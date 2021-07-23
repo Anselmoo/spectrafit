@@ -1,0 +1,13 @@
+{
+    "extensions.supportVirtualWorkspaces": {
+
+        "pub.name": false
+    },
+    "python.linting.mypyEnabled": true,
+    "python.linting.pylamaEnabled": true,
+    "python.linting.pydocstyleEnabled": true,
+    "python.linting.banditEnabled": true,
+    "python.linting.flake8Enabled": true,
+    "python.linting.pycodestyleEnabled": true,
+    "python.formatting.provider": "black"
+}
