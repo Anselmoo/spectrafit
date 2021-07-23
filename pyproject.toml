@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "spectrafit"
+version = "0.1.0"
+description = "Fast fitting of 2D-Spectra with established routines"
+authors = ["ahahn <Anselm.Hahn@cec.mpg.de>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+lmfit = "^1.0.2"
+numpy = "^1.21.1"
+pandas = "^1.3.0"
+matplotlib = "^3.4.2"
+seaborn = "^0.11.1"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
