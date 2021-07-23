@@ -4,8 +4,7 @@ import argparse
 import matplotlib.pylab as plt
 import numpy as np
 import pandas as pd
-from lmfit import (Minimizer, Parameters,  # , report_fit, conf_interval
-                   minimize)
+from lmfit import Minimizer, Parameters, conf_interval, minimize, report_fit
 from lmfit.printfuncs import *
 from matplotlib.ticker import AutoMinorLocator
 from matplotlib.widgets import Cursor
@@ -69,8 +68,10 @@ def main():
         elif again == "y":
             print("Lets start fitting ...")
             # try:
-            guess = pd.read_csv("guess.parm", sep=";\s+", engine="python", comment="#")
-            copy_guess("guess.parm", args.outfile + ".parm")
+            guess = pd.read_csv(
+                "spectrafit/test/guess.parm", sep=";\s+", engine="python", comment="#"
+            )
+            copy_guess("spectrafit/test/guess.parm", args.outfile + ".parm")
             # guess = np.genfromtxt('guess.parm',dtype=str)
             # print "Input guess is:"
             # print "En\tA\tG\tL miE miA miG miL maEn maA maG maL"
@@ -96,12 +97,12 @@ def main():
             # report_fit(result)
 
             plot(x, y, final, result, args)
-                    # except IOError:
-                    #    print "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-                    #    print "!!!!No Inputfile guess.parm for Fits!!!!"
-                    #    print "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-                    #
-                    #    pass
+            # except IOError:
+            #    print "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+            #    print "!!!!No Inputfile guess.parm for Fits!!!!"
+            #    print "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+            #
+            #    pass
 
         else:
             print('You should enter either "y" or "n".')
@@ -755,17 +756,17 @@ def excle(filename, file):
 
 """def printf(file,x,y,model,index,0,0,0,0,0,0,0,0,0,0,0):
     index = '\t\t'+str(index)
-    
+
     area = np.trapz(y,x)
     #print(cen.__dict__)
     #print str(np.round(cen._val,4)) +' +/- ' + str(cen.stderr)
-    if not (fwg  is None) and not (fwl  is None): 
+    if not (fwg  is None) and not (fwl  is None):
         f, n             = pv_cof(fwg._val,fwl._val)
         f_error, n_error = pv_cof(fwg.stderr,fwl.stderr)
-        
+
         fwh = str(np.round(f,4)) +' +/- ' + str(np.round(f_error,4))
         gam = str(np.round(n,4)) +' +/- ' + str(np.round(n_error,4))
-    elif not (fwh  is None) and not (gam  is None): 
+    elif not (fwh  is None) and not (gam  is None):
         fwh = str(np.round(fwh._val,4)) +' +/- ' + str(np.round(fwh.stderr,4))
         gam = str(np.round(gam._val,4)) +' +/- ' + str(np.round(gam.stderr,4))
     if not (cen  is None): cen = str(np.round(cen._val,4)) +' +/- ' + str(np.round(cen.stderr,4))
@@ -777,16 +778,16 @@ def excle(filename, file):
     if not (slp  is None): slp = str(np.round(slp._val,4)) +' +/- ' + str(np.round(slp.stderr,4))
     if not (con  is None): con = str(np.round(con._val,4)) +' +/- ' + str(np.round(con.stderr,4))
     if not (sig  is None): sig = str(np.round(sig._val,4)) +' +/- ' + str(np.round(sig.stderr,4))
-    
+
     #f = np.power(fwhm_g**5 +2.69269*fwhm_g**4*fwhm_l+2.42843*fwhm_g**3*fwhm_l**2+
     #             4.47163*fwhm_g**2*fwhm_l**3+0.07842*fwhm_g*fwhm_l**4+fwhm_l**5,0.25)
     #
     #if detail:
     #    print  model,     index,      eng         ,amp          ,sig       ,fra     ,gam        ,slp      ,cut     ,dec       ,exp
     sp = '\t\t'
-    
 
-        
+
+
     print  model,index,sp,cen,sp,amp,sp,area,sp,fwg,sp,fwl,sp,fwh,sp,gam,sp,dec,sp,exp,sp,slp,sp,con,sp,sig
     print  >>file,model,sp,index,sp,cen,sp,amp,sp,area,sp,fwg,sp,fwl,sp,fwh,sp,gam,sp,dec,sp,exp,sp,slp,sp,con,sp,sig"""
 
@@ -811,19 +812,19 @@ def high_res(x,final,result,filename):
 """
 """
 def psVoigt( x, x0, fwhmG, fwhmL):
-    
+
     #PSVOIGT This is a psuedo voigt function
     #   This is programmed according to wikipidia and they cite:
-    #   Ida, T and Ando, M and Toraya, H (2000). 
-    #"Extended pseudo-Voigt function for approximating the Voigt profile". 
+    #   Ida, T and Ando, M and Toraya, H (2000).
+    #"Extended pseudo-Voigt function for approximating the Voigt profile".
     #Journal of Applied Crystallography 33 (6): 1311-1316.
-    
-    
-    
+
+
+
     f = np.power(fwhmG**5 +2.69269*fwhmG**4*fwhmL+2.42843*fwhmG**3*fwhmL**2+
                  4.47163*fwhmG**2*fwhmL**3+0.07842*fwhmG*fwhmL**4+fwhmL**5,0.25)
     n = 1.36603*(fwhmL/f) - 0.47719*(fwhmL/f)**2 +0.11116*(fwhmL/f)**3
-    return n* fn_lorentz(x,x0,fwhmL)+ (1-n)*fn_gauss(x,x0,fwhmG) 
+    return n* fn_lorentz(x,x0,fwhmL)+ (1-n)*fn_gauss(x,x0,fwhmG)
 def fn_gauss(x,x0,fwhmG):
     c2 = np.power(fwhmG/(2*np.sqrt(2*np.log(2))),2)
     return  1.*np.exp(-0.5*(x - x0)**2/c2)
