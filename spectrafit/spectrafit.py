@@ -80,10 +80,9 @@ def main():
                     np.abs(data[:, 0] - args.e1)
                 )
                 x, y = data[x0:x1, 0] - args.sh, data[x0:x1, args.c]  # - args.b
-                y = smooth(y, args.s)
             else:
                 x, y = data[:, 0] - args.sh, data[:, args.c]  # - args.b
-                y = smooth(y, args.s)
+            y = smooth(y, args.s)
             x, y = oversampling(x, y, args.ov)
             minner = Minimizer(model, params, fcn_args=(x, y), iter_cb=20000)
             kws = {"options": {"maxiter": 2000}}
@@ -97,12 +96,12 @@ def main():
             # report_fit(result)
 
             plot(x, y, final, result, args)
-            # except IOError:
-            #    print "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-            #    print "!!!!No Inputfile guess.parm for Fits!!!!"
-            #    print "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-            #
-            #    pass
+                    # except IOError:
+                    #    print "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+                    #    print "!!!!No Inputfile guess.parm for Fits!!!!"
+                    #    print "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+                    #
+                    #    pass
 
         else:
             print('You should enter either "y" or "n".')
@@ -128,22 +127,18 @@ def copy_guess(inp, out):
 
 
 def smooth(y, box_pts):
-    if box_pts != 0:
-        box = np.ones(box_pts) / box_pts
-        return np.convolve(y, box, mode="same")
-    else:
+    if box_pts == 0:
         return y
+
+    box = np.ones(box_pts) / box_pts
+    return np.convolve(y, box, mode="same")
 
 
 def plot(x, y, final, result, args):
     filename = args.outfile
     # try:
     fig, ax = plt.subplots()
-    out = []
-    out.append(x)
-    out.append(y)
-    out.append(final)
-    out.append(y - final)
+    out = [x, y, final, y - final]
     # tmp = open(filename+'_Export.txt','w+')
 
     df = panda_h()
@@ -389,34 +384,33 @@ def plot(x, y, final, result, args):
                 index += 1
                 # printf(tmp,x, val,'Linear',index,0,0,0,0,0,0,0,0,slp,con,0)
 
-        if "cons" in mode:
-            if "con" in mode:
-                con = result.params[mode]
-                val = np.nan_to_num(const(x, con))
-                plt.plot(x, val, color="C3", ls="-.")
-                out.append(val)
-                # Exporting
-                model = "Constant"
-                res = np.array([val, x])
-                df = panda_e(
-                    df,
-                    model,
-                    index,
-                    res,
-                    cen=None,
-                    amp=None,
-                    fwg=None,
-                    fwl=None,
-                    fwh=None,
-                    gam=None,
-                    dec=None,
-                    exp=None,
-                    slp=None,
-                    con=con,
-                    sig=None,
-                )
-                index += 1
-                # printf(tmp,x, val,'Constant',index,0,0,0,0,0,0,0,0,0,con,0)
+        if "cons" in mode and "con" in mode:
+            con = result.params[mode]
+            val = np.nan_to_num(const(x, con))
+            plt.plot(x, val, color="C3", ls="-.")
+            out.append(val)
+            # Exporting
+            model = "Constant"
+            res = np.array([val, x])
+            df = panda_e(
+                df,
+                model,
+                index,
+                res,
+                cen=None,
+                amp=None,
+                fwg=None,
+                fwl=None,
+                fwh=None,
+                gam=None,
+                dec=None,
+                exp=None,
+                slp=None,
+                con=con,
+                sig=None,
+            )
+            index += 1
+            # printf(tmp,x, val,'Constant',index,0,0,0,0,0,0,0,0,0,con,0)
 
         # elif 'stpl' in mode:
         #    if 'cen' in mode: cen  = params[mode]
@@ -1068,10 +1062,9 @@ def model(params, x, data):
             if "con" in mode:
                 inter = params[mode]
                 val += np.nan_to_num(linear(x, slope, inter))
-        if "cons" in mode:
-            if "con" in mode:
-                c = params[mode]
-                val += np.nan_to_num(const(x, c))
+        if "cons" in mode and "con" in mode:
+            c = params[mode]
+            val += np.nan_to_num(const(x, c))
         # elif 'stpl' in mode:
         #    if 'cen' in mode: cen  = params[mode]
         #    elif 'sig' in mode:
