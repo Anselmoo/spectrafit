@@ -1,0 +1,80 @@
+[fitting.settings]
+column = [ 0, 1 ]
+decimal = "."
+disp = false
+infile = "spectrafit/test/rixs_fecl4.txt"
+input = "fitting_input.toml"
+outfile = ""
+oversampling = false
+seperator = "\t"
+shift = 0
+smooth = 0
+verbose = true
+version = false
+
+[fitting.parameters]
+maxiter = 1_000
+method = "leastsq"
+
+[fitting.peaks.1.pvoigt.amplitude]
+expr = ""
+max = 2
+min = 0.01
+optimize = true
+start = 1
+
+[fitting.peaks.1.pvoigt.center]
+expr = ""
+max = 0
+min = 0
+optimize = true
+start = 0
+
+[fitting.peaks.1.pvoigt.fwhm_gaussian]
+expr = ""
+max = 0.01
+min = 0.01
+optimize = true
+start = 0.01
+
+[fitting.peaks.1.pvoigt.fwhm_lorentzian]
+expr = ""
+max = 0.01
+min = 0.01
+optimize = true
+start = 0.01
+
+[fitting.peaks.2.pvoigt.amplitude]
+expr = ""
+max = 2
+min = 0.01
+optimize = true
+start = 1
+
+[fitting.peaks.2.pvoigt.center]
+expr = ""
+max = 0
+min = 0
+optimize = true
+start = 0
+
+[fitting.peaks.2.pvoigt.fwhm_gaussian]
+expr = ""
+max = 0.01
+min = 0.01
+optimize = true
+start = 0.01
+
+[fitting.peaks.2.pvoigt.fwhm_lorentzian]
+expr = ""
+max = 0.01
+min = 0.01
+optimize = true
+start = 0.01
+
+[fitting.peaks.3.const]
+expr = ""
+max = 2
+min = 0.01
+optimize = true
+start = 1

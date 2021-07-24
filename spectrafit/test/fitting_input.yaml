@@ -1,0 +1,82 @@
+fitting:
+  settings:
+    column:
+      - 0
+      - 1
+    decimal: .
+    disp: false
+    energy_start: null
+    energy_stop: null
+    header: null
+    infile: spectrafit/test/rixs_fecl4.txt
+    input: fitting_input.toml
+    outfile: ""
+    oversampling: false
+    seperator: "\t"
+    shift: 0
+    smooth: 0
+    verbose: true
+    version: false
+  parameters:
+    maxiter: 1000
+    method: leastsq
+  peaks:
+    "1":
+      pvoigt:
+        amplitude:
+          expr: ""
+          max: 2
+          min: 0.01
+          optimize: true
+          start: 1
+        center:
+          expr: ""
+          max: 0
+          min: 0
+          optimize: true
+          start: 0
+        fwhm_gaussian:
+          expr: ""
+          max: 0.01
+          min: 0.01
+          optimize: true
+          start: 0.01
+        fwhm_lorentzian:
+          expr: ""
+          max: 0.01
+          min: 0.01
+          optimize: true
+          start: 0.01
+    "2":
+      pvoigt:
+        amplitude:
+          expr: ""
+          max: 2
+          min: 0.01
+          optimize: true
+          start: 1
+        center:
+          expr: ""
+          max: 0
+          min: 0
+          optimize: true
+          start: 0
+        fwhm_gaussian:
+          expr: ""
+          max: 0.01
+          min: 0.01
+          optimize: true
+          start: 0.01
+        fwhm_lorentzian:
+          expr: ""
+          max: 0.01
+          min: 0.01
+          optimize: true
+          start: 0.01
+    "3":
+      const:
+        expr: ""
+        max: 2
+        min: 0.01
+        optimize: true
+        start: 1

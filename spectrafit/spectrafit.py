@@ -1,9 +1,17 @@
 #!/usr/bin/env python3.6
 import argparse
+import json
+import pprint
+from dataclasses import dataclass
+from functools import reduce
+from pathlib import Path
+from typing import List, Optional, Tuple
 
 import matplotlib.pylab as plt
 import numpy as np
 import pandas as pd
+import toml
+import yaml
 from lmfit import Minimizer, Parameters, conf_interval, minimize, report_fit
 from lmfit.printfuncs import *
 from matplotlib.ticker import AutoMinorLocator
@@ -13,52 +21,196 @@ from scipy.special import gamma as gamfcn
 from scipy.special import gammaln, wofz
 from tqdm import tqdm
 
-log2 = np.log(2)
-s2pi = np.sqrt(2 * np.pi)
-spi = np.sqrt(np.pi)
-s2 = np.sqrt(2.0)
-sig2fwhM = 2.0 * np.sqrt(2.0 * log2)
+from spectrafit import __version__
 
-description = "Fast Fitting Program for ascii txt files."
-# with open('/Users/hahn/bin/Readme.txt', 'r') as content_file:
-#    description = content_file.read()
-def main():
-    parser = argparse.ArgumentParser(description=description)
+
+@dataclass(frozen=True)
+class Constants:
+    log2 = np.log(2.0)
+    sq2pi = np.sqrt(2.0 * np.pi)
+    sqpi = np.sqrt(np.pi)
+    sq2 = np.sqrt(2.0)
+    sig2fwhm = 2.0 * np.sqrt(2.0 * np.log(2.0))
+
+
+pp = pprint.PrettyPrinter(indent=4)
+
+
+def get_args() -> dict:
+    parser = argparse.ArgumentParser(
+        description="Fast Fitting Program for ascii txt files."
+    )
+    parser.add_argument("infile", type=Path, help="Filename of the specta data")
     parser.add_argument(
-        "infile", type=argparse.FileType("r"), help="txt-textfile for plotting, please"
+        "-o",
+        "--outfile",
+        type=Path,
+        help="Filename for the export, default to set to input name.",
     )
     parser.add_argument(
-        "outfile",
-        nargs="?",
-        default="Results",
-        help="txt-textfile for fit parameter export, please",
+        "-i",
+        "--input",
+        type=Path,
+        default="fitting_input.toml",
+        help=(
+            "Filename for the input parameter, default to set to 'fitting_input.toml'."
+            "Supported fileformats are: '*.json', '*.yaml', and '*.toml'"
+        ),
     )
-    # parser.add_argument("outfile_1",nargs='?',default='Export_Data.txt', help="txt-textfile for data export, please")
     parser.add_argument(
         "-ov",
+        "--oversampling",
         action="store_true",
         default=False,
-        help="Oversampling the spectra by using factor of 5",
+        help="Oversampling the spectra by using factor of 5; default to False.",
     )
     parser.add_argument(
         "-disp",
         action="store_true",
         default=False,
-        help="Hole or splitted Table on the Screen (default = hole)",
+        help="Hole or splitted Table on the Screen; default to 'hole'.",
     )
-    parser.add_argument("-e0", type=float, default=None, help="Starting energy in eV")
-    parser.add_argument("-e1", type=float, default=None, help="Ending energy in eV")
     parser.add_argument(
-        "-s", type=int, default=0, help="Number of smooth points for lmfit"
+        "-e0",
+        "--energy_start",
+        type=float,
+        default=None,
+        help="Starting energy in eV; default to start of energy.",
     )
-    # parser.add_argument("-b",type=float,default=0.,help="Constant baseline subtraction")
-    parser.add_argument("-sh", type=float, default=0.0, help="Constant energy shift")
-    parser.add_argument("-c", type=int, default=1, help="Number of y-row")
-    # parser.parse_args(['input.txt', 'output.txt'])
-    args = parser.parse_args()
+    parser.add_argument(
+        "-e1",
+        "--energy_stop",
+        type=float,
+        default=None,
+        help="Ending energy in eV; default to end of energy.",
+    )
+    parser.add_argument(
+        "-s",
+        "--smooth",
+        type=int,
+        default=0,
+        help="Number of smooth points for lmfit; default to 0.",
+    )
+    parser.add_argument(
+        "-sh",
+        "--shift",
+        type=float,
+        default=0.0,
+        help="Constant applied energy shift; default to 0.0.",
+    )
+    parser.add_argument(
+        "-c",
+        "--column",
+        nargs=2,
+        type=int,
+        default=[0, 1],
+        help=(
+            "Selected columns for the energy- and intensity-values; default to 0 for"
+            " energy (x-axis) and 1 for intensity (y-axis)."
+        ),
+    )
+    parser.add_argument(
+        "-sep",
+        "--seperator",
+        type=str,
+        default="\t",
+        choices=["\t", ",", ";", ":", "|", " ", "s+"],
+        help="Redefine the type of seperator; default to '\t'.",
+    )
+    parser.add_argument(
+        "-dec",
+        "--decimal",
+        type=str,
+        default=".",
+        choices=[".", ","],
+        help="Type of decimal seperator; default to '.'.",
+    )
+    parser.add_argument(
+        "-hd",
+        "--header",
+        type=int,
+        default=None,
+        help="Selected the header for the dataframe; default to None.",
+    )
+    parser.add_argument(
+        "-v",
+        "--version",
+        help="Display the current version of `spectrafit`.",
+        action="store_true",
+    )
+    parser.add_argument(
+        "-vb",
+        "--verbose",
+        help="Display the initial configuration parameters as a dictionary.",
+        action="store_true",
+    )
+    return vars(parser.parse_args())
 
-    data = np.genfromtxt(args.infile, dtype=float)
-    data = np.nan_to_num(data)
+
+def read_input_file(fname: Path) -> dict:
+    """Read the input file.
+
+    Read the input file as `toml`, `json`, or `yaml` files
+    and return as a dictionary.
+
+    Args:
+        fname (Path): Name of the input file.
+
+    Raises:
+        TypeError: If the input file is not supported.
+
+    Returns:
+        dict: Table of the input file to a dictionary.
+    """
+    if fname.suffix == ".toml":
+        with open(fname, "r") as f:
+            return toml.load(fname)
+    elif fname.suffix == ".json":
+        with open(fname, "r") as f:
+            return json.load(f)
+    elif fname.suffix == ".yaml":
+        with open(fname, "r") as f:
+            return yaml.load(f, Loader=yaml.FullLoader)
+    else:
+        raise TypeError(
+            f"Input file {fname} has not supported file format."
+            "Supported fileformats are: '*.json', '*.yaml', and '*.toml'"
+        )
+
+
+def command_line_runner(args: dict = None) -> None:
+
+    if not args:
+        args = get_args()
+        _args = read_input_file(args["input"])
+        if "settings" in _args["fitting"].keys():
+            for key in _args["fitting"]["settings"].keys():
+                args[key] = _args["fitting"]["settings"][key]
+        parameters = _args["fitting"]["parameters"]
+        peaks = _args["fitting"]["peaks"]
+
+    if args["version"]:
+        print(f"Currently used verison is: {__version__}")
+        return
+    if args["verbose"]:
+        print("Input Parameter:\n")
+        pp.pprint(args)
+    try:
+        df = pd.read_csv(
+            args["infile"],
+            sep=args["seperator"],
+            header=args["header"],
+            usecols=args["column"],
+            dtype=np.float64,
+            decimal=args["decimal"],
+        )
+        df_stats = df.describe(percentiles=np.arange(0.1, 1, 0.1)).to_dict()
+    except ValueError as exc:
+        print(f"Error: {exc} -> Dataframe contains non numeric data!")
+        return
+    if args["verbose"]:
+        print("\nStatistic:\n")
+        pp.pprint(df_stats)
 
     while True:
         again = input("Would you like to fit ...? Enter y/n: ").lower()
@@ -67,46 +219,48 @@ def main():
             return
         elif again == "y":
             print("Lets start fitting ...")
-            # try:
-            guess = pd.read_csv("guess.parm", sep=";\s+", engine="python", comment="#")
-            copy_guess("guess.parm", args.outfile + ".parm")
-            # guess = np.genfromtxt('guess.parm',dtype=str)
-            # print "Input guess is:"
-            # print "En\tA\tG\tL miE miA miG miL maEn maA maG maL"
-            params = init(guess)
-            if args.e0 != args.e1:
-                x0, x1 = np.argmin(np.abs(data[:, 0] - args.e0)), np.argmin(
-                    np.abs(data[:, 0] - args.e1)
-                )
-                x, y = data[x0:x1, 0] - args.sh, data[x0:x1, args.c]  # - args.b
-            else:
-                x, y = data[:, 0] - args.sh, data[:, args.c]  # - args.b
-            y = smooth(y, args.s)
-            x, y = oversampling(x, y, args.ov)
-            minner = Minimizer(model, params, fcn_args=(x, y), iter_cb=20000)
-            kws = {"options": {"maxiter": 2000}}
-            # try:
-            result = minner.minimize()
-
-            # except ValueError:
-            #    print "Input error in guess.parm"
-            final = y + result.residual
-            # print result.init_fit
-            # report_fit(result)
-
-            plot(x, y, final, result, args)
-            # except IOError:
-            #    print "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-            #    print "!!!!No Inputfile guess.parm for Fits!!!!"
-            #    print "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-            #
-            #    pass
 
         else:
             print('You should enter either "y" or "n".')
 
 
-def oversampling(x, y, mode):
+def fitting_routine(args: dict = None) -> None:
+
+    # try:
+    guess = pd.read_csv("guess.parm", sep=";\s+", engine="python", comment="#")
+    # copy_guess("guess.parm", args.outfile + ".parm")
+    # guess = np.genfromtxt('guess.parm',dtype=str)
+    # print "Input guess is:"
+    # print "En\tA\tG\tL miE miA miG miL maEn maA maG maL"
+    params = init(guess)
+    if args.energy_start != args.energy_stop:
+        x0, x1 = np.argmin(np.abs(df[:, 0] - args.energy_start)), np.argmin(
+            np.abs(df[:, 0] - args.energy_stop)
+        )
+        x, y = df[x0:x1, 0] - args.shift, df[x0:x1, args.column]  # - args.b
+    else:
+        x, y = df[:, 0] - args.shift, df[:, args.column]  # - args.b
+    y = smooth(y, args.s)
+    x, y = oversampling(x, y, args.ov)
+    minner = Minimizer(model, params, fcn_args=(x, y), iter_cb=20000)
+    # kws = {"options": {"maxiter": 2000}}
+    # try:
+    result = minner.minimize()
+    # except ValueError:
+    #    print "Input error in guess.parm"
+    final = y + result.residual
+    # print result.init_fit
+    # report_fit(result)
+    plot(x, y, final, result, args)
+    # except IOError:
+    #    print "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+    #    print "!!!!No Inputfile guess.parm for Fits!!!!"
+    #    print "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+    #
+    #    pass
+
+
+def oversampling(x, y, mode: bool):
     if mode:
         xvals = np.linspace(min(x), max(x), 5 * len(x))
         yinterp = np.interp(xvals, x, y)
@@ -125,7 +279,7 @@ def copy_guess(inp, out):
             f1.writelines(lines)
 
 
-def smooth(y, box_pts):
+def smooth(y, box_pts: int):
     if box_pts == 0:
         return y
 
@@ -859,7 +1013,7 @@ def gaussian(x, amplitude=1.0, center=0.0, fwhm=1.0):
         (amplitude/(s2pi*sigma)) * exp(-(1.0*x-center)**2 / (2*sigma**2))
 
     """
-    sigma = fwhm / sig2fwhM
+    sigma = fwhm / sig2fwhm
     return (amplitude / (s2pi * sigma)) * np.exp(
         -((1.0 * x - center) ** 2) / (2 * sigma ** 2)
     )
@@ -1157,4 +1311,4 @@ def init(guess):
 
 
 if __name__ == "__main__":
-    main()
+    command_line_runner()
