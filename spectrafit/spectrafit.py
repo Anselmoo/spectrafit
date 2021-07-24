@@ -68,10 +68,8 @@ def main():
         elif again == "y":
             print("Lets start fitting ...")
             # try:
-            guess = pd.read_csv(
-                "spectrafit/test/guess.parm", sep=";\s+", engine="python", comment="#"
-            )
-            copy_guess("spectrafit/test/guess.parm", args.outfile + ".parm")
+            guess = pd.read_csv("guess.parm", sep=";\s+", engine="python", comment="#")
+            copy_guess("guess.parm", args.outfile + ".parm")
             # guess = np.genfromtxt('guess.parm',dtype=str)
             # print "Input guess is:"
             # print "En\tA\tG\tL miE miA miG miL maEn maA maG maL"
