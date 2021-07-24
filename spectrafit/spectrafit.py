@@ -725,18 +725,18 @@ def panda_e(
 
     file = file.append(tmp)
 
-    return file.ix[:, index]
+    return file[index]
 
 
 def excle(filename, file):
     # Create a Pandas Excel writer using XlsxWriter as the engine.
-    writer = pd.ExcelWriter(filename, engine="xlsxwriter")
+    # writer = pd.ExcelWriter(filename, engine="xlsxwriter")
 
     # Convert the dataframe to an XlsxWriter Excel object.
-    file.to_excel(writer, sheet_name="Fit-Results")
+    file.to_excel(filename, sheet_name="Fit-Results")
 
     # Close the Pandas Excel writer and output the Excel file.
-    writer.save()
+    # writer.save()
 
 
 """def printh(file,detail=False):
