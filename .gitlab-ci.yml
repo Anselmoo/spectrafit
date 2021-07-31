@@ -21,3 +21,6 @@ cache:
   paths:
     - .cache/pip
     - venv/
+
+before_script:
+  - python -V  # Print out python version for debugging
