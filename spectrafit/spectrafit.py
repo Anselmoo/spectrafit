@@ -180,18 +180,7 @@ def read_input_file(fname: Path) -> dict:
 def command_line_runner(args: dict = None) -> None:
 
     if not args:
-        args = get_args()
-        _args = read_input_file(args["input"])
-        if "settings" in _args["fitting"].keys():
-            for key in _args["fitting"]["settings"].keys():
-                args[key] = _args["fitting"]["settings"][key]
-        if "description" in _args["fitting"].keys():
-            args["description"] = _args["fitting"]["description"]
-        if "parameters" in _args["fitting"].keys():
-            args["parameters"] = _args["fitting"]["parameters"]
-        if "peaks" in _args["fitting"].keys():
-            args["peaks"] = _args["fitting"]["peaks"]
-
+        args = _extracted_from_command_line_runner_4()
     if args["version"]:
         print(f"Currently used verison is: {__version__}")
         return
@@ -228,6 +217,22 @@ def command_line_runner(args: dict = None) -> None:
             print('You should enter either "y" or "n".')
 
 
+def _extracted_from_command_line_runner_4():
+    result = get_args()
+    _args = read_input_file(result["input"])
+    if "settings" in _args["fitting"].keys():
+        for key in _args["fitting"]["settings"].keys():
+            result[key] = _args["fitting"]["settings"][key]
+    if "description" in _args["fitting"].keys():
+        result["description"] = _args["fitting"]["description"]
+    if "parameters" in _args["fitting"].keys():
+        result["parameters"] = _args["fitting"]["parameters"]
+    if "peaks" in _args["fitting"].keys():
+        result["peaks"] = _args["fitting"]["peaks"]
+
+    return result
+
+
 def fitting_routine(df: pd.DataFrame, args: dict) -> None:
 
     # try:
@@ -261,7 +266,14 @@ def fitting_routine(df: pd.DataFrame, args: dict) -> None:
 
 
 def get_parameters(args: dict) -> dict:
+    """[summary]
 
+    Args:
+        args (dict): [description]
+
+    Returns:
+        dict: [description]
+    """
     params = Parameters()
 
     for key_1, value_1 in args["peaks"].items():
@@ -272,104 +284,169 @@ def get_parameters(args: dict) -> dict:
 
 
 def model(params: dict, x: np.array, data):
-    """
-    Here is the model function, where all
-    init params will read and add to the model
+    """[summary]
 
+    Args:
+        params (dict): [description]
+        x (np.array): [description]
+        data ([type]): [description]
+
+    Returns:
+        [type]: [description]
     """
     val = 0.0
-    for i, mode in enumerate(params):
+    for mode in params:
         mode = mode.lower()
-        if "gaus" in mode:
-            if "cen" in mode:
-                cen = params[mode]
-            if "amp" in mode:
-                amp = params[mode]
-            if "fwg" in mode:
-                fwg = params[mode]
-                val += np.nan_to_num(gaussian(x, amp, cen, fwg))
-        if "lorz" in mode:
-            if "cen" in mode:
-                cen = params[mode]
-            if "amp" in mode:
-                amp = params[mode]
-            if "fwl" in mode:
-                fwl = params[mode]
-                val += np.nan_to_num(lorentzian(x, amp, cen, fwl))
+        if "gaussian" in mode:
+            if "center" in mode:
+                center = params[mode]
+            if "amplitude" in mode:
+                amplitude = params[mode]
+            if "fwhm_gaussian" in mode:
+                fwhm_gaussian = params[mode]
+                val += np.nan_to_num(
+                    gaussian(
+                        x=x,
+                        amplitude=amplitude,
+                        center=center,
+                        fwhm=fwhm_gaussian,
+                    )
+                )
+        if "lorentzian" in mode:
+            if "center" in mode:
+                center = params[mode]
+            if "amplitude" in mode:
+                amplitude = params[mode]
+            if "fwhm_lorentzian" in mode:
+                fwhm_lorentzian = params[mode]
+                val += np.nan_to_num(
+                    lorentzian(
+                        x=x,
+                        amplitude=amplitude,
+                        center=center,
+                        fwhm=fwhm_lorentzian,
+                    )
+                )
         if "voigt" in mode:
-            if "cen" in mode:
-                cen = params[mode]
-            if "fwh" in mode:
-                fwh = params[mode]
-            # elif 'amp' in mode: amp   = params[mode]
-            if "gam" in mode:
+            if "center" in mode:
+                center = params[mode]
+            if "fwhm" in mode:
+                fwhm = params[mode]
+            if "gamma" in mode:
                 gamma = params[mode]
-                val += np.nan_to_num(voigt(x, cen, fwh, gamma))
+                val += np.nan_to_num(
+                    voigt(
+                        x=x,
+                        center=center,
+                        fwhm=fwhm,
+                        gamma=gamma,
+                    )
+                )
         if "pvoigt" in mode:
             if "center" in mode:
                 center = params[mode]
-            if "amp" in mode:
+            if "amplitude" in mode:
                 amplitude = params[mode]
             if "fwhm_gaussian" in mode:
                 fwhm_gaussian = params[mode]
             if "fwhm_lorentzian" in mode:
                 fwhm_lorentzian = params[mode]
                 val += np.nan_to_num(
-                    pvoigt(x, amplitude, center, fwhm_gaussian, fwhm_lorentzian)
+                    pvoigt(
+                        x=x,
+                        amplitude=amplitude,
+                        center=center,
+                        fwhm_g=fwhm_gaussian,
+                        fwhm_l=fwhm_lorentzian,
+                    )
                 )
-        if "expo" in mode:
-            if "dec" in mode:
+        if "exponential" in mode:
+            if "amplitude" in mode:
+                amplitude = params[mode]
+            if "decay" in mode:
                 decay = params[mode]
-            if "amp" in mode:
-                amp = params[mode]
-            if "con" in mode:
-                inter = params[mode]
-                val += np.nan_to_num(exponential(x, amp, decay, inter))
-        if "powr" in mode:
-            if "ord" in mode:
-                expo = params[mode]
-            if "con" in mode:
-                inter = params[mode]
-                val += np.nan_to_num(powerlaw(x, amp, expo, inter))
-        if "linr" in mode:
-            if "slp" in mode:
+            if "intercept" in mode:
+                intercept = params[mode]
+                val += np.nan_to_num(
+                    exponential(
+                        x=x,
+                        amplitude=amplitude,
+                        decay=decay,
+                        intercept=intercept,
+                    )
+                )
+        if "power" in mode:
+            if "amplitude" in mode:
+                amplitude = params[mode]
+            if "exponent" in mode:
+                exponent = params[mode]
+            if "intercept" in mode:
+                intercept = params[mode]
+                val += np.nan_to_num(
+                    powerlaw(
+                        x=x,
+                        amplitude=amplitude,
+                        exponent=exponent,
+                        intercept=intercept,
+                    )
+                )
+        if "linear" in mode:
+            if "slope" in mode:
                 slope = params[mode]
-            if "con" in mode:
-                inter = params[mode]
-                val += np.nan_to_num(linear(x, slope, inter))
+            if "intercept" in mode:
+                intercept = params[mode]
+                val += np.nan_to_num(linear(x=x, slope=slope, intercept=intercept))
         if "constant" in mode and "con" in mode:
             c = params[mode]
             val += np.nan_to_num(const(x, c))
-        # elif 'stpl' in mode:
-        #    if 'cen' in mode: cen  = params[mode]
-        #    elif 'sig' in mode:
-        #        sig   = params[mode]
-        #        val += np.nan_to_num(step(x, cen, sig, form='linear'))
         if "erf" in mode:
-            if "cen" in mode:
-                cen = params[mode]
-            if "sig" in mode:
-                sig = params[mode]
-            if "amp" in mode:
-                amp = params[mode]
-                val += np.nan_to_num(step(x, amp, cen, sig, form="erf"))
+            if "center" in mode:
+                center = params[mode]
+            if "sigma" in mode:
+                sigma = params[mode]
+            if "amplitude" in mode:
+                amplitude = params[mode]
+                val += np.nan_to_num(
+                    step(
+                        x=x,
+                        amplitude=amplitude,
+                        center=center,
+                        sigma=sigma,
+                        form="erf",
+                    )
+                )
         if "atan" in mode:
-            if "cen" in mode:
-                cen = params[mode]
-            if "sig" in mode:
-                sig = params[mode]
-            if "amp" in mode:
-                amp = params[mode]
-                val += np.nan_to_num(step(x, amp, cen, sig, form="atan"))
+            if "center" in mode:
+                center = params[mode]
+            if "sigma" in mode:
+                sigma = params[mode]
+            if "amplitude" in mode:
+                amplitude = params[mode]
+                val += np.nan_to_num(
+                    step(
+                        x=x,
+                        amplitude=amplitude,
+                        center=center,
+                        sigma=sigma,
+                        form="atan",
+                    )
+                )
         if "log" in mode:
-            if "cen" in mode:
-                cen = params[mode]
-            if "sig" in mode:
-                sig = params[mode]
-            if "amp" in mode:
-                amp = params[mode]
-                val += np.nan_to_num(step(x, amp, cen, sig, form="atan"))
-    print(val, data)
+            if "center" in mode:
+                center = params[mode]
+            if "sigma" in mode:
+                sigma = params[mode]
+            if "amplitude" in mode:
+                amplitude = params[mode]
+                val += np.nan_to_num(
+                    step(
+                        x=x,
+                        amplitude=amplitude,
+                        center=center,
+                        sigma=sigma,
+                        form="logistic",
+                    )
+                )
     return val - data
 
 
@@ -1031,7 +1108,7 @@ def excle(filename, file):
     # writer.save()
 
 
-def pv_cof(fwhm_g, fwhm_l):
+def pv_cof(fwhm_g: float, fwhm_l: float) -> Tuple[float, float]:
     """
     Calculating the effectiv fwhm of the pseudo voigt profile and the fraction coefficient for n
     """
@@ -1049,10 +1126,12 @@ def pv_cof(fwhm_g, fwhm_l):
         - 0.47719 * (fwhm_l / f) ** 2
         + 0.11116 * (fwhm_l / f) ** 3
     )
-    return f, n
+    return (f, n)
 
 
-def gaussian(x, amplitude=1.0, center=0.0, fwhm=1.0):
+def gaussian(
+    x: np.array, amplitude: float = 1.0, center: float = 0.0, fwhm: float = 1.0
+) -> np.array:
     """Return a 1-dimensional Gaussian function.
 
     gaussian(x, amplitude, center, sigma) =
@@ -1065,7 +1144,9 @@ def gaussian(x, amplitude=1.0, center=0.0, fwhm=1.0):
     )
 
 
-def lorentzian(x, amplitude=1.0, center=0.0, fwhm=1.0):
+def lorentzian(
+    x, amplitude: float = 1.0, center: float = 0.0, fwhm: float = 1.0
+) -> np.array:
     """Return a 1-dimensional Lorentzian function.
 
     lorentzian(x, amplitude, center, sigma) =
@@ -1076,7 +1157,9 @@ def lorentzian(x, amplitude=1.0, center=0.0, fwhm=1.0):
     return (amplitude / (1 + ((1.0 * x - center) / sigma) ** 2)) / (np.pi * sigma)
 
 
-def voigt(x, center=0.0, fwhm=1.0, gamma=None):
+def voigt(
+    x: np.array, center: float = 0.0, fwhm: float = 1.0, gamma: float = None
+) -> np.array:
     """Return a 1-dimensional Voigt function.
 
     voigt(x, amplitude, center, sigma, gamma) =
@@ -1112,7 +1195,13 @@ def voigt(x, center=0.0, fwhm=1.0, gamma=None):
 #            fraction*lorentzian(x, amplitude, center, sigma))
 
 
-def pvoigt(x, amplitude, center, fwhm_g, fwhm_l):
+def pvoigt(
+    x: np.array,
+    amplitude: float = 1.0,
+    center: float = 0.0,
+    fwhm_g: float = 1.0,
+    fwhm_l: float = 1.0,
+) -> np.array:
 
     # PSVOIGT This is a psuedo voigt function
     #   This is programmed according to wikipidia and they cite:
@@ -1131,7 +1220,9 @@ def pvoigt(x, amplitude, center, fwhm_g, fwhm_l):
     )
 
 
-def exponential(x, amplitude=1, decay=1, intercept=0.0):
+def exponential(
+    x: np.array, amplitude: float = 1.0, decay: float = 1.0, intercept: float = 0.0
+) -> np.array:
     """Return an exponential function.
 
     x -> amplitude * exp(-x/decay)
@@ -1140,7 +1231,9 @@ def exponential(x, amplitude=1, decay=1, intercept=0.0):
     return amplitude * np.exp(-x / decay) + intercept
 
 
-def powerlaw(x, amplitude=1, exponent=1.0, intercept=0.0):
+def powerlaw(
+    x: np.array, amplitude: float = 1.0, exponent: float = 1.0, intercept: float = 0.0
+) -> np.array:
     """Return the powerlaw function.
 
     x -> amplitude * x**exponent
@@ -1150,7 +1243,7 @@ def powerlaw(x, amplitude=1, exponent=1.0, intercept=0.0):
     return amplitude * np.power(x, exponent) + intercept
 
 
-def linear(x, slope=1.0, intercept=0.0):
+def linear(x: np.array, slope: float = 1.0, intercept: float = 0.0) -> np.array:
     """Return a linear function.
 
     x -> slope * x + intercept
@@ -1159,7 +1252,7 @@ def linear(x, slope=1.0, intercept=0.0):
     return slope * x + intercept
 
 
-def const(x, c):
+def const(x: np.array, c: float) -> np.array:
     """Return a cosntant function.
 
     x -> constant
@@ -1168,7 +1261,13 @@ def const(x, c):
     return np.linspace(c, c, len(x))
 
 
-def step(x, amplitude=1.0, center=0.0, sigma=1.0, form="linear"):
+def step(
+    x: np.array,
+    amplitude: float = 1.0,
+    center: float = 0.0,
+    sigma: float = 1.0,
+    form: str = "linear",
+) -> np.array:
     """Return a step function.
 
     starts at 0.0, ends at amplitude, with half-max at center, and
@@ -1189,7 +1288,7 @@ def step(x, amplitude=1.0, center=0.0, sigma=1.0, form="linear"):
         out = 0.5 * (1 + erf(out))
     elif form.startswith("logi"):
         out = 1.0 - 1.0 / (1.0 + np.exp(out))
-    elif form in ("atan", "arctan"):
+    elif form in {"atan", "arctan"}:
         out = 0.5 + np.arctan(out) / np.pi
     else:
         out[np.where(out < 0)] = 0.0
