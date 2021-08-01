@@ -1,6 +1,7 @@
 import argparse
 import json
 import pprint
+
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Tuple
@@ -10,11 +11,16 @@ import numpy as np
 import pandas as pd
 import toml
 import yaml
-from lmfit import Minimizer, Parameters, conf_interval, fit_report, minimize
+
+from lmfit import Minimizer
+from lmfit import Parameters
+from lmfit import conf_interval
+from lmfit import fit_report
+from lmfit import minimize
 from matplotlib.ticker import AutoMinorLocator
 from matplotlib.widgets import Cursor
-from scipy.special import erf, wofz
-
+from scipy.special import erf
+from scipy.special import wofz
 from spectrafit import __version__
 
 
