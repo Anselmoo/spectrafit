@@ -2,23 +2,18 @@ import argparse
 import json
 import pprint
 from dataclasses import dataclass
-from functools import reduce
 from pathlib import Path
-from typing import List, Optional, Tuple
+from typing import Tuple
 
 import matplotlib.pylab as plt
 import numpy as np
 import pandas as pd
 import toml
 import yaml
-from lmfit import Minimizer, Parameters, conf_interval, minimize, report_fit
-from lmfit.printfuncs import *
+from lmfit import Minimizer, Parameters, conf_interval, fit_report, minimize
 from matplotlib.ticker import AutoMinorLocator
 from matplotlib.widgets import Cursor
-from scipy.special import erf, erfc
-from scipy.special import gamma as gamfcn
-from scipy.special import gammaln, wofz
-from tqdm import tqdm
+from scipy.special import erf, wofz
 
 from spectrafit import __version__
 
@@ -180,7 +175,7 @@ def read_input_file(fname: Path) -> dict:
 def command_line_runner(args: dict = None) -> None:
 
     if not args:
-        args = _extracted_from_command_line_runner_4()
+        args = extracted_from_command_line_runner()
     if args["version"]:
         print(f"Currently used verison is: {__version__}")
         return
@@ -217,16 +212,19 @@ def command_line_runner(args: dict = None) -> None:
             print('You should enter either "y" or "n".')
 
 
-def _extracted_from_command_line_runner_4():
+def extracted_from_command_line_runner() -> dict:
     result = get_args()
     _args = read_input_file(result["input"])
-    if "settings" in _args["fitting"].keys():
-        for key in _args["fitting"]["settings"].keys():
-            result[key] = _args["fitting"]["settings"][key]
+    if "settings" in _args.keys():
+        for key in _args["settings"].keys():
+            result[key] = _args["settings"][key]
     if "description" in _args["fitting"].keys():
         result["description"] = _args["fitting"]["description"]
     if "parameters" in _args["fitting"].keys():
-        result["parameters"] = _args["fitting"]["parameters"]
+        if "minimizer" in _args["fitting"]["parameters"].keys():
+            result["minimizer"] = _args["fitting"]["parameters"]["minimizer"]
+        if "optimizer" in _args["fitting"]["parameters"].keys():
+            result["optimizer"] = _args["fitting"]["parameters"]["optimizer"]
     if "peaks" in _args["fitting"].keys():
         result["peaks"] = _args["fitting"]["peaks"]
 
@@ -247,10 +245,31 @@ def fitting_routine(df: pd.DataFrame, args: dict) -> None:
         model,
         params,
         fcn_args=(df[args["column"][0]].values, df[args["column"][1]].values),
+        **args["minimizer"],
     )
     #
     # try:
-    result = minner.minimize(**args["parameters"])
+    result = minner.minimize(**args["optimizer"])
+    # print(result.params.dumps())
+    print(
+        result.nfev,
+        result.nvarys,
+        result.nfree,
+        result.residual,
+        result.ndata,
+        result.chisqr,
+        result.redchi,
+        result.aic,
+        result.bic,
+        result.var_names,
+        # result.covar,
+        result.init_vals,
+        result.call_kws,
+    )
+
+    # print(result.errorbars)
+
+    # print(dict(vars(result)))
     # except ValueError:
     #    print "Input error in guess.parm"
     # final = y + result.residual
@@ -297,6 +316,23 @@ def model(params: dict, x: np.array, data):
     val = 0.0
     for mode in params:
         mode = mode.lower()
+        if mode.split("_")[0] in [
+            "gaussian",
+            "lorentzian",
+            "voigt",
+            "pseudovoigt",
+            "exponential",
+            "linear",
+            "constant",
+            "erf",
+            "atan",
+            "log",
+        ]:
+            pass
+        else:
+            raise SystemExit(f"{mode} is not supported")
+    for mode in params:
+        mode = mode.lower()
         if "gaussian" in mode:
             if "center" in mode:
                 center = params[mode]
@@ -304,13 +340,11 @@ def model(params: dict, x: np.array, data):
                 amplitude = params[mode]
             if "fwhm_gaussian" in mode:
                 fwhm_gaussian = params[mode]
-                val += np.nan_to_num(
-                    gaussian(
-                        x=x,
-                        amplitude=amplitude,
-                        center=center,
-                        fwhm=fwhm_gaussian,
-                    )
+                val += gaussian(
+                    x=x,
+                    amplitude=amplitude,
+                    center=center,
+                    fwhm=fwhm_gaussian,
                 )
         if "lorentzian" in mode:
             if "center" in mode:
@@ -319,13 +353,11 @@ def model(params: dict, x: np.array, data):
                 amplitude = params[mode]
             if "fwhm_lorentzian" in mode:
                 fwhm_lorentzian = params[mode]
-                val += np.nan_to_num(
-                    lorentzian(
-                        x=x,
-                        amplitude=amplitude,
-                        center=center,
-                        fwhm=fwhm_lorentzian,
-                    )
+                val += lorentzian(
+                    x=x,
+                    amplitude=amplitude,
+                    center=center,
+                    fwhm=fwhm_lorentzian,
                 )
         if "voigt" in mode:
             if "center" in mode:
@@ -334,15 +366,13 @@ def model(params: dict, x: np.array, data):
                 fwhm = params[mode]
             if "gamma" in mode:
                 gamma = params[mode]
-                val += np.nan_to_num(
-                    voigt(
-                        x=x,
-                        center=center,
-                        fwhm=fwhm,
-                        gamma=gamma,
-                    )
+                val += voigt(
+                    x=x,
+                    center=center,
+                    fwhm=fwhm,
+                    gamma=gamma,
                 )
-        if "pvoigt" in mode:
+        if "pseudovoigt" in mode:
             if "center" in mode:
                 center = params[mode]
             if "amplitude" in mode:
@@ -351,14 +381,12 @@ def model(params: dict, x: np.array, data):
                 fwhm_gaussian = params[mode]
             if "fwhm_lorentzian" in mode:
                 fwhm_lorentzian = params[mode]
-                val += np.nan_to_num(
-                    pvoigt(
-                        x=x,
-                        amplitude=amplitude,
-                        center=center,
-                        fwhm_g=fwhm_gaussian,
-                        fwhm_l=fwhm_lorentzian,
-                    )
+                val += pseudovoigt(
+                    x=x,
+                    amplitude=amplitude,
+                    center=center,
+                    fwhm_g=fwhm_gaussian,
+                    fwhm_l=fwhm_lorentzian,
                 )
         if "exponential" in mode:
             if "amplitude" in mode:
@@ -367,13 +395,11 @@ def model(params: dict, x: np.array, data):
                 decay = params[mode]
             if "intercept" in mode:
                 intercept = params[mode]
-                val += np.nan_to_num(
-                    exponential(
-                        x=x,
-                        amplitude=amplitude,
-                        decay=decay,
-                        intercept=intercept,
-                    )
+                val += exponential(
+                    x=x,
+                    amplitude=amplitude,
+                    decay=decay,
+                    intercept=intercept,
                 )
         if "power" in mode:
             if "amplitude" in mode:
@@ -382,23 +408,21 @@ def model(params: dict, x: np.array, data):
                 exponent = params[mode]
             if "intercept" in mode:
                 intercept = params[mode]
-                val += np.nan_to_num(
-                    powerlaw(
-                        x=x,
-                        amplitude=amplitude,
-                        exponent=exponent,
-                        intercept=intercept,
-                    )
+                val += powerlaw(
+                    x=x,
+                    amplitude=amplitude,
+                    exponent=exponent,
+                    intercept=intercept,
                 )
         if "linear" in mode:
             if "slope" in mode:
                 slope = params[mode]
             if "intercept" in mode:
                 intercept = params[mode]
-                val += np.nan_to_num(linear(x=x, slope=slope, intercept=intercept))
-        if "constant" in mode and "con" in mode:
-            c = params[mode]
-            val += np.nan_to_num(const(x, c))
+                val += linear(x=x, slope=slope, intercept=intercept)
+        if "constant" in mode and "amplitude" in mode:
+            amplitude = params[mode]
+            val += constant(x=x, amplitude=amplitude)
         if "erf" in mode:
             if "center" in mode:
                 center = params[mode]
@@ -406,14 +430,12 @@ def model(params: dict, x: np.array, data):
                 sigma = params[mode]
             if "amplitude" in mode:
                 amplitude = params[mode]
-                val += np.nan_to_num(
-                    step(
-                        x=x,
-                        amplitude=amplitude,
-                        center=center,
-                        sigma=sigma,
-                        form="erf",
-                    )
+                val += step(
+                    x=x,
+                    amplitude=amplitude,
+                    center=center,
+                    sigma=sigma,
+                    form="erf",
                 )
         if "atan" in mode:
             if "center" in mode:
@@ -422,14 +444,12 @@ def model(params: dict, x: np.array, data):
                 sigma = params[mode]
             if "amplitude" in mode:
                 amplitude = params[mode]
-                val += np.nan_to_num(
-                    step(
-                        x=x,
-                        amplitude=amplitude,
-                        center=center,
-                        sigma=sigma,
-                        form="atan",
-                    )
+                val += step(
+                    x=x,
+                    amplitude=amplitude,
+                    center=center,
+                    sigma=sigma,
+                    form="atan",
                 )
         if "log" in mode:
             if "center" in mode:
@@ -438,14 +458,12 @@ def model(params: dict, x: np.array, data):
                 sigma = params[mode]
             if "amplitude" in mode:
                 amplitude = params[mode]
-                val += np.nan_to_num(
-                    step(
-                        x=x,
-                        amplitude=amplitude,
-                        center=center,
-                        sigma=sigma,
-                        form="logistic",
-                    )
+                val += step(
+                    x=x,
+                    amplitude=amplitude,
+                    center=center,
+                    sigma=sigma,
+                    form="logistic",
                 )
     return val - data
 
@@ -620,7 +638,7 @@ def plot(x, y, final, result, args):
                 index += 1
                 # printf(tmp,x, val,'Voigt',index,cen,amp,0,0,fwh=fwh,gam=gamma,0,0,0,0,0)
 
-        if "pvoigt" in mode:
+        if "pseudovoigt" in mode:
             if "cen" in mode:
                 cen = result.params[mode]
             if "amp" in mode:
@@ -629,7 +647,7 @@ def plot(x, y, final, result, args):
                 fwg = result.params[mode]
             if "fwl" in mode:
                 fwl = result.params[mode]
-                val = np.nan_to_num(pvoigt(x, amp, cen, fwg, fwl))
+                val = np.nan_to_num(pseudovoigt(x, amp, cen, fwg, fwl))
                 plt.plot(x, val, color="C9", ls=":")
                 out.append(val)
                 # Exporting
@@ -1175,10 +1193,10 @@ def voigt(
     return wofz(z).real / (sigma * Constants.sq2pi)
 
 
-# def pvoigt(x, amplitude=1.0, center=0.0, sigma=1.0, fraction=0.5):
+# def pseudovoigt(x, amplitude=1.0, center=0.0, sigma=1.0, fraction=0.5):
 #    """Return a 1-dimensional pseudo-Voigt function.
 #
-#    pvoigt(x, amplitude, center, sigma, fraction) =
+#    pseudovoigt(x, amplitude, center, sigma, fraction) =
 #       amplitude*(1-fraction)*gaussion(x, center, sigma_g) +
 #       amplitude*fraction*lorentzian(x, center, sigma)
 #
@@ -1195,7 +1213,7 @@ def voigt(
 #            fraction*lorentzian(x, amplitude, center, sigma))
 
 
-def pvoigt(
+def pseudovoigt(
     x: np.array,
     amplitude: float = 1.0,
     center: float = 0.0,
@@ -1252,13 +1270,13 @@ def linear(x: np.array, slope: float = 1.0, intercept: float = 0.0) -> np.array:
     return slope * x + intercept
 
 
-def const(x: np.array, c: float) -> np.array:
+def constant(x: np.array, amplitude: float = 1.0) -> np.array:
     """Return a cosntant function.
 
     x -> constant
 
     """
-    return np.linspace(c, c, len(x))
+    return np.linspace(amplitude, amplitude, len(x))
 
 
 def step(

@@ -1,22 +1,22 @@
 {
+  "settings": {
+    "column": [0, 1],
+    "decimal": ".",
+    "disp": false,
+    "energy_value": null,
+    "energy_stop": null,
+    "header": null,
+    "infile": "spectrafit/test/rixs_fecl4.txt",
+    "input": "fitting_input.toml",
+    "outfile": "",
+    "oversampling": false,
+    "seperator": "\t",
+    "shift": 0,
+    "smooth": 0,
+    "verbose": false,
+    "version": false
+  },
   "fitting": {
-    "settings": {
-      "column": [0, 1],
-      "decimal": ".",
-      "disp": false,
-      "energy_value": null,
-      "energy_stop": null,
-      "header": null,
-      "infile": "spectrafit/test/rixs_fecl4.txt",
-      "input": "fitting_input.toml",
-      "outfile": "",
-      "oversampling": false,
-      "seperator": "\t",
-      "shift": 0,
-      "smooth": 0,
-      "verbose": true,
-      "version": false
-    },
     "description": {
       "project_name": "Template",
       "project_details": "Template for testing",
@@ -29,12 +29,14 @@
       ]
     },
     "parameters": {
-      "max_nfev": 1000,
-      "method": "leastsq"
+      "minimizer": {
+        "nan_policy": "propagate"
+      },
+      "optimizer": { "max_nfev": 1000, "method": "powell" }
     },
     "peaks": {
       "1": {
-        "pvoigt": {
+        "pseudovoigt": {
           "amplitude": {
             "max": 2,
             "min": 0.01,
@@ -62,7 +64,7 @@
         }
       },
       "2": {
-        "pvoigt": {
+        "pseudovoigt": {
           "amplitude": {
             "max": 2,
             "min": 0.01,
@@ -91,7 +93,7 @@
       },
       "3": {
         "constant": {
-          "level": {
+          "amplitude": {
             "max": 2,
             "min": 0.01,
             "vary": true,

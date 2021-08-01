@@ -1,36 +1,37 @@
+---
+settings:
+  column:
+  - 0
+  - 1
+  decimal: "."
+  disp: false
+  energy_value:
+  energy_stop:
+  header:
+  infile: spectrafit/test/rixs_fecl4.txt
+  input: fitting_input.toml
+  outfile: ''
+  oversampling: false
+  seperator: "\t"
+  shift: 0
+  smooth: 0
+  verbose: true
+  version: false
 fitting:
-  settings:
-    column:
-      - 0
-      - 1
-    decimal: "."
-    disp: false
-    energy_value:
-    energy_stop:
-    header:
-    infile: spectrafit/test/rixs_fecl4.txt
-    input: fitting_input.toml
-    outfile: ""
-    oversampling: false
-    seperator: "\t"
-    shift: 0
-    smooth: 0
-    verbose: true
-    version: false
   description:
     project_name: Template
     project_details: Template for testing
     keywords:
-      - 2D-Spectra
-      - fitting
-      - curve-fitting
-      - peak-fitting
-      - spectrum
+    - 2D-Spectra
+    - fitting
+    - curve-fitting
+    - peak-fitting
+    - spectrum
   parameters:
     max_nfev: 1000
     method: leastsq
   peaks:
-    "1":
+    '1':
       pvoigt:
         amplitude:
           max: 2
@@ -52,7 +53,7 @@ fitting:
           min: 0.02
           vary: true
           value: 0.01
-    "2":
+    '2':
       pvoigt:
         amplitude:
           max: 2
@@ -74,7 +75,7 @@ fitting:
           min: 0.02
           vary: true
           value: 0.01
-    "3":
+    '3':
       constant:
         level:
           max: 2

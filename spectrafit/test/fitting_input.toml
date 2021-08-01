@@ -1,5 +1,5 @@
-[fitting.settings]
-column = [0, 1]
+[settings]
+column = [ 0, 1 ]
 decimal = "."
 disp = false
 infile = "spectrafit/test/rixs_fecl4.txt"
@@ -16,11 +16,11 @@ version = false
 project_name = "Template"
 project_details = "Template for testing"
 keywords = [
-    "2D-Spectra",
-    "fitting",
-    "curve-fitting",
-    "peak-fitting",
-    "spectrum"
+  "2D-Spectra",
+  "fitting",
+  "curve-fitting",
+  "peak-fitting",
+  "spectrum"
 ]
 
 [fitting.parameters]
