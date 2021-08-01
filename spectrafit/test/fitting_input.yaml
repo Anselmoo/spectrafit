@@ -27,7 +27,7 @@ fitting:
       - peak-fitting
       - spectrum
   parameters:
-    maxiter: 1000
+    max_nfev: 1000
     method: leastsq
   peaks:
     "1":

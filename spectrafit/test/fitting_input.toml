@@ -24,7 +24,7 @@ keywords = [
 ]
 
 [fitting.parameters]
-maxiter = 1_000
+max_nfev = 1_000
 method = "leastsq"
 
 [fitting.peaks.1.pvoigt.amplitude]
