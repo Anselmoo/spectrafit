@@ -6,16 +6,24 @@ readme = "README.md"
 authors = ["ahahn <Anselm.Hahn@cec.mpg.de>"]
 license = "MIT"
 repository = "https://gitlab.gwdg.de/RIXSTools/spectrafit"
-keywords = ["2D-Spectra", "fitting", "curve-fitting", "peak-fitting", "spectrum"]
-classifiers = ["Development Status :: 3 - Alpha",
-               "Intended Audience :: Science/Research",
-               "License :: OSI Approved :: MIT License",
-               "Operating System :: OS Independent",
-               "Programming Language :: Python :: 3.7",
-               "Programming Language :: Python :: 3.8",
-               "Programming Language :: Python :: 3.9",
-               "Topic :: Scientific/Engineering :: Physics",
-               "Topic :: Scientific/Engineering :: Chemistry"]
+keywords = [
+    "2D-Spectra",
+    "fitting",
+    "curve-fitting",
+    "peak-fitting",
+    "spectrum"
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Topic :: Scientific/Engineering :: Physics",
+    "Topic :: Scientific/Engineering :: Chemistry"
+]
 include = ["Examples/"]
 
 [tool.poetry.dependencies]
@@ -36,7 +44,7 @@ pylama = "^7.7.1"
 flake8 = "^3.9.2"
 pylint = "^2.9.5"
 mypy = "^0.910"
-black = {version = "^21.7b0", allow-prereleases = true}
+black = { version = "^21.7b0", allow-prereleases = true }
 isort = "^5.9.2"
 pytest = "^6.2.4"
 pytest-clarity = "^1.0.1"
@@ -50,3 +58,35 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
 spectrafit = "spectrafit.spectrafit:command_line_runner"
+
+[tool.isort]
+profile = "black"
+force_single_line = true
+atomic = true
+include_trailing_comma = true
+lines_after_imports = 2
+lines_between_types = 1
+use_parentheses = true
+src_paths = ["poetry", "tests"]
+skip_glob = ["*/setup.py"]
+filter_files = true
+known_first_party = "poetry"
+
+[tool.black]
+line-length = 88
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+  | tests/.*/setup.py
+)/
+'''
