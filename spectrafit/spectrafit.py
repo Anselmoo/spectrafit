@@ -88,14 +88,14 @@ def get_args() -> dict:
         "-s",
         "--smooth",
         type=int,
-        default=0,
+        default=None,
         help="Number of smooth points for lmfit; default to 0.",
     )
     parser.add_argument(
         "-sh",
         "--shift",
         type=float,
-        default=0.0,
+        default=None,
         help="Constant applied energy shift; default to 0.0.",
     )
     parser.add_argument(
@@ -186,8 +186,12 @@ def command_line_runner(args: dict = None) -> None:
         if "settings" in _args["fitting"].keys():
             for key in _args["fitting"]["settings"].keys():
                 args[key] = _args["fitting"]["settings"][key]
-        parameters = _args["fitting"]["parameters"]
-        peaks = _args["fitting"]["peaks"]
+        if "description" in _args["fitting"].keys():
+            args["description"] = _args["fitting"]["description"]
+        if "parameters" in _args["fitting"].keys():
+            args["parameters"] = _args["fitting"]["parameters"]
+        if "peaks" in _args["fitting"].keys():
+            args["peaks"] = _args["fitting"]["peaks"]
 
     if args["version"]:
         print(f"Currently used verison is: {__version__}")
@@ -205,6 +209,7 @@ def command_line_runner(args: dict = None) -> None:
             decimal=args["decimal"],
         )
         df_stats = df.describe(percentiles=np.arange(0.1, 1, 0.1)).to_dict()
+        df_original = df.to_dict()
     except ValueError as exc:
         print(f"Error: {exc} -> Dataframe contains non numeric data!")
         return
@@ -219,39 +224,35 @@ def command_line_runner(args: dict = None) -> None:
             return
         elif again == "y":
             print("Lets start fitting ...")
-
+            fitting_routine(df=df, args=args)
         else:
             print('You should enter either "y" or "n".')
 
 
-def fitting_routine(args: dict = None) -> None:
+def fitting_routine(df: pd.DataFrame, args: dict) -> None:
 
     # try:
-    guess = pd.read_csv("guess.parm", sep=";\s+", engine="python", comment="#")
-    # copy_guess("guess.parm", args.outfile + ".parm")
-    # guess = np.genfromtxt('guess.parm',dtype=str)
-    # print "Input guess is:"
-    # print "En\tA\tG\tL miE miA miG miL maEn maA maG maL"
-    params = init(guess)
-    if args.energy_start != args.energy_stop:
-        x0, x1 = np.argmin(np.abs(df[:, 0] - args.energy_start)), np.argmin(
-            np.abs(df[:, 0] - args.energy_stop)
-        )
-        x, y = df[x0:x1, 0] - args.shift, df[x0:x1, args.column]  # - args.b
-    else:
-        x, y = df[:, 0] - args.shift, df[:, args.column]  # - args.b
-    y = smooth(y, args.s)
-    x, y = oversampling(x, y, args.ov)
-    minner = Minimizer(model, params, fcn_args=(x, y), iter_cb=20000)
-    # kws = {"options": {"maxiter": 2000}}
+
+    df = energy_range(df=df, args=args)
+    df = energy_shift(df=df, args=args)
+    df = oversampling(df=df, args=args)
+    df = intensity_smooth(df=df, args=args)
+
+    params = get_parameters(args=args)
+    minner = Minimizer(
+        model,
+        params,
+        fcn_args=(df[args["column"][0]].values, df[args["column"][1]].values),
+    )
+    #
     # try:
-    result = minner.minimize()
+    result = minner.minimize(**args["parameters"])
     # except ValueError:
     #    print "Input error in guess.parm"
-    final = y + result.residual
+    # final = y + result.residual
     # print result.init_fit
     # report_fit(result)
-    plot(x, y, final, result, args)
+    # plot(x, y, final, result, args)
     # except IOError:
     #    print "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
     #    print "!!!!No Inputfile guess.parm for Fits!!!!"
@@ -260,31 +261,171 @@ def fitting_routine(args: dict = None) -> None:
     #    pass
 
 
-def oversampling(x, y, mode: bool):
-    if mode:
-        xvals = np.linspace(min(x), max(x), 5 * len(x))
-        yinterp = np.interp(xvals, x, y)
-    else:
-        xvals = x
-        yinterp = y
+def get_parameters(args: dict) -> dict:
 
-    return xvals, yinterp
+    params = Parameters()
 
-
-def copy_guess(inp, out):
-    with open(inp, "r") as f:
-        lines = f.readlines()
-        lines = [l for l in lines]
-        with open(out, "w+") as f1:
-            f1.writelines(lines)
+    for key_1, value_1 in args["peaks"].items():
+        for key_2, value_2 in value_1.items():
+            for key_3, value_3 in value_2.items():
+                params.add(f"{key_2}_{key_3}_{key_1}", **value_3)
+    return params
 
 
-def smooth(y, box_pts: int):
-    if box_pts == 0:
-        return y
+def model(params: dict, x: np.array, data):
+    """
+    Here is the model function, where all
+    init params will read and add to the model
 
-    box = np.ones(box_pts) / box_pts
-    return np.convolve(y, box, mode="same")
+    """
+    val = 0.0
+    for i, mode in enumerate(params):
+        mode = mode.lower()
+        if "gaus" in mode:
+            if "cen" in mode:
+                cen = params[mode]
+            if "amp" in mode:
+                amp = params[mode]
+            if "fwg" in mode:
+                fwg = params[mode]
+                val += np.nan_to_num(gaussian(x, amp, cen, fwg))
+        if "lorz" in mode:
+            if "cen" in mode:
+                cen = params[mode]
+            if "amp" in mode:
+                amp = params[mode]
+            if "fwl" in mode:
+                fwl = params[mode]
+                val += np.nan_to_num(lorentzian(x, amp, cen, fwl))
+        if "voigt" in mode:
+            if "cen" in mode:
+                cen = params[mode]
+            if "fwh" in mode:
+                fwh = params[mode]
+            # elif 'amp' in mode: amp   = params[mode]
+            if "gam" in mode:
+                gamma = params[mode]
+                val += np.nan_to_num(voigt(x, cen, fwh, gamma))
+        if "pvoigt" in mode:
+            if "center" in mode:
+                center = params[mode]
+            if "amp" in mode:
+                amplitude = params[mode]
+            if "fwhm_gaussian" in mode:
+                fwhm_gaussian = params[mode]
+            if "fwhm_lorentzian" in mode:
+                fwhm_lorentzian = params[mode]
+                val += np.nan_to_num(
+                    pvoigt(x, amplitude, center, fwhm_gaussian, fwhm_lorentzian)
+                )
+        if "expo" in mode:
+            if "dec" in mode:
+                decay = params[mode]
+            if "amp" in mode:
+                amp = params[mode]
+            if "con" in mode:
+                inter = params[mode]
+                val += np.nan_to_num(exponential(x, amp, decay, inter))
+        if "powr" in mode:
+            if "ord" in mode:
+                expo = params[mode]
+            if "con" in mode:
+                inter = params[mode]
+                val += np.nan_to_num(powerlaw(x, amp, expo, inter))
+        if "linr" in mode:
+            if "slp" in mode:
+                slope = params[mode]
+            if "con" in mode:
+                inter = params[mode]
+                val += np.nan_to_num(linear(x, slope, inter))
+        if "constant" in mode and "con" in mode:
+            c = params[mode]
+            val += np.nan_to_num(const(x, c))
+        # elif 'stpl' in mode:
+        #    if 'cen' in mode: cen  = params[mode]
+        #    elif 'sig' in mode:
+        #        sig   = params[mode]
+        #        val += np.nan_to_num(step(x, cen, sig, form='linear'))
+        if "erf" in mode:
+            if "cen" in mode:
+                cen = params[mode]
+            if "sig" in mode:
+                sig = params[mode]
+            if "amp" in mode:
+                amp = params[mode]
+                val += np.nan_to_num(step(x, amp, cen, sig, form="erf"))
+        if "atan" in mode:
+            if "cen" in mode:
+                cen = params[mode]
+            if "sig" in mode:
+                sig = params[mode]
+            if "amp" in mode:
+                amp = params[mode]
+                val += np.nan_to_num(step(x, amp, cen, sig, form="atan"))
+        if "log" in mode:
+            if "cen" in mode:
+                cen = params[mode]
+            if "sig" in mode:
+                sig = params[mode]
+            if "amp" in mode:
+                amp = params[mode]
+                val += np.nan_to_num(step(x, amp, cen, sig, form="atan"))
+    print(val, data)
+    return val - data
+
+
+def energy_range(df: pd.DataFrame, args: dict) -> pd.DataFrame:
+    """
+    Select the energy range for fitting.
+    """
+
+    _e0 = args["energy_start"]
+    _e1 = args["energy_stop"]
+
+    if _e0 and _e1:
+        return df[(df[args["column"][0]] >= _e0) & (df[args["column"][0]] <= _e1)]
+    elif _e0:
+        return df[df[args["column"][0]] >= _e0]
+    elif _e1:
+        return df[df[args["column"][0]] <= _e1]
+    return df
+
+
+def energy_shift(df: pd.DataFrame, args: dict) -> pd.DataFrame:
+    """
+    Shift the energy axis by a given value.
+    """
+    if args["shift"]:
+        df[args["column"][0]] = df[args["column"][0]] - args["shift"]
+        return df
+    return df
+
+
+def oversampling(df: pd.DataFrame, args: dict) -> pd.DataFrame:
+    if args["oversampling"]:
+        x_values = np.linspace(
+            df[args["column"][0]].min(), df[args["column"][0]].max(x), 5 * df.shape[0]
+        )
+        return pd.DataFrame(
+            {
+                args["column"][0]: x_values,
+                args["column"][1]: np.interp(
+                    x_values, df[args["column"][0]].values, df[args["column"][1]].values
+                ),
+            }
+        )
+    return df
+
+
+def intensity_smooth(df: pd.DataFrame, args: dict) -> pd.DataFrame:
+
+    if args["smooth"]:
+        box = np.ones(args["smooth"]) / args["smooth"]
+        df[args["column"][1]] = np.convolve(
+            df[args["column"][1]].values, box, mode="same"
+        )
+        return df
+    return df
 
 
 def plot(x, y, final, result, args):
@@ -891,100 +1032,6 @@ def excle(filename, file):
     # writer.save()
 
 
-"""def printh(file,detail=False):
-    if detail:
-        print '----- \t\t ----- \t\t ------ \t\t --------- \t\t ---- \t\t ---- \t\t ----- \t\t ----- \t\t --- \t\t ----- \t\t --------'
-        print 'Model \t\t Count \t\t Energy \t\t Amplitude \t\t FWHM \t\t FRAC \t\t Gamma \t\t Slope \t\t Cut \t\t Decay \t\t Exponent'
-        print '----- \t\t ----- \t\t ------ \t\t --------- \t\t ---- \t\t ---- \t\t ----- \t\t ----- \t\t --- \t\t ----- \t\t --------\n'
-        print >>file,'----- \t\t ----- \t\t ------ \t\t --------- \t\t ---- \t\t ---- \t\t ----- \t\t ----- \t\t --- \t\t ----- \t\t --------'
-        print >>file,'Model \t\t Count \t\t Energy \t\t Amplitude \t\t FWHM \t\t FRAC \t\t Gamma \t\t Slope \t\t Cut \t\t Decay \t\t Exponent'
-        print >>file,'----- \t\t ----- \t\t ------ \t\t --------- \t\t ---- \t\t ---- \t\t ----- \t\t ----- \t\t --- \t\t ----- \t\t --------\n'
-    else:
-        print 'Model \t\t Count \t\t Energy \t\t Amp \t\t Area \t\t FWHM (GAUSSIAN) \t\t FWHM (LORENTZ) \t\t FWHM (VOIGT) \t\t Fraction \t\t Decay \t\t Power \t\t Slope \t\t Constant \t\t Signum'
-        print '----- \t\t ----- \t\t ------ \t\t --- \t\t ---- \t\t --------------- \t\t -------------- \t\t ------------ \t\t -------- \t\t ----- \t\t ----- \t\t ----- \t\t -------- \t\t ------'
-        print >>file,'Model \t\t Count \t\t Energy \t\t Amp \t\t Area \t\t FWHM (GAUSSIAN) \t\t FWHM (LORENTZ) \t\t FWHM (VOIGT) \t\t Fraction \t\t Decay \t\t Power \t\t Slope \t\t Constant \t\t Signum'
-        print >>file,'----- \t\t ----- \t\t ------ \t\t --- \t\t ---- \t\t --------------- \t\t -------------- \t\t ------------ \t\t -------- \t\t ----- \t\t ----- \t\t ----- \t\t -------- \t\t ------'
-        """
-
-"""def printf(file,x,y,model,index,0,0,0,0,0,0,0,0,0,0,0):
-    index = '\t\t'+str(index)
-
-    area = np.trapz(y,x)
-    #print(cen.__dict__)
-    #print str(np.round(cen._val,4)) +' +/- ' + str(cen.stderr)
-    if not (fwg  is None) and not (fwl  is None):
-        f, n             = pv_cof(fwg._val,fwl._val)
-        f_error, n_error = pv_cof(fwg.stderr,fwl.stderr)
-
-        fwh = str(np.round(f,4)) +' +/- ' + str(np.round(f_error,4))
-        gam = str(np.round(n,4)) +' +/- ' + str(np.round(n_error,4))
-    elif not (fwh  is None) and not (gam  is None):
-        fwh = str(np.round(fwh._val,4)) +' +/- ' + str(np.round(fwh.stderr,4))
-        gam = str(np.round(gam._val,4)) +' +/- ' + str(np.round(gam.stderr,4))
-    if not (cen  is None): cen = str(np.round(cen._val,4)) +' +/- ' + str(np.round(cen.stderr,4))
-    if not (amp  is None): amp = str(np.round(amp._val,4)) +' +/- ' + str(np.round(amp.stderr,4))
-    if not (fwg  is None): fwg = str(np.round(fwg._val,4)) +' +/- ' + str(np.round(fwg.stderr,4))
-    if not (fwl  is None): fwl = str(np.round(fwl._val,4)) +' +/- ' + str(np.round(fwl.stderr,4))
-    if not (dec  is None): dec = str(np.round(dec._val,4)) +' +/- ' + str(np.round(dec.stderr,4))
-    if not (exp  is None): exp = str(np.round(exp._val,4)) +' +/- ' + str(np.round(exp.stderr,4))
-    if not (slp  is None): slp = str(np.round(slp._val,4)) +' +/- ' + str(np.round(slp.stderr,4))
-    if not (con  is None): con = str(np.round(con._val,4)) +' +/- ' + str(np.round(con.stderr,4))
-    if not (sig  is None): sig = str(np.round(sig._val,4)) +' +/- ' + str(np.round(sig.stderr,4))
-
-    #f = np.power(fwhm_g**5 +2.69269*fwhm_g**4*fwhm_l+2.42843*fwhm_g**3*fwhm_l**2+
-    #             4.47163*fwhm_g**2*fwhm_l**3+0.07842*fwhm_g*fwhm_l**4+fwhm_l**5,0.25)
-    #
-    #if detail:
-    #    print  model,     index,      eng         ,amp          ,sig       ,fra     ,gam        ,slp      ,cut     ,dec       ,exp
-    sp = '\t\t'
-
-
-
-    print  model,index,sp,cen,sp,amp,sp,area,sp,fwg,sp,fwl,sp,fwh,sp,gam,sp,dec,sp,exp,sp,slp,sp,con,sp,sig
-    print  >>file,model,sp,index,sp,cen,sp,amp,sp,area,sp,fwg,sp,fwl,sp,fwh,sp,gam,sp,dec,sp,exp,sp,slp,sp,con,sp,sig"""
-
-
-"""
-def high_res(x,final,result,filename):
-    x = np.linspace(min(x),max(x),2000)
-    out = []
-    y = 0.
-    for i,index in enumerate(range(0,len(result.params),4)):
-        amp   = result.params['amp_'+str(i)].value
-        x0    = result.params['x0_'+str(i)].value
-        fwhmG = result.params['fwhmG_'+str(i)].value
-        fwhmL = result.params['fwhmL_'+str(i)].value
-        tmp_y = amp* psVoigt( x, x0, fwhmG, fwhmL)
-        out.append(tmp_y)
-        y += tmp_y
-    export =  filename[0].split('.')[0]+'.dat'
-    out.append(x)
-    out.append(y)
-    np.savetxt(export,np.transpose(out),delimiter='\t')
-"""
-"""
-def psVoigt( x, x0, fwhmG, fwhmL):
-
-    #PSVOIGT This is a psuedo voigt function
-    #   This is programmed according to wikipidia and they cite:
-    #   Ida, T and Ando, M and Toraya, H (2000).
-    #"Extended pseudo-Voigt function for approximating the Voigt profile".
-    #Journal of Applied Crystallography 33 (6): 1311-1316.
-
-
-
-    f = np.power(fwhmG**5 +2.69269*fwhmG**4*fwhmL+2.42843*fwhmG**3*fwhmL**2+
-                 4.47163*fwhmG**2*fwhmL**3+0.07842*fwhmG*fwhmL**4+fwhmL**5,0.25)
-    n = 1.36603*(fwhmL/f) - 0.47719*(fwhmL/f)**2 +0.11116*(fwhmL/f)**3
-    return n* fn_lorentz(x,x0,fwhmL)+ (1-n)*fn_gauss(x,x0,fwhmG)
-def fn_gauss(x,x0,fwhmG):
-    c2 = np.power(fwhmG/(2*np.sqrt(2*np.log(2))),2)
-    return  1.*np.exp(-0.5*(x - x0)**2/c2)
-def fn_lorentz(x,x0,fwhmL):
-    return  1/np.pi*0.5*fwhmL/(np.power((x-x0),2)+np.power((0.5*fwhmL),2))
-"""
-
-
 def pv_cof(fwhm_g, fwhm_l):
     """
     Calculating the effectiv fwhm of the pseudo voigt profile and the fraction coefficient for n
@@ -1010,11 +1057,11 @@ def gaussian(x, amplitude=1.0, center=0.0, fwhm=1.0):
     """Return a 1-dimensional Gaussian function.
 
     gaussian(x, amplitude, center, sigma) =
-        (amplitude/(s2pi*sigma)) * exp(-(1.0*x-center)**2 / (2*sigma**2))
+        (amplitude/(sq2pi*sigma)) * exp(-(1.0*x-center)**2 / (2*sigma**2))
 
     """
-    sigma = fwhm / sig2fwhm
-    return (amplitude / (s2pi * sigma)) * np.exp(
+    sigma = fwhm / Constants.sig2fwhm
+    return (amplitude / (Constants.sq2pi * sigma)) * np.exp(
         -((1.0 * x - center) ** 2) / (2 * sigma ** 2)
     )
 
@@ -1034,7 +1081,7 @@ def voigt(x, center=0.0, fwhm=1.0, gamma=None):
     """Return a 1-dimensional Voigt function.
 
     voigt(x, amplitude, center, sigma, gamma) =
-        amplitude*wofz(z).real / (sigma*s2pi)
+        amplitude*wofz(z).real / (sigma*sq2pi)
 
     see http://en.wikipedia.org/wiki/Voigt_profile
 
@@ -1042,8 +1089,8 @@ def voigt(x, center=0.0, fwhm=1.0, gamma=None):
     sigma = fwhm / 3.60131
     if gamma is None:
         gamma = sigma
-    z = (x - center + 1j * gamma) / (sigma * s2)
-    return wofz(z).real / (sigma * s2pi)
+    z = (x - center + 1j * gamma) / (sigma * Constants.s2)
+    return wofz(z).real / (sigma * Constants.sq2pi)
 
 
 # def pvoigt(x, amplitude=1.0, center=0.0, sigma=1.0, fraction=0.5):
@@ -1146,168 +1193,9 @@ def step(x, amplitude=1.0, center=0.0, sigma=1.0, form="linear"):
     elif form in ("atan", "arctan"):
         out = 0.5 + np.arctan(out) / np.pi
     else:
-        out[where(out < 0)] = 0.0
-        out[where(out > 1)] = 1.0
+        out[np.where(out < 0)] = 0.0
+        out[np.where(out > 1)] = 1.0
     return amplitude * out
-
-
-def model(params, x, data):
-    """
-    Here is the model function, where all
-    init params will read and add to the model
-
-    """
-    val = 0.0
-    for i, mode in enumerate(params):
-        mode = mode.lower()
-        if "gaus" in mode:
-            if "cen" in mode:
-                cen = params[mode]
-            if "amp" in mode:
-                amp = params[mode]
-            if "fwg" in mode:
-                fwg = params[mode]
-                val += np.nan_to_num(gaussian(x, amp, cen, fwg))
-        if "lorz" in mode:
-            if "cen" in mode:
-                cen = params[mode]
-            if "amp" in mode:
-                amp = params[mode]
-            if "fwl" in mode:
-                fwl = params[mode]
-                val += np.nan_to_num(lorentzian(x, amp, cen, fwl))
-        if "voigt" in mode:
-            if "cen" in mode:
-                cen = params[mode]
-            if "fwh" in mode:
-                fwh = params[mode]
-            # elif 'amp' in mode: amp   = params[mode]
-            if "gam" in mode:
-                gamma = params[mode]
-                val += np.nan_to_num(voigt(x, cen, fwh, gamma))
-        if "pvoigt" in mode:
-            if "cen" in mode:
-                cen = params[mode]
-            if "amp" in mode:
-                amp = params[mode]
-            if "fwg" in mode:
-                fwg = params[mode]
-            if "fwl" in mode:
-                fwl = params[mode]
-                val += np.nan_to_num(pvoigt(x, amp, cen, fwg, fwl))
-        if "expo" in mode:
-            if "dec" in mode:
-                decay = params[mode]
-            if "amp" in mode:
-                amp = params[mode]
-            if "con" in mode:
-                inter = params[mode]
-                val += np.nan_to_num(exponential(x, amp, decay, inter))
-        if "powr" in mode:
-            if "ord" in mode:
-                expo = params[mode]
-            if "con" in mode:
-                inter = params[mode]
-                val += np.nan_to_num(powerlaw(x, amp, expo, inter))
-        if "linr" in mode:
-            if "slp" in mode:
-                slope = params[mode]
-            if "con" in mode:
-                inter = params[mode]
-                val += np.nan_to_num(linear(x, slope, inter))
-        if "cons" in mode and "con" in mode:
-            c = params[mode]
-            val += np.nan_to_num(const(x, c))
-        # elif 'stpl' in mode:
-        #    if 'cen' in mode: cen  = params[mode]
-        #    elif 'sig' in mode:
-        #        sig   = params[mode]
-        #        val += np.nan_to_num(step(x, cen, sig, form='linear'))
-        if "erf" in mode:
-            if "cen" in mode:
-                cen = params[mode]
-            if "sig" in mode:
-                sig = params[mode]
-            if "amp" in mode:
-                amp = params[mode]
-                val += np.nan_to_num(step(x, amp, cen, sig, form="erf"))
-        if "atan" in mode:
-            if "cen" in mode:
-                cen = params[mode]
-            if "sig" in mode:
-                sig = params[mode]
-            if "amp" in mode:
-                amp = params[mode]
-                val += np.nan_to_num(step(x, amp, cen, sig, form="atan"))
-        if "log" in mode:
-            if "cen" in mode:
-                cen = params[mode]
-            if "sig" in mode:
-                sig = params[mode]
-            if "amp" in mode:
-                amp = params[mode]
-                val += np.nan_to_num(step(x, amp, cen, sig, form="atan"))
-    return val - data
-
-
-def init(guess):
-    params = Parameters()
-    func = []
-    len_row = len(guess.axes[0])
-    len_col = len(guess.axes[1])
-    # index = 0
-
-    Name = np.array(guess.get("Name"))
-    Value = np.array(guess.get("Value"))
-    Vary = np.array(guess.get("Vary"))
-    Min = np.array(guess.get("Min"))
-    Max = np.array(guess.get("Max"))
-    Expr = np.array(guess.get("Expr"))
-
-    func = [i.lower() for i in np.array(guess.get("Type"))]
-
-    for i, mode in enumerate(func):
-        if Expr[i].lower() == "none":
-            Expr[i] = None
-        if (np.isnan(Min[i]) == True) and (np.isnan(Max[i]) != True):
-            params.add(
-                Name[i] + "_" + mode,
-                value=Value[i],
-                vary=Vary[i],
-                min=None,
-                max=Max[i],
-                expr=Expr[i],
-            )
-        elif (np.isnan(Min[i]) != True) and (np.isnan(Max[i]) == True):
-            params.add(
-                Name[i] + "_" + mode,
-                value=Value[i],
-                vary=Vary[i],
-                min=Min[i],
-                max=None,
-                expr=Expr[i],
-            )
-        elif (np.isnan(Min[i]) == True) and (np.isnan(Max[i]) == True):
-            params.add(
-                Name[i] + "_" + mode,
-                value=Value[i],
-                vary=Vary[i],
-                min=None,
-                max=None,
-                expr=Expr[i],
-            )
-        else:
-            params.add(
-                Name[i] + "_" + mode,
-                value=Value[i],
-                vary=Vary[i],
-                min=Min[i],
-                max=Max[i],
-                expr=Expr[i],
-            )
-
-    # TypeError
-    return params
 
 
 if __name__ == "__main__":
