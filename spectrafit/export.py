@@ -111,7 +111,6 @@ def fit_report_as_dict(
                     "    with this fitting method."
                 )
 
-    add("[[Variables]]")
     for name in parnames:
         par = params[name]
         add["variables"][name] = {}
