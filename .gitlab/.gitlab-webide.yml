@@ -1,7 +1,7 @@
 terminal:
   # This can be any image that has the necessary runtime environment for your project.
   image:
-    name: 3.8-alpine
+    name: python:3.8-slim-buster
   services:
     - name: registry.gitlab.com/gitlab-org/webide-file-sync:latest
       alias: webide-file-sync
