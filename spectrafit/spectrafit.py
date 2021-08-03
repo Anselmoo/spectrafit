@@ -17,6 +17,7 @@ from lmfit import Parameters
 from lmfit import conf_interval
 from lmfit import fit_report
 from lmfit import minimize
+from lmfit import printfuncs
 from matplotlib.ticker import AutoMinorLocator
 from matplotlib.widgets import Cursor
 from scipy.special import erf
@@ -247,7 +248,7 @@ def fitting_routine(df: pd.DataFrame, args: dict) -> None:
     df = intensity_smooth(df=df, args=args)
 
     params = get_parameters(args=args)
-    minner = Minimizer(
+    mini = Minimizer(
         model,
         params,
         fcn_args=(df[args["column"][0]].values, df[args["column"][1]].values),
@@ -255,32 +256,36 @@ def fitting_routine(df: pd.DataFrame, args: dict) -> None:
     )
     #
     # try:
-    result = minner.minimize(**args["optimizer"])
+    result = mini.minimize(**args["optimizer"])
+    print(result.init_vals)
     # print(result.params.dumps())
-    print(
-        result.nfev,
-        result.nvarys,
-        result.nfree,
-        result.residual,
-        result.ndata,
-        result.chisqr,
-        result.redchi,
-        result.aic,
-        result.bic,
-        result.var_names,
-        # result.covar,
-        result.init_vals,
-        result.call_kws,
-    )
-
+    # print(
+    #    result.nfev,
+    #    result.nvarys,
+    #    result.nfree,
+    #    result.residual,
+    #    result.ndata,
+    #    result.chisqr,
+    #    result.redchi,
+    #    result.aic,
+    #    result.bic,
+    #    result.var_names,
+    #    # result.covar,
+    #    result.init_vals,
+    #    result.call_kws,
+    # )
+    # print(result.params.values())
+    # print(result.covar)
+    if args["verbose"]:
+        printfuncs.report_ci(conf_interval(mini, result))
     # print(result.errorbars)
-
     # print(dict(vars(result)))
     # except ValueError:
     #    print "Input error in guess.parm"
     # final = y + result.residual
     # print result.init_fit
-    # report_fit(result)
+    # print(fit_report(result, result.params))
+    # conf_interval(mini, result)
     # plot(x, y, final, result, args)
     # except IOError:
     #    print "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"

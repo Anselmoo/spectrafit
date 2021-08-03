@@ -29,9 +29,7 @@
       ]
     },
     "parameters": {
-      "minimizer": {
-        "nan_policy": "propagate"
-      },
+      "minimizer": { "nan_policy": "propagate", "calc_covar": true },
       "optimizer": { "max_nfev": 1000, "method": "powell" }
     },
     "peaks": {
@@ -39,25 +37,25 @@
         "pseudovoigt": {
           "amplitude": {
             "max": 2,
-            "min": 0.01,
+            "min": 0,
             "vary": true,
             "value": 1
           },
           "center": {
-            "max": 0,
-            "min": 1,
+            "max": 2,
+            "min": -2,
             "vary": true,
             "value": 0
           },
           "fwhm_gaussian": {
-            "max": 0.01,
+            "max": 0.10,
             "min": 0.02,
             "vary": true,
             "value": 0.01
           },
           "fwhm_lorentzian": {
-            "max": 0.01,
-            "min": 0.02,
+            "max": 0.1,
+            "min": 0.01,
             "vary": true,
             "value": 0.01
           }
@@ -67,25 +65,25 @@
         "pseudovoigt": {
           "amplitude": {
             "max": 2,
-            "min": 0.01,
+            "min": 0,
             "vary": true,
             "value": 1
           },
           "center": {
-            "max": 0,
-            "min": 1,
+            "max": 2,
+            "min": -2,
             "vary": true,
             "value": 0
           },
           "fwhm_gaussian": {
-            "max": 0.01,
+            "max": 0.10,
             "min": 0.02,
             "vary": true,
             "value": 0.01
           },
           "fwhm_lorentzian": {
-            "max": 0.01,
-            "min": 0.02,
+            "max": 0.1,
+            "min": 0.01,
             "vary": true,
             "value": 0.01
           }
