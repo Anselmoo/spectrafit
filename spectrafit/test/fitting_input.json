@@ -13,7 +13,7 @@
     "seperator": "\t",
     "shift": 0,
     "smooth": 0,
-    "verbose": false,
+    "verbose": true,
     "version": false
   },
   "fitting": {
@@ -28,9 +28,19 @@
         "spectrum"
       ]
     },
+
     "parameters": {
       "minimizer": { "nan_policy": "propagate", "calc_covar": true },
-      "optimizer": { "max_nfev": 1000, "method": "powell" }
+      "optimizer": { "max_nfev": 1000, "method": "powell" },
+      "report": { "min_correl": 0.0 },
+      "conf_interval": {
+        "p_names": null,
+        "sigmas": null,
+        "trace": false,
+        "maxiter": 200,
+        "verbose": false,
+        "prob_func": null
+      }
     },
     "peaks": {
       "1": {
@@ -48,7 +58,7 @@
             "value": 0
           },
           "fwhm_gaussian": {
-            "max": 0.10,
+            "max": 0.1,
             "min": 0.02,
             "vary": true,
             "value": 0.01
@@ -76,7 +86,7 @@
             "value": 0
           },
           "fwhm_gaussian": {
-            "max": 0.10,
+            "max": 0.1,
             "min": 0.02,
             "vary": true,
             "value": 0.01

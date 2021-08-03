@@ -15,14 +15,15 @@ import yaml
 from lmfit import Minimizer
 from lmfit import Parameters
 from lmfit import conf_interval
-from lmfit import fit_report
 from lmfit import minimize
-from lmfit import printfuncs
+from lmfit import report_ci
+from lmfit import report_fit
 from matplotlib.ticker import AutoMinorLocator
 from matplotlib.widgets import Cursor
 from scipy.special import erf
 from scipy.special import wofz
 from spectrafit import __version__
+from spectrafit.export import fit_report_as_dict
 
 
 @dataclass(frozen=True)
@@ -230,11 +231,26 @@ def extracted_from_command_line_runner() -> dict:
     if "parameters" in _args["fitting"].keys():
         if "minimizer" in _args["fitting"]["parameters"].keys():
             result["minimizer"] = _args["fitting"]["parameters"]["minimizer"]
+        else:
+            raise KeyError("Missing 'minimizer' in 'parameters'.")
         if "optimizer" in _args["fitting"]["parameters"].keys():
             result["optimizer"] = _args["fitting"]["parameters"]["optimizer"]
+        else:
+            raise KeyError("Missing key 'optimizer' in 'parameters'.")
+        if "report" in _args["fitting"]["parameters"].keys():
+            result["report"] = _args["fitting"]["parameters"]["report"]
+        else:
+            result["report"] = {
+                "show_correl": True,
+                "min_correl": 0.1,
+                "sort_pars": False,
+            }
+        if "conf_interfal" in _args["fitting"]["parameters"].keys():
+            result["conf_interfal"] = _args["fitting"]["parameters"]["conf_interfal"]
+        else:
+            result["conf_interfal"] = None
     if "peaks" in _args["fitting"].keys():
         result["peaks"] = _args["fitting"]["peaks"]
-
     return result
 
 
@@ -257,36 +273,15 @@ def fitting_routine(df: pd.DataFrame, args: dict) -> None:
     #
     # try:
     result = mini.minimize(**args["optimizer"])
-    print(result.init_vals)
-    # print(result.params.dumps())
-    # print(
-    #    result.nfev,
-    #    result.nvarys,
-    #    result.nfree,
-    #    result.residual,
-    #    result.ndata,
-    #    result.chisqr,
-    #    result.redchi,
-    #    result.aic,
-    #    result.bic,
-    #    result.var_names,
-    #    # result.covar,
-    #    result.init_vals,
-    #    result.call_kws,
-    # )
-    # print(result.params.values())
-    # print(result.covar)
+    print(" Fit-Report\n")
+    print(report_fit(result, modelpars=result.params, **args["report"]))
+    if args["conf_interfal"]:
+        print(" Fit-Report\n")
+        print(report_ci(conf_interval(mini, result, **args["conf_interfal"])))
+    fit_insigths = fit_report_as_dict(result, modelpars=result.params)
     if args["verbose"]:
-        printfuncs.report_ci(conf_interval(mini, result))
-    # print(result.errorbars)
-    # print(dict(vars(result)))
-    # except ValueError:
-    #    print "Input error in guess.parm"
-    # final = y + result.residual
-    # print result.init_fit
-    # print(fit_report(result, result.params))
-    # conf_interval(mini, result)
-    # plot(x, y, final, result, args)
+        pp.pprint(fit_insigths)
+
     # except IOError:
     #    print "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
     #    print "!!!!No Inputfile guess.parm for Fits!!!!"
