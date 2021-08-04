@@ -39,6 +39,7 @@ openpyxl = "^3.0.7"
 toml = "^0.10.2"
 PyYAML = "^5.4.1"
 numdifftools = "^0.9.40"
+plotly = "^5.1.0"
 
 [tool.poetry.dev-dependencies]
 pylama = "^7.7.1"

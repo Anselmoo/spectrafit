@@ -15,7 +15,6 @@ import yaml
 from lmfit import Minimizer
 from lmfit import Parameters
 from lmfit import conf_interval
-from lmfit import minimize
 from lmfit import report_ci
 from lmfit import report_fit
 from matplotlib.ticker import AutoMinorLocator
@@ -187,9 +186,7 @@ def command_line_runner(args: dict = None) -> None:
     if args["version"]:
         print(f"Currently used verison is: {__version__}")
         return
-    if args["verbose"]:
-        print("Input Parameter:\n")
-        pp.pprint(args)
+
     try:
         df = pd.read_csv(
             args["infile"],
@@ -200,7 +197,7 @@ def command_line_runner(args: dict = None) -> None:
             decimal=args["decimal"],
         )
         df_stats = df.describe(percentiles=np.arange(0.1, 1, 0.1)).to_dict()
-        df_original = df.to_dict()
+        # df_original = df.to_dict()
     except ValueError as exc:
         print(f"Error: {exc} -> Dataframe contains non numeric data!")
         return
@@ -248,7 +245,7 @@ def extracted_from_command_line_runner() -> dict:
         if "conf_interfal" in _args["fitting"]["parameters"].keys():
             result["conf_interfal"] = _args["fitting"]["parameters"]["conf_interfal"]
         else:
-            result["conf_interfal"] = None
+            result["conf_interfal"] = {"maxiter": 200}
     if "peaks" in _args["fitting"].keys():
         result["peaks"] = _args["fitting"]["peaks"]
     return result
@@ -257,7 +254,7 @@ def extracted_from_command_line_runner() -> dict:
 def fitting_routine(df: pd.DataFrame, args: dict) -> None:
 
     # try:
-
+    df_dict = df.to_dict()
     df = energy_range(df=df, args=args)
     df = energy_shift(df=df, args=args)
     df = oversampling(df=df, args=args)
@@ -273,14 +270,28 @@ def fitting_routine(df: pd.DataFrame, args: dict) -> None:
     #
     # try:
     result = mini.minimize(**args["optimizer"])
-    print(" Fit-Report\n")
-    print(report_fit(result, modelpars=result.params, **args["report"]))
-    if args["conf_interfal"]:
-        print(" Fit-Report\n")
-        print(report_ci(conf_interval(mini, result, **args["conf_interfal"])))
-    fit_insigths = fit_report_as_dict(result, modelpars=result.params)
+    fit_insights = fit_report_as_dict(result, modelpars=result.params)
+    confidence_interval = conf_interval(
+        mini, result, trace=True, **args["conf_interfal"]
+    )
+    df["energy"] = df[args["column"][0]].values
+    df["intensity"] = df[args["column"][1]].values
+    df["residual"] = result.residual
+    df["fit"] = df[args["column"][1]].values - result.residual
+
     if args["verbose"]:
-        pp.pprint(fit_insigths)
+        print("Input Parameter:\n")
+        pp.pprint(args)
+        print("\nFit Results and Insights:\n")
+        pp.pprint(fit_insights)
+        print("\nConfidence Interval:\n")
+        pp.pprint(confidence_interval)
+    else:
+        print(" Fit-Report\n")
+        print(report_fit(result, modelpars=result.params, **args["report"]))
+        if args["conf_interfal"]:
+            print(" Fit-Report\n")
+            print(report_ci(conf_interval(mini, result, **args["conf_interfal"])))
 
     # except IOError:
     #    print "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
