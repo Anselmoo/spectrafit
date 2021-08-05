@@ -13,7 +13,7 @@
     "seperator": "\t",
     "shift": 0,
     "smooth": 0,
-    "verbose": true,
+    "verbose": false,
     "version": false
   },
   "fitting": {
@@ -36,7 +36,7 @@
       "conf_interval": {
         "p_names": null,
         "sigmas": null,
-        "trace": false,
+        "trace": true,
         "maxiter": 200,
         "verbose": false,
         "prob_func": null
