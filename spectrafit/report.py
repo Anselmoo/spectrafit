@@ -136,11 +136,12 @@ def fit_report_as_dict(inpars, modelpars=None, sort_pars=False):
                     and abs(par.correl[name_2]) <= 1.0
                 ):
                     buffer["correlations"][name_1][name_2] = par.correl[name_2]
+    try:
+        for i, name_1 in enumerate(parnames):
+            buffer["covariance_matrix"][name_1] = {}
+            for j, name_2 in enumerate(parnames):
 
-    for i, name_1 in enumerate(parnames):
-        buffer["covariance_matrix"][name_1] = {}
-        for j, name_2 in enumerate(parnames):
-
-            buffer["covariance_matrix"][name_1][name_2] = result.covar[i, j]
-
+                buffer["covariance_matrix"][name_1][name_2] = result.covar[i, j]
+    except AttributeError as exc:
+        print(f"{exc}: Covariance Matrix could not be calculated.\n")
     return buffer

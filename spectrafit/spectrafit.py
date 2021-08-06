@@ -1,8 +1,10 @@
 import argparse
 import json
 import pprint
+import sys
 
 from pathlib import Path
+from typing import Any
 from typing import Tuple
 
 import numpy as np
@@ -19,6 +21,7 @@ from spectrafit import __version__
 from spectrafit.models import calculated_models
 from spectrafit.models import solver_model
 from spectrafit.report import fit_report_as_dict
+from tabulate import tabulate
 
 
 pp = pprint.PrettyPrinter(indent=4)
@@ -28,17 +31,17 @@ def get_args() -> dict:
     parser = argparse.ArgumentParser(
         description="Fast Fitting Program for ascii txt files."
     )
-    parser.add_argument("infile", type=Path, help="Filename of the specta data")
+    parser.add_argument("infile", type=str, help="Filename of the specta data")
     parser.add_argument(
         "-o",
         "--outfile",
-        type=Path,
+        type=str,
         help="Filename for the export, default to set to input name.",
     )
     parser.add_argument(
         "-i",
         "--input",
-        type=Path,
+        type=str,
         default="fitting_input.toml",
         help=(
             "Filename for the input parameter, default to set to 'fitting_input.toml'."
@@ -135,14 +138,14 @@ def get_args() -> dict:
     return vars(parser.parse_args())
 
 
-def read_input_file(fname: Path) -> dict:
+def read_input_file(fname: str) -> dict:
     """Read the input file.
 
     Read the input file as `toml`, `json`, or `yaml` files
     and return as a dictionary.
 
     Args:
-        fname (Path): Name of the input file.
+        fname (str): Name of the input file.
 
     Raises:
         TypeError: If the input file is not supported.
@@ -150,47 +153,33 @@ def read_input_file(fname: Path) -> dict:
     Returns:
         dict: Table of the input file to a dictionary.
     """
-    if fname.suffix == ".toml":
-        with open(fname, "r") as f:
-            return toml.load(fname)
-    elif fname.suffix == ".json":
-        with open(fname, "r") as f:
-            return json.load(f)
-    elif fname.suffix == ".yaml":
-        with open(fname, "r") as f:
-            return yaml.load(f, Loader=yaml.FullLoader)
-    else:
-        raise TypeError(
-            f"Input file {fname} has not supported file format."
+    fname = Path(fname)
+    try:
+        if fname.suffix == ".toml":
+            with open(fname, "r") as f:
+                return toml.load(fname)
+        elif fname.suffix == ".json":
+            with open(fname, "r") as f:
+                return json.load(f)
+        elif fname.suffix == ".yaml":
+            with open(fname, "r") as f:
+                return yaml.load(f, Loader=yaml.FullLoader)
+    except TypeError as exc:
+        print(
+            f"{exc}:  Input file {fname} has not supported file format.\n"
             "Supported fileformats are: '*.json', '*.yaml', and '*.toml'"
         )
+        sys.exit(1)
+    except FileNotFoundError as exc:
+        print(
+            f"{exc}:  Standard input file {fname} has to be provided!"
+            "\nOr you have to explicitly provide an input file with '-i' or '--input'.\n"
+            "Supported fileformats are: '*.json', '*.yaml', and '*.toml'"
+        )
+        sys.exit(1)
 
 
 def command_line_runner(args: dict = None) -> None:
-
-    if not args:
-        args = extracted_from_command_line_runner()
-    if args["version"]:
-        print(f"Currently used verison is: {__version__}")
-        return
-
-    try:
-        df = pd.read_csv(
-            args["infile"],
-            sep=args["seperator"],
-            header=args["header"],
-            usecols=args["column"],
-            dtype=np.float64,
-            decimal=args["decimal"],
-        )
-        df_stats = df.describe(percentiles=np.arange(0.1, 1, 0.1)).to_dict()
-        # df_original = df.to_dict()
-    except ValueError as exc:
-        print(f"Error: {exc} -> Dataframe contains non numeric data!")
-        return
-    if args["verbose"]:
-        print("\nStatistic:\n")
-        pp.pprint(df_stats)
 
     while True:
         again = input("Would you like to fit ...? Enter y/n: ").lower()
@@ -198,11 +187,69 @@ def command_line_runner(args: dict = None) -> None:
             print("Thanks for using ...!")
             return
         elif again == "y":
+            if not args:
+                args = extracted_from_command_line_runner()
+            if args["version"]:
+                print(f"Currently used verison is: {__version__}")
+                return
+            try:
+                df = pd.read_csv(
+                    Path(args["infile"]),
+                    sep=args["seperator"],
+                    header=args["header"],
+                    usecols=args["column"],
+                    dtype=np.float64,
+                    decimal=args["decimal"],
+                )
+
+                args["data_statistic"] = df.describe(
+                    percentiles=np.arange(0.1, 1, 0.1)
+                ).to_dict()
+
+            except ValueError as exc:
+                print(f"Error: {exc} -> Dataframe contains non numeric data!")
+                return
             print("Lets start fitting ...")
-            df_result = fitting_routine(df=df, args=args)
-            lin_cor = df_result.corr()
+            df_result, args = fitting_routine(df=df, args=args)
+            args["fit_result"] = df_result.to_dict(orient="list")
+            save_as_json(args)
+            save_as_csv(args, df=df_result)
+
+            args = None
+            # print("\nCorrelation:\n")
         else:
             print('You should enter either "y" or "n".')
+
+
+def save_as_csv(args, df: pd.DataFrame) -> None:
+
+    df.to_csv(Path(f"{args['outfile']}_fit.csv"), index=False)
+    pd.DataFrame.from_dict(args["fit_insights"]["correlations"]).to_csv(
+        Path(f"{args['outfile']}_correlation.csv"),
+        index=True,
+        index_label="attributes",
+    )
+    pd.DataFrame.from_dict(args["fit_insights"]["variables"]).to_csv(
+        Path(f"{args['outfile']}_errors.csv"),
+        index=True,
+        index_label="attributes",
+    )
+
+
+def save_as_json(args):
+    """Save the fitting result as json file.
+
+    Args:
+        args (dict): Dictionary of the fitting result.
+
+    Returns:
+        None
+    """
+    if args["outfile"]:
+        with open(Path(f"{args['outfile']}_summary.json"), "w") as f:
+            json.dump(args, f, indent=4)
+    else:
+        raise FileNotFoundError("No output file provided!")
 
 
 def extracted_from_command_line_runner() -> dict:
@@ -257,38 +304,59 @@ def fitting_routine(df: pd.DataFrame, args: dict) -> Tuple[pd.DataFrame, dict]:
     #
     # try:
     result = mini.minimize(**args["optimizer"])
-    fit_insights = fit_report_as_dict(result, modelpars=result.params)
+    args["fit_insights"] = fit_report_as_dict(result, modelpars=result.params)
     if args["conf_interval"]:
-        confidence_interval = conf_interval(mini, result, **args["conf_interval"])
+        args["confidence_interval"] = conf_interval(
+            mini, result, **args["conf_interval"]
+        )
     df = df.rename(
         columns={args["column"][0]: "energy", args["column"][1]: "intensity"}
     )
     df["residual"] = result.residual
     df["fit"] = df["intensity"].values - result.residual
     df = calculated_models(params=result.params, x=df["energy"].values, df=df)
-
+    _corr = df.corr()
+    args["linear_correlation"] = _corr.to_dict()
     if args["verbose"]:
-        print("Input Parameter:\n")
-        pp.pprint(args)
-        print("\nFit Results and Insights:\n")
-        pp.pprint(fit_insights)
-        if args["conf_interval"]:
-            print("\nConfidence Interval:\n")
-            pp.pprint(confidence_interval)
+        printing_verbose_mode(args)
     else:
-        print("\nFit Results and Insights:\n")
-        print(report_fit(result, modelpars=result.params, **args["report"]))
-        if args["conf_interval"]:
-            print("\nConfidence Interval:\n")
-            report_ci(conf_interval(mini, result, **args["conf_interval"])[0])
+        printing_regular_mode(args, result=result, minimizer=mini, correlation=_corr)
+    return df, args
 
-    return df
-    # except IOError:
-    #    print "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-    #    print "!!!!No Inputfile guess.parm for Fits!!!!"
-    #    print "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-    #
-    #    pass
+
+def printing_regular_mode(
+    args, result: Any, minimizer: Minimizer, correlation: pd.DataFrame
+) -> None:
+    print("\nStatistic:\n")
+    print(
+        tabulate(
+            pd.DataFrame.from_dict(args["data_statistic"]),
+            headers="keys",
+            tablefmt="fancy_grid",
+            floatfmt=".2f",
+        )
+    )
+    print("\nFit Results and Insights:\n")
+    print(report_fit(result, modelpars=result.params, **args["report"]))
+    if args["conf_interval"]:
+        print("\nConfidence Interval:\n")
+        report_ci(conf_interval(minimizer, result, **args["conf_interval"])[0])
+    print("\nOverall Linear-Correlation:\n")
+    print(tabulate(correlation, headers="keys", tablefmt="fancy_grid", floatfmt=".2f"))
+
+
+def printing_verbose_mode(args: dict) -> None:
+    print("\nStatistic:\n")
+    pp.pprint(args["data_statistic"])
+    print("Input Parameter:\n")
+    pp.pprint(args)
+    print("\nFit Results and Insights:\n")
+    pp.pprint(args["fit_insights"])
+    if args["conf_interval"]:
+        print("\nConfidence Interval:\n")
+        pp.pprint(args["confidence_interval"])
+    print("\nOverall Linear-Correlation:\n")
+    pp.pprint(args["linear_correlation"])
 
 
 def get_parameters(args: dict) -> dict:
@@ -309,7 +377,7 @@ def get_parameters(args: dict) -> dict:
     return params
 
 
-def energy_range(df: pd.DataFrame, args: dict) -> pd.DataFrame:
+def energy_range(df: pd.DataFrame, args: dict) -> Tuple[pd.DataFrame, dict, dict]:
     """
     Select the energy range for fitting.
     """

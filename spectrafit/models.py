@@ -53,26 +53,26 @@ def solver_model(params: dict, x: np.array, data) -> np.array:
                 center = params[model]
             if "amplitude" in model:
                 amplitude = params[model]
-            if "fwhm_gaussian" in model:
-                fwhm_gaussian = params[model]
+            if "fwhm_g" in model:
+                fwhm_g = params[model]
                 val += gaussian(
                     x=x,
                     amplitude=amplitude,
                     center=center,
-                    fwhm=fwhm_gaussian,
+                    fwhm=fwhm_g,
                 )
         if "lorentzian" in model:
             if "center" in model:
                 center = params[model]
             if "amplitude" in model:
                 amplitude = params[model]
-            if "fwhm_lorentzian" in model:
-                fwhm_lorentzian = params[model]
+            if "fwhm_l" in model:
+                fwhm_l = params[model]
                 val += lorentzian(
                     x=x,
                     amplitude=amplitude,
                     center=center,
-                    fwhm=fwhm_lorentzian,
+                    fwhm=fwhm_l,
                 )
         if "voigt" in model and "pseudovoigt" not in model:
             if "center" in model:
@@ -92,16 +92,16 @@ def solver_model(params: dict, x: np.array, data) -> np.array:
                 center = params[model]
             if "amplitude" in model:
                 amplitude = params[model]
-            if "fwhm_gaussian" in model:
-                fwhm_gaussian = params[model]
-            if "fwhm_lorentzian" in model:
-                fwhm_lorentzian = params[model]
+            if "fwhm_g" in model:
+                fwhm_g = params[model]
+            if "fwhm_l" in model:
+                fwhm_l = params[model]
                 val += pseudovoigt(
                     x=x,
                     amplitude=amplitude,
                     center=center,
-                    fwhm_g=fwhm_gaussian,
-                    fwhm_l=fwhm_lorentzian,
+                    fwhm_g=fwhm_g,
+                    fwhm_l=fwhm_l,
                 )
         if "exponential" in model:
             if "amplitude" in model:
@@ -212,7 +212,6 @@ def calculated_models(params: dict, x: np.array, df: pd.DataFrame) -> pd.DataFra
             pass
         else:
             raise SystemExit(f"{model} is not supported")
-
     for model in params:
         model = model.lower()
         if "gaussian" in model:
@@ -220,26 +219,26 @@ def calculated_models(params: dict, x: np.array, df: pd.DataFrame) -> pd.DataFra
                 center = params[model]
             if "amplitude" in model:
                 amplitude = params[model]
-            if "fwhm_gaussian" in model:
-                fwhm_gaussian = params[model]
-                df[model] = gaussian(
+            if "fwhm_g" in model:
+                fwhm_g = params[model]
+                df[f"{model.split('_')[0]}_{model.split('_')[-1]}"] = gaussian(
                     x=x,
                     amplitude=amplitude,
                     center=center,
-                    fwhm=fwhm_gaussian,
+                    fwhm=fwhm_g,
                 )
         if "lorentzian" in model:
             if "center" in model:
                 center = params[model]
             if "amplitude" in model:
                 amplitude = params[model]
-            if "fwhm_lorentzian" in model:
-                fwhm_lorentzian = params[model]
-                df[model] = lorentzian(
+            if "fwhm_l" in model:
+                fwhm_l = params[model]
+                df[f"{model.split('_')[0]}_{model.split('_')[-1]}"] = lorentzian(
                     x=x,
                     amplitude=amplitude,
                     center=center,
-                    fwhm=fwhm_lorentzian,
+                    fwhm=fwhm_l,
                 )
         if "voigt" in model and "pseudovoigt" not in model:
             if "center" in model:
@@ -248,7 +247,7 @@ def calculated_models(params: dict, x: np.array, df: pd.DataFrame) -> pd.DataFra
                 fwhm = params[model]
             if "gamma" in model:
                 gamma = params[model]
-                df[model] = voigt(
+                df[f"{model.split('_')[0]}_{model.split('_')[-1]}"] = voigt(
                     x=x,
                     center=center,
                     fwhm=fwhm,
@@ -259,16 +258,16 @@ def calculated_models(params: dict, x: np.array, df: pd.DataFrame) -> pd.DataFra
                 center = params[model]
             if "amplitude" in model:
                 amplitude = params[model]
-            if "fwhm_gaussian" in model:
-                fwhm_gaussian = params[model]
-            if "fwhm_lorentzian" in model:
-                fwhm_lorentzian = params[model]
-                df[model] = pseudovoigt(
+            if "fwhm_g" in model:
+                fwhm_g = params[model]
+            if "fwhm_l" in model:
+                fwhm_l = params[model]
+                df[f"{model.split('_')[0]}_{model.split('_')[-1]}"] = pseudovoigt(
                     x=x,
                     amplitude=amplitude,
                     center=center,
-                    fwhm_g=fwhm_gaussian,
-                    fwhm_l=fwhm_lorentzian,
+                    fwhm_g=fwhm_g,
+                    fwhm_l=fwhm_l,
                 )
         if "exponential" in model:
             if "amplitude" in model:
@@ -277,7 +276,7 @@ def calculated_models(params: dict, x: np.array, df: pd.DataFrame) -> pd.DataFra
                 decay = params[model]
             if "intercept" in model:
                 intercept = params[model]
-                df[model] = exponential(
+                df[f"{model.split('_')[0]}_{model.split('_')[-1]}"] = exponential(
                     x=x,
                     amplitude=amplitude,
                     decay=decay,
@@ -290,7 +289,7 @@ def calculated_models(params: dict, x: np.array, df: pd.DataFrame) -> pd.DataFra
                 exponent = params[model]
             if "intercept" in model:
                 intercept = params[model]
-                df[model] = powerlaw(
+                df[f"{model.split('_')[0]}_{model.split('_')[-1]}"] = powerlaw(
                     x=x,
                     amplitude=amplitude,
                     exponent=exponent,
@@ -301,11 +300,15 @@ def calculated_models(params: dict, x: np.array, df: pd.DataFrame) -> pd.DataFra
                 slope = params[model]
             if "intercept" in model:
                 intercept = params[model]
-                df[model] = linear(x=x, slope=slope, intercept=intercept)
+                df[f"{model.split('_')[0]}_{model.split('_')[-1]}"] = linear(
+                    x=x, slope=slope, intercept=intercept
+                )
         if "constant" in model and "amplitude" in model:
             if "amplitude" in model:
                 amplitude = params[model]
-                df[model] = constant(x=x, amplitude=amplitude)
+                df[f"{model.split('_')[0]}_{model.split('_')[-1]}"] = constant(
+                    x=x, amplitude=amplitude
+                )
         if "erf" in model:
             if "center" in model:
                 center = params[model]
@@ -313,7 +316,7 @@ def calculated_models(params: dict, x: np.array, df: pd.DataFrame) -> pd.DataFra
                 sigma = params[model]
             if "amplitude" in model:
                 amplitude = params[model]
-                df[model] = step(
+                df[f"{model.split('_')[0]}_{model.split('_')[-1]}"] = step(
                     x=x,
                     amplitude=amplitude,
                     center=center,
@@ -327,7 +330,7 @@ def calculated_models(params: dict, x: np.array, df: pd.DataFrame) -> pd.DataFra
                 sigma = params[model]
             if "amplitude" in model:
                 amplitude = params[model]
-                df[model] = step(
+                df[f"{model.split('_')[0]}_{model.split('_')[-1]}"] = step(
                     x=x,
                     amplitude=amplitude,
                     center=center,
@@ -341,7 +344,7 @@ def calculated_models(params: dict, x: np.array, df: pd.DataFrame) -> pd.DataFra
                 sigma = params[model]
             if "amplitude" in model:
                 amplitude = params[model]
-                df[model] = step(
+                df[f"{model.split('_')[0]}_{model.split('_')[-1]}"] = step(
                     x=x,
                     amplitude=amplitude,
                     center=center,
