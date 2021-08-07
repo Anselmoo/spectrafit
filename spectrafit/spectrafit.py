@@ -20,6 +20,7 @@ from lmfit import report_fit
 from spectrafit import __version__
 from spectrafit.models import calculated_models
 from spectrafit.models import solver_model
+from spectrafit.plotting import plot_spectra
 from spectrafit.report import fit_report_as_dict
 from tabulate import tabulate
 
@@ -212,6 +213,7 @@ def command_line_runner(args: dict = None) -> None:
             print("Lets start fitting ...")
             df_result, args = fitting_routine(df=df, args=args)
             args["fit_result"] = df_result.to_dict(orient="list")
+            plot_spectra(df=df_result)
             save_as_json(args)
             save_as_csv(args, df=df_result)
 
@@ -313,7 +315,7 @@ def fitting_routine(df: pd.DataFrame, args: dict) -> Tuple[pd.DataFrame, dict]:
         columns={args["column"][0]: "energy", args["column"][1]: "intensity"}
     )
     df["residual"] = result.residual
-    df["fit"] = df["intensity"].values - result.residual
+    df["fit"] = df["intensity"].values + result.residual
     df = calculated_models(params=result.params, x=df["energy"].values, df=df)
     _corr = df.corr()
     args["linear_correlation"] = _corr.to_dict()

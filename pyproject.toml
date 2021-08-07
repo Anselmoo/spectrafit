@@ -4,7 +4,7 @@ version = "0.2.0"
 description = "Fast fitting of 2D-Spectra with established routines"
 readme = "README.md"
 authors = ["ahahn <Anselm.Hahn@cec.mpg.de>"]
-license = "MIT"
+license = "BSD"
 repository = "https://gitlab.gwdg.de/RIXSTools/spectrafit"
 keywords = [
     "2D-Spectra",
@@ -16,13 +16,17 @@ keywords = [
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: MIT License",
+    "License :: OSI Approved :: BSD License",
+    "Environment :: Console",
+    "Framework :: Matplotlib",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: Implementation :: CPython",
     "Topic :: Scientific/Engineering :: Physics",
-    "Topic :: Scientific/Engineering :: Chemistry"
+    "Topic :: Scientific/Engineering :: Chemistry",
+    "Topic :: Scientific/Engineering :: Information Analysis"
 ]
 include = ["Examples/"]
 
@@ -39,8 +43,8 @@ openpyxl = "^3.0.7"
 toml = "^0.10.2"
 PyYAML = "^5.4.1"
 numdifftools = "^0.9.40"
-plotly = "^5.1.0"
 tabulate = "^0.8.9"
+statsmodels = "^0.12.2"
 
 [tool.poetry.dev-dependencies]
 pylama = "^7.7.1"

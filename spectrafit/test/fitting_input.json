@@ -4,7 +4,7 @@
     "decimal": ".",
     "disp": false,
     "energy_start": 0,
-    "energy_stop": 2,
+    "energy_stop": 8,
     "header": null,
     "infile": "spectrafit/test/rixs_fecl4.txt",
     "outfile": "fit_results",
@@ -31,7 +31,15 @@
     "parameters": {
       "minimizer": { "nan_policy": "propagate", "calc_covar": true },
       "optimizer": { "max_nfev": 1000, "method": "leastsq" },
-      "report": { "min_correl": 0.0 }
+      "report": { "min_correl": 0.0 },
+      "conf_interval": {
+        "p_names": null,
+        "sigmas": null,
+        "trace": true,
+        "maxiter": 200,
+        "verbose": false,
+        "prob_func": null
+      }
     },
     "peaks": {
       "1": {

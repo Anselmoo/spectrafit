@@ -2,14 +2,15 @@
 column = [ 0, 1 ]
 decimal = "."
 disp = false
+energy_start = 0
+energy_stop = 8
 infile = "spectrafit/test/rixs_fecl4.txt"
-input = "fitting_input.toml"
-outfile = ""
+outfile = "fit_results"
 oversampling = false
 seperator = "\t"
 shift = 0
 smooth = 0
-verbose = true
+verbose = false
 version = false
 
 [fitting.description]
@@ -23,60 +24,90 @@ keywords = [
   "spectrum"
 ]
 
-[fitting.parameters]
+[fitting.parameters.minimizer]
+nan_policy = "propagate"
+calc_covar = true
+
+[fitting.parameters.optimizer]
 max_nfev = 1_000
 method = "leastsq"
 
-[fitting.peaks.1.pvoigt.amplitude]
+[fitting.parameters.report]
+min_correl = 0
+
+[fitting.parameters.conf_interval]
+trace = true
+maxiter = 200
+verbose = false
+
+[fitting.peaks.1.pseudovoigt.amplitude]
 max = 2
-min = 0.01
+min = 0
 vary = true
 value = 1
 
-[fitting.peaks.1.pvoigt.center]
-max = 0
-min = 1
+[fitting.peaks.1.pseudovoigt.center]
+max = 2
+min = -2
 vary = true
 value = 0
 
-[fitting.peaks.1.pvoigt.fwhm_gaussian]
-max = 0.01
+[fitting.peaks.1.pseudovoigt.fwhm_g]
+max = 0.1
 min = 0.02
 vary = true
 value = 0.01
 
-[fitting.peaks.1.pvoigt.fwhm_lorentzian]
-max = 0.01
-min = 0.02
-vary = true
-value = 0.01
-
-[fitting.peaks.2.pvoigt.amplitude]
-max = 2
+[fitting.peaks.1.pseudovoigt.fwhm_l]
+max = 0.1
 min = 0.01
+vary = true
+value = 0.01
+
+[fitting.peaks.2.pseudovoigt.amplitude]
+max = 2
+min = 0
 vary = true
 value = 1
 
-[fitting.peaks.2.pvoigt.center]
-max = 0
-min = 1
+[fitting.peaks.2.pseudovoigt.center]
+max = 2
+min = -2
 vary = true
 value = 0
 
-[fitting.peaks.2.pvoigt.fwhm_gaussian]
-max = 0.01
+[fitting.peaks.2.pseudovoigt.fwhm_g]
+max = 0.1
 min = 0.02
 vary = true
 value = 0.01
 
-[fitting.peaks.2.pvoigt.fwhm_lorentzian]
-max = 0.01
-min = 0.02
+[fitting.peaks.2.pseudovoigt.fwhm_l]
+max = 0.1
+min = 0.01
 vary = true
 value = 0.01
 
-[fitting.peaks.3.constant.level]
+[fitting.peaks.3.constant.amplitude]
 max = 2
 min = 0.01
 vary = true
 value = 1
+
+[fitting.peaks.4.gaussian.amplitude]
+max = 2
+min = 0
+vary = true
+value = 1
+
+[fitting.peaks.4.gaussian.center]
+max = 2
+min = -2
+vary = true
+value = 0
+
+[fitting.peaks.4.gaussian.fwhm_g]
+max = 0.1
+min = 0.02
+vary = true
+value = 0.01

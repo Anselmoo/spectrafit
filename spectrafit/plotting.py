@@ -1,0 +1,34 @@
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import seaborn as sns
+
+from matplotlib.widgets import MultiCursor
+
+
+sns.set_theme(style="whitegrid")
+color = sns.color_palette("Paired")
+
+
+def plot_spectra(df: pd.DataFrame, args: dict = None) -> None:
+    """Plot spectra with seaborn and matplotlib"""
+
+    fig, (ax1, ax2) = plt.subplots(
+        2, sharex=True, figsize=(9, 9), gridspec_kw={"height_ratios": [1, 2]}
+    )
+    ax1 = sns.regplot(x="energy", y="residual", data=df, ax=ax1, color=color[5])
+    ax2 = sns.lineplot(x="energy", y="intensity", data=df, ax=ax2, color=color[1])
+    ax2 = sns.lineplot(x="energy", y="fit", data=df, ax=ax2, ls="--", color=color[0])
+    peaks = [
+        peak
+        for peak in df.columns
+        if peak not in ["residual", "energy", "intensity", "fit"]
+    ]
+    color_peaks = sns.color_palette("rocket", len(peaks))
+    for i, peak in enumerate(peaks):
+        ax2 = sns.lineplot(
+            x="energy", y=peak, data=df, ax=ax2, ls=":", color=color_peaks[i]
+        )
+
+    _ = MultiCursor(fig.canvas, (ax1, ax2), color=color[4], ls="--", lw=1, horizOn=True)
+    plt.show()
