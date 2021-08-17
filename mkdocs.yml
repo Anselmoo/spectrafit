@@ -14,16 +14,10 @@ copyright: Copyright &copy; 2021 - Anselm Hahn
 # Configuration
 theme:
   name: material
-
-  # Static files
   static_templates:
     - 404.html
-
-  # Don't include MkDocs' JavaScript
   include_search_page: true
   search_index_only: true
-
-  # Default values, taken from mkdocs_theme.yml
   language: en
   features:
     - content.code.annotate
@@ -64,6 +58,11 @@ theme:
 # Plugins
 plugins:
   - search
+  - mkdocstrings
+  - autorefs
+  - section-index
+  - literate-nav:
+      nav_file: SUMMARY.md
   - minify:
       minify_html: true
 
@@ -120,12 +119,20 @@ markdown_extensions:
         - name: mermaid
           class: mermaid-experimental
           format: !!python/name:pymdownx.superfences.fence_code_format
+        - name: math
+          class: arithmatex
+          format: !!python/name:pymdownx.arithmatex.fence_mathjax_format
   - pymdownx.snippets:
       check_paths: true
   - pymdownx.tabbed
   - pymdownx.tasklist:
       custom_checkbox: true
   - pymdownx.tilde
+
+extra_javascript:
+  - javascripts/config.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
 
 # Page tree
 nav:
@@ -143,6 +150,7 @@ nav:
     - Example 5: examples/example5.md
     - Example 6: examples/example6.md
   - Documentation:
+      - Models & Solutions: doc/models_solutions.md
       - Fitting: doc/fitting.md
   - API:
     - SpectraFit: api/spectrafit.md
