@@ -130,3 +130,27 @@ markdown_extensions:
 # Page tree
 nav:
   - Home: index.md
+  - Getting started:
+    - Installation: interface/installation.md
+    - Usage: interface/usage.md
+    - Configuration: interface/configuration.md
+    - Extensions: interface/extensions.md
+  - Examples:
+    - Example 1: examples/example1.md
+    - Example 2: examples/example2.md
+    - Example 3: examples/example3.md
+    - Example 4: examples/example4.md
+    - Example 5: examples/example5.md
+    - Example 6: examples/example6.md
+  - Documentation:
+      - Fitting: doc/fitting.md
+  - API:
+    - SpectraFit: api/spectrafit.md
+  - Support:
+    - Contact: contact.md
+    - License: license.md
+    - Contributing: contributing.md
+    - Code of Conduct: code_of_conduct.md
+  - Releases:
+    - Changelog: changelog.md
+    - Contributors: contributors.md
