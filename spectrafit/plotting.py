@@ -13,6 +13,16 @@ color = sns.color_palette("Paired")
 def plot_spectra(df: pd.DataFrame) -> None:
     """Plot spectra with seaborn and matplotlib.
 
+    `plot_spectra` performs a dual split plot. In the upper part, the residuum is
+     plotted together with a linear regression line. This means, if the linear
+     regression is a flat line, the fit and spectra are identically.
+     In the lower part, the fit is plotted together with the original spectra. Also
+     the single contributions of the fit are drawn.
+
+    ![_](../../images/image001.png)
+    > The upper part shows the residuum and the linear regression line. The lower part
+    shows the fit and the single contributions of the fit.
+
     Args:
         df (pd.DataFrame): DataFrame containing the input data (`x` and `data`),
              as well as the best fit and the corresponding residuum. Hence, it will be

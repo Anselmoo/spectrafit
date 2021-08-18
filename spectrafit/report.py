@@ -1,5 +1,4 @@
 """Fit-Results as Report."""
-__name__ = ["fit_report_as_dict"]
 import numpy as np
 
 from lmfit.parameter import Parameters

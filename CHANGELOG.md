@@ -14,5 +14,5 @@
 ---
 
 - Changed from text file based input to object based input.
-- Replaced `matplotlib` with `plotly` for the plotting.
+- Extended `matplotlib` with `seaborn` for the plotting.
 - Start outsourcing code into submodules.

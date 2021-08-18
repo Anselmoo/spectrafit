@@ -243,7 +243,7 @@ def solver_model(params: dict, x: np.array, data: np.array) -> np.array:
 def calculated_models(params: dict, x: np.array, df: pd.DataFrame) -> pd.DataFrame:
     r"""Calculate the single contributions of the models and add them to the dataframe.
 
-     !!! note "About calculated models"
+    !!! note "About calculated models"
         `calculated_models` are also wrapper functions similar to `solve_model`. The
          overall goal is to extract from the best parameters the single contributions in
          the model. Currently, `lmfit` provides only a single model, so the best-fit.

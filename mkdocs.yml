@@ -157,7 +157,10 @@ nav:
       - Solvers: doc/solver.md
       - Fitting: doc/fitting.md
   - API:
-    - SpectraFit: api/spectrafit.md
+    - SpectraFit: api/spectrafit_api.md
+    - Plotting: api/plotting_api.md
+    - Modelling: api/modelling_api.md
+    - Reporting: api/reporting_api.md
   - Support:
     - Contact: contact.md
     - License: license.md
