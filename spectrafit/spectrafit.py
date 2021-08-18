@@ -1,11 +1,15 @@
+"""SpectraFit, the command line tool for fitting."""
 import argparse
 import json
 import pprint
 import sys
 
+from datetime import datetime
 from pathlib import Path
 from typing import Any
+from typing import MutableMapping
 from typing import Tuple
+from uuid import uuid4
 
 import numpy as np
 import pandas as pd
@@ -29,6 +33,12 @@ pp = pprint.PrettyPrinter(indent=4)
 
 
 def get_args() -> dict:
+    """Get the arguments from the command line.
+
+    Returns:
+        dict: Return the input file arguments as a dictionary without additional
+             information beyond the command line arguments.
+    """
     parser = argparse.ArgumentParser(
         description="Fast Fitting Program for ascii txt files."
     )
@@ -125,6 +135,12 @@ def get_args() -> dict:
         help="Selected the header for the dataframe; default to None.",
     )
     parser.add_argument(
+        "-np",
+        "--noplot",
+        help="No plotting the spectra and the fit of `spectrafit`.",
+        action="store_true",
+    )
+    parser.add_argument(
         "-v",
         "--version",
         help="Display the current version of `spectrafit`.",
@@ -139,7 +155,7 @@ def get_args() -> dict:
     return vars(parser.parse_args())
 
 
-def read_input_file(fname: str) -> dict:
+def read_input_file(fname: str) -> MutableMapping[str, Any]:
     """Read the input file.
 
     Read the input file as `toml`, `json`, or `yaml` files
@@ -152,19 +168,22 @@ def read_input_file(fname: str) -> dict:
         TypeError: If the input file is not supported.
 
     Returns:
-        dict: Table of the input file to a dictionary.
+        dict: Return the input file arguments as a dictionary with additional
+             information beyond the command line arguments.
+
     """
-    fname = Path(fname)
+    _fname = Path(fname)
     try:
-        if fname.suffix == ".toml":
-            with open(fname, "r") as f:
-                return toml.load(fname)
-        elif fname.suffix == ".json":
-            with open(fname, "r") as f:
-                return json.load(f)
-        elif fname.suffix == ".yaml":
-            with open(fname, "r") as f:
-                return yaml.load(f, Loader=yaml.FullLoader)
+        if _fname.suffix == ".toml":
+            with open(_fname, "r") as f:
+                args = toml.load(fname)
+        elif _fname.suffix == ".json":
+            with open(_fname, "r") as f:
+                args = json.load(f)
+        elif _fname.suffix == ".yaml":
+            with open(_fname, "r") as f:
+                args = yaml.load(f, Loader=yaml.FullLoader)
+        return args
     except TypeError as exc:
         print(
             f"{exc}:  Input file {fname} has not supported file format.\n"
@@ -174,14 +193,20 @@ def read_input_file(fname: str) -> dict:
     except FileNotFoundError as exc:
         print(
             f"{exc}:  Standard input file {fname} has to be provided!"
-            "\nOr you have to explicitly provide an input file with '-i' or '--input'.\n"
+            "\nOr you have to explicitly provide an input file with '-i' or "
+            "'--input'.\n"
             "Supported fileformats are: '*.json', '*.yaml', and '*.toml'"
         )
         sys.exit(1)
 
 
 def command_line_runner(args: dict = None) -> None:
+    """Running spectrafit from the command line.
 
+    Args:
+        args (dict, optional): The input file arguments as a dictionary with additional
+             information beyond the command line arguments. Defaults to None.
+    """
     while True:
         again = input("Would you like to fit ...? Enter y/n: ").lower()
         if again == "n":
@@ -223,8 +248,23 @@ def command_line_runner(args: dict = None) -> None:
             print('You should enter either "y" or "n".')
 
 
-def save_as_csv(args, df: pd.DataFrame) -> None:
+def save_as_csv(df: pd.DataFrame, args: dict) -> None:
+    """Save the the fit results to csv files.
 
+    !!! note "About saving the fit results"
+        The fit results are saved to csv files and are divided into three different
+         categories:
+            1. The fit results of the original used data.
+            2. The correlation analysis of the fit results.
+            3. The error analysis of the fit results.
+
+    Args:
+        df (pd.DataFrame): DataFrame containing the input data (`x` and `data`),
+             as well as the best fit and the corresponding residuum. Hence, it will be
+             extended by the single contribution of the model.
+        args (dict): Return the input file arguments as a dictionary with additional
+             information beyond the command line arguments.
+    """
     df.to_csv(Path(f"{args['outfile']}_fit.csv"), index=False)
     pd.DataFrame.from_dict(args["fit_insights"]["correlations"]).to_csv(
         Path(f"{args['outfile']}_correlation.csv"),
@@ -242,10 +282,8 @@ def save_as_json(args):
     """Save the fitting result as json file.
 
     Args:
-        args (dict): Dictionary of the fitting result.
-
-    Returns:
-        None
+        args (dict): The input file arguments as a dictionary with additional
+             information beyond the command line arguments.
     """
     if args["outfile"]:
         with open(Path(f"{args['outfile']}_summary.json"), "w") as f:
@@ -255,6 +293,16 @@ def save_as_json(args):
 
 
 def extracted_from_command_line_runner() -> dict:
+    """Extracting the input commands from the terminal.
+
+    Raises:
+        KeyError: [description]
+        KeyError: [description]
+
+    Returns:
+        dict: The input file arguments as a dictionary with additional
+             information beyond the command line arguments.
+    """
     result = get_args()
     _args = read_input_file(result["input"])
     if "settings" in _args.keys():
@@ -285,11 +333,27 @@ def extracted_from_command_line_runner() -> dict:
             result["conf_interval"] = None
     if "peaks" in _args["fitting"].keys():
         result["peaks"] = _args["fitting"]["peaks"]
+    result["timestamp"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    result["ID"] = str(uuid4())
     return result
 
 
 def fitting_routine(df: pd.DataFrame, args: dict) -> Tuple[pd.DataFrame, dict]:
+    """Running the fitting algorithm.
 
+    Args:
+        df (pd.DataFrame): DataFrame containing the input data (`x` and `data`),
+             as well as the best fit and the corresponding residuum. Hence, it will be
+             extended by the single contribution of the model.
+        args (dict): The input file arguments as a dictionary with additional
+             information beyond the command line arguments.
+
+    Returns:
+        Tuple[pd.DataFrame, dict]: Can be both a DataFrame or a dictionary, which is
+             containing the input data (`x` and `data`), as well as the best fit and
+             the corresponding residuum. Hence, it will be extended by the single
+             contribution of the model.
+    """
     # try:
     df = energy_range(df=df, args=args)
     df = energy_shift(df=df, args=args)
@@ -327,8 +391,19 @@ def fitting_routine(df: pd.DataFrame, args: dict) -> Tuple[pd.DataFrame, dict]:
 
 
 def printing_regular_mode(
-    args, result: Any, minimizer: Minimizer, correlation: pd.DataFrame
+    args: dict, result: Any, minimizer: Minimizer, correlation: pd.DataFrame
 ) -> None:
+    """Printing the fitting results in the regular mode.
+
+    Args:
+        args (dict): The input file arguments as a dictionary with additional
+             information beyond the command line arguments.
+        result (Any): The lmfit `results` as a kind of result based class.
+        minimizer (Minimizer): The lmfit `Minimizer`-class as a general minimizer for
+             curve fitting and optimization.
+        correlation (pd.DataFrame): The correlation results of the global fit as pandas
+             DataFrame.
+    """
     print("\nStatistic:\n")
     print(
         tabulate(
@@ -348,6 +423,12 @@ def printing_regular_mode(
 
 
 def printing_verbose_mode(args: dict) -> None:
+    """Printing all results in verbose mode.
+
+    Args:
+        args (dict): The input file arguments as a dictionary with additional
+             information beyond the command line arguments.
+    """
     print("\nStatistic:\n")
     pp.pprint(args["data_statistic"])
     print("Input Parameter:\n")
@@ -362,13 +443,15 @@ def printing_verbose_mode(args: dict) -> None:
 
 
 def get_parameters(args: dict) -> dict:
-    """[summary]
+    """Transforming the input parameters to a params-dictionary.
 
     Args:
-        args (dict): [description]
+        args (dict): The input file arguments as a dictionary with additional
+             information beyond the command line arguments.
 
     Returns:
-        dict: [description]
+        dict: Transformed the pre-defined peaks in the `args` to the params dictionary
+             of the lmfit-`minimizer`.
     """
     params = Parameters()
 
@@ -380,10 +463,20 @@ def get_parameters(args: dict) -> dict:
 
 
 def energy_range(df: pd.DataFrame, args: dict) -> Tuple[pd.DataFrame, dict, dict]:
-    """
-    Select the energy range for fitting.
-    """
+    """Select the energy range for fitting.
 
+    Args:
+        df (pd.DataFrame): DataFrame containing the input data (`x` and `data`),
+             as well as the best fit and the corresponding residuum. Hence, it will be
+             extended by the single contribution of the model.
+        args (dict): The input file arguments as a dictionary with additional
+             information beyond the command line arguments.
+
+    Returns:
+        Tuple[pd.DataFrame, dict, dict]: DataFrame containing the input data
+             (`x` and `data`), as well as the best fit and the corresponding residuum.
+             Hence, it will be extended by the single contribution of the model.
+    """
     _e0 = args["energy_start"]
     _e1 = args["energy_stop"]
 
@@ -397,8 +490,19 @@ def energy_range(df: pd.DataFrame, args: dict) -> Tuple[pd.DataFrame, dict, dict
 
 
 def energy_shift(df: pd.DataFrame, args: dict) -> pd.DataFrame:
-    """
-    Shift the energy axis by a given value.
+    """Shift the energy axis by a given value.
+
+    Args:
+        df (pd.DataFrame): DataFrame containing the input data (`x` and `data`),
+             as well as the best fit and the corresponding residuum. Hence, it will be
+             extended by the single contribution of the model.
+        args (dict): The input file arguments as a dictionary with additional
+             information beyond the command line arguments.
+
+    Returns:
+        pd.DataFrame: DataFrame containing the input data (`x` and `data`),
+             as well as the best fit and the corresponding residuum. Hence, it will be
+             extended by the single contribution of the model.
     """
     if args["shift"]:
         df[args["column"][0]] = df[args["column"][0]] - args["shift"]
@@ -407,9 +511,29 @@ def energy_shift(df: pd.DataFrame, args: dict) -> pd.DataFrame:
 
 
 def oversampling(df: pd.DataFrame, args: dict) -> pd.DataFrame:
+    """Oversampling the data to increase the resolution of the data.
+
+    !!! note "About Oversampling"
+        In this implementation of oversampling, the data is oversampled by the factor of
+         5. In case of data with only a few points, the increased resolution should
+         allow to easier solve the optimization problem. The oversampling based on a
+         simple linear regression.
+
+    Args:
+        df (pd.DataFrame): DataFrame containing the input data (`x` and `data`),
+             as well as the best fit and the corresponding residuum. Hence, it will be
+             extended by the single contribution of the model.
+        args (dict): The input file arguments as a dictionary with additional
+             information beyond the command line arguments.
+
+    Returns:
+        pd.DataFrame: DataFrame containing the input data (`x` and `data`),
+             as well as the best fit and the corresponding residuum. Hence, it will be
+             extended by the single contribution of the model.
+    """
     if args["oversampling"]:
         x_values = np.linspace(
-            df[args["column"][0]].min(), df[args["column"][0]].max(x), 5 * df.shape[0]
+            df[args["column"][0]].min(), df[args["column"][0]].max(), 5 * df.shape[0]
         )
         return pd.DataFrame(
             {
@@ -423,7 +547,17 @@ def oversampling(df: pd.DataFrame, args: dict) -> pd.DataFrame:
 
 
 def intensity_smooth(df: pd.DataFrame, args: dict) -> pd.DataFrame:
+    """Smooth the intensity values.
 
+    Args:
+        df (pd.AI2 DataFrame containing the input data (`x` and `data`).
+        args (dict): The input file arguments as a dictionary with additional
+             information beyond the command line arguments.
+
+    Returns:
+        pd.DataFrame: DataFrame containing the input data (`x` and `data`), which are
+             optionally smoothed.
+    """
     if args["smooth"]:
         box = np.ones(args["smooth"]) / args["smooth"]
         df[args["column"][1]] = np.convolve(

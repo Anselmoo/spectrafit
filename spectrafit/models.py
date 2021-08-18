@@ -44,7 +44,7 @@ class Constants:
 
 
 def solver_model(params: dict, x: np.array, data: np.array) -> np.array:
-    """Solving the fitting problem.
+    r"""Solving the fitting problem.
 
     !!! note "About implemented models"
         `solver_model` is a wrapper function for the calling the implemented moldels.
@@ -57,16 +57,17 @@ def solver_model(params: dict, x: np.array, data: np.array) -> np.array:
         - [Lorentzian](https://en.wikipedia.org/wiki/Cauchy_distribution)
             also known as Cauchy distribution
         - [Voigt](https://en.wikipedia.org/wiki/Voigt_profile)
-        - [Pseudo Voigt]
-            (https://en.wikipedia.org/wiki/Voigt_profile#Pseudo-Voigt_approximation)
+        - [Pseudo Voigt][1]
         - Exponential
-        - [Powerlaw]
-            (https://en.wikipedia.org/wiki/Power_law) (also known as Log-parabola)
+        - [Powerlaw][2] (also known as Log-parabola)
         - Linear
         - Constant
         - [Error Function](https://en.wikipedia.org/wiki/Error_function)
         - [Arcus Tangens](https://en.wikipedia.org/wiki/Inverse_trigonometric_functions)
         - Logarithmic
+
+        [1]: https://en.wikipedia.org/wiki/Voigt_profile#Pseudo-Voigt_approximation
+        [2]: https://en.wikipedia.org/wiki/Power_law
 
 
     Args:
@@ -79,6 +80,8 @@ def solver_model(params: dict, x: np.array, data: np.array) -> np.array:
 
     Returns:
         np.array: The best-fitted data based on the proposed model.
+
+
     """
     val = 0.0
     for model in params:
@@ -238,7 +241,12 @@ def solver_model(params: dict, x: np.array, data: np.array) -> np.array:
 
 
 def calculated_models(params: dict, x: np.array, df: pd.DataFrame) -> pd.DataFrame:
-    """Calculate the single contributions of the models and add them to the dataframe.
+    r"""Calculate the single contributions of the models and add them to the dataframe.
+
+     !!! note "About calculated models"
+        `calculated_models` are also wrapper functions similar to `solve_model`. The
+         overall goal is to extract from the best parameters the single contributions in
+         the model. Currently, `lmfit` provides only a single model, so the best-fit.
 
     Args:
         params (dict): The best optimized parameters of the fit.

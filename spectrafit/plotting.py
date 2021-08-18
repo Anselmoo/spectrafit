@@ -1,5 +1,5 @@
+"""Plotting of the fit results."""
 import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
 import seaborn as sns
 
@@ -10,9 +10,14 @@ sns.set_theme(style="whitegrid")
 color = sns.color_palette("Paired")
 
 
-def plot_spectra(df: pd.DataFrame, args: dict = None) -> None:
-    """Plot spectra with seaborn and matplotlib"""
+def plot_spectra(df: pd.DataFrame) -> None:
+    """Plot spectra with seaborn and matplotlib.
 
+    Args:
+        df (pd.DataFrame): DataFrame containing the input data (`x` and `data`),
+             as well as the best fit and the corresponding residuum. Hence, it will be
+             extended by the single contribution of the model.
+    """
     fig, (ax1, ax2) = plt.subplots(
         2, sharex=True, figsize=(9, 9), gridspec_kw={"height_ratios": [1, 2]}
     )

@@ -14,6 +14,8 @@ copyright: Copyright &copy; 2021 - Anselm Hahn
 # Configuration
 theme:
   name: material
+  features:
+    - navigation.expand
   static_templates:
     - 404.html
   include_search_page: true
@@ -43,15 +45,15 @@ theme:
         icon: material/toggle-switch-off-outline
         name: Switch to dark mode
     - scheme: slate
-      primary: red
-      accent: red
+      primary: deep purple
+      accent: deep purple
       toggle:
         icon: material/toggle-switch
         name: Switch to light mode
   font:
     text: Roboto
     code: Roboto Mono
-  # favicon: assets/favicon.png
+    favicon: assets/hdpi/ic_launcher_APP.png
   icon:
     logo: logo
 
@@ -142,6 +144,7 @@ nav:
     - Usage: interface/usage.md
     - Configuration: interface/configuration.md
     - Extensions: interface/extensions.md
+    - Features: interface/features.md
   - Examples:
     - Example 1: examples/example1.md
     - Example 2: examples/example2.md
@@ -150,7 +153,8 @@ nav:
     - Example 5: examples/example5.md
     - Example 6: examples/example6.md
   - Documentation:
-      - Models & Solutions: doc/models_solutions.md
+      - Models: doc/models.md
+      - Solvers: doc/solver.md
       - Fitting: doc/fitting.md
   - API:
     - SpectraFit: api/spectrafit.md
