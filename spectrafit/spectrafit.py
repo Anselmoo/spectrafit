@@ -138,7 +138,7 @@ def get_args() -> dict:
         "-np",
         "--noplot",
         help="No plotting the spectra and the fit of `spectrafit`.",
-        action="store_true",
+        action="store_false",
     )
     parser.add_argument(
         "-v",
@@ -238,9 +238,10 @@ def command_line_runner(args: dict = None) -> None:
             print("Lets start fitting ...")
             df_result, args = fitting_routine(df=df, args=args)
             args["fit_result"] = df_result.to_dict(orient="list")
-            plot_spectra(df=df_result)
+            if not args["noplot"]:
+                plot_spectra(df=df_result)
             save_as_json(args)
-            save_as_csv(args, df=df_result)
+            save_as_csv(df=df_result, args=args)
 
             args = None
             # print("\nCorrelation:\n")
@@ -296,8 +297,8 @@ def extracted_from_command_line_runner() -> dict:
     """Extracting the input commands from the terminal.
 
     Raises:
-        KeyError: [description]
-        KeyError: [description]
+        KeyError: Missing key `minimizer` in `parameters`.
+        KeyError: Missing key `optimizer` in `parameters`.
 
     Returns:
         dict: The input file arguments as a dictionary with additional
@@ -335,6 +336,7 @@ def extracted_from_command_line_runner() -> dict:
         result["peaks"] = _args["fitting"]["peaks"]
     result["timestamp"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     result["ID"] = str(uuid4())
+    result["used_version"] = __version__
     return result
 
 
@@ -417,7 +419,7 @@ def printing_regular_mode(
     print(report_fit(result, modelpars=result.params, **args["report"]))
     if args["conf_interval"]:
         print("\nConfidence Interval:\n")
-        report_ci(conf_interval(minimizer, result, **args["conf_interval"])[0])
+        report_ci(conf_interval(minimizer, result, **args["conf_interval"]))
     print("\nOverall Linear-Correlation:\n")
     print(tabulate(correlation, headers="keys", tablefmt="fancy_grid", floatfmt=".2f"))
 

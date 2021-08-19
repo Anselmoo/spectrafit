@@ -24,7 +24,15 @@ necessary:
    input file.
 4. More command line arguments can be seen by activating the `-h` \ ``--help`
    flag.
-5. Starting `SpectraFit` via:
+5. The attributes `minimizer` and `optimizer` have to be also defined, because
+   they control the optimization algorithm of lmfit. For information see
+   [lmfit.mininizer][5]. The input file has to contain the following lines:
+   ```json
+      "parameters": {
+      "minimizer": { "nan_policy": "propagate", "calc_covar": true },
+      "optimizer": { "max_nfev": 1000, "method": "leastsq" }
+   ```
+6. Starting `SpectraFit` via:
    ```shell
    spectrafit data_file.txt input_file.json
    ```
@@ -104,13 +112,14 @@ necessary:
     At the moment, no default attributes are defined for the models, but this
     will come in a future release.
 
-In summary, for using
-
 ## Advanced Usage
 
-```json
-{
-  "settings": {
+In case of advanced usage of `SpectraFit`, the following steps are necessary:
+
+1.  Define the settings in the input file as shown below:
+    ```json
+    {
+    "settings": {
     "column": [0, 1],
     "decimal": ".",
     "disp": false,
@@ -124,124 +133,223 @@ In summary, for using
     "shift": 0,
     "smooth": 0,
     "verbose": false,
-    "version": false
-  },
-  "fitting": {
-    "description": {
-      "project_name": "Template",
-      "project_details": "Template for testing",
-      "keywords": [
-        "2D-Spectra",
-        "fitting",
-        "curve-fitting",
-        "peak-fitting",
-        "spectrum"
-      ]
-    },
+    "version": false,
+    "noplot": false
+    }
+    ```
+    If the settings are pre-defined in the input file, the corresponding command
+    line arguments will be automatically replaced with them. If they are not
+    defined, the command line arguments or their default values will be use.
+    This allows to run faster `SpectraFit` and also be consistent in the fitting
+    procedure in case of larger studies. For the detail mechanism of overwriting
+    the settings, please see the API documentation of [Command Line Module][4]
+2.  Another advanced feature of `SpectraFit` is to define the fit as project,
+    which can become very useful in case of versioning the fitting project. For
+    using `SpectraFit` as a project, the project details have to be defined as
+    attributes. The attributes are `project name`, `project details`,
+    `keywords`, as shown in the snippet below:
+    ```json
+    "fitting": {
+        "description": {
+          "project_name": "Template",
+          "project_details": "Template for testing",
+          "keywords": [
+            "2D-Spectra",
+            "fitting",
+            "curve-fitting",
+            "peak-fitting",
+            "spectrum"
+          ]
+        }
+    ```
+    All three attributes are strings, the `project name` should be ideally a
+    single name with no spaces. The `project details` can be longer text, and
+    the `keywords` should be a list of strings for tagging in a database.
+3.  The input file can be extended with more parameters, which are not necessary
+    and optional in case of the confidence intervals. In general, the keywords
+    of the lmfit `minimizer` function are supported. For more information please
+    check the module [lmfit.mininizer][5]. The attributes have to be initialized
+    with the keyword `parameters` as shown below:
 
-    "parameters": {
-      "minimizer": { "nan_policy": "propagate", "calc_covar": true },
-      "optimizer": { "max_nfev": 1000, "method": "leastsq" },
-      "report": { "min_correl": 0.0 },
-      "conf_interval": {
-        "p_names": null,
-        "sigmas": null,
-        "trace": true,
-        "maxiter": 200,
+    ```json
+     "parameters": {
+       "minimizer": { "nan_policy": "propagate", "calc_covar": true },
+       "optimizer": { "max_nfev": 1000, "method": "leastsq" },
+       "report": { "min_correl": 0.0 },
+       "conf_interval": {
+         "p_names": null,
+         "sigmas": null,
+         "trace": true,
+         "maxiter": 200,
+         "verbose": false,
+         "prob_func": null
+       }
+     }
+    ```
+
+    !!! warning "About confidence interval calculations"
+
+        The calculations of the confidence intervals depends on the number of
+        features and `maxiter`. Consequently, the confidence interval calculations
+        should be only used for the final fit to put the calculation time low.
+
+## Configurations
+
+In terms of the configuration of `SpectraFit`, configurations depends on
+[`lmfit package`](https://lmfit.github.io/lmfit-py/fitting.html).Most of the
+provided features of `lmfit` can be used. The configurations can be called as
+attributes of `optimizer` and `minimizer` as shown in [Standard Usage][7] #5.
+For the individualization of the configuration, please use the keywords of
+`lmfit` [minimizer module][8] and also check the API section `SpectraFit`'s
+[fitting routine][6].
+
+## Input Files
+
+??? example "Reference Input in `JSON`"
+
+    ```json
+    {
+      "settings": {
+        "column": [0, 1],
+        "decimal": ".",
+        "disp": false,
+        "energy_start": 0,
+        "energy_stop": 8,
+        "header": null,
+        "infile": "spectrafit/test/rixs_fecl4.txt",
+        "outfile": "fit_results",
+        "oversampling": false,
+        "noplot": false,
+        "seperator": "\t",
+        "shift": 0,
+        "smooth": 0,
         "verbose": false,
-        "prob_func": null
-      }
-    },
-    "peaks": {
-      "1": {
-        "pseudovoigt": {
-          "amplitude": {
-            "max": 2,
-            "min": 0,
-            "vary": true,
-            "value": 1
-          },
-          "center": {
-            "max": 2,
-            "min": -2,
-            "vary": true,
-            "value": 0
-          },
-          "fwhm_g": {
-            "max": 0.1,
-            "min": 0.02,
-            "vary": true,
-            "value": 0.01
-          },
-          "fwhm_l": {
-            "max": 0.1,
-            "min": 0.01,
-            "vary": true,
-            "value": 0.01
-          }
-        }
+        "version": false
       },
-      "2": {
-        "pseudovoigt": {
-          "amplitude": {
-            "max": 2,
-            "min": 0,
-            "vary": true,
-            "value": 1
-          },
-          "center": {
-            "max": 2,
-            "min": -2,
-            "vary": true,
-            "value": 0
-          },
-          "fwhm_g": {
-            "max": 0.1,
-            "min": 0.02,
-            "vary": true,
-            "value": 0.01
-          },
-          "fwhm_l": {
-            "max": 0.1,
-            "min": 0.01,
-            "vary": true,
-            "value": 0.01
+      "fitting": {
+        "description": {
+          "project_name": "Template",
+          "project_details": "Template for testing",
+          "keywords": [
+            "2D-Spectra",
+            "fitting",
+            "curve-fitting",
+            "peak-fitting",
+            "spectrum"
+          ]
+        },
+        "parameters": {
+          "minimizer": { "nan_policy": "propagate", "calc_covar": true },
+          "optimizer": { "max_nfev": 1000, "method": "leastsq" },
+          "report": { "min_correl": 0.0 },
+          "conf_interval": {
+            "p_names": null,
+            "sigmas": null,
+            "trace": true,
+            "maxiter": 200,
+            "verbose": false,
+            "prob_func": null
           }
-        }
-      },
-      "3": {
-        "constant": {
-          "amplitude": {
-            "max": 2,
-            "min": 0.01,
-            "vary": true,
-            "value": 1
-          }
-        }
-      },
-      "4": {
-        "gaussian": {
-          "amplitude": {
-            "max": 2,
-            "min": 0,
-            "vary": true,
-            "value": 1
+        },
+        "peaks": {
+          "1": {
+            "pseudovoigt": {
+              "amplitude": {
+                "max": 2,
+                "min": 0,
+                "vary": true,
+                "value": 1
+              },
+              "center": {
+                "max": 2,
+                "min": -2,
+                "vary": true,
+                "value": 0
+              },
+              "fwhm_g": {
+                "max": 0.1,
+                "min": 0.02,
+                "vary": true,
+                "value": 0.01
+              },
+              "fwhm_l": {
+                "max": 0.1,
+                "min": 0.01,
+                "vary": true,
+                "value": 0.01
+              }
+            }
           },
-          "center": {
-            "max": 2,
-            "min": -2,
-            "vary": true,
-            "value": 0
+          "2": {
+            "pseudovoigt": {
+              "amplitude": {
+                "max": 2,
+                "min": 0,
+                "vary": true,
+                "value": 1
+              },
+              "center": {
+                "max": 2,
+                "min": -2,
+                "vary": true,
+                "value": 0
+              },
+              "fwhm_g": {
+                "max": 0.1,
+                "min": 0.02,
+                "vary": true,
+                "value": 0.01
+              },
+              "fwhm_l": {
+                "max": 0.1,
+                "min": 0.01,
+                "vary": true,
+                "value": 0.01
+              }
+            }
           },
-          "fwhm_g": {
-            "max": 0.1,
-            "min": 0.02,
-            "vary": true,
-            "value": 0.01
+          "3": {
+            "constant": {
+              "amplitude": {
+                "max": 2,
+                "min": 0.01,
+                "vary": true,
+                "value": 1
+              }
+            }
+          },
+          "4": {
+            "gaussian": {
+              "amplitude": {
+                "max": 2,
+                "min": 0,
+                "vary": true,
+                "value": 1
+              },
+              "center": {
+                "max": 2,
+                "min": -2,
+                "vary": true,
+                "value": 0
+              },
+              "fwhm_g": {
+                "max": 0.1,
+                "min": 0.02,
+                "vary": true,
+                "value": 0.01
+              }
+            }
           }
         }
       }
     }
-  }
-}
-```
+    ```
+
+[4]:
+  ../../api/spectrafit_api/#spectrafit.spectrafit.extracted_from_command_line_runner
+[5]:
+  https://lmfit.github.io/lmfit-py/fitting.html?highlight=minimizer#module-lmfit.minimizer
+[6]: ../../api/spectrafit_api/#spectrafit.spectrafit.fitting_routine
+[7]: /spectrafit/interface/usage/#standard-usage
+[8]:
+  https://lmfit.github.io/lmfit-py/fitting.html?highlight=minimizer#module-lmfit.minimizer

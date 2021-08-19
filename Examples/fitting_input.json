@@ -9,6 +9,7 @@
     "infile": "spectrafit/test/rixs_fecl4.txt",
     "outfile": "fit_results",
     "oversampling": false,
+    "noplot": false,
     "seperator": "\t",
     "shift": 0,
     "smooth": 0,
@@ -27,7 +28,6 @@
         "spectrum"
       ]
     },
-
     "parameters": {
       "minimizer": { "nan_policy": "propagate", "calc_covar": true },
       "optimizer": { "max_nfev": 1000, "method": "leastsq" },

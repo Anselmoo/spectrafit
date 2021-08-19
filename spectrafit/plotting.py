@@ -19,6 +19,15 @@ def plot_spectra(df: pd.DataFrame) -> None:
      In the lower part, the fit is plotted together with the original spectra. Also
      the single contributions of the fit are drawn.
 
+    !!! info "About Plotting"
+
+        `plot_spectra` is a wrapper around the `seaborn.lineplot` and `seaborn.regplot`
+         function. Furthermore, the `MultiCursor` widget is used to create an
+         interactive plot, for picking the energy and intensity of the spectrum. the
+         `MultiCursor` widget is a part of the `matplotlib` library and can be used for
+         both, the residual plot and the spectrum plot.
+
+
     ![_](../../images/image001.png)
     > The upper part shows the residuum and the linear regression line. The lower part
     shows the fit and the single contributions of the fit.
