@@ -205,6 +205,18 @@ For the individualization of the configuration, please use the keywords of
 
 ## Input Files
 
+The input file of `SpectraFit` are dictionary-like objects. The input file can
+be one of these three types:
+
+- [x] [json](https://en.wikipedia.org/wiki/JSON)
+- [x] [toml](https://en.wikipedia.org/wiki/TOML)
+- [x] [yaml](https://en.wikipedia.org/wiki/YAML)
+
+Especially, the `toml` and `yaml` files are very useful for the configuration of
+`SpectraFit` due to their structure and simplicity.
+https://www.convertsimple.com allows easily to convert between these three file
+types.
+
 ??? example "Reference Input in `JSON`"
 
     ```json

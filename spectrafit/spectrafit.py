@@ -356,7 +356,6 @@ def fitting_routine(df: pd.DataFrame, args: dict) -> Tuple[pd.DataFrame, dict]:
              the corresponding residuum. Hence, it will be extended by the single
              contribution of the model.
     """
-    # try:
     df = energy_range(df=df, args=args)
     df = energy_shift(df=df, args=args)
     df = oversampling(df=df, args=args)
@@ -369,8 +368,6 @@ def fitting_routine(df: pd.DataFrame, args: dict) -> Tuple[pd.DataFrame, dict]:
         fcn_args=(df[args["column"][0]].values, df[args["column"][1]].values),
         **args["minimizer"],
     )
-    #
-    # try:
     result = mini.minimize(**args["optimizer"])
     args["fit_insights"] = fit_report_as_dict(result, modelpars=result.params)
     if args["conf_interval"]:
