@@ -1,6 +1,6 @@
 # SpectraFit
 
-`SpectraFit` is a command line tool for quick data fitting based on the regular
+`SpectraFit` is a command-line tool for quick data fitting based on the regular
 expression of distribution and linear functions. Furthermore, it can be also
 used as a module in existing python code. A previous version of `SpectraFit` was
 used for the following publication:
