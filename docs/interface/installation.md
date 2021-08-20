@@ -15,12 +15,6 @@ poetry add git+https://github.com/Anselmoo/SpectraFit.git
 pip install spectrafit
 ```
 
-### via conda:
-
-```shell
-conda install spectrafit
-```
-
 ### via Docker:
 
 ```docker
