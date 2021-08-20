@@ -35,7 +35,7 @@
       "conf_interval": {
         "p_names": null,
         "sigmas": null,
-        "trace": true,
+        "trace": false,
         "maxiter": 200,
         "verbose": false,
         "prob_func": null

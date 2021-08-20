@@ -1,0 +1,1 @@
+"""Pytest of spectrafit."""

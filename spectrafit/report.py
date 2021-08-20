@@ -1,4 +1,4 @@
-__name__ = ["fit_report_as_dict"]
+"""Fit-Results as Report."""
 import numpy as np
 
 from lmfit.parameter import Parameters
@@ -14,30 +14,28 @@ except ImportError:
 CORREL_HEAD = "[[Correlations]] (unreported correlations are < %.3f)"
 
 
-def fit_report_as_dict(inpars, modelpars=None, sort_pars=False):
-    """Generate a report of the fitting results.
+def fit_report_as_dict(
+    inpars: dict, modelpars: dict = None, sort_pars: bool = False
+) -> dict:
+    """Generate the best fit report as dictionary.
 
     The report contains the best-fit values for the parameters and their
     uncertainties and correlations.
 
-    Parameters
-    ----------
-    inpars : Parameters
-        Input Parameters from fit or MinimizerResult returned from a fit.
-    modelpars : Parameters, optional
-        Known Model Parameters.
-    sort_pars : bool or callable, optional
-        Whether to show parameter names sorted in alphanumerical order. If
-        False (default), then the parameters will be listed in the order
-        they were buffered to the Parameters dictionary. If callable, then
-        this (one argument) function is used to extract a comparison key
-        from each list element.
+    Args:
+        inpars (dict): Input Parameters from fit or MinimizerResult returned from a fit.
+        modelpars (dict, optional): Known Model Parameters. Defaults to None.
+        sort_pars (bool, optional): Whether to show parameter names sorted in
+             alphanumerical order. If False (default), then the parameters will be
+             listed in the order they were buffered to the Parameters dictionary. If
+             callable, then this (one argument) function is used to extract a
+             comparison key from each list element. Defaults to False.
 
-    Returns
-    -------
-    str
-        Multi-line text of fit report.
+    Raises:
+        SystemExit: In case of `numdifftools` is not installed, it can raise SystemExit.
 
+    Returns:
+        dict: [description]
     """
     if isinstance(inpars, Parameters):
         result, params = None, inpars

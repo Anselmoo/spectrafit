@@ -1,0 +1,159 @@
+site_name: SpectraFit
+site_url: https://Anselmoo.github.io/spectrafit/
+site_author: Anselm Hahn
+site_description: >-
+  Technical documentation for SpectraFit, a Python package for fitting
+# Repository
+repo_name: Anselmoo/SpectraFit
+repo_url: https://github.com/Anselmoo/spectrafit
+edit_uri: ""
+
+# Copyright
+copyright: Copyright &copy; 2021 - Anselm Hahn
+
+# Configuration
+theme:
+  name: material
+  features:
+    - navigation.expand
+  static_templates:
+    - 404.html
+  include_search_page: true
+  search_index_only: true
+  language: en
+  features:
+    - content.code.annotate
+    - content.tabs.link
+    - header.autohide
+    - navigation.expand
+    - navigation.indexes
+    - navigation.instant
+    - navigation.sections
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.top
+    - navigation.tracking
+    - search.highlight
+    - search.share
+    - search.suggest
+    - toc.integrate
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to dark mode
+    - scheme: slate
+      primary: deep purple
+      accent: deep purple
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode
+  font:
+    text: Roboto
+    code: Roboto Mono
+    favicon: assets/hdpi/ic_launcher_APP.png
+  icon:
+    logo: logo
+
+# Plugins
+plugins:
+  - search
+  - mkdocstrings
+  - autorefs
+  - section-index
+  - literate-nav:
+      nav_file: SUMMARY.md
+  - minify:
+      minify_html: true
+
+# Customization
+extra:
+  # analytics:
+  #  provider: google
+  #  property: !ENV GOOGLE_ANALYTICS_KEY
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/Anselmoo
+
+# Extensions
+markdown_extensions:
+  - admonition
+  - abbr
+  - attr_list
+  - def_list
+  - footnotes
+  - meta
+  - md_in_html
+  - toc:
+      permalink: true
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.magiclink:
+      repo_url_shorthand: true
+      user: Anselmoo
+      repo: spectrafit
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid-experimental
+          format: !!python/name:pymdownx.superfences.fence_code_format
+        - name: math
+          class: arithmatex
+          format: !!python/name:pymdownx.arithmatex.fence_mathjax_format
+  - pymdownx.snippets:
+      check_paths: true
+  - pymdownx.tabbed
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+extra_javascript:
+  - javascripts/config.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+# Page tree
+nav:
+  - Home: index.md
+  - Getting started:
+    - Installation: interface/installation.md
+    - Usage: interface/usage.md
+    - Features: interface/features.md
+  - Examples:
+    - Example 1: examples/example1.md
+    - Example 2: examples/example2.md
+    - Example 3: examples/example3.md
+    - Example 4: examples/example4.md
+    - Example 5: examples/example5.md
+    - Example 6: examples/example6.md
+  - Documentation:
+      - Models: doc/models.md
+      - Solvers: doc/solver.md
+      - Fitting: doc/fitting.md
+  - API:
+    - SpectraFit: api/spectrafit_api.md
+    - Plotting: api/plotting_api.md
+    - Modelling: api/modelling_api.md
+    - Reporting: api/reporting_api.md
+  - Support:
+    - Contact: contact.md
+    - License: license.md
+    - Contributing: contributing.md
+    - Code of Conduct: code_of_conduct.md
+  - Releases:
+    - Changelog: changelog.md
+    - Contributors: contributors.md
