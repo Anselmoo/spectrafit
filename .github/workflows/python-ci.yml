@@ -7,8 +7,28 @@ on:
     branches: [master]
 
 jobs:
+  pre-commit:
+    name: Pre-commit check before the matrix testing
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install poetry
+      - name: Install SpectraFit
+        run: |
+          poetry install
+      - name: Style-Check via poetry
+        run: |
+          poetry run pre-commit run --all-files
   build:
     name: Python ${{ matrix.version }} - ${{ matrix.os }} - ${{ matrix.arch }} - ${{ github.event_name }}
+    needs: pre-commit
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -36,9 +56,9 @@ jobs:
       - name: Install SpectraFit
         run: |
           poetry install
-      - name: Style-Check via poetry
-        run: |
-          poetry run pre-commit run --all-files
+      #- name: Style-Check via poetry
+      #  run: |
+      #    poetry run pre-commit run --all-files
   documentation:
     name: Build documentation
     runs-on: ubuntu-latest
@@ -62,4 +82,4 @@ jobs:
       - name: Deploy documentation develops
         if: contains(github.ref, 'refs/heads/master')
         run: |
-          mkdocs gh-deploy --clean --force
+          poetry run mkdocs gh-deploy --clean --force
