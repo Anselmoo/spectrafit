@@ -83,3 +83,12 @@ jobs:
         if: contains(github.ref, 'refs/heads/master')
         run: |
           poetry run mkdocs gh-deploy --clean --force
+  docker:
+    name: Docker Image CI
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build the Docker image
+      run: |
+        docker build . --file Dockerfile --tag spectrafit:$(date +%s)
