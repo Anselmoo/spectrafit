@@ -27,12 +27,6 @@ via pip:
 pip install spectrafit
 ```
 
-via conda:
-
-```shell
-conda install spectrafit
-```
-
 ## Usage:
 
 `SpectraFit` needs as command line tool only two things:
