@@ -26,6 +26,5 @@ jobs:
           pip install poetry
       - name: Build and publish
         run: |
-          poetry build
-          poetry run twine upload dist/*
+          poetry publish --build
         continue-on-error: true
