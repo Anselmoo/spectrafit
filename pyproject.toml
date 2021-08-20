@@ -3,9 +3,10 @@ name = "spectrafit"
 version = "0.2.4"
 description = "Fast fitting of 2D-Spectra with established routines"
 readme = "README.md"
-authors = ["ahahn <Anselm.Hahn@cec.mpg.de>"]
+authors = ["Anselm Hahn <Anselm.Hahn@gmail.com>"]
 license = "BSD"
-repository = "https://gitlab.gwdg.de/RIXSTools/spectrafit"
+repository = "https://github.com/Anselmoo/spectrafit"
+homepage = "https://anselmoo.github.io/spectrafit/"
 keywords = [
     "2D-Spectra",
     "fitting",
