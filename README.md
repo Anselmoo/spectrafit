@@ -8,13 +8,13 @@ Now, it is completely rewritten and is more flexible.
 
 ## Scope:
 
-- [x] Fitting of 2d data
-- [x] Using established and advanced solver methods
-- [x] Extensibility of the fitting function
-- [x] Guarantee traceability of the fitting results
-- [x] Saving all results for publications in a `CSV`-format
-- [x] Saving all results in a NoSQL-format (`JSON`) for project management
-- [x] Having an API interface for Graph-databases
+- Fitting of 2d data
+- Using established and advanced solver methods
+- Extensibility of the fitting function
+- Guarantee traceability of the fitting results
+- Saving all results for publications in a `CSV`-format
+- Saving all results in a NoSQL-format (`JSON`) for project management
+- Having an API interface for Graph-databases
 
 ## Installation:
 
@@ -95,4 +95,5 @@ optional arguments:
 
 ## Documentation:
 
-Please see the extended documentation for the full usage of `SpectraFit`.
+Please see the [extended documentation](https://anselmoo.github.io/spectrafit/)
+for the full usage of `SpectraFit`.
