@@ -57,6 +57,11 @@ jobs:
         run: |
           poetry install
           poetry run pytest --verbose --diff-symbols --cov=spectrafit
+      - name: Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          env_vars: OS,PYTHON
   documentation:
     name: Build documentation
     runs-on: ubuntu-latest
