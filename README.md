@@ -51,12 +51,11 @@ In case of `SpectraFit`, we have further extend the package by:
    [Seaborn](https://seaborn.pydata.org/)
 
 ```shell
-poetry run spectrafit data_file.txt input_file.json
+spectrafit data_file.txt input_file.json
 ```
 
 ```shell
-poetry run spectrafit -h
-Would you like to fit ...? Enter y/n: y
+spectrafit -h
 usage: spectrafit [-h] [-o OUTFILE] [-i INPUT] [-ov] [-disp] [-e0 ENERGY_START] [-e1 ENERGY_STOP] [-s SMOOTH] [-sh SHIFT] [-c COLUMN COLUMN] [-sep {    ,,,;,:,|, ,s+}] [-dec {.,,}] [-hd HEADER] [-np] [-v] [-vb] infile
 
 Fast Fitting Program for ascii txt files.

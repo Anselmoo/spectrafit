@@ -31,6 +31,7 @@ necessary:
       "parameters": {
       "minimizer": { "nan_policy": "propagate", "calc_covar": true },
       "optimizer": { "max_nfev": 1000, "method": "leastsq" }
+      }
    ```
 6. Starting `SpectraFit` via:
    ```shell
