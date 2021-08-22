@@ -8,7 +8,7 @@ on:
 
 jobs:
   pre-commit:
-    name: Pre-commit check before the matrix testing
+    name: Pre-commit
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -56,9 +56,7 @@ jobs:
       - name: Install SpectraFit
         run: |
           poetry install
-      #- name: Style-Check via poetry
-      #  run: |
-      #    poetry run pre-commit run --all-files
+          poetry run pytest --verbose --diff-symbols --cov=spectrafit
   documentation:
     name: Build documentation
     runs-on: ubuntu-latest

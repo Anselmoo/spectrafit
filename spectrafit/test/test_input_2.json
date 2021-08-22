@@ -1,0 +1,68 @@
+{
+  "settings": {
+    "column": [0, 1],
+    "decimal": ".",
+    "disp": false,
+    "energy_start": 0,
+    "energy_stop": 8,
+    "header": null,
+    "infile": "spectrafit/test/test_data.txt",
+    "outfile": "fit_results",
+    "oversampling": false,
+    "seperator": "\t",
+    "shift": 0,
+    "smooth": 0,
+    "verbose": false,
+    "version": false,
+    "noplot": true
+  },
+  "fitting": {
+    "description": {
+      "project_name": "Template",
+      "project_details": "Template for testing",
+      "keywords": [
+        "2D-Spectra",
+        "fitting",
+        "curve-fitting",
+        "peak-fitting",
+        "spectrum"
+      ]
+    },
+
+    "parameters": {
+      "minimizer": { "nan_policy": "propagate", "calc_covar": true },
+      "optimizer": { "max_nfev": 1, "method": "leastsq" },
+      "report": { "min_correl": 0.0 }
+    },
+    "peaks": {
+      "1": {
+        "pseudovoigt": {
+          "amplitude": {
+            "max": 2,
+            "min": 0,
+            "vary": true,
+            "value": 1
+          },
+          "center": {
+            "max": 2,
+            "min": -2,
+            "vary": true,
+            "value": 0
+          },
+          "fwhm_g": {
+            "max": 0.1,
+            "min": 0.02,
+            "vary": true,
+            "value": 0.01
+          },
+          "fwhm_l": {
+            "max": 0.1,
+            "min": 0.01,
+            "vary": true,
+            "value": 0.01
+          }
+        }
+      }
+    }
+  }
+}

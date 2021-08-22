@@ -180,7 +180,7 @@ def read_input_file(fname: str) -> MutableMapping[str, Any]:
         elif _fname.suffix == ".json":
             with open(_fname, "r") as f:
                 args = json.load(f)
-        elif _fname.suffix == ".yaml":
+        elif _fname.suffix in [".yaml", ".yml"]:
             with open(_fname, "r") as f:
                 args = yaml.load(f, Loader=yaml.FullLoader)
         return args
@@ -208,45 +208,46 @@ def command_line_runner(args: dict = None) -> None:
              information beyond the command line arguments. Defaults to None.
     """
     while True:
-        again = input("Would you like to fit ...? Enter y/n: ").lower()
+        if not args:
+            args = extracted_from_command_line_runner()
+        if args["version"]:
+            print(f"Currently used version is: {__version__}")
+            return
+        try:
+            df = pd.read_csv(
+                Path(args["infile"]),
+                sep=args["seperator"],
+                header=args["header"],
+                usecols=args["column"],
+                dtype=np.float64,
+                decimal=args["decimal"],
+            )
+
+            args["data_statistic"] = df.describe(
+                percentiles=np.arange(0.1, 1, 0.1)
+            ).to_dict()
+
+        except ValueError as exc:
+            print(f"Error: {exc} -> Dataframe contains non numeric data!")
+            return
+        print("Lets start fitting ...")
+        df_result, args = fitting_routine(df=df, args=args)
+        args["fit_result"] = df_result.to_dict(orient="list")
+        if not args["noplot"]:
+            plot_spectra(df=df_result)
+        save_as_json(args)
+        save_as_csv(df=df_result, args=args)
+
+        args = None
+        print("Fitting is done!")
+        again = input("Would you like to fit again ...? Enter y/n: ").lower()
         if again == "n":
             print("Thanks for using ...!")
             return
         elif again == "y":
-            if not args:
-                args = extracted_from_command_line_runner()
-            if args["version"]:
-                print(f"Currently used verison is: {__version__}")
-                return
-            try:
-                df = pd.read_csv(
-                    Path(args["infile"]),
-                    sep=args["seperator"],
-                    header=args["header"],
-                    usecols=args["column"],
-                    dtype=np.float64,
-                    decimal=args["decimal"],
-                )
-
-                args["data_statistic"] = df.describe(
-                    percentiles=np.arange(0.1, 1, 0.1)
-                ).to_dict()
-
-            except ValueError as exc:
-                print(f"Error: {exc} -> Dataframe contains non numeric data!")
-                return
-            print("Lets start fitting ...")
-            df_result, args = fitting_routine(df=df, args=args)
-            args["fit_result"] = df_result.to_dict(orient="list")
-            if not args["noplot"]:
-                plot_spectra(df=df_result)
-            save_as_json(args)
-            save_as_csv(df=df_result, args=args)
-
-            args = None
-            # print("\nCorrelation:\n")
+            continue
         else:
-            print('You should enter either "y" or "n".')
+            print("You should enter either 'y' or 'n'.")
 
 
 def save_as_csv(df: pd.DataFrame, args: dict) -> None:
