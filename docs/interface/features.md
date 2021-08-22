@@ -166,19 +166,146 @@ plotting options is available in the [API section][13].
 
 `SpectraFinder` automatically saves the fit results and the statistics in file
 format. By default, the results starts with `fit_results_*.*`, but can be
-indviudally labeled via `-o` command or in the input file. Furthermore, four
+individually labeled via `-o` command or in the input file. Furthermore, four
 different types of output files will be generated
 
-1. Fit results as `*.csv` file, which combines the original data with the fit,
-   residuals, and the single contribution.
-2. Fit errors as `*.csv` file, which contains the value and fit errors for each
-   parameter. The saved report is identically to printed report of [Variable
-   Analysis][8].
-3. Fit correlation as `*.csv` file, which contains the correlation analysis of
-   the dataframe. The saved report is identically to printed report of
-   [Correlation Analysis][14].
-4. Fit summary as `*.json` file, which contains all results of the fit _project_
-   including the meta-data.
+1.  Fit results as `*.csv` file, which combines the original data with the fit,
+    residuals, and the single contribution.
+2.  Fit errors as `*.csv` file, which contains the value and fit errors for each
+    parameter. The saved report is identically to printed report of [Variable
+    Analysis][8].
+3.  Fit correlation as `*.csv` file, which contains the correlation analysis of
+    the dataframe. The saved report is identically to printed report of
+    [Correlation Analysis][14].
+4.  Fit summary as `*.json` file, which contains all results of the fit
+    _project_ including the meta-data. The overall goal is to save the results
+    in a NoSQL-format, so that every fit becomes an unique fitting-project.
+
+    ??? info "A closer look on the output file format"
+
+        The fitting-project consists of the following parts:
+
+         1. The input parameter including the file-name of the original data.
+             ```json
+             "infile": "spectrafit/test/test_data.txt",
+             "outfile": "fit_results",
+             "input": "spectrafit/test/test_input_2.json",
+             "oversampling": false,
+             "disp": false,
+             "energy_start": 0,
+             "energy_stop": 8,
+             "smooth": 0,
+             "shift": 0,
+             "column": [
+                 0,
+                 1
+             ],
+             "seperator": "\t",
+             "decimal": ".",
+             "header": null,
+             "noplot": true,
+             "version": false,
+             "verbose": false,
+
+             ```
+         2. The project-specific meta-data.
+             ```json
+               "description": {
+               "project_name": "Template",
+               "project_details": "Template for testing",
+               "keywords": [
+                   "2D-Spectra",
+                   "fitting",
+                   "curve-fitting",
+                   "peak-fitting",
+                   "spectrum"
+               ]
+             },
+             ```
+             The meta-data will be automatically extended by timestamp and
+             unique ID.
+             ```json
+             {
+             "timestamp": "2021-08-22 12:33:26",
+             "ID": "89b1a4ef-320a-4ac0-80da-e8d946b00e13",
+             "used_version": "0.3.0",
+             }
+             ```
+         3. The `lmfit`-settings.
+             ```json
+               "minimizer": {
+                     "nan_policy": "propagate",
+                     "calc_covar": true
+                 },
+               "optimizer": {
+                     "max_nfev": 1,
+                     "method": "leastsq"
+                 },
+               "report": {
+                     "min_correl": 0.0
+                 },
+             ```
+         4. The initial peak definitions.
+         5. The results are saved as dictionary-list and can be imported by
+         [pandas.DataFrame.from_dict][15]. For example:
+        ```json
+            "data_statistic": {
+            "0": {
+                "count": 611.0,
+                "mean": 3.483333333333315,
+                "std": 2.942079763251376,
+                "min": -1.6,
+                "10%": -0.5833333333333369,
+                "20%": 0.433333333333326,
+                "30%": 1.4499999999999895,
+                "40%": 2.466666666666652,
+                "50%": 3.483333333333315,
+                "60%": 4.499999999999979,
+                "70%": 5.516666666666641,
+                "80%": 6.533333333333305,
+                "90%": 7.549999999999968,
+                "max": 8.566666666666633
+            },
+            "1": {
+                "count": 611.0,
+                "mean": 0.0603440425183391,
+                "std": 0.12314108298811662,
+                "min": 0.0,
+                "10%": 0.00015819900201364986,
+                "20%": 0.0015617780277680387,
+                "30%": 0.0045243182103807894,
+                "40%": 0.010958904109588984,
+                "50%": 0.016245522651620947,
+                "60%": 0.02770646393851211,
+                "70%": 0.059617904082309055,
+                "80%": 0.10112180177353332,
+                "90%": 0.13932494130255624,
+                "max": 1.0
+            }
+        },
+        ```
+        becomes again the result of [pre-analysis][16]:
+
+        |       |      0 |      1 |
+        | :---- | -----: | -----: |
+        | count | 611.00 | 611.00 |
+        | mean  |   3.48 |   0.06 |
+        | std   |   2.94 |   0.12 |
+        | min   |  -1.60 |   0.00 |
+        | 10%   |  -0.58 |   0.00 |
+        | 20%   |   0.43 |   0.00 |
+        | 30%   |   1.45 |   0.00 |
+        | 40%   |   2.47 |   0.01 |
+        | 50%   |   3.48 |   0.02 |
+        | 60%   |   4.50 |   0.03 |
+        | 70%   |   5.52 |   0.06 |
+        | 80%   |   6.53 |   0.10 |
+        | 90%   |   7.55 |   0.14 |
+        | max   |   8.57 |   1.00 |
+
+        This is the one of the universal concepts of `SpectraFit` to to keep the
+        results of the fit in a universal format, so that it can be switch
+        between dictionary representation and dataframe representation.
 
 ??? example "Fit summary in JSON format"
 
@@ -2361,3 +2488,6 @@ different types of output files will be generated
   https://lmfit.github.io/lmfit-py/examples/example_confidence_interval.html?highlight=confidence
 [13]: ../../api/plotting_api/
 [14]: /spectrafit/interface/features/#correlation-analysis
+[15]:
+  https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.from_dict.html
+[16]: /spectrafit/interface/features/#pre-analysis

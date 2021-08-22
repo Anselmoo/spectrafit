@@ -1,6 +1,9 @@
 # SpectraFit
 
-poet:
+`SpectraFit` is a command line tool for quick data fitting based on the regular
+expression of distribution and linear functions. Furthermore, it can be also
+used as a module in existing python code. A previous version of `SpectraFit` was
+used for the following publication:
 
 - [Measurement of the Ligand Field Spectra of Ferrous and Ferric Iron Chlorides Using 2p3d RIXS](https://pubs.acs.org/doi/abs/10.1021/acs.inorgchem.7b00940)
 
@@ -51,12 +54,11 @@ In case of `SpectraFit`, we have further extend the package by:
    [Seaborn](https://seaborn.pydata.org/)
 
 ```shell
-poetry run spectrafit data_file.txt input_file.json
+spectrafit data_file.txt input_file.json
 ```
 
 ```shell
-poetry run spectrafit -h
-Would you like to fit ...? Enter y/n: y
+spectrafit -h
 usage: spectrafit [-h] [-o OUTFILE] [-i INPUT] [-ov] [-disp] [-e0 ENERGY_START] [-e1 ENERGY_STOP] [-s SMOOTH] [-sh SHIFT] [-c COLUMN COLUMN] [-sep {    ,,,;,:,|, ,s+}] [-dec {.,,}] [-hd HEADER] [-np] [-v] [-vb] infile
 
 Fast Fitting Program for ascii txt files.
@@ -67,9 +69,9 @@ positional arguments:
 optional arguments:
   -h, --help            show this help message and exit
   -o OUTFILE, --outfile OUTFILE
-                        Filename for the export, default to set to input name.
+                        Filename for the export, default to set to 'spectrafit_results'.
   -i INPUT, --input INPUT
-                        Filename for the input parameter, default to set to 'fitting_input.toml'.Supported fileformats are: '*.json', '*.yaml', and '*.toml'
+                        Filename for the input parameter, default to set to 'fitting_input.toml'.Supported fileformats are: '*.json', '*.yml', '*.yaml', and '*.toml'
   -ov, --oversampling   Oversampling the spectra by using factor of 5; default to False.
   -disp                 Hole or splitted Table on the Screen; default to 'hole'.
   -e0 ENERGY_START, --energy_start ENERGY_START

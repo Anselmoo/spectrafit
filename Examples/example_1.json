@@ -1,24 +1,3 @@
-In this example, the command-line interface of `SpectraFit` is used to fit a
-single peak of the spectrum, as shown below.
-
-```shell
-spectrafit data.txt -i example_1.json -o example_1
-```
-
-![_](images/Figure_1.png)
-
-In case of using the energy ranges, the spectra will be limited to the defined
-energy ranges of `-e0` and `-e1`.
-
-```shell
-spectrafit data.txt -i example_1.json -o example_1 -e0 -1 -e1 +1
-```
-
-![_](images/Figure_2.png)
-
-The input file has to look like the following:
-
-```json
 {
   "fitting": {
     "description": {
@@ -32,11 +11,18 @@ The input file has to look like the following:
         "spectrum"
       ]
     },
-
     "parameters": {
-      "minimizer": { "nan_policy": "propagate", "calc_covar": true },
-      "optimizer": { "max_nfev": 1000, "method": "leastsq" },
-      "report": { "min_correl": 0.0 }
+      "minimizer": {
+        "nan_policy": "propagate",
+        "calc_covar": true
+      },
+      "optimizer": {
+        "max_nfev": 1000,
+        "method": "leastsq"
+      },
+      "report": {
+        "min_correl": 0.0
+      }
     },
     "peaks": {
       "1": {
@@ -70,4 +56,3 @@ The input file has to look like the following:
     }
   }
 }
-```

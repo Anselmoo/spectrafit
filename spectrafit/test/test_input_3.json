@@ -1,11 +1,11 @@
 {
   "settings": {
-    "column": [1, 3],
+    "column": ["Energy", "Noisy_Intensity"],
     "decimal": ".",
     "disp": true,
     "energy_start": 0,
     "energy_stop": 8,
-    "header": null,
+    "header": 0,
     "infile": "spectrafit/test/test_data.csv",
     "outfile": "fit_results",
     "oversampling": true,
