@@ -33,3 +33,43 @@ class TestCommandLineRunner:
         )
         assert ret.success
         assert ret.stderr == ""
+
+
+class TestFileFormat:
+    """Testing the file formats."""
+
+    def test_json_input(self, monkeypatch, script_runner):
+        """Testing json support."""
+        monkeypatch.setattr("builtins.input", lambda _: "n")
+        ret = script_runner.run(
+            "spectrafit",
+            "spectrafit/test/test_data.csv",
+            "-i",
+            "spectrafit/test/test_input_3.json",
+        )
+        assert ret.success
+        assert ret.stderr == ""
+
+    def test_yaml_input(self, monkeypatch, script_runner):
+        """Testing yaml support."""
+        monkeypatch.setattr("builtins.input", lambda _: "n")
+        ret = script_runner.run(
+            "spectrafit",
+            "spectrafit/test/test_data.csv",
+            "-i",
+            "spectrafit/test/test_input_3.yml",
+        )
+        assert ret.success
+        assert ret.stderr == ""
+
+    def test_toml_input(self, monkeypatch, script_runner):
+        """Testing toml support."""
+        monkeypatch.setattr("builtins.input", lambda _: "n")
+        ret = script_runner.run(
+            "spectrafit",
+            "spectrafit/test/test_data.csv",
+            "-i",
+            "spectrafit/test/test_input_3.toml",
+        )
+        assert ret.success
+        assert ret.stderr == ""
