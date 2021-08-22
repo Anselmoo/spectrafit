@@ -180,7 +180,7 @@ def read_input_file(fname: str) -> MutableMapping[str, Any]:
         elif _fname.suffix == ".json":
             with open(_fname, "r") as f:
                 args = json.load(f)
-        elif _fname.suffix == ".yaml" or _fname.suffix == ".yml":
+        elif _fname.suffix in [".yaml", ".yml"]:
             with open(_fname, "r") as f:
                 args = yaml.load(f, Loader=yaml.FullLoader)
         return args
