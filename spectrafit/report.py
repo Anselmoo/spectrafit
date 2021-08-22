@@ -138,7 +138,6 @@ def fit_report_as_dict(
         for i, name_1 in enumerate(parnames):
             buffer["covariance_matrix"][name_1] = {}
             for j, name_2 in enumerate(parnames):
-
                 buffer["covariance_matrix"][name_1][name_2] = result.covar[i, j]
     except AttributeError as exc:
         print(f"{exc}: Covariance Matrix could not be calculated.\n")

@@ -3,13 +3,12 @@
     "column": [0, 1],
     "decimal": ".",
     "disp": false,
-    "energy_start": 0,
-    "energy_stop": 8,
+    "energy_start": -1,
+    "energy_stop": 2.4,
     "header": null,
-    "infile": "spectrafit/test/rixs_fecl4.txt",
-    "outfile": "fit_results",
+    "infile": "data.txt",
+    "outfile": "example_2",
     "oversampling": false,
-    "noplot": false,
     "seperator": "\t",
     "shift": 0,
     "smooth": 0,
@@ -28,18 +27,11 @@
         "spectrum"
       ]
     },
+
     "parameters": {
       "minimizer": { "nan_policy": "propagate", "calc_covar": true },
       "optimizer": { "max_nfev": 1000, "method": "leastsq" },
-      "report": { "min_correl": 0.0 },
-      "conf_interval": {
-        "p_names": null,
-        "sigmas": null,
-        "trace": true,
-        "maxiter": 200,
-        "verbose": false,
-        "prob_func": null
-      }
+      "report": { "min_correl": 0.0 }
     },
     "peaks": {
       "1": {
@@ -51,20 +43,20 @@
             "value": 1
           },
           "center": {
-            "max": 2,
-            "min": -2,
+            "max": 0.5,
+            "min": -0.5,
             "vary": true,
             "value": 0
           },
           "fwhm_g": {
-            "max": 0.1,
-            "min": 0.02,
+            "max": 0.75,
+            "min": 0.001,
             "vary": true,
             "value": 0.01
           },
           "fwhm_l": {
-            "max": 0.1,
-            "min": 0.01,
+            "max": 0.75,
+            "min": 0.001,
             "vary": true,
             "value": 0.01
           }
@@ -80,18 +72,18 @@
           },
           "center": {
             "max": 2,
-            "min": -2,
-            "vary": true,
-            "value": 0
+            "min": 0,
+            "vary": false,
+            "value": 1.662
           },
           "fwhm_g": {
-            "max": 0.1,
+            "max": 0.5,
             "min": 0.02,
             "vary": true,
             "value": 0.01
           },
           "fwhm_l": {
-            "max": 0.1,
+            "max": 0.5,
             "min": 0.01,
             "vary": true,
             "value": 0.01
@@ -99,17 +91,7 @@
         }
       },
       "3": {
-        "constant": {
-          "amplitude": {
-            "max": 2,
-            "min": 0.01,
-            "vary": true,
-            "value": 1
-          }
-        }
-      },
-      "4": {
-        "gaussian": {
+        "pseudovoigt": {
           "amplitude": {
             "max": 2,
             "min": 0,
@@ -118,13 +100,75 @@
           },
           "center": {
             "max": 2,
-            "min": -2,
-            "vary": true,
-            "value": 0
+            "min": 1.8,
+            "vary": false,
+            "value": 1.924
           },
           "fwhm_g": {
-            "max": 0.1,
-            "min": 0.02,
+            "max": 0.75,
+            "min": 0.001,
+            "vary": true,
+            "value": 0.01
+          },
+          "fwhm_l": {
+            "max": 0.75,
+            "min": 0.001,
+            "vary": true,
+            "value": 0.01
+          }
+        }
+      },
+      "4": {
+        "pseudovoigt": {
+          "amplitude": {
+            "max": 2,
+            "min": 0,
+            "vary": true,
+            "value": 1
+          },
+          "center": {
+            "max": 2,
+            "min": 1,
+            "vary": false,
+            "value": 2.157
+          },
+          "fwhm_g": {
+            "max": 0.75,
+            "min": 0.001,
+            "vary": true,
+            "value": 0.01
+          },
+          "fwhm_l": {
+            "max": 0.75,
+            "min": 0.001,
+            "vary": true,
+            "value": 0.01
+          }
+        }
+      },
+      "5": {
+        "pseudovoigt": {
+          "amplitude": {
+            "max": 2,
+            "min": 0,
+            "vary": true,
+            "value": 1
+          },
+          "center": {
+            "max": 2.5,
+            "min": 2,
+            "vary": false,
+            "value": 2.345
+          },
+          "fwhm_g": {
+            "max": 0.75,
+            "min": 0.001,
+            "vary": true,
+            "value": 0.01
+          },
+          "fwhm_l": {
+            "max": 0.75,
+            "min": 0.001,
             "vary": true,
             "value": 0.01
           }
