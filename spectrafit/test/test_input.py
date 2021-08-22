@@ -1,4 +1,6 @@
 """Testing of the command line interface."""
+from pathlib import Path
+
 import pytest
 
 from spectrafit import __version__
@@ -50,6 +52,18 @@ class TestFileFormat:
         assert ret.success
         assert ret.stderr == ""
 
+    def test_yml_input(self, monkeypatch, script_runner):
+        """Testing yml support."""
+        monkeypatch.setattr("builtins.input", lambda _: "n")
+        ret = script_runner.run(
+            "spectrafit",
+            "spectrafit/test/test_data.csv",
+            "-i",
+            "spectrafit/test/test_input_3.yml",
+        )
+        assert ret.success
+        assert ret.stderr == ""
+
     def test_yaml_input(self, monkeypatch, script_runner):
         """Testing yaml support."""
         monkeypatch.setattr("builtins.input", lambda _: "n")
@@ -57,7 +71,7 @@ class TestFileFormat:
             "spectrafit",
             "spectrafit/test/test_data.csv",
             "-i",
-            "spectrafit/test/test_input_3.yml",
+            "spectrafit/test/test_input_3.yaml",
         )
         assert ret.success
         assert ret.stderr == ""
@@ -73,3 +87,19 @@ class TestFileFormat:
         )
         assert ret.success
         assert ret.stderr == ""
+
+
+class TestFileFormatOutput:
+    """Testing the output files and formats."""
+
+    def test_outputs(self, monkeypatch, script_runner):
+        """Testing correct number of outputs."""
+        monkeypatch.setattr("builtins.input", lambda _: "n")
+        _ = script_runner.run(
+            "spectrafit",
+            "spectrafit/test/test_data.txt",
+            "-i",
+            "spectrafit/test/test_input_2.json",
+        )
+        assert len(list(Path(".").glob("*.json"))) == 1
+        assert len(list(Path(".").glob("*.csv"))) == 3
