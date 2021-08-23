@@ -76,6 +76,8 @@ extra:
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/Anselmoo
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/project/spectrafit/
 
 # Extensions
 markdown_extensions:
