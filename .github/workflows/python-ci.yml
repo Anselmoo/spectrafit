@@ -56,7 +56,7 @@ jobs:
       - name: Install SpectraFit
         run: |
           poetry install
-          poetry run pytest --verbose --diff-symbols --cov=./
+          poetry run pytest --diff-symbols --cov=./spectrafit -vv --cov-report=xml
       - name: Codecov
         uses: codecov/codecov-action@v2
         with:
