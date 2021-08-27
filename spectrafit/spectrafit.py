@@ -46,8 +46,9 @@ def get_args() -> dict:
     parser.add_argument(
         "-o",
         "--outfile",
+        default="spectrafit_results",
         type=str,
-        help="Filename for the export, default to set to input name.",
+        help="Filename for the export, default to set to 'spectrafit_results'.",
     )
     parser.add_argument(
         "-i",
@@ -56,7 +57,7 @@ def get_args() -> dict:
         default="fitting_input.toml",
         help=(
             "Filename for the input parameter, default to set to 'fitting_input.toml'."
-            "Supported fileformats are: '*.json', '*.yaml', and '*.toml'"
+            "Supported fileformats are: '*.json', '*.yml', '*.yaml', and '*.toml'"
         ),
     )
     parser.add_argument(
@@ -138,7 +139,7 @@ def get_args() -> dict:
         "-np",
         "--noplot",
         help="No plotting the spectra and the fit of `spectrafit`.",
-        action="store_false",
+        action="store_true",
     )
     parser.add_argument(
         "-v",

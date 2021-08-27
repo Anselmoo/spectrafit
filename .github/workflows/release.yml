@@ -1,9 +1,5 @@
 name: Package Publishing
 on:
-  push:
-    branches: [ master ]
-    # Publish semver tags as releases.
-    tags: [ 'v*.*.*' ]
   release:
     types:
       - published

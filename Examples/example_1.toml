@@ -1,0 +1,45 @@
+[fitting.description]
+project_name = "Example1"
+project_details = "Example 1"
+keywords = [
+  "2D-Spectra",
+  "fitting",
+  "curve-fitting",
+  "peak-fitting",
+  "spectrum"
+]
+
+[fitting.parameters.minimizer]
+nan_policy = "propagate"
+calc_covar = true
+
+[fitting.parameters.optimizer]
+max_nfev = 1_000
+method = "leastsq"
+
+[fitting.parameters.report]
+min_correl = 0
+
+[fitting.peaks.1.pseudovoigt.amplitude]
+max = 2
+min = 0
+vary = true
+value = 1
+
+[fitting.peaks.1.pseudovoigt.center]
+max = 2
+min = -2
+vary = true
+value = 0
+
+[fitting.peaks.1.pseudovoigt.fwhm_g]
+max = 0.5
+min = 0.02
+vary = true
+value = 0.1
+
+[fitting.peaks.1.pseudovoigt.fwhm_l]
+max = 0.5
+min = 0.01
+vary = true
+value = 0.1

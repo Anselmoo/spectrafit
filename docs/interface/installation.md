@@ -3,20 +3,24 @@ repository. It is important that poetry is installed first, because the
 `setup.py` is not explicitly defined, because it is indirectly available in the
 `pyproject.toml` file.
 
+## via GitHub:
+
 ```shell
-poetry add git+https://github.com/Anselmoo/SpectraFit.git
+pip install git+https://github.com/Anselmoo/SpectraFit.git
 ```
 
-## Coming soon:
-
-### via PyPi:
+## via PyPi:
 
 ```shell
 pip install spectrafit
 ```
 
-### via Docker:
+## via Docker:
 
 ```docker
-docker run --name=spectrafit -v /path/to/spectrafit/:/spectrafit -p 8888:8888 -d spectrafit/spectrafit
+docker pull ghcr.io/anselmoo/spectrafit:latest
 ```
+
+!!! caution "About Docker-Image"
+
+    The docker-image of `SpectraFit` is still under development!

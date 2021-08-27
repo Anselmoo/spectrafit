@@ -1,0 +1,151 @@
+{
+  "settings": {
+    "column": ["Energy", "Noisy"],
+    "decimal": ".",
+    "disp": false,
+    "energy_start": -1,
+    "energy_stop": 2,
+    "header": 0,
+    "infile": "data.csv",
+    "outfile": "example_3",
+    "oversampling": false,
+    "seperator": ",",
+    "shift": 0,
+    "smooth": 0,
+    "verbose": false,
+    "version": false
+  },
+  "fitting": {
+    "description": {
+      "project_name": "Template",
+      "project_details": "Template for testing",
+      "keywords": [
+        "2D-Spectra",
+        "fitting",
+        "curve-fitting",
+        "peak-fitting",
+        "spectrum"
+      ]
+    },
+
+    "parameters": {
+      "minimizer": { "nan_policy": "propagate", "calc_covar": true },
+      "optimizer": { "max_nfev": 1000, "method": "leastsq" },
+      "report": { "min_correl": 0.0 }
+    },
+    "peaks": {
+      "1": {
+        "pseudovoigt": {
+          "amplitude": {
+            "max": 2,
+            "min": 0,
+            "vary": true,
+            "value": 1
+          },
+          "center": {
+            "max": 0.5,
+            "min": -0.5,
+            "vary": true,
+            "value": 0
+          },
+          "fwhm_g": {
+            "max": 0.75,
+            "min": 0.001,
+            "vary": true,
+            "value": 0.01
+          },
+          "fwhm_l": {
+            "max": 0.75,
+            "min": 0.001,
+            "vary": true,
+            "value": 0.01
+          }
+        }
+      },
+      "2": {
+        "pseudovoigt": {
+          "amplitude": {
+            "max": 2,
+            "min": 0,
+            "vary": true,
+            "value": 1
+          },
+          "center": {
+            "max": 2,
+            "min": 0,
+            "vary": true,
+            "value": 1.662
+          },
+          "fwhm_g": {
+            "max": 0.5,
+            "min": 0.02,
+            "vary": true,
+            "value": 0.01
+          },
+          "fwhm_l": {
+            "max": 0.5,
+            "min": 0.01,
+            "vary": true,
+            "value": 0.01
+          }
+        }
+      },
+      "3": {
+        "pseudovoigt": {
+          "amplitude": {
+            "max": 2,
+            "min": 0,
+            "vary": true,
+            "value": 1
+          },
+          "center": {
+            "max": 2,
+            "min": 1.8,
+            "vary": true,
+            "value": 1.924
+          },
+          "fwhm_g": {
+            "max": 0.75,
+            "min": 0.001,
+            "vary": true,
+            "value": 0.01
+          },
+          "fwhm_l": {
+            "max": 0.75,
+            "min": 0.001,
+            "vary": true,
+            "value": 0.01
+          }
+        }
+      },
+      "4": {
+        "pseudovoigt": {
+          "amplitude": {
+            "max": 2,
+            "min": 0,
+            "vary": true,
+            "value": 1
+          },
+          "center": {
+            "max": 2,
+            "min": 1,
+            "vary": true,
+            "value": 2.157
+          },
+          "fwhm_g": {
+            "max": 0.75,
+            "min": 0.001,
+            "vary": true,
+            "value": 0.01
+          },
+          "fwhm_l": {
+            "max": 0.75,
+            "min": 0.001,
+            "vary": true,
+            "value": 0.01
+          }
+        }
+      }
+    }
+  }
+}

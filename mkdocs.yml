@@ -76,6 +76,8 @@ extra:
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/Anselmoo
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/project/spectrafit/
 
 # Extensions
 markdown_extensions:
@@ -134,12 +136,10 @@ nav:
     - Usage: interface/usage.md
     - Features: interface/features.md
   - Examples:
-    - Example 1: examples/example1.md
-    - Example 2: examples/example2.md
-    - Example 3: examples/example3.md
-    - Example 4: examples/example4.md
-    - Example 5: examples/example5.md
-    - Example 6: examples/example6.md
+    - Fitting of a Single Feature via Command-Line: examples/example1.md
+    - JSON, TOML, YAML Inputs: examples/example2.md
+    - Multi Peak Fitting: examples/example3.md
+    - Working with Real Life Data: examples/example4.md
   - Documentation:
       - Models: doc/models.md
       - Solvers: doc/solver.md
