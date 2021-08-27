@@ -1,6 +1,7 @@
 """Fit-Results as Report."""
 import numpy as np
 
+from lmfit.minimizer import minimize
 from lmfit.parameter import Parameters
 from lmfit.printfuncs import alphanumeric_sort
 
@@ -15,7 +16,7 @@ CORREL_HEAD = "[[Correlations]] (unreported correlations are < %.3f)"
 
 
 def fit_report_as_dict(
-    inpars: dict, modelpars: dict = None, sort_pars: bool = False
+    inpars: minimize, modelpars: dict = None, sort_pars: bool = False
 ) -> dict:
     """Generate the best fit report as dictionary.
 
@@ -23,7 +24,8 @@ def fit_report_as_dict(
     uncertainties and correlations.
 
     Args:
-        inpars (dict): Input Parameters from fit or MinimizerResult returned from a fit.
+        inpars (minimize): Input Parameters from a fit or the  Minimizer results
+             returned from a fit.
         modelpars (dict, optional): Known Model Parameters. Defaults to None.
         sort_pars (bool, optional): Whether to show parameter names sorted in
              alphanumerical order. If False (default), then the parameters will be
@@ -51,7 +53,7 @@ def fit_report_as_dict(
         # further down
         parnames = list(params.keys())
 
-    buffer = {
+    buffer: dict = {
         "configurations": {},
         "statistics": {},
         "variables": {},
