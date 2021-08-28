@@ -98,6 +98,7 @@ def solver_model(params: dict, x: np.array, data: np.array) -> np.array:
             "erf",
             "atan",
             "log",
+            "heaviside",
         ]:
             pass
         else:
@@ -237,14 +238,28 @@ def solver_model(params: dict, x: np.array, data: np.array) -> np.array:
                     sigma=sigma,
                     kind="logistic",
                 )
+        if "heaviside" in model:
+            if "center" in model:
+                center = params[model]
+            if "sigma" in model:
+                sigma = params[model]
+            if "amplitude" in model:
+                amplitude = params[model]
+                val += step(
+                    x=x,
+                    amplitude=amplitude,
+                    center=center,
+                    sigma=sigma,
+                    kind="heaviside",
+                )
     return val - data
 
 
-def calculated_models(params: dict, x: np.array, df: pd.DataFrame) -> pd.DataFrame:
+def calculated_model(params: dict, x: np.array, df: pd.DataFrame) -> pd.DataFrame:
     r"""Calculate the single contributions of the models and add them to the dataframe.
 
     !!! note "About calculated models"
-        `calculated_models` are also wrapper functions similar to `solve_model`. The
+        `calculated_model` are also wrapper functions similar to `solve_model`. The
          overall goal is to extract from the best parameters the single contributions in
          the model. Currently, `lmfit` provides only a single model, so the best-fit.
 
@@ -276,6 +291,7 @@ def calculated_models(params: dict, x: np.array, df: pd.DataFrame) -> pd.DataFra
             "erf",
             "atan",
             "log",
+            "heaviside",
         ]:
             pass
         else:
@@ -418,6 +434,20 @@ def calculated_models(params: dict, x: np.array, df: pd.DataFrame) -> pd.DataFra
                     center=center,
                     sigma=sigma,
                     kind="logistic",
+                )
+        if "heaviside" in model:
+            if "center" in model:
+                center = params[model]
+            if "sigma" in model:
+                sigma = params[model]
+            if "amplitude" in model:
+                amplitude = params[model]
+                df[f"{model.split('_')[0]}_{model.split('_')[-1]}"] = step(
+                    x=x,
+                    amplitude=amplitude,
+                    center=center,
+                    sigma=sigma,
+                    kind="heaviside",
                 )
     return df
 
@@ -632,8 +662,8 @@ def step(
         amplitude (float, optional): Amplitude of the step function. Defaults to 1.0.
         center (float, optional): Cener of the step function. Defaults to 0.0.
         sigma (float, optional): Sigma of the step function. Defaults to 1.0.
-        kind (str, optional): Kind of the step function; can be 'linear',
-             'atan' or 'arctan', 'log' or 'logistic', 'erf'. Defaults to "linear".
+        kind (str, optional): Kind of the step function; can be 'heaviside',
+             'atan' or 'arctan', 'log' or 'logarithmic', 'erf'. Defaults to "heaviside".
 
     Returns:
         np.array: Step function of `x` given.
@@ -658,7 +688,7 @@ def step(
         out = 1.0 - 1.0 / (1.0 + np.exp(out))
     elif kind in {"atan", "arctan"}:
         out = 0.5 + np.arctan(out) / np.pi
-    else:
+    elif kind == "heaviside":
         out[np.where(out < 0)] = 0.0
         out[np.where(out > 1)] = 1.0
     return amplitude * out
