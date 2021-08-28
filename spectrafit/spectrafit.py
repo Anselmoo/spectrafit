@@ -545,7 +545,7 @@ def intensity_smooth(df: pd.DataFrame, args: dict) -> pd.DataFrame:
     """Smooth the intensity values.
 
     Args:
-        df (pd.AI2 DataFrame containing the input data (`x` and `data`).
+        df (pd.DataFrame): DataFrame containing the input data (`x` and `data`).
         args (dict): The input file arguments as a dictionary with additional
              information beyond the command line arguments.
 

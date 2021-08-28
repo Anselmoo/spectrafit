@@ -924,6 +924,22 @@ py = "*"
 pytest = ">=3.10"
 
 [[package]]
+name = "pytest-plt"
+version = "1.1.0"
+description = "Fixtures for quickly making Matplotlib plots in tests"
+category = "dev"
+optional = false
+python-versions = ">=3.5"
+
+[package.dependencies]
+matplotlib = "*"
+pytest = "*"
+
+[package.extras]
+all = ["nbsphinx (>=0.6.0)", "nengo-sphinx-theme (>1.2.2)", "numpydoc (>=0.9.2)", "sphinx"]
+docs = ["nbsphinx (>=0.6.0)", "nengo-sphinx-theme (>1.2.2)", "numpydoc (>=0.9.2)", "sphinx"]
+
+[[package]]
 name = "pytest-xdist"
 version = "2.3.0"
 description = "pytest xdist plugin for distributed testing and loop-on-failing modes"
@@ -1233,7 +1249,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7.1,<3.10"
-content-hash = "9164a214d2e7742d19e0f42ae0f7d34d29b82b91a106aa8e971ec81de2e07e2d"
+content-hash = "4ee12b92332da4724f59638bc1cecf285c7903e0bc77790406bf072898e81a52"
 
 [metadata.files]
 algopy = [
@@ -1798,6 +1814,10 @@ pytest-cov = [
 pytest-forked = [
     {file = "pytest-forked-1.3.0.tar.gz", hash = "sha256:6aa9ac7e00ad1a539c41bec6d21011332de671e938c7637378ec9710204e37ca"},
     {file = "pytest_forked-1.3.0-py2.py3-none-any.whl", hash = "sha256:dc4147784048e70ef5d437951728825a131b81714b398d5d52f17c7c144d8815"},
+]
+pytest-plt = [
+    {file = "pytest-plt-1.1.0.tar.gz", hash = "sha256:2244cd9627ab157206f5649551f5688ab7d0eb3ec939894269ae4d867052bb17"},
+    {file = "pytest_plt-1.1.0-py3-none-any.whl", hash = "sha256:857e3df8fabda3697d5d7fd1ed46ae6f21ea2a2fbb881144121621861e693de8"},
 ]
 pytest-xdist = [
     {file = "pytest-xdist-2.3.0.tar.gz", hash = "sha256:e8ecde2f85d88fbcadb7d28cb33da0fa29bca5cf7d5967fa89fc0e97e5299ea5"},
