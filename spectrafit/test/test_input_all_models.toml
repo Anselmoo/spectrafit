@@ -1,5 +1,5 @@
 [settings]
-column = [ "Energy", "Intensity"]
+column = ["Energy", "Intensity"]
 header = 0
 decimal = "."
 energy_start = 0
@@ -150,20 +150,68 @@ min = -2
 vary = true
 value = 0
 
-[fitting.peaks.8.atan.center]
+[fitting.peaks.8.log.center]
 max = 2
 min = -2
 vary = true
 value = 0
 
-[fitting.peaks.8.atan.sigma]
+[fitting.peaks.8.log.sigma]
 max = 2
 min = -2
 vary = true
 value = 0
 
-[fitting.peaks.8.atan.amplitude]
+[fitting.peaks.8.log.amplitude]
 max = 2
 min = -2
 vary = true
 value = 0
+
+[fitting.peaks.9.voigt.center]
+max = 2
+min = -2
+vary = true
+value = 0
+
+[fitting.peaks.9.voigt.fhwm]
+max = 2
+min = -2
+vary = true
+value = 0
+
+[fitting.peaks.10.gaussian.amplitude]
+max = 2
+min = 0
+vary = true
+value = 1
+
+[fitting.peaks.10.gaussian.center]
+max = 2
+min = -2
+vary = true
+value = 0
+
+[fitting.peaks.10.gaussian.fwhm_g]
+max = 0.1
+min = 0.02
+vary = true
+value = 0.01
+
+[fitting.peaks.11.lorentzian.amplitude]
+max = 2
+min = 0
+vary = true
+value = 1
+
+[fitting.peaks.11.lorentzian.center]
+max = 2
+min = -2
+vary = true
+value = 0
+
+[fitting.peaks.11.lorentzian.fwhm_l]
+max = 0.1
+min = 0.01
+vary = true
+value = 0.01
