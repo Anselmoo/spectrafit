@@ -153,6 +153,7 @@ nav:
     - License: license.md
     - Contributing: contributing.md
     - Code of Conduct: code_of_conduct.md
+    - Security: security.md
   - Releases:
     - Changelog: changelog.md
     - Contributors: contributors.md
