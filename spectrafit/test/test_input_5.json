@@ -4,7 +4,7 @@
     "decimal": ".",
     "header": 0,
     "infile": "spectrafit/test/test_data.csv",
-    "seperator": ",",
+    "separator": ",",
     "shift": 0.2,
     "noplot": true
   },

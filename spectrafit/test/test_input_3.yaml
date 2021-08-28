@@ -1,16 +1,15 @@
 ---
 settings:
   column:
-  - 1
-  - 3
+  - Energy
+  - Intensity
   decimal: "."
   energy_start: 0
   energy_stop: 8
-  header:
+  header: 0
   infile: spectrafit/test/test_data.csv
-  outfile: fit_results
   oversampling: true
-  seperator: ","
+  separator: ","
   shift: 0.2
   smooth: 4
   verbose: true

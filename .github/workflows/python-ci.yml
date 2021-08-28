@@ -10,9 +10,9 @@ jobs:
   pre-commit:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-python@v2
-    - uses: pre-commit/action@v2.0.3
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - uses: pre-commit/action@v2.0.3
   build:
     name: Python ${{ matrix.version }} - ${{ matrix.os }} - ${{ matrix.arch }} - ${{ github.event_name }}
     needs: pre-commit
@@ -43,7 +43,7 @@ jobs:
       - name: Install SpectraFit
         run: |
           poetry install
-          poetry run pytest --diff-symbols --cov=./spectrafit -vv --cov-report=xml
+          poetry run pytest --diff-symbols --cov=./spectrafit -vv --cov-report=xml --plots
       - name: Codecov
         uses: codecov/codecov-action@v2
         with:
@@ -78,7 +78,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Build the Docker image
-      run: |
-        docker build . --file Dockerfile --tag spectrafit:$(date +%s)
+      - uses: actions/checkout@v2
+      - name: Build the Docker image
+        run: |
+          docker build . --file Dockerfile --tag spectrafit:$(date +%s)

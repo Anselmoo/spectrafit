@@ -8,7 +8,7 @@
     "infile": "data.csv",
     "outfile": "example_3",
     "oversampling": false,
-    "seperator": ",",
+    "separator": ",",
     "shift": 0,
     "smooth": 0,
     "verbose": false,

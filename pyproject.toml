@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "SpectraFit"
-version = "0.3.2"
+version = "0.3.3"
 description = "Fast fitting of 2D-Spectra with established routines"
 readme = "README.md"
 authors = ["Anselm Hahn <Anselm.Hahn@gmail.com>"]
@@ -74,6 +74,7 @@ mathjax = "^0.1.2"
 mkdocs-literate-nav = "^0.4.0"
 mkdocs-section-index = "^0.3.1"
 pytest-xdist = "^2.3.0"
+pytest-plt = "^1.1.0"
 
 
 [build-system]

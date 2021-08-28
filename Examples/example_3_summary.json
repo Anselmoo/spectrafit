@@ -11,7 +11,7 @@
         "Energy",
         "Noisy"
     ],
-    "seperator": ",",
+    "separator": ",",
     "decimal": ".",
     "header": 0,
     "noplot": false,
