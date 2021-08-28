@@ -8,7 +8,7 @@
     "infile": "spectrafit/test/test_data.txt",
     "outfile": "fit_results",
     "oversampling": false,
-    "seperator": "\t",
+    "separator": "\t",
     "shift": 0,
     "smooth": 0,
     "verbose": false,

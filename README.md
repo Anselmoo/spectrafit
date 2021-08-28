@@ -87,10 +87,10 @@ optional arguments:
                         Constant applied energy shift; default to 0.0.
   -c COLUMN COLUMN, --column COLUMN COLUMN
                         Selected columns for the energy- and intensity-values; default to 0 for energy (x-axis) and 1 for intensity (y-axis).
-  -sep {        ,,,;,:,|, ,s+}, --seperator {   ,,,;,:,|, ,s+}
-                        Redefine the type of seperator; default to ' '.
+  -sep {        ,,,;,:,|, ,s+}, --separator {   ,,,;,:,|, ,s+}
+                        Redefine the type of separator; default to ' '.
   -dec {.,,}, --decimal {.,,}
-                        Type of decimal seperator; default to '.'.
+                        Type of decimal separator; default to '.'.
   -hd HEADER, --header HEADER
                         Selected the header for the dataframe; default to None.
   -np, --noplot         No plotting the spectra and the fit of `spectrafit`.

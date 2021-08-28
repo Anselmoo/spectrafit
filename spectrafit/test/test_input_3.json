@@ -8,7 +8,7 @@
     "infile": "spectrafit/test/test_data.csv",
     "outfile": "fit_results",
     "oversampling": true,
-    "seperator": ",",
+    "separator": ",",
     "shift": 0.2,
     "smooth": 4,
     "verbose": true,

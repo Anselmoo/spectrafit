@@ -108,11 +108,11 @@ def get_args() -> dict:
     )
     parser.add_argument(
         "-sep",
-        "--seperator",
+        "--separator",
         type=str,
         default="\t",
         choices=["\t", ",", ";", ":", "|", " ", "s+"],
-        help="Redefine the type of seperator; default to '\t'.",
+        help="Redefine the type of separator; default to '\t'.",
     )
     parser.add_argument(
         "-dec",
@@ -120,7 +120,7 @@ def get_args() -> dict:
         type=str,
         default=".",
         choices=[".", ","],
-        help="Type of decimal seperator; default to '.'.",
+        help="Type of decimal separator; default to '.'.",
     )
     parser.add_argument(
         "-hd",
@@ -211,7 +211,7 @@ def command_line_runner(args: dict = None) -> None:
         try:
             df = pd.read_csv(
                 Path(args["infile"]),
-                sep=args["seperator"],
+                sep=args["separator"],
                 header=args["header"],
                 usecols=args["column"],
                 dtype=np.float64,

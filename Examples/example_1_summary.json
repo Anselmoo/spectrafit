@@ -11,7 +11,7 @@
         0,
         1
     ],
-    "seperator": "\t",
+    "separator": "\t",
     "decimal": ".",
     "header": null,
     "noplot": false,
