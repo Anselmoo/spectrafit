@@ -2,4 +2,4 @@
 
 ::: spectrafit.models.solver_model
 
-::: spectrafit.models.calculated_models
+::: spectrafit.models.calculated_model

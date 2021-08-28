@@ -215,3 +215,21 @@ max = 0.1
 min = 0.01
 vary = true
 value = 0.01
+
+[fitting.peaks.12.heaviside.center]
+max = 2
+min = -2
+vary = true
+value = 0
+
+[fitting.peaks.12.heaviside.sigma]
+max = 2
+min = -2
+vary = true
+value = 0
+
+[fitting.peaks.12.heaviside.amplitude]
+max = 2
+min = -2
+vary = true
+value = 0

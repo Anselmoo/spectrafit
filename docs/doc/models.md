@@ -3,7 +3,7 @@
     In principle, every model can be implemented in `spectrafit` by extending
     the module `spectrafit.models` by a new functions. It is important to know
     that the `raise` check have to be extend by the new function name in the
-    `solver_model` and `calculated_models`.
+    `solver_model` and `calculated_model`.
 
     ```python
     val = 0.0
