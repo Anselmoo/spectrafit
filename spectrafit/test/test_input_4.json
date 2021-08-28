@@ -11,7 +11,7 @@
     "seperator": ",",
     "shift": 0.2,
     "smooth": 4,
-    "verbose": true,
+    "verbose": false,
     "version": false,
     "noplot": true
   },
@@ -30,8 +30,7 @@
 
     "parameters": {
       "minimizer": { "nan_policy": "propagate", "calc_covar": true },
-      "optimizer": { "max_nfev": 1, "method": "leastsq" },
-      "report": { "min_correl": 0.0 }
+      "optimizer": { "max_nfev": 1, "method": "leastsq" }
     },
     "peaks": {
       "1": {

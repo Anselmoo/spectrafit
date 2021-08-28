@@ -73,7 +73,6 @@ optional arguments:
   -i INPUT, --input INPUT
                         Filename for the input parameter, default to set to 'fitting_input.toml'.Supported fileformats are: '*.json', '*.yml', '*.yaml', and '*.toml'
   -ov, --oversampling   Oversampling the spectra by using factor of 5; default to False.
-  -disp                 Hole or splitted Table on the Screen; default to 'hole'.
   -e0 ENERGY_START, --energy_start ENERGY_START
                         Starting energy in eV; default to start of energy.
   -e1 ENERGY_STOP, --energy_stop ENERGY_STOP

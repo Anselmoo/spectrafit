@@ -1,7 +1,6 @@
 [settings]
 column = [ 0, 1 ]
 decimal = "."
-disp = false
 energy_start = 0
 energy_stop = 8
 infile = "spectrafit/test/rixs_fecl4.txt"

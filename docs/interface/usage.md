@@ -123,7 +123,6 @@ In case of advanced usage of `SpectraFit`, the following steps are necessary:
     "settings": {
     "column": [0, 1],
     "decimal": ".",
-    "disp": false,
     "energy_start": 0,
     "energy_stop": 8,
     "header": null,
@@ -225,7 +224,6 @@ types.
       "settings": {
         "column": [0, 1],
         "decimal": ".",
-        "disp": false,
         "energy_start": 0,
         "energy_stop": 8,
         "header": null,
