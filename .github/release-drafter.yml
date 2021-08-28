@@ -18,6 +18,8 @@ categories:
     label: "documentation"
   - title: "🔗 Dependency Updates"
     label: "dependencies"
+  - title: "🔬 Testing & Coverage"
+    label: "testing"
   - title: "👋 Welcome"
     label: "good first issue"
 
@@ -35,6 +37,7 @@ version-resolver:
       - "documentation"
       - "dependencies"
       - "security"
+      - "testing"
       - "good first issue"
 
 exclude-labels:
