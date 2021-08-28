@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "SpectraFit"
-version = "0.3.2"
+version = "0.4.0"
 description = "Fast fitting of 2D-Spectra with established routines"
 readme = "README.md"
 authors = ["Anselm Hahn <Anselm.Hahn@gmail.com>"]
@@ -69,11 +69,12 @@ mkdocstrings = "^0.15.2"
 flake8-docstrings = "^1.6.0"
 pyminifier = "^2.1"
 mkdocs-minify-plugin = "^0.4.0"
-blacken-docs = "^1.10.0"
+blacken-docs = "^1.11.0"
 mathjax = "^0.1.2"
 mkdocs-literate-nav = "^0.4.0"
 mkdocs-section-index = "^0.3.1"
 pytest-xdist = "^2.3.0"
+pytest-plt = "^1.1.0"
 
 
 [build-system]

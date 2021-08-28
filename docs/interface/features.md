@@ -199,7 +199,7 @@ different types of output files will be generated
                  0,
                  1
              ],
-             "seperator": "\t",
+             "separator": "\t",
              "decimal": ".",
              "header": null,
              "noplot": true,
@@ -321,7 +321,7 @@ different types of output files will be generated
       "smooth": 0,
       "shift": 0,
       "column": [0, 1],
-      "seperator": "\t",
+      "separator": "\t",
       "decimal": ".",
       "header": null,
       "noplot": true,

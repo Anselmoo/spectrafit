@@ -22,7 +22,7 @@ from lmfit import conf_interval
 from lmfit import report_ci
 from lmfit import report_fit
 from spectrafit import __version__
-from spectrafit.models import calculated_models
+from spectrafit.models import calculated_model
 from spectrafit.models import solver_model
 from spectrafit.plotting import plot_spectra
 from spectrafit.report import fit_report_as_dict
@@ -108,11 +108,11 @@ def get_args() -> dict:
     )
     parser.add_argument(
         "-sep",
-        "--seperator",
+        "--separator",
         type=str,
         default="\t",
         choices=["\t", ",", ";", ":", "|", " ", "s+"],
-        help="Redefine the type of seperator; default to '\t'.",
+        help="Redefine the type of separator; default to '\t'.",
     )
     parser.add_argument(
         "-dec",
@@ -120,7 +120,7 @@ def get_args() -> dict:
         type=str,
         default=".",
         choices=[".", ","],
-        help="Type of decimal seperator; default to '.'.",
+        help="Type of decimal separator; default to '.'.",
     )
     parser.add_argument(
         "-hd",
@@ -211,7 +211,7 @@ def command_line_runner(args: dict = None) -> None:
         try:
             df = pd.read_csv(
                 Path(args["infile"]),
-                sep=args["seperator"],
+                sep=args["separator"],
                 header=args["header"],
                 usecols=args["column"],
                 dtype=np.float64,
@@ -375,7 +375,7 @@ def fitting_routine(df: pd.DataFrame, args: dict) -> Tuple[pd.DataFrame, dict]:
     )
     df["residual"] = result.residual
     df["fit"] = df["intensity"].values + result.residual
-    df = calculated_models(params=result.params, x=df["energy"].values, df=df)
+    df = calculated_model(params=result.params, x=df["energy"].values, df=df)
     _corr = df.corr()
     args["linear_correlation"] = _corr.to_dict()
     if args["verbose"]:
@@ -545,7 +545,7 @@ def intensity_smooth(df: pd.DataFrame, args: dict) -> pd.DataFrame:
     """Smooth the intensity values.
 
     Args:
-        df (pd.AI2 DataFrame containing the input data (`x` and `data`).
+        df (pd.DataFrame): DataFrame containing the input data (`x` and `data`).
         args (dict): The input file arguments as a dictionary with additional
              information beyond the command line arguments.
 

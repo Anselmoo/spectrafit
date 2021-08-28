@@ -57,7 +57,7 @@ also printed in the terminal output:
         "infile": "data.txt",
         "outfile": "example_2_results",
         "oversampling": false,
-        "seperator": "\t",
+        "separator": "\t",
         "shift": 0,
         "smooth": 0,
         "verbose": false,

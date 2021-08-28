@@ -635,7 +635,7 @@ following changes between previous
     "infile": "data.txt",
     "outfile": "example_2",
     "oversampling": false,
-    "seperator": "\t",
+    "separator": "\t",
     "shift": 0,
     "smooth": 0,
     "verbose": false,
@@ -656,7 +656,7 @@ and actually
     "infile": "spectrafit/test/test_data.csv",
     "outfile": "fit_results",
     "oversampling": true,
-    "seperator": ",",
+    "separator": ",",
     "shift": 0.2,
     "smooth": 4,
     "verbose": true,
@@ -669,7 +669,7 @@ have to be performed.
 
 1. **Column**: `int` (index of the column) --> `str` (name of the column)
 2. **header**: `null` (no header at all) --> `0` (header start at row-number 0)
-3. **seperator**: `\t` (columns are separated by tab character) --> `,` (columns
+3. **separator**: `\t` (columns are separated by tab character) --> `,` (columns
    are separated by comma character)
 
 ```shell
