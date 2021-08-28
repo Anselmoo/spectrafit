@@ -629,7 +629,6 @@ following changes between previous
   "settings": {
     "column": [0, 1],
     "decimal": ".",
-    "disp": false,
     "energy_start": -1,
     "energy_stop": 2.4,
     "header": null,
@@ -651,7 +650,6 @@ and actually
   "settings": {
     "column": ["Energy", "Noisy_Intensity"],
     "decimal": ".",
-    "disp": true,
     "energy_start": 0,
     "energy_stop": 8,
     "header": 0,

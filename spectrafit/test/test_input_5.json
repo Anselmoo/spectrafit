@@ -1,18 +1,11 @@
 {
   "settings": {
-    "column": ["Energy", "Noisy_Intensity"],
+    "column": ["Energy", "Intensity"],
     "decimal": ".",
-    "energy_start": 0,
-    "energy_stop": 8,
     "header": 0,
     "infile": "spectrafit/test/test_data.csv",
-    "outfile": "fit_results",
-    "oversampling": true,
     "seperator": ",",
     "shift": 0.2,
-    "smooth": 4,
-    "verbose": true,
-    "version": false,
     "noplot": true
   },
   "fitting": {
@@ -30,8 +23,7 @@
 
     "parameters": {
       "minimizer": { "nan_policy": "propagate", "calc_covar": true },
-      "optimizer": { "max_nfev": 1, "method": "leastsq" },
-      "report": { "min_correl": 0.0 }
+      "optimizer": { "max_nfev": 1, "method": "leastsq" }
     },
     "peaks": {
       "1": {

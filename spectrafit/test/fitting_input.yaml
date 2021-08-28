@@ -4,7 +4,6 @@ settings:
   - 0
   - 1
   decimal: "."
-  disp: false
   energy_start: 0
   energy_stop: 8
   header:

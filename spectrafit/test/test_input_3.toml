@@ -1,7 +1,6 @@
 [settings]
 column = [ 1, 3 ]
 decimal = "."
-disp = true
 energy_start = 0
 energy_stop = 8
 infile = "spectrafit/test/test_data.csv"

@@ -6,7 +6,8 @@ readme = "README.md"
 authors = ["Anselm Hahn <Anselm.Hahn@gmail.com>"]
 license = "BSD"
 repository = "https://github.com/Anselmoo/spectrafit"
-homepage = "https://anselmoo.github.io/spectrafit/"
+documentation = "https://anselmoo.github.io/spectrafit/"
+homepage = "https://pypi.org/project/spectrafit/"
 keywords = [
     "2D-Spectra",
     "fitting",

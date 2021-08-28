@@ -68,12 +68,6 @@ def get_args() -> dict:
         help="Oversampling the spectra by using factor of 5; default to False.",
     )
     parser.add_argument(
-        "-disp",
-        action="store_true",
-        default=False,
-        help="Hole or splitted Table on the Screen; default to 'hole'.",
-    )
-    parser.add_argument(
         "-e0",
         "--energy_start",
         type=float,
@@ -478,14 +472,14 @@ def energy_range(df: pd.DataFrame, args: dict) -> Tuple[pd.DataFrame, dict, dict
              (`x` and `data`), as well as the best fit and the corresponding residuum.
              Hence, it will be extended by the single contribution of the model.
     """
-    _e0 = args["energy_start"]
     _e1 = args["energy_stop"]
+    _e0 = args["energy_start"]
 
-    if _e0 and _e1:
+    if isinstance(_e0, (int, float)) and isinstance(_e1, (int, float)):
         return df[(df[args["column"][0]] >= _e0) & (df[args["column"][0]] <= _e1)]
-    elif _e0:
+    elif isinstance(_e0, (int, float)):
         return df[df[args["column"][0]] >= _e0]
-    elif _e1:
+    elif isinstance(_e1, (int, float)):
         return df[df[args["column"][0]] <= _e1]
     return df
 

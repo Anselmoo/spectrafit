@@ -3,7 +3,6 @@
     "outfile": "example_3",
     "input": "example_3.json",
     "oversampling": false,
-    "disp": false,
     "energy_start": -1,
     "energy_stop": 2,
     "smooth": 0,

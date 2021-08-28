@@ -51,7 +51,6 @@ also printed in the terminal output:
     "settings": {
         "column": [0, 1],
         "decimal": ".",
-        "disp": false,
         "energy_start": -1,
         "energy_stop": 2.4,
         "header": null,
