@@ -2,7 +2,6 @@
   "settings": {
     "column": ["Energy", "Noisy"],
     "decimal": ".",
-    "disp": false,
     "energy_start": -1,
     "energy_stop": 2,
     "header": 0,
