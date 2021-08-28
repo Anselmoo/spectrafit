@@ -1,3 +1,7 @@
+[![CI - Python Package](https://github.com/Anselmoo/spectrafit/actions/workflows/python-ci.yml/badge.svg?branch=master)](https://github.com/Anselmoo/spectrafit/actions/workflows/python-ci.yml)
+[![codecov](https://codecov.io/gh/Anselmoo/spectrafit/branch/master/graph/badge.svg?token=pNIMKwWsO2)](https://codecov.io/gh/Anselmoo/spectrafit)
+[![PyPI](https://img.shields.io/pypi/v/spectrafit?logo=PyPi)](https://pypi.org/project/spectrafit/)
+
 # SpectraFit
 
 `SpectraFit` is a command line tool for quick data fitting based on the regular
@@ -25,6 +29,10 @@ via pip:
 
 ```shell
 pip install spectrafit
+
+# Upgrade
+
+pip install spectrafit --upgrade
 ```
 
 ## Usage:
@@ -83,10 +91,10 @@ optional arguments:
                         Constant applied energy shift; default to 0.0.
   -c COLUMN COLUMN, --column COLUMN COLUMN
                         Selected columns for the energy- and intensity-values; default to 0 for energy (x-axis) and 1 for intensity (y-axis).
-  -sep {        ,,,;,:,|, ,s+}, --seperator {   ,,,;,:,|, ,s+}
-                        Redefine the type of seperator; default to ' '.
+  -sep {        ,,,;,:,|, ,s+}, --separator {   ,,,;,:,|, ,s+}
+                        Redefine the type of separator; default to ' '.
   -dec {.,,}, --decimal {.,,}
-                        Type of decimal seperator; default to '.'.
+                        Type of decimal separator; default to '.'.
   -hd HEADER, --header HEADER
                         Selected the header for the dataframe; default to None.
   -np, --noplot         No plotting the spectra and the fit of `spectrafit`.
