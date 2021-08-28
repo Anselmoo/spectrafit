@@ -1,10 +1,10 @@
 [settings]
-column = [ 1, 3 ]
+column = [ "Energy", "Intensity"]
+header = 0
 decimal = "."
 energy_start = 0
 energy_stop = 8
 infile = "spectrafit/test/test_data.csv"
-outfile = "fit_results"
 oversampling = true
 separator = ","
 shift = 0.2

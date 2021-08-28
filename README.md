@@ -29,6 +29,10 @@ via pip:
 
 ```shell
 pip install spectrafit
+
+# Upgrade
+
+pip install spectrafit --upgrade
 ```
 
 ## Usage:

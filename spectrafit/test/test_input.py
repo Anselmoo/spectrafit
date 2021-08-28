@@ -50,9 +50,13 @@ class TestFileFormat:
             "spectrafit/test/test_data.csv",
             "-i",
             "spectrafit/test/test_input_3.json",
+            "-o",
+            "result_json",
         )
         assert ret.success
         assert ret.stderr == ""
+        assert len(list(Path(".").glob("result_json*.json"))) == 1
+        assert len(list(Path(".").glob("result_json*.csv"))) == 3
 
     def test_yml_input(self, monkeypatch, script_runner):
         """Testing yml support."""
@@ -62,9 +66,13 @@ class TestFileFormat:
             "spectrafit/test/test_data.csv",
             "-i",
             "spectrafit/test/test_input_3.yml",
+            "-o",
+            "result_yml",
         )
         assert ret.success
         assert ret.stderr == ""
+        assert len(list(Path(".").glob("result_yml*.json"))) == 1
+        assert len(list(Path(".").glob("result_yml*.csv"))) == 3
 
     def test_yaml_input(self, monkeypatch, script_runner):
         """Testing yaml support."""
@@ -74,9 +82,13 @@ class TestFileFormat:
             "spectrafit/test/test_data.csv",
             "-i",
             "spectrafit/test/test_input_3.yaml",
+            "-o",
+            "result_yaml",
         )
         assert ret.success
         assert ret.stderr == ""
+        assert len(list(Path(".").glob("result_yaml*.json"))) == 1
+        assert len(list(Path(".").glob("result_yaml*.csv"))) == 3
 
     def test_toml_input(self, monkeypatch, script_runner):
         """Testing toml support."""
@@ -86,9 +98,13 @@ class TestFileFormat:
             "spectrafit/test/test_data.csv",
             "-i",
             "spectrafit/test/test_input_3.toml",
+            "-o",
+            "result_toml",
         )
         assert ret.success
         assert ret.stderr == ""
+        assert len(list(Path(".").glob("result_toml*.json"))) == 1
+        assert len(list(Path(".").glob("result_toml*.csv"))) == 3
 
 
 class TestFileFormatOutput:
@@ -103,8 +119,8 @@ class TestFileFormatOutput:
             "-i",
             "spectrafit/test/test_input_2.json",
         )
-        assert len(list(Path(".").glob("fit_results*.json"))) == 1
-        assert len(list(Path(".").glob("fit_results*.csv"))) == 3
+        assert len(list(Path(".").glob("spectrafit/test/fit_results*.json"))) == 1
+        assert len(list(Path(".").glob("spectrafit/test/fit_results*.csv"))) == 3
 
 
 class TestMoreFeatures:
@@ -183,3 +199,15 @@ class TestMoreFeatures:
         df_test = pd.read_csv(Path("./spectrafit/test/e0e1_result_fit.csv"))
         assert_almost_equal(df_test["energy"].max(), 5.0, decimal=0)
         assert_almost_equal(df_test["energy"].min(), 0.0, decimal=0)
+
+    def test_all_models(self, monkeypatch, script_runner):
+        """Testing test all models of spectrafit."""
+        monkeypatch.setattr("builtins.input", lambda _: "n")
+        ret = script_runner.run(
+            "spectrafit",
+            "spectrafit/test/test_data.csv",
+            "-i",
+            "spectrafit/test/test_input_all_models.toml",
+        )
+        assert ret.success
+        assert ret.stderr == ""

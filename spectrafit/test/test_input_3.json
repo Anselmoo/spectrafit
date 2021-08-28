@@ -6,7 +6,6 @@
     "energy_stop": 8,
     "header": 0,
     "infile": "spectrafit/test/test_data.csv",
-    "outfile": "fit_results",
     "oversampling": true,
     "separator": ",",
     "shift": 0.2,
