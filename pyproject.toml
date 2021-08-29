@@ -123,4 +123,4 @@ docstring-convention = "google"
 ignore = ["E203", "W503", "W605"]
 
 [tool.pytest]
- script_launch_mode = "subprocess"
+script_launch_mode = "subprocess"
