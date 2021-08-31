@@ -1,6 +1,7 @@
 [![CI - Python Package](https://github.com/Anselmoo/spectrafit/actions/workflows/python-ci.yml/badge.svg?branch=master)](https://github.com/Anselmoo/spectrafit/actions/workflows/python-ci.yml)
 [![codecov](https://codecov.io/gh/Anselmoo/spectrafit/branch/master/graph/badge.svg?token=pNIMKwWsO2)](https://codecov.io/gh/Anselmoo/spectrafit)
-[![PyPI](https://img.shields.io/pypi/v/spectrafit?logo=PyPi)](https://pypi.org/project/spectrafit/)
+[![PyPI](https://img.shields.io/pypi/v/spectrafit?logo=PyPi&logoColor=yellow)](https://pypi.org/project/spectrafit/)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/spectrafit?color=gree&logo=Python&logoColor=yellow)](https://pypi.org/project/spectrafit/)
 
 # SpectraFit
 
