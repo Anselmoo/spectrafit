@@ -95,10 +95,10 @@ analyze every peak's attributes against each other. In contrast to the default
 values of `lmfit`, the threshold of the correlation analysis is set to 0.0;
 please check also the [Performing Fits and Analyzing Outputs in `lmfit`][9]
 
-In the second case, the linear correlation analysis of [`pandas`][10] is used to
-generally analyze the fit results in the concept of the dataframes. In more
-detail, a linear pearson correlation will be performed between each components
-in the dataframe, which normally consits of:
+In the second case, the linear correlation analysis of
+[`pandas-module corr`][10] is used to generally analyze the fit results in the
+concept of the dataframes. In more detail, a linear pearson correlation will be
+performed between each components in the dataframe, which normally consists of:
 
 1. Energy (1D-array)
 2. Intensity (1D-array)
@@ -107,7 +107,8 @@ in the dataframe, which normally consits of:
 5. Single components of the fit as multiple variables (1D-array)
 
 This analysis should give insights, if the fit model can be further simplified
-as a result of a superposition of the components.
+as a result of a superposition of the components, see also the Wikipedia article
+about [Correlation][17].
 
 ??? example "Overall Correlation Analysis"
 
@@ -2489,3 +2490,4 @@ different types of output files will be generated
 [15]:
   https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.from_dict.html
 [16]: /spectrafit/interface/features/#pre-analysis
+[17]: https://en.wikipedia.org/wiki/Correlation
