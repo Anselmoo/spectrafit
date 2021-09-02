@@ -51,7 +51,7 @@ body:
       value: |
         - OS:
         - Python:
-        - version:
+        - spectrafit:
       render: markdown
     validations:
       required: true

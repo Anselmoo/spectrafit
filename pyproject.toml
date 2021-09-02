@@ -1,10 +1,10 @@
 [tool.poetry]
 name = "SpectraFit"
-version = "0.4.0"
+version = "0.4.1"
 description = "Fast fitting of 2D-Spectra with established routines"
 readme = "README.md"
 authors = ["Anselm Hahn <Anselm.Hahn@gmail.com>"]
-license = "BSD"
+license = "BSD-3-Clause"
 repository = "https://github.com/Anselmoo/spectrafit"
 documentation = "https://anselmoo.github.io/spectrafit/"
 homepage = "https://pypi.org/project/spectrafit/"

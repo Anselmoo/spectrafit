@@ -11,17 +11,34 @@ Here are some important resources:
   code
 - Millestones, which are listed below.
 
+## Setup the development environment
+
+`SpectraFit` is using [poetry][4] as python package management system and
+[pre-commit][5] for managing git hooks. For fixing bugs or developing new
+featuers, we recommend to use both tools. The python version should be `3.7.1`
+or higher and can be optional managed via [pyenv][6].
+
+```shell
+pyenv local 3.8.11
+poetry install
+pre-commit install --install-hooks
+```
+
+Even if we have not git hook for code style `markdown`, `json`, and `yaml`
+files, we prefer the [prettier style][7] and its extension for `toml` files.
+
 ## Milestones
 
-- [ ] Introducing a class concept for `SpectraFit` because it i
+- [ ] Introducing a class concept for `SpectraFit` because it is very functional
+      driven programmed
 - [ ] Introducing JupyterLab
 - [ ] Implementing genetic solvers for fitting optimization problems
 - [ ] Updating the Docker package configuration
 
 ## Testing
 
-We are using only [GitHub-Actions][1] for pre-commit testing, the CI/CD pipeline
-and the release.
+We are using only [GitHub-Actions][1] for [pre-commit][5] testing, the CI/CD
+pipeline and the release.
 
 ## Submitting changes
 
@@ -59,3 +76,7 @@ This template is adapted from [opengovernment][3].
 [2]: https://google.github.io/styleguide/pyguide.html
 [3]:
   https://github.com/opengovernment/opengovernment/blob/master/CONTRIBUTING.md
+[4]: https://python-poetry.org
+[5]: https://pre-commit.com
+[6]: https://github.com/pyenv/pyenv
+[7]: https://prettier.io

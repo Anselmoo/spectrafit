@@ -95,10 +95,10 @@ analyze every peak's attributes against each other. In contrast to the default
 values of `lmfit`, the threshold of the correlation analysis is set to 0.0;
 please check also the [Performing Fits and Analyzing Outputs in `lmfit`][9]
 
-In the second case, the linear correlation analysis of [`pandas`][10] is used to
-generally analyze the fit results in the concept of the dataframes. In more
-detail, a linear pearson correlation will be performed between each components
-in the dataframe, which normally consits of:
+In the second case, the linear correlation analysis of
+[`pandas-module corr`][10] is used to generally analyze the fit results in the
+concept of the dataframes. In more detail, a linear pearson correlation will be
+performed between each components in the dataframe, which normally consists of:
 
 1. Energy (1D-array)
 2. Intensity (1D-array)
@@ -107,7 +107,8 @@ in the dataframe, which normally consits of:
 5. Single components of the fit as multiple variables (1D-array)
 
 This analysis should give insights, if the fit model can be further simplified
-as a result of a superposition of the components.
+as a result of a superposition of the components, see also the Wikipedia article
+about [Correlation][17].
 
 ??? example "Overall Correlation Analysis"
 
@@ -162,22 +163,22 @@ For the plotting of the results, the `SpectraFinder` provides the possibility to
 plot both the fit results and the residuals. A detail description of the
 plotting options is available in the [API section][13].
 
-## Saving
+## Saving the Results as CSV- and JSON-files
 
-`SpectraFinder` automatically saves the fit results and the statistics in file
-format. By default, the results starts with `fit_results_*.*`, but can be
+`SpectraFinder` automatically saves the **fit results and the statistics** in
+file format. By default, the results starts with `fit_results_*.*`, but can be
 individually labeled via `-o` command or in the input file. Furthermore, four
 different types of output files will be generated
 
-1.  Fit results as `*.csv` file, which combines the original data with the fit,
-    residuals, and the single contribution.
-2.  Fit errors as `*.csv` file, which contains the value and fit errors for each
-    parameter. The saved report is identically to printed report of [Variable
-    Analysis][8].
-3.  Fit correlation as `*.csv` file, which contains the correlation analysis of
-    the dataframe. The saved report is identically to printed report of
-    [Correlation Analysis][14].
-4.  Fit summary as `*.json` file, which contains all results of the fit
+1.  Fit results as `*_fit.csv` file, which combines the original data with the
+    fit, residuals, and the single contribution.
+2.  Fit errors as `*_errors.csv` file, which contains the value and fit errors
+    for each parameter. The saved report is identically to printed report of
+    [Variable Analysis][8].
+3.  Fit correlation as `*_correlation.csv` file, which contains the correlation
+    analysis of the dataframe. The saved report is identically to printed report
+    of [Correlation Analysis][14].
+4.  Fit summary as `*_summary.json` file, which contains all results of the fit
     _project_ including the meta-data. The overall goal is to save the results
     in a NoSQL-format, so that every fit becomes an unique fitting-project.
 
@@ -2489,3 +2490,4 @@ different types of output files will be generated
 [15]:
   https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.from_dict.html
 [16]: /spectrafit/interface/features/#pre-analysis
+[17]: https://en.wikipedia.org/wiki/Correlation
