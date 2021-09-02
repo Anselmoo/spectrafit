@@ -1,0 +1,58 @@
+{
+  "fitting": {
+    "description": {
+      "project_name": "Example1",
+      "project_details": "Example 1",
+      "keywords": [
+        "2D-Spectra",
+        "fitting",
+        "curve-fitting",
+        "peak-fitting",
+        "spectrum"
+      ]
+    },
+    "parameters": {
+      "minimizer": {
+        "nan_policy": "propagate",
+        "calc_covar": true
+      },
+      "optimizer": {
+        "max_nfev": 1000,
+        "method": "leastsq"
+      },
+      "report": {
+        "min_correl": 0.0
+      }
+    },
+    "peaks": {
+      "1": {
+        "pseudovoigt": {
+          "amplitude": {
+            "max": 2,
+            "min": 0,
+            "vary": true,
+            "value": 1
+          },
+          "center": {
+            "max": 2,
+            "min": -2,
+            "vary": true,
+            "value": 0
+          },
+          "fwhm_g": {
+            "max": 0.5,
+            "min": 0.02,
+            "vary": true,
+            "value": 0.1
+          },
+          "fwhm_l": {
+            "max": 0.5,
+            "min": 0.01,
+            "vary": true,
+            "value": 0.1
+          }
+        }
+      }
+    }
+  }
+}

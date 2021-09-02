@@ -1,5 +1,5 @@
+"""Plotting of the fit results."""
 import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
 import seaborn as sns
 
@@ -10,9 +10,33 @@ sns.set_theme(style="whitegrid")
 color = sns.color_palette("Paired")
 
 
-def plot_spectra(df: pd.DataFrame, args: dict = None) -> None:
-    """Plot spectra with seaborn and matplotlib"""
+def plot_spectra(df: pd.DataFrame) -> None:
+    """Plot spectra with seaborn and matplotlib.
 
+    `plot_spectra` performs a dual split plot. In the upper part, the residuum is
+     plotted together with a linear regression line. This means, if the linear
+     regression is a flat line, the fit and spectra are identically.
+     In the lower part, the fit is plotted together with the original spectra. Also
+     the single contributions of the fit are drawn.
+
+    !!! info "About Plotting"
+
+        `plot_spectra` is a wrapper around the `seaborn.lineplot` and `seaborn.regplot`
+         function. Furthermore, the `MultiCursor` widget is used to create an
+         interactive plot, for picking the energy and intensity of the spectrum. the
+         `MultiCursor` widget is a part of the `matplotlib` library and can be used for
+         both, the residual plot and the spectrum plot.
+
+
+    ![_](../../images/image001.png)
+    > The upper part shows the residuum and the linear regression line. The lower part
+    shows the fit and the single contributions of the fit.
+
+    Args:
+        df (pd.DataFrame): DataFrame containing the input data (`x` and `data`),
+             as well as the best fit and the corresponding residuum. Hence, it will be
+             extended by the single contribution of the model.
+    """
     fig, (ax1, ax2) = plt.subplots(
         2, sharex=True, figsize=(9, 9), gridspec_kw={"height_ratios": [1, 2]}
     )

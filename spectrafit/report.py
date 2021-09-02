@@ -1,6 +1,7 @@
-__name__ = ["fit_report_as_dict"]
+"""Fit-Results as Report."""
 import numpy as np
 
+from lmfit.minimizer import minimize
 from lmfit.parameter import Parameters
 from lmfit.printfuncs import alphanumeric_sort
 
@@ -14,30 +15,29 @@ except ImportError:
 CORREL_HEAD = "[[Correlations]] (unreported correlations are < %.3f)"
 
 
-def fit_report_as_dict(inpars, modelpars=None, sort_pars=False):
-    """Generate a report of the fitting results.
+def fit_report_as_dict(
+    inpars: minimize, modelpars: dict = None, sort_pars: bool = False
+) -> dict:
+    """Generate the best fit report as dictionary.
 
     The report contains the best-fit values for the parameters and their
     uncertainties and correlations.
 
-    Parameters
-    ----------
-    inpars : Parameters
-        Input Parameters from fit or MinimizerResult returned from a fit.
-    modelpars : Parameters, optional
-        Known Model Parameters.
-    sort_pars : bool or callable, optional
-        Whether to show parameter names sorted in alphanumerical order. If
-        False (default), then the parameters will be listed in the order
-        they were buffered to the Parameters dictionary. If callable, then
-        this (one argument) function is used to extract a comparison key
-        from each list element.
+    Args:
+        inpars (minimize): Input Parameters from a fit or the  Minimizer results
+             returned from a fit.
+        modelpars (dict, optional): Known Model Parameters. Defaults to None.
+        sort_pars (bool, optional): Whether to show parameter names sorted in
+             alphanumerical order. If False (default), then the parameters will be
+             listed in the order they were buffered to the Parameters dictionary. If
+             callable, then this (one argument) function is used to extract a
+             comparison key from each list element. Defaults to False.
 
-    Returns
-    -------
-    str
-        Multi-line text of fit report.
+    Raises:
+        SystemExit: In case of `numdifftools` is not installed, it can raise SystemExit.
 
+    Returns:
+        dict: [description]
     """
     if isinstance(inpars, Parameters):
         result, params = None, inpars
@@ -53,7 +53,7 @@ def fit_report_as_dict(inpars, modelpars=None, sort_pars=False):
         # further down
         parnames = list(params.keys())
 
-    buffer = {
+    buffer: dict = {
         "configurations": {},
         "statistics": {},
         "variables": {},
@@ -140,7 +140,6 @@ def fit_report_as_dict(inpars, modelpars=None, sort_pars=False):
         for i, name_1 in enumerate(parnames):
             buffer["covariance_matrix"][name_1] = {}
             for j, name_2 in enumerate(parnames):
-
                 buffer["covariance_matrix"][name_1][name_2] = result.covar[i, j]
     except AttributeError as exc:
         print(f"{exc}: Covariance Matrix could not be calculated.\n")

@@ -4,14 +4,13 @@ settings:
   - 0
   - 1
   decimal: "."
-  disp: false
   energy_start: 0
   energy_stop: 8
   header:
   infile: spectrafit/test/rixs_fecl4.txt
   outfile: fit_results
   oversampling: false
-  seperator: "\t"
+  separator: "\t"
   shift: 0
   smooth: 0
   verbose: false
