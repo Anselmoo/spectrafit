@@ -163,22 +163,22 @@ For the plotting of the results, the `SpectraFinder` provides the possibility to
 plot both the fit results and the residuals. A detail description of the
 plotting options is available in the [API section][13].
 
-## Saving
+## Saving the Results as CSV- and JSON-files
 
-`SpectraFinder` automatically saves the fit results and the statistics in file
-format. By default, the results starts with `fit_results_*.*`, but can be
+`SpectraFinder` automatically saves the **fit results and the statistics** in
+file format. By default, the results starts with `fit_results_*.*`, but can be
 individually labeled via `-o` command or in the input file. Furthermore, four
 different types of output files will be generated
 
-1.  Fit results as `*.csv` file, which combines the original data with the fit,
-    residuals, and the single contribution.
-2.  Fit errors as `*.csv` file, which contains the value and fit errors for each
-    parameter. The saved report is identically to printed report of [Variable
-    Analysis][8].
-3.  Fit correlation as `*.csv` file, which contains the correlation analysis of
-    the dataframe. The saved report is identically to printed report of
-    [Correlation Analysis][14].
-4.  Fit summary as `*.json` file, which contains all results of the fit
+1.  Fit results as `*_fit.csv` file, which combines the original data with the
+    fit, residuals, and the single contribution.
+2.  Fit errors as `*_errors.csv` file, which contains the value and fit errors
+    for each parameter. The saved report is identically to printed report of
+    [Variable Analysis][8].
+3.  Fit correlation as `*_correlation.csv` file, which contains the correlation
+    analysis of the dataframe. The saved report is identically to printed report
+    of [Correlation Analysis][14].
+4.  Fit summary as `*_summary.json` file, which contains all results of the fit
     _project_ including the meta-data. The overall goal is to save the results
     in a NoSQL-format, so that every fit becomes an unique fitting-project.
 
