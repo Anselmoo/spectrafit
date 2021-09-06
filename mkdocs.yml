@@ -54,8 +54,8 @@ theme:
     code: Roboto Mono
   icon:
     repo: material/github
-  logo: assets/hdpi/ic_launcher_APP.png
-  favicon: assets/mdpi/ic_launcher_APP.png
+  logo: images/logo.svg
+  favicon: images/logo.svg
 
 # Plugins
 plugins:
