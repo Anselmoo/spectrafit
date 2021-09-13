@@ -1,7 +1,7 @@
 In this example, the the input-file of `SpectraFit` is used to perform a multi
 peak fitting, shown in the figure below.
 
-![_](images/Figure_3.png)
+![_](img/Figure_3.png)
 
 > Mulit peak fitting example by using 6 different pseudovoigt functions. The
 > energy range is limited from -1 to 2.4 eV.
