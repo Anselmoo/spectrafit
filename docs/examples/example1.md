@@ -5,7 +5,7 @@ single peak of the spectrum, as shown below.
 spectrafit data.txt -i example_1.json -o example_1
 ```
 
-![_](images/Figure_1.png)
+![_](img/Figure_1.png)
 
 In case of using the energy ranges, the spectra will be limited to the defined
 energy ranges of `-e0` and `-e1`.
@@ -14,7 +14,7 @@ energy ranges of `-e0` and `-e1`.
 spectrafit data.txt -i example_1.json -o example_1 -e0 -1 -e1 +1
 ```
 
-![_](images/Figure_2.png)
+![_](img/Figure_2.png)
 
 The input file has to look like the following:
 
