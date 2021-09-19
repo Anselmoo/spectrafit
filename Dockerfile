@@ -11,7 +11,7 @@ ENV PYTHONUNBUFFERED=1
 COPY pyproject.toml poetry.lock ./
 RUN python -m pip install poetry
 RUN poetry config virtualenvs.create false
-RUN poetry install
+RUN poetry install --no-dev
 
 WORKDIR /app
 COPY . /app
