@@ -75,6 +75,7 @@ mkdocs-literate-nav = "^0.4.0"
 mkdocs-section-index = "^0.3.1"
 pytest-xdist = "^2.3.0"
 pytest-plt = "^1.1.0"
+jsmin = "^3.0.0"
 
 
 [build-system]
