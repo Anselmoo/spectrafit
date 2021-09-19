@@ -50,7 +50,6 @@ tabulate = "^0.8.9"
 statsmodels = "^0.12.2"
 
 [tool.poetry.dev-dependencies]
-setuptools = "^57.5.0"
 pylama = "^7.7.1"
 flake8 = "^3.9.2"
 pylint = "^2.9.5"
