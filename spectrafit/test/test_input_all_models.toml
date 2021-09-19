@@ -174,7 +174,13 @@ min = -2
 vary = true
 value = 0
 
-[fitting.peaks.9.voigt.fhwm]
+[fitting.peaks.9.voigt.fwhm]
+max = 2
+min = -2
+vary = true
+value = 0
+
+[fitting.peaks.9.voigt.gamma]
 max = 2
 min = -2
 vary = true
@@ -229,6 +235,18 @@ vary = true
 value = 0
 
 [fitting.peaks.12.heaviside.amplitude]
+max = 2
+min = -2
+vary = true
+value = 0
+
+[fitting.peaks.13.voigt.center]
+max = 2
+min = -2
+vary = true
+value = 0
+
+[fitting.peaks.13.voigt.fwhm]
 max = 2
 min = -2
 vary = true
