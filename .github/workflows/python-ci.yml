@@ -42,6 +42,7 @@ jobs:
           pip install poetry
       - name: Install SpectraFit
         run: |
+          poetry run pip install 'setuptools==57.5.0'
           poetry install
           poetry run pytest --diff-symbols --cov=./spectrafit -vv --cov-report=xml --plots
       - name: Codecov
@@ -64,6 +65,7 @@ jobs:
           pip install poetry
       - name: Install SpectraFit
         run: |
+          poetry run pip install 'setuptools==57.5.0'
           poetry install
       - name: Set git config
         run: |
