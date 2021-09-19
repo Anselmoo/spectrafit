@@ -65,6 +65,7 @@ jobs:
           pip install poetry
       - name: Install SpectraFit
         run: |
+          poetry run pip install 'setuptools==57.5.0'
           poetry install
       - name: Set git config
         run: |
