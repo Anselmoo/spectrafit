@@ -211,3 +211,25 @@ class TestMoreFeatures:
         )
         assert ret.success
         assert ret.stderr == ""
+
+    def test_not_allowed_input(self, monkeypatch, script_runner):
+        """Testing test all models of spectrafit."""
+        monkeypatch.setattr("builtins.input", lambda _: "n")
+        ret = script_runner.run(
+            "spectrafit",
+            "spectrafit/test/test_data.csv",
+            "-i",
+            "spectrafit/test/test_wrong.pp",
+        )
+        assert not ret.success
+        #assert ret.stderr == ""
+    def test_no_input(self, monkeypatch, script_runner):
+        """Testing test all models of spectrafit."""
+        monkeypatch.setattr("builtins.input", lambda _: "n")
+        ret = script_runner.run(
+            "spectrafit",
+            "spectrafit/test/test_data.csv",
+            "-i",
+            "spectrafit/test/no_input.pp",
+        )
+        assert not ret.success
