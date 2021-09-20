@@ -3,7 +3,9 @@ import argparse
 import json
 
 from datetime import datetime
+from getpass import getuser
 from pathlib import Path
+from socket import gethostname
 from typing import Any
 from typing import MutableMapping
 from typing import Tuple
@@ -180,7 +182,7 @@ def read_input_file(fname: str) -> MutableMapping[str, Any]:
         fname (str): Name of the input file.
 
     Raises:
-        TypeError: If the input file is not supported.
+        SystemExit: If the input file is not supported.
 
     Returns:
         dict: Return the input file arguments as a dictionary with additional
@@ -299,6 +301,8 @@ def extracted_from_command_line_runner() -> dict:
         result["peaks"] = _args["fitting"]["peaks"]
     result["timestamp"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     result["ID"] = str(uuid4())
+    result["user_name"] = getuser()
+    result["user_system"] = gethostname()
     result["used_version"] = __version__
     return result
 

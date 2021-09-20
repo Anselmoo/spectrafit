@@ -182,7 +182,7 @@ different types of output files will be generated
     _project_ including the meta-data. The overall goal is to save the results
     in a NoSQL-format, so that every fit becomes an unique fitting-project.
 
-    ??? info "A closer look on the output file format"
+    !!! info "A closer look on the output file format"
 
         The fitting-project consists of the following parts:
 
@@ -222,12 +222,17 @@ different types of output files will be generated
                ]
              },
              ```
-             The meta-data will be automatically extended by timestamp and
-             unique ID.
+             The meta-data will be automatically extended by **timestamp**, name
+             of the user (**username**), name of system of the user
+             (**system**), and unique ID. For getting the username and the name
+             of the used system, the built-in function [`getpass.getuser()`][19]
+             and [`socket.gethostname()`][18] are used.
              ```json
              {
              "timestamp": "2021-08-22 12:33:26",
              "ID": "89b1a4ef-320a-4ac0-80da-e8d946b00e13",
+             "user_name": "user_name",
+             "user_system": "user_system",
              "used_version": "0.3.0",
              }
              ```
@@ -450,6 +455,8 @@ different types of output files will be generated
       },
       "timestamp": "2021-08-19 21:08:57",
       "ID": "ce43d306-43e4-4350-9f09-fd1b13064f39",
+      "user_name": "username",
+      "user_system": "user_system",
       "used_version": "0.2.0",
       "data_statistic": {
         "0": {
@@ -2491,3 +2498,5 @@ different types of output files will be generated
   https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.from_dict.html
 [16]: /spectrafit/interface/features/#pre-analysis
 [17]: https://en.wikipedia.org/wiki/Correlation
+[18]: https://docs.python.org/3/library/socket.html
+[19]: https://docs.python.org/3/library/getpass.html
