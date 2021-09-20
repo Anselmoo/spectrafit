@@ -12,8 +12,7 @@
     "shift": 0,
     "smooth": 0,
     "verbose": false,
-    "version": false,
-    "noplot": true
+    "version": false
   },
   "fitting": {
     "description": {
@@ -30,8 +29,16 @@
 
     "parameters": {
       "minimizer": { "nan_policy": "propagate", "calc_covar": true },
-      "optimizer": { "max_nfev": 1, "method": "leastsq" },
-      "report": { "min_correl": 0.0 }
+      "optimizer": { "max_nfev": 1000, "method": "leastsq" },
+      "report": { "min_correl": 0.0 },
+      "conf_interval": {
+        "p_names": null,
+        "sigmas": null,
+        "trace": false,
+        "maxiter": 200,
+        "verbose": false,
+        "prob_func": null
+      }
     },
     "peaks": {
       "1": {
@@ -57,6 +64,66 @@
           "fwhm_l": {
             "max": 0.1,
             "min": 0.01,
+            "vary": true,
+            "value": 0.01
+          }
+        }
+      },
+      "2": {
+        "pseudovoigt": {
+          "amplitude": {
+            "max": 2,
+            "min": 0,
+            "vary": true,
+            "value": 1
+          },
+          "center": {
+            "max": 2,
+            "min": -2,
+            "vary": true,
+            "value": 0
+          },
+          "fwhm_g": {
+            "max": 0.1,
+            "min": 0.02,
+            "vary": true,
+            "value": 0.01
+          },
+          "fwhm_l": {
+            "max": 0.1,
+            "min": 0.01,
+            "vary": true,
+            "value": 0.01
+          }
+        }
+      },
+      "3": {
+        "constant": {
+          "amplitude": {
+            "max": 2,
+            "min": 0.01,
+            "vary": true,
+            "value": 1
+          }
+        }
+      },
+      "4": {
+        "gaussian": {
+          "amplitude": {
+            "max": 2,
+            "min": 0,
+            "vary": true,
+            "value": 1
+          },
+          "center": {
+            "max": 2,
+            "min": -2,
+            "vary": true,
+            "value": 0
+          },
+          "fwhm_g": {
+            "max": 0.1,
+            "min": 0.02,
             "vary": true,
             "value": 0.01
           }

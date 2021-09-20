@@ -211,3 +211,30 @@ class TestMoreFeatures:
         )
         assert ret.success
         assert ret.stderr == ""
+
+    def test_not_allowed_input(self, monkeypatch, script_runner):
+        """Testing test all models of spectrafit."""
+        monkeypatch.setattr("builtins.input", lambda _: "n")
+        fname = "spectrafit/test/test_wrong.pp"
+        ret = script_runner.run(
+            "spectrafit",
+            "spectrafit/test/test_data.csv",
+            "-i",
+            fname,
+        )
+        assert not ret.success
+        assert ret.stderr == (
+            f"ERROR: Input file {fname} has not supported file format.\n"
+            "Supported fileformats are: '*.json', '*.yaml', and '*.toml'\n"
+        )
+
+    def test_no_input(self, monkeypatch, script_runner):
+        """Testing test all models of spectrafit."""
+        monkeypatch.setattr("builtins.input", lambda _: "n")
+        ret = script_runner.run(
+            "spectrafit",
+            "spectrafit/test/test_data.csv",
+            "-i",
+            "spectrafit/test/no_input.pp",
+        )
+        assert not ret.success
