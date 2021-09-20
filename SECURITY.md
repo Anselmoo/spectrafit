@@ -7,8 +7,9 @@ currently being supported with security updates.
 
 | Version | Supported          |
 | ------- | ------------------ |
+| 0.5.x   | :white_check_mark: |
 | 0.4.x   | :white_check_mark: |
-| 0.3.x   | :white_check_mark: |
+| 0.3.x   | :x:                |
 | 0.1.x   | :x:                |
 
 > Security are currently performed via [GitHub's CodeQL][1]. See also the
