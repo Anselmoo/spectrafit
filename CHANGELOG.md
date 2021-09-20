@@ -4,6 +4,31 @@
 
 > See also: [https://github.com/Anselmoo/spectrafit/releases][1]
 
+## v0.4.2
+
+---
+
+- Removed the [`GIT LFS`][12] integration for avoiding trouble with broken
+  images.
+- Adding [`YAML`-Forms][11] as pull request template.
+
+## v0.4.1
+
+---
+
+- Change from `MarkDown` based issue templates to [`YAML`-Forms][11] by GitHub
+  as issue and feature request templates.
+
+## v0.4.0
+
+---
+
+- Create [SECURITY policy][8] for the `spectrafit` application.
+- Adding [dependabot][9] for updating `poetry.lock`, `pyproject.toml` and GitHub
+  Action workflow.
+- Adding a [codeql-analysis][10]
+- Increasing the coverage level
+
 ## v0.3.2
 
 ---
@@ -50,3 +75,9 @@
 [5]: https://codecov.io/gh/Anselmoo/spectrafit
 [6]: https://github.com/marketplace/actions/pre-commit
 [7]: https://mypy.readthedocs.io/en/stable/
+[8]: https://github.com/Anselmoo/spectrafit/security
+[9]: https://dependabot.com
+[10]: https://securitylab.github.com/tools/codeql/
+[11]:
+  https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/configuring-issue-templates-for-your-repository
+[12]: https://git-lfs.github.com

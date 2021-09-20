@@ -676,7 +676,7 @@ have to be performed.
 spectrafit _ -i example_3.json
 ```
 
-![_](iamges/Figure_4.png)
+![_](images/Figure_4.png)
 
 > Elastic-line of a pseudo 2p3d-RIXS spectra.
 
