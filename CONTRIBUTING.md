@@ -29,10 +29,12 @@ files, we prefer the [prettier style][7] and its extension for `toml` files.
 
 ## Milestones
 
-- [ ] Introducing a class concept for `SpectraFit` because it is very functional
-      driven programmed
+- [x] Introducing a class concept for `SpectraFit` because it is very functional
+      driven programmed; partially solved be exporting into submodules like
+      `tools.py`
 - [ ] Introducing JupyterLab
-- [ ] Implementing genetic solvers for fitting optimization problems
+- [x] Implementing genetic solvers for fitting optimization problems, because
+      [LMFIT][8] contains `differential_evolution` as solver.
 - [ ] Updating the Docker package configuration
 
 ## Testing
@@ -80,3 +82,4 @@ This template is adapted from [opengovernment][3].
 [5]: https://pre-commit.com
 [6]: https://github.com/pyenv/pyenv
 [7]: https://prettier.io
+[8]: https://lmfit.github.io/lmfit-py/fitting.html
