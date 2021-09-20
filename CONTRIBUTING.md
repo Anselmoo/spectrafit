@@ -32,9 +32,9 @@ files, we prefer the [prettier style][7] and its extension for `toml` files.
 - [x] Introducing a class concept for `SpectraFit` because it is very functional
       driven programmed; partially solved be exporting into submodules like
       `tools.py`
-- [ ] Introducing JupyterLab
 - [x] Implementing genetic solvers for fitting optimization problems, because
       [LMFIT][8] contains `differential_evolution` as solver.
+- [ ] Introducing JupyterLab
 - [ ] Updating the Docker package configuration
 
 ## Testing
