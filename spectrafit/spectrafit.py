@@ -263,7 +263,7 @@ def save_as_csv(df: pd.DataFrame, args: dict) -> None:
              information beyond the command line arguments.
     """
     df.to_csv(Path(f"{args['outfile']}_fit.csv"), index=False)
-    pd.DataFrame.from_dict(args["fit_insights"]["correlations"]).to_csv(
+    pd.DataFrame.from_dict(args["linear_correlation"]).to_csv(
         Path(f"{args['outfile']}_correlation.csv"),
         index=True,
         index_label="attributes",
