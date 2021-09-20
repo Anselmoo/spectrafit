@@ -1,18 +1,23 @@
 """Fit-Results as Report."""
-import numpy as np
+import pprint
 
+from typing import Any
+
+import numpy as np
+import pandas as pd
+
+from lmfit import Minimizer
+from lmfit import conf_interval
+from lmfit import report_ci
+from lmfit import report_fit
 from lmfit.minimizer import minimize
 from lmfit.parameter import Parameters
 from lmfit.printfuncs import alphanumeric_sort
+from tabulate import tabulate
 
 
-try:
-    import numdifftools  # noqa: F401
-
-    HAS_NUMDIFFTOOLS = True
-except ImportError:
-    HAS_NUMDIFFTOOLS = False
 CORREL_HEAD = "[[Correlations]] (unreported correlations are < %.3f)"
+pp = pprint.PrettyPrinter(indent=4)
 
 
 def fit_report_as_dict(
@@ -80,10 +85,7 @@ def fit_report_as_dict(
 
         if not result.errorbars:
             print("##  Warning: uncertainties could not be estimated:")
-            if (
-                result.method not in ("leastsq", "least_squares")
-                and not HAS_NUMDIFFTOOLS
-            ):
+            if result.method not in ("leastsq", "least_squares"):
                 raise SystemExit(
                     "    this fitting method does not natively calculate uncertainties"
                     "    and numdifftools is not installed for lmfit to do this. Use"
@@ -144,3 +146,55 @@ def fit_report_as_dict(
     except AttributeError as exc:
         print(f"{exc}: Covariance Matrix could not be calculated.\n")
     return buffer
+
+
+def printing_regular_mode(
+    args: dict, result: Any, minimizer: Minimizer, correlation: pd.DataFrame
+) -> None:
+    """Printing the fitting results in the regular mode.
+
+    Args:
+        args (dict): The input file arguments as a dictionary with additional
+             information beyond the command line arguments.
+        result (Any): The lmfit `results` as a kind of result based class.
+        minimizer (Minimizer): The lmfit `Minimizer`-class as a general minimizer for
+             curve fitting and optimization.
+        correlation (pd.DataFrame): The correlation results of the global fit as pandas
+             DataFrame.
+    """
+    print("\nStatistic:\n")
+    print(
+        tabulate(
+            pd.DataFrame.from_dict(args["data_statistic"]),
+            headers="keys",
+            tablefmt="fancy_grid",
+            floatfmt=".2f",
+        )
+    )
+    print("\nFit Results and Insights:\n")
+    print(report_fit(result, modelpars=result.params, **args["report"]))
+    if args["conf_interval"]:
+        print("\nConfidence Interval:\n")
+        report_ci(conf_interval(minimizer, result, **args["conf_interval"]))
+    print("\nOverall Linear-Correlation:\n")
+    print(tabulate(correlation, headers="keys", tablefmt="fancy_grid", floatfmt=".2f"))
+
+
+def printing_verbose_mode(args: dict) -> None:
+    """Printing all results in verbose mode.
+
+    Args:
+        args (dict): The input file arguments as a dictionary with additional
+             information beyond the command line arguments.
+    """
+    print("\nStatistic:\n")
+    pp.pprint(args["data_statistic"])
+    print("Input Parameter:\n")
+    pp.pprint(args)
+    print("\nFit Results and Insights:\n")
+    pp.pprint(args["fit_insights"])
+    if args["conf_interval"]:
+        print("\nConfidence Interval:\n")
+        pp.pprint(args["confidence_interval"])
+    print("\nOverall Linear-Correlation:\n")
+    pp.pprint(args["linear_correlation"])
