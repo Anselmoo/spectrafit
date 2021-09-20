@@ -189,31 +189,22 @@ def read_input_file(fname: str) -> MutableMapping[str, Any]:
 
     """
     _fname = Path(fname)
-    try:
-        if _fname.suffix == ".toml":
-            with open(_fname, "r") as f:
-                args = toml.load(fname)
-        elif _fname.suffix == ".json":
-            with open(_fname, "r") as f:
-                args = json.load(f)
-        elif _fname.suffix in [".yaml", ".yml"]:
-            with open(_fname, "r") as f:
-                args = yaml.load(f, Loader=yaml.FullLoader)
-        return args
-    except TypeError as exc:
-        print(
-            f"{exc}:  Input file {fname} has not supported file format.\n"
+
+    if _fname.suffix == ".toml":
+        with open(_fname, "r") as f:
+            args = toml.load(fname)
+    elif _fname.suffix == ".json":
+        with open(_fname, "r") as f:
+            args = json.load(f)
+    elif _fname.suffix in [".yaml", ".yml"]:
+        with open(_fname, "r") as f:
+            args = yaml.load(f, Loader=yaml.FullLoader)
+    else:
+        raise SystemExit(
+            f"ERROR: Input file {fname} has not supported file format.\n"
             "Supported fileformats are: '*.json', '*.yaml', and '*.toml'"
         )
-        sys.exit(1)
-    except FileNotFoundError as exc:
-        print(
-            f"{exc}:  Standard input file {fname} has to be provided!"
-            "\nOr you have to explicitly provide an input file with '-i' or "
-            "'--input'.\n"
-            "Supported fileformats are: '*.json', '*.yaml', and '*.toml'"
-        )
-        sys.exit(1)
+    return args
 
 
 def command_line_runner(args: dict = None) -> None:
