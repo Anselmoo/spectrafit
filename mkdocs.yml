@@ -149,6 +149,7 @@ nav:
     - Plotting: api/plotting_api.md
     - Modelling: api/modelling_api.md
     - Reporting: api/reporting_api.md
+    - Tools: api/tools_api.md
   - Support:
     - Contact: contact.md
     - License: license.md
