@@ -1,9 +1,10 @@
 [tool.poetry]
 name = "SpectraFit"
-version = "0.5.1"
+version = "0.5.2"
 description = "Fast fitting of 2D-Spectra with established routines"
 readme = "README.md"
 authors = ["Anselm Hahn <Anselm.Hahn@gmail.com>"]
+maintainers = ["Anselm Hahn <Anselm.Hahn@gmail.com>"]
 license = "BSD-3-Clause"
 repository = "https://github.com/Anselmoo/spectrafit"
 documentation = "https://anselmoo.github.io/spectrafit/"
