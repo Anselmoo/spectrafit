@@ -1,6 +1,7 @@
 # User specific settings
 .vscode
 .DS_Store
+.python-version
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
