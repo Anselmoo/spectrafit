@@ -507,15 +507,15 @@ python-versions = ">=3.6"
 
 [[package]]
 name = "mkdocs-minify-plugin"
-version = "0.4.0"
+version = "0.4.1"
 description = "An MkDocs plugin to minify HTML and/or JS files prior to being written to disk"
 category = "dev"
 optional = false
-python-versions = ">=2.7"
+python-versions = ">=3.0"
 
 [package.dependencies]
 htmlmin = ">=0.1.4"
-jsmin = ">=2.2.2"
+jsmin = ">=3.0.0"
 mkdocs = ">=1.0.4"
 
 [[package]]
@@ -1241,7 +1241,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7.1,<3.10"
-content-hash = "690db76fb1c4947c5b5869d2116a980ce6d0c341a71cf74eed9c208f7cfc3792"
+content-hash = "744db8884dde088bf804312a092eaa0a010a62c5116b9ad31d15aab476aaeffb"
 
 [metadata.files]
 algopy = [
@@ -1600,8 +1600,8 @@ mkdocs-material-extensions = [
     {file = "mkdocs_material_extensions-1.0.3-py3-none-any.whl", hash = "sha256:a82b70e533ce060b2a5d9eb2bc2e1be201cf61f901f93704b4acf6e3d5983a44"},
 ]
 mkdocs-minify-plugin = [
-    {file = "mkdocs-minify-plugin-0.4.0.tar.gz", hash = "sha256:b975ab8e72b9aeadaa8ba2e2901be401475b280a1d8f1789653d66734ea7d8cc"},
-    {file = "mkdocs_minify_plugin-0.4.0-py2-none-any.whl", hash = "sha256:8893aef8410458a2c1d6454342fc6d1db30439d60f7850c144803932262fd89c"},
+    {file = "mkdocs-minify-plugin-0.4.1.tar.gz", hash = "sha256:dd12c178853485281aac3ccdd7c85733462550961fa6cf6d2ce0fdad103c9c9e"},
+    {file = "mkdocs_minify_plugin-0.4.1-py2-none-any.whl", hash = "sha256:8799170c9b3bcc169be60104b80f3a43f9eb585d4d50701e2cbf342d35a46487"},
 ]
 mkdocs-section-index = [
     {file = "mkdocs-section-index-0.3.1.tar.gz", hash = "sha256:f31a4950c411ef2b32450bb2755765ce27f9fe3f37a5c33ddbf6852b7c9008e0"},
