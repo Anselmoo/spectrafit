@@ -1,12 +1,12 @@
 """Pytest of tools model."""
-import pandas as pd
 import numpy as np
+import pandas as pd
+
+from pandas._testing import assert_frame_equal
 from spectrafit.tools import energy_range
 from spectrafit.tools import energy_shift
 from spectrafit.tools import intensity_smooth
 from spectrafit.tools import oversampling
-
-from pandas._testing import assert_frame_equal
 
 
 df = pd.DataFrame(
@@ -113,6 +113,7 @@ def test_smoothing_2() -> None:
     }
     assert intensity_smooth(df, args).shape[0] == 100
 
+
 def test_energy_shift_1() -> None:
     """Testing energy shift for no shift."""
     args = {
@@ -123,6 +124,7 @@ def test_energy_shift_1() -> None:
         energy_shift(df, args),
         df,
     )
+
 
 def test_energy_shift_2() -> None:
     """Testing energy shift for yes shift."""
