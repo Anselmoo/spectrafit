@@ -23,8 +23,8 @@ def energy_range(df: pd.DataFrame, args: dict) -> Tuple[pd.DataFrame, dict, dict
              (`x` and `data`), as well as the best fit and the corresponding residuum.
              Hence, it will be extended by the single contribution of the model.
     """
-    _e1 = args["energy_stop"]
     _e0 = args["energy_start"]
+    _e1 = args["energy_stop"]
 
     if isinstance(_e0, (int, float)) and isinstance(_e1, (int, float)):
         return df[(df[args["column"][0]] >= _e0) & (df[args["column"][0]] <= _e1)]
