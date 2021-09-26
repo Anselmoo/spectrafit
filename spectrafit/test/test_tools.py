@@ -1,12 +1,14 @@
 """Pytest of tools model."""
 import numpy as np
 import pandas as pd
+import pytest
 
 from pandas._testing import assert_frame_equal
 from spectrafit.tools import energy_range
 from spectrafit.tools import energy_shift
 from spectrafit.tools import intensity_smooth
 from spectrafit.tools import oversampling
+from spectrafit.tools import save_as_json
 
 
 df = pd.DataFrame(
@@ -136,3 +138,13 @@ def test_energy_shift_2() -> None:
         energy_shift(df, args),
         df,
     )
+
+
+def test_save_as_json_fail() -> None:
+    """Testing save as json for no file."""
+    args = {
+        "outfile": None,
+        "data": df,
+    }
+    with pytest.raises(FileNotFoundError):
+        save_as_json(args)
