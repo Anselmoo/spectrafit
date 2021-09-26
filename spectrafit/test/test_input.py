@@ -2,29 +2,29 @@
 from pathlib import Path
 
 import pandas as pd
-import pytest
 
 from numpy.testing import assert_almost_equal
-from spectrafit import __version__
 
 
 class TestCommandLineRunner:
     """Testing the command line interface."""
 
-    @pytest.mark.skip("Will be an infinity loop")
-    def test_version(self, monkeypatch, script_runner):
-        """Testing the version command."""
-        monkeypatch.setattr("builtins.input", lambda _: "y")
-        ret = script_runner.run(
-            "spectrafit",
-            "spectrafit/test/test_data.txt",
-            "-i",
-            "spectrafit/test/test_input_1.json",
-        )
-
-        assert ret.success
-        assert ret.stdout == f"Currently used version is: {__version__}\n"
-        assert ret.stderr == ""
+    # @pytest.mark.skip("Will be an infinity loop")
+    # def test_version(self, monkeypatch, script_runner):
+    #     """Testing the version command."""
+    #     import pytest
+    #     from spectrafit import __version__
+    #     monkeypatch.setattr("builtins.input", lambda _: "y")
+    #     ret = script_runner.run(
+    #         "spectrafit",
+    #         "spectrafit/test/test_data.txt",
+    #         "-i",
+    #         "spectrafit/test/test_input_1.json",
+    #     )
+    #
+    #     assert ret.success
+    #     assert ret.stdout == f"Currently used version is: {__version__}\n"
+    #     assert ret.stderr == ""
 
     def test_extended(self, monkeypatch, script_runner):
         """Testing the extended command."""
