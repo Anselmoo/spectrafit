@@ -1,0 +1,10 @@
+version: '3.4'
+
+services:
+  spectrafit:
+    image: spectrafit
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    volumes:
+      - ./:/home/app/
