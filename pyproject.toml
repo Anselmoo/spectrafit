@@ -47,7 +47,7 @@ toml = "^0.10.2"
 PyYAML = "^5.4.1"
 numdifftools = "^0.9.40"
 tabulate = "^0.8.9"
-statsmodels = "^0.12.2"
+statsmodels = ">=0.12.2,<0.14.0"
 
 [tool.poetry.dev-dependencies]
 pylama = "^7.7.1"
