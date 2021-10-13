@@ -1126,7 +1126,7 @@ python-versions = "*"
 
 [[package]]
 name = "types-pyyaml"
-version = "5.4.10"
+version = "5.4.11"
 description = "Typing stubs for PyYAML"
 category = "dev"
 optional = false
@@ -1227,7 +1227,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7.1,<3.10"
-content-hash = "64674912456ab2181c145aa1df2a6b6e303d6d84eb74c085d534d190a3a8f911"
+content-hash = "c05effc01eca61bc89d0e0b0ad3723bda57b9817dcfd933bbb328c842d68771d"
 
 [metadata.files]
 algopy = [
@@ -2013,8 +2013,8 @@ typed-ast = [
     {file = "typed_ast-1.4.3.tar.gz", hash = "sha256:fb1bbeac803adea29cedd70781399c99138358c26d05fcbd23c13016b7f5ec65"},
 ]
 types-pyyaml = [
-    {file = "types-PyYAML-5.4.10.tar.gz", hash = "sha256:1d9e431e9f1f78a65ea957c558535a3b15ad67ea4912bce48a6c1b613dcf81ad"},
-    {file = "types_PyYAML-5.4.10-py3-none-any.whl", hash = "sha256:f1d1357168988e45fa20c65aecb3911462246a84809015dd889ebf8b1db74124"},
+    {file = "types-PyYAML-5.4.11.tar.gz", hash = "sha256:802566879aa630b3199f33f3523d4ba069d248d04cea1a12cfa35ecd0dd86622"},
+    {file = "types_PyYAML-5.4.11-py3-none-any.whl", hash = "sha256:09b7e488b8057677b7cdf348d2ba5fdcf0952d2f468e86834631db56e5125058"},
 ]
 types-tabulate = [
     {file = "types-tabulate-0.8.3.tar.gz", hash = "sha256:7c28ca3b35f13eedefdc2cddc0b73e4b3e67b353174d9294a0687c558d1d1d85"},
