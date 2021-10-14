@@ -27,7 +27,7 @@ jobs:
           pip install poetry
       - name: Build and publish
         run: |
-          poetry config http-basic.pypi ${{ secrets.TWINE_USERNAME }} ${{ secrets.TWINE_PASSWORD }}
+          poetry config pypi-token.pypi ${{ secrets.TWINE_TOKEN }}
           poetry publish --build
         continue-on-error: true
   Docker:
