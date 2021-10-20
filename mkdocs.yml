@@ -140,8 +140,10 @@ nav:
     - JSON, TOML, YAML Inputs: examples/example2.md
     - Multi Peak Fitting: examples/example3.md
     - Working with Real Life Data: examples/example4.md
+    - Working with Expressions: examples/example5.md
   - Documentation:
       - Models: doc/models.md
+      - Expression: doc/expression.md
       - Solvers: doc/solver.md
       - Fitting: doc/fitting.md
   - API:

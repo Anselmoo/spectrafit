@@ -1,0 +1,117 @@
+{
+  "settings": {
+    "column": ["Energy", "Intensity"],
+    "decimal": ".",
+    "energy_start": -1,
+    "energy_stop": 2,
+    "header": 0,
+    "infile": "data.csv",
+    "outfile": "example_5",
+    "oversampling": false,
+    "separator": ",",
+    "shift": 0,
+    "smooth": 0,
+    "verbose": false,
+    "version": false
+  },
+  "fitting": {
+    "description": {
+      "project_name": "Template",
+      "project_details": "Template for testing",
+      "keywords": [
+        "2D-Spectra",
+        "fitting",
+        "curve-fitting",
+        "peak-fitting",
+        "spectrum"
+      ]
+    },
+
+    "parameters": {
+      "minimizer": { "nan_policy": "propagate", "calc_covar": true },
+      "optimizer": { "max_nfev": 1000, "method": "leastsq" },
+      "report": { "min_correl": 0.0 }
+    },
+    "peaks": {
+      "1": {
+        "pseudovoigt": {
+          "amplitude": {
+            "max": 2,
+            "min": 0,
+            "vary": true,
+            "value": 1
+          },
+          "center": {
+            "max": 2,
+            "min": -2,
+            "vary": true,
+            "value": 0
+          },
+          "fwhmg": {
+            "max": 0.74,
+            "min": 0.02,
+            "vary": true,
+            "value": 0.21
+          },
+          "fwhml": {
+            "max": 0.74,
+            "min": 0.01,
+            "vary": true,
+            "value": 0.21
+          }
+        }
+      },
+      "2": {
+        "pseudovoigt": {
+          "amplitude": {
+            "expr": "pseudovoigt_amplitude_1 / 3"
+          },
+          "center": {
+            "expr": "pseudovoigt_center_1 + 1.73"
+          },
+          "fwhmg": {
+            "max": 0.5,
+            "min": 0.02,
+            "vary": true,
+            "value": 0.01
+          },
+          "fwhml": {
+            "max": 0.5,
+            "min": 0.01,
+            "vary": true,
+            "value": 0.01
+          }
+        }
+      },
+      "3": {
+        "constant": {
+          "amplitude": {
+            "max": 2,
+            "min": 0.01,
+            "vary": true,
+            "value": 1
+          }
+        }
+      },
+      "4": {
+        "gaussian": {
+          "amplitude": {
+            "max": 2,
+            "min": 0,
+            "vary": true,
+            "value": 1
+          },
+          "center": {
+            "expr": "pseudovoigt_center_2 + 0.35"
+          },
+          "fwhmg": {
+            "max": 0.4,
+            "min": 0.02,
+            "vary": true,
+            "value": 0.01
+          }
+        }
+      }
+    }
+  }
+}

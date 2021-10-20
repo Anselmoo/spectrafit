@@ -170,7 +170,6 @@ def get_parameters(args: dict) -> dict:
         for key_2, value_2 in value_1.items():
             for key_3, value_3 in value_2.items():
                 params.add(f"{key_2}_{key_3}_{key_1}", **value_3)
-                # params.add(f"{key_2}-{key_3}-{key_1}", **value_3)
     return params
 
 
