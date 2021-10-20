@@ -51,6 +51,7 @@ statsmodels = ">=0.12.2,<0.14.0"
 emcee = "^3.1.1"
 dill = "^0.3.4"
 corner = "^2.2.1"
+tqdm = "^4.62.3"
 
 [tool.poetry.dev-dependencies]
 pylama = "^7.7.1"
