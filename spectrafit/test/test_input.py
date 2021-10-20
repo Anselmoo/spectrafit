@@ -9,22 +9,21 @@ from numpy.testing import assert_almost_equal
 class TestCommandLineRunner:
     """Testing the command line interface."""
 
-    # @pytest.mark.skip("Will be an infinity loop")
-    # def test_version(self, monkeypatch, script_runner):
-    #     """Testing the version command."""
-    #     import pytest
-    #     from spectrafit import __version__
-    #     monkeypatch.setattr("builtins.input", lambda _: "y")
-    #     ret = script_runner.run(
-    #         "spectrafit",
-    #         "spectrafit/test/test_data.txt",
-    #         "-i",
-    #         "spectrafit/test/test_input_1.json",
-    #     )
-    #
-    #     assert ret.success
-    #     assert ret.stdout == f"Currently used version is: {__version__}\n"
-    #     assert ret.stderr == ""
+    def test_version(self, monkeypatch, script_runner):
+        """Testing the version command."""
+        from spectrafit import __version__
+
+        monkeypatch.setattr("builtins.input", lambda _: "y")
+        ret = script_runner.run(
+            "spectrafit",
+            "spectrafit/test/test_data.txt",
+            "-i",
+            "spectrafit/test/test_input_1.json",
+        )
+
+        assert ret.success
+        assert ret.stdout == f"Currently used version is: {__version__}\n"
+        assert ret.stderr == ""
 
     def test_extended(self, monkeypatch, script_runner):
         """Testing the extended command."""
@@ -212,7 +211,7 @@ class TestMoreFeatures:
         assert ret.success
         assert ret.stderr == ""
 
-    def test_not_allowed_input(self, monkeypatch, script_runner):
+    def test_not_allowed_input_1(self, monkeypatch, script_runner):
         """Testing test all models of spectrafit."""
         monkeypatch.setattr("builtins.input", lambda _: "n")
         fname = "spectrafit/test/test_wrong.pp"
@@ -228,8 +227,34 @@ class TestMoreFeatures:
             "Supported fileformats are: '*.json', '*.yaml', and '*.toml'\n"
         )
 
+    def test_not_allowed_input_2(self, monkeypatch, script_runner):
+        """Testing missing mininizmer parameter in input."""
+        monkeypatch.setattr("builtins.input", lambda _: "n")
+        fname = "spectrafit/test/test_missing_parameter_1.json"
+        ret = script_runner.run(
+            "spectrafit",
+            "spectrafit/test/test_data.csv",
+            "-i",
+            fname,
+        )
+        assert not ret.success
+        assert ret.stderr == "Missing 'minimizer' in 'parameters'!\n"
+
+    def test_not_allowed_input_3(self, monkeypatch, script_runner):
+        """Testing missing optimizer parameter in input."""
+        monkeypatch.setattr("builtins.input", lambda _: "n")
+        fname = "spectrafit/test/test_missing_parameter_2.json"
+        ret = script_runner.run(
+            "spectrafit",
+            "spectrafit/test/test_data.csv",
+            "-i",
+            fname,
+        )
+        assert not ret.success
+        assert ret.stderr == "Missing key 'optimizer' in 'parameters'!\n"
+
     def test_no_input(self, monkeypatch, script_runner):
-        """Testing test all models of spectrafit."""
+        """Testing no provided input for spectrafit."""
         monkeypatch.setattr("builtins.input", lambda _: "n")
         ret = script_runner.run(
             "spectrafit",
