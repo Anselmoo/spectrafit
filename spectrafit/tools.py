@@ -51,8 +51,9 @@ def energy_shift(df: pd.DataFrame, args: dict) -> pd.DataFrame:
              extended by the single contribution of the model.
     """
     if args["shift"]:
-        df[args["column"][0]] = df[args["column"][0]] - args["shift"]
-        return df
+        _df = df.copy()
+        _df.loc[:, args["column"][0]] = df[args["column"][0]].values + args["shift"]
+        return _df
     return df
 
 
@@ -106,10 +107,11 @@ def intensity_smooth(df: pd.DataFrame, args: dict) -> pd.DataFrame:
     """
     if args["smooth"]:
         box = np.ones(args["smooth"]) / args["smooth"]
-        df[args["column"][1]] = np.convolve(
+        _df = df.copy()
+        _df.loc[:, args["column"][1]] = np.convolve(
             df[args["column"][1]].values, box, mode="same"
         )
-        return df
+        return _df
     return df
 
 

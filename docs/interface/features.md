@@ -76,16 +76,16 @@ And every of these attributes has to be analyzed according to the:
     | :---------------------- | ----------: | -------------: | -------------: | ---------: | -----------: |
     | pseudovoigt_amplitude_1 |  0.16403603 | +/- 0.28617283 |        174.46% |          1 |     0.164036 |
     | pseudovoigt_center_1    |  0.03500058 | +/- 0.07534815 |        215.28% |          0 |   0.03500058 |
-    | pseudovoigt_fwhm_g_1    |  0.06876795 | +/- 0.04790400 |         69.66% |       0.02 |   0.06876795 |
-    | pseudovoigt_fwhm_l_1    |  0.09252389 | +/- 0.03757126 |         40.61% |       0.01 |   0.09252389 |
+    | pseudovoigt_fwhmg_1    |  0.06876795 | +/- 0.04790400 |         69.66% |       0.02 |   0.06876795 |
+    | pseudovoigt_fwhml_1    |  0.09252389 | +/- 0.03757126 |         40.61% |       0.01 |   0.09252389 |
     | pseudovoigt_amplitude_2 |  0.09740402 | +/- 0.12049276 |        123.70% |          1 |   0.09740402 |
     | pseudovoigt_center_2    | -0.01805236 | +/- 0.02098358 |        116.24% |          0 |  -0.01805236 |
-    | pseudovoigt_fwhm_g_2    |  0.04334471 | +/- 0.03017987 |         69.63% |       0.02 |   0.04334471 |
-    | pseudovoigt_fwhm_l_2    |  0.09989511 | +/- 0.07669355 |         76.77% |       0.01 |   0.09989511 |
+    | pseudovoigt_fwhmg_2    |  0.04334471 | +/- 0.03017987 |         69.63% |       0.02 |   0.04334471 |
+    | pseudovoigt_fwhml_2    |  0.09989511 | +/- 0.07669355 |         76.77% |       0.01 |   0.09989511 |
     | constant_amplitude_3    |  0.03676873 | +/- 0.00277773 |          7.55% |          1 |   0.03676873 |
     | gaussian_amplitude_4    |  0.01411288 | +/- 0.18946470 |       1342.49% |          1 |   0.01411288 |
     | gaussian_center_4       |  7.8507e-04 | +/- 0.07239645 |       9221.69% |          0 | 0.0007850674 |
-    | gaussian_fwhm_g_4       |  0.04893397 | +/- 0.27055202 |        552.89% |       0.02 |   0.04893397 |
+    | gaussian_fwhmg_4       |  0.04893397 | +/- 0.27055202 |        552.89% |       0.02 |   0.04893397 |
 
 ### Correlation Analysis
 
@@ -136,16 +136,16 @@ fit.
     | :---------------------- | -----: | -----: | -----: | -------: | -----: | -----: | -----: |
     | pseudovoigt_amplitude_1 |   -inf |   -inf |   -inf |  0.16404 |   +inf |   +inf |   +inf |
     | pseudovoigt_center_1    |   -inf |   -inf |   -inf |  0.03500 |   +inf |   +inf |   +inf |
-    | pseudovoigt_fwhm_g_1    |   -inf |   -inf |   -inf |  0.06877 |   +inf |   +inf |   +inf |
-    | pseudovoigt_fwhm_l_1    |   -inf |   -inf |   -inf |  0.09252 |   +inf |   +inf |   +inf |
+    | pseudovoigt_fwhmg_1    |   -inf |   -inf |   -inf |  0.06877 |   +inf |   +inf |   +inf |
+    | pseudovoigt_fwhml_1    |   -inf |   -inf |   -inf |  0.09252 |   +inf |   +inf |   +inf |
     | pseudovoigt_amplitude_2 |   -inf |   -inf |   -inf |  0.09740 |   +inf |   +inf |   +inf |
     | pseudovoigt_center_2    |   -inf |   -inf |   -inf | -0.01805 |   +inf |   +inf |   +inf |
-    | pseudovoigt_fwhm_g_2    |   -inf |   -inf |   -inf |  0.04334 |   +inf |   +inf |   +inf |
-    | pseudovoigt_fwhm_l_2    |   -inf |   -inf |   -inf |  0.09990 |   +inf |   +inf |   +inf |
+    | pseudovoigt_fwhmg_2    |   -inf |   -inf |   -inf |  0.04334 |   +inf |   +inf |   +inf |
+    | pseudovoigt_fwhml_2    |   -inf |   -inf |   -inf |  0.09990 |   +inf |   +inf |   +inf |
     | constant_amplitude_3    |   -inf |   -inf |   -inf |  0.03677 |   +inf |   +inf |   +inf |
     | gaussian_amplitude_4    |   -inf |   -inf |   -inf |  0.01411 |   +inf |   +inf |   +inf |
     | gaussian_center_4       |   -inf |   -inf |   -inf |  0.00079 |   +inf |   +inf |   +inf |
-    | gaussian_fwhm_g_4       |   -inf |   -inf |   -inf |  0.04893 |   +inf |   +inf |   +inf |
+    | gaussian_fwhmg_4       |   -inf |   -inf |   -inf |  0.04893 |   +inf |   +inf |   +inf |
 
 !!! Danger "About the trace in confidence intervals"
 
@@ -378,13 +378,13 @@ different types of output files will be generated
               "vary": true,
               "value": 0
             },
-            "fwhm_g": {
+            "fwhmg": {
               "max": 0.1,
               "min": 0.02,
               "vary": true,
               "value": 0.01
             },
-            "fwhm_l": {
+            "fwhml": {
               "max": 0.1,
               "min": 0.01,
               "vary": true,
@@ -406,13 +406,13 @@ different types of output files will be generated
               "vary": true,
               "value": 0
             },
-            "fwhm_g": {
+            "fwhmg": {
               "max": 0.1,
               "min": 0.02,
               "vary": true,
               "value": 0.01
             },
-            "fwhm_l": {
+            "fwhml": {
               "max": 0.1,
               "min": 0.01,
               "vary": true,
@@ -444,7 +444,7 @@ different types of output files will be generated
               "vary": true,
               "value": 0
             },
-            "fwhm_g": {
+            "fwhmg": {
               "max": 0.1,
               "min": 0.02,
               "vary": true,
@@ -500,16 +500,16 @@ different types of output files will be generated
           "variable_names": [
             "pseudovoigt_amplitude_1",
             "pseudovoigt_center_1",
-            "pseudovoigt_fwhm_g_1",
-            "pseudovoigt_fwhm_l_1",
+            "pseudovoigt_fwhmg_1",
+            "pseudovoigt_fwhml_1",
             "pseudovoigt_amplitude_2",
             "pseudovoigt_center_2",
-            "pseudovoigt_fwhm_g_2",
-            "pseudovoigt_fwhm_l_2",
+            "pseudovoigt_fwhmg_2",
+            "pseudovoigt_fwhml_2",
             "constant_amplitude_3",
             "gaussian_amplitude_4",
             "gaussian_center_4",
-            "gaussian_fwhm_g_4"
+            "gaussian_fwhmg_4"
           ],
           "variable_numbers": 12,
           "degree_of_freedom": 565
@@ -535,14 +535,14 @@ different types of output files will be generated
             "error_relative": 0.07534814694716585,
             "error_absolute": 215.27682273005587
           },
-          "pseudovoigt_fwhm_g_1": {
+          "pseudovoigt_fwhmg_1": {
             "init_value": 0.02,
             "model_value": 0.0687679507938458,
             "best_value": 0.0687679507938458,
             "error_relative": 0.04790400069682786,
             "error_absolute": 69.66035797756372
           },
-          "pseudovoigt_fwhm_l_1": {
+          "pseudovoigt_fwhml_1": {
             "init_value": 0.01,
             "model_value": 0.09252389394106236,
             "best_value": 0.09252389394106236,
@@ -563,14 +563,14 @@ different types of output files will be generated
             "error_relative": 0.02098357900187265,
             "error_absolute": 116.23732231810547
           },
-          "pseudovoigt_fwhm_g_2": {
+          "pseudovoigt_fwhmg_2": {
             "init_value": 0.02,
             "model_value": 0.043344705776687614,
             "best_value": 0.043344705776687614,
             "error_relative": 0.030179868797834665,
             "error_absolute": 69.62757794071015
           },
-          "pseudovoigt_fwhm_l_2": {
+          "pseudovoigt_fwhml_2": {
             "init_value": 0.01,
             "model_value": 0.09989511131863486,
             "best_value": 0.09989511131863486,
@@ -598,7 +598,7 @@ different types of output files will be generated
             "error_relative": 0.0723964536938497,
             "error_absolute": 9221.686009884514
           },
-          "gaussian_fwhm_g_4": {
+          "gaussian_fwhmg_4": {
             "init_value": 0.02,
             "model_value": 0.0489339673857355,
             "best_value": 0.0489339673857355,
@@ -610,68 +610,68 @@ different types of output files will be generated
         "correlations": {
           "pseudovoigt_amplitude_1": {
             "pseudovoigt_center_1": -0.9862283106649913,
-            "pseudovoigt_fwhm_g_1": 0.08087768591070482,
-            "pseudovoigt_fwhm_l_1": 0.026422859895268734,
+            "pseudovoigt_fwhmg_1": 0.08087768591070482,
+            "pseudovoigt_fwhml_1": 0.026422859895268734,
             "pseudovoigt_amplitude_2": -0.8508056947473775,
             "pseudovoigt_center_2": 0.443720894718587,
-            "pseudovoigt_fwhm_g_2": 0.46503877490597423,
-            "pseudovoigt_fwhm_l_2": -0.7971320712781913,
+            "pseudovoigt_fwhmg_2": 0.46503877490597423,
+            "pseudovoigt_fwhml_2": -0.7971320712781913,
             "constant_amplitude_3": -0.19256163835611795,
             "gaussian_amplitude_4": -0.9391516417433717,
             "gaussian_center_4": 0.4275708026546227
           },
           "pseudovoigt_center_1": {
-            "pseudovoigt_fwhm_g_1": 0.016337719047078703,
-            "pseudovoigt_fwhm_l_1": 0.09199213704177446,
+            "pseudovoigt_fwhmg_1": 0.016337719047078703,
+            "pseudovoigt_fwhml_1": 0.09199213704177446,
             "pseudovoigt_amplitude_2": 0.7845675730452338,
             "pseudovoigt_center_2": -0.5671057830051938,
-            "pseudovoigt_fwhm_g_2": -0.543356574051609,
-            "pseudovoigt_fwhm_l_2": 0.7838468315613173,
+            "pseudovoigt_fwhmg_2": -0.543356574051609,
+            "pseudovoigt_fwhml_2": 0.7838468315613173,
             "constant_amplitude_3": 0.1908234141503389,
             "gaussian_amplitude_4": 0.9606615151849531,
             "gaussian_center_4": -0.45981680639412886
           },
-          "pseudovoigt_fwhm_g_1": {
-            "pseudovoigt_fwhm_l_1": 0.9707589530283234,
+          "pseudovoigt_fwhmg_1": {
+            "pseudovoigt_fwhml_1": 0.9707589530283234,
             "pseudovoigt_amplitude_2": -0.12947342434289133,
             "pseudovoigt_center_2": -0.22593963910738113,
-            "pseudovoigt_fwhm_g_2": -0.041441070112167695,
-            "pseudovoigt_fwhm_l_2": -0.22029948420194614,
+            "pseudovoigt_fwhmg_2": -0.041441070112167695,
+            "pseudovoigt_fwhml_2": -0.22029948420194614,
             "constant_amplitude_3": -0.08828608501696038,
             "gaussian_amplitude_4": -0.02662835781007091,
             "gaussian_center_4": 0.11186439414852514
           },
-          "pseudovoigt_fwhm_l_1": {
+          "pseudovoigt_fwhml_1": {
             "pseudovoigt_amplitude_2": -0.13806698462988234,
             "pseudovoigt_center_2": -0.3754173331238591,
-            "pseudovoigt_fwhm_g_2": -0.14152665304317025,
-            "pseudovoigt_fwhm_l_2": -0.16783283765319543,
+            "pseudovoigt_fwhmg_2": -0.14152665304317025,
+            "pseudovoigt_fwhml_2": -0.16783283765319543,
             "constant_amplitude_3": -0.07658241281626063,
             "gaussian_amplitude_4": 0.05913347928634629,
             "gaussian_center_4": 0.06599377246402101
           },
           "pseudovoigt_amplitude_2": {
             "pseudovoigt_center_2": 0.01906524917689979,
-            "pseudovoigt_fwhm_g_2": 0.06033478892009533,
-            "pseudovoigt_fwhm_l_2": 0.44749434233368474,
+            "pseudovoigt_fwhmg_2": 0.06033478892009533,
+            "pseudovoigt_fwhml_2": 0.44749434233368474,
             "constant_amplitude_3": 0.18484185277297382,
             "gaussian_amplitude_4": 0.6203122316031827,
             "gaussian_center_4": 0.0556317158685396
           },
           "pseudovoigt_center_2": {
-            "pseudovoigt_fwhm_g_2": 0.8392271456101567,
-            "pseudovoigt_fwhm_l_2": -0.5198485790152048,
+            "pseudovoigt_fwhmg_2": 0.8392271456101567,
+            "pseudovoigt_fwhml_2": -0.5198485790152048,
             "constant_amplitude_3": -0.09631860290887163,
             "gaussian_amplitude_4": -0.6669343985978409,
             "gaussian_center_4": 0.6369311212860583
           },
-          "pseudovoigt_fwhm_g_2": {
-            "pseudovoigt_fwhm_l_2": -0.7677038773609103,
+          "pseudovoigt_fwhmg_2": {
+            "pseudovoigt_fwhml_2": -0.7677038773609103,
             "constant_amplitude_3": -0.04615140867123564,
             "gaussian_amplitude_4": -0.7331418848699987,
             "gaussian_center_4": 0.9347248046811267
           },
-          "pseudovoigt_fwhm_l_2": {
+          "pseudovoigt_fwhml_2": {
             "constant_amplitude_3": 0.07011958877932851,
             "gaussian_amplitude_4": 0.9079454516212739,
             "gaussian_center_4": -0.8457904795491098
@@ -684,176 +684,176 @@ different types of output files will be generated
             "gaussian_center_4": -0.680824994264301
           },
           "gaussian_center_4": {},
-          "gaussian_fwhm_g_4": {}
+          "gaussian_fwhmg_4": {}
         },
         "covariance_matrix": {
           "pseudovoigt_amplitude_1": {
             "pseudovoigt_amplitude_1": 0.08189489039509333,
             "pseudovoigt_center_1": -0.021265639351830783,
-            "pseudovoigt_fwhm_g_1": 0.001108737928958058,
-            "pseudovoigt_fwhm_l_1": 0.0002840952206331345,
+            "pseudovoigt_fwhmg_1": 0.001108737928958058,
+            "pseudovoigt_fwhml_1": 0.0002840952206331345,
             "pseudovoigt_amplitude_2": -0.029337272332296393,
             "pseudovoigt_center_2": 0.0026645130237849127,
-            "pseudovoigt_fwhm_g_2": 0.004016381114148398,
-            "pseudovoigt_fwhm_l_2": -0.017495144124302444,
+            "pseudovoigt_fwhmg_2": 0.004016381114148398,
+            "pseudovoigt_fwhml_2": -0.017495144124302444,
             "constant_amplitude_3": -0.00015306951027211485,
             "gaussian_amplitude_4": -0.05092047223554052,
             "gaussian_center_4": 0.008858368387821043,
-            "gaussian_fwhm_g_4": -0.06714216825754851
+            "gaussian_fwhmg_4": -0.06714216825754851
           },
           "pseudovoigt_center_1": {
             "pseudovoigt_amplitude_1": -0.02126563935183133,
             "pseudovoigt_center_1": 0.005677343248371699,
-            "pseudovoigt_fwhm_g_1": 5.897063230563316e-5,
-            "pseudovoigt_fwhm_l_1": 0.00026042278959073953,
+            "pseudovoigt_fwhmg_1": 5.897063230563316e-5,
+            "pseudovoigt_fwhml_1": 0.00026042278959073953,
             "pseudovoigt_amplitude_2": 0.007123015208851593,
             "pseudovoigt_center_2": -0.0008966360919980639,
-            "pseudovoigt_fwhm_g_2": -0.0012355913220318477,
-            "pseudovoigt_fwhm_l_2": 0.004529628892633818,
+            "pseudovoigt_fwhmg_2": -0.0012355913220318477,
+            "pseudovoigt_fwhml_2": 0.004529628892633818,
             "constant_amplitude_3": 3.993877639913862e-5,
             "gaussian_amplitude_4": 0.013714224880423878,
             "gaussian_center_4": -0.0025082724605561347,
-            "gaussian_fwhm_g_4": 0.018719658813627908
+            "gaussian_fwhmg_4": 0.018719658813627908
           },
-          "pseudovoigt_fwhm_g_1": {
+          "pseudovoigt_fwhmg_1": {
             "pseudovoigt_amplitude_1": 0.0011087379289576504,
             "pseudovoigt_center_1": 5.8970632305741064e-5,
-            "pseudovoigt_fwhm_g_1": 0.0022947932827616846,
-            "pseudovoigt_fwhm_l_1": 0.0017471849987940095,
+            "pseudovoigt_fwhmg_1": 0.0022947932827616846,
+            "pseudovoigt_fwhml_1": 0.0017471849987940095,
             "pseudovoigt_amplitude_2": -0.0007473316247946308,
             "pseudovoigt_center_2": -0.00022711393397554513,
-            "pseudovoigt_fwhm_g_2": -5.991286583356574e-5,
-            "pseudovoigt_fwhm_l_2": -0.0008093644116645487,
+            "pseudovoigt_fwhmg_2": -5.991286583356574e-5,
+            "pseudovoigt_fwhml_2": -0.0008093644116645487,
             "constant_amplitude_3": -1.174774635498921e-5,
             "gaussian_amplitude_4": -0.000241682089250215,
             "gaussian_center_4": 0.0003879546421282315,
-            "gaussian_fwhm_g_4": 0.0006338841801499864
+            "gaussian_fwhmg_4": 0.0006338841801499864
           },
-          "pseudovoigt_fwhm_l_1": {
+          "pseudovoigt_fwhml_1": {
             "pseudovoigt_amplitude_1": 0.00028409522063252706,
             "pseudovoigt_center_1": 0.00026042278959089474,
-            "pseudovoigt_fwhm_g_1": 0.001747184998794004,
-            "pseudovoigt_fwhm_l_1": 0.001411599205530134,
+            "pseudovoigt_fwhmg_1": 0.001747184998794004,
+            "pseudovoigt_fwhml_1": 0.001411599205530134,
             "pseudovoigt_amplitude_2": -0.0006250380895126818,
             "pseudovoigt_center_2": -0.0002959712912374934,
-            "pseudovoigt_fwhm_g_2": -0.0001604764417774813,
-            "pseudovoigt_fwhm_l_2": -0.0004836057758023863,
+            "pseudovoigt_fwhmg_2": -0.0001604764417774813,
+            "pseudovoigt_fwhml_2": -0.0004836057758023863,
             "constant_amplitude_3": -7.99236418817879e-6,
             "gaussian_amplitude_4": 0.0004209373212019539,
             "gaussian_center_4": 0.00017950475225613966,
-            "gaussian_fwhm_g_4": 0.0016290684573037366
+            "gaussian_fwhmg_4": 0.0016290684573037366
           },
           "pseudovoigt_amplitude_2": {
             "pseudovoigt_amplitude_1": -0.029337272332291955,
             "pseudovoigt_center_1": 0.007123015208850233,
-            "pseudovoigt_fwhm_g_1": -0.0007473316247947598,
-            "pseudovoigt_fwhm_l_1": -0.0006250380895129165,
+            "pseudovoigt_fwhmg_1": -0.0007473316247947598,
+            "pseudovoigt_fwhml_1": -0.0006250380895129165,
             "pseudovoigt_amplitude_2": 0.014518504463013346,
             "pseudovoigt_center_2": 4.8203990398478634e-5,
-            "pseudovoigt_fwhm_g_2": 0.00021940478068353377,
-            "pseudovoigt_fwhm_l_2": 0.004135302929289992,
+            "pseudovoigt_fwhmg_2": 0.00021940478068353377,
+            "pseudovoigt_fwhml_2": 0.004135302929289992,
             "constant_amplitude_3": 6.186596216252945e-5,
             "gaussian_amplitude_4": 0.014161184585388637,
             "gaussian_center_4": 0.0004852892705786586,
-            "gaussian_fwhm_g_4": 0.01580657485574901
+            "gaussian_fwhmg_4": 0.01580657485574901
           },
           "pseudovoigt_center_2": {
             "pseudovoigt_amplitude_1": 0.0026645130237860095,
             "pseudovoigt_center_1": -0.000896636091998334,
-            "pseudovoigt_fwhm_g_1": -0.00022711393397552792,
-            "pseudovoigt_fwhm_l_1": -0.0002959712912374785,
+            "pseudovoigt_fwhmg_1": -0.00022711393397552792,
+            "pseudovoigt_fwhml_1": -0.0002959712912374785,
             "pseudovoigt_amplitude_2": 4.820399039793754e-5,
             "pseudovoigt_center_2": 0.00044031058772783083,
-            "pseudovoigt_fwhm_g_2": 0.0005314671608839781,
-            "pseudovoigt_fwhm_l_2": -0.0008365949996164612,
+            "pseudovoigt_fwhmg_2": 0.0005314671608839781,
+            "pseudovoigt_fwhml_2": -0.0008365949996164612,
             "constant_amplitude_3": -5.614101449265054e-6,
             "gaussian_amplitude_4": -0.002651496020276534,
             "gaussian_center_4": 0.0009675854452465984,
-            "gaussian_fwhm_g_4": -0.004552935512084298
+            "gaussian_fwhmg_4": -0.004552935512084298
           },
-          "pseudovoigt_fwhm_g_2": {
+          "pseudovoigt_fwhmg_2": {
             "pseudovoigt_amplitude_1": 0.004016381114150193,
             "pseudovoigt_center_1": -0.0012355913220322883,
-            "pseudovoigt_fwhm_g_1": -5.991286583353875e-5,
-            "pseudovoigt_fwhm_l_1": -0.00016047644177745796,
+            "pseudovoigt_fwhmg_1": -5.991286583353875e-5,
+            "pseudovoigt_fwhml_1": -0.00016047644177745796,
             "pseudovoigt_amplitude_2": 0.00021940478068266733,
             "pseudovoigt_center_2": 0.0005314671608839815,
-            "pseudovoigt_fwhm_g_2": 0.0009108244806545143,
-            "pseudovoigt_fwhm_l_2": -0.0017769283665557472,
+            "pseudovoigt_fwhmg_2": 0.0009108244806545143,
+            "pseudovoigt_fwhml_2": -0.0017769283665557472,
             "constant_amplitude_3": -3.868947408063938e-6,
             "gaussian_amplitude_4": -0.004192119718773303,
             "gaussian_center_4": 0.002042294689594265,
-            "gaussian_fwhm_g_4": -0.006643131556043086
+            "gaussian_fwhmg_4": -0.006643131556043086
           },
-          "pseudovoigt_fwhm_l_2": {
+          "pseudovoigt_fwhml_2": {
             "pseudovoigt_amplitude_1": -0.017495144124304918,
             "pseudovoigt_center_1": 0.004529628892634345,
-            "pseudovoigt_fwhm_g_1": -0.0008093644116646446,
-            "pseudovoigt_fwhm_l_1": -0.0004836057758025077,
+            "pseudovoigt_fwhmg_1": -0.0008093644116646446,
+            "pseudovoigt_fwhml_1": -0.0004836057758025077,
             "pseudovoigt_amplitude_2": 0.004135302929291826,
             "pseudovoigt_center_2": -0.0008365949996163061,
-            "pseudovoigt_fwhm_g_2": -0.0017769283665554888,
-            "pseudovoigt_fwhm_l_2": 0.005881900558206947,
+            "pseudovoigt_fwhmg_2": -0.0017769283665554888,
+            "pseudovoigt_fwhml_2": 0.005881900558206947,
             "constant_amplitude_3": 1.4937871417533935e-5,
             "gaussian_amplitude_4": 0.013193101203570787,
             "gaussian_center_4": -0.0046961171705344,
-            "gaussian_fwhm_g_4": 0.017977662918727797
+            "gaussian_fwhmg_4": 0.017977662918727797
           },
           "constant_amplitude_3": {
             "pseudovoigt_amplitude_1": -0.00015306951027210417,
             "pseudovoigt_center_1": 3.993877639913526e-5,
-            "pseudovoigt_fwhm_g_1": -1.1747746354989603e-5,
-            "pseudovoigt_fwhm_l_1": -7.992364188179718e-6,
+            "pseudovoigt_fwhmg_1": -1.1747746354989603e-5,
+            "pseudovoigt_fwhml_1": -7.992364188179718e-6,
             "pseudovoigt_amplitude_2": 6.186596216253293e-5,
             "pseudovoigt_center_2": -5.61410144926284e-6,
-            "pseudovoigt_fwhm_g_2": -3.868947408060254e-6,
-            "pseudovoigt_fwhm_l_2": 1.4937871417527104e-5,
+            "pseudovoigt_fwhmg_2": -3.868947408060254e-6,
+            "pseudovoigt_fwhml_2": 1.4937871417527104e-5,
             "constant_amplitude_3": 7.71580129520277e-6,
             "gaussian_amplitude_4": 7.974967428193074e-5,
             "gaussian_center_4": 1.8634259555896554e-7,
-            "gaussian_fwhm_g_4": 0.00010750148023268642
+            "gaussian_fwhmg_4": 0.00010750148023268642
           },
           "gaussian_amplitude_4": {
             "pseudovoigt_amplitude_1": -0.050920472235545126,
             "pseudovoigt_center_1": 0.013714224880424732,
-            "pseudovoigt_fwhm_g_1": -0.00024168208925048727,
-            "pseudovoigt_fwhm_l_1": 0.0004209373212015925,
+            "pseudovoigt_fwhmg_1": -0.00024168208925048727,
+            "pseudovoigt_fwhml_1": 0.0004209373212015925,
             "pseudovoigt_amplitude_2": 0.01416118458539306,
             "pseudovoigt_center_2": -0.0026514960202759937,
-            "pseudovoigt_fwhm_g_2": -0.004192119718772415,
-            "pseudovoigt_fwhm_l_2": 0.013193101203570229,
+            "pseudovoigt_fwhmg_2": -0.004192119718772415,
+            "pseudovoigt_fwhml_2": 0.013193101203570229,
             "constant_amplitude_3": 7.974967428194676e-5,
             "gaussian_amplitude_4": 0.03589687106994505,
             "gaussian_center_4": -0.00933858512004467,
-            "gaussian_fwhm_g_4": 0.05016978516684734
+            "gaussian_fwhmg_4": 0.05016978516684734
           },
           "gaussian_center_4": {
             "pseudovoigt_amplitude_1": 0.008858368387825048,
             "pseudovoigt_center_1": -0.002508272460557119,
-            "pseudovoigt_fwhm_g_1": 0.0003879546421282912,
-            "pseudovoigt_fwhm_l_1": 0.00017950475225619249,
+            "pseudovoigt_fwhmg_1": 0.0003879546421282912,
+            "pseudovoigt_fwhml_1": 0.00017950475225619249,
             "pseudovoigt_amplitude_2": 0.0004852892705767287,
             "pseudovoigt_center_2": 0.0009675854452466064,
-            "pseudovoigt_fwhm_g_2": 0.002042294689594267,
-            "pseudovoigt_fwhm_l_2": -0.004696117170534979,
+            "pseudovoigt_fwhmg_2": 0.002042294689594267,
+            "pseudovoigt_fwhml_2": -0.004696117170534979,
             "constant_amplitude_3": 1.863425955505357e-7,
             "gaussian_amplitude_4": -0.009338585120046658,
             "gaussian_center_4": 0.005241246507445724,
-            "gaussian_fwhm_g_4": -0.014022897607884997
+            "gaussian_fwhmg_4": -0.014022897607884997
           },
-          "gaussian_fwhm_g_4": {
+          "gaussian_fwhmg_4": {
             "pseudovoigt_amplitude_1": -0.06714216825755784,
             "pseudovoigt_center_1": 0.01871965881362988,
-            "pseudovoigt_fwhm_g_1": 0.0006338841801496148,
-            "pseudovoigt_fwhm_l_1": 0.001629068457303274,
+            "pseudovoigt_fwhmg_1": 0.0006338841801496148,
+            "pseudovoigt_fwhml_1": 0.001629068457303274,
             "pseudovoigt_amplitude_2": 0.015806574855756025,
             "pseudovoigt_center_2": -0.004552935512083683,
-            "pseudovoigt_fwhm_g_2": -0.006643131556042074,
-            "pseudovoigt_fwhm_l_2": 0.01797766291872774,
+            "pseudovoigt_fwhmg_2": -0.006643131556042074,
+            "pseudovoigt_fwhml_2": 0.01797766291872774,
             "constant_amplitude_3": 0.00010750148023271109,
             "gaussian_amplitude_4": 0.05016978516684935,
             "gaussian_center_4": -0.014022897607882723,
-            "gaussian_fwhm_g_4": 0.07319839591345827
+            "gaussian_fwhmg_4": 0.07319839591345827
           }
         }
       },
@@ -876,7 +876,7 @@ different types of output files will be generated
           [0.9544997361036416, Infinity],
           [0.9973002039367398, Infinity]
         ],
-        "pseudovoigt_fwhm_g_1": [
+        "pseudovoigt_fwhmg_1": [
           [0.9973002039367398, -Infinity],
           [0.9544997361036416, -Infinity],
           [0.6826894921370859, -Infinity],
@@ -885,7 +885,7 @@ different types of output files will be generated
           [0.9544997361036416, Infinity],
           [0.9973002039367398, Infinity]
         ],
-        "pseudovoigt_fwhm_l_1": [
+        "pseudovoigt_fwhml_1": [
           [0.9973002039367398, -Infinity],
           [0.9544997361036416, -Infinity],
           [0.6826894921370859, -Infinity],
@@ -912,7 +912,7 @@ different types of output files will be generated
           [0.9544997361036416, Infinity],
           [0.9973002039367398, Infinity]
         ],
-        "pseudovoigt_fwhm_g_2": [
+        "pseudovoigt_fwhmg_2": [
           [0.9973002039367398, -Infinity],
           [0.9544997361036416, -Infinity],
           [0.6826894921370859, -Infinity],
@@ -921,7 +921,7 @@ different types of output files will be generated
           [0.9544997361036416, Infinity],
           [0.9973002039367398, Infinity]
         ],
-        "pseudovoigt_fwhm_l_2": [
+        "pseudovoigt_fwhml_2": [
           [0.9973002039367398, -Infinity],
           [0.9544997361036416, -Infinity],
           [0.6826894921370859, -Infinity],
@@ -957,7 +957,7 @@ different types of output files will be generated
           [0.9544997361036416, Infinity],
           [0.9973002039367398, Infinity]
         ],
-        "gaussian_fwhm_g_4": [
+        "gaussian_fwhmg_4": [
           [0.9973002039367398, -Infinity],
           [0.9544997361036416, -Infinity],
           [0.6826894921370859, -Infinity],

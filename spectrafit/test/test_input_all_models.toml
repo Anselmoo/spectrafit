@@ -48,13 +48,13 @@ min = -2
 vary = true
 value = 0
 
-[fitting.peaks.1.pseudovoigt.fwhm_g]
+[fitting.peaks.1.pseudovoigt.fwhmg]
 max = 0.1
 min = 0.02
 vary = true
 value = 0.01
 
-[fitting.peaks.1.pseudovoigt.fwhm_l]
+[fitting.peaks.1.pseudovoigt.fwhml]
 max = 0.1
 min = 0.01
 vary = true
@@ -174,7 +174,7 @@ min = -2
 vary = true
 value = 0
 
-[fitting.peaks.9.voigt.fwhm]
+[fitting.peaks.9.voigt.fwhmv]
 max = 2
 min = -2
 vary = true
@@ -198,7 +198,7 @@ min = -2
 vary = true
 value = 0
 
-[fitting.peaks.10.gaussian.fwhm_g]
+[fitting.peaks.10.gaussian.fwhmg]
 max = 0.1
 min = 0.02
 vary = true
@@ -216,7 +216,7 @@ min = -2
 vary = true
 value = 0
 
-[fitting.peaks.11.lorentzian.fwhm_l]
+[fitting.peaks.11.lorentzian.fwhml]
 max = 0.1
 min = 0.01
 vary = true
@@ -246,7 +246,7 @@ min = -2
 vary = true
 value = 0
 
-[fitting.peaks.13.voigt.fwhm]
+[fitting.peaks.13.voigt.fwhmv]
 max = 2
 min = -2
 vary = true

@@ -4,6 +4,63 @@
 
 > See also: [https://github.com/Anselmoo/spectrafit/releases][1]
 
+## v0.6.0
+
+---
+
+- Changed the input for **Pseudo-Voigt**:
+  - _`fwhm_g`_ &#8594; **`fwhmg`**
+  - _`fwhm_l`_ &#8594; **`fwhml`**
+- Changed the input for **Gaussian-FWHM** and **Lorentzian-FWHM**:
+  - _`fwhm`_ &#8594; **`fwhmg`**
+  - _`fwhm`_ &#8594; **`fwhml`**
+- Changed the input for **Voigt-FWHM**:
+  - _`fwhm`_ &#8594; **`fwhmv`**
+- Adding error-handling for not determatination of _Confiden Interval_.
+
+## v0.5.6
+
+---
+
+- CI/CD pipeline is now token-protected.
+
+## v0.5.5
+
+---
+
+- Removed the `setuptools==57.5.0` limitation due to formally `Python2.7`.
+
+## v0.5.4
+
+---
+
+- Adding a [stale boot][13] for keeping the issue and PRs up-to-date.
+
+## v0.5.3
+
+---
+
+- Extending unit tests to the `SpectraFit` package.
+
+## v0.5.2
+
+---
+
+- Adding maintainer to the `pyproject.yml` file.
+
+## v0.5.1
+
+---
+
+- Minor fix of broken links in docs.
+
+## v0.5.0
+
+---
+
+- Rewrite `SpectraFit` main to become a more object-oriented approach.
+- Increase the coverage quality of the tests.
+
 ## v0.4.2
 
 ---
@@ -81,3 +138,4 @@
 [11]:
   https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/configuring-issue-templates-for-your-repository
 [12]: https://git-lfs.github.com
+[13]: https://github.com/apps/stale

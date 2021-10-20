@@ -58,13 +58,13 @@ necessary:
             "vary": true,
             "value": 0
           },
-          "fwhm_g": {
+          "fwhmg": {
             "max": 0.1,
             "min": 0.02,
             "vary": true,
             "value": 0.01
           },
-          "fwhm_l": {
+          "fwhml": {
             "max": 0.1,
             "min": 0.01,
             "vary": true,
@@ -84,7 +84,7 @@ necessary:
     - [Voigt](https://en.wikipedia.org/wiki/Voigt_profile)
     - [Pseudo Voigt][1]
     - Exponential
-    - [Powerlaw][2] (also known as Log-parabola)
+    - [Powerlaw][2] (also known as Log-parabola or just Power)
     - Linear
     - Constant
     - [Error Function](https://en.wikipedia.org/wiki/Error_function)
@@ -277,13 +277,13 @@ types.
                 "vary": true,
                 "value": 0
               },
-              "fwhm_g": {
+              "fwhmg": {
                 "max": 0.1,
                 "min": 0.02,
                 "vary": true,
                 "value": 0.01
               },
-              "fwhm_l": {
+              "fwhml": {
                 "max": 0.1,
                 "min": 0.01,
                 "vary": true,
@@ -305,13 +305,13 @@ types.
                 "vary": true,
                 "value": 0
               },
-              "fwhm_g": {
+              "fwhmg": {
                 "max": 0.1,
                 "min": 0.02,
                 "vary": true,
                 "value": 0.01
               },
-              "fwhm_l": {
+              "fwhml": {
                 "max": 0.1,
                 "min": 0.01,
                 "vary": true,
@@ -343,7 +343,7 @@ types.
                 "vary": true,
                 "value": 0
               },
-              "fwhm_g": {
+              "fwhmg": {
                 "max": 0.1,
                 "min": 0.02,
                 "vary": true,

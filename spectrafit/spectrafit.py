@@ -19,6 +19,7 @@ import yaml
 from lmfit import Minimizer
 from lmfit import Parameters
 from lmfit import conf_interval
+from lmfit.minimizer import MinimizerException
 from spectrafit import __version__
 from spectrafit.models import calculated_model
 from spectrafit.models import solver_model
@@ -169,6 +170,7 @@ def get_parameters(args: dict) -> dict:
         for key_2, value_2 in value_1.items():
             for key_3, value_3 in value_2.items():
                 params.add(f"{key_2}_{key_3}_{key_1}", **value_3)
+                # params.add(f"{key_2}-{key_3}-{key_1}", **value_3)
     return params
 
 
@@ -338,9 +340,13 @@ def fitting_routine(df: pd.DataFrame, args: dict) -> Tuple[pd.DataFrame, dict]:
     result = mini.minimize(**args["optimizer"])
     args["fit_insights"] = fit_report_as_dict(result, modelpars=result.params)
     if args["conf_interval"]:
-        args["confidence_interval"] = conf_interval(
-            mini, result, **args["conf_interval"]
-        )
+        try:
+            args["confidence_interval"] = conf_interval(
+                mini, result, **args["conf_interval"]
+            )
+        except MinimizerException as exc:
+            print(f"Error: {exc} -> No confidence interval could be calculated!")
+            args["confidence_interval"] = None
     df = df.rename(
         columns={args["column"][0]: "energy", args["column"][1]: "intensity"}
     )
