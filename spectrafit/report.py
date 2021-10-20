@@ -12,8 +12,6 @@ from lmfit import report_ci
 from lmfit import report_fit
 from lmfit.minimizer import MinimizerException
 from lmfit.minimizer import minimize
-from lmfit.parameter import Parameters
-from lmfit.printfuncs import alphanumeric_sort
 from tabulate import tabulate
 
 
@@ -21,9 +19,7 @@ CORREL_HEAD = "[[Correlations]] (unreported correlations are < %.3f)"
 pp = pprint.PrettyPrinter(indent=4)
 
 
-def fit_report_as_dict(
-    inpars: minimize, modelpars: dict = None, sort_pars: bool = False
-) -> dict:
+def fit_report_as_dict(inpars: minimize, modelpars: dict = None) -> dict:
     """Generate the best fit report as dictionary.
 
     The report contains the best-fit values for the parameters and their
@@ -33,31 +29,14 @@ def fit_report_as_dict(
         inpars (minimize): Input Parameters from a fit or the  Minimizer results
              returned from a fit.
         modelpars (dict, optional): Known Model Parameters. Defaults to None.
-        sort_pars (bool, optional): Whether to show parameter names sorted in
-             alphanumerical order. If False (default), then the parameters will be
-             listed in the order they were buffered to the Parameters dictionary. If
-             callable, then this (one argument) function is used to extract a
-             comparison key from each list element. Defaults to False.
-
-    Raises:
-        SystemExit: In case of `numdifftools` is not installed, it can raise SystemExit.
 
     Returns:
         dict: [description]
     """
-    if isinstance(inpars, Parameters):
-        result, params = None, inpars
-    if hasattr(inpars, "params"):
-        result = inpars
-        params = inpars.params
+    result = inpars
+    params = inpars.params
 
-    if sort_pars:
-        key = sort_pars if callable(sort_pars) else alphanumeric_sort
-        parnames = sorted(params, key=key)
-    else:
-        # dict.keys() returns a KeysView in py3, and they're indexed
-        # further down
-        parnames = list(params.keys())
+    parnames = list(params.keys())
 
     buffer: dict = {
         "configurations": {},

@@ -37,6 +37,18 @@ class TestCommandLineRunner:
         assert ret.success
         assert ret.stderr == ""
 
+    def test_extended_verbose(self, monkeypatch, script_runner):
+        """Testing the extended with verbose command."""
+        monkeypatch.setattr("builtins.input", lambda _: "n")
+        ret = script_runner.run(
+            "spectrafit",
+            "spectrafit/test/test_data.txt",
+            "-i",
+            "spectrafit/test/test_input_7.json",
+        )
+        assert ret.success
+        assert ret.stderr == ""
+
 
 class TestFileFormat:
     """Testing the file formats."""
@@ -280,3 +292,14 @@ class TestMoreFeatures:
         assert (
             len(list(Path(".").glob("spectrafit/test/conf_interval_result*.json"))) == 1
         )
+
+    def test_get_no_errors(self, monkeypatch, script_runner):
+        """Testing for no errorbars for spectrafit."""
+        monkeypatch.setattr("builtins.input", lambda _: "n")
+        ret = script_runner.run(
+            "spectrafit",
+            "spectrafit/test/test_data.csv",
+            "-i",
+            "spectrafit/test/test_input_8.json",
+        )
+        assert ret.success
