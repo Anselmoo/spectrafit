@@ -62,13 +62,13 @@ spectrafit data.txt -i example_1.json
             "vary": true,
             "value": 0
           },
-          "fwhm_g": {
+          "fwhmg": {
             "max": 0.5,
             "min": 0.02,
             "vary": true,
             "value": 0.1
           },
-          "fwhm_l": {
+          "fwhml": {
             "max": 0.5,
             "min": 0.01,
             "vary": true,
@@ -121,12 +121,12 @@ fitting:
           min: -2
           vary: true
           value: 0
-        fwhm_g:
+        fwhmg:
           max: 0.5
           min: 0.02
           vary: true
           value: 0.1
-        fwhm_l:
+        fwhml:
           max: 0.5
           min: 0.01
           vary: true
@@ -174,13 +174,13 @@ min = -2
 vary = true
 value = 0
 
-[fitting.peaks.1.pseudovoigt.fwhm_g]
+[fitting.peaks.1.pseudovoigt.fwhmg]
 max = 0.5
 min = 0.02
 vary = true
 value = 0.1
 
-[fitting.peaks.1.pseudovoigt.fwhm_l]
+[fitting.peaks.1.pseudovoigt.fwhml]
 max = 0.5
 min = 0.01
 vary = true

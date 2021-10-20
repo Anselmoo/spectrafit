@@ -6,46 +6,62 @@
     `solver_model` and `calculated_model`.
 
     ```python
-    val = 0.0
+    __implemented_models__ = [
+        "gaussian",
+        "lorentzian",
+        "voigt",
+        "pseudovoigt",
+        "exponential",
+        "power",
+        "linear",
+        "constant",
+        "erf",
+        "atan",
+        "log",
+        "heaviside",
+        "my_new_model",
+    ]
+    ...
     for model in params:
         model = model.lower()
-        if model.split("_")[0] in [
-            "gaussian",
-            "lorentzian",
-            "voigt",
-            "pseudovoigt",
-            "exponential",
-            "powerlaw",
-            "linear",
-            "constant",
-            "erf",
-            "atan",
-            "log",
-            "here_comes_the_new_function",
-        ]:
-            pass
-        else:
+        if model.split("_")[0] not in __implemented_models__:
             raise SystemExit(f"{model} is not supported")
-    for model in params:
-        model = model.lower()
-        if "here_comes_the_new_function" in model:
-            if "center" in model:
-                center = params[model]
-            if "amplitude" in model:
-                amplitude = params[model]
-            if "fwhm_g" in model:
-                fwhm_g = params[model]
-                val += gaussian(
-                    x=x,
-                    amplitude=amplitude,
-                    center=center,
-                    fwhm=fwhm_g,
-                )
+        peak_kwargs[(model.split("_")[-1], model.split("_")[0])][
+            model.split("_")[1]
+        ] = params[model]
+
+    for key, _kwarg in peak_kwargs.items():
+        if key[1] == "my_new_model":
+            val += my_new_model(x, **_kwarg)
         ...
+
+
+    def my_new_model(
+        x: np.array, amplitude: float = 1.0, center: float = 0.0, fwhmg: float = 1.0
+    ) -> np.array:
+        r"""Return a 1-dimensional `m`y_new_model` distribution."""
+
+
+    ...
     ```
     Further information about implemented own models in `lmfit` can be found
     in this [example](https://lmfit.github.io/lmfit-py/examples/documentation/model_two_components.html#sphx-glr-examples-documentation-model-two-components-py). So far, the
     built-in models of lmfit are not supported, yet.
+
+!!! warning "Change in notation for the Full Maximum Half Widht (FWHM)"
+
+    The notation for the Full Maximum Half Widht (FWHM) is adapted due to
+    changes in the `**kwargs`-handling in the models; see also
+    [API](../../api/modelling_api/) and [CHANGELOG](../../changelog).
+    The notation becomes:
+
+    | Method              | _Old_ Notation | _New_ Notation |
+    | ------------------- | -------------- | -------------- |
+    | **Gaussian-FWHM**   | `fwhm`         | `fwhmg`        |
+    | **Lorentzian-FWHM** | `fwhm`         | `fwhml`        |
+    | **Pseudo-Voigt**    | `fwhm_g`       | `fwhmg`        |
+    | **Pseudo-Voigt**    | `fwhm_l`       | `fwhml`        |
+    | **Voigt**           | `fwhm`         | `fwhmv`        |
 
 ## Implemented models
 
@@ -61,7 +77,7 @@ Here is a list of implemented models of `spectrafit`:
 
 ::: spectrafit.models.exponential
 
-::: spectrafit.models.powerlaw
+::: spectrafit.models.power
 
 ::: spectrafit.models.linear
 

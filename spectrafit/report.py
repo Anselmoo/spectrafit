@@ -10,6 +10,7 @@ from lmfit import Minimizer
 from lmfit import conf_interval
 from lmfit import report_ci
 from lmfit import report_fit
+from lmfit.minimizer import MinimizerException
 from lmfit.minimizer import minimize
 from lmfit.parameter import Parameters
 from lmfit.printfuncs import alphanumeric_sort
@@ -86,11 +87,9 @@ def fit_report_as_dict(
         if not result.errorbars:
             print("##  Warning: uncertainties could not be estimated:")
             if result.method not in ("leastsq", "least_squares"):
-                raise SystemExit(
-                    "    this fitting method does not natively calculate uncertainties"
-                    "    and numdifftools is not installed for lmfit to do this. Use"
-                    "    `pip install numdifftools` for lmfit to estimate uncertainties"
-                    "    with this fitting method."
+                print(
+                    f"The fitting method '{result.method}' does not natively calculate"
+                    " and uncertainties cannot be estimated due to be out of region!"
                 )
 
             parnames_varying = [par for par in result.params if result.params[par].vary]
@@ -175,7 +174,11 @@ def printing_regular_mode(
     print(report_fit(result, modelpars=result.params, **args["report"]))
     if args["conf_interval"]:
         print("\nConfidence Interval:\n")
-        report_ci(conf_interval(minimizer, result, **args["conf_interval"]))
+        try:
+            report_ci(conf_interval(minimizer, result, **args["conf_interval"]))
+        except MinimizerException as exc:
+            print(f"Error: {exc} -> No confidence interval could be calculated!")
+            args["confidence_interval"] = None
     print("\nOverall Linear-Correlation:\n")
     print(tabulate(correlation, headers="keys", tablefmt="fancy_grid", floatfmt=".2f"))
 

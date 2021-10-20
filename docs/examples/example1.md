@@ -53,13 +53,13 @@ The input file has to look like the following:
             "vary": true,
             "value": 0
           },
-          "fwhm_g": {
+          "fwhmg": {
             "max": 0.5,
             "min": 0.02,
             "vary": true,
             "value": 0.1
           },
-          "fwhm_l": {
+          "fwhml": {
             "max": 0.5,
             "min": 0.01,
             "vary": true,

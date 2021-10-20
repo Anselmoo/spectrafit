@@ -55,13 +55,13 @@
                     "vary": true,
                     "value": 0
                 },
-                "fwhm_g": {
+                "fwhmg": {
                     "max": 0.75,
                     "min": 0.001,
                     "vary": true,
                     "value": 0.01
                 },
-                "fwhm_l": {
+                "fwhml": {
                     "max": 0.75,
                     "min": 0.001,
                     "vary": true,
@@ -83,13 +83,13 @@
                     "vary": false,
                     "value": 1.662
                 },
-                "fwhm_g": {
+                "fwhmg": {
                     "max": 0.5,
                     "min": 0.02,
                     "vary": true,
                     "value": 0.01
                 },
-                "fwhm_l": {
+                "fwhml": {
                     "max": 0.5,
                     "min": 0.01,
                     "vary": true,
@@ -111,13 +111,13 @@
                     "vary": false,
                     "value": 1.924
                 },
-                "fwhm_g": {
+                "fwhmg": {
                     "max": 0.75,
                     "min": 0.001,
                     "vary": true,
                     "value": 0.01
                 },
-                "fwhm_l": {
+                "fwhml": {
                     "max": 0.75,
                     "min": 0.001,
                     "vary": true,
@@ -139,13 +139,13 @@
                     "vary": false,
                     "value": 2.157
                 },
-                "fwhm_g": {
+                "fwhmg": {
                     "max": 0.75,
                     "min": 0.001,
                     "vary": true,
                     "value": 0.01
                 },
-                "fwhm_l": {
+                "fwhml": {
                     "max": 0.75,
                     "min": 0.001,
                     "vary": true,
@@ -167,13 +167,13 @@
                     "vary": false,
                     "value": 2.345
                 },
-                "fwhm_g": {
+                "fwhmg": {
                     "max": 0.75,
                     "min": 0.001,
                     "vary": true,
                     "value": 0.01
                 },
-                "fwhm_l": {
+                "fwhml": {
                     "max": 0.75,
                     "min": 0.001,
                     "vary": true,
@@ -227,20 +227,20 @@
             "variable_names": [
                 "pseudovoigt_amplitude_1",
                 "pseudovoigt_center_1",
-                "pseudovoigt_fwhm_g_1",
-                "pseudovoigt_fwhm_l_1",
+                "pseudovoigt_fwhmg_1",
+                "pseudovoigt_fwhml_1",
                 "pseudovoigt_amplitude_2",
-                "pseudovoigt_fwhm_g_2",
-                "pseudovoigt_fwhm_l_2",
+                "pseudovoigt_fwhmg_2",
+                "pseudovoigt_fwhml_2",
                 "pseudovoigt_amplitude_3",
-                "pseudovoigt_fwhm_g_3",
-                "pseudovoigt_fwhm_l_3",
+                "pseudovoigt_fwhmg_3",
+                "pseudovoigt_fwhml_3",
                 "pseudovoigt_amplitude_4",
-                "pseudovoigt_fwhm_g_4",
-                "pseudovoigt_fwhm_l_4",
+                "pseudovoigt_fwhmg_4",
+                "pseudovoigt_fwhml_4",
                 "pseudovoigt_amplitude_5",
-                "pseudovoigt_fwhm_g_5",
-                "pseudovoigt_fwhm_l_5"
+                "pseudovoigt_fwhmg_5",
+                "pseudovoigt_fwhml_5"
             ],
             "variable_numbers": 16,
             "degree_of_freedom": 188
@@ -262,12 +262,12 @@
                 "model_value": 0.01664784457230417,
                 "best_value": 0.01664784457230417
             },
-            "pseudovoigt_fwhm_g_1": {
+            "pseudovoigt_fwhmg_1": {
                 "init_value": 0.01,
                 "model_value": 0.14329487023828708,
                 "best_value": 0.14329487023828708
             },
-            "pseudovoigt_fwhm_l_1": {
+            "pseudovoigt_fwhml_1": {
                 "init_value": 0.01,
                 "model_value": 0.19995301665003645,
                 "best_value": 0.19995301665003645
@@ -282,12 +282,12 @@
                 "model_value": 1.662,
                 "best_value": 1.662
             },
-            "pseudovoigt_fwhm_g_2": {
+            "pseudovoigt_fwhmg_2": {
                 "init_value": 0.02,
                 "model_value": 0.28628541220037435,
                 "best_value": 0.28628541220037435
             },
-            "pseudovoigt_fwhm_l_2": {
+            "pseudovoigt_fwhml_2": {
                 "init_value": 0.01,
                 "model_value": 0.12531853887931088,
                 "best_value": 0.12531853887931088
@@ -302,12 +302,12 @@
                 "model_value": 1.924,
                 "best_value": 1.924
             },
-            "pseudovoigt_fwhm_g_3": {
+            "pseudovoigt_fwhmg_3": {
                 "init_value": 0.01,
                 "model_value": 0.4333669743449957,
                 "best_value": 0.4333669743449957
             },
-            "pseudovoigt_fwhm_l_3": {
+            "pseudovoigt_fwhml_3": {
                 "init_value": 0.01,
                 "model_value": 0.10962934493828974,
                 "best_value": 0.10962934493828974
@@ -322,12 +322,12 @@
                 "model_value": 2,
                 "best_value": 2
             },
-            "pseudovoigt_fwhm_g_4": {
+            "pseudovoigt_fwhmg_4": {
                 "init_value": 0.01,
                 "model_value": 0.01376735812746636,
                 "best_value": 0.01376735812746636
             },
-            "pseudovoigt_fwhm_l_4": {
+            "pseudovoigt_fwhml_4": {
                 "init_value": 0.01,
                 "model_value": 0.08425183722897195,
                 "best_value": 0.08425183722897195
@@ -342,12 +342,12 @@
                 "model_value": 2.345,
                 "best_value": 2.345
             },
-            "pseudovoigt_fwhm_g_5": {
+            "pseudovoigt_fwhmg_5": {
                 "init_value": 0.01,
                 "model_value": 0.20598428505852515,
                 "best_value": 0.20598428505852515
             },
-            "pseudovoigt_fwhm_l_5": {
+            "pseudovoigt_fwhml_5": {
                 "init_value": 0.01,
                 "model_value": 0.5355837052550289,
                 "best_value": 0.5355837052550289
@@ -357,24 +357,24 @@
         "correlations": {
             "pseudovoigt_amplitude_1": {},
             "pseudovoigt_center_1": {},
-            "pseudovoigt_fwhm_g_1": {},
-            "pseudovoigt_fwhm_l_1": {},
+            "pseudovoigt_fwhmg_1": {},
+            "pseudovoigt_fwhml_1": {},
             "pseudovoigt_amplitude_2": {},
             "pseudovoigt_center_2": {},
-            "pseudovoigt_fwhm_g_2": {},
-            "pseudovoigt_fwhm_l_2": {},
+            "pseudovoigt_fwhmg_2": {},
+            "pseudovoigt_fwhml_2": {},
             "pseudovoigt_amplitude_3": {},
             "pseudovoigt_center_3": {},
-            "pseudovoigt_fwhm_g_3": {},
-            "pseudovoigt_fwhm_l_3": {},
+            "pseudovoigt_fwhmg_3": {},
+            "pseudovoigt_fwhml_3": {},
             "pseudovoigt_amplitude_4": {},
             "pseudovoigt_center_4": {},
-            "pseudovoigt_fwhm_g_4": {},
-            "pseudovoigt_fwhm_l_4": {},
+            "pseudovoigt_fwhmg_4": {},
+            "pseudovoigt_fwhml_4": {},
             "pseudovoigt_amplitude_5": {},
             "pseudovoigt_center_5": {},
-            "pseudovoigt_fwhm_g_5": {},
-            "pseudovoigt_fwhm_l_5": {}
+            "pseudovoigt_fwhmg_5": {},
+            "pseudovoigt_fwhml_5": {}
         },
         "covariance_matrix": {
             "pseudovoigt_amplitude_1": {}

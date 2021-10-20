@@ -51,12 +51,12 @@ class TestFileFormat:
             "-i",
             "spectrafit/test/test_input_3.json",
             "-o",
-            "result_json",
+            "spectrafit/test/result_json",
         )
         assert ret.success
         assert ret.stderr == ""
-        assert len(list(Path(".").glob("result_json*.json"))) == 1
-        assert len(list(Path(".").glob("result_json*.csv"))) == 3
+        assert len(list(Path(".").glob("spectrafit/test/result_json*.json"))) == 1
+        assert len(list(Path(".").glob("spectrafit/test/result_json*.csv"))) == 3
 
     def test_yml_input(self, monkeypatch, script_runner):
         """Testing yml support."""
@@ -67,12 +67,12 @@ class TestFileFormat:
             "-i",
             "spectrafit/test/test_input_3.yml",
             "-o",
-            "result_yml",
+            "spectrafit/test/result_yml",
         )
         assert ret.success
         assert ret.stderr == ""
-        assert len(list(Path(".").glob("result_yml*.json"))) == 1
-        assert len(list(Path(".").glob("result_yml*.csv"))) == 3
+        assert len(list(Path(".").glob("spectrafit/test/result_yml*.json"))) == 1
+        assert len(list(Path(".").glob("spectrafit/test/result_yml*.csv"))) == 3
 
     def test_yaml_input(self, monkeypatch, script_runner):
         """Testing yaml support."""
@@ -83,12 +83,12 @@ class TestFileFormat:
             "-i",
             "spectrafit/test/test_input_3.yaml",
             "-o",
-            "result_yaml",
+            "spectrafit/test/result_yaml",
         )
         assert ret.success
         assert ret.stderr == ""
-        assert len(list(Path(".").glob("result_yaml*.json"))) == 1
-        assert len(list(Path(".").glob("result_yaml*.csv"))) == 3
+        assert len(list(Path(".").glob("spectrafit/test/result_yaml*.json"))) == 1
+        assert len(list(Path(".").glob("spectrafit/test/result_yaml*.csv"))) == 3
 
     def test_toml_input(self, monkeypatch, script_runner):
         """Testing toml support."""
@@ -99,12 +99,12 @@ class TestFileFormat:
             "-i",
             "spectrafit/test/test_input_3.toml",
             "-o",
-            "result_toml",
+            "spectrafit/test/result_toml",
         )
         assert ret.success
         assert ret.stderr == ""
-        assert len(list(Path(".").glob("result_toml*.json"))) == 1
-        assert len(list(Path(".").glob("result_toml*.csv"))) == 3
+        assert len(list(Path(".").glob("spectrafit/test/result_toml*.json"))) == 1
+        assert len(list(Path(".").glob("spectrafit/test/result_toml*.csv"))) == 3
 
 
 class TestFileFormatOutput:
@@ -238,3 +238,20 @@ class TestMoreFeatures:
             "spectrafit/test/no_input.pp",
         )
         assert not ret.success
+
+    def test_conf_interval(self, monkeypatch, script_runner):
+        """Testing upper energy range cut."""
+        monkeypatch.setattr("builtins.input", lambda _: "n")
+        ret = script_runner.run(
+            "spectrafit",
+            "spectrafit/test/test_data.csv",
+            "-i",
+            "spectrafit/test/test_input_6.json",
+            "-o",
+            "spectrafit/test/conf_interval_result",
+        )
+        assert ret.success
+        assert ret.stderr == ""
+        assert (
+            len(list(Path(".").glob("spectrafit/test/conf_interval_result*.json"))) == 1
+        )

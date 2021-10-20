@@ -1,4 +1,5 @@
 """Minimization models for curve fitting."""
+from collections import defaultdict
 from dataclasses import dataclass
 
 import numpy as np
@@ -6,6 +7,22 @@ import pandas as pd
 
 from scipy.special import erf
 from scipy.special import wofz
+
+
+__implemented_models__ = [
+    "gaussian",
+    "lorentzian",
+    "voigt",
+    "pseudovoigt",
+    "exponential",
+    "power",
+    "linear",
+    "constant",
+    "erf",
+    "atan",
+    "log",
+    "heaviside",
+]
 
 
 @dataclass(frozen=True)
@@ -59,7 +76,7 @@ def solver_model(params: dict, x: np.array, data: np.array) -> np.array:
         - [Voigt](https://en.wikipedia.org/wiki/Voigt_profile)
         - [Pseudo Voigt][1]
         - Exponential
-        - [Powerlaw][2] (also known as Log-parabola)
+        - [power][2] (also known as Log-parabola or just power)
         - Linear
         - Constant
         - [Error Function](https://en.wikipedia.org/wiki/Error_function)
@@ -84,174 +101,41 @@ def solver_model(params: dict, x: np.array, data: np.array) -> np.array:
 
     """
     val = 0.0
+    peak_kwargs: dict = defaultdict(dict)
+
     for model in params:
         model = model.lower()
-        if model.split("_")[0] in [
-            "gaussian",
-            "lorentzian",
-            "voigt",
-            "pseudovoigt",
-            "exponential",
-            "power",
-            "linear",
-            "constant",
-            "erf",
-            "atan",
-            "log",
-            "heaviside",
-        ]:
-            pass
-        else:
+        if model.split("_")[0] not in __implemented_models__:
             raise SystemExit(f"{model} is not supported")
-    for model in params:
-        model = model.lower()
-        if "gaussian" in model:
-            if "center" in model:
-                center = params[model]
-            if "amplitude" in model:
-                amplitude = params[model]
-            if "fwhm_g" in model:
-                fwhm_g = params[model]
-                val += gaussian(
-                    x=x,
-                    amplitude=amplitude,
-                    center=center,
-                    fwhm=fwhm_g,
-                )
-        if "lorentzian" in model:
-            if "center" in model:
-                center = params[model]
-            if "amplitude" in model:
-                amplitude = params[model]
-            if "fwhm_l" in model:
-                fwhm_l = params[model]
-                val += lorentzian(
-                    x=x,
-                    amplitude=amplitude,
-                    center=center,
-                    fwhm=fwhm_l,
-                )
-        if "voigt" in model and "pseudovoigt" not in model:
-            if "center" in model:
-                center = params[model]
-            if "fwhm" in model:
-                fwhm = params[model]
-            if "gamma" in model:
-                gamma = params[model]
-                val += voigt(
-                    x=x,
-                    center=center,
-                    fwhm=fwhm,
-                    gamma=gamma,
-                )
-        if "pseudovoigt" in model:
-            if "center" in model:
-                center = params[model]
-            if "amplitude" in model:
-                amplitude = params[model]
-            if "fwhm_g" in model:
-                fwhm_g = params[model]
-            if "fwhm_l" in model:
-                fwhm_l = params[model]
-                val += pseudovoigt(
-                    x=x,
-                    amplitude=amplitude,
-                    center=center,
-                    fwhm_g=fwhm_g,
-                    fwhm_l=fwhm_l,
-                )
-        if "exponential" in model:
-            if "amplitude" in model:
-                amplitude = params[model]
-            if "decay" in model:
-                decay = params[model]
-            if "intercept" in model:
-                intercept = params[model]
-                val += exponential(
-                    x=x,
-                    amplitude=amplitude,
-                    decay=decay,
-                    intercept=intercept,
-                )
-        if "power" in model:
-            if "amplitude" in model:
-                amplitude = params[model]
-            if "exponent" in model:
-                exponent = params[model]
-            if "intercept" in model:
-                intercept = params[model]
-                val += powerlaw(
-                    x=x,
-                    amplitude=amplitude,
-                    exponent=exponent,
-                    intercept=intercept,
-                )
-        if "linear" in model:
-            if "slope" in model:
-                slope = params[model]
-            if "intercept" in model:
-                intercept = params[model]
-                val += linear(x=x, slope=slope, intercept=intercept)
-        if "constant" in model and "amplitude" in model:
-            if "amplitude" in model:
-                amplitude = params[model]
-                val += constant(x=x, amplitude=amplitude)
-        if "erf" in model:
-            if "center" in model:
-                center = params[model]
-            if "sigma" in model:
-                sigma = params[model]
-            if "amplitude" in model:
-                amplitude = params[model]
-                val += step(
-                    x=x,
-                    amplitude=amplitude,
-                    center=center,
-                    sigma=sigma,
-                    kind="erf",
-                )
-        if "atan" in model:
-            if "center" in model:
-                center = params[model]
-            if "sigma" in model:
-                sigma = params[model]
-            if "amplitude" in model:
-                amplitude = params[model]
-                val += step(
-                    x=x,
-                    amplitude=amplitude,
-                    center=center,
-                    sigma=sigma,
-                    kind="atan",
-                )
-        if "log" in model:
-            if "center" in model:
-                center = params[model]
-            if "sigma" in model:
-                sigma = params[model]
-            if "amplitude" in model:
-                amplitude = params[model]
-                val += step(
-                    x=x,
-                    amplitude=amplitude,
-                    center=center,
-                    sigma=sigma,
-                    kind="logistic",
-                )
-        if "heaviside" in model:
-            if "center" in model:
-                center = params[model]
-            if "sigma" in model:
-                sigma = params[model]
-            if "amplitude" in model:
-                amplitude = params[model]
-                val += step(
-                    x=x,
-                    amplitude=amplitude,
-                    center=center,
-                    sigma=sigma,
-                    kind="heaviside",
-                )
+        peak_kwargs[(model.split("_")[-1], model.split("_")[0])][
+            model.split("_")[1]
+        ] = params[model]
+
+    for key, _kwarg in peak_kwargs.items():
+        if key[1] == "gaussian":
+            val += gaussian(x, **_kwarg)
+        elif key[1] == "lorentzian":
+            val += lorentzian(x, **_kwarg)
+        elif key[1] == "voigt":
+            val += voigt(x, **_kwarg)
+        elif key[1] == "pseudovoigt":
+            val += pseudovoigt(x, **_kwarg)
+        elif key[1] == "exponential":
+            val += exponential(x, **_kwarg)
+        elif key[1] == "power":
+            val += power(x, **_kwarg)
+        elif key[1] == "linear":
+            val += linear(x, **_kwarg)
+        elif key[1] == "constant":
+            val += constant(x, **_kwarg)
+        elif key[1] == "erf":
+            val += step(x, kind="erf", **_kwarg)
+        elif key[1] == "atan":
+            val += step(x, kind="atan", **_kwarg)
+        elif key[1] == "log":
+            val += step(x, kind="log", **_kwarg)
+        elif key[1] == "heaviside":
+            val += step(x, kind="heaviside", **_kwarg)
     return val - data
 
 
@@ -277,183 +161,60 @@ def calculated_model(params: dict, x: np.array, df: pd.DataFrame) -> pd.DataFram
         pd.DataFrame: Extended dataframe containing the single contributions of the
              models.
     """
+    peak_kwargs: dict = defaultdict(dict)
+
     for model in params:
         model = model.lower()
-        if model.split("_")[0] in [
-            "gaussian",
-            "lorentzian",
-            "voigt",
-            "pseudovoigt",
-            "exponential",
-            "power",
-            "linear",
-            "constant",
-            "erf",
-            "atan",
-            "log",
-            "heaviside",
-        ]:
-            pass
-        else:
+        if model.split("_")[0] not in __implemented_models__:
             raise SystemExit(f"{model} is not supported")
-    for model in params:
-        model = model.lower()
-        if "gaussian" in model:
-            if "center" in model:
-                center = params[model]
-            if "amplitude" in model:
-                amplitude = params[model]
-            if "fwhm_g" in model:
-                fwhm_g = params[model]
-                df[f"{model.split('_')[0]}_{model.split('_')[-1]}"] = gaussian(
-                    x=x,
-                    amplitude=amplitude,
-                    center=center,
-                    fwhm=fwhm_g,
-                )
-        if "lorentzian" in model:
-            if "center" in model:
-                center = params[model]
-            if "amplitude" in model:
-                amplitude = params[model]
-            if "fwhm_l" in model:
-                fwhm_l = params[model]
-                df[f"{model.split('_')[0]}_{model.split('_')[-1]}"] = lorentzian(
-                    x=x,
-                    amplitude=amplitude,
-                    center=center,
-                    fwhm=fwhm_l,
-                )
-        if "voigt" in model and "pseudovoigt" not in model:
-            if "center" in model:
-                center = params[model]
-            if "fwhm" in model:
-                fwhm = params[model]
-            if "gamma" in model:
-                gamma = params[model]
-                df[f"{model.split('_')[0]}_{model.split('_')[-1]}"] = voigt(
-                    x=x,
-                    center=center,
-                    fwhm=fwhm,
-                    gamma=gamma,
-                )
-        if "pseudovoigt" in model:
-            if "center" in model:
-                center = params[model]
-            if "amplitude" in model:
-                amplitude = params[model]
-            if "fwhm_g" in model:
-                fwhm_g = params[model]
-            if "fwhm_l" in model:
-                fwhm_l = params[model]
-                df[f"{model.split('_')[0]}_{model.split('_')[-1]}"] = pseudovoigt(
-                    x=x,
-                    amplitude=amplitude,
-                    center=center,
-                    fwhm_g=fwhm_g,
-                    fwhm_l=fwhm_l,
-                )
-        if "exponential" in model:
-            if "amplitude" in model:
-                amplitude = params[model]
-            if "decay" in model:
-                decay = params[model]
-            if "intercept" in model:
-                intercept = params[model]
-                df[f"{model.split('_')[0]}_{model.split('_')[-1]}"] = exponential(
-                    x=x,
-                    amplitude=amplitude,
-                    decay=decay,
-                    intercept=intercept,
-                )
-        if "power" in model:
-            if "amplitude" in model:
-                amplitude = params[model]
-            if "exponent" in model:
-                exponent = params[model]
-            if "intercept" in model:
-                intercept = params[model]
-                df[f"{model.split('_')[0]}_{model.split('_')[-1]}"] = powerlaw(
-                    x=x,
-                    amplitude=amplitude,
-                    exponent=exponent,
-                    intercept=intercept,
-                )
-        if "linear" in model:
-            if "slope" in model:
-                slope = params[model]
-            if "intercept" in model:
-                intercept = params[model]
-                df[f"{model.split('_')[0]}_{model.split('_')[-1]}"] = linear(
-                    x=x, slope=slope, intercept=intercept
-                )
-        if "constant" in model and "amplitude" in model:
-            if "amplitude" in model:
-                amplitude = params[model]
-                df[f"{model.split('_')[0]}_{model.split('_')[-1]}"] = constant(
-                    x=x, amplitude=amplitude
-                )
-        if "erf" in model:
-            if "center" in model:
-                center = params[model]
-            if "sigma" in model:
-                sigma = params[model]
-            if "amplitude" in model:
-                amplitude = params[model]
-                df[f"{model.split('_')[0]}_{model.split('_')[-1]}"] = step(
-                    x=x,
-                    amplitude=amplitude,
-                    center=center,
-                    sigma=sigma,
-                    kind="erf",
-                )
-        if "atan" in model:
-            if "center" in model:
-                center = params[model]
-            if "sigma" in model:
-                sigma = params[model]
-            if "amplitude" in model:
-                amplitude = params[model]
-                df[f"{model.split('_')[0]}_{model.split('_')[-1]}"] = step(
-                    x=x,
-                    amplitude=amplitude,
-                    center=center,
-                    sigma=sigma,
-                    kind="atan",
-                )
-        if "log" in model:
-            if "center" in model:
-                center = params[model]
-            if "sigma" in model:
-                sigma = params[model]
-            if "amplitude" in model:
-                amplitude = params[model]
-                df[f"{model.split('_')[0]}_{model.split('_')[-1]}"] = step(
-                    x=x,
-                    amplitude=amplitude,
-                    center=center,
-                    sigma=sigma,
-                    kind="logistic",
-                )
-        if "heaviside" in model:
-            if "center" in model:
-                center = params[model]
-            if "sigma" in model:
-                sigma = params[model]
-            if "amplitude" in model:
-                amplitude = params[model]
-                df[f"{model.split('_')[0]}_{model.split('_')[-1]}"] = step(
-                    x=x,
-                    amplitude=amplitude,
-                    center=center,
-                    sigma=sigma,
-                    kind="heaviside",
-                )
+        peak_kwargs[(model.split("_")[-1], model.split("_")[0])][
+            model.split("_")[1]
+        ] = params[model]
+
+    for key, _kwarg in peak_kwargs.items():
+        if key[1] == "gaussian":
+            df[f"{model.split('_')[0]}_{model.split('_')[-1]}"] = gaussian(x, **_kwarg)
+        elif key[1] == "lorentzian":
+            df[f"{model.split('_')[0]}_{model.split('_')[-1]}"] = lorentzian(
+                x, **_kwarg
+            )
+        elif key[1] == "voigt":
+            df[f"{model.split('_')[0]}_{model.split('_')[-1]}"] = voigt(x, **_kwarg)
+        elif key[1] == "pseudovoigt":
+            df[f"{model.split('_')[0]}_{model.split('_')[-1]}"] = pseudovoigt(
+                x, **_kwarg
+            )
+        elif key[1] == "exponential":
+            df[f"{model.split('_')[0]}_{model.split('_')[-1]}"] = exponential(
+                x, **_kwarg
+            )
+        elif key[1] == "power":
+            df[f"{model.split('_')[0]}_{model.split('_')[-1]}"] = power(x, **_kwarg)
+        elif key[1] == "linear":
+            df[f"{model.split('_')[0]}_{model.split('_')[-1]}"] = linear(x, **_kwarg)
+        elif key[1] == "constant":
+            df[f"{model.split('_')[0]}_{model.split('_')[-1]}"] = constant(x, **_kwarg)
+        elif key[1] == "erf":
+            df[f"{model.split('_')[0]}_{model.split('_')[-1]}"] = step(
+                x, kind="erf", **_kwarg
+            )
+        elif key[1] == "atan":
+            df[f"{model.split('_')[0]}_{model.split('_')[-1]}"] = step(
+                x, kind="atan", **_kwarg
+            )
+        elif key[1] == "log":
+            df[f"{model.split('_')[0]}_{model.split('_')[-1]}"] = step(
+                x, kind="log", **_kwarg
+            )
+        elif key[1] == "heaviside":
+            df[f"{model.split('_')[0]}_{model.split('_')[-1]}"] = step(
+                x, kind="heaviside", **_kwarg
+            )
     return df
 
 
 def gaussian(
-    x: np.array, amplitude: float = 1.0, center: float = 0.0, fwhm: float = 1.0
+    x: np.array, amplitude: float = 1.0, center: float = 0.0, fwhmg: float = 1.0
 ) -> np.array:
     r"""Return a 1-dimensional Gaussian distribution.
 
@@ -467,20 +228,20 @@ def gaussian(
         amplitude (float, optional): Amplitude of the Gaussian distribution. Defaults
              to 1.0.
         center (float, optional): Center of the Gaussian distribution. Defaults to 0.0.
-        fwhm (float, optional): Full width at half maximum (FWHM) of the Gaussian
+        fwhmg (float, optional): Full width at half maximum (FWHM) of the Gaussian
              distribution. Defaults to 1.0.
 
     Returns:
         np.array: Gaussian distribution of `x` given.
     """
-    sigma = fwhm / Constants.sig2fwhm
+    sigma = fwhmg / Constants.sig2fwhm
     return (amplitude / (Constants.sq2pi * sigma)) * np.exp(
         -((1.0 * x - center) ** 2) / (2 * sigma ** 2)
     )
 
 
 def lorentzian(
-    x, amplitude: float = 1.0, center: float = 0.0, fwhm: float = 1.0
+    x, amplitude: float = 1.0, center: float = 0.0, fwhml: float = 1.0
 ) -> np.array:
     r"""Return a 1-dimensional Lorentzian distribution.
 
@@ -495,18 +256,18 @@ def lorentzian(
              to 1.0.
         center (float, optional): Center of the Lorentzian distribution. Defaults to
              0.0.
-        fwhm (float, optional): Full width at half maximum (FWHM) of the Lorentzian
+        fwhml (float, optional): Full width at half maximum (FWHM) of the Lorentzian
              distribution. Defaults to 1.0.
 
     Returns:
         np.array: Lorentzian distribution of `x` given.
     """
-    sigma = fwhm / 2.0
+    sigma = fwhml / 2.0
     return (amplitude / (1 + ((1.0 * x - center) / sigma) ** 2)) / (np.pi * sigma)
 
 
 def voigt(
-    x: np.array, center: float = 0.0, fwhm: float = 1.0, gamma: float = None
+    x: np.array, center: float = 0.0, fwhmv: float = 1.0, gamma: float = None
 ) -> np.array:
     r"""Return a 1-dimensional Voigt distribution.
 
@@ -520,7 +281,7 @@ def voigt(
         amplitude (float, optional): Amplitude of the Voigt distribution. Defaults to
              1.0.
         center (float, optional): Center of the Voigt distribution. Defaults to 0.0.
-        fwhm (float, optional): Full width at half maximum (FWHM) of the Lorentzian
+        fwhmv (float, optional): Full width at half maximum (FWHM) of the Lorentzian
              distribution. Defaults to 1.0.
         gamma (float, optional): Scaling factor of the complex part of the
              [Faddeeva Function](https://en.wikipedia.org/wiki/Faddeeva_function).
@@ -529,7 +290,7 @@ def voigt(
     Returns:
         np.array: Voigt distribution of `x` given.
     """
-    sigma = fwhm / 3.60131
+    sigma = fwhmv / 3.60131
     if gamma is None:
         gamma = sigma
     z = (x - center + 1j * gamma) / (sigma * Constants.sq2)
@@ -540,8 +301,8 @@ def pseudovoigt(
     x: np.array,
     amplitude: float = 1.0,
     center: float = 0.0,
-    fwhm_g: float = 1.0,
-    fwhm_l: float = 1.0,
+    fwhmg: float = 1.0,
+    fwhml: float = 1.0,
 ) -> np.array:
     """Return a 1-dimensional Pseudo-Voigt distribution.
 
@@ -556,30 +317,26 @@ def pseudovoigt(
              Defaults to 1.0.
         center (float, optional): Center of the Pseudo-Voigt distribution.
              Defaults to 0.0.
-        fwhm_g (float, optional): Full width half maximum of the Gaussian distribution
+        fwhmg (float, optional): Full width half maximum of the Gaussian distribution
             in the Pseudo-Voigt distribution. Defaults to 1.0.
-        fwhm_l (float, optional): Full width half maximum of the Lorentzian distribution
+        fwhml (float, optional): Full width half maximum of the Lorentzian distribution
             in the Pseudo-Voigt distribution. Defaults to 1.0.
 
     Returns:
         np.array: Pseudo-Voigt distribution of `x` given.
     """
     f = np.power(
-        fwhm_g ** 5
-        + 2.69269 * fwhm_g ** 4 * fwhm_l
-        + 2.42843 * fwhm_g ** 3 * fwhm_l ** 2
-        + 4.47163 * fwhm_g ** 2 * fwhm_l ** 3
-        + 0.07842 * fwhm_g * fwhm_l ** 4
-        + fwhm_l ** 5,
+        fwhmg ** 5
+        + 2.69269 * fwhmg ** 4 * fwhml
+        + 2.42843 * fwhmg ** 3 * fwhml ** 2
+        + 4.47163 * fwhmg ** 2 * fwhml ** 3
+        + 0.07842 * fwhmg * fwhml ** 4
+        + fwhml ** 5,
         0.25,
     )
-    n = (
-        1.36603 * (fwhm_l / f)
-        - 0.47719 * (fwhm_l / f) ** 2
-        + 0.11116 * (fwhm_l / f) ** 3
-    )
-    return n * lorentzian(x, amplitude, center, fwhm_l) + (1 - n) * gaussian(
-        x, amplitude, center, fwhm_g
+    n = 1.36603 * (fwhml / f) - 0.47719 * (fwhml / f) ** 2 + 0.11116 * (fwhml / f) ** 3
+    return n * lorentzian(x, amplitude, center, fwhml) + (1 - n) * gaussian(
+        x, amplitude, center, fwhmg
     )
 
 
@@ -602,21 +359,21 @@ def exponential(
     return amplitude * np.exp(-x / decay) + intercept
 
 
-def powerlaw(
+def power(
     x: np.array, amplitude: float = 1.0, exponent: float = 1.0, intercept: float = 0.0
 ) -> np.array:
-    """Return a 1-dimensional powerlaw function.
+    """Return a 1-dimensional power function.
 
     Args:
         x (np.array): `x`-values of the data.
-        amplitude (float, optional): Amplitude of the powerlaw function. Defaults to
+        amplitude (float, optional): Amplitude of the power function. Defaults to
              1.0.
-        exponent (float, optional): Exponent of the powerlaw function. Defaults to 1.0.
-        intercept (float, optional): Intercept of the powerlaw function. Defaults to
+        exponent (float, optional): Exponent of the power function. Defaults to 1.0.
+        intercept (float, optional): Intercept of the power function. Defaults to
              0.0.
 
     Returns:
-        np.array: Powerlaw function of `x` given.
+        np.array: power function of `x` given.
     """
     return amplitude * np.power(x, exponent) + intercept
 

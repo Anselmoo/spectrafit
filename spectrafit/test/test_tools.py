@@ -134,9 +134,11 @@ def test_energy_shift_2() -> None:
         "shift": 2,
         "column": ["energy"],
     }
+    _df = df.copy()
+    _df.loc[:, "energy"] = df["energy"] + args["shift"]
     assert_frame_equal(
         energy_shift(df, args),
-        df,
+        _df,
     )
 
 

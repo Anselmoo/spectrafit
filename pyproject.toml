@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "SpectraFit"
-version = "0.5.6"
+version = "0.6.0"
 description = "Fast fitting of 2D-Spectra with established routines"
 readme = "README.md"
 authors = ["Anselm Hahn <Anselm.Hahn@gmail.com>"]
@@ -48,6 +48,9 @@ PyYAML = ">=5.4.1,<7.0.0"
 numdifftools = "^0.9.40"
 tabulate = "^0.8.9"
 statsmodels = ">=0.12.2,<0.14.0"
+emcee = "^3.1.1"
+dill = "^0.3.4"
+corner = "^2.2.1"
 
 [tool.poetry.dev-dependencies]
 pylama = "^7.7.1"
