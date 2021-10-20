@@ -1,4 +1,4 @@
-!!! info "Aboot implemented models"
+!!! info "About implemented models"
 
     In principle, every model can be implemented in `spectrafit` by extending
     the module `spectrafit.models` by a new functions. It is important to know
