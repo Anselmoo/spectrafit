@@ -6,7 +6,7 @@ site_description: >-
 # Repository
 repo_name: Anselmoo/SpectraFit
 repo_url: https://github.com/Anselmoo/spectrafit
-edit_uri: "https://github.com/Anselmoo/spectrafit/tree/master/docs"
+edit_uri: "https://github.com/Anselmoo/spectrafit/tree/main/docs"
 
 # Copyright
 copyright: Copyright &copy; 2021 - Anselm Hahn

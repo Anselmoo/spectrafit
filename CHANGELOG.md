@@ -128,7 +128,7 @@
 [1]: https://github.com/Anselmoo/spectrafit/releases
 [2]: https://ghcr.io/anselmoo/spectrafit:latest
 [3]: https://pypi.org/project/spectrafit/
-[4]: https://github.com/Anselmoo/spectrafit/blob/master/CONTRIBUTING.md
+[4]: https://github.com/Anselmoo/spectrafit/blob/main/CONTRIBUTING.md
 [5]: https://codecov.io/gh/Anselmoo/spectrafit
 [6]: https://github.com/marketplace/actions/pre-commit
 [7]: https://mypy.readthedocs.io/en/stable/

@@ -24,4 +24,4 @@ vulnerability, what to expect if the vulnerability is accepted or declined, etc.
 
 [1]: https://securitylab.github.com/tools/codeql/
 [2]:
-  https://github.com/Anselmoo/spectrafit/blob/master/.github/workflows/codeql-analysis.yml
+  https://github.com/Anselmoo/spectrafit/blob/main/.github/workflows/codeql-analysis.yml

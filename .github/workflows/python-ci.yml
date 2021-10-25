@@ -2,9 +2,9 @@ name: CI - Python Package
 
 on:
   push:
-    branches: [master]
+    branches: [main]
   pull_request:
-    branches: [master]
+    branches: [main]
 
 jobs:
   pre-commit:
@@ -70,7 +70,7 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
       - name: Deploy documentation develops
-        if: contains(github.ref, 'refs/heads/master')
+        if: contains(github.ref, 'refs/heads/main')
         run: |
           poetry run mkdocs gh-deploy --clean --force
   docker:
