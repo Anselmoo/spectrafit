@@ -20,7 +20,7 @@ Now, it is completely rewritten and is more flexible.
 
 ## Scope:
 
-- Fitting of 2d data
+- Fitting of 2D data
 - Using established and advanced solver methods
 - Extensibility of the fitting function
 - Guarantee traceability of the fitting results

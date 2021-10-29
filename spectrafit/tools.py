@@ -1,159 +1,545 @@
 """Collection of essential tools for running SpectraFit."""
 import json
+import sys
 
 from pathlib import Path
+from typing import Any
+from typing import Dict
+from typing import MutableMapping
+from typing import Optional
 from typing import Tuple
 
 import numpy as np
 import pandas as pd
+import toml
+import yaml
+
+from lmfit import Minimizer
+from lmfit import conf_interval
+from lmfit.minimizer import MinimizerException
+from spectrafit.models import calculated_model
+from spectrafit.report import fit_report_as_dict
 
 
-def energy_range(df: pd.DataFrame, args: dict) -> Tuple[pd.DataFrame, dict, dict]:
-    """Select the energy range for fitting.
+class PreProcessing:
+    """Summarized all pre-processing-filters  together."""
 
-    Args:
-        df (pd.DataFrame): DataFrame containing the input data (`x` and `data`),
-             as well as the best fit and the corresponding residuum. Hence, it will be
-             extended by the single contribution of the model.
-        args (dict): The input file arguments as a dictionary with additional
-             information beyond the command line arguments.
+    def __init__(self, df: pd.DataFrame, args: Dict[str, Any]) -> None:
+        """Initialize PreProcessing class.
 
-    Returns:
-        Tuple[pd.DataFrame, dict, dict]: DataFrame containing the input data
-             (`x` and `data`), as well as the best fit and the corresponding residuum.
-             Hence, it will be extended by the single contribution of the model.
-    """
-    _e0 = args["energy_start"]
-    _e1 = args["energy_stop"]
+        Args:
+            df (pd.DataFrame): DataFrame containing the input data (`x` and `data`),
+                 as well as the best fit and the corresponding residuum. Hence, it will
+                 be extended by the single contribution of the model.
+            args (Dict[str,Any]): The input file arguments as a dictionary with
+                 additional information beyond the command line arguments.
+        """
+        self.df = df
+        self.args = args
 
-    if isinstance(_e0, (int, float)) and isinstance(_e1, (int, float)):
-        return df[(df[args["column"][0]] >= _e0) & (df[args["column"][0]] <= _e1)]
-    elif isinstance(_e0, (int, float)):
-        return df[df[args["column"][0]] >= _e0]
-    elif isinstance(_e1, (int, float)):
-        return df[df[args["column"][0]] <= _e1]
-    return df
+    def __call__(self) -> Tuple[pd.DataFrame, Dict[str, Any]]:
+        """Apply all pre-processing-filters.
 
+        Returns:
+            pd.DataFrame: DataFrame containing the input data (`x` and `data`), which
+                 are optionally:
 
-def energy_shift(df: pd.DataFrame, args: dict) -> pd.DataFrame:
-    """Shift the energy axis by a given value.
+                    1. shrinked
+                    2. shifted
+                    3. linear oversampled
+                    4. smoothed
+            Dict[str,Any]: Adding a descriptive statistics to the input dictionary.
+        """
+        _df = self.df.copy()
+        self.args["data_statistic"] = _df.describe(
+            percentiles=np.arange(0.1, 1, 0.1)
+        ).to_dict(orient="list")
+        if self.args["energy_start"] or self.args["energy_stop"]:
+            _df = self.energy_range(_df, self.args)
+        if self.args["shift"]:
+            _df = self.energy_shift(_df, self.args)
+        if self.args["oversampling"]:
+            _df = self.oversampling(_df, self.args)
+        if self.args["smooth"]:
+            _df = self.intensity_smooth(_df, self.args)
+        return (_df, self.args)
 
-    Args:
-        df (pd.DataFrame): DataFrame containing the input data (`x` and `data`),
-             as well as the best fit and the corresponding residuum. Hence, it will be
-             extended by the single contribution of the model.
-        args (dict): The input file arguments as a dictionary with additional
-             information beyond the command line arguments.
+    @staticmethod
+    def energy_range(df: pd.DataFrame, args: Dict[str, Any]) -> pd.DataFrame:
+        """Select the energy range for fitting.
 
-    Returns:
-        pd.DataFrame: DataFrame containing the input data (`x` and `data`),
-             as well as the best fit and the corresponding residuum. Hence, it will be
-             extended by the single contribution of the model.
-    """
-    if args["shift"]:
+        Args:
+            df (pd.DataFrame): DataFrame containing the input data (`x` and `data`),
+                 as well as the best fit and the corresponding residuum. Hence, it will
+                 be extended by the single contribution of the model.
+            args (Dict[str,Any]): The input file arguments as a dictionary with
+                 additional information beyond the command line arguments.
+
+        Returns:
+            pd.DataFrame: DataFrame containing the `optimized` input data
+                 (`x` and `data`), which are shrinked according to the energy range.
+        """
+        _e0 = args["energy_start"]
+        _e1 = args["energy_stop"]
+
+        _df = df.copy()
+        if isinstance(_e0, (int, float)) and isinstance(_e1, (int, float)):
+            return _df.loc[
+                (df[args["column"][0]] >= _e0) & (df[args["column"][0]] <= _e1)
+            ]
+        elif isinstance(_e0, (int, float)):
+            return _df.loc[df[args["column"][0]] >= _e0]
+        elif isinstance(_e1, (int, float)):
+            return _df.loc[df[args["column"][0]] <= _e1]
+
+    @staticmethod
+    def energy_shift(df: pd.DataFrame, args: Dict[str, Any]) -> pd.DataFrame:
+        """Shift the energy axis by a given value.
+
+        Args:
+            df (pd.DataFrame): DataFrame containing the input data (`x` and `data`),
+                 as well as the best fit and the corresponding residuum. Hence, it will
+                 be extended by the single contribution of the model.
+            args (Dict[str,Any]): The input file arguments as a dictionary with
+                 additional information beyond the command line arguments.
+
+        Returns:
+            pd.DataFrame: DataFrame containing the `optimzed` input data
+                 (`x` and `data`), which are energy-shifted by the given value.
+        """
         _df = df.copy()
         _df.loc[:, args["column"][0]] = df[args["column"][0]].values + args["shift"]
         return _df
-    return df
 
+    @staticmethod
+    def oversampling(df: pd.DataFrame, args: dict) -> pd.DataFrame:
+        """Oversampling the data to increase the resolution of the data.
 
-def oversampling(df: pd.DataFrame, args: dict) -> pd.DataFrame:
-    """Oversampling the data to increase the resolution of the data.
+        !!! note "About Oversampling"
+            In this implementation of oversampling, the data is oversampled by the
+             factor of 5. In case of data with only a few points, the increased
+             resolution should allow to easier solve the optimization problem. The
+             oversampling based on a simple linear regression.
 
-    !!! note "About Oversampling"
-        In this implementation of oversampling, the data is oversampled by the factor of
-         5. In case of data with only a few points, the increased resolution should
-         allow to easier solve the optimization problem. The oversampling based on a
-         simple linear regression.
+        Args:
+            df (pd.DataFrame): DataFrame containing the input data (`x` and `data`),
+                 as well as the best fit and the corresponding residuum. Hence, it will
+                 be extended by the single contribution of the model.
+            args (Dict[str,Any]): The input file arguments as a dictionary with
+                 additional information beyond the command line arguments.
 
-    Args:
-        df (pd.DataFrame): DataFrame containing the input data (`x` and `data`),
-             as well as the best fit and the corresponding residuum. Hence, it will be
-             extended by the single contribution of the model.
-        args (dict): The input file arguments as a dictionary with additional
-             information beyond the command line arguments.
+        Returns:
+            pd.DataFrame: DataFrame containing the `optimzed` input data
+                 (`x` and `data`), which are oversampled by the factor of 5.
+        """
+        if args["oversampling"]:
+            x_values = np.linspace(
+                df[args["column"][0]].min(),
+                df[args["column"][0]].max(),
+                5 * df.shape[0],
+            )
+            return pd.DataFrame(
+                {
+                    args["column"][0]: x_values,
+                    args["column"][1]: np.interp(
+                        x_values,
+                        df[args["column"][0]].values,
+                        df[args["column"][1]].values,
+                    ),
+                }
+            )
+        return df
 
-    Returns:
-        pd.DataFrame: DataFrame containing the input data (`x` and `data`),
-             as well as the best fit and the corresponding residuum. Hence, it will be
-             extended by the single contribution of the model.
-    """
-    if args["oversampling"]:
-        x_values = np.linspace(
-            df[args["column"][0]].min(), df[args["column"][0]].max(), 5 * df.shape[0]
-        )
-        return pd.DataFrame(
-            {
-                args["column"][0]: x_values,
-                args["column"][1]: np.interp(
-                    x_values, df[args["column"][0]].values, df[args["column"][1]].values
-                ),
-            }
-        )
-    return df
+    @staticmethod
+    def intensity_smooth(df: pd.DataFrame, args: Dict[str, Any]) -> pd.DataFrame:
+        """Smooth the intensity values.
 
+        Args:
+            df (pd.DataFrame): DataFrame containing the input data (`x` and `data`).
+            args (Dict[str,Any]): The input file arguments as a dictionary with
+                 additional information beyond the command line arguments.
 
-def intensity_smooth(df: pd.DataFrame, args: dict) -> pd.DataFrame:
-    """Smooth the intensity values.
-
-    Args:
-        df (pd.DataFrame): DataFrame containing the input data (`x` and `data`).
-        args (dict): The input file arguments as a dictionary with additional
-             information beyond the command line arguments.
-
-    Returns:
-        pd.DataFrame: DataFrame containing the input data (`x` and `data`), which are
-             optionally smoothed.
-    """
-    if args["smooth"]:
+        Returns:
+            pd.DataFrame: DataFrame containing the `optimized` input data
+                 (`x` and `data`), which are smoothed by the given value.
+        """
         box = np.ones(args["smooth"]) / args["smooth"]
         _df = df.copy()
         _df.loc[:, args["column"][1]] = np.convolve(
             df[args["column"][1]].values, box, mode="same"
         )
         return _df
-    return df
 
 
-def save_as_csv(df: pd.DataFrame, args: dict) -> None:
-    """Save the the fit results to csv files.
+class PostProcessing:
+    """Post-processing of the dataframe."""
 
-    !!! note "About saving the fit results"
-        The fit results are saved to csv files and are divided into three different
-         categories:
-            1. The fit results of the original used data.
-            2. The correlation analysis of the fit results.
-            3. The error analysis of the fit results.
+    def __init__(
+        self, df: pd.DataFrame, args: Dict[str, Any], minimizer: Minimizer, result: Any
+    ) -> None:
+        """Initialize PostProcessing class.
+
+        Args:
+            df (pd.DataFrame): DataFrame containing the input data (`x` and `data`),
+                 as well as the best fit and the corresponding residuum. Hence, it will
+                 be extended by the single contribution of the model.
+            args (Dict[str, Any]): The input file arguments as a dictionary with
+                 additional information beyond the command line arguments.
+            minimizer (Minimizer): The minimizer class.
+            result (Any): The result of the minimization of the best fit.
+        """
+        self.args = args
+        self.df = self.rename_columns(df=df)
+        self.minimizer = minimizer
+        self.result = result
+        self.data_size = self.check_global_fitting()
+
+    def check_global_fitting(self) -> Optional[int]:
+        """Check if the global fitting is performed.
+
+        !!! note "About Global Fitting"
+            In case of the global fitting, the data is extended by the single
+            contribution of the model.
+
+        Returns:
+            Optional[int]: The number of spectra of the global fitting.
+        """
+        if self.args["global"]:
+            return max(
+                int(self.result.params[i].name.split("_")[-1])
+                for i in self.result.params
+            )
+        return None
+
+    def __call__(self) -> Tuple[pd.DataFrame, Dict[str, Any]]:
+        """Call the post-processing."""
+        self.make_insight_report
+        self.make_residual_fit
+        self.make_fit_contributions
+        self.export_correlation2args
+        self.export_results2args
+        return (self.df, self.args)
+
+    def rename_columns(self, df: pd.DataFrame) -> pd.DataFrame:
+        """Rename the columns of the dataframe.
+
+        Rename the columns of the dataframe to the names defined in the input file.
+
+        Args:
+            df (pd.DataFrame): DataFrame containing the original input data, which are
+                 individually pre-named.
+
+        Returns:
+            pd.DataFrame: DataFrame containing renamed columns. All column-names are
+                 lowered. In case of a regular fitting, the columns are named `energy`
+                 and `intensity`. In case of a global fitting, `energy` stays `energy`
+                 and `intensity` is extended by a `_`  and column index; like: `energy`
+                 and `intensity_1`, `intensity_2`, `intensity_...` depending on
+                 the dataset size.
+        """
+        if self.args["global"]:
+            return df.rename(
+                columns={
+                    col: "energy" if i == 0 else f"intensity_{i}"
+                    for i, col in enumerate(df.columns)
+                }
+            )
+        return df.rename(columns={df.columns[0]: "energy", df.columns[1]: "intensity"})
+
+    @property
+    def make_insight_report(self) -> None:
+        """Make an insight-report of the fit statistic.
+
+        !!! note "About Insight Report"
+
+            The insight report based on:
+
+                1. Configurations
+                2. Statistics
+                3. Variables
+                4. Errorbars
+                5. Correlations
+                6. Covariance Matrix
+                7. _Optional_: Confidence Interval
+
+            All of the above are included in the report as dictionary in `args`.
+
+        """
+        self.args["fit_insights"] = fit_report_as_dict(
+            self.result, modelpars=self.result.params
+        )
+        if self.args["conf_interval"]:
+            try:
+                self.args["confidence_interval"] = conf_interval(
+                    self.minimizer, self.result, **self.args["conf_interval"]
+                )
+            except MinimizerException as exc:
+                print(f"Error: {exc} -> No confidence interval could be calculated!")
+                self.args["confidence_interval"] = None
+
+    @property
+    def make_residual_fit(self) -> None:
+        r"""Make the residuals of the model and the fit.
+
+        !!! note "About Residual and Fit"
+
+            The residual is calculated by the difference of the best fit `model` and
+            the reference `data`. In case of a global fitting, the residuals are
+            calculated for each `spectra` separately plus an avaraged global residual.
+
+            $$
+            \mathrm{residual} = \mathrm{model} - \mathrm{data}
+            $$
+            $$
+            \mathrm{residual}_{i} = \mathrm{model}_{i} - \mathrm{data}_{i}
+            $$
+            \mathrm{residual}_{avg} = \frac{ \sum_{i}
+                \mathrm{model}_{i} - \mathrm{data}_{i}}{i}
+            $$
+
+            The fit is defined by the difference sum of fit and reference data. In case
+            of a global fitting, the residuals are calculated for each `spectra`
+            separately.
+        """
+        _df = self.df.copy()
+        if self.args["global"]:
+
+            residual = self.result.residual.reshape((self.data_size, -1))
+
+            for i, res in enumerate(residual, start=1):
+                _df[f"residual_{i}"] = res
+                _df[f"fit_{i}"] = self.df[f"intensity_{i}"].values + res
+            _df["residual_avg"] = np.mean(residual, axis=0)
+        else:
+            residual = self.result.residual
+            _df["residual"] = residual
+            _df["fit"] = self.df["intensity"].values + residual
+        self.df = _df
+
+    @property
+    def make_fit_contributions(self) -> None:
+        """Make the fit contributions of the best fit model.
+
+        !!! info "About Fit Contributions"
+            The fit contributions are made independently of the local or global fitting.
+        """
+        self.df = calculated_model(
+            params=self.result.params,
+            x=self.df.iloc[:, 0].values,
+            df=self.df,
+            global_fit=self.args["global"],
+        )
+
+    @property
+    def export_correlation2args(self) -> None:
+        """Export the correlation matrix to the input file arguments.
+
+        !!! note "About Correlation Matrix"
+            The correlation matrix is calculated from and for the pandas dataframe and
+            divided into two parts:
+
+            1. Linear correlation matrix
+            2. Non-linear correlation matrix (coming later ...)
+
+        """
+        self.args["linear_correlation"] = self.df.corr().to_dict(orient="list")
+
+    @property
+    def export_results2args(self) -> None:
+        """Export the results of the fit to the input file arguments."""
+        self.args["fit_result"] = self.df.to_dict(orient="list")
+
+
+class SaveResult:
+    """Saving the result of the fitting process."""
+
+    def __init__(self, df: pd.DataFrame, args: Dict[str, Any]) -> None:
+        """Initialize SaveResult class.
+
+        !!! note "About SaveResult"
+
+            The SaveResult class is responsible for saving the results of the
+            optimization process. The results are saved in the following formats:
+
+            1. JSON (default) for all results and meta data of the fitting process.
+            2. CSV for the results of the optimization process.
+
+        !!! note "About the output `CSV`-file"
+
+            The output files are seperated into three classes:
+
+                1. The `results` of the optimization process.
+                2. The `correlation analysis` of the optimization process.
+                3. The `error analysis` of the optimization process.
+
+            The result outputfile contains the following information:
+
+                1. The column names of the energy axis (`x`) and the intensity values
+                (`data`)
+                2. The name of the column containing the energy axis (`x`)
+                3. The name of the column containing the intensity values (`data`)
+                4. The name of the column containing the best fit (`best_fit`)
+                5. The name of the column containing the residuum (`residuum`)
+                6. The name of the column containing the model contribution (`model`)
+                7. The name of the column containing the error of the model
+                contribution (`model_error`)
+                8. The name of the column containing the error of the best fit
+                (`best_fit_error`)
+                9. The name of the column containing the error of the residuum
+                (`residuum_error`)
+
+            The `correlation analysis` file contains the following information about all
+            attributes of the model:
+
+                1. Energy
+                2. Intensity or Intensities (global fitting)
+                3. Residuum
+                4. Best fit
+                5. Model contribution(s)
+
+            The `error analysis` file contains the following information about all model
+            attributes vs:
+
+                1. Initial model values
+                2. Current model values
+                3. Best model values
+                4. Residuum / error relative to the best fit
+                5. Residuum / error relative to the absolute fit
+
+        Args:
+            df (pd.DataFrame): DataFrame containing the input data (`x` and `data`),
+                 as well as the best fit and the corresponding residuum. Hence, it will
+                 be extended by the single contribution of the model.
+            args (Dict[str,Any]): The input file arguments as a dictionary with
+                 additional information beyond the command line arguments.
+        """
+        self.df = df
+        self.args = args
+
+    def __call__(self) -> None:
+        """Call the SaveResult class."""
+        self.save_as_json
+        self.save_as_csv
+
+    @property
+    def save_as_csv(self) -> None:
+        """Save the the fit results to csv files.
+
+        !!! note "About saving the fit results"
+            The fit results are saved to csv files and are divided into three different
+            categories:
+
+                1. The `results` of the optimization process.
+                2. The `correlation analysis` of the optimization process.
+                3. The `error analysis` of the optimization process.
+        """
+        self.df.to_csv(Path(f"{self.args['outfile']}_fit.csv"), index=False)
+        pd.DataFrame.from_dict(self.args["linear_correlation"]).to_csv(
+            Path(f"{self.args['outfile']}_correlation.csv"),
+            index=True,
+            index_label="attributes",
+        )
+        pd.DataFrame.from_dict(self.args["fit_insights"]["variables"]).to_csv(
+            Path(f"{self.args['outfile']}_errors.csv"),
+            index=True,
+            index_label="attributes",
+        )
+
+    @property
+    def save_as_json(self) -> None:
+        """Save the fitting result as json file."""
+        if self.args["outfile"]:
+            with open(Path(f"{self.args['outfile']}_summary.json"), "w") as f:
+                json.dump(self.args, f, indent=4)
+        else:
+            raise FileNotFoundError("No output file provided!")
+
+
+def read_input_file(fname: str) -> MutableMapping[str, Any]:
+    """Read the input file.
+
+    Read the input file as `toml`, `json`, or `yaml` files and return as a dictionary.
 
     Args:
-        df (pd.DataFrame): DataFrame containing the input data (`x` and `data`),
+        fname (str): Name of the input file.
+
+    Raises:
+        SystemExit: If the input file is not supported.
+
+    Returns:
+        dict: Return the input file arguments as a dictionary with additional
+             information beyond the command line arguments.
+
+    """
+    _fname = Path(fname)
+
+    if _fname.suffix == ".toml":
+        args = toml.load(fname)
+    elif _fname.suffix == ".json":
+        with open(_fname, "r") as f:
+            args = json.load(f)
+    elif _fname.suffix in [".yaml", ".yml"]:
+        with open(_fname, "r") as f:
+            args = yaml.load(f, Loader=yaml.FullLoader)
+    else:
+        raise SystemExit(
+            f"ERROR: Input file {fname} has not supported file format.\n"
+            "Supported fileformats are: '*.json', '*.yaml', and '*.toml'"
+        )
+    return args
+
+
+def load_data(args: Dict[str, str]) -> pd.DataFrame:
+    """Load the data from a txt file.
+
+    !!! note "About the data format"
+
+        Load data from a txt file, which can be an ASCII file as txt, csv, or
+        user-specific but rational file. The file can be separated by a delimiter.
+
+        In case of 2d data, the columns has to be defined. In case of 3D data, all
+        columns are considered as data.
+
+    Args:
+        args (Dict[str,str]): The input file arguments as a dictionary with additional
+             information beyond the command line arguments.
+
+    Returns:
+        pd.DataFrame: DataFrame containing the input data (`x` and `data`),
              as well as the best fit and the corresponding residuum. Hence, it will be
              extended by the single contribution of the model.
-        args (dict): Return the input file arguments as a dictionary with additional
-             information beyond the command line arguments.
     """
-    df.to_csv(Path(f"{args['outfile']}_fit.csv"), index=False)
-    pd.DataFrame.from_dict(args["linear_correlation"]).to_csv(
-        Path(f"{args['outfile']}_correlation.csv"),
-        index=True,
-        index_label="attributes",
+    try:
+        if args["global"]:
+            return pd.read_csv(
+                Path(args["infile"]),
+                sep=args["separator"],
+                header=args["header"],
+                dtype=np.float64,
+                decimal=args["decimal"],
+            )
+        return pd.read_csv(
+            Path(args["infile"]),
+            sep=args["separator"],
+            header=args["header"],
+            usecols=args["column"],
+            dtype=np.float64,
+            decimal=args["decimal"],
+        )
+    except ValueError as exc:
+        print(f"Error: {exc} -> Dataframe contains non numeric data!")
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+
+    df = pd.DataFrame(
+        {
+            "Energy": np.arange(100).astype(np.float64),
+            "Intensity_1": np.random.standard_normal(100),
+            "Intensity_2": np.random.standard_normal(100),
+            "Intensity_3": np.random.standard_normal(100),
+            "Intensity_4": np.random.standard_normal(100),
+        }
     )
-    pd.DataFrame.from_dict(args["fit_insights"]["variables"]).to_csv(
-        Path(f"{args['outfile']}_errors.csv"),
-        index=True,
-        index_label="attributes",
-    )
-
-
-def save_as_json(args) -> None:
-    """Save the fitting result as json file.
-
-    Args:
-        args (dict): The input file arguments as a dictionary with additional
-             information beyond the command line arguments.
-    """
-    if args["outfile"]:
-        with open(Path(f"{args['outfile']}_summary.json"), "w") as f:
-            json.dump(args, f, indent=4)
-    else:
-        raise FileNotFoundError("No output file provided!")
+    df.to_csv("test_global_2.csv", index=False)

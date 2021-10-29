@@ -193,6 +193,106 @@ In case of advanced usage of `SpectraFit`, the following steps are necessary:
         features and `maxiter`. Consequently, the confidence interval calculations
         should be only used for the final fit to put the calculation time low.
 
+4.  The input file can be further extended by `expressions`, which are evaluated
+    during the fitting process. The `expressions` have to be defined as
+    attributes of the `fitting` object in the input file. It can be only contain
+    mathematical constraints or dependencies between different `peaks`; please
+    compare the docs of [lmfit.eval][9] and [docs][10]. The attributes are
+    defined by the keyword `expr` followd by the string, which can contain any
+    mathematical expression supported by Python.
+
+    !!! info "About the importance of expressions"
+
+        Using the `expr` attribute, the amplitude of the peak `2` can be defined
+         1 /3 of the amplitude of the peak `1`. In general, this expression mode
+         is very useful in cases of fitting relative dependencies like the
+         _L-edge X-ray Absorption Spectra_ (**L-XAS**), where are relative
+         dependencie between the **L_3** and **L_2** edge has to be defined.
+
+        ```json
+        "peaks": {
+              "1": {
+                "pseudovoigt": {
+                  "amplitude": {
+                    "max": 2,
+                    "min": 0,
+                    "vary": true,
+                    "value": 1
+                  },
+                  "center": {
+                    "max": 2,
+                    "min": -2,
+                    "vary": true,
+                    "value": 0
+                  },
+                  "fwhmg": {
+                    "max": 0.74,
+                    "min": 0.02,
+                    "vary": true,
+                    "value": 0.21
+                  },
+                  "fwhml": {
+                    "max": 0.74,
+                    "min": 0.01,
+                    "vary": true,
+                    "value": 0.21
+                  }
+                }
+              },
+              "2": {
+                "pseudovoigt": {
+                  "amplitude": {
+                    "expr": "pseudovoigt_amplitude_1 / 3"
+                  },
+                  "center": {
+                    "expr": "pseudovoigt_center_1 + 1.73"
+                  },
+                  "fwhmg": {
+                    "max": 0.5,
+                    "min": 0.02,
+                    "vary": true,
+                    "value": 0.01
+                  },
+                  "fwhml": {
+                    "max": 0.5,
+                    "min": 0.01,
+                    "vary": true,
+                    "value": 0.01
+                  }
+                }
+              },
+              "3": {
+                "constant": {
+                  "amplitude": {
+                    "max": 2,
+                    "min": 0.01,
+                    "vary": true,
+                    "value": 1
+                  }
+                }
+              },
+              "4": {
+                "gaussian": {
+                  "amplitude": {
+                    "max": 2,
+                    "min": 0,
+                    "vary": true,
+                    "value": 1
+                  },
+                  "center": {
+                    "expr": "pseudovoigt_center_2 + 0.35"
+                  },
+                  "fwhmg": {
+                    "max": 0.4,
+                    "min": 0.02,
+                    "vary": true,
+                    "value": 0.01
+                  }
+                }
+              }
+            }
+        ```
+
 ## Configurations
 
 In terms of the configuration of `SpectraFit`, configurations depends on
@@ -364,3 +464,5 @@ types.
 [7]: /spectrafit/interface/usage/#standard-usage
 [8]:
   https://lmfit.github.io/lmfit-py/fitting.html?highlight=minimizer#module-lmfit.minimizer
+[9]: https://lmfit.github.io/lmfit-py/constraints.html
+[10]: ../../doc/expression

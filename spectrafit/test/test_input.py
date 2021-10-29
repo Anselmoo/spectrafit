@@ -303,3 +303,31 @@ class TestMoreFeatures:
             "spectrafit/test/test_input_8.json",
         )
         assert ret.success
+
+    def test_load_global(self, monkeypatch, script_runner):
+        """Testing for no errorbars for spectrafit."""
+        monkeypatch.setattr("builtins.input", lambda _: "n")
+        ret = script_runner.run(
+            "spectrafit",
+            "spectrafit/test/test_data.csv",
+            "-i",
+            "spectrafit/test/test_input_8.json",
+            "-g",
+        )
+        assert ret.success
+
+    def test_non_numeric_data(self, monkeypatch, script_runner):
+        """Testing missing mininizmer parameter in input."""
+        monkeypatch.setattr("builtins.input", lambda _: "n")
+        fname = "spectrafit/test/test_input_9.json"
+        ret = script_runner.run(
+            "spectrafit",
+            "_",
+            "-i",
+            fname,
+        )
+        assert not ret.success
+        assert ret.stderr == (
+            "Error: could not convert string to float: 'cc' ->"
+            " Dataframe contains non numeric data!!\n"
+        )

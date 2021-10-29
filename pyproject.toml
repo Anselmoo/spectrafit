@@ -127,3 +127,6 @@ ignore = ["E203", "W503", "W605"]
 
 [tool.pytest]
 script_launch_mode = "subprocess"
+
+[tool.pydocstyle]
+match = '.*\.py'
