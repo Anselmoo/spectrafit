@@ -285,33 +285,33 @@ class SolverModels(ModelParameters):
             model = model.lower()
             if model.split("_")[0] not in __implemented_models__:
                 raise SystemExit(f"{model} is not supported")
-            peak_kwargs[(model.split("_")[-1], model.split("_")[0])][
-                model.split("_")[1]
-            ] = params[model]
+            c_name = model.split("_")
+            peak_kwargs[(c_name[0], c_name[2])][c_name[1]] = params[model]
+
         for key, _kwarg in peak_kwargs.items():
-            if key[1] == "gaussian":
+            if key[0] == "gaussian":
                 val += gaussian(x, **_kwarg)
-            elif key[1] == "lorentzian":
+            elif key[0] == "lorentzian":
                 val += lorentzian(x, **_kwarg)
-            elif key[1] == "voigt":
+            elif key[0] == "voigt":
                 val += voigt(x, **_kwarg)
-            elif key[1] == "pseudovoigt":
+            elif key[0] == "pseudovoigt":
                 val += pseudovoigt(x, **_kwarg)
-            elif key[1] == "exponential":
+            elif key[0] == "exponential":
                 val += exponential(x, **_kwarg)
-            elif key[1] == "power":
+            elif key[0] == "power":
                 val += power(x, **_kwarg)
-            elif key[1] == "linear":
+            elif key[0] == "linear":
                 val += linear(x, **_kwarg)
-            elif key[1] == "constant":
+            elif key[0] == "constant":
                 val += constant(x, **_kwarg)
-            elif key[1] == "erf":
+            elif key[0] == "erf":
                 val += step(x, kind="erf", **_kwarg)
-            elif key[1] == "atan":
+            elif key[0] == "atan":
                 val += step(x, kind="atan", **_kwarg)
-            elif key[1] == "log":
+            elif key[0] == "log":
                 val += step(x, kind="log", **_kwarg)
-            elif key[1] == "heaviside":
+            elif key[0] == "heaviside":
                 val += step(x, kind="heaviside", **_kwarg)
         return val - data
 
@@ -357,38 +357,36 @@ class SolverModels(ModelParameters):
             model = model.lower()
             if model.split("_")[0] not in __implemented_models__:
                 raise SystemExit(f"{model} is not supported")
-            peak_kwargs[
-                (model.split("_")[-2], model.split("_")[0], model.split("_")[-1])
-            ][model.split("_")[1]] = params[model]
+            c_name = model.split("_")
+            peak_kwargs[(c_name[0], c_name[2], c_name[3])][c_name[1]] = params[model]
         for key, _kwarg in peak_kwargs.items():
             i = int(key[2]) - 1
-            if key[1] == "gaussian":
+            if key[0] == "gaussian":
                 val[:, i] += gaussian(x, **_kwarg)
-            elif key[1] == "lorentzian":
+            elif key[0] == "lorentzian":
                 val[:, i] += lorentzian(x, **_kwarg)
-            elif key[1] == "voigt":
+            elif key[0] == "voigt":
                 val[:, i] += voigt(x, **_kwarg)
-            elif key[1] == "pseudovoigt":
+            elif key[0] == "pseudovoigt":
                 val[:, i] += pseudovoigt(x, **_kwarg)
-            elif key[1] == "exponential":
+            elif key[0] == "exponential":
                 val[:, i] += exponential(x, **_kwarg)
-            elif key[1] == "power":
+            elif key[0] == "power":
                 val[:, i] += power(x, **_kwarg)
-            elif key[1] == "linear":
+            elif key[0] == "linear":
                 val[:, i] += linear(x, **_kwarg)
-            elif key[1] == "constant":
+            elif key[0] == "constant":
                 val[:, i] += constant(x, **_kwarg)
-            elif key[1] == "erf":
+            elif key[0] == "erf":
                 val[:, i] += step(x, kind="erf", **_kwarg)
-            elif key[1] == "atan":
+            elif key[0] == "atan":
                 val[:, i] += step(x, kind="atan", **_kwarg)
-            elif key[1] == "log":
+            elif key[0] == "log":
                 val[:, i] += step(x, kind="log", **_kwarg)
-            elif key[1] == "heaviside":
+            elif key[0] == "heaviside":
                 val[:, i] += step(x, kind="heaviside", **_kwarg)
-        for i in range(val.shape[1]):
-            val[:, i] -= data[:, i]
-        # val -= data
+
+        val -= data
         return val.flatten()
 
 
@@ -428,9 +426,9 @@ def calculated_model(
             peak_kwargs[(c_name[0], c_name[2], c_name[3])][c_name[1]] = params[model]
         else:
             peak_kwargs[(c_name[0], c_name[2])][c_name[1]] = params[model]
+
     _df = df.copy()
     for key, _kwarg in peak_kwargs.items():
-
         c_name = f"{key[0]}_{key[1]}_{key[2]}" if global_fit else f"{key[0]}_{key[1]}"
         if key[0] == "gaussian":
             _df[c_name] = gaussian(x, **_kwarg)

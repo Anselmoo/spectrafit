@@ -304,8 +304,7 @@ class PostProcessing:
         _df = self.df.copy()
         if self.args["global"]:
 
-            residual = self.result.residual.reshape((self.data_size, -1))
-
+            residual = self.result.residual.reshape((-1, self.data_size)).T
             for i, res in enumerate(residual, start=1):
                 _df[f"residual_{i}"] = res
                 _df[f"fit_{i}"] = self.df[f"intensity_{i}"].values + res
@@ -529,17 +528,3 @@ def load_data(args: Dict[str, str]) -> pd.DataFrame:
     except ValueError as exc:
         print(f"Error: {exc} -> Dataframe contains non numeric data!")
         sys.exit(1)
-
-
-if __name__ == "__main__":
-
-    df = pd.DataFrame(
-        {
-            "Energy": np.arange(100).astype(np.float64),
-            "Intensity_1": np.random.standard_normal(100),
-            "Intensity_2": np.random.standard_normal(100),
-            "Intensity_3": np.random.standard_normal(100),
-            "Intensity_4": np.random.standard_normal(100),
-        }
-    )
-    df.to_csv("test_global_2.csv", index=False)
