@@ -60,8 +60,8 @@ class TestNotSupported:
         }
     )
 
-    def test_solver_model_exit(self):
-        """Exit-Test of solver_model."""
+    def test_solver_model_exit_local(self):
+        """Exit-Test of solver_model for local fitting."""
         with pytest.raises(SystemExit) as pytest_wrapped_e:
             SolverModels(
                 df=self.df, args=self.args
@@ -69,6 +69,16 @@ class TestNotSupported:
 
         assert pytest_wrapped_e.type == SystemExit
         assert pytest_wrapped_e.value.code == "dummy_amplitude_1 is not supported"
+
+    def test_solver_model_exit_global(self):
+        """Exit-Test of solver_model for global fitting."""
+        _args = self.args
+        _args["global"] = 1
+        with pytest.raises(SystemExit) as pytest_wrapped_e:
+            SolverModels(df=self.df, args=_args)().will_exit_somewhere_down_the_stack()
+
+        assert pytest_wrapped_e.type == SystemExit
+        assert pytest_wrapped_e.value.code == "dummy_amplitude_1_1 is not supported"
 
     def test_calculated_model_exit(self):
         """Exit-Test of solver_model."""
@@ -257,5 +267,73 @@ class TestModelParametersSolver:
     def test_solver_global_2(self):
         """Test of SolverModels for global fitting."""
         mp = SolverModels(df=self.df_global, args=self.args_global_2)()
+        assert type(mp.__str__()) == str
+        assert type(mp) == tuple
+
+    def test_all_model_local(self):
+        """Test of the AllModel class for local fitting."""
+        df = pd.DataFrame(
+            {
+                "Energy": np.arange(10).astype(np.float64),
+                "Intensity_1": np.random.rand(10),
+                "Intensity_2": np.random.rand(10),
+                "Intensity_3": np.random.rand(10),
+                "Intensity_4": np.random.rand(10),
+            }
+        )
+        args = {
+            "global": 0,
+            "column": ["Energy", "Intensity_1"],
+            "minimizer": {"nan_policy": "propagate", "calc_covar": False},
+            "optimizer": {"max_nfev": 10, "method": "leastsq"},
+            "peaks": {
+                "1": {"pseudovoigt": {}},
+                "2": {"gaussian": {}},
+                "3": {"lorentzian": {}},
+                "4": {"exponential": {}},
+                "5": {"power": {}},
+                "6": {"linear": {}},
+                "7": {"constant": {}},
+                "8": {"erf": {}},
+                "9": {"atan": {}},
+                "10": {"log": {}},
+                "11": {"heaviside": {}},
+            },
+        }
+        mp = SolverModels(df=df, args=args)()
+        assert type(mp.__str__()) == str
+        assert type(mp) == tuple
+
+    def test_all_model_global(self):
+        """Test of the AllModel class for global fitting."""
+        df = pd.DataFrame(
+            {
+                "Energy": np.arange(10).astype(np.float64),
+                "Intensity_1": np.random.rand(10),
+                "Intensity_2": np.random.rand(10),
+                "Intensity_3": np.random.rand(10),
+                "Intensity_4": np.random.rand(10),
+            }
+        )
+        args = {
+            "global": 1,
+            "column": ["Energy"],
+            "minimizer": {"nan_policy": "propagate", "calc_covar": False},
+            "optimizer": {"max_nfev": 10, "method": "leastsq"},
+            "peaks": {
+                "1": {"pseudovoigt": {}},
+                "2": {"gaussian": {}},
+                "3": {"lorentzian": {}},
+                "4": {"exponential": {}},
+                "5": {"power": {}},
+                "6": {"linear": {}},
+                "7": {"constant": {}},
+                "8": {"erf": {}},
+                "9": {"atan": {}},
+                "10": {"log": {}},
+                "11": {"heaviside": {}},
+            },
+        }
+        mp = SolverModels(df=df, args=args)()
         assert type(mp.__str__()) == str
         assert type(mp) == tuple

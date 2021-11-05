@@ -133,7 +133,7 @@ class PreProcessing:
                  additional information beyond the command line arguments.
 
         Returns:
-            pd.DataFrame: DataFrame containing the `optimzed` input data
+            pd.DataFrame: DataFrame containing the `optimized` input data
                  (`x` and `data`), which are oversampled by the factor of 5.
         """
         if args["oversampling"]:
