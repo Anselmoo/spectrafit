@@ -12,8 +12,7 @@ def double_peak(fname: str) -> None:
     """Generate a spectrum with two Gaussian peaks.
 
     Args:
-        fname : str
-            The path to the output file.
+        fname (str): The file name of the `csv` file to write.
     """
     variance = 1
     sigma = math.sqrt(variance)
