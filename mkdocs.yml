@@ -141,6 +141,7 @@ nav:
     - Multi Peak Fitting: examples/example3.md
     - Working with Real Life Data: examples/example4.md
     - Working with Expressions: examples/example5.md
+    - Global Fitting: examples/example6.md
   - Documentation:
       - Models: doc/models.md
       - Expression: doc/expression.md

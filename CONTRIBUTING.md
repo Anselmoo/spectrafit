@@ -76,8 +76,7 @@ This template is adapted from [opengovernment][3].
 
 [1]: https://github.com/Anselmoo/spectrafit/actions
 [2]: https://google.github.io/styleguide/pyguide.html
-[3]:
-  https://github.com/opengovernment/opengovernment/blob/main/CONTRIBUTING.md
+[3]: https://github.com/opengovernment/opengovernment/blob/main/CONTRIBUTING.md
 [4]: https://python-poetry.org
 [5]: https://pre-commit.com
 [6]: https://github.com/pyenv/pyenv

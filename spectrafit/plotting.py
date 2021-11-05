@@ -85,8 +85,8 @@ class PlotSpectra:
                 peak
                 for peak in self.df.columns
                 if not peak.startswith(("residual", "energy", "intensity", "fit"))
+                and peak.endswith(f"_{i+1}")
             ]
-
             color_peaks = sns.color_palette("rocket", len(peaks))
             for j, peak in enumerate(peaks):
                 axs[1, i] = sns.lineplot(

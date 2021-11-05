@@ -335,3 +335,53 @@ class TestMoreFeatures:
             "spectrafit", "_", "-i", "spectrafit/test/scripts/test_input_9.json"
         )
         assert not ret.success
+
+
+class TestGlobalFitting:
+    """Test class for global fitting."""
+
+    def test_global_fitting_0(self, monkeypatch, script_runner):
+        """Testing global fitting."""
+        monkeypatch.setattr("builtins.input", lambda _: "n")
+        ret = script_runner.run(
+            "spectrafit", "_", "-i", "spectrafit/test/scripts/test_input_global_0.json"
+        )
+        assert ret.success
+        assert ret.stderr == ""
+        assert (
+            len(
+                list(
+                    Path(".").glob("spectrafit/test/export/global_fit_results_0*.json")
+                )
+            )
+            == 1
+        )
+        assert (
+            len(
+                list(Path(".").glob("spectrafit/test/export/global_fit_results_0*.csv"))
+            )
+            == 3
+        )
+
+    def test_global_fitting_1(self, monkeypatch, script_runner):
+        """Testing global fitting."""
+        monkeypatch.setattr("builtins.input", lambda _: "n")
+        ret = script_runner.run(
+            "spectrafit", "_", "-i", "spectrafit/test/scripts/test_input_global_1.json"
+        )
+        assert ret.success
+        assert ret.stderr == ""
+        assert (
+            len(
+                list(
+                    Path(".").glob("spectrafit/test/export/global_fit_results_1*.json")
+                )
+            )
+            == 1
+        )
+        assert (
+            len(
+                list(Path(".").glob("spectrafit/test/export/global_fit_results_1*.csv"))
+            )
+            == 3
+        )

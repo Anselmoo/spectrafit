@@ -39,7 +39,7 @@ class TestNotSupported:
 
     args = {
         "column": ["energy", "intensity"],
-        "global": False,
+        "global": 0,
         "minimizer": {"method": "Nelder-Mead", "tol": 1e-6},
         "optimizer": {"method": "Nelder-Mead", "tol": 1e-6},
         "peaks": {
@@ -145,21 +145,46 @@ class TestModelParametersSolver:
             "1": {
                 "1": {
                     "pseudovoigt": {
-                        "amplitude": {"max": 200, "min": 0, "vary": True, "value": 1},
-                        "center": {"max": 200, "min": -200, "vary": True, "value": 0},
+                        "amplitude": {
+                            "max": 200,
+                            "min": 0,
+                            "vary": True,
+                            "value": 1,
+                        },
+                        "center": {
+                            "max": 200,
+                            "min": -200,
+                            "vary": True,
+                            "value": 0,
+                        },
                         "fwhmg": {
                             "max": 2.5,
                             "min": 0.00002,
                             "vary": True,
                             "value": 0.1,
                         },
-                        "fwhml": {"max": 2.5, "min": 0.00001, "vary": True, "value": 1},
+                        "fwhml": {
+                            "max": 2.5,
+                            "min": 0.00001,
+                            "vary": True,
+                            "value": 1,
+                        },
                     }
                 },
                 "2": {
                     "pseudovoigt": {
-                        "amplitude": {"max": 200, "min": 0, "vary": True, "value": 1},
-                        "center": {"max": 200, "min": -200, "vary": True, "value": 0},
+                        "amplitude": {
+                            "max": 200,
+                            "min": 0,
+                            "vary": True,
+                            "value": 1,
+                        },
+                        "center": {
+                            "max": 200,
+                            "min": -200,
+                            "vary": True,
+                            "value": 0,
+                        },
                         "fwhmg": {
                             "max": 2.5,
                             "min": 0.00002,

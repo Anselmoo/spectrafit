@@ -20,11 +20,15 @@ def double_peak(fname: str) -> None:
     pd.DataFrame(
         {
             "energy": x,
-            "y_1": stats.norm.pdf(x, 1, sigma) + stats.norm.pdf(x, 2, sigma),
-            "y_2": stats.norm.pdf(x, 1, sigma) * np.random.rand(100)
-            + stats.norm.pdf(x, 2, sigma) * np.random.rand(100),
-            "y_3": stats.norm.pdf(x, 1, sigma) * np.random.rand(100)
-            + stats.norm.pdf(x, 3, sigma) * np.random.rand(100),
+            "y_1": stats.norm.pdf(x, 1, sigma) + 0.75 * stats.norm.pdf(x, 5, sigma),
+            "y_2": stats.norm.pdf(x, 1, sigma)
+            + np.random.rand(100) / 10.0
+            + 0.75 * stats.norm.pdf(x, 5, sigma)
+            + np.random.rand(100) / 10.0,
+            "y_3": stats.norm.pdf(x, 1, sigma)
+            + np.random.rand(100) / 100.0
+            + 0.75 * stats.norm.pdf(x, 5, sigma)
+            + np.random.rand(100) / 100.0,
         }
     ).to_csv(Path(fname), index=False)
 
