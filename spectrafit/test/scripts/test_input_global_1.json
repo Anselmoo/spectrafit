@@ -3,7 +3,8 @@
     "column": ["energy"],
     "decimal": ".",
     "header": 0,
-    "infile": "spectrafit/test/data/test_data_global_3.csv",
+    "infile": "spectrafit/test/import/test_data_global_3.csv",
+    "outfile": "spectrafit/test/export/global_fit_results_1",
     "oversampling": false,
     "separator": ",",
     "shift": 0.2,
@@ -41,19 +42,19 @@
             "value": 1
           },
           "center": {
-            "max": 200,
-            "min": -200,
+            "max": 3,
+            "min": 0,
             "vary": true,
-            "value": 0
+            "value": 1.25
           },
           "fwhmg": {
-            "max": 2.5,
+            "max": 25,
             "min": 0.00002,
             "vary": true,
             "value": 0.1
           },
           "fwhml": {
-            "max": 2.5,
+            "max": 25,
             "min": 0.00001,
             "vary": true,
             "value": 1
@@ -69,19 +70,19 @@
             "value": 1
           },
           "center": {
-            "max": 200,
-            "min": -200,
+            "max": 8,
+            "min": 2,
             "vary": true,
-            "value": 0
+            "value": 5
           },
           "fwhmg": {
-            "max": 2.5,
+            "max": 25,
             "min": 0.00002,
             "vary": true,
             "value": 1.0
           },
           "fwhml": {
-            "max": 2.5,
+            "max": 25,
             "min": 0.0001,
             "vary": true,
             "value": 0.01

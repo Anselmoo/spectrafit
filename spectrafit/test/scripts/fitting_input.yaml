@@ -7,7 +7,7 @@ settings:
   energy_start: 0
   energy_stop: 8
   header:
-  infile: spectrafit/test/data/rixs_fecl4.txt
+  infile: spectrafit/test/import/test_data.txt
   outfile: spectrafit/test/export/fit_results
   oversampling: false
   separator: "\t"

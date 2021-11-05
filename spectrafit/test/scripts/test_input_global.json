@@ -5,7 +5,7 @@
     "energy_start": -1,
     "energy_stop": 1.0,
     "header": 0,
-    "infile": "spectrafit/test/data/test_data_global.csv",
+    "infile": "spectrafit/test/import/test_data_global.csv",
     "oversampling": false,
     "separator": ",",
     "shift": 0.2,
