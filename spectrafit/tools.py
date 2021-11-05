@@ -54,14 +54,18 @@ class PreProcessing:
         self.args["data_statistic"] = _df.describe(
             percentiles=np.arange(0.1, 1, 0.1)
         ).to_dict(orient="list")
-        if self.args["energy_start"] or self.args["energy_stop"]:
-            _df = self.energy_range(_df, self.args)
-        if self.args["shift"]:
-            _df = self.energy_shift(_df, self.args)
-        if self.args["oversampling"]:
-            _df = self.oversampling(_df, self.args)
-        if self.args["smooth"]:
-            _df = self.intensity_smooth(_df, self.args)
+        try:
+            if self.args["energy_start"] or self.args["energy_stop"]:
+                _df = self.energy_range(_df, self.args)
+            if self.args["shift"]:
+                _df = self.energy_shift(_df, self.args)
+            if self.args["oversampling"]:
+                _df = self.oversampling(_df, self.args)
+            if self.args["smooth"]:
+                _df = self.intensity_smooth(_df, self.args)
+        except KeyError as exc:
+            print(f"KeyError: {exc} is not part of the dataframe!")
+            sys.exit(1)
         return (_df, self.args)
 
     @staticmethod
@@ -104,7 +108,7 @@ class PreProcessing:
                  additional information beyond the command line arguments.
 
         Returns:
-            pd.DataFrame: DataFrame containing the `optimzed` input data
+            pd.DataFrame: DataFrame containing the `optimized` input data
                  (`x` and `data`), which are energy-shifted by the given value.
         """
         _df = df.copy()

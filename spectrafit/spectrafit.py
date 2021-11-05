@@ -174,7 +174,7 @@ def command_line_runner(args: Dict[str, Any] = None) -> None:
 
         PlotSpectra(df=df_result, args=args)()
 
-        SaveResult(df=df_result, args=args)
+        SaveResult(df=df_result, args=args)()
 
         args = None
         print("Fitting is done!")

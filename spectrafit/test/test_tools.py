@@ -32,7 +32,7 @@ class TestPreProcessing:
             "smooth": None,
             "column": ["energy", "intensity"],
         }
-        assert_frame_equal(PreProcessing(self.df, args)(), self.df)
+        assert_frame_equal(PreProcessing(self.df, args)()[0], self.df)
 
     def test_energy_range_2(self) -> None:
         """Testing energy range for start energy only."""
@@ -45,7 +45,7 @@ class TestPreProcessing:
             "column": ["energy", "intensity"],
         }
         assert_frame_equal(
-            PreProcessing(self.df, args)(),
+            PreProcessing(self.df, args)()[0],
             self.df[(self.df["energy"] >= args["energy_start"])],
         )
 
@@ -60,7 +60,7 @@ class TestPreProcessing:
             "column": ["energy", "intensity"],
         }
         assert_frame_equal(
-            PreProcessing(self.df, args)(),
+            PreProcessing(self.df, args)()[0],
             self.df[(self.df["energy"] <= args["energy_stop"])],
         )
 
@@ -119,7 +119,35 @@ class TestPreProcessing:
             "column": ["energy", "intensity"],
         }
 
-        assert PreProcessing(self.df, args)()["energy"].min() == args["shift"]
+        assert PreProcessing(self.df, args)()[0]["energy"].min() == args["shift"]
+
+    def test_return_args(self) -> None:
+        """Testing return args."""
+        args = {
+            "energy_start": None,
+            "energy_stop": None,
+            "shift": None,
+            "oversampling": None,
+            "smooth": None,
+            "column": ["energy", "intensity"],
+        }
+        assert PreProcessing(self.df, args)()[1] == args
+
+    def test_keyword_fail(self) -> None:
+        """Testing energy range for no range."""
+        args = {
+            "energy_start": 2,
+            "energy_stop": 4,
+            "shift": None,
+            "oversampling": None,
+            "smooth": None,
+            "column": ["Energy", "intensity"],
+        }
+        with pytest.raises(SystemExit) as pytest_wrapped_e:
+            PreProcessing(self.df, args)()
+
+        assert pytest_wrapped_e.type == SystemExit
+        assert pytest_wrapped_e.value.code == 1
 
 
 class TestSaving:
@@ -144,13 +172,19 @@ class TestSaving:
     def test_save_all(self) -> None:
         """Testing save all for no file."""
         args = {
-            "outfile": "spectrafit/test/test_SaveResult",
+            "outfile": "spectrafit/test/export/test_SaveResult",
             "linear_correlation": self.df.to_dict(),
             "fit_insights": {"variables": self.df.to_dict()},
         }
         SaveResult(self.df, args)()
-        assert len(list(Path(".").glob("spectrafit/test/test_SaveResult*.json"))) == 1
-        assert len(list(Path(".").glob("spectrafit/test/test_SaveResult*.csv"))) == 3
+        assert (
+            len(list(Path(".").glob("spectrafit/test/export/test_SaveResult*.json")))
+            == 1
+        )
+        assert (
+            len(list(Path(".").glob("spectrafit/test/export/test_SaveResult*.csv")))
+            == 3
+        )
 
 
 class TestPostProcessing:

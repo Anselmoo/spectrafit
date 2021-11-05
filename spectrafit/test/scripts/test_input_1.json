@@ -2,17 +2,17 @@
   "settings": {
     "column": [0, 1],
     "decimal": ".",
-    "energy_start": 0,
+    "energy_start": -1,
     "energy_stop": 8,
     "header": null,
-    "infile": "spectrafit/test/test_data.txt",
-    "outfile": "spectrafit/test/fit_results",
+    "infile": "spectrafit/test/data/test_data.txt",
+    "outfile": "spectrafit/test/export/fit_results",
     "oversampling": false,
     "separator": "\t",
     "shift": 0,
     "smooth": 0,
-    "verbose": true,
-    "version": false
+    "verbose": false,
+    "version": true
   },
   "fitting": {
     "description": {
@@ -26,18 +26,11 @@
         "spectrum"
       ]
     },
+
     "parameters": {
-      "minimizer": {
-        "nan_policy": "propagate",
-        "calc_covar": true
-      },
-      "optimizer": {
-        "max_nfev": 1000,
-        "method": "leastsq"
-      },
-      "report": {
-        "min_correl": 0.0
-      },
+      "minimizer": { "nan_policy": "propagate", "calc_covar": true },
+      "optimizer": { "max_nfev": 1000, "method": "leastsq" },
+      "report": { "min_correl": 0.0 },
       "conf_interval": {
         "p_names": null,
         "sigmas": null,

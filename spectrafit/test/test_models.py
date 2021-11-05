@@ -37,41 +37,52 @@ class TestConstants:
 class TestNotSupported:
     """Test of not supported models."""
 
+    args = {
+        "column": ["energy", "intensity"],
+        "global": False,
+        "minimizer": {"method": "Nelder-Mead", "tol": 1e-6},
+        "optimizer": {"method": "Nelder-Mead", "tol": 1e-6},
+        "peaks": {
+            "1": {
+                "dummy": {
+                    "amplitude": {"max": 200, "min": 0, "vary": True, "value": 1},
+                    "center": {"max": 200, "min": -200, "vary": True, "value": 0},
+                    "fwhmg": {"max": 2.5, "min": 0.00002, "vary": True, "value": 0.1},
+                    "fwhml": {"max": 2.5, "min": 0.00001, "vary": True, "value": 1},
+                }
+            },
+        },
+    }
+    df = pd.DataFrame(
+        {
+            "energy": np.arange(10),
+            "intensity": np.random.random_sample((10,)),
+        }
+    )
+
     def test_solver_model_exit(self):
         """Exit-Test of solver_model."""
-        params = Parameters()
-        params.add("dummy_amplitude_", value=1.0)
         with pytest.raises(SystemExit) as pytest_wrapped_e:
             SolverModels(
-                params=params,
-                args={
-                    "column": ["energy", "intensity"],
-                    "global": False,
-                    "minimizer": {"method": "Nelder-Mead", "tol": 1e-6},
-                    "optimizer": {"method": "Nelder-Mead", "tol": 1e-6},
-                },
-                df=pd.DataFrame(
-                    {
-                        "energy": np.arange(10),
-                        "intensity": np.random.random_sample((10,)),
-                    }
-                ),
+                df=self.df, args=self.args
             )().will_exit_somewhere_down_the_stack()
+
         assert pytest_wrapped_e.type == SystemExit
-        assert pytest_wrapped_e.value.code == "dummy_amplitude_ is not supported"
+        assert pytest_wrapped_e.value.code == "dummy_amplitude_1 is not supported"
 
     def test_calculated_model_exit(self):
         """Exit-Test of solver_model."""
         params = Parameters()
-        params.add("dummy_amplitude_", value=1.0)
+        params.add("dummy_amplitude_1", value=1.0)
         with pytest.raises(SystemExit) as pytest_wrapped_e:
             calculated_model(
                 params=params,
-                x=np.arange(10, dtype=np.float),
-                df=pd.DataFrame({"intensity": np.random.random_sample((10,))}),
+                x=self.df["energy"].values,
+                df=self.df["intensity"].values,
+                global_fit=0,
             ).will_exit_somewhere_down_the_stack()
         assert pytest_wrapped_e.type == SystemExit
-        assert pytest_wrapped_e.value.code == "dummy_amplitude_ is not supported"
+        assert pytest_wrapped_e.value.code == "dummy_amplitude_1 is not supported"
 
 
 class TestModelParametersSolver:

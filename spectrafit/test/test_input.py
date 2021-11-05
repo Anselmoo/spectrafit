@@ -16,9 +16,9 @@ class TestCommandLineRunner:
         monkeypatch.setattr("builtins.input", lambda _: "y")
         ret = script_runner.run(
             "spectrafit",
-            "spectrafit/test/test_data.txt",
+            "spectrafit/test/data/test_data.txt",
             "-i",
-            "spectrafit/test/test_input_1.json",
+            "spectrafit/test/scripts/test_input_1.json",
         )
 
         assert ret.success
@@ -30,9 +30,9 @@ class TestCommandLineRunner:
         monkeypatch.setattr("builtins.input", lambda _: "n")
         ret = script_runner.run(
             "spectrafit",
-            "spectrafit/test/test_data.txt",
+            "spectrafit/test/data/test_data.txt",
             "-i",
-            "spectrafit/test/test_input_2.json",
+            "spectrafit/test/scripts/test_input_2.json",
         )
         assert ret.success
         assert ret.stderr == ""
@@ -42,9 +42,9 @@ class TestCommandLineRunner:
         monkeypatch.setattr("builtins.input", lambda _: "n")
         ret = script_runner.run(
             "spectrafit",
-            "spectrafit/test/test_data.txt",
+            "spectrafit/test/data/test_data.txt",
             "-i",
-            "spectrafit/test/test_input_7.json",
+            "spectrafit/test/scripts/test_input_7.json",
         )
         assert ret.success
         assert ret.stderr == ""
@@ -58,64 +58,70 @@ class TestFileFormat:
         monkeypatch.setattr("builtins.input", lambda _: "n")
         ret = script_runner.run(
             "spectrafit",
-            "spectrafit/test/test_data.csv",
+            "spectrafit/test/data/test_data.csv",
             "-i",
-            "spectrafit/test/test_input_3.json",
+            "spectrafit/test/scripts/test_input_3.json",
             "-o",
-            "spectrafit/test/result_json",
+            "spectrafit/test/export/result_json",
         )
         assert ret.success
         assert ret.stderr == ""
-        assert len(list(Path(".").glob("spectrafit/test/result_json*.json"))) == 1
-        assert len(list(Path(".").glob("spectrafit/test/result_json*.csv"))) == 3
+        assert (
+            len(list(Path(".").glob("spectrafit/test/export/result_json*.json"))) == 1
+        )
+        assert len(list(Path(".").glob("spectrafit/test/export/result_json*.csv"))) == 3
 
     def test_yml_input(self, monkeypatch, script_runner):
         """Testing yml support."""
         monkeypatch.setattr("builtins.input", lambda _: "n")
         ret = script_runner.run(
             "spectrafit",
-            "spectrafit/test/test_data.csv",
+            "spectrafit/test/data/test_data.csv",
             "-i",
-            "spectrafit/test/test_input_3.yml",
+            "spectrafit/test/scripts/test_input_3.yml",
             "-o",
-            "spectrafit/test/result_yml",
+            "spectrafit/test/export/result_yml",
         )
         assert ret.success
         assert ret.stderr == ""
-        assert len(list(Path(".").glob("spectrafit/test/result_yml*.json"))) == 1
-        assert len(list(Path(".").glob("spectrafit/test/result_yml*.csv"))) == 3
+        assert len(list(Path(".").glob("spectrafit/test/export/result_yml*.json"))) == 1
+        assert len(list(Path(".").glob("spectrafit/test/export/result_yml*.csv"))) == 3
 
     def test_yaml_input(self, monkeypatch, script_runner):
         """Testing yaml support."""
         monkeypatch.setattr("builtins.input", lambda _: "n")
         ret = script_runner.run(
             "spectrafit",
-            "spectrafit/test/test_data.csv",
+            "spectrafit/test/data/test_data.csv",
             "-i",
-            "spectrafit/test/test_input_3.yaml",
+            "spectrafit/test/scripts/test_input_3.yaml",
             "-o",
-            "spectrafit/test/result_yaml",
+            "spectrafit/test/export/result_yaml",
         )
         assert ret.success
         assert ret.stderr == ""
-        assert len(list(Path(".").glob("spectrafit/test/result_yaml*.json"))) == 1
-        assert len(list(Path(".").glob("spectrafit/test/result_yaml*.csv"))) == 3
+        assert (
+            len(list(Path(".").glob("spectrafit/test/export/result_yaml*.json"))) == 1
+        )
+        assert len(list(Path(".").glob("spectrafit/test/export/result_yaml*.csv"))) == 3
 
     def test_toml_input(self, monkeypatch, script_runner):
         """Testing toml support."""
         monkeypatch.setattr("builtins.input", lambda _: "n")
         ret = script_runner.run(
             "spectrafit",
-            "spectrafit/test/test_data.csv",
+            "spectrafit/test/data/test_data.csv",
             "-i",
-            "spectrafit/test/test_input_3.toml",
+            "spectrafit/test/scripts/test_input_3.toml",
             "-o",
-            "spectrafit/test/result_toml",
+            "spectrafit/test/export/result_toml",
         )
         assert ret.success
         assert ret.stderr == ""
-        assert len(list(Path(".").glob("spectrafit/test/result_toml*.json"))) == 1
-        assert len(list(Path(".").glob("spectrafit/test/result_toml*.csv"))) == 3
+        assert (
+            len(list(Path(".").glob("spectrafit/test/export/result_toml*.json"))) == 1
+        )
+        assert len(list(Path(".").glob("spectrafit/test/export/result_toml*.csv"))) == 3
 
 
 class TestFileFormatOutput:
@@ -126,12 +132,14 @@ class TestFileFormatOutput:
         monkeypatch.setattr("builtins.input", lambda _: "n")
         _ = script_runner.run(
             "spectrafit",
-            "spectrafit/test/test_data.txt",
+            "spectrafit/test/data/test_data.txt",
             "-i",
-            "spectrafit/test/test_input_2.json",
+            "spectrafit/test/scripts/test_input_2.json",
         )
-        assert len(list(Path(".").glob("spectrafit/test/fit_results*.json"))) == 1
-        assert len(list(Path(".").glob("spectrafit/test/fit_results*.csv"))) == 3
+        assert (
+            len(list(Path(".").glob("spectrafit/test/export/fit_results*.json"))) == 1
+        )
+        assert len(list(Path(".").glob("spectrafit/test/export/fit_results*.csv"))) == 3
 
 
 class TestMoreFeatures:
@@ -142,9 +150,9 @@ class TestMoreFeatures:
         monkeypatch.setattr("builtins.input", lambda _: "n")
         ret = script_runner.run(
             "spectrafit",
-            "spectrafit/test/test_data.csv",
+            "spectrafit/test/data/test_data.csv",
             "-i",
-            "spectrafit/test/test_input_4.json",
+            "spectrafit/test/scripts/test_input_4.json",
         )
         assert ret.success
         assert ret.stderr == ""
@@ -154,18 +162,18 @@ class TestMoreFeatures:
         monkeypatch.setattr("builtins.input", lambda _: "n")
         ret = script_runner.run(
             "spectrafit",
-            "spectrafit/test/test_data.csv",
+            "spectrafit/test/data/test_data.csv",
             "-i",
-            "spectrafit/test/test_input_5.json",
+            "spectrafit/test/scripts/test_input_5.json",
             "-o",
-            "spectrafit/test/e0_result",
+            "spectrafit/test/export/e0_result",
             "-e0",
             "0.0",
         )
         assert ret.success
         assert ret.stderr == ""
 
-        df_test = pd.read_csv(Path("./spectrafit/test/e0_result_fit.csv"))
+        df_test = pd.read_csv(Path("./spectrafit/test/export/e0_result_fit.csv"))
         assert_almost_equal(df_test["energy"].min(), 0.0, decimal=0)
 
     def test_energyrange_e1(self, monkeypatch, script_runner):
@@ -173,11 +181,11 @@ class TestMoreFeatures:
         monkeypatch.setattr("builtins.input", lambda _: "n")
         ret = script_runner.run(
             "spectrafit",
-            "spectrafit/test/test_data.csv",
+            "spectrafit/test/data/test_data.csv",
             "-i",
-            "spectrafit/test/test_input_5.json",
+            "spectrafit/test/scripts/test_input_5.json",
             "-o",
-            "spectrafit/test/e1_result",
+            "spectrafit/test/export/e1_result",
             "--oversampling",
             "-e1",
             "5.0",
@@ -185,7 +193,7 @@ class TestMoreFeatures:
         assert ret.success
         assert ret.stderr == ""
 
-        df_test = pd.read_csv(Path("./spectrafit/test/e1_result_fit.csv"))
+        df_test = pd.read_csv(Path("./spectrafit/test/export/e1_result_fit.csv"))
         assert_almost_equal(df_test["energy"].max(), 5.0, decimal=0)
 
     def test_energyrange_e0e1(self, monkeypatch, script_runner):
@@ -193,11 +201,11 @@ class TestMoreFeatures:
         monkeypatch.setattr("builtins.input", lambda _: "n")
         ret = script_runner.run(
             "spectrafit",
-            "spectrafit/test/test_data.csv",
+            "spectrafit/test/data/test_data.csv",
             "-i",
-            "spectrafit/test/test_input_5.json",
+            "spectrafit/test/scripts/test_input_5.json",
             "-o",
-            "spectrafit/test/e0e1_result",
+            "spectrafit/test/export/e0e1_result",
             "--oversampling",
             "-e0",
             "0",
@@ -207,7 +215,7 @@ class TestMoreFeatures:
         assert ret.success
         assert ret.stderr == ""
 
-        df_test = pd.read_csv(Path("./spectrafit/test/e0e1_result_fit.csv"))
+        df_test = pd.read_csv(Path("./spectrafit/test/export/e0e1_result_fit.csv"))
         assert_almost_equal(df_test["energy"].max(), 5.0, decimal=0)
         assert_almost_equal(df_test["energy"].min(), 0.0, decimal=0)
 
@@ -216,9 +224,9 @@ class TestMoreFeatures:
         monkeypatch.setattr("builtins.input", lambda _: "n")
         ret = script_runner.run(
             "spectrafit",
-            "spectrafit/test/test_data.csv",
+            "spectrafit/test/data/test_data.csv",
             "-i",
-            "spectrafit/test/test_input_all_models.toml",
+            "spectrafit/test/scripts/test_input_all_models.toml",
         )
         assert ret.success
         assert ret.stderr == ""
@@ -226,10 +234,10 @@ class TestMoreFeatures:
     def test_not_allowed_input_1(self, monkeypatch, script_runner):
         """Testing test all models of spectrafit."""
         monkeypatch.setattr("builtins.input", lambda _: "n")
-        fname = "spectrafit/test/test_wrong.pp"
+        fname = "spectrafit/test/scripts/test_wrong.pp"
         ret = script_runner.run(
             "spectrafit",
-            "spectrafit/test/test_data.csv",
+            "spectrafit/test/data/test_data.csv",
             "-i",
             fname,
         )
@@ -242,12 +250,11 @@ class TestMoreFeatures:
     def test_not_allowed_input_2(self, monkeypatch, script_runner):
         """Testing missing mininizmer parameter in input."""
         monkeypatch.setattr("builtins.input", lambda _: "n")
-        fname = "spectrafit/test/test_missing_parameter_1.json"
         ret = script_runner.run(
             "spectrafit",
-            "spectrafit/test/test_data.csv",
+            "spectrafit/test/data/test_data.csv",
             "-i",
-            fname,
+            "spectrafit/test/scripts/test_missing_parameters_1.json",
         )
         assert not ret.success
         assert ret.stderr == "Missing 'minimizer' in 'parameters'!\n"
@@ -255,12 +262,11 @@ class TestMoreFeatures:
     def test_not_allowed_input_3(self, monkeypatch, script_runner):
         """Testing missing optimizer parameter in input."""
         monkeypatch.setattr("builtins.input", lambda _: "n")
-        fname = "spectrafit/test/test_missing_parameter_2.json"
         ret = script_runner.run(
             "spectrafit",
-            "spectrafit/test/test_data.csv",
+            "spectrafit/test/data/test_data.csv",
             "-i",
-            fname,
+            "spectrafit/test/scripts/test_missing_parameters_2.json",
         )
         assert not ret.success
         assert ret.stderr == "Missing key 'optimizer' in 'parameters'!\n"
@@ -281,16 +287,21 @@ class TestMoreFeatures:
         monkeypatch.setattr("builtins.input", lambda _: "n")
         ret = script_runner.run(
             "spectrafit",
-            "spectrafit/test/test_data.csv",
+            "spectrafit/test/data/test_data.csv",
             "-i",
-            "spectrafit/test/test_input_6.json",
+            "spectrafit/test/scripts/test_input_6.json",
             "-o",
-            "spectrafit/test/conf_interval_result",
+            "spectrafit/test/export/conf_interval_result",
         )
         assert ret.success
         assert ret.stderr == ""
         assert (
-            len(list(Path(".").glob("spectrafit/test/conf_interval_result*.json"))) == 1
+            len(
+                list(
+                    Path(".").glob("spectrafit/test/export/conf_interval_result*.json")
+                )
+            )
+            == 1
         )
 
     def test_get_no_errors(self, monkeypatch, script_runner):
@@ -298,36 +309,29 @@ class TestMoreFeatures:
         monkeypatch.setattr("builtins.input", lambda _: "n")
         ret = script_runner.run(
             "spectrafit",
-            "spectrafit/test/test_data.csv",
+            "spectrafit/test/data/test_data.csv",
             "-i",
-            "spectrafit/test/test_input_8.json",
+            "spectrafit/test/scripts/test_input_8.json",
         )
         assert ret.success
 
-    def test_load_global(self, monkeypatch, script_runner):
+    def test_load_noglobal(self, monkeypatch, script_runner):
         """Testing for no errorbars for spectrafit."""
         monkeypatch.setattr("builtins.input", lambda _: "n")
         ret = script_runner.run(
             "spectrafit",
-            "spectrafit/test/test_data.csv",
+            "_",
             "-i",
-            "spectrafit/test/test_input_8.json",
+            "spectrafit/test/scripts/test_input_8.json",
             "-g",
+            "0",
         )
         assert ret.success
 
     def test_non_numeric_data(self, monkeypatch, script_runner):
         """Testing missing mininizmer parameter in input."""
         monkeypatch.setattr("builtins.input", lambda _: "n")
-        fname = "spectrafit/test/test_input_9.json"
         ret = script_runner.run(
-            "spectrafit",
-            "_",
-            "-i",
-            fname,
+            "spectrafit", "_", "-i", "spectrafit/test/scripts/test_input_9.json"
         )
         assert not ret.success
-        assert ret.stderr == (
-            "Error: could not convert string to float: 'cc' ->"
-            " Dataframe contains non numeric data!!\n"
-        )
