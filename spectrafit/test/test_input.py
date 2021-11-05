@@ -16,7 +16,7 @@ class TestCommandLineRunner:
         monkeypatch.setattr("builtins.input", lambda _: "y")
         ret = script_runner.run(
             "spectrafit",
-            "spectrafit/test/data/test_data.txt",
+            "_",
             "-i",
             "spectrafit/test/scripts/test_input_1.json",
         )
@@ -30,7 +30,7 @@ class TestCommandLineRunner:
         monkeypatch.setattr("builtins.input", lambda _: "n")
         ret = script_runner.run(
             "spectrafit",
-            "spectrafit/test/data/test_data.txt",
+            "_",
             "-i",
             "spectrafit/test/scripts/test_input_2.json",
         )
@@ -42,7 +42,7 @@ class TestCommandLineRunner:
         monkeypatch.setattr("builtins.input", lambda _: "n")
         ret = script_runner.run(
             "spectrafit",
-            "spectrafit/test/data/test_data.txt",
+            "_",
             "-i",
             "spectrafit/test/scripts/test_input_7.json",
         )
@@ -58,7 +58,7 @@ class TestFileFormat:
         monkeypatch.setattr("builtins.input", lambda _: "n")
         ret = script_runner.run(
             "spectrafit",
-            "spectrafit/test/data/test_data.csv",
+            "_",
             "-i",
             "spectrafit/test/scripts/test_input_3.json",
             "-o",
@@ -76,7 +76,7 @@ class TestFileFormat:
         monkeypatch.setattr("builtins.input", lambda _: "n")
         ret = script_runner.run(
             "spectrafit",
-            "spectrafit/test/data/test_data.csv",
+            "_",
             "-i",
             "spectrafit/test/scripts/test_input_3.yml",
             "-o",
@@ -92,7 +92,7 @@ class TestFileFormat:
         monkeypatch.setattr("builtins.input", lambda _: "n")
         ret = script_runner.run(
             "spectrafit",
-            "spectrafit/test/data/test_data.csv",
+            "_",
             "-i",
             "spectrafit/test/scripts/test_input_3.yaml",
             "-o",
@@ -110,7 +110,7 @@ class TestFileFormat:
         monkeypatch.setattr("builtins.input", lambda _: "n")
         ret = script_runner.run(
             "spectrafit",
-            "spectrafit/test/data/test_data.csv",
+            "_",
             "-i",
             "spectrafit/test/scripts/test_input_3.toml",
             "-o",
@@ -132,7 +132,7 @@ class TestFileFormatOutput:
         monkeypatch.setattr("builtins.input", lambda _: "n")
         _ = script_runner.run(
             "spectrafit",
-            "spectrafit/test/data/test_data.txt",
+            "_",
             "-i",
             "spectrafit/test/scripts/test_input_2.json",
         )
@@ -150,7 +150,7 @@ class TestMoreFeatures:
         monkeypatch.setattr("builtins.input", lambda _: "n")
         ret = script_runner.run(
             "spectrafit",
-            "spectrafit/test/data/test_data.csv",
+            "_",
             "-i",
             "spectrafit/test/scripts/test_input_4.json",
         )
@@ -162,7 +162,7 @@ class TestMoreFeatures:
         monkeypatch.setattr("builtins.input", lambda _: "n")
         ret = script_runner.run(
             "spectrafit",
-            "spectrafit/test/data/test_data.csv",
+            "_",
             "-i",
             "spectrafit/test/scripts/test_input_5.json",
             "-o",
@@ -181,7 +181,7 @@ class TestMoreFeatures:
         monkeypatch.setattr("builtins.input", lambda _: "n")
         ret = script_runner.run(
             "spectrafit",
-            "spectrafit/test/data/test_data.csv",
+            "_",
             "-i",
             "spectrafit/test/scripts/test_input_5.json",
             "-o",
@@ -201,7 +201,7 @@ class TestMoreFeatures:
         monkeypatch.setattr("builtins.input", lambda _: "n")
         ret = script_runner.run(
             "spectrafit",
-            "spectrafit/test/data/test_data.csv",
+            "_",
             "-i",
             "spectrafit/test/scripts/test_input_5.json",
             "-o",
@@ -224,7 +224,7 @@ class TestMoreFeatures:
         monkeypatch.setattr("builtins.input", lambda _: "n")
         ret = script_runner.run(
             "spectrafit",
-            "spectrafit/test/data/test_data.csv",
+            "_",
             "-i",
             "spectrafit/test/scripts/test_input_all_models.toml",
         )
@@ -237,7 +237,7 @@ class TestMoreFeatures:
         fname = "spectrafit/test/scripts/test_wrong.pp"
         ret = script_runner.run(
             "spectrafit",
-            "spectrafit/test/data/test_data.csv",
+            "spectrafit/test/import/test_data.csv",
             "-i",
             fname,
         )
@@ -252,7 +252,7 @@ class TestMoreFeatures:
         monkeypatch.setattr("builtins.input", lambda _: "n")
         ret = script_runner.run(
             "spectrafit",
-            "spectrafit/test/data/test_data.csv",
+            "_",
             "-i",
             "spectrafit/test/scripts/test_missing_parameters_1.json",
         )
@@ -264,7 +264,7 @@ class TestMoreFeatures:
         monkeypatch.setattr("builtins.input", lambda _: "n")
         ret = script_runner.run(
             "spectrafit",
-            "spectrafit/test/data/test_data.csv",
+            "_",
             "-i",
             "spectrafit/test/scripts/test_missing_parameters_2.json",
         )
@@ -287,7 +287,7 @@ class TestMoreFeatures:
         monkeypatch.setattr("builtins.input", lambda _: "n")
         ret = script_runner.run(
             "spectrafit",
-            "spectrafit/test/data/test_data.csv",
+            "_",
             "-i",
             "spectrafit/test/scripts/test_input_6.json",
             "-o",
@@ -309,7 +309,7 @@ class TestMoreFeatures:
         monkeypatch.setattr("builtins.input", lambda _: "n")
         ret = script_runner.run(
             "spectrafit",
-            "spectrafit/test/data/test_data.csv",
+            "_",
             "-i",
             "spectrafit/test/scripts/test_input_8.json",
         )

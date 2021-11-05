@@ -3,7 +3,7 @@
     "column": ["Energy", "Intensity"],
     "decimal": ".",
     "header": 0,
-    "infile": "spectrafit/test/data/test_data.csv",
+    "infile": "spectrafit/test/import/test_data.csv",
     "separator": ",",
     "shift": 0.2,
     "noplot": true

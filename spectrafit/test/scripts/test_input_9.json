@@ -5,7 +5,7 @@
     "energy_start": -2,
     "energy_stop": 2,
     "header": null,
-    "infile": "spectrafit/test/data/test_abc.txt",
+    "infile": "spectrafit/test/import/test_abc.txt",
     "outfile": "spectrafit/test/export/fit_results",
     "oversampling": false,
     "separator": "\t",
