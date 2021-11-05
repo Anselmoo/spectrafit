@@ -136,23 +136,21 @@ class PreProcessing:
             pd.DataFrame: DataFrame containing the `optimized` input data
                  (`x` and `data`), which are oversampled by the factor of 5.
         """
-        if args["oversampling"]:
-            x_values = np.linspace(
-                df[args["column"][0]].min(),
-                df[args["column"][0]].max(),
-                5 * df.shape[0],
-            )
-            return pd.DataFrame(
-                {
-                    args["column"][0]: x_values,
-                    args["column"][1]: np.interp(
-                        x_values,
-                        df[args["column"][0]].values,
-                        df[args["column"][1]].values,
-                    ),
-                }
-            )
-        return df
+        x_values = np.linspace(
+            df[args["column"][0]].min(),
+            df[args["column"][0]].max(),
+            5 * df.shape[0],
+        )
+        return pd.DataFrame(
+            {
+                args["column"][0]: x_values,
+                args["column"][1]: np.interp(
+                    x_values,
+                    df[args["column"][0]].values,
+                    df[args["column"][1]].values,
+                ),
+            }
+        )
 
     @staticmethod
     def intensity_smooth(df: pd.DataFrame, args: Dict[str, Any]) -> pd.DataFrame:

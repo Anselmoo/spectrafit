@@ -581,7 +581,6 @@ def pseudovoigt(
         + fwhml ** 5,
         0.25,
     )
-    # print(center, fwhmg, fwhml, f)
     n = 1.36603 * (fwhml / f) - 0.47719 * (fwhml / f) ** 2 + 0.11116 * (fwhml / f) ** 3
     return n * lorentzian(x, amplitude, center, fwhml) + (1 - n) * gaussian(
         x, amplitude, center, fwhmg
