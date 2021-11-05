@@ -3,7 +3,7 @@
     "column": ["Energy"],
     "decimal": ".",
     "header": 0,
-    "infile": "spectrafit/test/test_data_global_2.csv",
+    "infile": "spectrafit/test/test_data_global_3.csv",
     "oversampling": false,
     "separator": ",",
     "shift": 0.2,
