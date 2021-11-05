@@ -31,7 +31,10 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Chemistry",
     "Topic :: Scientific/Engineering :: Information Analysis"
 ]
-include = ["examples/"]
+include = [
+    { path = "spectrafit/test/", format = "sdist" },
+    { path = "examples/", format = "sdist" }
+]
 exclude = ["docs/", "tools/"]
 
 [tool.poetry.dependencies]
@@ -78,7 +81,6 @@ mkdocs-literate-nav = "^0.4.0"
 mkdocs-section-index = "^0.3.2"
 pytest-xdist = "^2.3.0"
 pytest-plt = "^1.1.0"
-
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
