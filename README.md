@@ -24,8 +24,8 @@ Now, it is completely rewritten and is more flexible.
 - Using established and advanced solver methods
 - Extensibility of the fitting function
 - Guarantee traceability of the fitting results
-- Saving all results for publications in a `CSV`-format
-- Saving all results in a NoSQL-format (`JSON`) for project management
+- Saving all results in a _SQL-like-format_ (`CSV`) for publications
+- Saving all results in a _NoSQL-like-format_ (`JSON`) for project management
 - Having an API interface for Graph-databases
 
 ## Installation:
