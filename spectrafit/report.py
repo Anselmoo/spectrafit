@@ -127,62 +127,6 @@ def fit_report_as_dict(inpars: minimize, modelpars: dict = None) -> dict:
     return buffer
 
 
-def printing_regular_mode(
-    args: dict, result: Any, minimizer: Minimizer, correlation: pd.DataFrame
-) -> None:
-    """Print the fitting results in the regular mode.
-
-    Args:
-        args (Dict[str,Any]): The input file arguments as a dictionary with additional
-             information beyond the command line arguments.
-        result (Any): The lmfit `results` as a kind of result based class.
-        minimizer (Minimizer): The lmfit `Minimizer`-class as a general minimizer for
-             curve fitting and optimization.
-        correlation (pd.DataFrame): The correlation results of the global fit as pandas
-             DataFrame.
-    """
-    print("\nStatistic:\n")
-    print(
-        tabulate(
-            pd.DataFrame.from_dict(args["data_statistic"]),
-            headers="keys",
-            tablefmt="fancy_grid",
-            floatfmt=".2f",
-        )
-    )
-    print("\nFit Results and Insights:\n")
-    print(report_fit(result, modelpars=result.params, **args["report"]))
-    if args["conf_interval"]:
-        print("\nConfidence Interval:\n")
-        try:
-            report_ci(conf_interval(minimizer, result, **args["conf_interval"]))
-        except MinimizerException as exc:
-            print(f"Error: {exc} -> No confidence interval could be calculated!")
-            args["confidence_interval"] = None
-    print("\nOverall Linear-Correlation:\n")
-    print(tabulate(correlation, headers="keys", tablefmt="fancy_grid", floatfmt=".2f"))
-
-
-def printing_verbose_mode(args: dict) -> None:
-    """Print all results in verbose mode.
-
-    Args:
-        args (Dict[str,Any]): The input file arguments as a dictionary with additional
-             information beyond the command line arguments.
-    """
-    print("\nStatistic:\n")
-    pp.pprint(args["data_statistic"])
-    print("Input Parameter:\n")
-    pp.pprint(args)
-    print("\nFit Results and Insights:\n")
-    pp.pprint(args["fit_insights"])
-    if args["conf_interval"]:
-        print("\nConfidence Interval:\n")
-        pp.pprint(args["confidence_interval"])
-    print("\nOverall Linear-Correlation:\n")
-    pp.pprint(args["linear_correlation"])
-
-
 class PrintingResults:
     """Print the results of the fitting process."""
 
