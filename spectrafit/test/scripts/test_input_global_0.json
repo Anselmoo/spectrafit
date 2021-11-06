@@ -1,19 +1,18 @@
 {
   "settings": {
-    "column": ["Energy", "Noisy_Intensity"],
+    "column": ["energy", "y_1"],
     "decimal": ".",
-    "energy_start": 0,
-    "energy_stop": 8,
     "header": 0,
-    "infile": "spectrafit/test/test_data.csv",
-    "outfile": "fit_results",
-    "oversampling": true,
+    "infile": "spectrafit/test/import/test_data_global_3.csv",
+    "outfile": "spectrafit/test/export/global_fit_results_0",
+    "oversampling": false,
     "separator": ",",
     "shift": 0.2,
-    "smooth": 4,
+    "smooth": false,
     "verbose": false,
     "version": false,
-    "noplot": true
+    "noplot": false,
+    "global": 0
   },
   "fitting": {
     "description": {
@@ -29,62 +28,63 @@
     },
 
     "parameters": {
-      "minimizer": { "nan_policy": "propagate", "calc_covar": true },
-      "optimizer": { "max_nfev": 1, "method": "leastsq" }
+      "minimizer": { "nan_policy": "propagate", "calc_covar": false },
+      "optimizer": { "max_nfev": 1000, "method": "leastsq" },
+      "report": { "min_correl": 0.0 }
     },
     "peaks": {
       "1": {
         "pseudovoigt": {
           "amplitude": {
-            "max": 2,
+            "max": 200,
             "min": 0,
             "vary": true,
             "value": 1
           },
           "center": {
-            "max": 2,
-            "min": -2,
+            "max": 3,
+            "min": 0,
             "vary": true,
-            "value": 0
+            "value": 1.25
           },
           "fwhmg": {
-            "max": 0.1,
-            "min": 0.02,
+            "max": 25,
+            "min": 0.00002,
             "vary": true,
-            "value": 0.01
+            "value": 0.1
           },
           "fwhml": {
-            "max": 0.1,
-            "min": 0.01,
+            "max": 25,
+            "min": 0.00001,
             "vary": true,
-            "value": 0.01
+            "value": 1
           }
         }
       },
       "2": {
         "pseudovoigt": {
           "amplitude": {
-            "max": 2,
+            "max": 200,
             "min": 0,
             "vary": true,
             "value": 1
           },
           "center": {
-            "max": 2,
-            "min": -2,
+            "max": 8,
+            "min": 2,
             "vary": true,
-            "value": 0
+            "value": 5
           },
           "fwhmg": {
-            "max": 0.1,
-            "min": 0.02,
-            "vary": false,
-            "value": 0.01
+            "max": 25,
+            "min": 0.00002,
+            "vary": true,
+            "value": 1.0
           },
           "fwhml": {
-            "max": 0.1,
-            "min": 0.01,
-            "vary": false,
+            "max": 25,
+            "min": 0.0001,
+            "vary": true,
             "value": 0.01
           }
         }

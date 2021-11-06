@@ -1,0 +1,102 @@
+{
+  "settings": {
+    "column": ["Energy", "Noisy_Intensity"],
+    "decimal": ".",
+    "energy_start": -1,
+    "energy_stop": 1.0,
+    "header": 0,
+    "infile": "spectrafit/test/import/test_data.csv",
+    "oversampling": true,
+    "separator": ",",
+    "shift": 0.2,
+    "smooth": 4,
+    "verbose": false,
+    "version": false,
+    "noplot": false
+  },
+  "fitting": {
+    "description": {
+      "project_name": "Template",
+      "project_details": "Template for testing",
+      "keywords": [
+        "2D-Spectra",
+        "fitting",
+        "curve-fitting",
+        "peak-fitting",
+        "spectrum"
+      ]
+    },
+
+    "parameters": {
+      "minimizer": { "nan_policy": "propagate", "calc_covar": false },
+      "optimizer": { "max_nfev": 1000, "method": "leastsq" },
+      "report": { "min_correl": 0.0 },
+      "conf_interval": {
+        "p_names": null,
+        "sigmas": null,
+        "trace": false,
+        "maxiter": 200,
+        "verbose": false,
+        "prob_func": null
+      }
+    },
+    "peaks": {
+      "1": {
+        "pseudovoigt": {
+          "amplitude": {
+            "max": 200,
+            "min": 0,
+            "vary": true,
+            "value": 1
+          },
+          "center": {
+            "max": 200,
+            "min": -200,
+            "vary": true,
+            "value": 0
+          },
+          "fwhmg": {
+            "max": 2.5,
+            "min": 0.00002,
+            "vary": true,
+            "value": 0.1
+          },
+          "fwhml": {
+            "max": 2.5,
+            "min": 0.00001,
+            "vary": true,
+            "value": 1
+          }
+        }
+      },
+      "2": {
+        "pseudovoigt": {
+          "amplitude": {
+            "max": 200,
+            "min": 0,
+            "vary": true,
+            "value": 1
+          },
+          "center": {
+            "max": 200,
+            "min": -200,
+            "vary": true,
+            "value": 0
+          },
+          "fwhmg": {
+            "max": 2.5,
+            "min": 0.00002,
+            "vary": true,
+            "value": 1.0
+          },
+          "fwhml": {
+            "max": 2.5,
+            "min": 0.0001,
+            "vary": true,
+            "value": 0.01
+          }
+        }
+      }
+    }
+  }
+}

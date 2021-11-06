@@ -1,38 +1,25 @@
 """SpectraFit, the command line tool for fitting."""
 import argparse
-import json
 
 from datetime import datetime
 from getpass import getuser
-from pathlib import Path
 from socket import gethostname
 from typing import Any
-from typing import MutableMapping
+from typing import Dict
 from typing import Tuple
 from uuid import uuid4
 
-import numpy as np
 import pandas as pd
-import toml
-import yaml
 
-from lmfit import Minimizer
-from lmfit import Parameters
-from lmfit import conf_interval
-from lmfit.minimizer import MinimizerException
 from spectrafit import __version__
-from spectrafit.models import calculated_model
-from spectrafit.models import solver_model
-from spectrafit.plotting import plot_spectra
-from spectrafit.report import fit_report_as_dict
-from spectrafit.report import printing_regular_mode
-from spectrafit.report import printing_verbose_mode
-from spectrafit.tools import energy_range
-from spectrafit.tools import energy_shift
-from spectrafit.tools import intensity_smooth
-from spectrafit.tools import oversampling
-from spectrafit.tools import save_as_csv
-from spectrafit.tools import save_as_json
+from spectrafit.models import SolverModels
+from spectrafit.plotting import PlotSpectra
+from spectrafit.report import PrintingResults
+from spectrafit.tools import PostProcessing
+from spectrafit.tools import PreProcessing
+from spectrafit.tools import SaveResult
+from spectrafit.tools import load_data
+from spectrafit.tools import read_input_file
 
 
 def get_args() -> dict:
@@ -150,71 +137,29 @@ def get_args() -> dict:
         help="Display the initial configuration parameters as a dictionary.",
         action="store_true",
     )
+    parser.add_argument(
+        "-g",
+        "--global",
+        type=int,
+        default=0,
+        choices=[0, 1, 2],
+        help=(
+            "Perform a global fit over the complete dataframe. The options are '0' "
+            "for classic fit (default). The option '1' for global fitting with "
+            "auto-definition of the peaks depending on the column size and '2' for "
+            "self-defined global fitting routines."
+        ),
+    )
     return vars(parser.parse_args())
 
 
-def get_parameters(args: dict) -> dict:
-    """Transforming the input parameters to a params-dictionary.
+def command_line_runner(args: Dict[str, Any] = None) -> None:
+    """Run spectrafit from the command line.
 
     Args:
-        args (dict): The input file arguments as a dictionary with additional
-             information beyond the command line arguments.
-
-    Returns:
-        dict: Transformed the pre-defined peaks in the `args` to the params dictionary
-             of the lmfit-`minimizer`.
-    """
-    params = Parameters()
-
-    for key_1, value_1 in args["peaks"].items():
-        for key_2, value_2 in value_1.items():
-            for key_3, value_3 in value_2.items():
-                params.add(f"{key_2}_{key_3}_{key_1}", **value_3)
-    return params
-
-
-def read_input_file(fname: str) -> MutableMapping[str, Any]:
-    """Read the input file.
-
-    Read the input file as `toml`, `json`, or `yaml` files
-    and return as a dictionary.
-
-    Args:
-        fname (str): Name of the input file.
-
-    Raises:
-        SystemExit: If the input file is not supported.
-
-    Returns:
-        dict: Return the input file arguments as a dictionary with additional
-             information beyond the command line arguments.
-
-    """
-    _fname = Path(fname)
-
-    if _fname.suffix == ".toml":
-        with open(_fname, "r") as f:
-            args = toml.load(fname)
-    elif _fname.suffix == ".json":
-        with open(_fname, "r") as f:
-            args = json.load(f)
-    elif _fname.suffix in [".yaml", ".yml"]:
-        with open(_fname, "r") as f:
-            args = yaml.load(f, Loader=yaml.FullLoader)
-    else:
-        raise SystemExit(
-            f"ERROR: Input file {fname} has not supported file format.\n"
-            "Supported fileformats are: '*.json', '*.yaml', and '*.toml'"
-        )
-    return args
-
-
-def command_line_runner(args: dict = None) -> None:
-    """Running spectrafit from the command line.
-
-    Args:
-        args (dict, optional): The input file arguments as a dictionary with additional
-             information beyond the command line arguments. Defaults to None.
+        args (Dict[str, Any], optional): The input file arguments as a
+             dictionary with additional information beyond the command line arguments.
+             Defaults to None.
     """
     while True:
         if not args:
@@ -222,30 +167,14 @@ def command_line_runner(args: dict = None) -> None:
         if args["version"]:
             print(f"Currently used version is: {__version__}")
             return
-        try:
-            df = pd.read_csv(
-                Path(args["infile"]),
-                sep=args["separator"],
-                header=args["header"],
-                usecols=args["column"],
-                dtype=np.float64,
-                decimal=args["decimal"],
-            )
+        df = load_data(args)
 
-            args["data_statistic"] = df.describe(
-                percentiles=np.arange(0.1, 1, 0.1)
-            ).to_dict()
-
-        except ValueError as exc:
-            print(f"Error: {exc} -> Dataframe contains non numeric data!")
-            return
         print("Lets start fitting ...")
         df_result, args = fitting_routine(df=df, args=args)
-        args["fit_result"] = df_result.to_dict(orient="list")
-        if not args["noplot"]:
-            plot_spectra(df=df_result)
-        save_as_json(args)
-        save_as_csv(df=df_result, args=args)
+
+        PlotSpectra(df=df_result, args=args)()
+
+        SaveResult(df=df_result, args=args)()
 
         args = None
         print("Fitting is done!")
@@ -259,15 +188,15 @@ def command_line_runner(args: dict = None) -> None:
             print("You should enter either 'y' or 'n'.")
 
 
-def extracted_from_command_line_runner() -> dict:
-    """Extracting the input commands from the terminal.
+def extracted_from_command_line_runner() -> Dict[str, Any]:
+    """Extract the input commands from the terminal.
 
     Raises:
         KeyError: Missing key `minimizer` in `parameters`.
         KeyError: Missing key `optimizer` in `parameters`.
 
     Returns:
-        dict: The input file arguments as a dictionary with additional
+        Dict[str, Any]: The input file arguments as a dictionary with additional
              information beyond the command line arguments.
     """
     result = get_args()
@@ -308,15 +237,17 @@ def extracted_from_command_line_runner() -> dict:
     return result
 
 
-def fitting_routine(df: pd.DataFrame, args: dict) -> Tuple[pd.DataFrame, dict]:
-    """Running the fitting algorithm.
+def fitting_routine(
+    df: pd.DataFrame, args: Dict[str, Any]
+) -> Tuple[pd.DataFrame, dict]:
+    """Run the fitting algorithm.
 
     Args:
         df (pd.DataFrame): DataFrame containing the input data (`x` and `data`),
              as well as the best fit and the corresponding residuum. Hence, it will be
              extended by the single contribution of the model.
-        args (dict): The input file arguments as a dictionary with additional
-             information beyond the command line arguments.
+        args (Dict[str, Any]): The input file arguments as a dictionary with
+             additional information beyond the command line arguments.
 
     Returns:
         Tuple[pd.DataFrame, dict]: Can be both a DataFrame or a dictionary, which is
@@ -324,40 +255,13 @@ def fitting_routine(df: pd.DataFrame, args: dict) -> Tuple[pd.DataFrame, dict]:
              the corresponding residuum. Hence, it will be extended by the single
              contribution of the model.
     """
-    df = energy_range(df=df, args=args)
-    df = energy_shift(df=df, args=args)
-    df = oversampling(df=df, args=args)
-    df = intensity_smooth(df=df, args=args)
+    df, args = PreProcessing(df=df, args=args)()
 
-    params = get_parameters(args=args)
-    mini = Minimizer(
-        solver_model,
-        params,
-        fcn_args=(df[args["column"][0]].values, df[args["column"][1]].values),
-        **args["minimizer"],
-    )
-    result = mini.minimize(**args["optimizer"])
-    args["fit_insights"] = fit_report_as_dict(result, modelpars=result.params)
-    if args["conf_interval"]:
-        try:
-            args["confidence_interval"] = conf_interval(
-                mini, result, **args["conf_interval"]
-            )
-        except MinimizerException as exc:
-            print(f"Error: {exc} -> No confidence interval could be calculated!")
-            args["confidence_interval"] = None
-    df = df.rename(
-        columns={args["column"][0]: "energy", args["column"][1]: "intensity"}
-    )
-    df["residual"] = result.residual
-    df["fit"] = df["intensity"].values + result.residual
-    df = calculated_model(params=result.params, x=df["energy"].values, df=df)
-    _corr = df.corr()
-    args["linear_correlation"] = _corr.to_dict()
-    if args["verbose"]:
-        printing_verbose_mode(args)
-    else:
-        printing_regular_mode(args, result=result, minimizer=mini, correlation=_corr)
+    minimizer, result = SolverModels(df=df, args=args)()
+
+    df, args = PostProcessing(df=df, args=args, minimizer=minimizer, result=result)()
+    PrintingResults(args=args, minimizer=minimizer, result=result)()
+
     return df, args
 
 

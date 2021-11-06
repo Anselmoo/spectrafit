@@ -1,11 +1,18 @@
 {
   "settings": {
-    "column": ["Energy", "Intensity"],
+    "column": ["Energy", "Noisy_Intensity"],
     "decimal": ".",
+    "energy_start": 0,
+    "energy_stop": 8,
     "header": 0,
-    "infile": "spectrafit/test/test_data.csv",
+    "infile": "spectrafit/test/import/test_data.csv",
+    "outfile": "fit_results",
+    "oversampling": true,
     "separator": ",",
     "shift": 0.2,
+    "smooth": 4,
+    "verbose": false,
+    "version": false,
     "noplot": true
   },
   "fitting": {
@@ -50,6 +57,34 @@
             "max": 0.1,
             "min": 0.01,
             "vary": true,
+            "value": 0.01
+          }
+        }
+      },
+      "2": {
+        "pseudovoigt": {
+          "amplitude": {
+            "max": 2,
+            "min": 0,
+            "vary": true,
+            "value": 1
+          },
+          "center": {
+            "max": 2,
+            "min": -2,
+            "vary": true,
+            "value": 0
+          },
+          "fwhmg": {
+            "max": 0.1,
+            "min": 0.02,
+            "vary": false,
+            "value": 0.01
+          },
+          "fwhml": {
+            "max": 0.1,
+            "min": 0.01,
+            "vary": false,
             "value": 0.01
           }
         }

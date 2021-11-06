@@ -2,16 +2,16 @@
   "settings": {
     "column": [0, 1],
     "decimal": ".",
-    "energy_start": 0,
-    "energy_stop": 8,
+    "energy_start": -1,
+    "energy_stop": 2,
     "header": null,
-    "infile": "spectrafit/test/test_data.txt",
-    "outfile": "spectrafit/test/fit_results",
+    "infile": "spectrafit/test/import/test_data.txt",
+    "outfile": "spectrafit/test/export/fit_results",
     "oversampling": false,
     "separator": "\t",
     "shift": 0,
     "smooth": 0,
-    "verbose": true,
+    "verbose": false,
     "version": false
   },
   "fitting": {
@@ -26,26 +26,11 @@
         "spectrum"
       ]
     },
+
     "parameters": {
-      "minimizer": {
-        "nan_policy": "propagate",
-        "calc_covar": true
-      },
-      "optimizer": {
-        "max_nfev": 1000,
-        "method": "leastsq"
-      },
-      "report": {
-        "min_correl": 0.0
-      },
-      "conf_interval": {
-        "p_names": null,
-        "sigmas": null,
-        "trace": false,
-        "maxiter": 200,
-        "verbose": false,
-        "prob_func": null
-      }
+      "minimizer": { "nan_policy": "propagate", "calc_covar": true },
+      "optimizer": { "max_nfev": 1000, "method": "leastsq" },
+      "report": { "min_correl": 0.0 }
     },
     "peaks": {
       "1": {
@@ -63,13 +48,13 @@
             "value": 0
           },
           "fwhmg": {
-            "max": 0.1,
+            "max": 0.4,
             "min": 0.02,
             "vary": true,
             "value": 0.01
           },
           "fwhml": {
-            "max": 0.1,
+            "max": 0.4,
             "min": 0.01,
             "vary": true,
             "value": 0.01
@@ -79,25 +64,19 @@
       "2": {
         "pseudovoigt": {
           "amplitude": {
-            "max": 2,
-            "min": 0,
-            "vary": true,
-            "value": 1
+            "expr": "pseudovoigt_amplitude_1"
           },
           "center": {
-            "max": 2,
-            "min": -2,
-            "vary": true,
-            "value": 0
+            "expr": "pseudovoigt_center_1 + 1.68"
           },
           "fwhmg": {
-            "max": 0.1,
+            "max": 0.5,
             "min": 0.02,
             "vary": true,
             "value": 0.01
           },
           "fwhml": {
-            "max": 0.1,
+            "max": 0.5,
             "min": 0.01,
             "vary": true,
             "value": 0.01

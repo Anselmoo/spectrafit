@@ -5,7 +5,7 @@
     "energy_start": -1,
     "energy_stop": 1.0,
     "header": 0,
-    "infile": "spectrafit/test/test_data.csv",
+    "infile": "spectrafit/test/import/test_data.csv",
     "oversampling": true,
     "separator": ",",
     "shift": 0.2,
@@ -28,7 +28,6 @@
     },
 
     "parameters": {
-      "minimizer": { "nan_policy": "propagate", "calc_covar": false },
       "optimizer": { "max_nfev": 1000, "method": "leastsq" },
       "report": { "min_correl": 0.0 },
       "conf_interval": {

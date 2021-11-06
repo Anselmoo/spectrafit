@@ -1,0 +1,96 @@
+{
+  "settings": {
+    "column": [0, 1],
+    "decimal": ".",
+    "energy_start": -2,
+    "energy_stop": 2,
+    "header": null,
+    "infile": "spectrafit/test/import/test_abc.txt",
+    "outfile": "spectrafit/test/export/fit_results",
+    "oversampling": false,
+    "separator": "\t",
+    "shift": 0,
+    "smooth": 0,
+    "verbose": true,
+    "version": false
+  },
+  "fitting": {
+    "description": {
+      "project_name": "Template",
+      "project_details": "Template for testing",
+      "keywords": [
+        "2D-Spectra",
+        "fitting",
+        "curve-fitting",
+        "peak-fitting",
+        "spectrum"
+      ]
+    },
+
+    "parameters": {
+      "minimizer": { "nan_policy": "propagate", "calc_covar": true },
+      "optimizer": { "method": "emcee" },
+      "report": { "min_correl": 0.0 },
+      "conf_interval": {
+        "p_names": null,
+        "sigmas": null,
+        "trace": false,
+        "maxiter": 200,
+        "verbose": false,
+        "prob_func": null
+      }
+    },
+    "peaks": {
+      "1": {
+        "pseudovoigt": {
+          "amplitude": {
+            "max": 0.25,
+            "min": 0.2,
+            "vary": true,
+            "value": 0.25
+          },
+          "center": {
+            "max": 2,
+            "min": -2,
+            "vary": false,
+            "value": 0
+          },
+          "fwhml": {
+            "max": 0.1,
+            "min": 0.02,
+            "vary": false,
+            "value": 0.01
+          },
+          "fwhmg": {
+            "max": 0.1,
+            "min": 0.01,
+            "vary": false,
+            "value": 0.01
+          }
+        }
+      },
+      "2": {
+        "gaussian": {
+          "amplitude": {
+            "max": 0.25,
+            "min": 0.2,
+            "vary": true,
+            "value": 0.25
+          },
+          "center": {
+            "max": 2,
+            "min": -2,
+            "vary": false,
+            "value": 0
+          },
+          "fwhmg": {
+            "max": 0.1,
+            "min": 0.01,
+            "vary": false,
+            "value": 0.01
+          }
+        }
+      }
+    }
+  }
+}

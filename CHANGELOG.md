@@ -8,6 +8,8 @@
 
 ---
 
+- Introduce the **Global-Fitting** option, which allows to fit the several
+  spectra with a single model.
 - Changed the input for **Pseudo-Voigt**:
   - _`fwhm_g`_ &#8594; **`fwhmg`**
   - _`fwhm_l`_ &#8594; **`fwhml`**

@@ -193,6 +193,145 @@ In case of advanced usage of `SpectraFit`, the following steps are necessary:
         features and `maxiter`. Consequently, the confidence interval calculations
         should be only used for the final fit to put the calculation time low.
 
+4.  The input file can be further extended by `expressions`, which are evaluated
+    during the fitting process. The `expressions` have to be defined as
+    attributes of the `fitting` object in the input file. It can be only contain
+    mathematical constraints or dependencies between different `peaks`; please
+    compare the docs of [lmfit.eval][9] and [docs][10]. The attributes are
+    defined by the keyword `expr` followd by the string, which can contain any
+    mathematical expression supported by Python.
+
+    !!! info "About the importance of expressions"
+
+        Using the `expr` attribute, the amplitude of the peak `2` can be defined
+         1 /3 of the amplitude of the peak `1`. In general, this expression mode
+         is very useful in cases of fitting relative dependencies like the
+         _L-edge X-ray Absorption Spectra_ (**L-XAS**), where are relative
+         dependencie between the **L_3** and **L_2** edge has to be defined.
+
+        ```json
+        "peaks": {
+              "1": {
+                "pseudovoigt": {
+                  "amplitude": {
+                    "max": 2,
+                    "min": 0,
+                    "vary": true,
+                    "value": 1
+                  },
+                  "center": {
+                    "max": 2,
+                    "min": -2,
+                    "vary": true,
+                    "value": 0
+                  },
+                  "fwhmg": {
+                    "max": 0.74,
+                    "min": 0.02,
+                    "vary": true,
+                    "value": 0.21
+                  },
+                  "fwhml": {
+                    "max": 0.74,
+                    "min": 0.01,
+                    "vary": true,
+                    "value": 0.21
+                  }
+                }
+              },
+              "2": {
+                "pseudovoigt": {
+                  "amplitude": {
+                    "expr": "pseudovoigt_amplitude_1 / 3"
+                  },
+                  "center": {
+                    "expr": "pseudovoigt_center_1 + 1.73"
+                  },
+                  "fwhmg": {
+                    "max": 0.5,
+                    "min": 0.02,
+                    "vary": true,
+                    "value": 0.01
+                  },
+                  "fwhml": {
+                    "max": 0.5,
+                    "min": 0.01,
+                    "vary": true,
+                    "value": 0.01
+                  }
+                }
+              },
+              "3": {
+                "constant": {
+                  "amplitude": {
+                    "max": 2,
+                    "min": 0.01,
+                    "vary": true,
+                    "value": 1
+                  }
+                }
+              },
+              "4": {
+                "gaussian": {
+                  "amplitude": {
+                    "max": 2,
+                    "min": 0,
+                    "vary": true,
+                    "value": 1
+                  },
+                  "center": {
+                    "expr": "pseudovoigt_center_2 + 0.35"
+                  },
+                  "fwhmg": {
+                    "max": 0.4,
+                    "min": 0.02,
+                    "vary": true,
+                    "value": 0.01
+                  }
+                }
+              }
+            }
+        ```
+
+5.  The input file as well as the command line interface can be turned into the
+    `global fitting` mode. The `global fitting` mode is useful when the fitting
+    several spectra with the same initial model. In case of using the
+    `global fitting` **mode = 1**, the `fitting` object has to be defined in the
+    same way like the local fitting model; via Input file
+
+        ```json
+              {
+              "settings": {
+                "column": ["energy"],
+                "decimal": ".",
+                "header": 0,
+                "infile": "data_global.csv",
+                "outfile": "example_6",
+                "oversampling": false,
+                "separator": ",",
+                "shift": 0.2,
+                "smooth": false,
+                "verbose": false,
+                "version": false,
+                "noplot": false,
+                "global": 1
+              },
+          ```
+
+    or via Command Line.
+
+          ```bash
+          spectrafit global_data.csv -i input.json -g 1
+          ```
+
+    For more info please see the [example section][11].
+
+    !!! danger "Correct Data Format for Global Fits"
+
+        For the correct fitting the data file has to contain only spectra data;
+        meaning `energy` and `intensity` columns. **No other columns are
+        allowed!!**
+
 ## Configurations
 
 In terms of the configuration of `SpectraFit`, configurations depends on
@@ -364,3 +503,6 @@ types.
 [7]: /spectrafit/interface/usage/#standard-usage
 [8]:
   https://lmfit.github.io/lmfit-py/fitting.html?highlight=minimizer#module-lmfit.minimizer
+[9]: https://lmfit.github.io/lmfit-py/constraints.html
+[10]: ../../doc/expression
+[11]: ../../examples/example6

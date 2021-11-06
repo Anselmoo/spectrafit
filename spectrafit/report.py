@@ -2,6 +2,7 @@
 import pprint
 
 from typing import Any
+from typing import Dict
 
 import numpy as np
 import pandas as pd
@@ -126,57 +127,84 @@ def fit_report_as_dict(inpars: minimize, modelpars: dict = None) -> dict:
     return buffer
 
 
-def printing_regular_mode(
-    args: dict, result: Any, minimizer: Minimizer, correlation: pd.DataFrame
-) -> None:
-    """Printing the fitting results in the regular mode.
+class PrintingResults:
+    """Print the results of the fitting process."""
 
-    Args:
-        args (dict): The input file arguments as a dictionary with additional
-             information beyond the command line arguments.
-        result (Any): The lmfit `results` as a kind of result based class.
-        minimizer (Minimizer): The lmfit `Minimizer`-class as a general minimizer for
-             curve fitting and optimization.
-        correlation (pd.DataFrame): The correlation results of the global fit as pandas
-             DataFrame.
-    """
-    print("\nStatistic:\n")
-    print(
-        tabulate(
-            pd.DataFrame.from_dict(args["data_statistic"]),
-            headers="keys",
-            tablefmt="fancy_grid",
-            floatfmt=".2f",
+    def __init__(
+        self,
+        args: Dict[str, Any],
+        result: Any,
+        minimizer: Minimizer,
+    ) -> None:
+        """Initialize the PrintingResults class.
+
+        Args:
+            args (Dict[str,Any]): The input file arguments as a dictionary with
+                 additional information beyond the command line arguments.
+            result (Any): The lmfit `results` as a kind of result based class.
+            minimizer (Minimizer): The lmfit `Minimizer`-class as a general minimizer
+                 for curve fitting and optimization.
+        """
+        self.args = args
+        self.result = result
+        self.minimizer = minimizer
+        self.correlation = pd.DataFrame.from_dict(args["linear_correlation"])
+
+    def __call__(self) -> None:
+        """Print the results of the fitting process."""
+        if self.args["verbose"]:
+            self.printing_verbose_mode
+        else:
+            self.printing_regular_mode
+
+    @property
+    def printing_regular_mode(self) -> None:
+        """Print the fitting results in the regular mode."""
+        print("\nStatistic:\n")
+        print(
+            tabulate(
+                pd.DataFrame.from_dict(self.args["data_statistic"]),
+                headers="keys",
+                tablefmt="fancy_grid",
+                floatfmt=".2f",
+            )
         )
-    )
-    print("\nFit Results and Insights:\n")
-    print(report_fit(result, modelpars=result.params, **args["report"]))
-    if args["conf_interval"]:
-        print("\nConfidence Interval:\n")
-        try:
-            report_ci(conf_interval(minimizer, result, **args["conf_interval"]))
-        except MinimizerException as exc:
-            print(f"Error: {exc} -> No confidence interval could be calculated!")
-            args["confidence_interval"] = None
-    print("\nOverall Linear-Correlation:\n")
-    print(tabulate(correlation, headers="keys", tablefmt="fancy_grid", floatfmt=".2f"))
+        print("\nFit Results and Insights:\n")
+        print(
+            report_fit(self.result, modelpars=self.result.params, **self.args["report"])
+        )
+        if self.args["conf_interval"]:
+            print("\nConfidence Interval:\n")
+            try:
+                report_ci(
+                    conf_interval(
+                        self.minimizer, self.result, **self.args["conf_interval"]
+                    )
+                )
+            except MinimizerException as exc:
+                print(f"Error: {exc} -> No confidence interval could be calculated!")
+                self.args["confidence_interval"] = None
+        print("\nOverall Linear-Correlation:\n")
+        print(
+            tabulate(
+                pd.DataFrame.from_dict(self.args["linear_correlation"]),
+                headers="keys",
+                tablefmt="fancy_grid",
+                floatfmt=".2f",
+            )
+        )
 
-
-def printing_verbose_mode(args: dict) -> None:
-    """Printing all results in verbose mode.
-
-    Args:
-        args (dict): The input file arguments as a dictionary with additional
-             information beyond the command line arguments.
-    """
-    print("\nStatistic:\n")
-    pp.pprint(args["data_statistic"])
-    print("Input Parameter:\n")
-    pp.pprint(args)
-    print("\nFit Results and Insights:\n")
-    pp.pprint(args["fit_insights"])
-    if args["conf_interval"]:
-        print("\nConfidence Interval:\n")
-        pp.pprint(args["confidence_interval"])
-    print("\nOverall Linear-Correlation:\n")
-    pp.pprint(args["linear_correlation"])
+    @property
+    def printing_verbose_mode(self) -> None:
+        """Print all results in verbose mode."""
+        print("\nStatistic:\n")
+        pp.pprint(self.args["data_statistic"])
+        print("Input Parameter:\n")
+        pp.pprint(self.args)
+        print("\nFit Results and Insights:\n")
+        pp.pprint(self.args["fit_insights"])
+        if self.args["conf_interval"]:
+            print("\nConfidence Interval:\n")
+            pp.pprint(self.args["confidence_interval"])
+        print("\nOverall Linear-Correlation:\n")
+        pp.pprint(self.args["linear_correlation"])

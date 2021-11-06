@@ -188,7 +188,7 @@ different types of output files will be generated
 
          1. The input parameter including the file-name of the original data.
              ```json
-             "infile": "spectrafit/test/test_data.txt",
+             "infile": "reference_data.txt",
              "outfile": "fit_results",
              "input": "spectrafit/test/test_input_2.json",
              "oversampling": false,

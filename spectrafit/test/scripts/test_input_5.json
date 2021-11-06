@@ -1,0 +1,59 @@
+{
+  "settings": {
+    "column": ["Energy", "Intensity"],
+    "decimal": ".",
+    "header": 0,
+    "infile": "spectrafit/test/import/test_data.csv",
+    "separator": ",",
+    "shift": 0.2,
+    "noplot": true
+  },
+  "fitting": {
+    "description": {
+      "project_name": "Template",
+      "project_details": "Template for testing",
+      "keywords": [
+        "2D-Spectra",
+        "fitting",
+        "curve-fitting",
+        "peak-fitting",
+        "spectrum"
+      ]
+    },
+
+    "parameters": {
+      "minimizer": { "nan_policy": "propagate", "calc_covar": true },
+      "optimizer": { "max_nfev": 1, "method": "leastsq" }
+    },
+    "peaks": {
+      "1": {
+        "pseudovoigt": {
+          "amplitude": {
+            "max": 2,
+            "min": 0,
+            "vary": true,
+            "value": 1
+          },
+          "center": {
+            "max": 2,
+            "min": -2,
+            "vary": true,
+            "value": 0
+          },
+          "fwhmg": {
+            "max": 0.1,
+            "min": 0.02,
+            "vary": true,
+            "value": 0.01
+          },
+          "fwhml": {
+            "max": 0.1,
+            "min": 0.01,
+            "vary": true,
+            "value": 0.01
+          }
+        }
+      }
+    }
+  }
+}
