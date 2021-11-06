@@ -71,8 +71,9 @@ spectrafit data_file.txt input_file.json
 ```
 
 ```shell
-spectrafit -h
-usage: spectrafit [-h] [-o OUTFILE] [-i INPUT] [-ov] [-disp] [-e0 ENERGY_START] [-e1 ENERGY_STOP] [-s SMOOTH] [-sh SHIFT] [-c COLUMN COLUMN] [-sep {    ,,,;,:,|, ,s+}] [-dec {.,,}] [-hd HEADER] [-np] [-v] [-vb] infile
+usage: spectrafit [-h] [-o OUTFILE] [-i INPUT] [-ov] [-e0 ENERGY_START] [-e1 ENERGY_STOP] [-s SMOOTH] [-sh SHIFT]
+                  [-c COLUMN COLUMN] [-sep {	,,,;,:,|, ,s+}] [-dec {.,,}] [-hd HEADER] [-np] [-v] [-vb] [-g {0,1,2}]
+                  infile
 
 Fast Fitting Program for ascii txt files.
 
@@ -84,7 +85,8 @@ optional arguments:
   -o OUTFILE, --outfile OUTFILE
                         Filename for the export, default to set to 'spectrafit_results'.
   -i INPUT, --input INPUT
-                        Filename for the input parameter, default to set to 'fitting_input.toml'.Supported fileformats are: '*.json', '*.yml', '*.yaml', and '*.toml'
+                        Filename for the input parameter, default to set to 'fitting_input.toml'.Supported fileformats are:
+                        '*.json', '*.yml', '*.yaml', and '*.toml'
   -ov, --oversampling   Oversampling the spectra by using factor of 5; default to False.
   -e0 ENERGY_START, --energy_start ENERGY_START
                         Starting energy in eV; default to start of energy.
@@ -95,8 +97,9 @@ optional arguments:
   -sh SHIFT, --shift SHIFT
                         Constant applied energy shift; default to 0.0.
   -c COLUMN COLUMN, --column COLUMN COLUMN
-                        Selected columns for the energy- and intensity-values; default to 0 for energy (x-axis) and 1 for intensity (y-axis).
-  -sep {        ,,,;,:,|, ,s+}, --separator {   ,,,;,:,|, ,s+}
+                        Selected columns for the energy- and intensity-values; default to 0 for energy (x-axis) and 1 for
+                        intensity (y-axis).
+  -sep {	,,,;,:,|, ,s+}, --separator {	,,,;,:,|, ,s+}
                         Redefine the type of separator; default to ' '.
   -dec {.,,}, --decimal {.,,}
                         Type of decimal separator; default to '.'.
@@ -105,6 +108,10 @@ optional arguments:
   -np, --noplot         No plotting the spectra and the fit of `spectrafit`.
   -v, --version         Display the current version of `spectrafit`.
   -vb, --verbose        Display the initial configuration parameters as a dictionary.
+  -g {0,1,2}, --global {0,1,2}
+                        Perform a global fit over the complete dataframe. The options are '0' for classic fit (default). The
+                        option '1' for global fitting with auto-definition of the peaks depending on the column size and '2'
+                        for self-defined global fitting routines.
 ```
 
 ## Documentation:
