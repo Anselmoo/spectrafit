@@ -18,7 +18,7 @@ used for the following publication:
 
 Now, it is completely rewritten and is more flexible.
 
-## Scope:
+## Scope
 
 - Fitting of 2D data
 - Using established and advanced solver methods
@@ -28,7 +28,7 @@ Now, it is completely rewritten and is more flexible.
 - Saving all results in a _NoSQL-like-format_ (`JSON`) for project management
 - Having an API interface for Graph-databases
 
-## Installation:
+## Installation
 
 via pip:
 
@@ -40,7 +40,7 @@ pip install spectrafit
 pip install spectrafit --upgrade
 ```
 
-## Usage:
+## Usage
 
 `SpectraFit` needs as command line tool only two things:
 
@@ -61,33 +61,38 @@ workhorse for the fit optimization, which is macro wrapper based on:
 In case of `SpectraFit`, we have further extend the package by:
 
 1. [Pandas](https://pandas.pydata.org/)
-2. [Statsmodels](https://www.statsmodels.org/stable/index.html)
+2. [statsmodels](https://www.statsmodels.org/stable/index.html)
 3. [numdifftools](https://github.com/pbrod/numdifftools)
 4. [Matplotlib](https://matplotlib.org/) in combination with
    [Seaborn](https://seaborn.pydata.org/)
 
 ```shell
-spectrafit data_file.txt input_file.json
+spectrafit data_file.txt -i input_file.json
 ```
 
 ```shell
-usage: spectrafit [-h] [-o OUTFILE] [-i INPUT] [-ov] [-e0 ENERGY_START] [-e1 ENERGY_STOP] [-s SMOOTH] [-sh SHIFT]
-                  [-c COLUMN COLUMN] [-sep {	,,,;,:,|, ,s+}] [-dec {.,,}] [-hd HEADER] [-np] [-v] [-vb] [-g {0,1,2}]
+usage: spectrafit [-h] [-o OUTFILE] [-i INPUT] [-ov] [-e0 ENERGY_START]
+                  [-e1 ENERGY_STOP] [-s SMOOTH] [-sh SHIFT]
+                  [-c COLUMN COLUMN] [-sep {    ,,,;,:,|, ,s+}] [-dec {.,,}]
+                  [-hd HEADER] [-g {0,1,2}] [-auto] [-np] [-v] [-vb]
                   infile
 
 Fast Fitting Program for ascii txt files.
 
 positional arguments:
-  infile                Filename of the specta data
+  infile                Filename of the spectra data
 
 optional arguments:
   -h, --help            show this help message and exit
   -o OUTFILE, --outfile OUTFILE
-                        Filename for the export, default to set to 'spectrafit_results'.
+                        Filename for the export, default to set to
+                        'spectrafit_results'.
   -i INPUT, --input INPUT
-                        Filename for the input parameter, default to set to 'fitting_input.toml'.Supported fileformats are:
+                        Filename for the input parameter, default to set to
+                        'fitting_input.toml'.Supported fileformats are:
                         '*.json', '*.yml', '*.yaml', and '*.toml'
-  -ov, --oversampling   Oversampling the spectra by using factor of 5; default to False.
+  -ov, --oversampling   Oversampling the spectra by using factor of 5;
+                        default to False.
   -e0 ENERGY_START, --energy_start ENERGY_START
                         Starting energy in eV; default to start of energy.
   -e1 ENERGY_STOP, --energy_stop ENERGY_STOP
@@ -97,24 +102,32 @@ optional arguments:
   -sh SHIFT, --shift SHIFT
                         Constant applied energy shift; default to 0.0.
   -c COLUMN COLUMN, --column COLUMN COLUMN
-                        Selected columns for the energy- and intensity-values; default to 0 for energy (x-axis) and 1 for
+                        Selected columns for the energy- and intensity-values;
+                        default to 0 for energy (x-axis) and 1 for
                         intensity (y-axis).
-  -sep {	,,,;,:,|, ,s+}, --separator {	,,,;,:,|, ,s+}
+  -sep { ,,,;,:,|, ,s+}, --separator { ,,,;,:,|, ,s+}
                         Redefine the type of separator; default to ' '.
   -dec {.,,}, --decimal {.,,}
                         Type of decimal separator; default to '.'.
   -hd HEADER, --header HEADER
                         Selected the header for the dataframe; default to None.
+  -g {0,1,2}, --global {0,1,2}
+                        Perform a global fit over the complete dataframe. The
+                        options are '0' for classic fit (default). The
+                        option '1' for global fitting with auto-definition
+                        of the peaks depending on the column size and '2'
+                        for self-defined global fitting routines.
+  -auto, --autopeak     Auto detection of peaks in the spectra based on `SciPy`.
+                        The position, height, and width are used as estimation
+                        for the `Gaussian` models.The default option is 'False'
+                        for  manual peak definition.
   -np, --noplot         No plotting the spectra and the fit of `spectrafit`.
   -v, --version         Display the current version of `spectrafit`.
-  -vb, --verbose        Display the initial configuration parameters as a dictionary.
-  -g {0,1,2}, --global {0,1,2}
-                        Perform a global fit over the complete dataframe. The options are '0' for classic fit (default). The
-                        option '1' for global fitting with auto-definition of the peaks depending on the column size and '2'
-                        for self-defined global fitting routines.
+  -vb, --verbose        Display the initial configuration parameters as a
+                        dictionary.
 ```
 
-## Documentation:
+## Documentation
 
 Please see the [extended documentation](https://anselmoo.github.io/spectrafit/)
 for the full usage of `SpectraFit`.

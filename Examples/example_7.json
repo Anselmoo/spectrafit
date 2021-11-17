@@ -1,0 +1,44 @@
+{
+  "settings": {
+    "column": ["Energy", "Intensity"],
+    "decimal": ".",
+    "energy_start": -1,
+    "energy_stop": 4,
+    "header": 0,
+    "infile": "data.csv",
+    "outfile": "example_7",
+    "oversampling": false,
+    "separator": ",",
+    "shift": 0,
+    "smooth": 0,
+    "autopeak": {
+      "model_type": "gaussian",
+      "height": [0.0, 16],
+      "threshold": [0.0, 16],
+      "distance": 2,
+      "prominence": [0.002, 12],
+      "width": [0.002, 12],
+      "wlen": 100
+    },
+    "verbose": false,
+    "version": false
+  },
+  "fitting": {
+    "description": {
+      "project_name": "Template",
+      "project_details": "Template for testing",
+      "keywords": [
+        "2D-Spectra",
+        "fitting",
+        "curve-fitting",
+        "peak-fitting",
+        "spectrum"
+      ]
+    },
+    "parameters": {
+      "minimizer": { "nan_policy": "propagate", "calc_covar": true },
+      "optimizer": { "max_nfev": 1000, "method": "leastsq" },
+      "report": { "min_correl": 0.0 }
+    }
+  }
+}

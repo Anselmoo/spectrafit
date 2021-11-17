@@ -41,7 +41,7 @@ _center_ of the first peak plus 1.68.
 ![_](../../examples/images/Figure_5.png)
 
 > In this example, the expression parser is used to set the _amplitude_ of the
-> peak 1 and 2 to equaly, as well as the _center_ of peak 2 to the center of
+> peak 1 and 2 to equally, as well as the _center_ of peak 2 to the center of
 > peak 1 plus 1.68.
 
 !!! note "The right notation of peaks"

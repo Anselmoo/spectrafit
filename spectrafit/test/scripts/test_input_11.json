@@ -1,0 +1,55 @@
+{
+  "settings": {
+    "column": [0, 1],
+    "decimal": ".",
+    "energy_start": 0,
+    "energy_stop": 8,
+    "header": null,
+    "infile": "spectrafit/test/import/test_data.txt",
+    "outfile": "spectrafit/test/export/fit_results",
+    "oversampling": false,
+    "separator": "\t",
+    "shift": 0,
+    "smooth": 0,
+    "autopeak": {
+      "model_type": "gaussian",
+      "height": [0.0, 10],
+      "threshold": [0.0, 10],
+      "distance": 2,
+      "prominence": [0.0, 1.0],
+      "width": [0.0, 10],
+      "wlen": 2,
+      "rel_height": 1,
+      "plateau_size": 0.5
+    },
+    "verbose": false,
+    "version": false
+  },
+  "fitting": {
+    "description": {
+      "project_name": "Template",
+      "project_details": "Template for testing",
+      "keywords": [
+        "2D-Spectra",
+        "fitting",
+        "curve-fitting",
+        "peak-fitting",
+        "spectrum"
+      ]
+    },
+
+    "parameters": {
+      "minimizer": { "nan_policy": "propagate", "calc_covar": true },
+      "optimizer": { "max_nfev": 1000, "method": "leastsq" },
+      "report": { "min_correl": 0.0 },
+      "conf_interval": {
+        "p_names": null,
+        "sigmas": null,
+        "trace": false,
+        "maxiter": 200,
+        "verbose": false,
+        "prob_func": null
+      }
+    }
+  }
+}

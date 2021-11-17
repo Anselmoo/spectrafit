@@ -4,11 +4,11 @@ fitting:
     project_name: Example1
     project_details: Example 1
     keywords:
-    - 2D-Spectra
-    - fitting
-    - curve-fitting
-    - peak-fitting
-    - spectrum
+      - 2D-Spectra
+      - fitting
+      - curve-fitting
+      - peak-fitting
+      - spectrum
   parameters:
     minimizer:
       nan_policy: propagate
@@ -19,7 +19,7 @@ fitting:
     report:
       min_correl: 0
   peaks:
-    '1':
+    "1":
       pseudovoigt:
         amplitude:
           max: 2
