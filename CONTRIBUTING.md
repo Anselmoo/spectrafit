@@ -34,6 +34,7 @@ files, we prefer the [prettier style][7] and its extension for `toml` files.
       `tools.py`
 - [x] Implementing genetic solvers for fitting optimization problems, because
       [LMFIT][8] contains `differential_evolution` as solver.
+- [x] Implementing `Global Fitting` as a part of the `SpectraFit` class
 - [ ] Introducing JupyterLab
 - [ ] Updating the Docker package configuration
 
@@ -44,9 +45,8 @@ pipeline and the release.
 
 ## Submitting changes
 
-Please send a
-[GitHub Pull Request to SpectraFit](https://github.com/Anselmoo/spectrafit/pulls)
-with a clear list of what you've done (read more about
+Please send a [GitHub Pull Request to SpectraFit][9] with a clear list of what
+you've done (read more about
 [pull requests](http://help.github.com/pull-requests/)). We can always use more
 test coverage. Please follow our coding conventions (below) and make sure all of
 your commits are atomic (one feature per commit).
@@ -54,9 +54,11 @@ your commits are atomic (one feature per commit).
 Always write a clear log message for your commits. One-line messages are fine
 for small changes, but bigger changes should look like this:
 
-    $ git commit -m "A brief summary of the commit
-    >
-    > A paragraph describing what changed and its impact."
+```shell
+git commit -m "A brief summary of the commit"
+```
+
+> A paragraph describing what changed and its impact.
 
 ## Coding conventions
 
@@ -70,7 +72,7 @@ readability:
 - We use the [google convention][2] for docstrings
 - We use for `Markdown` and `JSON` [https://prettier.io](https://prettier.io)
 
-## Note:
+## Note
 
 This template is adapted from [opengovernment][3].
 
@@ -82,3 +84,4 @@ This template is adapted from [opengovernment][3].
 [6]: https://github.com/pyenv/pyenv
 [7]: https://prettier.io
 [8]: https://lmfit.github.io/lmfit-py/fitting.html
+[9]: https://github.com/Anselmoo/spectrafit/pulls

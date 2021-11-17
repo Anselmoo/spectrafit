@@ -2,7 +2,7 @@
   "settings": {
     "column": [0, 1],
     "decimal": ".",
-    "energy_start": -1,
+    "energy_start": 0,
     "energy_stop": 8,
     "header": null,
     "infile": "spectrafit/test/import/test_data.txt",
@@ -11,8 +11,9 @@
     "separator": "\t",
     "shift": 0,
     "smooth": 0,
+    "autopeak": true,
     "verbose": false,
-    "version": true
+    "version": false
   },
   "fitting": {
     "description": {
@@ -26,6 +27,7 @@
         "spectrum"
       ]
     },
+
     "parameters": {
       "minimizer": { "nan_policy": "propagate", "calc_covar": true },
       "optimizer": { "max_nfev": 1000, "method": "leastsq" },

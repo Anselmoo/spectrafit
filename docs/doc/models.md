@@ -45,8 +45,8 @@
     ...
     ```
     Further information about implemented own models in `lmfit` can be found
-    in this [example](https://lmfit.github.io/lmfit-py/examples/documentation/model_two_components.html#sphx-glr-examples-documentation-model-two-components-py). So far, the
-    built-in models of lmfit are not supported, yet.
+    in this [example][1]. So far, the built-in models of lmfit are not
+    supported, yet.
 
 !!! warning "Change in notation for the Full Maximum Half Widht (FWHM)"
 
@@ -91,3 +91,5 @@ For calculating the models a few math constants are needed, which are
 implemented in the `constants` module.
 
 ::: spectrafit.models.Constants
+
+[1] https://lmfit.github.io/lmfit-py/examples/documentation/model_two_components.html#sphx-glr-examples-documentation-model-two-components-py

@@ -4,6 +4,7 @@ import pandas as pd
 import pytest
 
 from lmfit import Parameters
+from spectrafit.models import AutoPeakDetection
 from spectrafit.models import Constants
 from spectrafit.models import ModelParameters
 from spectrafit.models import SolverModels
@@ -38,6 +39,7 @@ class TestNotSupported:
     """Test of not supported models."""
 
     args = {
+        "autopeak": False,
         "column": ["energy", "intensity"],
         "global": 0,
         "minimizer": {"method": "Nelder-Mead", "tol": 1e-6},
@@ -68,7 +70,7 @@ class TestNotSupported:
             )().will_exit_somewhere_down_the_stack()
 
         assert pytest_wrapped_e.type == SystemExit
-        assert pytest_wrapped_e.value.code == "dummy_amplitude_1 is not supported"
+        assert pytest_wrapped_e.value.code == "dummy_amplitude_1 is not supported!"
 
     def test_solver_model_exit_global(self):
         """Exit-Test of solver_model for global fitting."""
@@ -78,7 +80,7 @@ class TestNotSupported:
             SolverModels(df=self.df, args=_args)().will_exit_somewhere_down_the_stack()
 
         assert pytest_wrapped_e.type == SystemExit
-        assert pytest_wrapped_e.value.code == "dummy_amplitude_1_1 is not supported"
+        assert pytest_wrapped_e.value.code == "dummy_amplitude_1_1 is not supported!"
 
     def test_calculated_model_exit(self):
         """Exit-Test of solver_model."""
@@ -92,7 +94,25 @@ class TestNotSupported:
                 global_fit=0,
             ).will_exit_somewhere_down_the_stack()
         assert pytest_wrapped_e.type == SystemExit
-        assert pytest_wrapped_e.value.code == "dummy_amplitude_1 is not supported"
+        assert pytest_wrapped_e.value.code == "dummy_amplitude_1 is not supported!"
+
+    def test_auto_global_fail(self):
+        """Test of no global fitting and auto peak is allowed."""
+        _args = self.args
+        _args["global"] = 1
+        _args["autopeak"] = True
+
+        with pytest.raises(SystemExit) as pytest_wrapped_e:
+            _ = SolverModels(
+                df=self.df, args=_args
+            )().will_exit_somewhere_down_the_stack()
+
+        assert pytest_wrapped_e.type == SystemExit
+        assert (
+            pytest_wrapped_e.value.code
+            == "Global fitting mode with automatic peak detection "
+            "is not supported yet."
+        )
 
 
 class TestModelParametersSolver:
@@ -100,6 +120,7 @@ class TestModelParametersSolver:
 
     args = {
         "global": 0,
+        "autopeak": False,
         "column": ["Energy", "Intensity"],
         "minimizer": {"nan_policy": "propagate", "calc_covar": False},
         "optimizer": {"max_nfev": 10, "method": "leastsq"},
@@ -123,6 +144,7 @@ class TestModelParametersSolver:
         },
     }
     args_global_1 = {
+        "autopeak": False,
         "global": 1,
         "column": ["Energy"],
         "minimizer": {"nan_policy": "propagate", "calc_covar": False},
@@ -147,6 +169,7 @@ class TestModelParametersSolver:
         },
     }
     args_global_2 = {
+        "autopeak": False,
         "global": 2,
         "column": ["Energy"],
         "minimizer": {"nan_policy": "propagate", "calc_covar": False},
@@ -282,6 +305,7 @@ class TestModelParametersSolver:
             }
         )
         args = {
+            "autopeak": False,
             "global": 0,
             "column": ["Energy", "Intensity_1"],
             "minimizer": {"nan_policy": "propagate", "calc_covar": False},
@@ -573,6 +597,7 @@ class TestModelParametersSolver:
             }
         )
         args = {
+            "autopeak": False,
             "global": 1,
             "column": ["Energy"],
             "minimizer": {"nan_policy": "propagate", "calc_covar": False},
@@ -852,3 +877,310 @@ class TestModelParametersSolver:
         mp = SolverModels(df=df, args=args)()
         assert type(mp.__str__()) == str
         assert type(mp) == tuple
+
+    def test_all_model_global_fail(self):
+        """Test of the AllModel class for global fitting."""
+        df = pd.DataFrame(
+            {
+                "Energy": np.arange(100).astype(np.float64),
+                "Intensity_1": np.random.rand(100),
+                "Intensity_2": np.random.rand(100),
+                "Intensity_3": np.random.rand(100),
+                "Intensity_4": np.random.rand(100),
+            }
+        )
+        args = {
+            "autopeak": True,
+            "global": 1,
+            "column": ["Energy"],
+            "minimizer": {"nan_policy": "propagate", "calc_covar": False},
+            "optimizer": {"max_nfev": 10, "method": "leastsq"},
+        }
+
+        with pytest.raises(SystemExit) as pytest_wrapped_e:
+            _ = SolverModels(df=df, args=args)().will_exit_somewhere_down_the_stack()
+
+        assert pytest_wrapped_e.type == SystemExit
+        assert (
+            pytest_wrapped_e.value.code
+            == "Global fitting mode with automatic peak detection "
+            "is not supported yet."
+        )
+
+
+class TestAutoPeakDetection:
+    """Testing of the Auto Peak Detection Class."""
+
+    def test_key_not_available(self):
+        """Test if the key is not available."""
+        args = {"autopeak": True, "global": 0}
+        x = np.arange(0, 10, 0.1)
+        data = (
+            np.sin(np.arange(0, 10, 0.1)) ** 3 + 2 * np.cos(np.arange(0, 10, 0.1)) ** 2
+        )
+
+        auto = AutoPeakDetection(x=x, data=data, args=args)
+        _val = auto.check_key_exists(key="missing", args=args, value=2)
+        assert _val == 2
+
+    def test_rel_heigh_1(self):
+        """Test if the relative height is calculated correctly."""
+        args = {"autopeak": True, "global": 0}
+        x = np.arange(10)
+        data = np.arange(10)
+
+        auto = AutoPeakDetection(x=x, data=data, args=args)
+        _val = auto.estimated_rel_height
+        assert _val == 0.0
+
+    def test_rel_heigh_2(self):
+        """Test if the relative height is calculated correctly."""
+        args = {"autopeak": True, "global": 0}
+        x = np.arange(10)
+        data = np.sin(10) * np.arange(10)
+
+        auto = AutoPeakDetection(x=x, data=data, args=args)
+        _val = auto.estimated_rel_height
+        assert _val > 0.0
+
+    def test_plateau_size(self):
+        """Test if the plateau_size is calculated correctly."""
+        args = {"autopeak": True, "global": 0}
+        x = np.arange(10, dtype=np.float64)
+        data = np.arange(10, dtype=np.float64)
+
+        auto = AutoPeakDetection(x=x, data=data, args=args)
+        _val = auto.estimated_plateau_size
+        assert _val == (0.0, 9.0)
+
+    def test_distance(self):
+        """Test if the distance is calculated correctly."""
+        args = {"autopeak": True, "global": 0}
+        x = 3 * np.arange(10, dtype=np.float64)
+        data = 3 * np.exp(10, dtype=np.float64)
+
+        auto = AutoPeakDetection(x=x, data=data, args=args)
+        _val = auto.estimate_distance
+        assert _val != 1.0
+
+    def test_autopeakdetection_mean(self):
+        """Test of auto default detection with negative values."""
+        args = {"autopeak": True, "global": 0}
+        x = np.arange(0, 10, 0.1)
+        data = (
+            np.sin(np.arange(0, 10, 0.1)) ** 3 + 2 * np.cos(np.arange(0, 10, 0.1)) ** 2
+        )
+
+        auto = AutoPeakDetection(x=x, data=data, args=args)
+        auto.initialize_peak_detection()
+        peaks, properties = auto.__autodetect__()
+
+        assert type(peaks) == np.ndarray
+        assert type(properties) == dict
+
+    def test_autopeakdetection_hmean(self):
+        """Test of auto default detection only positive values."""
+        args = {"autopeak": True}
+        df = pd.read_csv("spectrafit/test/import/test_data.csv")
+        x, data = df["Energy"].values, df["Noisy_Intensity"].values
+
+        auto = AutoPeakDetection(x=x, data=data, args=args)
+        auto.initialize_peak_detection()
+        peaks, properties = auto.__autodetect__()
+
+        assert type(peaks) == np.ndarray
+        assert len(peaks) == 21
+        assert type(properties) == dict
+
+    def test_autopeakdetection_userdef(self):
+        """Test of auto default detection with user definitions."""
+        args = {
+            "autopeak": {
+                "height": (0.0, 10),
+                "threshold": (0.0, 10),
+                "distance": 2,
+                "prominence": (0.0, 1.0),
+                "width": (0.0, 10),
+                "wlen": 20,
+                "rel_height": 1,
+                "plateau_size": 0.5,
+            }
+        }
+        df = pd.read_csv("spectrafit/test/import/test_data.csv")
+        x, data = df["Energy"].values, df["Noisy_Intensity"].values
+
+        auto = AutoPeakDetection(x=x, data=data, args=args)
+        auto.initialize_peak_detection()
+        peaks, properties = auto.__autodetect__()
+
+        assert type(peaks) == np.ndarray
+        assert len(peaks) == 174
+        assert type(properties) == dict
+        assert len(properties.keys()) == 13
+
+    def test_wlen(self):
+        """Test numerical return of wlen."""
+        ad = AutoPeakDetection(
+            x=np.arange(2, dtype=float),
+            data=np.arange(2, dtype=float),
+            args={"autopeak": True},
+        )
+        val = ad.estimated_wlen
+
+        assert val == 1 + 1e-9
+
+    def test_raise_autopeaks(self):
+        """Test raise of AutoPeakDetection."""
+        args = {"autopeak": {"no_implimented": 0}}
+        with pytest.raises(SystemExit) as pytest_wrapped_e:
+            auto = AutoPeakDetection(
+                x=np.arange(2, dtype=float), data=np.arange(2, dtype=float), args=args
+            )
+            auto.initialize_peak_detection()
+            peaks, properties = auto.__autodetect__()
+
+        assert pytest_wrapped_e.type == SystemExit
+        assert (
+            pytest_wrapped_e.value.code
+            == f"{list(args['autopeak'].keys())[0]} is no function parameter of "
+            "`scipy.signal.find_peaks`!"
+        )
+
+    def test_raise_autopeaks_type(self):
+        """Test raise of AutoPeakDetection for wrong type."""
+        args = {"autopeak": [{"no_implimented": 0}]}
+        with pytest.raises(TypeError) as pytest_wrapped_e:
+            auto = AutoPeakDetection(
+                x=np.arange(2, dtype=float), data=np.arange(2, dtype=float), args=args
+            )
+            auto.initialize_peak_detection()
+            peaks, properties = auto.__autodetect__()
+
+        assert pytest_wrapped_e.type == TypeError
+
+    def test_noraise_autopeaks(self):
+        """Test no raise of AutoPeakDetection."""
+        args = {"autopeak": True}
+        _ = AutoPeakDetection(
+            x=np.arange(2, dtype=float),
+            data=np.arange(2, dtype=float),
+            args=args,
+        )
+
+        assert True
+
+    def test_autopeakdetection_userdef_voigt(self):
+        """Test of auto default detection with voigt model."""
+        args = {
+            "global": 0,
+            "column": ["Energy", "Noisy_Intensity"],
+            "autopeak": {
+                "model_type": "voigt",
+                "height": (0.0, 10),
+                "threshold": (0.0, 10),
+                "distance": 2,
+                "prominence": (0.0, 1.0),
+                "width": (0.0, 10),
+                "wlen": 20,
+                "rel_height": 1,
+                "plateau_size": 0.5,
+            },
+        }
+        df = pd.read_csv("spectrafit/test/import/test_data.csv")
+
+        mp = ModelParameters(df=df, args=args)
+        mp.__perform__()
+        assert len(mp.return_params.keys()) == 522
+
+    def test_autopeakdetection_userdef_pseudovoigt(self):
+        """Test of auto default detection with pseudovoigt model."""
+        args = {
+            "global": 0,
+            "column": ["Energy", "Noisy_Intensity"],
+            "autopeak": {
+                "model_type": "pseudovoigt",
+                "height": (0.0, 10),
+                "threshold": (0.0, 10),
+                "distance": 2,
+                "prominence": (0.0, 1.0),
+                "width": (0.0, 10),
+                "wlen": 20,
+                "rel_height": 1,
+                "plateau_size": 0.5,
+            },
+        }
+        df = pd.read_csv("spectrafit/test/import/test_data.csv")
+
+        mp = ModelParameters(df=df, args=args)
+        mp.__perform__()
+        assert len(mp.return_params.keys()) > 0
+
+    def test_autopeakdetection_userdef_lorentzian(self):
+        """Test of auto default detection with lorentzian model."""
+        args = {
+            "global": 0,
+            "column": ["Energy", "Noisy_Intensity"],
+            "autopeak": {
+                "model_type": "lorentzian",
+                "height": (0.0, 10),
+                "threshold": (0.0, 10),
+                "distance": 2,
+                "prominence": (0.0, 1.0),
+                "width": (0.0, 10),
+                "wlen": 20,
+                "rel_height": 1,
+                "plateau_size": 0.5,
+            },
+        }
+        df = pd.read_csv("spectrafit/test/import/test_data.csv")
+
+        mp = ModelParameters(df=df, args=args)
+        mp.__perform__()
+        assert len(mp.return_params.keys()) > 0
+
+    def test_autopeakdetection_userdef_default(self):
+        """Test of auto specific detection with default model."""
+        args = {
+            "global": 0,
+            "column": ["Energy", "Noisy_Intensity"],
+            "autopeak": {
+                "height": (0.0, 10),
+                "threshold": (0.0, 10),
+                "distance": 2,
+                "prominence": (0.0, 1.0),
+                "width": (0.0, 10),
+                "wlen": 20,
+                "rel_height": 1,
+                "plateau_size": 0.5,
+            },
+        }
+        df = pd.read_csv("spectrafit/test/import/test_data.csv")
+
+        mp = ModelParameters(df=df, args=args)
+        mp.__perform__()
+        assert len(mp.return_params.keys()) == 522
+
+    def test_autopeakdetection_userdef_failmodel(self):
+        """Test of auto specific detection with wrong model."""
+        args = {
+            "global": 0,
+            "column": ["Energy", "Noisy_Intensity"],
+            "autopeak": {
+                "model_type": "nomodel",
+                "height": (0.0, 10),
+                "threshold": (0.0, 10),
+                "distance": 2,
+                "prominence": (0.0, 1.0),
+                "width": (0.0, 10),
+                "wlen": 20,
+                "rel_height": 1,
+                "plateau_size": 0.5,
+            },
+        }
+        df = pd.read_csv("spectrafit/test/import/test_data.csv")
+
+        with pytest.raises(SystemExit) as pytest_wrapped_e:
+            mp = ModelParameters(df=df, args=args)
+            mp.__perform__()
+        # peaks, properties = auto.__autodetect__()
+        assert pytest_wrapped_e.type == SystemExit

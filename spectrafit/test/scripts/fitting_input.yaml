@@ -1,8 +1,8 @@
 ---
 settings:
   column:
-  - 0
-  - 1
+    - 0
+    - 1
   decimal: "."
   energy_start: 0
   energy_stop: 8
@@ -20,11 +20,11 @@ fitting:
     project_name: Template
     project_details: Template for testing
     keywords:
-    - 2D-Spectra
-    - fitting
-    - curve-fitting
-    - peak-fitting
-    - spectrum
+      - 2D-Spectra
+      - fitting
+      - curve-fitting
+      - peak-fitting
+      - spectrum
   parameters:
     minimizer:
       nan_policy: propagate
@@ -42,7 +42,7 @@ fitting:
       verbose: false
       prob_func:
   peaks:
-    '1':
+    "1":
       pseudovoigt:
         amplitude:
           max: 2
@@ -64,7 +64,7 @@ fitting:
           min: 0.01
           vary: true
           value: 0.01
-    '2':
+    "2":
       pseudovoigt:
         amplitude:
           max: 2
@@ -86,14 +86,14 @@ fitting:
           min: 0.01
           vary: true
           value: 0.01
-    '3':
+    "3":
       constant:
         amplitude:
           max: 2
           min: 0.01
           vary: true
           value: 1
-    '4':
+    "4":
       gaussian:
         amplitude:
           max: 2

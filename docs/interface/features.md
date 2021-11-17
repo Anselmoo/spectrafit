@@ -2,7 +2,7 @@
 
 ### Pre-Analysis
 
-As part of the fitting procedure in `SpectraFit`, the intial data will be first
+As part of the fitting procedure in `SpectraFit`, the initial data will be first
 analyzed based on standard statistic. The standard statistics includes:
 
 - [x] Number of points in the data array
@@ -76,16 +76,16 @@ And every of these attributes has to be analyzed according to the:
     | :---------------------- | ----------: | -------------: | -------------: | ---------: | -----------: |
     | pseudovoigt_amplitude_1 |  0.16403603 | +/- 0.28617283 |        174.46% |          1 |     0.164036 |
     | pseudovoigt_center_1    |  0.03500058 | +/- 0.07534815 |        215.28% |          0 |   0.03500058 |
-    | pseudovoigt_fwhmg_1    |  0.06876795 | +/- 0.04790400 |         69.66% |       0.02 |   0.06876795 |
-    | pseudovoigt_fwhml_1    |  0.09252389 | +/- 0.03757126 |         40.61% |       0.01 |   0.09252389 |
+    | pseudovoigt_fwhmg_1     |  0.06876795 | +/- 0.04790400 |         69.66% |       0.02 |   0.06876795 |
+    | pseudovoigt_fwhml_1     |  0.09252389 | +/- 0.03757126 |         40.61% |       0.01 |   0.09252389 |
     | pseudovoigt_amplitude_2 |  0.09740402 | +/- 0.12049276 |        123.70% |          1 |   0.09740402 |
     | pseudovoigt_center_2    | -0.01805236 | +/- 0.02098358 |        116.24% |          0 |  -0.01805236 |
-    | pseudovoigt_fwhmg_2    |  0.04334471 | +/- 0.03017987 |         69.63% |       0.02 |   0.04334471 |
-    | pseudovoigt_fwhml_2    |  0.09989511 | +/- 0.07669355 |         76.77% |       0.01 |   0.09989511 |
+    | pseudovoigt_fwhmg_2     |  0.04334471 | +/- 0.03017987 |         69.63% |       0.02 |   0.04334471 |
+    | pseudovoigt_fwhml_2     |  0.09989511 | +/- 0.07669355 |         76.77% |       0.01 |   0.09989511 |
     | constant_amplitude_3    |  0.03676873 | +/- 0.00277773 |          7.55% |          1 |   0.03676873 |
     | gaussian_amplitude_4    |  0.01411288 | +/- 0.18946470 |       1342.49% |          1 |   0.01411288 |
     | gaussian_center_4       |  7.8507e-04 | +/- 0.07239645 |       9221.69% |          0 | 0.0007850674 |
-    | gaussian_fwhmg_4       |  0.04893397 | +/- 0.27055202 |        552.89% |       0.02 |   0.04893397 |
+    | gaussian_fwhmg_4        |  0.04893397 | +/- 0.27055202 |        552.89% |       0.02 |   0.04893397 |
 
 ### Correlation Analysis
 
@@ -136,16 +136,16 @@ fit.
     | :---------------------- | -----: | -----: | -----: | -------: | -----: | -----: | -----: |
     | pseudovoigt_amplitude_1 |   -inf |   -inf |   -inf |  0.16404 |   +inf |   +inf |   +inf |
     | pseudovoigt_center_1    |   -inf |   -inf |   -inf |  0.03500 |   +inf |   +inf |   +inf |
-    | pseudovoigt_fwhmg_1    |   -inf |   -inf |   -inf |  0.06877 |   +inf |   +inf |   +inf |
-    | pseudovoigt_fwhml_1    |   -inf |   -inf |   -inf |  0.09252 |   +inf |   +inf |   +inf |
+    | pseudovoigt_fwhmg_1     |   -inf |   -inf |   -inf |  0.06877 |   +inf |   +inf |   +inf |
+    | pseudovoigt_fwhml_1     |   -inf |   -inf |   -inf |  0.09252 |   +inf |   +inf |   +inf |
     | pseudovoigt_amplitude_2 |   -inf |   -inf |   -inf |  0.09740 |   +inf |   +inf |   +inf |
     | pseudovoigt_center_2    |   -inf |   -inf |   -inf | -0.01805 |   +inf |   +inf |   +inf |
-    | pseudovoigt_fwhmg_2    |   -inf |   -inf |   -inf |  0.04334 |   +inf |   +inf |   +inf |
-    | pseudovoigt_fwhml_2    |   -inf |   -inf |   -inf |  0.09990 |   +inf |   +inf |   +inf |
+    | pseudovoigt_fwhmg_2     |   -inf |   -inf |   -inf |  0.04334 |   +inf |   +inf |   +inf |
+    | pseudovoigt_fwhml_2     |   -inf |   -inf |   -inf |  0.09990 |   +inf |   +inf |   +inf |
     | constant_amplitude_3    |   -inf |   -inf |   -inf |  0.03677 |   +inf |   +inf |   +inf |
     | gaussian_amplitude_4    |   -inf |   -inf |   -inf |  0.01411 |   +inf |   +inf |   +inf |
     | gaussian_center_4       |   -inf |   -inf |   -inf |  0.00079 |   +inf |   +inf |   +inf |
-    | gaussian_fwhmg_4       |   -inf |   -inf |   -inf |  0.04893 |   +inf |   +inf |   +inf |
+    | gaussian_fwhmg_4        |   -inf |   -inf |   -inf |  0.04893 |   +inf |   +inf |   +inf |
 
 !!! Danger "About the trace in confidence intervals"
 
@@ -2478,10 +2478,8 @@ different types of output files will be generated
     ```
 
 [1]: https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.describe.html
-[2]:
-  ../../api/spectrafit_api/#spectrafit.spectrafit.extracted_from_command_line_runner
-[3]:
-  https://lmfit.github.io/lmfit-py/model.html?highlight=report#lmfit.model.ModelResult.fit_report
+[2]: ../../api/spectrafit_api/#spectrafit.spectrafit.extracted_from_command_line_runner
+[3]: https://lmfit.github.io/lmfit-py/model.html?highlight=report#lmfit.model.ModelResult.fit_report
 [4]: https://en.wikipedia.org/wiki/Akaike_information_criterion
 [5]: https://en.wikipedia.org/wiki/Bayesian_information_criterion
 [6]: /spectrafit/interface/features/#fit-statistic
@@ -2490,12 +2488,10 @@ different types of output files will be generated
 [9]: https://lmfit.github.io/lmfit-py/fitting.html?highlight=correlation
 [10]: https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.corr.html
 [11]: https://en.wikipedia.org/wiki/Confidence_interval
-[12]:
-  https://lmfit.github.io/lmfit-py/examples/example_confidence_interval.html?highlight=confidence
+[12]: https://lmfit.github.io/lmfit-py/examples/example_confidence_interval.html?highlight=confidence
 [13]: ../../api/plotting_api/
 [14]: /spectrafit/interface/features/#correlation-analysis
-[15]:
-  https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.from_dict.html
+[15]: https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.from_dict.html
 [16]: /spectrafit/interface/features/#pre-analysis
 [17]: https://en.wikipedia.org/wiki/Correlation
 [18]: https://docs.python.org/3/library/socket.html

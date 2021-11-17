@@ -50,7 +50,10 @@ result = mini.minimize(**args["optimizer"])
     - [x] `shgo`: Simplicial Homology Global Optimization
     - [x] `dual_annealing`: Dual Annealing optimization
 
-    Especially, the [`differential_evolution`][3] is an intressting alternative for solving numerically challenging fitting problems. The method based on this [SciPy implementation][4] is implemented in `SpectraFit` and can be used by setting the `minimizer` parameter to `"differential_evolution"`.
+    Especially, the [`differential_evolution`][3] is an interesting alternative
+    for solving numerically challenging fitting problems. The method based on
+    this [SciPy implementation][4] is implemented in `SpectraFit` and can be
+    used by setting the `minimizer` parameter to `"differential_evolution"`.
 
 [1]:
   https://lmfit.github.io/lmfit-py/fitting.html?highlight=minimizer#lmfit.minimizer.Minimizer

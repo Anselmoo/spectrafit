@@ -13,6 +13,7 @@ from lmfit import report_ci
 from lmfit import report_fit
 from lmfit.minimizer import MinimizerException
 from lmfit.minimizer import minimize
+from spectrafit import __version__
 from tabulate import tabulate
 
 
@@ -208,3 +209,51 @@ class PrintingResults:
             pp.pprint(self.args["confidence_interval"])
         print("\nOverall Linear-Correlation:\n")
         pp.pprint(self.args["linear_correlation"])
+
+
+class PrintingStatus:
+    """Print the status of the fitting process."""
+
+    @property
+    def version(self) -> None:
+        """Print current version of the SpectraFit."""
+        print(f"Currently used version is: {__version__}")
+
+    @property
+    def start(self) -> None:
+        """Print the start of the fitting process."""
+        print("\nStart of the fitting process:\n")
+
+    @property
+    def end(self) -> None:
+        """Print the end of the fitting process."""
+        print("\nEnd of the fitting process:\n")
+
+    @property
+    def thanks(self) -> None:
+        """Print the end of the fitting process."""
+        print("\nThanks for using SpectraFit!")
+
+    @property
+    def yes_no(self) -> None:
+        """Print the end of the fitting process."""
+        print("\nDo you want to continue? (y/n)")
+
+    @property
+    def credits(self) -> None:
+        """Print the credits of the fitting process."""
+        print("\nCredits:\n")
+        print(
+            "The fitting process is based on the following software:"
+            "\n\t- lmfit (https://lmfit.github.io/lmfit-py/index.html)"
+            "\n\t- statsmodel (https://www.statsmodels.org/stable/)"
+            "\n\t- scipy (https://docs.scipy.org/doc/scipy/reference/index.html)"
+            "\n\t- numpy (https://docs.scipy.org/doc/numpy/reference/index.html)"
+            "\n\t- pandas (https://pandas.pydata.org/pandas-docs/stable/index.html)"
+            "\n\t- matplotlib (https://matplotlib.org/index.html)"
+            "\n\t- seaborn (https://seaborn.pydata.org/index.html)"
+            "\n\t- tabulate (https://github.com/astanin/python-tabulate))"
+            "\n\t- argparse (https://docs.python.org/3/library/argparse.html)"
+            "\n\t- anymany more "
+            "(https://github.com/Anselmoo/spectrafit/network/dependencies)"
+        )

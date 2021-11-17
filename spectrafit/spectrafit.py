@@ -15,6 +15,7 @@ from spectrafit import __version__
 from spectrafit.models import SolverModels
 from spectrafit.plotting import PlotSpectra
 from spectrafit.report import PrintingResults
+from spectrafit.report import PrintingStatus
 from spectrafit.tools import PostProcessing
 from spectrafit.tools import PreProcessing
 from spectrafit.tools import SaveResult
@@ -22,17 +23,20 @@ from spectrafit.tools import load_data
 from spectrafit.tools import read_input_file
 
 
-def get_args() -> dict:
+__status__ = PrintingStatus()
+
+
+def get_args() -> Dict[str, Any]:
     """Get the arguments from the command line.
 
     Returns:
-        dict: Return the input file arguments as a dictionary without additional
-             information beyond the command line arguments.
+        Dict[str, Any]: Return the input file arguments as a dictionary without
+             additional information beyond the command line arguments.
     """
     parser = argparse.ArgumentParser(
         description="Fast Fitting Program for ascii txt files."
     )
-    parser.add_argument("infile", type=str, help="Filename of the specta data")
+    parser.add_argument("infile", type=str, help="Filename of the spectra data")
     parser.add_argument(
         "-o",
         "--outfile",
@@ -120,24 +124,6 @@ def get_args() -> dict:
         help="Selected the header for the dataframe; default to None.",
     )
     parser.add_argument(
-        "-np",
-        "--noplot",
-        help="No plotting the spectra and the fit of `spectrafit`.",
-        action="store_true",
-    )
-    parser.add_argument(
-        "-v",
-        "--version",
-        help="Display the current version of `spectrafit`.",
-        action="store_true",
-    )
-    parser.add_argument(
-        "-vb",
-        "--verbose",
-        help="Display the initial configuration parameters as a dictionary.",
-        action="store_true",
-    )
-    parser.add_argument(
         "-g",
         "--global",
         type=int,
@@ -149,6 +135,39 @@ def get_args() -> dict:
             "auto-definition of the peaks depending on the column size and '2' for "
             "self-defined global fitting routines."
         ),
+    )
+    parser.add_argument(
+        "-auto",
+        "--autopeak",
+        help=(
+            "Auto detection of peaks in the spectra based on `SciPy`. The position, "
+            "height, and width are used as estimation for the `Gaussian` models."
+            "The default option is 'False' for manual peak definition."
+        ),
+        action="store_true",
+        default=False,
+    )
+
+    parser.add_argument(
+        "-np",
+        "--noplot",
+        help="No plotting the spectra and the fit of `SpectraFit`.",
+        action="store_true",
+        default=False,
+    )
+    parser.add_argument(
+        "-v",
+        "--version",
+        help="Display the current version of `SpectraFit`.",
+        action="store_true",
+        default=False,
+    )
+    parser.add_argument(
+        "-vb",
+        "--verbose",
+        help="Display the initial configuration parameters as a dictionary.",
+        action="store_true",
+        default=False,
     )
     return vars(parser.parse_args())
 
@@ -165,27 +184,27 @@ def command_line_runner(args: Dict[str, Any] = None) -> None:
         if not args:
             args = extracted_from_command_line_runner()
         if args["version"]:
-            print(f"Currently used version is: {__version__}")
+            __status__.version
             return
-        df = load_data(args)
 
-        print("Lets start fitting ...")
-        df_result, args = fitting_routine(df=df, args=args)
+        __status__.start
 
+        df_result, args = fitting_routine(args=args)
         PlotSpectra(df=df_result, args=args)()
-
         SaveResult(df=df_result, args=args)()
-
         args = None
-        print("Fitting is done!")
+
+        __status__.end
+
         again = input("Would you like to fit again ...? Enter y/n: ").lower()
         if again == "n":
-            print("Thanks for using ...!")
+            __status__.thanks
+            __status__.credits
             return
         elif again == "y":
             continue
         else:
-            print("You should enter either 'y' or 'n'.")
+            __status__.yes_no
 
 
 def extracted_from_command_line_runner() -> Dict[str, Any]:
@@ -237,24 +256,22 @@ def extracted_from_command_line_runner() -> Dict[str, Any]:
     return result
 
 
-def fitting_routine(
-    df: pd.DataFrame, args: Dict[str, Any]
-) -> Tuple[pd.DataFrame, dict]:
+def fitting_routine(args: Dict[str, Any]) -> Tuple[pd.DataFrame, dict]:
     """Run the fitting algorithm.
 
     Args:
-        df (pd.DataFrame): DataFrame containing the input data (`x` and `data`),
-             as well as the best fit and the corresponding residuum. Hence, it will be
-             extended by the single contribution of the model.
         args (Dict[str, Any]): The input file arguments as a dictionary with
              additional information beyond the command line arguments.
 
     Returns:
-        Tuple[pd.DataFrame, dict]: Can be both a DataFrame or a dictionary, which is
-             containing the input data (`x` and `data`), as well as the best fit and
-             the corresponding residuum. Hence, it will be extended by the single
-             contribution of the model.
+        Tuple[pd.DataFrame, dict]: Returns a DataFrame and a dictionary, which is
+             containing the input data (`x` and `data`), as well as the best fit, single
+             contributions of each peak and the corresponding residuum. The dictionary
+             contains the raw input data, the best fit, the single contributions and the
+             corresponding residuum. Furthermore, the dictionary is extended by advanced
+             statistical information of the fit.
     """
+    df = load_data(args)
     df, args = PreProcessing(df=df, args=args)()
 
     minimizer, result = SolverModels(df=df, args=args)()

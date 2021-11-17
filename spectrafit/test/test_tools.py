@@ -191,6 +191,7 @@ class TestPostProcessing:
     """Test Post-Processing tool."""
 
     args_0 = {
+        "autopeak": False,
         "global": 0,
         "column": ["Energy", "Intensity_1"],
         "minimizer": {"nan_policy": "propagate", "calc_covar": False},
@@ -216,6 +217,7 @@ class TestPostProcessing:
         },
     }
     args_1 = {
+        "autopeak": False,
         "global": 1,
         "column": ["Energy"],
         "minimizer": {"nan_policy": "propagate", "calc_covar": False},

@@ -1,8 +1,8 @@
 ---
 settings:
   column:
-  - Energy
-  - Intensity
+    - Energy
+    - Intensity
   decimal: "."
   energy_start: 0
   energy_stop: 8
@@ -20,11 +20,11 @@ fitting:
     project_name: Template
     project_details: Template for testing
     keywords:
-    - 2D-Spectra
-    - fitting
-    - curve-fitting
-    - peak-fitting
-    - spectrum
+      - 2D-Spectra
+      - fitting
+      - curve-fitting
+      - peak-fitting
+      - spectrum
   parameters:
     minimizer:
       nan_policy: propagate
@@ -35,7 +35,7 @@ fitting:
     report:
       min_correl: 0
   peaks:
-    '1':
+    "1":
       pseudovoigt:
         amplitude:
           max: 2

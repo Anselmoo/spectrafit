@@ -132,33 +132,34 @@ extra_javascript:
 nav:
   - Home: index.md
   - Getting started:
-    - Installation: interface/installation.md
-    - Usage: interface/usage.md
-    - Features: interface/features.md
+      - Installation: interface/installation.md
+      - Usage: interface/usage.md
+      - Features: interface/features.md
   - Examples:
-    - Fitting of a Single Feature via Command-Line: examples/example1.md
-    - JSON, TOML, YAML Inputs: examples/example2.md
-    - Multi Peak Fitting: examples/example3.md
-    - Working with Real Life Data: examples/example4.md
-    - Working with Expressions: examples/example5.md
-    - Global Fitting: examples/example6.md
+      - Fitting of a Single Feature via Command-Line: examples/example1.md
+      - JSON, TOML, YAML Inputs: examples/example2.md
+      - Multi Peak Fitting: examples/example3.md
+      - Working with Real Life Data: examples/example4.md
+      - Working with Expressions: examples/example5.md
+      - Global Fitting: examples/example6.md
+      - Automatic Fitting: examples/example7.md
   - Documentation:
       - Models: doc/models.md
       - Expression: doc/expression.md
       - Solvers: doc/solver.md
       - Fitting: doc/fitting.md
   - API:
-    - SpectraFit: api/spectrafit_api.md
-    - Plotting: api/plotting_api.md
-    - Modelling: api/modelling_api.md
-    - Reporting: api/reporting_api.md
-    - Tools: api/tools_api.md
+      - SpectraFit: api/spectrafit_api.md
+      - Plotting: api/plotting_api.md
+      - Modelling: api/modelling_api.md
+      - Reporting: api/reporting_api.md
+      - Tools: api/tools_api.md
   - Support:
-    - Contact: contact.md
-    - License: license.md
-    - Contributing: contributing.md
-    - Code of Conduct: code_of_conduct.md
-    - Security: security.md
+      - Contact: contact.md
+      - License: license.md
+      - Contributing: contributing.md
+      - Code of Conduct: code_of_conduct.md
+      - Security: security.md
   - Releases:
-    - Changelog: changelog.md
-    - Contributors: contributors.md
+      - Changelog: changelog.md
+      - Contributors: contributors.md
