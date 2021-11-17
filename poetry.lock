@@ -1332,7 +1332,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7.1,<3.10"
-content-hash = "7e8440608b7033ab56322ee7412682a6957b71d38aaeb741ea9979844931146d"
+content-hash = "b8ae4dea3768be8381ec1dfb85c1069c46f2726ce370992ba499a1d8a8275c4a"
 
 [metadata.files]
 algopy = [
