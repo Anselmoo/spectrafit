@@ -295,6 +295,7 @@ class PostProcessing:
             $$
             \mathrm{residual}_{i} = \mathrm{model}_{i} - \mathrm{data}_{i}
             $$
+            $$
             \mathrm{residual}_{avg} = \frac{ \sum_{i}
                 \mathrm{model}_{i} - \mathrm{data}_{i}}{i}
             $$
