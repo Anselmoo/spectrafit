@@ -51,7 +51,6 @@ jobs:
       matrix:
         python-version: [3.7, 3.8, 3.9]
         os: [ubuntu-20.04, windows-2019, macos-10.15]
-        arch: [x64]
     steps:
       - uses: actions/checkout@v2
         with:
@@ -60,14 +59,16 @@ jobs:
       - name: Build wheel via poetry and cibuildwheel
         uses: pypa/cibuildwheel@v2.2.2
         env:
-          CIBW_BEFORE_BUILD: |
-            pip install --upgrade pip
-            pip install poetry
-            poetry config virtualenvs.create false
-            poetry build
-            tar -xzf dist/*.tar.gz
-            cp dist/**/setup.py .
-            rm -rf dist
+          #CIBW_BEFORE_BUILD: |
+          #  pip install --upgrade pip
+          #  pip install poetry
+          #  poetry config virtualenvs.create false
+          #  poetry build
+          #  tar -xzf dist/*.tar.gz
+          #  cp dist/**/setup.py .
+          #  rm -rf dist
+          CIBW_SKIP: cp27-* cp35-* cp36-*
+          CIBW_BUILD: cp3*-*
       - uses: actions/upload-artifact@v2
         with:
           path: ./wheelhouse/*.whl
