@@ -20,16 +20,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version:
-          - 3.7
-          - 3.8
-          - 3.9
-        os:
-          - ubuntu-latest
-          - macOS-latest
-          - windows-latest
-        arch:
-          - x64
+        python-version: [3.7, 3.8, 3.9]
+        os: [ubuntu-20.04, windows-2019, macos-10.15]
+        arch: [x64]
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python ${{ matrix.python-version }}
@@ -58,6 +51,7 @@ jobs:
       matrix:
         python-version: [3.7, 3.8, 3.9]
         os: [ubuntu-20.04, windows-2019, macos-10.15]
+        arch: [x64]
     steps:
       - uses: actions/checkout@v2
         with:
@@ -71,7 +65,10 @@ jobs:
             pip install --upgrade pip
             pip install poetry
             poetry config virtualenvs.create false
-            poetry install
+            poetry build
+            tar -xzf dist/*.tar.gz
+            cp dist/**/setup.py .
+            rm -rf dist
       - uses: actions/upload-artifact@v2
         with:
           path: ./wheelhouse/*.whl
