@@ -121,8 +121,8 @@ optional arguments:
                         The position, height, and width are used as estimation
                         for the `Gaussian` models.The default option is 'False'
                         for  manual peak definition.
-  -np, --noplot         No plotting the spectra and the fit of `spectrafit`.
-  -v, --version         Display the current version of `spectrafit`.
+  -np, --noplot         No plotting the spectra and the fit of `SpectraFit`.
+  -v, --version         Display the current version of `SpectraFit`.
   -vb, --verbose        Display the initial configuration parameters as a
                         dictionary.
 ```
