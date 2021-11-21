@@ -60,7 +60,6 @@ jobs:
       - name: Build wheel via poetry and cibuildwheel
         uses: pypa/cibuildwheel@v2.2.2
         env:
-          CIBW_BUILD: cp${{ matrix.python-version }}-${{ matrix.os }}
           CIBW_BEFORE_BUILD: |
             pip install --upgrade pip
             pip install poetry
