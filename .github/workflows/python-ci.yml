@@ -59,14 +59,14 @@ jobs:
       - name: Build wheel via poetry and cibuildwheel
         uses: pypa/cibuildwheel@v2.2.2
         env:
-          #CIBW_BEFORE_BUILD: |
-          #  pip install --upgrade pip
-          #  pip install poetry
-          #  poetry config virtualenvs.create false
-          #  poetry build
-          #  tar -xzf dist/*.tar.gz
-          #  cp dist/**/setup.py .
-          #  rm -rf dist
+          CIBW_BEFORE_BUILD: |
+            pip install --upgrade pip
+            pip install poetry
+            poetry config virtualenvs.create false
+            poetry build
+            tar -xzf dist/*.tar.gz
+            cd dist/SpectraFit-*
+            rm pyproject.toml
           CIBW_SKIP: cp27-* cp35-* cp36-*
           CIBW_BUILD: cp3*-*
       - uses: actions/upload-artifact@v2
