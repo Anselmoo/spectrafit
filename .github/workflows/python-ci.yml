@@ -52,38 +52,12 @@ jobs:
   build_wheels:
     name: Build wheels for cp${{ matrix.python }}-${{ matrix.platform }}
     needs: build
-    runs-on: ${{ matrix.platform }}
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        include:
-        - os: ubuntu-latest
-          python: "37"
-          platform: manylinux_x86_64
-        - os: ubuntu-latest
-          python: "38"
-          platform: manylinux_x86_64
-        - os: ubuntu-latest
-          python: "39"
-          platform: manylinux_x86_64
-        - os: macos-latest
-          python: "37"
-          platform: macosx_x86_64
-        - os: macos-latest
-          python: "38"
-          platform: macosx_x86_64
-        - os: macos-latest
-          python: "39"
-          platform: macosx_x86_64
-        - os: windows-2019
-          python: "37"
-          platform: win_amd64
-        - os: windows-2019
-          python: "38"
-          platform: win_amd64
-        - os: windows-2019
-          python: "39"
-          platform: win_amd64
+        python-version: [3.7, 3.8, 3.9]
+        os: [ubuntu-20.04, windows-2019, macos-10.15]
     steps:
       - uses: actions/checkout@v2
         with:
@@ -92,7 +66,7 @@ jobs:
       - name: Build wheel via poetry and cibuildwheel
         uses: pypa/cibuildwheel@v2.2.2
         env:
-          CIBW_BUILD: cp${{ matrix.python }}-${{ matrix.platform }}
+          CIBW_BUILD: cp${{ matrix.python-version }}-${{ matrix.os }}
           CIBW_BEFORE_BUILD: |
             pip install --upgrade pip
             pip install poetry
