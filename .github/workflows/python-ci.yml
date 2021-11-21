@@ -45,17 +45,61 @@ jobs:
           poetry install
           poetry run pytest --diff-symbols --cov=./spectrafit -vv --cov-report=xml --plots
       - name: Codecov
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v2.1.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           env_vars: OS,PYTHON
-      - name: Build wheels
-        run: |
-          poetry run cibuildwheel --output-dir wheelhouse
-      - name: Upload wheels
-        uses: actions/upload-artifact@v2
+  build_wheels:
+    name: Build wheels for cp${{ matrix.python }}-${{ matrix.platform }}
+    needs: build
+    runs-on: ${{ matrix.platform }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        - os: ubuntu-latest
+          python: "37"
+          platform: manylinux_x86_64
+        - os: ubuntu-latest
+          python: "38"
+          platform: manylinux_x86_64
+        - os: ubuntu-latest
+          python: "39"
+          platform: manylinux_x86_64
+        - os: macos-latest
+          python: "37"
+          platform: macosx_x86_64
+        - os: macos-latest
+          python: "38"
+          platform: macosx_x86_64
+        - os: macos-latest
+          python: "39"
+          platform: macosx_x86_64
+        - os: windows-2019
+          python: "37"
+          platform: win_amd64
+        - os: windows-2019
+          python: "38"
+          platform: win_amd64
+        - os: windows-2019
+          python: "39"
+          platform: win_amd64
+    steps:
+      - uses: actions/checkout@v2
         with:
-          name: "wheels"
+          submodules: true
+          fetch-depth: 0
+      - name: Build wheel via poetry and cibuildwheel
+        uses: pypa/cibuildwheel@v2.2.2
+        env:
+          CIBW_BUILD: cp${{ matrix.python }}-${{ matrix.platform }}
+          CIBW_BEFORE_BUILD: |
+            pip install --upgrade pip
+            pip install poetry
+            poetry config virtualenvs.create false
+            poetry install
+      - uses: actions/upload-artifact@v2
+        with:
           path: ./wheelhouse/*.whl
   documentation:
     name: Build documentation
