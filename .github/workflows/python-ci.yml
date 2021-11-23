@@ -43,32 +43,32 @@ jobs:
   #        token: ${{ secrets.CODECOV_TOKEN }}
   #        env_vars: OS,PYTHON
   build-wheels:
-     name: Build wheels for cp${{ matrix.python }}-${{ matrix.platform }}
+     name: Build wheels for cp-${{ matrix.os }}
      #needs: build-test
      runs-on: ${{ matrix.os }}
      strategy:
        fail-fast: false
        matrix:
          os: [ubuntu-20.04, windows-2019, macos-10.15]
+         python-version: [3.8]
      steps:
-        - name: Set up Python ${{ matrix.python-version }}
-          uses: actions/checkout@v2
-          with:
-           submodules: true
-           fetch-depth: 0
+        - uses: actions/checkout@v2
+          # with:
+           #submodules: true
+           #fetch-depth: 0
         - name: Install dependencies
           run: |
             python -m pip install --upgrade pip
             pip install poetry
             poetry config virtualenvs.create false
-        - name: Buildx SpectraFit
+        - name: Build SpectraFit
           run: |
             poetry build
-            tar -xzf ./dist/*.tar.gz -C dist/
-            cp ./dist/SpectraFit*/setup.py .
+            tar -xzf dist/*.tar.gz -C dist/.
+            cp dist/SpectraFit*/setup.py .
         - name: Clean up
           run: |
-            rm -rf ./dist
+            rm -rf dist
             rm *.toml
         - name: Build wheel via poetry and cibuildwheel
           uses: pypa/cibuildwheel@v2.2.2
