@@ -78,9 +78,7 @@ jobs:
       - name: Build wheel via poetry and cibuildwheel
         uses: pypa/cibuildwheel@v2.2.2
         env:
-          # CIBW_SKIP: cp27-* cp35-* cp36-*
-          CIBW_BUILD: cp37-* cp38-* cp39-*
-          CIBW_BUILD_FRONTEND: "build"
+          CIBW_BUILD: cp37-manylinux_x86_64
           CIBW_BUILD_VERBOSITY: 1
       - name: Upload wheels to artifact server
         uses: actions/upload-artifact@v2
