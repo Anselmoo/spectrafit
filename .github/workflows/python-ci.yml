@@ -62,11 +62,11 @@ jobs:
             pip install poetry
             poetry config virtualenvs.create false
             poetry build
-            tar -xzf ./dist/*.tar.gz
-            cp ./dist/**/setup.py .
+            tar -xzf ./dist/*.tar.gz -C dist/
+            cp ./dist/SpectraFit*/setup.py .
         - name: Clean up
           run: |
-            rm -rf ./dist SpectraFit-*
+            rm -rf ./dist
             rm *.toml
         - name: Build wheel via poetry and cibuildwheel
           uses: pypa/cibuildwheel@v2.2.2
