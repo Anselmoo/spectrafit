@@ -61,6 +61,8 @@ jobs:
             python -m pip install --upgrade pip
             pip install poetry
             poetry config virtualenvs.create false
+        - name: Buildx SpectraFit
+          run: |
             poetry build
             tar -xzf ./dist/*.tar.gz -C dist/
             cp ./dist/SpectraFit*/setup.py .
@@ -73,6 +75,7 @@ jobs:
           env:
            CIBW_SKIP: cp27-* cp35-* cp36-*
            CIBW_BUILD: cp3*-*
+           CIBW_BUILD_VERBOSITY: 1
         - name: Upload wheels to artifact server
           uses: actions/upload-artifact@v2
           with:
