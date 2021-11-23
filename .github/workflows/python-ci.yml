@@ -65,7 +65,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install poetry
           poetry config virtualenvs.create false
-          pip install wheel
+          python -m pip install cibuildwheel wheel
       - name: Build SpectraFit
         run: |
           poetry build
@@ -75,11 +75,12 @@ jobs:
         run: |
           rm -rf dist
           rm *.toml
-      - name: Build wheel via poetry and cibuildwheel
-        uses: pypa/cibuildwheel@v2.2.2
+      - name: Build wheels for CPython 3.7
+        run: |
+          python -m cibuildwheel --output-dir wheelhouse
         env:
-          CIBW_BUILD: cp37-manylinux_x86_64
-          CIBW_BUILD_VERBOSITY: 1
+          CIBW_BUILD: "cp37-*"
+          CIBW_ARCHS_LINUX: x86_64
       - name: Upload wheels to artifact server
         uses: actions/upload-artifact@v2
         with:
