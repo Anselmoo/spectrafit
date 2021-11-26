@@ -868,17 +868,26 @@ python-versions = ">=3.5"
 
 [[package]]
 name = "pylama"
-version = "7.7.1"
-description = "pylama -- Code audit tool for python"
+version = "8.0.6"
+description = "Code audit tool for python"
 category = "dev"
 optional = false
-python-versions = "*"
+python-versions = ">=3.7"
 
 [package.dependencies]
-mccabe = ">=0.5.2"
-pycodestyle = ">=2.3.1"
-pydocstyle = ">=2.0.0"
-pyflakes = ">=1.5.0"
+mccabe = ">=0.6.1"
+pycodestyle = ">=2.8.0"
+pydocstyle = ">=6.1.1"
+pyflakes = ">=2.4.0"
+
+[package.extras]
+all = ["pylint", "eradicate", "radon", "mypy", "vulture"]
+eradicate = ["eradicate"]
+mypy = ["mypy"]
+pylint = ["pylint"]
+radon = ["radon"]
+tests = ["pytest", "pytest-mypy", "eradicate (>=2.0.0)", "radon (>=5.1.0)", "mypy", "pylint (>=2.11.1)", "pylama-quotes", "vulture", "types-setuptools"]
+vulture = ["vulture"]
 
 [[package]]
 name = "pylint"
@@ -1332,7 +1341,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7.1,<3.10"
-content-hash = "3b1288af6a0df6115b13f5eb907a33a129e2ab78fbe3080a1e3a5cdb025d8a8e"
+content-hash = "f761d9c6764510be12cb5cb1e28fc5a4061d67e66c56c9655dcbf7e1dda89d39"
 
 [metadata.files]
 algopy = [
@@ -1941,8 +1950,8 @@ pygments = [
     {file = "Pygments-2.10.0.tar.gz", hash = "sha256:f398865f7eb6874156579fdf36bc840a03cab64d1cde9e93d68f46a425ec52c6"},
 ]
 pylama = [
-    {file = "pylama-7.7.1-py2.py3-none-any.whl", hash = "sha256:fd61c11872d6256b019ef1235be37b77c922ef37ac9797df6bd489996dddeb15"},
-    {file = "pylama-7.7.1.tar.gz", hash = "sha256:9bae53ef9c1a431371d6a8dca406816a60d547147b60a4934721898f553b7d8f"},
+    {file = "pylama-8.0.6-py3-none-any.whl", hash = "sha256:66e313c5b0c017f6ea003c272c9271d1421eb1756c6b06b9fd7eca2c75f1b343"},
+    {file = "pylama-8.0.6.tar.gz", hash = "sha256:07a22f34bd8199a3808291bbe54d2b6e3de7e3717f64ad106c28ff0085a2ae50"},
 ]
 pylint = [
     {file = "pylint-2.12.1-py3-none-any.whl", hash = "sha256:b4b5a7b6d04e914a11c198c816042af1fb2d3cda29bb0c98a9c637010da2a5c5"},
