@@ -57,7 +57,7 @@ corner = "^2.2.1"
 tqdm = "^4.62.3"
 
 [tool.poetry.dev-dependencies]
-pylama = "^8.1.4"
+pylama = "^8.2.0"
 flake8 = "^4.0.1"
 pylint = "^2.12.1"
 mypy = "^0.910"
