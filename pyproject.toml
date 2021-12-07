@@ -59,7 +59,7 @@ tqdm = "^4.62.3"
 [tool.poetry.dev-dependencies]
 pylama = "^8.3.3"
 flake8 = "^4.0.1"
-pylint = "^2.12.1"
+pylint = "^2.12.2"
 mypy = "^0.910"
 black = { version = "^21.12b0", allow-prereleases = true }
 isort = "^5.10.1"
