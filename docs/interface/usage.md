@@ -140,18 +140,24 @@ Define the settings in the input file as shown below:
 
 If the settings are pre-defined in the input file, the corresponding command
 line arguments will be automatically replaced with them. If they are not
-defined, the command line arguments or their default values will be use.
-This allows to run faster `SpectraFit` and also be consistent in the fitting
-procedure in case of larger studies. For the detail mechanism of overwriting
-the settings, please see the API documentation of [Command Line Module][4].
+defined, the command line arguments or their default values will be use. This
+allows to run faster `SpectraFit` and also be consistent in the fitting
+procedure in case of larger studies. For the detail mechanism of overwriting the
+settings, please see the API documentation of [Command Line Module][4].
+
+!!! waring "Datatype of columns for `pandas.read_csv`"
+
+     According to the documentation of [`pandas.read_csv`][17], the datatype of
+     can be both: `int` or `str`. The `in` is the default. In case of using
+     the header the `str` is the mandatory.
 
 ### Define project details
 
-Another advanced feature of `SpectraFit` is to define the fit as project,
-which can become very useful in case of versioning the fitting project. For
-using `SpectraFit` as a project, the project details have to be defined as
-attributes. The attributes are `project name`, `project details`,
-`keywords`, as shown in the snippet below:
+Another advanced feature of `SpectraFit` is to define the fit as project, which
+can become very useful in case of versioning the fitting project. For using
+`SpectraFit` as a project, the project details have to be defined as attributes.
+The attributes are `project name`, `project details`, `keywords`, as shown in
+the snippet below:
 
 ```json
 "fitting": {
@@ -168,17 +174,17 @@ attributes. The attributes are `project name`, `project details`,
     }
 ```
 
-All three attributes are strings, the `project name` should be ideally a
-single name with no spaces. The `project details` can be longer text, and
-the `keywords` should be a list of strings for tagging in a database.
+All three attributes are strings, the `project name` should be ideally a single
+name with no spaces. The `project details` can be longer text, and the
+`keywords` should be a list of strings for tagging in a database.
 
 ### Tuning `Minimizer` and `Optimizer` and activating `Confidence Intervals`
 
-The input file can be extended with more parameters, which are not necessary
-and optional in case of the confidence intervals. In general, the keywords
-of the lmfit `minimizer` function are supported. For more information please
-check the module [lmfit.mininizer][5]. The attributes have to be initialized
-with the keyword `parameters` as shown below:
+The input file can be extended with more parameters, which are not necessary and
+optional in case of the confidence intervals. In general, the keywords of the
+lmfit `minimizer` function are supported. For more information please check the
+module [lmfit.mininizer][5]. The attributes have to be initialized with the
+keyword `parameters` as shown below:
 
 ```json
  "parameters": {
@@ -205,12 +211,12 @@ with the keyword `parameters` as shown below:
 ### Using mathematical expressions
 
 The input file can be further extended by `expressions`, which are evaluated
-during the fitting process. The `expressions` have to be defined as
-attributes of the `fitting` object in the input file. It can be only contain
-mathematical constraints or dependencies between different `peaks`; please
-compare the docs of [lmfit.eval][9] and [docs][10]. The attributes are
-defined by the keyword `expr` followd by the string, which can contain any
-mathematical expression supported by Python.
+during the fitting process. The `expressions` have to be defined as attributes
+of the `fitting` object in the input file. It can be only contain mathematical
+constraints or dependencies between different `peaks`; please compare the docs
+of [lmfit.eval][9] and [docs][10]. The attributes are defined by the keyword
+`expr` followd by the string, which can contain any mathematical expression
+supported by Python.
 
 !!! info "About the importance of expressions"
 
@@ -350,9 +356,9 @@ For more info please see the [example section][11].
 ### Activating Automatic Peak detection for Fitting
 
 The input file can further extended by `autopeak`, which is used to
-automatically find the peaks in the data. The `autopeak` has to be defined
-as an attribute of the `setting` object in the input file or directly via
-command line:
+automatically find the peaks in the data. The `autopeak` has to be defined as an
+attribute of the `setting` object in the input file or directly via command
+line:
 
 ```shell
 spectrafit data.csv -i input.json -auto
@@ -546,14 +552,18 @@ types.
       }
     }
     ```
+
 [1]: https://en.wikipedia.org/wiki/Voigt_profile#Pseudo-Voigt_approximation
 [2]: https://en.wikipedia.org/wiki/Power_law
 [3]: https://en.wikipedia.org/wiki/Inverse_trigonometric_functions
-[4]: ../../api/spectrafit_api/#spectrafit.spectrafit.extracted_from_command_line_runner
-[5]: https://lmfit.github.io/lmfit-py/fitting.html?highlight=minimizer#module-lmfit.minimizer
+[4]:
+  ../../api/spectrafit_api/#spectrafit.spectrafit.extracted_from_command_line_runner
+[5]:
+  https://lmfit.github.io/lmfit-py/fitting.html?highlight=minimizer#module-lmfit.minimizer
 [6]: ../../api/spectrafit_api/#spectrafit.spectrafit.fitting_routine
 [7]: /spectrafit/interface/usage/#standard-usage
-[8]: https://lmfit.github.io/lmfit-py/fitting.html?highlight=minimizer#module-lmfit.minimizer
+[8]:
+  https://lmfit.github.io/lmfit-py/fitting.html?highlight=minimizer#module-lmfit.minimizer
 [9]: https://lmfit.github.io/lmfit-py/constraints.html
 [10]: ../../doc/expression
 [11]: ../../examples/example6
@@ -561,4 +571,7 @@ types.
 [13]: https://en.wikipedia.org/wiki/Cauchy_distribution
 [14]: https://en.wikipedia.org/wiki/Voigt_profile
 [15]: https://en.wikipedia.org/wiki/Voigt_profile#Pseudo-Voigt_approximation
-[16]: https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.find_peaks.html
+[16]:
+  https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.find_peaks.html
+[17]:
+  https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_csv.html
