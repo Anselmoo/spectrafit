@@ -1095,12 +1095,12 @@ def pseudovoigt(
         + 4.47163 * fwhmg ** 2 * fwhml ** 3
         + 0.07842 * fwhmg * fwhml ** 4
         + fwhml ** 5,
-        0.25,
+        0.2,
     )
     n = 1.36603 * (fwhml / f) - 0.47719 * (fwhml / f) ** 2 + 0.11116 * (fwhml / f) ** 3
-    return n * lorentzian(x, amplitude, center, fwhml) + (1 - n) * gaussian(
-        x, amplitude, center, fwhmg
-    )
+    return n * lorentzian(x=x, amplitude=amplitude, center=center, fwhml=fwhml) + (
+        1 - n
+    ) * gaussian(x=x, amplitude=amplitude, center=center, fwhmg=fwhmg)
 
 
 def exponential(
