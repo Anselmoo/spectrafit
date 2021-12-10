@@ -93,11 +93,11 @@ def get_args() -> Dict[str, Any]:
         "-c",
         "--column",
         nargs=2,
-        type=int,
         default=[0, 1],
         help=(
             "Selected columns for the energy- and intensity-values; default to 0 for"
-            " energy (x-axis) and 1 for intensity (y-axis)."
+            " energy (x-axis) and 1 for intensity (y-axis). In case of working with "
+            "header, the column should be set to the column names as str."
         ),
     )
     parser.add_argument(
