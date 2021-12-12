@@ -87,7 +87,7 @@ def get_args() -> Dict[str, Any]:
         "--shift",
         type=float,
         default=None,
-        help="Constant applied energy shift; default to 0.0.",
+        help="Constant applied energy shift",
     )
     parser.add_argument(
         "-c",
@@ -95,9 +95,10 @@ def get_args() -> Dict[str, Any]:
         nargs=2,
         default=[0, 1],
         help=(
-            "Selected columns for the energy- and intensity-values; default to 0 for"
-            " energy (x-axis) and 1 for intensity (y-axis). In case of working with "
-            "header, the column should be set to the column names as str."
+            "Selected columns for the energy- and intensity-values; default to '0' for"
+            " energy (x-axis) and '1' for intensity (y-axis). In case of working with"
+            " header, the column should be set to the column names as 'str'; ; default"
+            " to 0 and 1."
         ),
     )
     parser.add_argument(
