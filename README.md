@@ -2,6 +2,7 @@
 [![codecov](https://codecov.io/gh/Anselmoo/spectrafit/branch/main/graph/badge.svg?token=pNIMKwWsO2)](https://codecov.io/gh/Anselmoo/spectrafit)
 [![PyPI](https://img.shields.io/pypi/v/spectrafit?logo=PyPi&logoColor=yellow)](https://pypi.org/project/spectrafit/)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/spectrafit?color=gree&logo=Python&logoColor=yellow)](https://pypi.org/project/spectrafit/)
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/Anselmoo/spectrafit/main.svg)](https://results.pre-commit.ci/latest/github/Anselmoo/spectrafit/main)
 
 <p align="center">
 <img src="https://github.com/Anselmoo/spectrafit/blob/c5f7ee05e5610fb8ef4e237a88f62977b6f832e5/docs/images/spectrafit_synopsis.png?raw=true">
@@ -16,7 +17,8 @@ used for the following publication:
 
 - [Measurement of the Ligand Field Spectra of Ferrous and Ferric Iron Chlorides Using 2p3d RIXS](https://pubs.acs.org/doi/abs/10.1021/acs.inorgchem.7b00940)
 
-Now, it is completely rewritten and is more flexible.
+Now, it is completely rewritten and is more flexible. It is supporting all
+common ASCII-data formats and it run on `Linux`, `Windows`, and `MacOS`.
 
 ## Scope
 
@@ -103,8 +105,10 @@ optional arguments:
                         Constant applied energy shift; default to 0.0.
   -c COLUMN COLUMN, --column COLUMN COLUMN
                         Selected columns for the energy- and intensity-values;
-                        default to 0 for energy (x-axis) and 1 for
-                        intensity (y-axis).
+                        default to '0' for energy (x-axis) and '1' for intensity
+                        (y-axis). In case of working with header, the column
+                        should be set to the column names as 'str'; ; default
+                        to 0 and 1.
   -sep { ,,,;,:,|, ,s+}, --separator { ,,,;,:,|, ,s+}
                         Redefine the type of separator; default to ' '.
   -dec {.,,}, --decimal {.,,}

@@ -156,4 +156,5 @@
 [13]: https://github.com/apps/stale
 [14]: https://github.com/Anselmoo/spectrafit/blob/main/README.md
 [15]: https://pypi.org/project/spectrafit/
-[16]: https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.find_peaks.html
+[16]:
+  https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.find_peaks.html
