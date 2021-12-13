@@ -77,3 +77,22 @@ jobs:
       - name: Build the Docker image
         run: |
           docker build . --file Dockerfile --tag spectrafit:$(date +%s)
+  prettier:
+    name: Run Prettier
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        # Make sure the actual branch is checked out when running on pull requests
+        ref: ${{ github.head_ref }}
+        # This is important to fetch the changes to the previous commit
+        fetch-depth: 0
+
+    - name: Prettify code
+      uses: creyD/prettier_action@v4.1
+      with:
+        # This part is also where you can pass other options, for example:
+        prettier_options: --write **/*.{js,md, json, yaml, yml}
+        only_changed: True
