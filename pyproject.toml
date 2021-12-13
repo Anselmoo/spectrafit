@@ -79,7 +79,7 @@ blacken-docs = "^1.12.0"
 mathjax = "^0.1.2"
 mkdocs-literate-nav = "^0.4.0"
 mkdocs-section-index = "^0.3.2"
-pytest-xdist = "^2.3.0"
+pytest-xdist = "^2.5.0"
 pytest-plt = "^1.1.0"
 
 [build-system]
