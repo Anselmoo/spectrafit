@@ -145,7 +145,7 @@ allows to run faster `SpectraFit` and also be consistent in the fitting
 procedure in case of larger studies. For the detail mechanism of overwriting the
 settings, please see the API documentation of [Command Line Module][4].
 
-!!! waring "Datatype of columns for `pandas.read_csv`"
+!!! warning "Datatype of columns for `pandas.read_csv`"
 
      According to the documentation of [`pandas.read_csv`][17], the datatype of
      can be both: `int` or `str`. The `in` is the default. In case of using
@@ -397,8 +397,8 @@ In terms of the configuration of `SpectraFit`, configurations depends on
 provided features of `lmfit` can be used. The configurations can be called as
 attributes of `optimizer` and `minimizer` as shown in [Standard Usage][7] #5.
 For the individualization of the configuration, please use the keywords of
-`lmfit` [minimizer module][8] and also check the API section `SpectraFit`'s
-[fitting routine][6].
+`lmfit` [minimizer module][8] and also check the `SpectraFit`'s [fitting
+routine][6].
 
 ## Input Files
 

@@ -92,4 +92,5 @@ implemented in the `constants` module.
 
 ::: spectrafit.models.Constants
 
-[1] https://lmfit.github.io/lmfit-py/examples/documentation/model_two_components.html#sphx-glr-examples-documentation-model-two-components-py
+[1]
+https://lmfit.github.io/lmfit-py/examples/documentation/model_two_components.html#sphx-glr-examples-documentation-model-two-components-py

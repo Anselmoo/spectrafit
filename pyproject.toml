@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "SpectraFit"
-version = "0.7.1"
+version = "0.8.0"
 description = "Fast fitting of 2D-Spectra with established routines"
 readme = "README.md"
 authors = ["Anselm Hahn <Anselm.Hahn@gmail.com>"]
@@ -17,7 +17,7 @@ keywords = [
     "spectrum"
 ]
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 3 - Beta",
     "Intended Audience :: Science/Research",
     "License :: OSI Approved :: BSD License",
     "Environment :: Console",

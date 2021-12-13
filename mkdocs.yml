@@ -148,6 +148,7 @@ nav:
       - Expression: doc/expression.md
       - Solvers: doc/solver.md
       - Fitting: doc/fitting.md
+      - Statistics: doc/statistics.md
   - API:
       - SpectraFit: api/spectrafit_api.md
       - Plotting: api/plotting_api.md
