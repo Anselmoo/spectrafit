@@ -90,9 +90,9 @@ jobs:
         # This is important to fetch the changes to the previous commit
         fetch-depth: 0
 
-    - name: Prettify code
-      uses: creyD/prettier_action@v4.1
-      with:
-        # This part is also where you can pass other options, for example:
-        prettier_options: --write **/*.{md,json,yaml,yml} --prose-wrap always
-        dry: true
+    # - name: Prettify code
+    #  uses: creyD/prettier_action@v4.1
+    #  with:
+    #    # This part is also where you can pass other options, for example:
+    #    prettier_options: --write **/*.{md,json,yaml,yml} --prose-wrap always
+    #    dry: true
