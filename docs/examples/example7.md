@@ -347,5 +347,6 @@ in the figure shown below.
         },
     ```
 
-[1]: https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.find_peaks.html
+[1]:
+  https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.find_peaks.html
 [2]: ../../interface/usage/

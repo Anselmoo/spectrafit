@@ -1,6 +1,6 @@
-In this example, the **global fitting routine** is introduced. The routine allows
-the fitting of several spectra based on one initial model. The routine is based
-on the `lmfit` approach for [Fit Multiple Data Sets][2]. In this case of
+In this example, the **global fitting routine** is introduced. The routine
+allows the fitting of several spectra based on one initial model. The routine is
+based on the `lmfit` approach for [Fit Multiple Data Sets][2]. In this case of
 `SpectraFit` the following parameter are set global and local:
 
 - `global_parameters`: The global parameters are the parameters that are fitted
