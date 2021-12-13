@@ -65,12 +65,13 @@ git commit -m "A brief summary of the commit"
 Start reading our code and you'll get the hang of it. We optimize for
 readability:
 
-- We use as formaters:
-  - [black](https://black.readthedocs.io/en/stable/)
-  - [isort](https://pycqa.github.io/isort/)
-  - [flake8](https://flake8.pycqa.org/en/latest/)
-- We use the [google convention][2] for docstrings
-- We use for `Markdown` and `JSON` [https://prettier.io](https://prettier.io)
+- We use as formaters for Python:
+  - [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+  - [![Imports: isort](https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat&labelColor=ef8336)](https://pycqa.github.io/isort/)
+  - [![Code style: flake8](https://img.shields.io/badge/code%20style-flake8-brightgreen.svg)](https://flake8.pycqa.org/en/latest/)
+  - [Google convention][2] for docstrings
+- We use as formater for `Markdown`, `JSON` and `YAML` files:
+  - [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square&logo=prettier)](https://github.com/prettier/prettier)
 
 ## Note
 
