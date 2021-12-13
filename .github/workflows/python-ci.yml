@@ -94,5 +94,5 @@ jobs:
       uses: creyD/prettier_action@v4.1
       with:
         # This part is also where you can pass other options, for example:
-        prettier_options: --write **/*.{js,md, json, yaml, yml}
+        prettier_options: --write **/*.{js,md,json,yaml,yml}
         only_changed: True
