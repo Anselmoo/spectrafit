@@ -547,7 +547,7 @@ mkdocs = ">=1.1,<2.0"
 
 [[package]]
 name = "mkdocs-literate-nav"
-version = "0.4.0"
+version = "0.4.1"
 description = "MkDocs plugin to specify the navigation in Markdown instead of YAML"
 category = "dev"
 optional = false
@@ -1335,7 +1335,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7.1,<3.10"
-content-hash = "020215468bb9f9f9e051d008108c4fe2a7ce24c892709962a3c318cdbf85e726"
+content-hash = "25361e56ae7245091a36b5ce63ea0547960cd894e8e0a98d974e15467cebf60f"
 
 [metadata.files]
 algopy = [
@@ -1726,8 +1726,8 @@ mkdocs-autorefs = [
     {file = "mkdocs_autorefs-0.3.0-py3-none-any.whl", hash = "sha256:261875003e49b5d708993fd2792a69d624cbc8cf7de49e96c81d3d9825977ca4"},
 ]
 mkdocs-literate-nav = [
-    {file = "mkdocs-literate-nav-0.4.0.tar.gz", hash = "sha256:29bf383170b80200d16f0d8528f4925ae96982677c8a98f84af70343a3b38bcf"},
-    {file = "mkdocs_literate_nav-0.4.0-py3-none-any.whl", hash = "sha256:2012ac97bc2316890ac35deabd653fd3c6a7434923d572de965c5b6c80f09537"},
+    {file = "mkdocs-literate-nav-0.4.1.tar.gz", hash = "sha256:9efe26b662f2f901cae5807bfd51446d30ea7e033c2bc43a15d6282c7dfac1ab"},
+    {file = "mkdocs_literate_nav-0.4.1-py3-none-any.whl", hash = "sha256:a4b761792ba21defbe2dfd5e0de6ba451639e1ca0f0661c37eda83cc6261e4f9"},
 ]
 mkdocs-material = [
     {file = "mkdocs-material-8.1.2.tar.gz", hash = "sha256:83b73d62b11cbc97c3b05de44f2fad3b96edf3fe2cf977851972e2c25348893b"},
