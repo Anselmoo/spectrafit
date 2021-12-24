@@ -550,6 +550,4 @@ def check_keywords_consistency(
     """
     for key in check_args:
         if key not in ref_args.keys():
-            raise SystemExit(
-                "ERROR: The keywords are not consistent between the two input files!"
-            )
+            raise SystemExit(f"ERROR: The {key} is not parameter of the `cmd-input`!")

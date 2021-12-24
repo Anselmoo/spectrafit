@@ -222,7 +222,7 @@ def extracted_from_command_line_runner() -> Dict[str, Any]:
     """
     result = get_args()
     _args = read_input_file(result["input"])
-    check_keywords_consistency(check_args=_args, ref_args=result)
+    check_keywords_consistency(check_args=_args["settings"], ref_args=result)
     if "settings" in _args.keys():
         for key in _args["settings"].keys():
             result[key] = _args["settings"][key]

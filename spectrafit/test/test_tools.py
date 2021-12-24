@@ -169,7 +169,7 @@ class TestPreProcessing:
 
         assert pytest_wrapped_e.type == SystemExit
         assert pytest_wrapped_e.value.code == (
-            "ERROR: The keywords are not consistent between the two input files!"
+            f"ERROR: The {list(args_1.keys())[0]} is not parameter of the `cmd-input`!"
         )
 
 
