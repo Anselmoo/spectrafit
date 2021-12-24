@@ -19,6 +19,7 @@ from spectrafit.report import PrintingStatus
 from spectrafit.tools import PostProcessing
 from spectrafit.tools import PreProcessing
 from spectrafit.tools import SaveResult
+from spectrafit.tools import check_keywords_consistency
 from spectrafit.tools import load_data
 from spectrafit.tools import read_input_file
 
@@ -221,6 +222,7 @@ def extracted_from_command_line_runner() -> Dict[str, Any]:
     """
     result = get_args()
     _args = read_input_file(result["input"])
+    check_keywords_consistency(check_args=_args, ref_args=result)
     if "settings" in _args.keys():
         for key in _args["settings"].keys():
             result[key] = _args["settings"][key]

@@ -531,3 +531,25 @@ def load_data(args: Dict[str, str]) -> pd.DataFrame:
     except ValueError as exc:
         print(f"Error: {exc} -> Dataframe contains non numeric data!")
         sys.exit(1)
+
+
+def check_keywords_consistency(
+    check_args: Dict[str, Any], ref_args: Dict[str, Any]
+) -> None:
+    """Check if the keywords are consistent.
+
+    Check if the keywords are consistent between two dictionaries. The two dictionaries
+    are reference keywords of the `cmd_line_args` and the `args` of the `input_file`.
+
+    Args:
+        check_args (Dict[str,Any]): First dictionary to be checked.
+        ref_args (Dict[str,Any]): Second dictionary to be checked.
+
+    Raises:
+        SystemExit: If the keywords are not consistent.
+    """
+    for key in check_args:
+        if key not in ref_args.keys():
+            raise SystemExit(
+                "ERROR: The keywords are not consistent between the two input files!"
+            )

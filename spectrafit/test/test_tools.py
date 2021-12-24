@@ -10,6 +10,7 @@ from spectrafit.models import SolverModels
 from spectrafit.tools import PostProcessing
 from spectrafit.tools import PreProcessing
 from spectrafit.tools import SaveResult
+from spectrafit.tools import check_keywords_consistency
 
 
 class TestPreProcessing:
@@ -148,6 +149,28 @@ class TestPreProcessing:
 
         assert pytest_wrapped_e.type == SystemExit
         assert pytest_wrapped_e.value.code == 1
+
+    def test_keyword_not_fail(self) -> None:
+        """Testing consistency between cmd and input keywords."""
+        args_1 = {"keyword": "value"}
+        args_2 = {"keyword": "value", "keyword2": "value"}
+
+        check_keywords_consistency(args_1, args_2)
+
+        assert True
+
+    def test_keyword_fail_2(self) -> None:
+        """Testing consistency between cmd and input keywords."""
+        args_1 = {"keyword4": "value"}
+        args_2 = {"keyword": "value", "keyword2": "value", "keyword3": "value"}
+
+        with pytest.raises(SystemExit) as pytest_wrapped_e:
+            check_keywords_consistency(args_1, args_2)
+
+        assert pytest_wrapped_e.type == SystemExit
+        assert pytest_wrapped_e.value.code == (
+            "ERROR: The keywords are not consistent between the two input files!"
+        )
 
 
 class TestSaving:
