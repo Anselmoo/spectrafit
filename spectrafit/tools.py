@@ -534,7 +534,7 @@ def load_data(args: Dict[str, str]) -> pd.DataFrame:
 
 
 def check_keywords_consistency(
-    check_args: Dict[str, Any], ref_args: Dict[str, Any]
+    check_args: MutableMapping[str, Any], ref_args: Dict[str, Any]
 ) -> None:
     """Check if the keywords are consistent.
 
@@ -542,7 +542,7 @@ def check_keywords_consistency(
     are reference keywords of the `cmd_line_args` and the `args` of the `input_file`.
 
     Args:
-        check_args (Dict[str,Any]): First dictionary to be checked.
+        check_args (MutableMapping[str, Any]): First dictionary to be checked.
         ref_args (Dict[str,Any]): Second dictionary to be checked.
 
     Raises:
