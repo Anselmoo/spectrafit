@@ -9,10 +9,10 @@
 ---
 
 - Introduced smaller enhancement:
-  - Printout of the fit parameters in the output file: True/False -> [0, 1, 2]
+  - Printout of the fit parameters in the output file: True/False &#8594; [0, 1, 2]
   - Keyword check for `SpectraFit`
 - Fix smaller bugs:
-  - `Pseudo-Voigt` power factor from 0.25 -> 0.2
+  - `Pseudo-Voigt` power factor from 0.25 &#8594; 0.2
   - Correct type-definitions for `SpectraFit`
 
 ## v0.7.1
