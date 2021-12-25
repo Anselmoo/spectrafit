@@ -30,7 +30,7 @@ In the following example the in example the section block looks like:
       "width": [0.002, 12],
       "wlen": 100
     },
-    "verbose": false,
+    "verbose": 1,
     "version": false
   }
 }
@@ -347,6 +347,5 @@ in the figure shown below.
         },
     ```
 
-[1]:
-  https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.find_peaks.html
+[1]: https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.find_peaks.html
 [2]: ../../interface/usage/

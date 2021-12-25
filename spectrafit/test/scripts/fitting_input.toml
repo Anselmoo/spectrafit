@@ -9,7 +9,7 @@ oversampling = false
 separator = "\t"
 shift = 0
 smooth = 0
-verbose = false
+verbose = 1
 version = false
 
 [fitting.description]
@@ -37,7 +37,7 @@ min_correl = 0
 [fitting.parameters.conf_interval]
 trace = true
 maxiter = 200
-verbose = false
+verbose = 1
 
 [fitting.peaks.1.pseudovoigt.amplitude]
 max = 2

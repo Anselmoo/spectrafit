@@ -4,6 +4,23 @@
 
 > See also: [https://github.com/Anselmoo/spectrafit/releases][1]
 
+## v 0.8.0
+
+---
+
+- Introduced smaller enhancement:
+  - Printout of the fit parameters in the output file: True/False -> [0, 1, 2]
+  - Keyword check for `SpectraFit`
+- Fix smaller bugs:
+  - `Pseudo-Voigt` power factor from 0.25 -> 0.2
+  - Correct type-definitions for `SpectraFit`
+
+## v0.7.1
+
+---
+
+- Maintance of the `SpectraFit` package
+
 ## v0.7.0
 
 ---
@@ -150,11 +167,9 @@
 [8]: https://github.com/Anselmoo/spectrafit/security
 [9]: https://dependabot.com
 [10]: https://securitylab.github.com/tools/codeql/
-[11]:
-  https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/configuring-issue-templates-for-your-repository
+[11]: https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/configuring-issue-templates-for-your-repository
 [12]: https://git-lfs.github.com
 [13]: https://github.com/apps/stale
 [14]: https://github.com/Anselmoo/spectrafit/blob/main/README.md
 [15]: https://pypi.org/project/spectrafit/
-[16]:
-  https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.find_peaks.html
+[16]: https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.find_peaks.html

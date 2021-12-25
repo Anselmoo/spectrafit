@@ -20,7 +20,7 @@
       "width": [0.002, 12],
       "wlen": 100
     },
-    "verbose": false,
+    "verbose": 1,
     "version": false
   },
   "fitting": {

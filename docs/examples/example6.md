@@ -137,7 +137,7 @@ based on the `lmfit` approach for [Fit Multiple Data Sets][2]. In this case of
             "separator": ",",
             "shift": 0.2,
             "smooth": false,
-            "verbose": false,
+            "verbose": 1,
             "version": false,
             "noplot": false,
             "global": 1

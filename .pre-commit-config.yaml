@@ -12,7 +12,7 @@ repos:
       - id: check-ast
       - id: check-merge-conflict
       - id: check-added-large-files
-        args: ['--maxkb=1000']
+        args: ["--maxkb=1000"]
   - repo: https://github.com/psf/black.git
     rev: 21.12b0
     hooks:

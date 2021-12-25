@@ -23,7 +23,7 @@
   },
   "noplot": false,
   "version": false,
-  "verbose": false,
+  "verbose": 1,
   "description": {
     "project_name": "Template",
     "project_details": "Template for testing",

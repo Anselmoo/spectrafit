@@ -143,7 +143,7 @@ def get_args() -> Dict[str, Any]:
         "--autopeak",
         help=(
             "Auto detection of peaks in the spectra based on `SciPy`. The position, "
-            "height, and width are used as estimation for the `Gaussian` models."
+            "height, and width are used as estimation for the `Gaussian` models. "
             "The default option is 'False' for manual peak definition."
         ),
         action="store_true",
@@ -167,9 +167,14 @@ def get_args() -> Dict[str, Any]:
     parser.add_argument(
         "-vb",
         "--verbose",
-        help="Display the initial configuration parameters as a dictionary.",
-        action="store_true",
-        default=False,
+        help=(
+            "Display the initial configuration parameters and fit results, as a table "
+            "'1', as a dictionary '2', or not in the terminal '0'. The default option "
+            "is set to 1 for table `printout`."
+        ),
+        type=int,
+        default=1,
+        choices=[0, 1, 2],
     )
     return vars(parser.parse_args())
 
