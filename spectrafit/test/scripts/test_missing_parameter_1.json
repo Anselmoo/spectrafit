@@ -10,7 +10,7 @@
     "separator": ",",
     "shift": 0.2,
     "smooth": 4,
-    "verbose": false,
+    "verbose": 1,
     "version": false,
     "noplot": false
   },
@@ -35,7 +35,7 @@
         "sigmas": null,
         "trace": false,
         "maxiter": 200,
-        "verbose": false,
+        "verbose": 1,
         "prob_func": null
       }
     },

@@ -12,7 +12,7 @@
     "shift": 0,
     "smooth": 0,
     "autopeak": true,
-    "verbose": false,
+    "verbose": 1,
     "version": false
   },
   "fitting": {
@@ -37,7 +37,7 @@
         "sigmas": null,
         "trace": false,
         "maxiter": 200,
-        "verbose": false,
+        "verbose": 1,
         "prob_func": null
       }
     },

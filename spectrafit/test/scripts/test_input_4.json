@@ -11,7 +11,7 @@
     "separator": ",",
     "shift": 0.2,
     "smooth": 4,
-    "verbose": false,
+    "verbose": 1,
     "version": false,
     "noplot": true
   },

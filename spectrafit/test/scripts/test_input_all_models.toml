@@ -10,7 +10,7 @@ oversampling = true
 separator = ","
 shift = 0.2
 smooth = 4
-verbose = true
+verbose = 2
 version = false
 noplot = true
 

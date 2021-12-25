@@ -127,8 +127,10 @@ optional arguments:
                         for  manual peak definition.
   -np, --noplot         No plotting the spectra and the fit of `SpectraFit`.
   -v, --version         Display the current version of `SpectraFit`.
-  -vb, --verbose        Display the initial configuration parameters as a
-                        dictionary.
+  -vb, --verbose        Display the initial configuration parameters and fit
+                        results, as a table '1', as a dictionary '2', or not in
+                        the terminal '0'. The default option is set to 1 for
+                        table `printout`.
 ```
 
 ## Documentation

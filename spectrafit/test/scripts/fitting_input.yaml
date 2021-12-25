@@ -13,7 +13,7 @@ settings:
   separator: "\t"
   shift: 0
   smooth: 0
-  verbose: false
+  verbose: 1
   version: false
 fitting:
   description:
@@ -39,7 +39,7 @@ fitting:
       sigmas:
       trace: true
       maxiter: 200
-      verbose: false
+      verbose: 1
       prob_func:
   peaks:
     "1":

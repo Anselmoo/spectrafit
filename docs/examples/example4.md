@@ -638,7 +638,7 @@ following changes between previous
     "separator": "\t",
     "shift": 0,
     "smooth": 0,
-    "verbose": false,
+    "verbose": 1,
     "version": false
   },
 ```
@@ -659,7 +659,7 @@ and actually
     "separator": ",",
     "shift": 0.2,
     "smooth": 4,
-    "verbose": true,
+    "verbose": 2,
     "version": false,
     "noplot": true
   },
@@ -680,8 +680,6 @@ spectrafit _ -i example_3.json
 
 > Elastic-line of a pseudo 2p3d-RIXS spectra.
 
-[1]:
-  https://numpy.org/doc/stable/reference/random/generated/numpy.random.random.html
-[2]:
-  https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_csv.html
+[1]: https://numpy.org/doc/stable/reference/random/generated/numpy.random.random.html
+[2]: https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_csv.html
 [3]: ../../examples/example3/

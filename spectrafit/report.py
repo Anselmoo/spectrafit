@@ -153,9 +153,9 @@ class PrintingResults:
 
     def __call__(self) -> None:
         """Print the results of the fitting process."""
-        if self.args["verbose"]:
+        if self.args["verbose"] == 1:
             self.printing_verbose_mode
-        else:
+        elif self.args["verbose"] == 2:
             self.printing_regular_mode
 
     @property
