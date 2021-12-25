@@ -74,9 +74,9 @@ spectrafit data_file.txt -i input_file.json
 
 ```shell
 usage: spectrafit [-h] [-o OUTFILE] [-i INPUT] [-ov] [-e0 ENERGY_START]
-                  [-e1 ENERGY_STOP] [-s SMOOTH] [-sh SHIFT]
-                  [-c COLUMN COLUMN] [-sep {    ,,,;,:,|, ,s+}] [-dec {.,,}]
-                  [-hd HEADER] [-g {0,1,2}] [-auto] [-np] [-v] [-vb]
+                  [-e1 ENERGY_STOP] [-s SMOOTH] [-sh SHIFT] [-c COLUMN COLUMN]
+                  [-sep {       ,,,;,:,|, ,s+}] [-dec {.,,}] [-hd HEADER]
+                  [-g {0,1,2}] [-auto] [-np] [-v] [-vb {0,1,2}]
                   infile
 
 Fast Fitting Program for ascii txt files.
