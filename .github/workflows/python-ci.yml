@@ -2,7 +2,7 @@ name: CI - Python Package
 
 on:
   push:
-    branches: [main,feature/*]
+    branches: [feature/*]
   pull_request:
     branches: [main, develop]
 
@@ -23,13 +23,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
-          # Make sure the actual branch is checked out when running on pull requests
           ref: ${{ github.head_ref }}
-
       - name: Prettify code
         uses: creyD/prettier_action@v4.1.1
         with:
-          # This part is also where you can pass other options, for example:
           prettier_options: --write **/*.{js,md,json,yml,yaml}
           file_pattern: "."
   build:
