@@ -14,6 +14,8 @@ categories:
     label: "bug"
   - title: "🧰 Maintenance"
     label: "maintenance"
+  - title: ":octocat: Github Actions"
+    label: "github_actions"
   - title: "🗂 Documentation"
     label: "documentation"
   - title: "🔗 Dependency Updates"
@@ -34,6 +36,7 @@ version-resolver:
     labels:
       - "bug"
       - "maintenance"
+      - "github_actions"
       - "documentation"
       - "dependencies"
       - "security"
