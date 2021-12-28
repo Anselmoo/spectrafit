@@ -168,11 +168,9 @@
 [8]: https://github.com/Anselmoo/spectrafit/security
 [9]: https://dependabot.com
 [10]: https://securitylab.github.com/tools/codeql/
-[11]:
-  https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/configuring-issue-templates-for-your-repository
+[11]: https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/configuring-issue-templates-for-your-repository
 [12]: https://git-lfs.github.com
 [13]: https://github.com/apps/stale
 [14]: https://github.com/Anselmoo/spectrafit/blob/main/README.md
 [15]: https://pypi.org/project/spectrafit/
-[16]:
-  https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.find_peaks.html
+[16]: https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.find_peaks.html
