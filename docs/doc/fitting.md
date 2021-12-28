@@ -55,9 +55,7 @@ result = mini.minimize(**args["optimizer"])
     this [SciPy implementation][4] is implemented in `SpectraFit` and can be
     used by setting the `minimizer` parameter to `"differential_evolution"`.
 
-[1]:
-  https://lmfit.github.io/lmfit-py/fitting.html?highlight=minimizer#lmfit.minimizer.Minimizer
+[1]: https://lmfit.github.io/lmfit-py/fitting.html?highlight=minimizer#lmfit.minimizer.Minimizer
 [2]: https://lmfit.github.io/lmfit-py/fitting.html?highlight=minimize
 [3]: https://en.wikipedia.org/wiki/Differential_evolution
-[4]:
-  https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.differential_evolution.html
+[4]: https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.differential_evolution.html

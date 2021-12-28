@@ -25,5 +25,4 @@ Tell them where to go, how often they can expect to get an update on a reported
 vulnerability, what to expect if the vulnerability is accepted or declined, etc.
 
 [1]: https://securitylab.github.com/tools/codeql/
-[2]:
-  https://github.com/Anselmoo/spectrafit/blob/main/.github/workflows/codeql-analysis.yml
+[2]: https://github.com/Anselmoo/spectrafit/blob/main/.github/workflows/codeql-analysis.yml
