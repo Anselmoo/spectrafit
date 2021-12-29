@@ -11,9 +11,14 @@ jobs:
     name: Pre-commit
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
       - uses: actions/setup-python@v2
-      - uses: pre-commit/action@v2.0.3
+      - name: Pre-commit
+        uses: pre-commit/action@v2.0.3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
   prettier:
@@ -24,6 +29,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           ref: ${{ github.head_ref }}
+          fetch-depth: 0
       - name: Prettify code
         uses: creyD/prettier_action@v4.1.1
         with:
