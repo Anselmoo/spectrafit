@@ -55,6 +55,9 @@ emcee = "^3.1.1"
 dill = "^0.3.4"
 corner = "^2.2.1"
 tqdm = "^4.62.3"
+ray = {version = "^1.9.1", optional = true}
+tune = {version = "^0.0.9", optional = true}
+
 
 [tool.poetry.dev-dependencies]
 pylama = "^8.3.6"
@@ -81,6 +84,9 @@ mkdocs-literate-nav = "^0.4.1"
 mkdocs-section-index = "^0.3.3"
 pytest-xdist = "^2.5.0"
 pytest-plt = "^1.1.0"
+
+[tool.poetry.extras]
+ray = ["ray", "tune"]
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
