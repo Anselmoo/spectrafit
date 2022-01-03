@@ -25,7 +25,7 @@ To keep the system environment clean, the installation is done via the:
 
     _Installation_:
 
-    ``` shell
+    ```terminal
     # install pipx for macOS
     brew install pipx
     # install pipx for Linux or Windows
@@ -49,7 +49,7 @@ To keep the system environment clean, the installation is done via the:
 
     _Example_:
 
-    ``` shell
+    ```terminal
     # install pipx for macOS, Linux or Windows
     # install spectrafit for python 3.7
     conda create -n spectrafit python=3.7 --no-default-packages -y
