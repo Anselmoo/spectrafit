@@ -7,7 +7,7 @@ extension, which can be `*.json`, `*.yaml`, `*.yml`, or `*.toml`.
     The standard input file for `SpectraFit` is called `fitting_input.toml`; other specific inpute files has to be explicitly defined by `-i` or `--input`.
 
 
-    ```shell
+    ```terminal
     spectrafit data.txt
     ```
 
@@ -16,7 +16,7 @@ extension, which can be `*.json`, `*.yaml`, `*.yml`, or `*.toml`.
 
 ## JSON-Input
 
-```shell
+```terminal
 spectrafit data.txt -i example_1.json
 ```
 
@@ -83,7 +83,7 @@ spectrafit data.txt -i example_1.json
 
 ## YAML- or YML-Input
 
-```shell
+```terminal
 spectrafit data.txt -i example_1.yaml
 ```
 
@@ -135,7 +135,7 @@ fitting:
 
 ## TOML-Input
 
-```shell
+```terminal
 spectrafit data.txt -i example_1.toml
 ```
 

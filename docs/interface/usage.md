@@ -34,7 +34,7 @@ necessary:
       }
    ```
 6. Starting `SpectraFit` via:
-   ```shell
+   ```terminal
    spectrafit data_file.txt input_file.json
    ```
 
@@ -360,7 +360,7 @@ automatically find the peaks in the data. The `autopeak` has to be defined as an
 attribute of the `setting` object in the input file or directly via command
 line:
 
-```shell
+```terminal
 spectrafit data.csv -i input.json -auto
 ```
 
