@@ -1,7 +1,7 @@
 In this example, the command-line interface of `SpectraFit` is used to fit a
 single peak of the spectrum, as shown below.
 
-```shell
+```terminal
 spectrafit data.txt -i example_1.json -o example_1
 ```
 
@@ -10,7 +10,7 @@ spectrafit data.txt -i example_1.json -o example_1
 In case of using the energy ranges, the spectra will be limited to the defined
 energy ranges of `-e0` and `-e1`.
 
-```shell
+```terminal
 spectrafit data.txt -i example_1.json -o example_1 -e0 -1 -e1 +1
 ```
 

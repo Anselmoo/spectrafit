@@ -98,7 +98,7 @@ def get_args() -> Dict[str, Any]:
         help=(
             "Selected columns for the energy- and intensity-values; default to '0' for"
             " energy (x-axis) and '1' for intensity (y-axis). In case of working with"
-            " header, the column should be set to the column names as 'str'; ; default"
+            " header, the column should be set to the column names as 'str'; default"
             " to 0 and 1."
         ),
     )

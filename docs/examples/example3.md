@@ -13,7 +13,7 @@ All required settings are defined in the input-file in the section `settings`.
     If the data source, named `infile` is defined in the input-file, any
     filename can be used, like the undersocore **\_**.
 
-    ```shell
+    ```terminal
     spectrafit _ -i example_2.json
     ```
 

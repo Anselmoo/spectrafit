@@ -34,7 +34,7 @@ common ASCII-data formats and it run on `Linux`, `Windows`, and `MacOS`.
 
 via pip:
 
-```shell
+```terminal
 pip install spectrafit
 
 # Upgrade
@@ -68,11 +68,11 @@ In case of `SpectraFit`, we have further extend the package by:
 4. [Matplotlib](https://matplotlib.org/) in combination with
    [Seaborn](https://seaborn.pydata.org/)
 
-```shell
+```terminal
 spectrafit data_file.txt -i input_file.json
 ```
 
-```shell
+```terminal
 usage: spectrafit [-h] [-o OUTFILE] [-i INPUT] [-ov] [-e0 ENERGY_START]
                   [-e1 ENERGY_STOP] [-s SMOOTH] [-sh SHIFT] [-c COLUMN COLUMN]
                   [-sep {       ,,,;,:,|, ,s+}] [-dec {.,,}] [-hd HEADER]
@@ -107,7 +107,7 @@ optional arguments:
                         Selected columns for the energy- and intensity-values;
                         default to '0' for energy (x-axis) and '1' for intensity
                         (y-axis). In case of working with header, the column
-                        should be set to the column names as 'str'; ; default
+                        should be set to the column names as 'str'; default
                         to 0 and 1.
   -sep { ,,,;,:,|, ,s+}, --separator { ,,,;,:,|, ,s+}
                         Redefine the type of separator; default to ' '.

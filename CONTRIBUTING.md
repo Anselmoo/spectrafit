@@ -18,7 +18,7 @@ Here are some important resources:
 featuers, we recommend to use both tools. The python version should be `3.7.1`
 or higher and can be optional managed via [pyenv][6].
 
-```shell
+```terminal
 pyenv local 3.8.11
 poetry install
 pre-commit install --install-hooks

@@ -5,13 +5,13 @@ repository. It is important that poetry is installed first, because the
 
 ## via GitHub
 
-```shell
+```terminal
 pip install git+https://github.com/Anselmoo/SpectraFit.git
 ```
 
 ## via PyPi
 
-```shell
+```terminal
 pip install spectrafit
 ```
 
