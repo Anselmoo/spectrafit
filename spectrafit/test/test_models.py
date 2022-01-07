@@ -64,37 +64,37 @@ class TestNotSupported:
 
     def test_solver_model_exit_local(self):
         """Exit-Test of solver_model for local fitting."""
-        with pytest.raises(SystemExit) as pytest_wrapped_e:
+        with pytest.raises(KeyError) as pytest_wrapped_e:
             SolverModels(
                 df=self.df, args=self.args
             )().will_exit_somewhere_down_the_stack()
 
-        assert pytest_wrapped_e.type == SystemExit
-        assert pytest_wrapped_e.value.code == "dummy_amplitude_1 is not supported!"
+        assert pytest_wrapped_e.type == KeyError
+        assert pytest_wrapped_e.value.args[0] == "dummy_amplitude_1 is not supported!"
 
     def test_solver_model_exit_global(self):
         """Exit-Test of solver_model for global fitting."""
         _args = self.args
         _args["global"] = 1
-        with pytest.raises(SystemExit) as pytest_wrapped_e:
+        with pytest.raises(KeyError) as pytest_wrapped_e:
             SolverModels(df=self.df, args=_args)().will_exit_somewhere_down_the_stack()
 
-        assert pytest_wrapped_e.type == SystemExit
-        assert pytest_wrapped_e.value.code == "dummy_amplitude_1_1 is not supported!"
+        assert pytest_wrapped_e.type == KeyError
+        assert pytest_wrapped_e.value.args[0] == "dummy_amplitude_1_1 is not supported!"
 
     def test_calculated_model_exit(self):
         """Exit-Test of solver_model."""
         params = Parameters()
         params.add("dummy_amplitude_1", value=1.0)
-        with pytest.raises(SystemExit) as pytest_wrapped_e:
+        with pytest.raises(KeyError) as pytest_wrapped_e:
             calculated_model(
                 params=params,
                 x=self.df["energy"].values,
                 df=self.df["intensity"].values,
                 global_fit=0,
             ).will_exit_somewhere_down_the_stack()
-        assert pytest_wrapped_e.type == SystemExit
-        assert pytest_wrapped_e.value.code == "dummy_amplitude_1 is not supported!"
+        assert pytest_wrapped_e.type == KeyError
+        assert pytest_wrapped_e.value.args[0] == "dummy_amplitude_1 is not supported!"
 
     def test_auto_global_fail(self):
         """Test of no global fitting and auto peak is allowed."""
@@ -102,14 +102,14 @@ class TestNotSupported:
         _args["global"] = 1
         _args["autopeak"] = True
 
-        with pytest.raises(SystemExit) as pytest_wrapped_e:
+        with pytest.raises(KeyError) as pytest_wrapped_e:
             _ = SolverModels(
                 df=self.df, args=_args
             )().will_exit_somewhere_down_the_stack()
 
-        assert pytest_wrapped_e.type == SystemExit
+        assert pytest_wrapped_e.type == KeyError
         assert (
-            pytest_wrapped_e.value.code
+            pytest_wrapped_e.value.args[0]
             == "Global fitting mode with automatic peak detection "
             "is not supported yet."
         )
@@ -897,12 +897,12 @@ class TestModelParametersSolver:
             "optimizer": {"max_nfev": 10, "method": "leastsq"},
         }
 
-        with pytest.raises(SystemExit) as pytest_wrapped_e:
+        with pytest.raises(KeyError) as pytest_wrapped_e:
             _ = SolverModels(df=df, args=args)().will_exit_somewhere_down_the_stack()
 
-        assert pytest_wrapped_e.type == SystemExit
+        assert pytest_wrapped_e.type == KeyError
         assert (
-            pytest_wrapped_e.value.code
+            pytest_wrapped_e.value.args[0]
             == "Global fitting mode with automatic peak detection "
             "is not supported yet."
         )
@@ -1032,16 +1032,16 @@ class TestAutoPeakDetection:
     def test_raise_autopeaks(self):
         """Test raise of AutoPeakDetection."""
         args = {"autopeak": {"no_implimented": 0}}
-        with pytest.raises(SystemExit) as pytest_wrapped_e:
+        with pytest.raises(KeyError) as pytest_wrapped_e:
             auto = AutoPeakDetection(
                 x=np.arange(2, dtype=float), data=np.arange(2, dtype=float), args=args
             )
             auto.initialize_peak_detection()
             peaks, properties = auto.__autodetect__()
 
-        assert pytest_wrapped_e.type == SystemExit
+        assert pytest_wrapped_e.type == KeyError
         assert (
-            pytest_wrapped_e.value.code
+            pytest_wrapped_e.value.args[0]
             == f"{list(args['autopeak'].keys())[0]} is no function parameter of "
             "`scipy.signal.find_peaks`!"
         )
@@ -1179,8 +1179,8 @@ class TestAutoPeakDetection:
         }
         df = pd.read_csv("spectrafit/test/import/test_data.csv")
 
-        with pytest.raises(SystemExit) as pytest_wrapped_e:
+        with pytest.raises(KeyError) as pytest_wrapped_e:
             mp = ModelParameters(df=df, args=args)
             mp.__perform__()
         # peaks, properties = auto.__autodetect__()
-        assert pytest_wrapped_e.type == SystemExit
+        assert pytest_wrapped_e.type == KeyError

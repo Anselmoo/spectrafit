@@ -237,11 +237,11 @@ def extracted_from_command_line_runner() -> Dict[str, Any]:
         if "minimizer" in _args["fitting"]["parameters"].keys():
             result["minimizer"] = _args["fitting"]["parameters"]["minimizer"]
         else:
-            raise SystemExit("Missing 'minimizer' in 'parameters'!")
+            raise KeyError("Missing 'minimizer' in 'parameters'!")
         if "optimizer" in _args["fitting"]["parameters"].keys():
             result["optimizer"] = _args["fitting"]["parameters"]["optimizer"]
         else:
-            raise SystemExit("Missing key 'optimizer' in 'parameters'!")
+            raise KeyError("Missing key 'optimizer' in 'parameters'!")
         if "report" in _args["fitting"]["parameters"].keys():
             result["report"] = _args["fitting"]["parameters"]["report"]
         else:

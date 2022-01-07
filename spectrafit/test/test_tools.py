@@ -164,11 +164,11 @@ class TestPreProcessing:
         args_1 = {"keyword4": "value"}
         args_2 = {"keyword": "value", "keyword2": "value", "keyword3": "value"}
 
-        with pytest.raises(SystemExit) as pytest_wrapped_e:
+        with pytest.raises(KeyError) as pytest_wrapped_e:
             check_keywords_consistency(args_1, args_2)
 
-        assert pytest_wrapped_e.type == SystemExit
-        assert pytest_wrapped_e.value.code == (
+        assert pytest_wrapped_e.type == KeyError
+        assert pytest_wrapped_e.value.args[0] == str(
             f"ERROR: The {list(args_1.keys())[0]} is not parameter of the `cmd-input`!"
         )
 
