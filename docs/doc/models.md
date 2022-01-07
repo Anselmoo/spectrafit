@@ -25,7 +25,7 @@
     for model in params:
         model = model.lower()
         if model.split("_")[0] not in __implemented_models__:
-            raise SystemExit(f"{model} is not supported")
+            raise KeyError(f"{model} is not supported")
         peak_kwargs[(model.split("_")[-1], model.split("_")[0])][
             model.split("_")[1]
         ] = params[model]

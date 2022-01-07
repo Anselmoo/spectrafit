@@ -466,7 +466,7 @@ def read_input_file(fname: str) -> MutableMapping[str, Any]:
         fname (str): Name of the input file.
 
     Raises:
-        SystemExit: If the input file is not supported.
+        OSError: If the input file is not supported.
 
     Returns:
         dict: Return the input file arguments as a dictionary with additional
@@ -484,7 +484,7 @@ def read_input_file(fname: str) -> MutableMapping[str, Any]:
         with open(_fname, "r") as f:
             args = yaml.load(f, Loader=yaml.FullLoader)
     else:
-        raise SystemExit(
+        raise OSError(
             f"ERROR: Input file {fname} has not supported file format.\n"
             "Supported fileformats are: '*.json', '*.yaml', and '*.toml'"
         )
@@ -546,8 +546,8 @@ def check_keywords_consistency(
         ref_args (Dict[str,Any]): Second dictionary to be checked.
 
     Raises:
-        SystemExit: If the keywords are not consistent.
+        KeyError: If the keywords are not consistent.
     """
     for key in check_args:
         if key not in ref_args.keys():
-            raise SystemExit(f"ERROR: The {key} is not parameter of the `cmd-input`!")
+            raise KeyError(f"ERROR: The {key} is not parameter of the `cmd-input`!")

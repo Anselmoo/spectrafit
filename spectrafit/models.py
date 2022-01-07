@@ -62,10 +62,10 @@ class ReferenceKeys:
             model (str): Model name.
 
         Raises:
-            SystemExit: If the model is not supported.
+            KeyError: If the model is not supported.
         """
         if model.split("_")[0] not in self.__models__:
-            raise SystemExit(f"{model} is not supported!")
+            raise KeyError(f"{model} is not supported!")
 
     def automodel_check(self, model: str) -> None:
         """Check if model is available.
@@ -74,10 +74,10 @@ class ReferenceKeys:
             model (str): Auto Model name (gaussian, lorentzian, voigt, or pseudovoigt).
 
         Raises:
-            SystemExit: If the model is not supported.
+            KeyError: If the model is not supported.
         """
         if model not in self.__automodels__:
-            raise SystemExit(f"{model} is not supported!")
+            raise KeyError(f"{model} is not supported!")
 
     def detection_check(self, arg: Dict[str, Any]) -> None:
         """Check if detection is available.
@@ -87,13 +87,13 @@ class ReferenceKeys:
                  additional information beyond the command line arguments.
 
         Raises:
-            SystemExit: If the key is not parameter of the
+            KeyError: If the key is not parameter of the
                  `scipy.signal.find_peaks` function.
         """
         if arg:
             for key in arg:
                 if key.lower() not in self.__findpeaks__:
-                    raise SystemExit(
+                    raise KeyError(
                         f"{key} is no function parameter of "
                         "`scipy.signal.find_peaks`!"
                     )
@@ -481,7 +481,7 @@ class ModelParameters(AutoPeakDetection):
         """Perform the model parameter definition.
 
         Raises:
-            SystemExit: Global fitting is combination with automatic peak detection is
+            KeyError: Global fitting is combination with automatic peak detection is
                  not implemented yet.
         """
         if self.args["global"] == 0 and not self.args["autopeak"]:
@@ -494,7 +494,7 @@ class ModelParameters(AutoPeakDetection):
             self.initialize_peak_detection()
             self.define_parameters_auto()
         elif self.args["global"] in [1, 2]:
-            raise SystemExit(
+            raise KeyError(
                 "Global fitting mode with automatic peak detection "
                 "is not supported yet."
             )
@@ -797,8 +797,6 @@ class SolverModels(ModelParameters):
         for model in params:
             model = model.lower()
             ReferenceKeys().model_check(model=model)
-            # if model.split("_")[0] not in ReferenceKeys.__models__:
-            #    raise SystemExit(f"{model} is not supported")
             c_name = model.split("_")
             peak_kwargs[(c_name[0], c_name[2])][c_name[1]] = params[model]
 
@@ -857,9 +855,6 @@ class SolverModels(ModelParameters):
             x (NDArray[np.float64]): `x`-values of the data.
             data (NDArray[np.float64]): `y`-values of the data as 2D-array.
 
-        Raises:
-            SystemExit: If the model is not supported.
-
         Returns:
             NDArray[np.float64]: The best-fitted data based on the proposed model.
         """
@@ -870,8 +865,6 @@ class SolverModels(ModelParameters):
 
             model = model.lower()
             ReferenceKeys().model_check(model=model)
-            # if model.split("_")[0] not in ReferenceKeys.__models__:
-            #    raise SystemExit(f"{model} is not supported")
             c_name = model.split("_")
             peak_kwargs[(c_name[0], c_name[2], c_name[3])][c_name[1]] = params[model]
         for key, _kwarg in peak_kwargs.items():
@@ -923,9 +916,6 @@ def calculated_model(
              extended by the single contribution of the model.
         global_fit (int): If 1 or 2, the model is calculated for the global fit.
 
-    Raises:
-        SystemExit: If the model is not supported.
-
     Returns:
         pd.DataFrame: Extended dataframe containing the single contributions of the
             models.
@@ -935,8 +925,6 @@ def calculated_model(
     for model in params:
         model = model.lower()
         ReferenceKeys().model_check(model=model)
-        # if model.split("_")[0] not in ReferenceKeys.__models__:
-        #    raise SystemExit(f"{model} is not supported")
         c_name = model.split("_")
         if global_fit:
             peak_kwargs[(c_name[0], c_name[2], c_name[3])][c_name[1]] = params[model]
