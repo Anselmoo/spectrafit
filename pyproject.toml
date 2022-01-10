@@ -65,7 +65,7 @@ optuna = {version = "^2.10.0", optional = true}
 pylama = "^8.3.6"
 flake8 = "^4.0.1"
 pylint = "^2.12.2"
-mypy = "^0.930"
+mypy = "^0.931"
 black = { version = "^21.12b0", allow-prereleases = true }
 isort = "^5.10.1"
 pytest = "^6.2.5"
