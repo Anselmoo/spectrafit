@@ -1268,7 +1268,7 @@ python-versions = ">=3.5"
 
 [[package]]
 name = "pylama"
-version = "8.3.6"
+version = "8.3.7"
 description = "Code audit tool for python"
 category = "dev"
 optional = false
@@ -1981,7 +1981,7 @@ tune = ["tune"]
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7.1,<3.10"
-content-hash = "acd90281bee11ecd1d8b8455568d7ac7f95df2ddd7ed58e8a1d6a1ed5316e56a"
+content-hash = "627153d4e7bae5720cd9df561385c1ef96a0f5f4621146179ff7abed00f2eab6"
 
 [metadata.files]
 adagio = [
@@ -2895,8 +2895,8 @@ pygments = [
     {file = "Pygments-2.11.2.tar.gz", hash = "sha256:4e426f72023d88d03b2fa258de560726ce890ff3b630f88c21cbb8b2503b8c6a"},
 ]
 pylama = [
-    {file = "pylama-8.3.6-py3-none-any.whl", hash = "sha256:7e1f533d345e1a353ecb06bfde8eddee1601396f77e0896ad5068a03c2b1524a"},
-    {file = "pylama-8.3.6.tar.gz", hash = "sha256:c8465cf992efb772026bbe9a435ce90f2890f627cc43992500395490dc400fb1"},
+    {file = "pylama-8.3.7-py3-none-any.whl", hash = "sha256:ca47a1d341ede3aafbe117dc69f9e573cd1b749b2bacf5ac99d8daf6657001ec"},
+    {file = "pylama-8.3.7.tar.gz", hash = "sha256:d6b48087c810db3be5267d44ac0e1998a8c015c5d3eee0524fec90fbfaf8ad26"},
 ]
 pylint = [
     {file = "pylint-2.12.2-py3-none-any.whl", hash = "sha256:daabda3f7ed9d1c60f52d563b1b854632fd90035bcf01443e234d3dc794e3b74"},
