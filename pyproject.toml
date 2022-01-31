@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "SpectraFit"
-version = "0.8.2"
+version = "0.8.3"
 description = "Fast fitting of 2D-Spectra with established routines"
 readme = "README.md"
 authors = ["Anselm Hahn <Anselm.Hahn@gmail.com>"]
@@ -14,7 +14,7 @@ keywords = [
     "fitting",
     "curve-fitting",
     "peak-fitting",
-    "spectrum"
+    "spectrum",
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -29,11 +29,11 @@ classifiers = [
     "Programming Language :: Python :: Implementation :: CPython",
     "Topic :: Scientific/Engineering :: Physics",
     "Topic :: Scientific/Engineering :: Chemistry",
-    "Topic :: Scientific/Engineering :: Information Analysis"
+    "Topic :: Scientific/Engineering :: Information Analysis",
 ]
 include = [
     { path = "spectrafit/test/", format = "sdist" },
-    { path = "examples/", format = "sdist" }
+    { path = "examples/", format = "sdist" },
 ]
 exclude = ["docs/", "tools/"]
 
@@ -55,10 +55,6 @@ emcee = "^3.1.1"
 dill = "^0.3.4"
 corner = "^2.2.1"
 tqdm = "^4.62.3"
-ray = {extras = ["tune"], version = "^1.9.1", optional = true}
-tune = {version = "^0.0.9", optional = true}
-hyperopt = {version = "^0.2.7", optional = true}
-optuna = {version = "^2.10.0", optional = true}
 
 
 [tool.poetry.dev-dependencies]
@@ -87,12 +83,6 @@ mkdocs-section-index = "^0.3.3"
 pytest-xdist = "^2.5.0"
 pytest-plt = "^1.1.0"
 
-[tool.poetry.extras]
-ray = ["ray"]
-tune = ["tune"]
-hyperopt = ["hyperopt"]
-optuna = ["optuna"]
-all = ["ray", "tune", "hyperopt", "optuna"]
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
