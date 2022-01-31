@@ -987,7 +987,7 @@ def gaussian(
     """
     sigma = fwhmg / Constants.sig2fwhm
     return (amplitude / (Constants.sq2pi * sigma)) * np.exp(
-        -((1.0 * x - center) ** 2) / (2 * sigma ** 2)
+        -((1.0 * x - center) ** 2) / (2 * sigma**2)
     )
 
 
@@ -1077,12 +1077,12 @@ def pseudovoigt(
         NDArray[np.float64]: Pseudo-Voigt distribution of `x` given.
     """
     f = np.power(
-        fwhmg ** 5
-        + 2.69269 * fwhmg ** 4 * fwhml
-        + 2.42843 * fwhmg ** 3 * fwhml ** 2
-        + 4.47163 * fwhmg ** 2 * fwhml ** 3
-        + 0.07842 * fwhmg * fwhml ** 4
-        + fwhml ** 5,
+        fwhmg**5
+        + 2.69269 * fwhmg**4 * fwhml
+        + 2.42843 * fwhmg**3 * fwhml**2
+        + 4.47163 * fwhmg**2 * fwhml**3
+        + 0.07842 * fwhmg * fwhml**4
+        + fwhml**5,
         0.2,
     )
     n = 1.36603 * (fwhml / f) - 0.47719 * (fwhml / f) ** 2 + 0.11116 * (fwhml / f) ** 3
