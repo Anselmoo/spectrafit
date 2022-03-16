@@ -4,7 +4,7 @@
 
 > See also: [https://github.com/Anselmoo/spectrafit/releases][1]
 
-## v 0.8.0
+## v0.8.0
 
 ---
 
