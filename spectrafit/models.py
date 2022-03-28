@@ -177,9 +177,7 @@ class AutoPeakDetection:
         Returns:
             Any: The reference value for `scipy.signal.find_peaks`.
         """
-        if key in args:
-            return args[key]
-        return value
+        return args.get(key, value)
 
     @property
     def estimate_height(self) -> Tuple[float, float]:
