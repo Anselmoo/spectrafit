@@ -62,7 +62,7 @@ pylama = "^8.3.8"
 flake8 = "^4.0.1"
 pylint = "^2.12.2"
 mypy = "^0.941"
-black = { version = "^22.1", allow-prereleases = true }
+black = { version = "^22.3", allow-prereleases = true }
 isort = "^5.10.1"
 pytest = "^7.1.1"
 pytest-clarity = "^1.0.1"
