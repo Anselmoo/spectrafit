@@ -586,7 +586,7 @@ mkdocs = ">=1.0.4"
 
 [[package]]
 name = "mkdocs-section-index"
-version = "0.3.3"
+version = "0.3.4"
 description = "MkDocs plugin to allow clickable sections that lead to an index page"
 category = "dev"
 optional = false
@@ -1333,7 +1333,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7.1,<3.10"
-content-hash = "9b2cf1c9e5be96ef2bdcf70f4ecd3e561ce87e6c9b49d5c0300852a9a7f18106"
+content-hash = "456e57db653c210d5181687c223fcc9ddcc41c283f1cb8c2dac497a844162464"
 
 [metadata.files]
 algopy = [
@@ -1736,8 +1736,8 @@ mkdocs-minify-plugin = [
     {file = "mkdocs_minify_plugin-0.5.0-py2-none-any.whl", hash = "sha256:487c31ae6b8b3230f56910ce6bcf5c7e6ad9a8c4f51c720a4b989f30c2b0233f"},
 ]
 mkdocs-section-index = [
-    {file = "mkdocs-section-index-0.3.3.tar.gz", hash = "sha256:434c7c2378a7c2a7ce15f642fcb0cd04af741a7d157eab47e6c02c3eb8a52a98"},
-    {file = "mkdocs_section_index-0.3.3-py3-none-any.whl", hash = "sha256:a79d8b6e21b5d9d4edf056246ea1d1d4f6c8705469c20bbe06e3ecd5b30fc4e7"},
+    {file = "mkdocs-section-index-0.3.4.tar.gz", hash = "sha256:050151bfe7c0e374f197335e0ecb19c45b53dbafc0f817aa203f0cc24bcf7d10"},
+    {file = "mkdocs_section_index-0.3.4-py3-none-any.whl", hash = "sha256:214f7a6df9d35a5772e9577f3899ff3edd90044064589e6dd4d84615b72a8024"},
 ]
 mkdocstrings = [
     {file = "mkdocstrings-0.18.1-py3-none-any.whl", hash = "sha256:4053929356df8cd69ed32eef71d8f676a472ef72980c9ffd4f933ead1debcdad"},
