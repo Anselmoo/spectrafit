@@ -60,7 +60,7 @@ jobs:
           poetry install
           poetry run pytest --diff-symbols --cov=./spectrafit -vv --cov-report=xml --plots
       - name: Codecov
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           env_vars: OS,PYTHON
