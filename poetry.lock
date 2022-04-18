@@ -1242,7 +1242,7 @@ python-versions = "*"
 
 [[package]]
 name = "types-tabulate"
-version = "0.8.6"
+version = "0.8.7"
 description = "Typing stubs for tabulate"
 category = "dev"
 optional = false
@@ -1334,7 +1334,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7.1,<3.10"
-content-hash = "aef3b4d546cd6ef026b31243371247718fdf0c622b4eb063eeffdf505cb1d213"
+content-hash = "bf906c2989cd0ca282365f1e05772d3705cd7c7837bc0d8b6a91126dae4051c7"
 
 [metadata.files]
 algopy = [
@@ -2151,8 +2151,8 @@ types-pyyaml = [
     {file = "types_PyYAML-6.0.6-py3-none-any.whl", hash = "sha256:d3d99e0a37a2fd37f35a9e4b4f794034192dac2aea2efc84c1bcde00ed66e150"},
 ]
 types-tabulate = [
-    {file = "types-tabulate-0.8.6.tar.gz", hash = "sha256:3f4dfb795449c2178ed5c214ec5114c044b1eedd71ad0a1003bc670f09d8710a"},
-    {file = "types_tabulate-0.8.6-py3-none-any.whl", hash = "sha256:865300241f768f862e5cb5819d0a5ca62715d42f5c5c22dd9e540c139dc4abb3"},
+    {file = "types-tabulate-0.8.7.tar.gz", hash = "sha256:0acd0295866e5f2de2e90738ff0bc1201751e1dd028bd30cbfa41aa7a669929e"},
+    {file = "types_tabulate-0.8.7-py3-none-any.whl", hash = "sha256:540dc44538bb5a24ef2b359d6a3649547013ae4500205829ce4b9f7d2e1630e7"},
 ]
 types-toml = [
     {file = "types-toml-0.10.5.tar.gz", hash = "sha256:f949463a388200be392ef9399dbad3e1e3bbe6d4543d84ad93d96c3fda028080"},
