@@ -4,6 +4,28 @@
 
 > See also: [https://github.com/Anselmoo/spectrafit/releases][1]
 
+## v0.8.3 - v0.8.5
+
+---
+
+- Dependency and GitHub Action Updates
+
+## v0.8.2
+
+---
+
+
+- Refactor buffer of the _covariance matrix_
+
+## v0.8.1
+
+---
+
+- Updating all `raise` statements
+- Add [prettier][17] to CI/CD workflow
+
+
+
 ## v0.8.0
 
 ---
@@ -20,7 +42,7 @@
 
 ---
 
-- Maintance of the `SpectraFit` package
+- Maintenance of the `SpectraFit` package
 
 ## v0.7.0
 
@@ -174,3 +196,4 @@
 [14]: https://github.com/Anselmoo/spectrafit/blob/main/README.md
 [15]: https://pypi.org/project/spectrafit/
 [16]: https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.find_peaks.html
+[17]: https://prettier.io
