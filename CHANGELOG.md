@@ -14,7 +14,6 @@
 
 ---
 
-
 - Refactor buffer of the _covariance matrix_
 
 ## v0.8.1
@@ -23,8 +22,6 @@
 
 - Updating all `raise` statements
 - Add [prettier][17] to CI/CD workflow
-
-
 
 ## v0.8.0
 
