@@ -64,7 +64,7 @@ pylint = "^2.13.7"
 mypy = "^0.942"
 black = { version = "^22.3", allow-prereleases = true }
 isort = "^5.10.1"
-pytest = "^7.1.1"
+pytest = "^7.1.2"
 pytest-clarity = "^1.0.1"
 pytest-cov = "^3.0.0"
 pytest-console-scripts = "^1.3"
