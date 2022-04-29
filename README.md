@@ -18,7 +18,7 @@ used for the following publication:
 - [Measurement of the Ligand Field Spectra of Ferrous and Ferric Iron Chlorides Using 2p3d RIXS](https://pubs.acs.org/doi/abs/10.1021/acs.inorgchem.7b00940)
 
 Now, it is completely rewritten and is more flexible. It is supporting all
-common ASCII-data formats and it run on `Linux`, `Windows`, and `MacOS`.
+common ASCII-data formats and it runs on `Linux`, `Windows`, and `MacOS`.
 
 ## Scope
 
