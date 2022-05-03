@@ -60,7 +60,7 @@ exclude = ["docs/", "tools/"]
 [tool.poetry.dev-dependencies]
 pylama = "^8.3.8"
 flake8 = "^4.0.1"
-pylint = "^2.13.7"
+pylint = "^2.13.8"
 mypy = "^0.950"
 black = { version = "^22.3", allow-prereleases = true }
 isort = "^5.10.1"
