@@ -213,7 +213,7 @@ python-versions = "*"
 
 [[package]]
 name = "emcee"
-version = "3.1.1"
+version = "3.1.2"
 description = "The Python ensemble sampling toolkit for MCMC"
 category = "main"
 optional = false
@@ -1471,8 +1471,8 @@ distlib = [
     {file = "distlib-0.3.4.zip", hash = "sha256:e4b58818180336dc9c529bfb9a0b58728ffc09ad92027a3f30b7cd91e3458579"},
 ]
 emcee = [
-    {file = "emcee-3.1.1-py2.py3-none-any.whl", hash = "sha256:e01d68a84725f6c0734c3c31394e88a7252b12fddb44efe981e10956a7028a93"},
-    {file = "emcee-3.1.1.tar.gz", hash = "sha256:48ffc6a7f5c51760b7a836056184c7286a9959ef81b45b977b02794f1210fb5c"},
+    {file = "emcee-3.1.2-py2.py3-none-any.whl", hash = "sha256:88a816b09932048c58d3ff8a8ce8d8171ef0926314a887ebb45748979a8aa518"},
+    {file = "emcee-3.1.2.tar.gz", hash = "sha256:7f668b1a0db8f591b5cff26e8671c98c943417e1508dae8c752170883f4c0981"},
 ]
 et-xmlfile = [
     {file = "et_xmlfile-1.1.0-py3-none-any.whl", hash = "sha256:a2ba85d1d6a74ef63837eed693bcb89c3f752169b0e3e7ae5b16ca5e1b3deada"},
