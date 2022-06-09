@@ -17,6 +17,8 @@ jobs:
           ref: ${{ github.head_ref }}
           fetch-depth: 0
       - uses: actions/setup-python@v4
+        with:
+          python-version: 3.8
       - name: Pre-commit
         uses: pre-commit/action@v3.0.0
         with:
@@ -114,6 +116,8 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
+      - name: Build documentation
+        run: mkdocs build --clean
       - name: Deploy documentation develops
         if: contains(github.ref, 'refs/heads/main')
         run: poetry run mkdocs gh-deploy --clean --force
