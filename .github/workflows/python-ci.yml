@@ -117,7 +117,7 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
       - name: Build documentation
-        run: mkdocs build --clean
+        run: poetry run mkdocs build --clean
       - name: Deploy documentation develops
         if: contains(github.ref, 'refs/heads/main')
         run: poetry run mkdocs gh-deploy --clean --force
