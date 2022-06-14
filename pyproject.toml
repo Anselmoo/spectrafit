@@ -55,6 +55,7 @@ exclude = ["docs/", "tools/"]
     dill = "^0.3.4"
     corner = "^2.2.1"
     tqdm = "^4.62.3"
+    pydantic = "^1.9.1"
 
 
     [tool.poetry.dev-dependencies]
@@ -82,6 +83,7 @@ exclude = ["docs/", "tools/"]
     mkdocs-section-index = "^0.3.4"
     pytest-xdist = "^2.5.0"
     pytest-plt = "^1.1.0"
+    datamodel-code-generator = "^0.13.0"
 
 
 [build-system]
@@ -132,6 +134,10 @@ ignore = ["E203", "W503", "W605"]
 
 [tool.pytest]
 script_launch_mode = "subprocess"
+    [tool.pytest.ini_options]
+    minversion = "7.0"
+    addopts = "--cov=spectrafit/ --cov-report=xml -ra -q"
+    testpaths = ["spectrafit"]
 
 [tool.pydocstyle]
 match = '.*\.py'
