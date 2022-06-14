@@ -9,8 +9,9 @@ ENV PYTHONUNBUFFERED=1
 
 # Export via poetry and install  via pip requirements
 COPY pyproject.toml poetry.lock ./
+RUN python -m pip install pip --upgrade
 RUN python -m pip install poetry
-RUN poetry config virtualenvs.create false
+RUN poetry config virtualenvs.create true
 RUN poetry install --no-dev
 
 WORKDIR /app
