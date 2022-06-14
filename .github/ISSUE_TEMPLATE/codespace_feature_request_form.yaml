@@ -1,7 +1,7 @@
-name: 🚀 Feature Request
-description: Suggest an idea for `SpectraFit`
-title: "[Feature]: "
-labels: [enhancement]
+name: 💻 Feature Request for Codespaces
+description: Suggest an idea for Codespaces of `SpectraFit`
+title: "[Codespaces-Feature]: "
+labels: [codespaces, enhancement]
 assignees:
   - Anselmoo
 body:
@@ -9,18 +9,18 @@ body:
     attributes:
       label: Is there an existing issue for this?
       description: |
-        Please search to see if an [issue](https://github.com/Anselmoo/spectrafit/issues) already exists for the 🐛 bug or 🚀 feature-request you encountered.
+        Please search to see if an [issue](https://github.com/Anselmoo/spectrafit/issues) already exists for the 🐛 bug or 💻 feature-request you encountered.
       options:
         - label: I have searched the existing issues
           required: true
   - type: markdown
     attributes:
       value: |
-        Thanks for taking the time to fill out this 🚀 feature request!
+        Thanks for taking the time to fill out this 💻 Codespaces feature request!
   - type: textarea
     attributes:
       label: Current Missing Feature
-      description: Which feature is missing from the current version of `SpectraFit`?
+      description: Which feature is missing from the current implementation of 💻 Codespaces in `SpectraFit`?
       placeholder: |
         A clear and concise description of what the problem is. Ex. I'm always frustrated when ...
     validations:
