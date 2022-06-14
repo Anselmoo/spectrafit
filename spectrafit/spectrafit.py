@@ -16,11 +16,11 @@ from spectrafit.models import SolverModels
 from spectrafit.plotting import PlotSpectra
 from spectrafit.report import PrintingResults
 from spectrafit.report import PrintingStatus
+
+# from spectrafit.tools import check_keywords_consistency
 from spectrafit.tools import PostProcessing
 from spectrafit.tools import PreProcessing
 from spectrafit.tools import SaveResult
-
-# from spectrafit.tools import check_keywords_consistency
 from spectrafit.tools import load_data
 from spectrafit.tools import read_input_file
 
