@@ -1,5 +1,14 @@
 # How to contribute
 
+
+- [How to contribute](#how-to-contribute)
+  - [Setup the development environment](#setup-the-development-environment)
+  - [Milestones](#milestones)
+  - [Testing](#testing)
+  - [Submitting changes](#submitting-changes)
+  - [Coding conventions](#coding-conventions)
+  - [Note](#note)
+
 We are really glad you're reading this, because we need volunteer developers to
 help this project `SpectraFit`.
 
@@ -29,6 +38,8 @@ files, we prefer the [prettier style][7] and its extension for `toml` files.
 
 ## Milestones
 
+> Milestones are listed in the order of their completion.
+
 - [x] Introducing a class concept for `SpectraFit` because it is very functional
       driven programmed; partially solved be exporting into submodules like
       `tools.py`
@@ -37,6 +48,8 @@ files, we prefer the [prettier style][7] and its extension for `toml` files.
 - [x] Implementing `Global Fitting` as a part of the `SpectraFit` class
 - [ ] Introducing JupyterLab
 - [ ] Updating the Docker package configuration
+
+[Milestones][10] now also available for the `spectrafit` application. Furthermore,
 
 ## Testing
 
@@ -59,6 +72,9 @@ git commit -m "A brief summary of the commit"
 ```
 
 > A paragraph describing what changed and its impact.
+
+In terms of connecting [issues][11] with the corresponding [PR][9], we prefer to use the the [GitHub convention of using the issue number][12] in the commit message. This also allows us to easily linking PRs with issues in our [Project Board][13].
+
 
 ## Coding conventions
 
@@ -86,3 +102,7 @@ This template is adapted from [opengovernment][3].
 [7]: https://prettier.io
 [8]: https://lmfit.github.io/lmfit-py/fitting.html
 [9]: https://github.com/Anselmoo/spectrafit/pulls
+[10]: https://github.com/Anselmoo/spectrafit/milestones
+[11]: https://github.com/Anselmoo/spectrafit/issues
+[12]: https://docs.github.com/en/issues/tracking-your-work-with-issues/linking-a-pull-request-to-an-issue
+[13]: https://github.com/Anselmoo/spectrafit/projects/1

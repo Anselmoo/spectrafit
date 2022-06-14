@@ -4,6 +4,14 @@
 
 > See also: [https://github.com/Anselmoo/spectrafit/releases][1]
 
+## v0.8.6
+
+---
+
+- Updating the way of poetry caching
+- Update docker actions
+- Fixed typo in README.md
+
 ## v0.8.3 - v0.8.5
 
 ---
