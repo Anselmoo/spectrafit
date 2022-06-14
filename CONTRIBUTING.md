@@ -1,6 +1,5 @@
 # How to contribute
 
-
 - [How to contribute](#how-to-contribute)
   - [Setup the development environment](#setup-the-development-environment)
   - [Milestones](#milestones)
@@ -74,7 +73,6 @@ git commit -m "A brief summary of the commit"
 > A paragraph describing what changed and its impact.
 
 In terms of connecting [issues][11] with the corresponding [PR][9], we prefer to use the the [GitHub convention of using the issue number][12] in the commit message. This also allows us to easily linking PRs with issues in our [Project Board][13].
-
 
 ## Coding conventions
 
