@@ -10,6 +10,8 @@ categories:
     label: "milestone"
   - title: "🚀 New"
     label: "enhancement"
+  - title: "💻 New"
+    label: "codespaces"
   - title: "🐛 Bug Fixes"
     label: "bug"
   - title: "🧰 Maintenance"
@@ -32,6 +34,7 @@ version-resolver:
   minor:
     labels:
       - "enhancement"
+      - "codespaces"
   patch:
     labels:
       - "bug"
