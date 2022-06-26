@@ -86,7 +86,7 @@ exclude = ["docs/", "tools/"]
   datamodel-code-generator = "^0.13.0"
   pytest-benchmark = "^3.4.1"
   pip-licenses = { version = "^3.5.4", optional = true }
-  pip-audit = { version = "^2.3.3", optional = true }
+  pip-audit = { version = "^2.3.4", optional = true }
 
 
 
