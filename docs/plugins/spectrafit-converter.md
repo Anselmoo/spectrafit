@@ -4,7 +4,6 @@ With the command `spectrafit-converter` input and output files can be converted.
 2. `.yaml`
 3. `.toml`
 
-
 ```shell
    ❯ spectrafit-converter -h
    usage: spectrafit-converter [-h] [-f {lock,ymltoml,yaml,json}] infile
@@ -1448,6 +1447,7 @@ With the command `spectrafit-converter` input and output files can be converted.
         }
       }
     ```
+
 === "LOCK"
 
     ```toml
