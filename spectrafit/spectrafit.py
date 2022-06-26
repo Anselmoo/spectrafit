@@ -239,7 +239,10 @@ def extracted_from_command_line_runner() -> Dict[str, Any]:
     # check_keywords_consistency(check_args=_args["settings"], ref_args=result)
     if "settings" in _args.keys():
         for key in _args["settings"].keys():
-            result[key] = _args["settings"][key]
+            if key == "infile":
+                result[key] = Path(_args["settings"][key])
+            else:
+                result[key] = _args["settings"][key]
     if "description" in _args["fitting"].keys():
         result["description"] = _args["fitting"]["description"]
     if "parameters" in _args["fitting"].keys():
