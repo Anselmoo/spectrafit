@@ -82,11 +82,10 @@ exclude = ["docs/", "tools/"]
   mkdocs-section-index = "^0.3.4"
   pytest-xdist = "^2.5.0"
   pytest-plt = "^1.1.0"
-  datamodel-code-generator = "^0.13.0"
+  datamodel-code-generator = { version = "^0.13.0", optional = true }
   pytest-benchmark = "^3.4.1"
-  pip-licenses = { version = "^3.5.4", optional = true }
-  pip-audit = { version = "^2.3.4", optional = true }
-  flake8 = "^4.0.1"
+  # flake8 = "^4.0.1"
+  importlib-metadata = "^4.12.0"
 
 
 [build-system]
@@ -95,9 +94,10 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
 spectrafit = "spectrafit.spectrafit:command_line_runner"
+spectrafit-converter = "spectrafit.plugins.converter:command_line_runner"
 
 [tool.poetry.extras]
-dev = ["pip-license", "pip-audit"]
+dev = ["datamodel-code-generator"]
 
 [tool.isort]
 profile = "black"

@@ -3,6 +3,7 @@ import argparse
 
 from datetime import datetime
 from getpass import getuser
+from pathlib import Path
 from socket import gethostname
 from typing import Any
 from typing import Dict
@@ -38,7 +39,7 @@ def get_args() -> Dict[str, Any]:
     parser = argparse.ArgumentParser(
         description="Fast Fitting Program for ascii txt files."
     )
-    parser.add_argument("infile", type=str, help="Filename of the spectra data")
+    parser.add_argument("infile", type=Path, help="Filename of the spectra data")
     parser.add_argument(
         "-o",
         "--outfile",

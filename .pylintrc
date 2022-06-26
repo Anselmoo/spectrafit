@@ -105,6 +105,7 @@ disable=
     # We anticipate #3512 where it will become optional
     fixme,
     E0401, # Import is not at the top of the file
+    R6002, # Old typing definition
 
 
 [REPORTS]
