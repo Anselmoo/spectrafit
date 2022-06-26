@@ -519,6 +519,7 @@ def load_data(args: Dict[str, str]) -> pd.DataFrame:
                 header=args["header"],
                 dtype=np.float64,
                 decimal=args["decimal"],
+                comment=args["comment"],
             )
         return pd.read_csv(
             Path(args["infile"]),
@@ -527,6 +528,7 @@ def load_data(args: Dict[str, str]) -> pd.DataFrame:
             usecols=args["column"],
             dtype=np.float64,
             decimal=args["decimal"],
+            comment=args["comment"],
         )
     except ValueError as exc:
         print(f"Error: {exc} -> Dataframe contains non numeric data!")
