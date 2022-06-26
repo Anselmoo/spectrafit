@@ -53,14 +53,14 @@ def test_json_conversion():
         infile = Path(tmpdir) / "input_1.json"
 
         # write input json
-        with open(infile, "w") as f:
+        with open(infile, "w", encoding="utf8") as f:
             json.dump({"a": 1, "b": 2}, f)
         args = {
             "infile": infile,
             "format": "yaml",
         }
         convert(args)
-        with open(infile.with_suffix(".yaml")) as f:
+        with open(infile.with_suffix(".yaml"), encoding="utf8") as f:
             data = yaml.safe_load(f)
 
         assert data == {"a": 1, "b": 2}
@@ -72,14 +72,14 @@ def test_yaml_conversion():
         infile = Path(tmpdir) / "input_1.yaml"
 
         # write input yaml
-        with open(infile, "w") as f:
+        with open(infile, "w", encoding="utf8") as f:
             yaml.dump({"a": 1, "b": 2}, f)
         args = {
             "infile": infile,
             "format": "toml",
         }
         convert(args)
-        with open(infile.with_suffix(".toml")) as f:
+        with open(infile.with_suffix(".toml"), encoding="utf8") as f:
             data = toml.load(f)
 
         assert data == {"a": 1, "b": 2}
@@ -91,14 +91,14 @@ def test_toml_conversion():
         infile = Path(tmpdir) / "input_1.toml"
 
         # write input toml
-        with open(infile, "w") as f:
+        with open(infile, "w", encoding="utf8") as f:
             toml.dump({"a": 1, "b": 2}, f)
         args = {
             "infile": infile,
-            "format": "yaml",
+            "format": "json",
         }
         convert(args)
-        with open(infile.with_suffix(".yaml")) as f:
-            data = yaml.load(f, Loader=yaml.SafeLoader)
+        with open(infile.with_suffix(".json"), encoding="utf8") as f:
+            data = json.load(f)
 
         assert data == {"a": 1, "b": 2}
