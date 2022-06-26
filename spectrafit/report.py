@@ -21,7 +21,9 @@ CORREL_HEAD = "[[Correlations]] (unreported correlations are < %.3f)"
 pp = pprint.PrettyPrinter(indent=4)
 
 
-def fit_report_as_dict(inpars: minimize, modelpars: dict = None) -> dict:
+def fit_report_as_dict(
+    inpars: minimize, modelpars: Dict[str, Any] = None
+) -> Dict[str, Dict[Any, Any]]:
     """Generate the best fit report as dictionary.
 
     The report contains the best-fit values for the parameters and their
@@ -30,10 +32,11 @@ def fit_report_as_dict(inpars: minimize, modelpars: dict = None) -> dict:
     Args:
         inpars (minimize): Input Parameters from a fit or the  Minimizer results
              returned from a fit.
-        modelpars (dict, optional): Known Model Parameters. Defaults to None.
+        modelpars (Dict[str,  Any], optional): Known Model Parameters.
+            Defaults to None.
 
     Returns:
-        dict: [description]
+         Dict[str, Dict[Any, Any]]: The report as a dictionary.
     """
     result = inpars
     params = inpars.params
@@ -113,7 +116,7 @@ def fit_report_as_dict(inpars: minimize, modelpars: dict = None) -> dict:
         if hasattr(par, "correl") and par.correl is not None:
             for name_2 in parnames[i + 1 :]:
                 if (
-                    name != name_2
+                    name_1 != name_2
                     and name_2 in par.correl
                     and abs(par.correl[name_2]) <= 1.0
                 ):
