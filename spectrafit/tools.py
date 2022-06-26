@@ -451,13 +451,15 @@ class SaveResult:
     def save_as_json(self) -> None:
         """Save the fitting result as json file."""
         if self.args["outfile"]:
-            with open(Path(f"{self.args['outfile']}_summary.json"), "w") as f:
+            with open(
+                Path(f"{self.args['outfile']}_summary.json"), "w", encoding="utf8"
+            ) as f:
                 json.dump(self.args, f, indent=4)
         else:
             raise FileNotFoundError("No output file provided!")
 
 
-def read_input_file(fname: str) -> MutableMapping[str, Any]:
+def read_input_file(fname: Path) -> MutableMapping[str, Any]:
     """Read the input file.
 
     Read the input file as `toml`, `json`, or `yaml` files and return as a dictionary.
@@ -473,15 +475,15 @@ def read_input_file(fname: str) -> MutableMapping[str, Any]:
              information beyond the command line arguments.
 
     """
-    _fname = Path(fname)
+    fname = Path(fname)
 
-    if _fname.suffix == ".toml":
+    if fname.suffix == ".toml":
         args = toml.load(fname)
-    elif _fname.suffix == ".json":
-        with open(_fname, "r") as f:
+    elif fname.suffix == ".json":
+        with open(fname, "r", encoding="utf8") as f:
             args = json.load(f)
-    elif _fname.suffix in [".yaml", ".yml"]:
-        with open(_fname, "r") as f:
+    elif fname.suffix in [".yaml", ".yml"]:
+        with open(fname, "r", encoding="utf8") as f:
             args = yaml.load(f, Loader=yaml.FullLoader)
     else:
         raise OSError(
@@ -514,7 +516,7 @@ def load_data(args: Dict[str, str]) -> pd.DataFrame:
     try:
         if args["global"]:
             return pd.read_csv(
-                Path(args["infile"]),
+                args["infile"],
                 sep=args["separator"],
                 header=args["header"],
                 dtype=np.float64,
@@ -522,7 +524,7 @@ def load_data(args: Dict[str, str]) -> pd.DataFrame:
                 comment=args["comment"],
             )
         return pd.read_csv(
-            Path(args["infile"]),
+            args["infile"],
             sep=args["separator"],
             header=args["header"],
             usecols=args["column"],

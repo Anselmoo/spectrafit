@@ -4,6 +4,16 @@
 
 > See also: [https://github.com/Anselmoo/spectrafit/releases][1]
 
+## v0.9.0
+
+---
+
+- Adding Python 3.10 support
+- Adding [Athena file][19] support
+- Increasing code quality by using [`pylint`][18]
+- Adding plugin support for `SpectraFit`
+  - Starting with input file converter
+
 ## v0.8.6
 
 ---
@@ -202,3 +212,5 @@
 [15]: https://pypi.org/project/spectrafit/
 [16]: https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.find_peaks.html
 [17]: https://prettier.io
+[18]: https://github.com/PyCQA/pylint
+[19]: http://bruceravel.github.io/demeter/documents/Athena/index.html

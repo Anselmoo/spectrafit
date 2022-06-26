@@ -151,6 +151,8 @@ nav:
       - Solvers: doc/solver.md
       - Fitting: doc/fitting.md
       - Statistics: doc/statistics.md
+  - Plugins:
+      - File-Format-Conversion: plugins/spectrafit-converter.md
   - API:
       - SpectraFit: api/spectrafit_api.md
       - Plotting: api/plotting_api.md
