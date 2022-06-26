@@ -19,7 +19,6 @@ demonstrated.
     * Currently, only Athena files with one column for energy and one column for
       intensity are supported!
 
-
 ```json
 "settings": {
     "decimal": ".",
@@ -262,7 +261,6 @@ demonstrated.
       }
     }
     ```
-
 
 [1]: http://bruceravel.github.io/demeter/documents/Athena/index.html
 [2]: https://bruceravel.github.io/demeter/
