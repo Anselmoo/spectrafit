@@ -14,7 +14,8 @@
 ---
 
 - [ ] Does your submission pass tests?
-- [ ] Have you lint your code locally prior to submission?
+- [ ] Have you lint your code locally prior to submission? Fixed:
+- [ ] This PR is for a new feature, not a bug fix.
 
 ### Changes to ⚙️ Core-Features:
 
