@@ -144,6 +144,7 @@ nav:
       - Working with Expressions: examples/example5.md
       - Global Fitting: examples/example6.md
       - Automatic Fitting: examples/example7.md
+      - Working with Athena Data: examples/example8.md
   - Documentation:
       - Models: doc/models.md
       - Expression: doc/expression.md

@@ -115,6 +115,9 @@ optional arguments:
                         Type of decimal separator; default to '.'.
   -hd HEADER, --header HEADER
                         Selected the header for the dataframe; default to None.
+  -cm COMMENT, --comment COMMENT
+                        Lines with comment characters like '#' should not be
+                        parsed; default to None.
   -g {0,1,2}, --global {0,1,2}
                         Perform a global fit over the complete dataframe. The
                         options are '0' for classic fit (default). The

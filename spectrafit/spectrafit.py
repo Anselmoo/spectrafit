@@ -68,28 +68,28 @@ def get_args() -> Dict[str, Any]:
         "--energy_start",
         type=float,
         default=None,
-        help="Starting energy in eV; default to start of energy.",
+        help="Starting energy in eV; default to start of energy; default to None.",
     )
     parser.add_argument(
         "-e1",
         "--energy_stop",
         type=float,
         default=None,
-        help="Ending energy in eV; default to end of energy.",
+        help="Ending energy in eV; default to end of energy; default to None.",
     )
     parser.add_argument(
         "-s",
         "--smooth",
         type=int,
         default=None,
-        help="Number of smooth points for lmfit; default to 0.",
+        help="Number of smooth points for lmfit; default to None.",
     )
     parser.add_argument(
         "-sh",
         "--shift",
         type=float,
         default=None,
-        help="Constant applied energy shift",
+        help="Constant applied energy shift; default to 0.",
     )
     parser.add_argument(
         "-c",
@@ -127,6 +127,14 @@ def get_args() -> Dict[str, Any]:
         help="Selected the header for the dataframe; default to None.",
     )
     parser.add_argument(
+        "-cm",
+        "--comment",
+        type=str,
+        default=None,
+        help="Lines with comment characters like '#' should not be parsed;"
+        " default to None.",
+    )
+    parser.add_argument(
         "-g",
         "--global",
         type=int,
@@ -150,7 +158,6 @@ def get_args() -> Dict[str, Any]:
         action="store_true",
         default=False,
     )
-
     parser.add_argument(
         "-np",
         "--noplot",

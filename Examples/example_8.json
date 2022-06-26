@@ -1,0 +1,216 @@
+{
+  "settings": {
+    "decimal": ".",
+    "energy_start": 5440,
+    "energy_stop": 5520,
+    "comment": "#",
+    "infile": "athena.nor",
+    "outfile": "example_8",
+    "oversampling": false,
+    "separator": "\\s+",
+    "shift": 0,
+    "smooth": 0,
+    "verbose": 0,
+    "version": false
+  },
+  "fitting": {
+    "description": {
+      "project_name": "Template",
+      "project_details": "Template for testing",
+      "keywords": [
+        "2D-Spectra",
+        "fitting",
+        "curve-fitting",
+        "peak-fitting",
+        "spectrum"
+      ]
+    },
+    "parameters": {
+      "minimizer": {
+        "nan_policy": "propagate",
+        "calc_covar": true
+      },
+      "optimizer": {
+        "max_nfev": 1000,
+        "method": "leastsq"
+      },
+      "report": {
+        "min_correl": 0.0
+      }
+    },
+    "peaks": {
+      "1": {
+        "pseudovoigt": {
+          "amplitude": {
+            "max": 4,
+            "min": 0,
+            "vary": true,
+            "value": 1
+          },
+          "center": {
+            "max": 5470,
+            "min": 5460,
+            "vary": true,
+            "value": 5468
+          },
+          "fwhmg": {
+            "max": 2.75,
+            "min": 0.001,
+            "vary": true,
+            "value": 1.0
+          },
+          "fwhml": {
+            "max": 2.75,
+            "min": 0.001,
+            "vary": true,
+            "value": 1.0
+          }
+        }
+      },
+      "2": {
+        "pseudovoigt": {
+          "amplitude": {
+            "max": 4,
+            "min": 0,
+            "vary": true,
+            "value": 1
+          },
+          "center": {
+            "max": 5470,
+            "min": 5465,
+            "vary": true,
+            "value": 5469
+          },
+          "fwhmg": {
+            "max": 2.75,
+            "min": 0.001,
+            "vary": true,
+            "value": 1.0
+          },
+          "fwhml": {
+            "max": 2.75,
+            "min": 0.001,
+            "vary": true,
+            "value": 1.0
+          }
+        }
+      },
+      "3": {
+        "pseudovoigt": {
+          "amplitude": {
+            "max": 4,
+            "min": 0,
+            "vary": true,
+            "value": 1
+          },
+          "center": {
+            "max": 5480,
+            "min": 5470,
+            "vary": true,
+            "value": 5473
+          },
+          "fwhmg": {
+            "max": 3.75,
+            "min": 0.1,
+            "vary": true,
+            "value": 1
+          },
+          "fwhml": {
+            "max": 3.75,
+            "min": 0.1,
+            "vary": true,
+            "value": 1
+          }
+        }
+      },
+      "4": {
+        "gaussian": {
+          "amplitude": {
+            "max": 10,
+            "min": 0.1,
+            "vary": true,
+            "value": 3
+          },
+          "center": {
+            "max": 5485,
+            "min": 5475,
+            "vary": true,
+            "value": 5478
+          },
+          "fwhmg": {
+            "max": 4,
+            "min": 0.1,
+            "vary": true,
+            "value": 1
+          }
+        }
+      },
+      "5": {
+        "gaussian": {
+          "amplitude": {
+            "max": 10,
+            "min": 0.1,
+            "vary": true,
+            "value": 4
+          },
+          "center": {
+            "max": 5498,
+            "min": 5480,
+            "vary": true,
+            "value": 5483
+          },
+          "fwhmg": {
+            "max": 4.75,
+            "min": 0.1,
+            "vary": true,
+            "value": 3
+          }
+        }
+      },
+      "6": {
+        "gaussian": {
+          "amplitude": {
+            "max": 10,
+            "min": 0.1,
+            "vary": true,
+            "value": 4
+          },
+          "center": {
+            "max": 5498,
+            "min": 5493,
+            "vary": true,
+            "value": 5494
+          },
+          "fwhmg": {
+            "max": 4.75,
+            "min": 0.1,
+            "vary": true,
+            "value": 3
+          }
+        }
+      },
+      "7": {
+        "atan": {
+          "amplitude": {
+            "max": 5,
+            "min": 0,
+            "vary": true,
+            "value": 1
+          },
+          "center": {
+            "max": 5500,
+            "min": 5483,
+            "vary": true,
+            "value": 5481
+          },
+          "sigma": {
+            "max": 0.75,
+            "min": 0.001,
+            "vary": true,
+            "value": 0.01
+          }
+        }
+      }
+    }
+  }
+}
