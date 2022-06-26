@@ -475,7 +475,7 @@ def read_input_file(fname: Path) -> MutableMapping[str, Any]:
              information beyond the command line arguments.
 
     """
-    # _fname = Path(fname)
+    fname = Path(fname)
 
     if fname.suffix == ".toml":
         args = toml.load(fname)

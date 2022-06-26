@@ -3,7 +3,6 @@ import argparse
 
 from datetime import datetime
 from getpass import getuser
-from pathlib import Path
 from socket import gethostname
 from typing import Any
 from typing import Dict
@@ -39,7 +38,7 @@ def get_args() -> Dict[str, Any]:
     parser = argparse.ArgumentParser(
         description="Fast Fitting Program for ascii txt files."
     )
-    parser.add_argument("infile", type=Path, help="Filename of the spectra data")
+    parser.add_argument("infile", type=str, help="Filename of the spectra data")
     parser.add_argument(
         "-o",
         "--outfile",
@@ -239,10 +238,7 @@ def extracted_from_command_line_runner() -> Dict[str, Any]:
     # check_keywords_consistency(check_args=_args["settings"], ref_args=result)
     if "settings" in _args.keys():
         for key in _args["settings"].keys():
-            if key == "infile":
-                result[key] = Path(_args["settings"][key])
-            else:
-                result[key] = _args["settings"][key]
+            result[key] = _args["settings"][key]
     if "description" in _args["fitting"].keys():
         result["description"] = _args["fitting"]["description"]
     if "parameters" in _args["fitting"].keys():

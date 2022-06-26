@@ -76,11 +76,11 @@ def test_yaml_conversion():
             yaml.dump({"a": 1, "b": 2}, f)
         args = {
             "infile": infile,
-            "format": "json",
+            "format": "toml",
         }
         convert(args)
-        with open(infile.with_suffix(".json")) as f:
-            data = json.load(f)
+        with open(infile.with_suffix(".toml")) as f:
+            data = toml.load(f)
 
         assert data == {"a": 1, "b": 2}
 
@@ -95,10 +95,10 @@ def test_toml_conversion():
             toml.dump({"a": 1, "b": 2}, f)
         args = {
             "infile": infile,
-            "format": "json",
+            "format": "yaml",
         }
         convert(args)
-        with open(infile.with_suffix(".json")) as f:
-            data = json.load(f)
+        with open(infile.with_suffix(".yaml")) as f:
+            data = yaml.load(f, Loader=yaml.SafeLoader)
 
         assert data == {"a": 1, "b": 2}

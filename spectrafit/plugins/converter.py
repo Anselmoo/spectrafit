@@ -12,7 +12,7 @@ import yaml
 from spectrafit.tools import read_input_file
 
 
-choices = {"json", "yaml", "yml" "toml", "lock"}
+choices = ["json", "yaml", "yml", "toml", "lock"]
 
 
 def get_args() -> Dict[str, Any]:
