@@ -1305,7 +1305,7 @@ dev = []
 [metadata]
 lock-version = "1.1"
   python-versions = ">=3.7.2,<3.11"
-content-hash = "127f31cb4e940d1b40ff1f72869608f162903f5895e2b934afd5b6dfccc19615"
+content-hash = "efab5210f5c977626e6b4f4e3c53fdbee891aca634bdb3201096c0bc7e64efec"
 
 [metadata.files]
 algopy = [
