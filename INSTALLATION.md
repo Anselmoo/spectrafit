@@ -44,21 +44,12 @@ To keep the system environment clean, the installation is done via the:
 === "Conda"
 
     [Conda][2] is a package manager for Python. It is a tool for installing and
-    managing packages, environments, and virtualenvs. Currently, `SpectraFit`
-    can be only installed via pip; no Conda or Conda-forge is available.
+    managing packages, environments, and virtualenvs. `SpectraFit` is available as [conda-forge][3].
 
     _Example_:
 
     ```terminal
-    # install pipx for macOS, Linux or Windows
-    # install spectrafit for python 3.7
-    conda create -n spectrafit python=3.7 --no-default-packages -y
-    # install spectrafit for python 3.8
-    conda create -n spectrafit python=3.8 --no-default-packages -y
-    # install spectrafit for python 3.9
-    conda create -n spectrafit python=3.9 --no-default-packages -y
-    conda activate spectrafit
-    pip install spectrafit
+    conda install -c conda-forge spectrafit
 
     spectrafit --help
     ```
@@ -90,3 +81,4 @@ docker pull ghcr.io/anselmoo/spectrafit:latest
 
 [1]: https://github.com/pypa/pipx
 [2]: https://conda.io/docs/
+[3]: https://anaconda.org/conda-forge/spectrafit
