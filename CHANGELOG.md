@@ -11,7 +11,7 @@
 ---
 
 - Downgrading `numdifftools` and `openpyxl` for compatibility with the
-   [conda-forge-formula][20]
+  [conda-forge-formula][20]
 
 ## v0.10.0
 
