@@ -31,15 +31,15 @@
   },
   // Add the IDs of extensions you want installed when the container is created.
   "extensions": [
-	"ms-python.python",
-	"ms-python.vscode-pylance",
-	"dracula-theme.theme-dracula",
-	"codezombiech.gitignore",
-	"eamodio.gitlens",
-	"esbenp.prettier-vscode",
-	"sourcery.sourcery",
-	"vivaxy.vscode-conventional-commits"
-],
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "dracula-theme.theme-dracula",
+    "codezombiech.gitignore",
+    "eamodio.gitlens",
+    "esbenp.prettier-vscode",
+    "sourcery.sourcery",
+    "vivaxy.vscode-conventional-commits"
+  ],
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
   // "forwardPorts": [],
   // Use 'postCreateCommand' to run commands after the container is created.
