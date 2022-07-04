@@ -14,7 +14,6 @@
       "NODE_VERSION": "lts/*"
     }
   },
-
   // Set *default* container specific settings.json values on container create.
   "settings": {
     "python.defaultInterpreterPath": "/usr/local/bin/python",
@@ -30,30 +29,26 @@
     "python.linting.pydocstylePath": "/usr/local/py-utils/bin/pydocstyle",
     "python.linting.pylintPath": "/usr/local/py-utils/bin/pylint"
   },
-
   // Add the IDs of extensions you want installed when the container is created.
   "extensions": [
-    "ms-python.python",
-    "ms-python.vscode-pylance",
-    "dracula-theme.theme-dracula",
-    "codezombiech.gitignore",
-    "eamodio.gitlens",
-    "esbenp.prettier-vscode",
-    "sourcery.sourcery"
-  ],
-
+	"ms-python.python",
+	"ms-python.vscode-pylance",
+	"dracula-theme.theme-dracula",
+	"codezombiech.gitignore",
+	"eamodio.gitlens",
+	"esbenp.prettier-vscode",
+	"sourcery.sourcery",
+	"vivaxy.vscode-conventional-commits"
+],
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
   // "forwardPorts": [],
-
   // Use 'postCreateCommand' to run commands after the container is created.
   "postCreateCommand": [
     "pip install poetry; ",
     "python -m pip install --upgrade pip; ",
     "poetry config virtualenvs.in-project true; ",
-    "python -m poetry install; ",
-    "brew install prettier"
+    "python -m poetry install; "
   ],
-
   // Comment out to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
   "remoteUser": "vscode",
   "features": {
