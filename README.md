@@ -43,6 +43,12 @@ pip install spectrafit
 pip install spectrafit --upgrade
 ```
 
+via conda:
+
+```terminal
+conda install -c conda-forge spectrafit
+```
+
 ## Usage
 
 `SpectraFit` needs as command line tool only two things:

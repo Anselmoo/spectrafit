@@ -37,18 +37,8 @@ files, we prefer the [prettier style][7] and its extension for `toml` files.
 
 ## Milestones
 
-> Milestones are listed in the order of their completion.
-
-- [x] Introducing a class concept for `SpectraFit` because it is very functional
-      driven programmed; partially solved be exporting into submodules like
-      `tools.py`
-- [x] Implementing genetic solvers for fitting optimization problems, because
-      [LMFIT][8] contains `differential_evolution` as solver.
-- [x] Implementing `Global Fitting` as a part of the `SpectraFit` class
-- [ ] Introducing JupyterLab
-- [ ] Updating the Docker package configuration
-
-[Milestones][10] now also available for the `spectrafit` application. Furthermore,
+[Milestones][10] now also available for the `spectrafit` application.
+Furthermore, project status can be seen in the [GitHub Project Panel][13].
 
 ## Testing
 
@@ -72,7 +62,10 @@ git commit -m "A brief summary of the commit"
 
 > A paragraph describing what changed and its impact.
 
-In terms of connecting [issues][11] with the corresponding [PR][9], we prefer to use the the [GitHub convention of using the issue number][12] in the commit message. This also allows us to easily linking PRs with issues in our [Project Board][13].
+In terms of connecting [issues][11] with the corresponding [PR][9], we prefer to
+use the the [GitHub convention of using the issue number][12] in the commit
+message. This also allows us to easily linking PRs with issues in our [Project
+Board][13].
 
 ## Coding conventions
 

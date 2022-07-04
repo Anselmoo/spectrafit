@@ -1,8 +1,23 @@
+<!-- @format -->
+
 # CHANGELOG
 
 ---
 
 > See also: [https://github.com/Anselmoo/spectrafit/releases][1]
+
+## v0.10.1 - v.10.3
+
+---
+
+- Downgrading `numdifftools` and `openpyxl` for getting
+  [conda-forge-formula][20] running.
+
+## v0.10.0
+
+---
+
+- Refactor the `pyproject.toml` file for getting it working with `conda`.
 
 ## v0.9.0
 
@@ -214,3 +229,4 @@
 [17]: https://prettier.io
 [18]: https://github.com/PyCQA/pylint
 [19]: http://bruceravel.github.io/demeter/documents/Athena/index.html
+[20]: https://anaconda.org/conda-forge/spectrafit
