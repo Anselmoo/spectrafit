@@ -34,9 +34,9 @@ version-resolver:
   minor:
     labels:
       - "enhancement"
-      - "codespaces"
   patch:
     labels:
+      - "codespaces"
       - "bug"
       - "maintenance"
       - "github_actions"
