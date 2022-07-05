@@ -1,0 +1,3 @@
+[submodule "vendor/lmfit-py"]
+	path = vendor/lmfit-py
+	url = https://github.com/lmfit/lmfit-py.git
