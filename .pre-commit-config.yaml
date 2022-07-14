@@ -39,7 +39,7 @@ repos:
     hooks:
       - id: mypy
         additional_dependencies:
-          [types-toml==0.10.7, types-PyYAML==6.0.9, types-tabulate==0.8.11]
+          [types-toml==0.10.8, types-PyYAML==6.0.10, types-tabulate==0.8.11]
   - repo: https://github.com/pycqa/pydocstyle
     rev: 6.1.1 # pick a git hash / tag to point to
     hooks:
