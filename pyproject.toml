@@ -55,7 +55,7 @@ exclude = ["docs/", "tools/"]
   [tool.poetry.dev-dependencies]
   pylama = "^8.3.8"
   pylint = "^2.14.5"
-  mypy = "^0.961"
+  mypy = "^0.971"
   black = "^22.6.0"
   blacken-docs = "^1.12.1"
   isort = "^5.10.1"
