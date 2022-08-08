@@ -29,7 +29,7 @@ repos:
       - id: isort
         additional_dependencies: [toml==0.10.2]
   - repo: https://github.com/PyCQA/flake8.git
-    rev: 5.0.2
+    rev: 5.0.4
     hooks:
       - id: flake8
         exclude: ^spectrafit/test/, ^examples/
