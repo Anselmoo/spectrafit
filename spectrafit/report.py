@@ -3,6 +3,7 @@ import pprint
 
 from typing import Any
 from typing import Dict
+from typing import Optional
 
 import numpy as np
 import pandas as pd
@@ -22,7 +23,7 @@ pp = pprint.PrettyPrinter(indent=4)
 
 
 def fit_report_as_dict(
-    inpars: minimize, modelpars: Dict[str, Any] = None
+    inpars: minimize, modelpars: Optional[Dict[str, Any]] = None
 ) -> Dict[str, Dict[Any, Any]]:
     """Generate the best fit report as dictionary.
 

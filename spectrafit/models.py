@@ -221,9 +221,7 @@ class AutoPeakDetection:
             float: Estimated distance between peaks.
         """
         min_step = np.diff(self.x).min()
-        if min_step > 1.0:
-            return min_step
-        return 1.0
+        return max(min_step, 1.0)
 
     @property
     def estimate_prominence(self) -> Tuple[float, float]:
@@ -282,9 +280,7 @@ class AutoPeakDetection:
         except ValueError as exc:
             rel_height = (self.data.mean() - self.data.min()) / 4
             print(f"{exc}: Using standard arithmetic mean of NumPy.\n")
-        if rel_height > 0:
-            return rel_height
-        return 0.0
+        return rel_height if rel_height > 0 else 0.0
 
     @property
     def estimated_wlen(self) -> float:
@@ -450,10 +446,10 @@ class ModelParameters(AutoPeakDetection):
         """
         if args["global"]:
             return (
-                df[args["column"][0]].values,
-                df.loc[:, df.columns != args["column"][0]].values,
+                df[args["column"][0]].to_numpy(),
+                df.loc[:, df.columns != args["column"][0]].to_numpy(),
             )
-        return df[args["column"][0]].values, df[args["column"][1]].values
+        return (df[args["column"][0]].to_numpy(), df[args["column"][1]].to_numpy())
 
     @property
     def return_params(self) -> Parameters:
