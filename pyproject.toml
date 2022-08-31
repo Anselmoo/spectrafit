@@ -3,8 +3,8 @@ name = "SpectraFit"
 version = "0.11.0"
 description = "Fast fitting of 2D-Spectra with established routines"
 readme = "README.md"
-authors = ["Anselm Hahn <Anselm.Hahn@gmail.com>"]
-maintainers = ["Anselm Hahn <Anselm.Hahn@gmail.com>"]
+authors = [ "Anselm Hahn <Anselm.Hahn@gmail.com>" ]
+maintainers = [ "Anselm Hahn <Anselm.Hahn@gmail.com>" ]
 license = "BSD-3-Clause"
 repository = "https://github.com/Anselmoo/spectrafit"
 documentation = "https://anselmoo.github.io/spectrafit/"
@@ -36,7 +36,7 @@ include = [
   { path = "spectrafit/test/", format = "sdist" },
   { path = "examples/", format = "sdist" },
 ]
-exclude = ["docs/", "tools/"]
+exclude = [ "docs/", "tools/" ]
 
   [tool.poetry.dependencies]
   python = ">=3.7.2,<3.11"
@@ -50,6 +50,8 @@ exclude = ["docs/", "tools/"]
   seaborn = "^0.11.2"
   numdifftools = "^0.9.39"
   tqdm = "^4.64.0"
+  scikit-learn = "^1"
+  art = "^5.7"
 
 
   [tool.poetry.dev-dependencies]
@@ -78,7 +80,7 @@ exclude = ["docs/", "tools/"]
 
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
+requires = [ "poetry-core>=1.0.0" ]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
@@ -86,7 +88,7 @@ spectrafit = "spectrafit.spectrafit:command_line_runner"
 spectrafit-converter = "spectrafit.plugins.converter:command_line_runner"
 
 [tool.poetry.extras]
-dev = ["datamodel-code-generator"]
+dev = [ "datamodel-code-generator" ]
 
 [tool.isort]
 profile = "black"
@@ -96,8 +98,8 @@ include_trailing_comma = true
 lines_after_imports = 2
 lines_between_types = 1
 use_parentheses = true
-src_paths = ["poetry", "tests"]
-skip_glob = ["*/setup.py"]
+src_paths = [ "poetry", "tests" ]
+skip_glob = [ "*/setup.py" ]
 filter_files = true
 known_first_party = "poetry"
 
@@ -124,14 +126,14 @@ exclude = '''
 [tool.flake8]
 max-doc-length = 100
 max-line-length = 88
-ignore = ["E203", "W503", "W605"]
+ignore = [ "E203", "W503", "W605" ]
 
 [tool.pytest]
 script_launch_mode = "subprocess"
   [tool.pytest.ini_options]
   minversion = "7.0"
   addopts = "--cov=spectrafit/ --cov-report=xml -ra -q"
-  testpaths = ["spectrafit"]
+  testpaths = [ "spectrafit" ]
 
 [tool.pydocstyle]
 match = '.*\.py'
