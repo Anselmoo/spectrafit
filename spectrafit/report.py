@@ -25,7 +25,7 @@ pp = pprint.PrettyPrinter(indent=4)
 
 
 def regression_metric(
-    data: NDArray[np.float64 ], residual: NDArray[np.float64]
+    data: NDArray[np.float64], residual: NDArray[np.float64]
 ) -> Dict[str, float]:
     """Calculate the regression metrics.
 
