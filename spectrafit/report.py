@@ -395,6 +395,7 @@ class PrintingStatus:
             "\n\t- lmfit (https://lmfit.github.io/lmfit-py/index.html)"
             "\n\t- statsmodel (https://www.statsmodels.org/stable/)"
             "\n\t- scipy (https://docs.scipy.org/doc/scipy/reference/index.html)"
+            "\n\t- scikit-learn (https://scikit-learn.org/stable/)"
             "\n\t- numpy (https://docs.scipy.org/doc/numpy/reference/index.html)"
             "\n\t- pandas (https://pandas.pydata.org/pandas-docs/stable/index.html)"
             "\n\t- matplotlib (https://matplotlib.org/index.html)"
