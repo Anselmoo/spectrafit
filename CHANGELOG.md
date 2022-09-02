@@ -6,6 +6,29 @@
 
 > See also: [https://github.com/Anselmoo/spectrafit/releases][1]
 
+## v0.12.0
+
+---
+
+- Adding metrics for regression analysis as part of the post analysis; see also
+  [sklearn-metrics-regression][23]
+- Add [art][24] for generating ASCII Decor in the terminal / output.
+
+## v0.11.0
+
+---
+
+- Focus on maintenance fixed for the `spectrafit` package:
+  - [Synk][21] security vulnerabilities fixed
+  - [SonarCloud][22] code quality fixed
+
+## v0.10.4
+
+---
+
+- Update docs with topics: ``Changelog`, `README`, `Security`, `Licencse`
+- Add docs for `conda` installation
+
 ## v0.10.1 - v.10.3
 
 ---
@@ -230,3 +253,7 @@
 [18]: https://github.com/PyCQA/pylint
 [19]: http://bruceravel.github.io/demeter/documents/Athena/index.html
 [20]: https://anaconda.org/conda-forge/spectrafit
+[21]: https://docs.snyk.io/products/snyk-open-source/language-and-package-manager-support/snyk-for-python
+[22]: https://sonarcloud.io
+[23]: https://scikit-learn.org/stable/modules/model_evaluation.html
+[24]: https://www.4r7.ir

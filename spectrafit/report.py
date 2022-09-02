@@ -14,12 +14,67 @@ from lmfit import report_ci
 from lmfit import report_fit
 from lmfit.minimizer import MinimizerException
 from lmfit.minimizer import minimize
+from numpy.typing import NDArray
+from sklearn import metrics
 from spectrafit import __version__
 from tabulate import tabulate
 
 
 CORREL_HEAD = "[[Correlations]] (unreported correlations are < %.3f)"
 pp = pprint.PrettyPrinter(indent=4)
+
+
+def regression_metric(
+    data: NDArray[np.float64], residual: NDArray[np.float64]
+) -> Dict[str, float]:
+    """Calculate the regression metrics.
+
+    Args:
+        data (NDArray[np.float64]): Data of one or more spectra.
+        residual (NDArray[np.float64]): Residual of the single or global fit.
+
+    Returns:
+        Dict[str, float]: Dictionary with the regression metrics calculated via
+            `sklearn.metrics`. For more information see:
+            [https://scikit-learn.org/stable/modules/model_evaluation.html](
+                https://scikit-learn.org/stable/modules/model_evaluation.html
+            )
+    """
+    return {
+        "explained_variance_score": metrics.explained_variance_score(
+            y_true=data, y_pred=residual
+        ),
+        "max_error": metrics.max_error(y_true=data, y_pred=residual),
+        "mean_absolute_error": metrics.mean_absolute_error(
+            y_true=data, y_pred=residual
+        ),
+        "mean_squared_error": metrics.mean_squared_error(y_true=data, y_pred=residual),
+        "mean_squared_log_error": metrics.mean_squared_log_error(
+            y_true=data, y_pred=residual
+        ),
+        "median_absolute_error": metrics.median_absolute_error(
+            y_true=data, y_pred=residual
+        ),
+        "mean_absolute_percentage_error": metrics.mean_absolute_percentage_error(
+            y_true=data, y_pred=residual
+        ),
+        "r2_score": metrics.r2_score(y_true=data, y_pred=residual),
+        "mean_poisson_deviance": metrics.mean_poisson_deviance(
+            y_true=data, y_pred=residual
+        ),
+        "mean_gamma_deviance": metrics.mean_gamma_deviance(
+            y_true=data, y_pred=residual
+        ),
+        "mean_tweedie_deviance": metrics.mean_tweedie_deviance(
+            y_true=data, y_pred=residual
+        ),
+        "d2_tweedie_score": metrics.d2_tweedie_score(y_true=data, y_pred=residual),
+        "mean_pinball_loss": metrics.mean_pinball_loss(y_true=data, y_pred=residual),
+        "d2_pinball_score": metrics.d2_pinball_score(y_true=data, y_pred=residual),
+        "d2_absolute_error_score": metrics.d2_absolute_error_score(
+            y_true=data, y_pred=residual
+        ),
+    }
 
 
 def fit_report_as_dict(
