@@ -18,11 +18,6 @@ from lmfit import report_fit
 from lmfit.minimizer import MinimizerException
 from lmfit.minimizer import minimize
 from numpy.typing import NDArray
-
-# from sklearn.metrics import mean_tweedie_deviance
-# from sklearn.metrics import mean_gamma_deviance
-# from sklearn.metrics import mean_pinball_loss
-# from sklearn.metrics import d2_tweedie_score
 from sklearn.metrics import explained_variance_score
 from sklearn.metrics import max_error
 from sklearn.metrics import mean_absolute_error
@@ -126,7 +121,11 @@ class RegressionMetrics:
         if _pred.shape != _true.shape:
             raise ValueError("The shape of the real and fit data-values are not equal!")
 
-        return (_true, _pred) if _true.shape[1] > 1 else (_true.T, _pred.T)
+        return (
+            (_true, _pred)
+            if _true.shape[1] > 1
+            else (np.array([_true]), np.array([_pred]))
+        )
 
     def __call__(self) -> Dict[str, Any]:
         """Calculate the regression metrics of the Fit(s) for the post analysis."""
@@ -140,16 +139,15 @@ class RegressionMetrics:
             median_absolute_error,
             mean_absolute_percentage_error,
             mean_poisson_deviance,
-            # mean_gamma_deviance,
-            # mean_tweedie_deviance,
-            # mean_pinball_loss,
-            # d2_tweedie_score,
         )
         metric_dict: Dict[str, List[float]] = {}
         for fnc in metrics_fnc:
             metric_dict[fnc.__name__] = []
             for y_true, y_pred in zip(self.y_true.T, self.y_pred.T):
-                metric_dict[fnc.__name__].append(fnc(y_true, y_pred))
+                if np.isnan(y_pred).any():
+                    metric_dict[fnc.__name__].append(np.nan)
+                else:
+                    metric_dict[fnc.__name__].append(fnc(y_true, y_pred))
         return metric_dict
 
 
