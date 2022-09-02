@@ -361,7 +361,6 @@ class PostProcessing:
             The regression metrics are calculated by the `statsmodels.stats.diagnostic`
             module.
         """
-
         self.args["regression_metrics"] = RegressionMetrics(self.df)()
 
 

@@ -315,5 +315,3 @@ data. The metrics are calculated for each fit individually and based on the
 [21]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.d2_tweedie_score.html
 [22]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.d2_pinball_score.html
 [23]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.d2_absolute_error_score.html
-
-

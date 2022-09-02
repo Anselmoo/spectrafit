@@ -1,8 +1,6 @@
 """Fit-Results as Report."""
 import pprint
 
-from ensurepip import version
-from statistics import median
 from typing import Any
 from typing import Dict
 from typing import List
@@ -79,6 +77,15 @@ class RegressionMetrics:
     def __init__(
         self, df: pd.DataFrame, name_true: str = "intensity", name_pred: str = "fit"
     ) -> None:
+        """Initialize the regression metrics of the Fit(s) for the post analysis.
+
+        Args:
+            df (pd.DataFrame): DataFrame containing the input data (`x` and `data`),
+                 as well as the best fit and the corresponding residuum. Hence, it will
+                 be extended by the single contribution of the model.
+            name_true (str, optional): Name of the data. Defaults to "intensity".
+            name_pred (str, optional): Name of the fit data. Defaults to "fit".
+        """
         self.y_true, self.y_pred = self.initialize(
             df=df, name_true=name_true, name_pred=name_pred
         )
@@ -107,7 +114,6 @@ class RegressionMetrics:
             Tuple[NDArray[np.float64], NDArray[np.float64]]: Tuple of true and predicted
                 (fit) intensities.
         """
-
         _true = df[
             [col_name for col_name in df.columns if name_true in col_name]
         ].to_numpy()

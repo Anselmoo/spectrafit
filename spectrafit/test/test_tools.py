@@ -298,6 +298,8 @@ class TestPostProcessing:
 
 
 class TestRegressionMetrics:
+    """Test of the regression metrics module."""
+
     def test_raise_error(self) -> None:
         """Testing raise error."""
         with pytest.raises(ValueError) as excinfo:
