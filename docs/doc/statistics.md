@@ -255,27 +255,26 @@ For the regression metrics, the fitting results are compared to the reference
 data. The metrics are calculated for each fit individually and based on the
 [`sklearn.metrics`][7] module. Currently, the following metrics are implemented:
 
-- [x]  [`Explained Variance Score`][9]
-- [x]  [`R²`][10]
-- [x]  [`Max Error`][11]
-- [x]  [`Mean Absolute Error`][12]
-- [x]  [`Mean Squared Error`][13]
-- [x]  [`Mean Squared Log Error`][14]
-- [x]  [`Median Absolute Error`][15]
-- [x]  [`Mean Absolute Percentage Error`][16]
-
+- [x] [`Explained Variance Score`][9]
+- [x] [`R²`][10]
+- [x] [`Max Error`][11]
+- [x] [`Mean Absolute Error`][12]
+- [x] [`Mean Squared Error`][13]
+- [x] [`Mean Squared Log Error`][14]
+- [x] [`Median Absolute Error`][15]
+- [x] [`Mean Absolute Percentage Error`][16]
 
 The metrics should provide a better overview of the individual fitting results
 and the used model then just using the `Goodness of Fit` metrics. However, the
 following metrics are not implemented yet:
 
-- [ ]  [`Mean Percentage Error`][17][^1]
-- [ ]  [`Mean Gamma Deviance`][18][^1]
-- [ ]  [`Mean Tweedie Deviance`][19][^1]
-- [ ]  [`Mean Pinball Loss`][20][^1]
-- [ ]  [`D² tweedie score`][21][^2]
-- [ ]  [`D² pinball score`][22][^2]
-- [ ]  [`D² absolute error score`][23][^2]
+- [ ] [`Mean Percentage Error`][17][^1]
+- [ ] [`Mean Gamma Deviance`][18][^1]
+- [ ] [`Mean Tweedie Deviance`][19][^1]
+- [ ] [`Mean Pinball Loss`][20][^1]
+- [ ] [`D² tweedie score`][21][^2]
+- [ ] [`D² pinball score`][22][^2]
+- [ ] [`D² absolute error score`][23][^2]
 
 !!! info "Regression Metrics For [Example 6][8]"
 
@@ -299,9 +298,9 @@ following metrics are not implemented yet:
 [6]: https://en.wikipedia.org/wiki/Covariance_matrix
 [7]: https://scikit-learn.org/stable/modules/classes.html#regression-metrics
 [8]: ../../examples/example6
-[9]:https://scikit-learn.org/stable/modules/generated/sklearn.metrics.explained_variance_score.html
-[10]:https://scikit-learn.org/stable/modules/generated/sklearn.metrics.r2_score.html
-[11]:https://scikit-learn.org/stable/modules/generated/sklearn.metrics.max_error.html
+[9]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.explained_variance_score.html
+[10]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.r2_score.html
+[11]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.max_error.html
 [12]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_absolute_error.html
 [13]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_squared_error.html
 [14]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_squared_log_error.html
@@ -314,7 +313,6 @@ following metrics are not implemented yet:
 [21]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.d2_tweedie_score.html
 [22]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.d2_pinball_score.html
 [23]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.d2_absolute_error_score.html
-
 
 [^1]: requires a strictly postive `y_true` and `y_pred` array
 [^2]: requires `sklearn >= 1.1.2`
