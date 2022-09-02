@@ -255,21 +255,21 @@ For the regression metrics, the fitting results are compared to the reference
 data. The metrics are calculated for each fit individually and based on the
 [`sklearn.metrics`][7] module. Currently, the following metrics are implemented:
 
-- [x]  [`Explained Variance Score`][9]
-- [x]  [`R²`][10]
-- [x]  [`Max Error`][11]
-- [x]  [`Mean Absolute Error`][12]
-- [x]  [`Mean Squared Error`][13]
-- [x]  [`Mean Squared Log Error`][14]
-- [x]  [`Median Absolute Error`][15]
-- [x]  [`Mean Absolute Percentage Error`][16]
-- [x]  [`Mean Percentage Error`][17]
-- [x]  [`Mean Gamma Deviance`][18]
-- [x]  [`Mean Tweedie Deviance`][19]
-- [x]  [`Mean Pinball Loss`][20]
-- [x]  [`D² tweedie score`][21]
-- [ ]  [`D² pinball score`][22]
-- [ ]  [`D² absolute error score`][23]
+- [x] [`Explained Variance Score`][9]
+- [x] [`R²`][10]
+- [x] [`Max Error`][11]
+- [x] [`Mean Absolute Error`][12]
+- [x] [`Mean Squared Error`][13]
+- [x] [`Mean Squared Log Error`][14]
+- [x] [`Median Absolute Error`][15]
+- [x] [`Mean Absolute Percentage Error`][16]
+- [x] [`Mean Percentage Error`][17]
+- [x] [`Mean Gamma Deviance`][18]
+- [x] [`Mean Tweedie Deviance`][19]
+- [x] [`Mean Pinball Loss`][20]
+- [x] [`D² tweedie score`][21]
+- [ ] [`D² pinball score`][22]
+- [ ] [`D² absolute error score`][23]
 
 > The metrics should provide a better overview of the individual fitting results
 > and the used model then just using the `Goodness of Fit` metrics.
@@ -300,9 +300,9 @@ data. The metrics are calculated for each fit individually and based on the
 [6]: https://en.wikipedia.org/wiki/Covariance_matrix
 [7]: https://scikit-learn.org/stable/modules/classes.html#regression-metrics
 [8]: ../../examples/example6
-[9]:https://scikit-learn.org/stable/modules/generated/sklearn.metrics.explained_variance_score.html
-[10]:https://scikit-learn.org/stable/modules/generated/sklearn.metrics.r2_score.html
-[11]:https://scikit-learn.org/stable/modules/generated/sklearn.metrics.max_error.html
+[9]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.explained_variance_score.html
+[10]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.r2_score.html
+[11]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.max_error.html
 [12]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_absolute_error.html
 [13]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_squared_error.html
 [14]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_squared_log_error.html
