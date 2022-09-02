@@ -19,6 +19,7 @@ from lmfit import conf_interval
 from lmfit.minimizer import MinimizerException
 from spectrafit.models import calculated_model
 from spectrafit.report import fit_report_as_dict
+from spectrafit.report import RegressionMetrics
 
 
 class PreProcessing:
@@ -112,7 +113,7 @@ class PreProcessing:
                  (`x` and `data`), which are energy-shifted by the given value.
         """
         _df = df.copy()
-        _df.loc[:, args["column"][0]] = df[args["column"][0]].values + args["shift"]
+        _df.loc[:, args["column"][0]] = df[args["column"][0]].to_numpy() + args["shift"]
         return _df
 
     @staticmethod
@@ -146,8 +147,8 @@ class PreProcessing:
                 args["column"][0]: x_values,
                 args["column"][1]: np.interp(
                     x_values,
-                    df[args["column"][0]].values,
-                    df[args["column"][1]].values,
+                    df[args["column"][0]].to_numpy(),
+                    df[args["column"][1]].to_numpy(),
                 ),
             }
         )
@@ -168,7 +169,7 @@ class PreProcessing:
         box = np.ones(args["smooth"]) / args["smooth"]
         _df = df.copy()
         _df.loc[:, args["column"][1]] = np.convolve(
-            df[args["column"][1]].values, box, mode="same"
+            df[args["column"][1]].to_numpy(), box, mode="same"
         )
         return _df
 
@@ -196,6 +197,16 @@ class PostProcessing:
         self.result = result
         self.data_size = self.check_global_fitting()
 
+    def __call__(self) -> Tuple[pd.DataFrame, Dict[str, Any]]:
+        """Call the post-processing."""
+        self.make_insight_report
+        self.make_residual_fit
+        self.make_fit_contributions
+        self.export_correlation2args
+        self.export_results2args
+        self.export_regression_metrics2args
+        return (self.df, self.args)
+
     def check_global_fitting(self) -> Optional[int]:
         """Check if the global fitting is performed.
 
@@ -212,15 +223,6 @@ class PostProcessing:
                 for i in self.result.params
             )
         return None
-
-    def __call__(self) -> Tuple[pd.DataFrame, Dict[str, Any]]:
-        """Call the post-processing."""
-        self.make_insight_report
-        self.make_residual_fit
-        self.make_fit_contributions
-        self.export_correlation2args
-        self.export_results2args
-        return (self.df, self.args)
 
     def rename_columns(self, df: pd.DataFrame) -> pd.DataFrame:
         """Rename the columns of the dataframe.
@@ -308,14 +310,14 @@ class PostProcessing:
         if self.args["global"]:
 
             residual = self.result.residual.reshape((-1, self.data_size)).T
-            for i, res in enumerate(residual, start=1):
-                _df[f"residual_{i}"] = res
-                _df[f"fit_{i}"] = self.df[f"intensity_{i}"].values + res
+            for i, _residual in enumerate(residual, start=1):
+                _df[f"residual_{i}"] = _residual
+                _df[f"fit_{i}"] = self.df[f"intensity_{i}"].to_numpy() + _residual
             _df["residual_avg"] = np.mean(residual, axis=0)
         else:
             residual = self.result.residual
             _df["residual"] = residual
-            _df["fit"] = self.df["intensity"].values + residual
+            _df["fit"] = self.df["intensity"].to_numpy() + residual
         self.df = _df
 
     @property
@@ -327,7 +329,7 @@ class PostProcessing:
         """
         self.df = calculated_model(
             params=self.result.params,
-            x=self.df.iloc[:, 0].values,
+            x=self.df.iloc[:, 0].to_numpy(),
             df=self.df,
             global_fit=self.args["global"],
         )
@@ -350,6 +352,17 @@ class PostProcessing:
     def export_results2args(self) -> None:
         """Export the results of the fit to the input file arguments."""
         self.args["fit_result"] = self.df.to_dict(orient="list")
+
+    @property
+    def export_regression_metrics2args(self) -> None:
+        """Export the regression metrics of the fit to the input file arguments.
+
+        !!! note "About Regression Metrics"
+            The regression metrics are calculated by the `statsmodels.stats.diagnostic`
+            module.
+        """
+
+        self.args["regression_metrics"] = RegressionMetrics(self.df)()
 
 
 class SaveResult:

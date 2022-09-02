@@ -13,6 +13,7 @@
 - Adding metrics for regression analysis as part of the post analysis; see also
   [sklearn-metrics-regression][23]
 - Add [art][24] for generating ASCII Decor in the terminal / output.
+- Using transposed dataframes for the tabulated output to the terminal.
 
 ## v0.11.0
 

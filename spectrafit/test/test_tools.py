@@ -11,6 +11,7 @@ from spectrafit.tools import PostProcessing
 from spectrafit.tools import PreProcessing
 from spectrafit.tools import SaveResult
 from spectrafit.tools import check_keywords_consistency
+from spectrafit.tools import RegressionMetrics
 
 
 class TestPreProcessing:
@@ -294,3 +295,21 @@ class TestPostProcessing:
         )()
         assert type(df) == pd.DataFrame
         assert type(args) == dict
+
+
+class TestRegressionMetrics:
+    def test_raise_error(self) -> None:
+        """Testing raise error."""
+        with pytest.raises(ValueError) as excinfo:
+            RegressionMetrics(
+                pd.DataFrame(
+                    {
+                        "intensity_0": np.random.rand(10),
+                        "intensity_1": np.random.rand(10),
+                        "fit_0": np.random.rand(10),
+                    }
+                )
+            )
+        assert "The shape of the real and fit data-values are not equal!" in str(
+            excinfo.value
+        )
