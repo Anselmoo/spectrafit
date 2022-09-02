@@ -3,23 +3,154 @@ import pprint
 
 from typing import Any
 from typing import Dict
+from typing import List
 from typing import Optional
+from typing import Tuple
 
 import numpy as np
 import pandas as pd
 
+from art import tprint
 from lmfit import Minimizer
 from lmfit import conf_interval
 from lmfit import report_ci
 from lmfit import report_fit
 from lmfit.minimizer import MinimizerException
 from lmfit.minimizer import minimize
+from numpy.typing import NDArray
+
+# from sklearn.metrics import mean_tweedie_deviance
+# from sklearn.metrics import mean_gamma_deviance
+# from sklearn.metrics import mean_pinball_loss
+# from sklearn.metrics import d2_tweedie_score
+from sklearn.metrics import explained_variance_score
+from sklearn.metrics import max_error
+from sklearn.metrics import mean_absolute_error
+from sklearn.metrics import mean_absolute_percentage_error
+from sklearn.metrics import mean_poisson_deviance
+from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_squared_log_error
+from sklearn.metrics import median_absolute_error
+from sklearn.metrics import r2_score
 from spectrafit import __version__
 from tabulate import tabulate
 
 
 CORREL_HEAD = "[[Correlations]] (unreported correlations are < %.3f)"
 pp = pprint.PrettyPrinter(indent=4)
+
+
+class RegressionMetrics:
+    """Calculate the regression metrics of the Fit(s) for the post analysis.
+
+    !!! note  "Regression Metrics for post analysis of the Fit(s)"
+
+        `SpectraFit` provides the following regression metrics for
+        post analysis of the regular and global fit(s) based on the
+        metric functions of `sklearn.metrics`:
+
+            - `explained_variance_score`: Explained variance score.
+            - `r2_score`: the coefficient of determination
+            - `max_error`: Maximum error.
+            - `mean_absolute_error`: the mean absolute error
+            - `mean_squared_error`: the mean squared error
+            - `mean_squared_log_error`: the mean squared log error
+            - `median_absolute_error`: the median absolute error
+            - `mean_absolute_percentage_error`: the mean absolute percentage error
+            - `mean_poisson_deviance`: the mean Poisson deviance
+            - `mean_gamma_deviance`: the mean Gamma deviance
+            - `mean_tweedie_deviance`: the mean Tweedie deviance
+            - `mean_pinball_loss`: the mean Pinball loss
+            - `d2_tweedie_score`: the D2 Tweedie score
+            - `d2_pinball_score`: the D2 Pinball score
+            - `d2_absolute_error_score`: the D2 absolute error score
+
+        The regression fit metrics can be used to evaluate the quality of the
+        fit by comparing the fit to the actual intensity.
+
+    !!! warning "D2 Tweedie and D2 Pinball scores"
+
+         `d2_pinball_score` and `d2_absolute_error_score` are only available for
+         `sklearn` versions >= 1.1.2 and will be later implemented if the
+         __End of support (2023-06-27)__ is reached for the `Python3.7`.
+    """
+
+    def __init__(
+        self, df: pd.DataFrame, name_true: str = "intensity", name_pred: str = "fit"
+    ) -> None:
+        """Initialize the regression metrics of the Fit(s) for the post analysis.
+
+        Args:
+            df (pd.DataFrame): DataFrame containing the input data (`x` and `data`),
+                 as well as the best fit and the corresponding residuum. Hence, it will
+                 be extended by the single contribution of the model.
+            name_true (str, optional): Name of the data. Defaults to "intensity".
+            name_pred (str, optional): Name of the fit data. Defaults to "fit".
+        """
+        self.y_true, self.y_pred = self.initialize(
+            df=df, name_true=name_true, name_pred=name_pred
+        )
+
+    def initialize(
+        self, df: pd.DataFrame, name_true: str = "intensity", name_pred: str = "fit"
+    ) -> Tuple[NDArray[np.float64], NDArray[np.float64]]:
+        """Initialize the regression metrics of the Fit(s) for the post analysis.
+
+        For this reason, the dataframe is split into two numpy array for true
+        (`intensity`) and predicted (`fit`) intensities. In terms of global fit,
+        the numpy array according to the order in the original dataframe.
+
+        Args:
+            df (pd.DataFrame): DataFrame containing the input data (`x` and `data`),
+                 as well as the best fit and the corresponding residuum. Hence, it will
+                 be extended by the single contribution of the model.
+            name_true (str, optional): Name of the data. Defaults to "intensity".
+            name_pred (str, optional): Name of the fit data. Defaults to "fit".
+
+        Raises:
+            ValueError: In terms of global fit contains an unequal number of intial data
+                and fit data.
+
+        Returns:
+            Tuple[NDArray[np.float64], NDArray[np.float64]]: Tuple of true and predicted
+                (fit) intensities.
+        """
+        _true = df[
+            [col_name for col_name in df.columns if name_true in col_name]
+        ].to_numpy()
+
+        _pred = df[
+            [col_name for col_name in df.columns if name_pred in col_name]
+        ].to_numpy()
+
+        if _pred.shape != _true.shape:
+            raise ValueError("The shape of the real and fit data-values are not equal!")
+
+        return (_true, _pred) if _true.shape[1] > 1 else (_true.T, _pred.T)
+
+    def __call__(self) -> Dict[str, Any]:
+        """Calculate the regression metrics of the Fit(s) for the post analysis."""
+        metrics_fnc = (
+            explained_variance_score,
+            r2_score,
+            max_error,
+            mean_absolute_error,
+            mean_squared_error,
+            mean_squared_log_error,
+            median_absolute_error,
+            mean_absolute_percentage_error,
+            mean_poisson_deviance,
+            # mean_gamma_deviance,
+            # mean_tweedie_deviance,
+            # mean_pinball_loss,
+            # d2_tweedie_score,
+        )
+        metric_dict: Dict[str, List[float]] = {}
+        for fnc in metrics_fnc:
+            metric_dict[fnc.__name__] = []
+            for y_true, y_pred in zip(self.y_true.T, self.y_pred.T):
+                metric_dict[fnc.__name__].append(fnc(y_true, y_pred))
+        return metric_dict
 
 
 def fit_report_as_dict(
@@ -163,18 +294,28 @@ class PrintingResults:
         elif self.args["verbose"] == 2:
             self.printing_regular_mode
 
-    @property
-    def printing_regular_mode(self) -> None:
-        """Print the fitting results in the regular mode."""
-        print("\nStatistic:\n")
+    @staticmethod
+    def print_tabulate(args: Dict[str, Any]) -> None:
+        """Print the results of the fitting process.
+
+        Args:
+            args (Dict[str, Any]): The args to be printed as a dictionary.
+        """
         print(
             tabulate(
-                pd.DataFrame.from_dict(self.args["data_statistic"]),
+                pd.DataFrame.from_dict(args).T,
                 headers="keys",
                 tablefmt="fancy_grid",
                 floatfmt=".2f",
             )
         )
+
+    @property
+    def printing_regular_mode(self) -> None:
+        """Print the fitting results in the regular mode."""
+        print("\nStatistic:\n")
+        self.print_tabulate(args=self.args["data_statistic"])
+
         print("\nFit Results and Insights:\n")
         print(
             report_fit(self.result, modelpars=self.result.params, **self.args["report"])
@@ -191,14 +332,9 @@ class PrintingResults:
                 print(f"Error: {exc} -> No confidence interval could be calculated!")
                 self.args["confidence_interval"] = None
         print("\nOverall Linear-Correlation:\n")
-        print(
-            tabulate(
-                pd.DataFrame.from_dict(self.args["linear_correlation"]),
-                headers="keys",
-                tablefmt="fancy_grid",
-                floatfmt=".2f",
-            )
-        )
+        self.print_tabulate(args=self.args["linear_correlation"])
+        print("\nRegression Metrics:\n")
+        self.print_tabulate(args=self.args["regression_metrics"])
 
     @property
     def printing_verbose_mode(self) -> None:
@@ -214,10 +350,20 @@ class PrintingResults:
             pp.pprint(self.args["confidence_interval"])
         print("\nOverall Linear-Correlation:\n")
         pp.pprint(self.args["linear_correlation"])
+        print("\nRegression Metrics:\n")
+        pp.pprint(self.args["regression_metrics"])
+
+
+#        pp.pprint(self.args["regression_metrics"])
 
 
 class PrintingStatus:
     """Print the status of the fitting process."""
+
+    @property
+    def welcome(self) -> None:
+        """Print the welcome message."""
+        tprint("SpectraFit", font="3-d")
 
     @property
     def version(self) -> None:
@@ -247,12 +393,13 @@ class PrintingStatus:
     @property
     def credits(self) -> None:
         """Print the credits of the fitting process."""
-        print("\nCredits:\n")
+        tprint("\nCredits:\n", font="3-d")
         print(
             "The fitting process is based on the following software:"
             "\n\t- lmfit (https://lmfit.github.io/lmfit-py/index.html)"
             "\n\t- statsmodel (https://www.statsmodels.org/stable/)"
             "\n\t- scipy (https://docs.scipy.org/doc/scipy/reference/index.html)"
+            "\n\t- scikit-learn (https://scikit-learn.org/stable/)"
             "\n\t- numpy (https://docs.scipy.org/doc/numpy/reference/index.html)"
             "\n\t- pandas (https://pandas.pydata.org/pandas-docs/stable/index.html)"
             "\n\t- matplotlib (https://matplotlib.org/index.html)"

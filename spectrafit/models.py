@@ -298,9 +298,7 @@ class AutoPeakDetection:
             float: Estimated window length is set to the numeric value of > 1.
         """
         wlen = self.data.size / 100
-        if wlen > 1.0:
-            return wlen
-        return 1 + 1e-9
+        return wlen if wlen > 1.0 else 1 + 1e-9
 
     @property
     def estimated_plateau_size(self) -> Tuple[float, float]:
