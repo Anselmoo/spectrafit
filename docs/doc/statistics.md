@@ -263,16 +263,19 @@ data. The metrics are calculated for each fit individually and based on the
 - [x]  [`Mean Squared Log Error`][14]
 - [x]  [`Median Absolute Error`][15]
 - [x]  [`Mean Absolute Percentage Error`][16]
-- [x]  [`Mean Percentage Error`][17]
-- [x]  [`Mean Gamma Deviance`][18]
-- [x]  [`Mean Tweedie Deviance`][19]
-- [x]  [`Mean Pinball Loss`][20]
-- [x]  [`D² tweedie score`][21]
-- [ ]  [`D² pinball score`][22]
-- [ ]  [`D² absolute error score`][23]
 
-> The metrics should provide a better overview of the individual fitting results
-> and the used model then just using the `Goodness of Fit` metrics.
+
+The metrics should provide a better overview of the individual fitting results
+and the used model then just using the `Goodness of Fit` metrics. However, the
+following metrics are not implemented yet:
+
+- [ ]  [`Mean Percentage Error`][17][^1]
+- [ ]  [`Mean Gamma Deviance`][18][^1]
+- [ ]  [`Mean Tweedie Deviance`][19][^1]
+- [ ]  [`Mean Pinball Loss`][20][^1]
+- [ ]  [`D² tweedie score`][21][^2]
+- [ ]  [`D² pinball score`][22][^2]
+- [ ]  [`D² absolute error score`][23][^2]
 
 !!! info "Regression Metrics For [Example 6][8]"
 
@@ -287,10 +290,6 @@ data. The metrics are calculated for each fit individually and based on the
     | `median absolute error`          |     0.02      |     0.04      |     0.02      |
     | `mean absolute percentage error` |    441.19     |     0.25      |     0.62      |
     | `mean poisson deviance`          |     0.02      |     0.02      |     0.01      |
-    | `mean gamma deviance`            |     2.12      |     0.37      |     0.23      |
-    | `mean tweedie deviance`          |     0.00      |     0.00      |     0.00      |
-    | `mean pinball loss`              |     0.01      |     0.02      |     0.01      |
-    | `d2 tweedie score`               |     0.97      |     0.86      |     0.98      |
 
 [1]: https://en.wikipedia.org/wiki/Goodness_of_fit
 [2]: https://lmfit.github.io/lmfit-py/fitting.html?highlight=goodness
@@ -315,3 +314,7 @@ data. The metrics are calculated for each fit individually and based on the
 [21]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.d2_tweedie_score.html
 [22]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.d2_pinball_score.html
 [23]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.d2_absolute_error_score.html
+
+
+[^1]: requires a strictly postive `y_true` and `y_pred` array
+[^2]: requires `sklearn >= 1.1.2`

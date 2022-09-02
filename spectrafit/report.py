@@ -18,17 +18,18 @@ from lmfit import report_fit
 from lmfit.minimizer import MinimizerException
 from lmfit.minimizer import minimize
 from numpy.typing import NDArray
-from sklearn.metrics import d2_tweedie_score
+
+# from sklearn.metrics import mean_tweedie_deviance
+# from sklearn.metrics import mean_gamma_deviance
+# from sklearn.metrics import mean_pinball_loss
+# from sklearn.metrics import d2_tweedie_score
 from sklearn.metrics import explained_variance_score
 from sklearn.metrics import max_error
 from sklearn.metrics import mean_absolute_error
 from sklearn.metrics import mean_absolute_percentage_error
-from sklearn.metrics import mean_gamma_deviance
-from sklearn.metrics import mean_pinball_loss
 from sklearn.metrics import mean_poisson_deviance
 from sklearn.metrics import mean_squared_error
 from sklearn.metrics import mean_squared_log_error
-from sklearn.metrics import mean_tweedie_deviance
 from sklearn.metrics import median_absolute_error
 from sklearn.metrics import r2_score
 from spectrafit import __version__
@@ -128,10 +129,7 @@ class RegressionMetrics:
         return (_true, _pred) if _true.shape[1] > 1 else (_true.T, _pred.T)
 
     def __call__(self) -> Dict[str, Any]:
-        """Calculate the regression metrics of the Fit(s) for the post analysis.
-
-        !!! note  "Regression Metrics for post analysis of the Fit(s)"
-        """
+        """Calculate the regression metrics of the Fit(s) for the post analysis."""
         metrics_fnc = (
             explained_variance_score,
             r2_score,
@@ -142,10 +140,10 @@ class RegressionMetrics:
             median_absolute_error,
             mean_absolute_percentage_error,
             mean_poisson_deviance,
-            mean_gamma_deviance,
-            mean_tweedie_deviance,
-            mean_pinball_loss,
-            d2_tweedie_score,
+            # mean_gamma_deviance,
+            # mean_tweedie_deviance,
+            # mean_pinball_loss,
+            # d2_tweedie_score,
         )
         metric_dict: Dict[str, List[float]] = {}
         for fnc in metrics_fnc:
