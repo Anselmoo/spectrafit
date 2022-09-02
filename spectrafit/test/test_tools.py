@@ -9,9 +9,9 @@ from pandas._testing import assert_frame_equal
 from spectrafit.models import SolverModels
 from spectrafit.tools import PostProcessing
 from spectrafit.tools import PreProcessing
+from spectrafit.tools import RegressionMetrics
 from spectrafit.tools import SaveResult
 from spectrafit.tools import check_keywords_consistency
-from spectrafit.tools import RegressionMetrics
 
 
 class TestPreProcessing:

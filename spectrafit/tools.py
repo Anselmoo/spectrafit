@@ -18,8 +18,8 @@ from lmfit import Minimizer
 from lmfit import conf_interval
 from lmfit.minimizer import MinimizerException
 from spectrafit.models import calculated_model
-from spectrafit.report import fit_report_as_dict
 from spectrafit.report import RegressionMetrics
+from spectrafit.report import fit_report_as_dict
 
 
 class PreProcessing:
