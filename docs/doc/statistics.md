@@ -1,7 +1,7 @@
 ## Standard Statistics
 
-Standard statistics will be performed according to the [`Goodness of fit`][1],
-which is implemented by default through [`lmfit`][2]. The goodness of fit
+Standard statistics will be performed according to the [`Goodness of Fit`][1],
+which is implemented by default through [`lmfit`][2]. The `Goodness of Fit`
 contains:
 
 - [x] $N_{vars}$: the number of degrees of variables
@@ -249,9 +249,70 @@ measure of the linear dependence between two variables.
 
 > _Three_ peak fit of the `Reference Data` above.
 
+## Regression Metrics
+
+For the regression metrics, the fitting results are compared to the reference
+data. The metrics are calculated for each fit individually and based on the
+[`sklearn.metrics`][7] module. Currently, the following metrics are implemented:
+
+- [x] [`Explained Variance Score`][9]
+- [x] [`R²`][10]
+- [x] [`Max Error`][11]
+- [x] [`Mean Absolute Error`][12]
+- [x] [`Mean Squared Error`][13]
+- [x] [`Mean Squared Log Error`][14]
+- [x] [`Median Absolute Error`][15]
+- [x] [`Mean Absolute Percentage Error`][16]
+
+The metrics should provide a better overview of the individual fitting results
+and the used model then just using the `Goodness of Fit` metrics. However, the
+following metrics are not implemented yet:
+
+- [ ] [`Mean Percentage Error`][17][^1]
+- [ ] [`Mean Gamma Deviance`][18][^1]
+- [ ] [`Mean Tweedie Deviance`][19][^1]
+- [ ] [`Mean Pinball Loss`][20][^1]
+- [ ] [`D² tweedie score`][21][^2]
+- [ ] [`D² pinball score`][22][^2]
+- [ ] [`D² absolute error score`][23][^2]
+
+!!! info "Regression Metrics For [Example 6][8]"
+
+    | **Metric**                       | **Spectra 1** | **Spectra 2** | **Spectra 3** |
+    | -------------------------------- | :-----------: | :-----------: | :-----------: |
+    | `explained variance score`       |     0.97      |     0.88      |     0.98      |
+    | `r2 score`                       |     0.97      |     0.86      |     0.98      |
+    | `max error`                      |     0.05      |     0.14      |     0.05      |
+    | `mean absolute error`            |     0.02      |     0.04      |     0.02      |
+    | `mean squared error`             |     0.00      |     0.00      |     0.00      |
+    | `mean squared log error`         |     0.00      |     0.00      |     0.00      |
+    | `median absolute error`          |     0.02      |     0.04      |     0.02      |
+    | `mean absolute percentage error` |    441.19     |     0.25      |     0.62      |
+    | `mean poisson deviance`          |     0.02      |     0.02      |     0.01      |
+
 [1]: https://en.wikipedia.org/wiki/Goodness_of_fit
 [2]: https://lmfit.github.io/lmfit-py/fitting.html?highlight=goodness
 [3]: https://en.wikipedia.org/wiki/Chi-squared_test
 [4]: https://en.wikipedia.org/wiki/Akaike_information_criterion
 [5]: https://en.wikipedia.org/wiki/Bayesian_information_criterion
 [6]: https://en.wikipedia.org/wiki/Covariance_matrix
+[7]: https://scikit-learn.org/stable/modules/classes.html#regression-metrics
+[8]: ../../examples/example6
+[9]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.explained_variance_score.html
+[10]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.r2_score.html
+[11]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.max_error.html
+[12]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_absolute_error.html
+[13]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_squared_error.html
+[14]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_squared_log_error.html
+[15]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.median_absolute_error.html
+[16]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_absolute_percentage_error.html
+[17]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_percentage_error.html
+[18]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_gamma_deviance.html
+[19]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_tweedie_deviance.html
+[20]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_pinball_loss.html
+[21]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.d2_tweedie_score.html
+[22]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.d2_pinball_score.html
+[23]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.d2_absolute_error_score.html
+
+[^1]: requires a strictly postive `y_true` and `y_pred` array
+[^2]: requires `sklearn >= 1.1.2`

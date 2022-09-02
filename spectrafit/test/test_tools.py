@@ -9,6 +9,7 @@ from pandas._testing import assert_frame_equal
 from spectrafit.models import SolverModels
 from spectrafit.tools import PostProcessing
 from spectrafit.tools import PreProcessing
+from spectrafit.tools import RegressionMetrics
 from spectrafit.tools import SaveResult
 from spectrafit.tools import check_keywords_consistency
 
@@ -157,8 +158,6 @@ class TestPreProcessing:
 
         check_keywords_consistency(args_1, args_2)
 
-        assert True
-
     def test_keyword_fail_2(self) -> None:
         """Testing consistency between cmd and input keywords."""
         args_1 = {"keyword4": "value"}
@@ -294,3 +293,23 @@ class TestPostProcessing:
         )()
         assert type(df) == pd.DataFrame
         assert type(args) == dict
+
+
+class TestRegressionMetrics:
+    """Test of the regression metrics module."""
+
+    def test_raise_error(self) -> None:
+        """Testing raise error."""
+        with pytest.raises(ValueError) as excinfo:
+            RegressionMetrics(
+                pd.DataFrame(
+                    {
+                        "intensity_0": np.random.rand(10),
+                        "intensity_1": np.random.rand(10),
+                        "fit_0": np.random.rand(10),
+                    }
+                )
+            )
+        assert "The shape of the real and fit data-values are not equal!" in str(
+            excinfo.value
+        )

@@ -22,7 +22,7 @@ class TestCommandLineRunner:
         )
 
         assert ret.success
-        assert ret.stdout == f"Currently used version is: {__version__}\n"
+        assert f"Currently used version is: {__version__}\n" in ret.stdout
         assert ret.stderr == ""
 
     def test_extended(self, monkeypatch, script_runner):

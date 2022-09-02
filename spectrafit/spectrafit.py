@@ -195,6 +195,7 @@ def command_line_runner(args: Dict[str, Any] = None) -> None:
              dictionary with additional information beyond the command line arguments.
              Defaults to None.
     """
+    __status__.welcome
     while True:
         if not args:
             args = extracted_from_command_line_runner()
