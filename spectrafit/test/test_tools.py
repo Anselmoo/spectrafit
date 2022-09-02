@@ -158,8 +158,6 @@ class TestPreProcessing:
 
         check_keywords_consistency(args_1, args_2)
 
-        assert True
-
     def test_keyword_fail_2(self) -> None:
         """Testing consistency between cmd and input keywords."""
         args_1 = {"keyword4": "value"}
