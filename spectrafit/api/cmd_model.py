@@ -45,10 +45,10 @@ class Description(BaseModel):
     )
     authors: List[str] = Field(default=[], description="Authors of the project")
     references: List[str] = Field(default=[], description="References for the project")
-    version: Optional[str] = __version__
-    user_system: Optional[str] = f"{getuser()}@{gethostname()}"
-    timestamp: Optional[str] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    id_: Optional[str] = Field(
+    version: str = __version__
+    user_system: str = f"{getuser()}@{gethostname()}"
+    timestamp: str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    id_: str = Field(
         default=str(uuid4()), alias="id", description="Unique ID of the project"
     )
 
@@ -64,7 +64,9 @@ class Model(BaseModel):
     energy_stop: Optional[int] = None
     smooth: Optional[int] = None
     shift: Optional[Union[int, float]] = None
-    column: List[Union[str, int]] = Field(min_items=1, default=[0, 1])
+    column: List[Union[int, str]] = Field(
+        min_items=1, default=[0, 1], dtypes=[int, str]
+    )
     separator: str = "\t"
     decimal: str = "."
     header: Optional[int] = None
