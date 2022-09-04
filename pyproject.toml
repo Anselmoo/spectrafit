@@ -146,7 +146,7 @@ convention = "google"
 [tool.mypy]
 plugins = [ "pydantic.mypy", "numpy.typing.mypy_plugin" ]
 
-# python_version = [ "3.7", "3.8", "3.9", "3.10" ]
+
 follow_imports = "silent"
 warn_redundant_casts = true
 warn_unused_ignores = true
