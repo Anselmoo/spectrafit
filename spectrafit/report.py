@@ -173,7 +173,7 @@ def fit_report_as_dict(
 
     parnames = list(params.keys())
 
-    buffer: dict = {
+    buffer: Dict[str, Dict[Any, Any]] = {
         "configurations": {},
         "statistics": {},
         "variables": {},
