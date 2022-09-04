@@ -1,17 +1,13 @@
 """SpectraFit, the command line tool for fitting."""
 import argparse
 
-from datetime import datetime
-from getpass import getuser
-from socket import gethostname
 from typing import Any
 from typing import Dict
 from typing import Tuple
-from uuid import uuid4
 
 import pandas as pd
 
-from spectrafit import __version__
+from spectrafit.api import cmd_model
 from spectrafit.models import SolverModels
 from spectrafit.plotting import PlotSpectra
 from spectrafit.report import PrintingResults
@@ -240,6 +236,7 @@ def extracted_from_command_line_runner() -> Dict[str, Any]:
     if "settings" in _args.keys():
         for key in _args["settings"].keys():
             result[key] = _args["settings"][key]
+    result = cmd_model.Model(**result).dict()
     if "description" in _args["fitting"].keys():
         result["description"] = _args["fitting"]["description"]
     if "parameters" in _args["fitting"].keys():
@@ -265,15 +262,15 @@ def extracted_from_command_line_runner() -> Dict[str, Any]:
             result["conf_interval"] = None
     if "peaks" in _args["fitting"].keys():
         result["peaks"] = _args["fitting"]["peaks"]
-    result["timestamp"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    result["ID"] = str(uuid4())
-    result["user_name"] = getuser()
-    result["user_system"] = gethostname()
-    result["used_version"] = __version__
+    # result["timestamp"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    # result["ID"] = str(uuid4())
+    # result["user_name"] = getuser()
+    # result["user_system"] = gethostname()
+    # result["used_version"] = __version__
     return result
 
 
-def fitting_routine(args: Dict[str, Any]) -> Tuple[pd.DataFrame, dict]:
+def fitting_routine(args: Dict[str, Any]) -> Tuple[pd.DataFrame, Dict[str, Any]]:
     """Run the fitting algorithm.
 
     Args:
@@ -281,12 +278,12 @@ def fitting_routine(args: Dict[str, Any]) -> Tuple[pd.DataFrame, dict]:
              additional information beyond the command line arguments.
 
     Returns:
-        Tuple[pd.DataFrame, dict]: Returns a DataFrame and a dictionary, which is
-             containing the input data (`x` and `data`), as well as the best fit, single
-             contributions of each peak and the corresponding residuum. The dictionary
-             contains the raw input data, the best fit, the single contributions and the
-             corresponding residuum. Furthermore, the dictionary is extended by advanced
-             statistical information of the fit.
+        Tuple[pd.DataFrame, Dict[str, Any]]: Returns a DataFrame and a dictionary,
+             which is containing the input data (`x` and `data`), as well as the best
+             fit, single contributions of each peak and the corresponding residuum. The
+             dictionary contains the raw input data, the best fit, the single
+             contributions and the corresponding residuum. Furthermore, the dictionary
+             is extended by advanced statistical information of the fit.
     """
     df = load_data(args)
     df, args = PreProcessing(df=df, args=args)()

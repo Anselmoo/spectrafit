@@ -36,7 +36,7 @@ include = [
   { path = "spectrafit/test/", format = "sdist" },
   { path = "examples/", format = "sdist" },
 ]
-exclude = [ "docs/", "tools/" ]
+exclude = [ "docs/", "tools/", "tests/" ]
 
   [tool.poetry.dependencies]
   python = ">=3.7.2,<3.11"
@@ -52,6 +52,8 @@ exclude = [ "docs/", "tools/" ]
   tqdm = "^4.64.0"
   scikit-learn = "^1"
   art = "^5.7"
+  jupyterlab = { version = "^3.4.5", optional = true }
+  pydantic = "^1.10.1"
 
 
   [tool.poetry.dev-dependencies]
@@ -88,7 +90,8 @@ spectrafit = "spectrafit.spectrafit:command_line_runner"
 spectrafit-converter = "spectrafit.plugins.converter:command_line_runner"
 
 [tool.poetry.extras]
-dev = [ "datamodel-code-generator" ]
+jupyter = [ "jupyterlab" ]
+
 
 [tool.isort]
 profile = "black"
@@ -139,5 +142,23 @@ script_launch_mode = "subprocess"
 match = '.*\.py'
 convention = "google"
 
-[tools.mypy]
-plugins = "numpy.typing.mypy_plugin"
+
+[tool.mypy]
+plugins = [ "pydantic.mypy", "numpy.typing.mypy_plugin" ]
+
+python_version = [ "3.7", "3.8", "3.9", "3.10" ]
+follow_imports = "silent"
+warn_redundant_casts = true
+warn_unused_ignores = true
+disallow_any_generics = true
+check_untyped_defs = true
+no_implicit_reexport = true
+disallow_untyped_defs = true
+
+exclude = "**/test/test_*.py"
+
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+warn_required_dynamic_aliases = true
+warn_untyped_fields = true

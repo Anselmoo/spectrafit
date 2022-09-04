@@ -1,5 +1,6 @@
 """Testing of the command line interface."""
 from pathlib import Path
+from typing import Any
 
 import pandas as pd
 
@@ -9,7 +10,7 @@ from numpy.testing import assert_almost_equal
 class TestCommandLineRunner:
     """Testing the command line interface."""
 
-    def test_version(self, monkeypatch, script_runner):
+    def test_version(self, monkeypatch: Any, script_runner: Any) -> None:
         """Testing the version command."""
         from spectrafit import __version__
 
@@ -25,7 +26,7 @@ class TestCommandLineRunner:
         assert f"Currently used version is: {__version__}\n" in ret.stdout
         assert ret.stderr == ""
 
-    def test_extended(self, monkeypatch, script_runner):
+    def test_extended(self, monkeypatch: Any, script_runner: Any) -> None:
         """Testing the extended command."""
         monkeypatch.setattr("builtins.input", lambda _: "n")
         ret = script_runner.run(
@@ -37,7 +38,7 @@ class TestCommandLineRunner:
         assert ret.success
         assert ret.stderr == ""
 
-    def test_extended_verbose(self, monkeypatch, script_runner):
+    def test_extended_verbose(self, monkeypatch: Any, script_runner: Any) -> None:
         """Testing the extended with verbose command."""
         monkeypatch.setattr("builtins.input", lambda _: "n")
         ret = script_runner.run(
@@ -53,7 +54,7 @@ class TestCommandLineRunner:
 class TestFileFormat:
     """Testing the file formats."""
 
-    def test_json_input(self, monkeypatch, script_runner):
+    def test_json_input(self, monkeypatch: Any, script_runner: Any) -> None:
         """Testing json support."""
         monkeypatch.setattr("builtins.input", lambda _: "n")
         ret = script_runner.run(
@@ -71,7 +72,7 @@ class TestFileFormat:
         )
         assert len(list(Path(".").glob("spectrafit/test/export/result_json*.csv"))) == 3
 
-    def test_yml_input(self, monkeypatch, script_runner):
+    def test_yml_input(self, monkeypatch: Any, script_runner: Any) -> None:
         """Testing yml support."""
         monkeypatch.setattr("builtins.input", lambda _: "n")
         ret = script_runner.run(
@@ -87,7 +88,7 @@ class TestFileFormat:
         assert len(list(Path(".").glob("spectrafit/test/export/result_yml*.json"))) == 1
         assert len(list(Path(".").glob("spectrafit/test/export/result_yml*.csv"))) == 3
 
-    def test_yaml_input(self, monkeypatch, script_runner):
+    def test_yaml_input(self, monkeypatch: Any, script_runner: Any) -> None:
         """Testing yaml support."""
         monkeypatch.setattr("builtins.input", lambda _: "n")
         ret = script_runner.run(
@@ -105,7 +106,7 @@ class TestFileFormat:
         )
         assert len(list(Path(".").glob("spectrafit/test/export/result_yaml*.csv"))) == 3
 
-    def test_toml_input(self, monkeypatch, script_runner):
+    def test_toml_input(self, monkeypatch: Any, script_runner: Any) -> None:
         """Testing toml support."""
         monkeypatch.setattr("builtins.input", lambda _: "n")
         ret = script_runner.run(
@@ -127,7 +128,7 @@ class TestFileFormat:
 class TestFileFormatOutput:
     """Testing the output files and formats."""
 
-    def test_outputs(self, monkeypatch, script_runner):
+    def test_outputs(self, monkeypatch: Any, script_runner: Any) -> None:
         """Testing correct number of outputs."""
         monkeypatch.setattr("builtins.input", lambda _: "n")
         _ = script_runner.run(
@@ -145,7 +146,7 @@ class TestFileFormatOutput:
 class TestMoreFeatures:
     """Testing more features."""
 
-    def test_default_options(self, monkeypatch, script_runner):
+    def test_default_options(self, monkeypatch: Any, script_runner: Any) -> None:
         """Testing verbose support."""
         monkeypatch.setattr("builtins.input", lambda _: "n")
         ret = script_runner.run(
@@ -157,7 +158,7 @@ class TestMoreFeatures:
         assert ret.success
         assert ret.stderr == ""
 
-    def test_energyrange_e0(self, monkeypatch, script_runner):
+    def test_energyrange_e0(self, monkeypatch: Any, script_runner: Any) -> None:
         """Testing lower energy range cut."""
         monkeypatch.setattr("builtins.input", lambda _: "n")
         ret = script_runner.run(
@@ -176,7 +177,7 @@ class TestMoreFeatures:
         df_test = pd.read_csv(Path("./spectrafit/test/export/e0_result_fit.csv"))
         assert_almost_equal(df_test["energy"].min(), 0.0, decimal=0)
 
-    def test_energyrange_e1(self, monkeypatch, script_runner):
+    def test_energyrange_e1(self, monkeypatch: Any, script_runner: Any) -> None:
         """Testing upper energy range cut."""
         monkeypatch.setattr("builtins.input", lambda _: "n")
         ret = script_runner.run(
@@ -196,7 +197,7 @@ class TestMoreFeatures:
         df_test = pd.read_csv(Path("./spectrafit/test/export/e1_result_fit.csv"))
         assert_almost_equal(df_test["energy"].max(), 5.0, decimal=0)
 
-    def test_energyrange_e0e1(self, monkeypatch, script_runner):
+    def test_energyrange_e0e1(self, monkeypatch: Any, script_runner: Any) -> None:
         """Testing lower and upper energy range cut."""
         monkeypatch.setattr("builtins.input", lambda _: "n")
         ret = script_runner.run(
@@ -219,7 +220,7 @@ class TestMoreFeatures:
         assert_almost_equal(df_test["energy"].max(), 5.0, decimal=0)
         assert_almost_equal(df_test["energy"].min(), 0.0, decimal=0)
 
-    def test_all_models(self, monkeypatch, script_runner):
+    def test_all_models(self, monkeypatch: Any, script_runner: Any) -> None:
         """Testing test all models of spectrafit."""
         monkeypatch.setattr("builtins.input", lambda _: "n")
         ret = script_runner.run(
@@ -231,7 +232,7 @@ class TestMoreFeatures:
         assert ret.success
         assert ret.stderr == ""
 
-    def test_not_allowed_input_1(self, monkeypatch, script_runner):
+    def test_not_allowed_input_1(self, monkeypatch: Any, script_runner: Any) -> None:
         """Testing test all models of spectrafit."""
         monkeypatch.setattr("builtins.input", lambda _: "n")
         fname = "spectrafit/test/scripts/test_wrong.pp"
@@ -248,7 +249,7 @@ class TestMoreFeatures:
         # "Supported fileformats are: '*.json', '*.yaml', and '*.toml'\n"
         # )
 
-    def test_not_allowed_input_2(self, monkeypatch, script_runner):
+    def test_not_allowed_input_2(self, monkeypatch: Any, script_runner: Any) -> None:
         """Testing missing mininizmer parameter in input."""
         monkeypatch.setattr("builtins.input", lambda _: "n")
         ret = script_runner.run(
@@ -260,7 +261,7 @@ class TestMoreFeatures:
         assert not ret.success
         # assert ret.stderr == "Missing 'minimizer' in 'parameters'!\n"
 
-    def test_not_allowed_input_3(self, monkeypatch, script_runner):
+    def test_not_allowed_input_3(self, monkeypatch: Any, script_runner: Any) -> None:
         """Testing missing optimizer parameter in input."""
         monkeypatch.setattr("builtins.input", lambda _: "n")
         ret = script_runner.run(
@@ -272,7 +273,7 @@ class TestMoreFeatures:
         assert not ret.success
         # assert ret.stderr == "Missing key 'optimizer' in 'parameters'!\n"
 
-    def test_no_input(self, monkeypatch, script_runner):
+    def test_no_input(self, monkeypatch: Any, script_runner: Any) -> None:
         """Testing no provided input for spectrafit."""
         monkeypatch.setattr("builtins.input", lambda _: "n")
         ret = script_runner.run(
@@ -283,7 +284,7 @@ class TestMoreFeatures:
         )
         assert not ret.success
 
-    def test_conf_interval(self, monkeypatch, script_runner):
+    def test_conf_interval(self, monkeypatch: Any, script_runner: Any) -> None:
         """Testing upper energy range cut."""
         monkeypatch.setattr("builtins.input", lambda _: "n")
         ret = script_runner.run(
@@ -305,7 +306,7 @@ class TestMoreFeatures:
             == 1
         )
 
-    def test_get_no_errors(self, monkeypatch, script_runner):
+    def test_get_no_errors(self, monkeypatch: Any, script_runner: Any) -> None:
         """Testing for no errorbars for spectrafit."""
         monkeypatch.setattr("builtins.input", lambda _: "n")
         ret = script_runner.run(
@@ -316,7 +317,7 @@ class TestMoreFeatures:
         )
         assert ret.success
 
-    def test_load_noglobal(self, monkeypatch, script_runner):
+    def test_load_noglobal(self, monkeypatch: Any, script_runner: Any) -> None:
         """Testing for no errorbars for spectrafit."""
         monkeypatch.setattr("builtins.input", lambda _: "n")
         ret = script_runner.run(
@@ -329,7 +330,7 @@ class TestMoreFeatures:
         )
         assert ret.success
 
-    def test_non_numeric_data(self, monkeypatch, script_runner):
+    def test_non_numeric_data(self, monkeypatch: Any, script_runner: Any) -> None:
         """Testing missing mininizmer parameter in input."""
         monkeypatch.setattr("builtins.input", lambda _: "n")
         ret = script_runner.run(
@@ -341,7 +342,7 @@ class TestMoreFeatures:
 class TestGlobalFitting:
     """Test class for global fitting."""
 
-    def test_global_fitting_0(self, monkeypatch, script_runner):
+    def test_global_fitting_0(self, monkeypatch: Any, script_runner: Any) -> None:
         """Testing global fitting."""
         monkeypatch.setattr("builtins.input", lambda _: "n")
         ret = script_runner.run(
@@ -364,7 +365,7 @@ class TestGlobalFitting:
             == 3
         )
 
-    def test_global_fitting_1(self, monkeypatch, script_runner):
+    def test_global_fitting_1(self, monkeypatch: Any, script_runner: Any) -> None:
         """Testing global fitting."""
         monkeypatch.setattr("builtins.input", lambda _: "n")
         ret = script_runner.run(

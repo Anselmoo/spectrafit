@@ -1,10 +1,11 @@
 """Pytest of the plotting features of spectrafit."""
 import pandas as pd
 
+from matplotlib import pyplot
 from spectrafit.plotting import PlotSpectra
 
 
-def test_succeeds(plt):
+def test_succeeds(plt: pyplot) -> None:
     """Test that PlotSpectra class succeeds for 2D-plotting."""
     df = pd.DataFrame(
         {
@@ -75,13 +76,13 @@ def test_succeeds(plt):
             ],
         }
     )
-    args = {"noplot": True, "global": False}
+    args = {"noplot": True, "global_": False}
     PlotSpectra(df=df, args=args)()
     plt.show()
     assert True
 
 
-def test_empty(plt):
+def test_empty(plt: pyplot) -> None:
     """Test that PlotSpectra class succeeds for no-plotting."""
     df = pd.DataFrame(
         {
@@ -152,7 +153,7 @@ def test_empty(plt):
             ],
         }
     )
-    args = {"noplot": False, "global": False}
+    args = {"noplot": False, "global_": False}
     PlotSpectra(df=df, args=args)()
     plt.show()
     assert True

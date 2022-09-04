@@ -442,7 +442,7 @@ class ModelParameters(AutoPeakDetection):
             Tuple[NDArray[np.float64], NDArray[np.float64]]: Tuple of `x` and
                  `data` as numpy arrays.
         """
-        if args["global"]:
+        if args["global_"]:
             return (
                 df[args["column"][0]].to_numpy(),
                 df.loc[:, df.columns != args["column"][0]].to_numpy(),
@@ -475,16 +475,16 @@ class ModelParameters(AutoPeakDetection):
             KeyError: Global fitting is combination with automatic peak detection is
                  not implemented yet.
         """
-        if self.args["global"] == 0 and not self.args["autopeak"]:
+        if self.args["global_"] == 0 and not self.args["autopeak"]:
             self.define_parameters()
-        elif self.args["global"] == 1 and not self.args["autopeak"]:
+        elif self.args["global_"] == 1 and not self.args["autopeak"]:
             self.define_parameters_global()
-        elif self.args["global"] == 2 and not self.args["autopeak"]:
+        elif self.args["global_"] == 2 and not self.args["autopeak"]:
             self.define_parameters_global_pre()
-        elif self.args["global"] == 0:
+        elif self.args["global_"] == 0:
             self.initialize_peak_detection()
             self.define_parameters_auto()
-        elif self.args["global"] in [1, 2]:
+        elif self.args["global_"] in [1, 2]:
             raise KeyError(
                 "Global fitting mode with automatic peak detection "
                 "is not supported yet."
@@ -723,7 +723,7 @@ class SolverModels(ModelParameters):
         Returns:
             Tuple[Minimizer, Any]: Minimizer class and the fitting results.
         """
-        if self.args["global"]:
+        if self.args["global_"]:
             minimizer = Minimizer(
                 self.solve_global_fitting,
                 params=self.params,
@@ -782,7 +782,7 @@ class SolverModels(ModelParameters):
             [3]: https://en.wikipedia.org/wiki/Inverse_trigonometric_functions
         """
         val = np.zeros(x.shape)
-        peak_kwargs: dict = defaultdict(dict)
+        peak_kwargs: Dict[Tuple[str, str], Parameters] = defaultdict(dict)
 
         for model in params:
             model = model.lower()
@@ -849,7 +849,7 @@ class SolverModels(ModelParameters):
             NDArray[np.float64]: The best-fitted data based on the proposed model.
         """
         val = np.zeros(data.shape)
-        peak_kwargs: dict = defaultdict(dict)
+        peak_kwargs: Dict[Tuple[str, str, str], Parameters] = defaultdict(dict)
 
         for model in params:
 
@@ -889,12 +889,15 @@ class SolverModels(ModelParameters):
 
 
 def calculated_model(
-    params: dict, x: NDArray[np.float64], df: pd.DataFrame, global_fit: int
+    params: Dict[str, Parameters],
+    x: NDArray[np.float64],
+    df: pd.DataFrame,
+    global_fit: int,
 ) -> pd.DataFrame:
     r"""Calculate the single contributions of the models and add them to the dataframe.
 
     Args:
-        params (dict): The best optimized parameters of the fit.
+        params (Dict[str, Parameters]): The best optimized parameters of the fit.
         x (NDArray[np.float64]): `x`-values of the data.
         df (pd.DataFrame): DataFrame containing the input data (`x` and `data`),
              as well as the best fit and the corresponding residuum. Hence, it will be
@@ -910,16 +913,16 @@ def calculated_model(
         overall goal is to extract from the best parameters the single contributions in
         the model. Currently, `lmfit` provides only a single model, so the best-fit.
     """
-    peak_kwargs: dict = defaultdict(dict)
+    peak_kwargs: Dict[Any, Parameters] = defaultdict(dict)
 
     for model in params:
         model = model.lower()
         ReferenceKeys().model_check(model=model)
-        c_name = model.split("_")
+        p_name = model.split("_")
         if global_fit:
-            peak_kwargs[(c_name[0], c_name[2], c_name[3])][c_name[1]] = params[model]
+            peak_kwargs[(p_name[0], p_name[2], p_name[3])][p_name[1]] = params[model]
         else:
-            peak_kwargs[(c_name[0], c_name[2])][c_name[1]] = params[model]
+            peak_kwargs[(p_name[0], p_name[2])][p_name[1]] = params[model]
 
     _df = df.copy()
     for key, _kwarg in peak_kwargs.items():
@@ -976,13 +979,16 @@ def gaussian(
         NDArray[np.float64]: Gaussian distribution of `x` given.
     """
     sigma = fwhmg / Constants.sig2fwhm
-    return (amplitude / (Constants.sq2pi * sigma)) * np.exp(
+    return np.array(amplitude / (Constants.sq2pi * sigma)) * np.exp(
         -((1.0 * x - center) ** 2) / (2 * sigma**2)
     )
 
 
 def lorentzian(
-    x, amplitude: float = 1.0, center: float = 0.0, fwhml: float = 1.0
+    x: NDArray[np.float64],
+    amplitude: float = 1.0,
+    center: float = 0.0,
+    fwhml: float = 1.0,
 ) -> NDArray[np.float64]:
     r"""Return a 1-dimensional Lorentzian distribution.
 
@@ -1001,10 +1007,12 @@ def lorentzian(
              distribution. Defaults to 1.0.
 
     Returns:
-        NDArray[np.float64]: Lorentzian distribution of `x` given.
+        Union[NDArray[np.float64], float]: Lorentzian distribution of `x` given.
     """
     sigma = fwhml / 2.0
-    return (amplitude / (1 + ((1.0 * x - center) / sigma) ** 2)) / (np.pi * sigma)
+    return np.array(amplitude / (1 + ((1.0 * x - center) / sigma) ** 2)) / (
+        np.pi * sigma
+    )
 
 
 def voigt(
@@ -1033,7 +1041,7 @@ def voigt(
     if gamma is None:
         gamma = sigma
     z = (x - center + 1j * gamma) / (sigma * Constants.sq2)
-    return wofz(z).real / (sigma * Constants.sq2pi)
+    return np.array(wofz(z).real / (sigma * Constants.sq2pi))
 
 
 def pseudovoigt(
@@ -1074,9 +1082,10 @@ def pseudovoigt(
         0.2,
     )
     n = 1.36603 * (fwhml / f) - 0.47719 * (fwhml / f) ** 2 + 0.11116 * (fwhml / f) ** 3
-    return n * lorentzian(x=x, amplitude=amplitude, center=center, fwhml=fwhml) + (
-        1 - n
-    ) * gaussian(x=x, amplitude=amplitude, center=center, fwhmg=fwhmg)
+    return np.array(
+        n * lorentzian(x=x, amplitude=amplitude, center=center, fwhml=fwhml)
+        + (1 - n) * gaussian(x=x, amplitude=amplitude, center=center, fwhmg=fwhmg)
+    )
 
 
 def exponential(
@@ -1098,7 +1107,7 @@ def exponential(
     Returns:
         NDArray[np.float64]: Exponential decay of `x` given.
     """
-    return amplitude * np.exp(-x / decay) + intercept
+    return np.array(amplitude * np.exp(-x / decay) + intercept)
 
 
 def power(
@@ -1120,7 +1129,7 @@ def power(
     Returns:
         NDArray[np.float64]: power function of `x` given.
     """
-    return amplitude * np.power(x, exponent) + intercept
+    return np.array(amplitude * np.power(x, exponent) + intercept)
 
 
 def linear(
@@ -1136,7 +1145,7 @@ def linear(
     Returns:
         NDArray[np.float64]: Linear function of `x` given.
     """
-    return slope * x + intercept
+    return np.array(slope * x + intercept)
 
 
 def constant(x: NDArray[np.float64], amplitude: float = 1.0) -> NDArray[np.float64]:
@@ -1149,7 +1158,7 @@ def constant(x: NDArray[np.float64], amplitude: float = 1.0) -> NDArray[np.float
     Returns:
         NDArray[np.float64]: Constant value of `x` given.
     """
-    return np.linspace(amplitude, amplitude, len(x))
+    return np.array(np.linspace(amplitude, amplitude, len(x)))
 
 
 def step(
@@ -1185,7 +1194,7 @@ def step(
     if abs(sigma) < 1.0e-13:
         sigma = 1.0e-13
 
-    out = (x - center) / sigma
+    out: NDArray[np.float64] = np.subtract(x, center) / sigma
     if kind == "erf":
         out = 0.5 * (1 + erf(out))
     elif kind.startswith("log"):
@@ -1195,4 +1204,4 @@ def step(
     elif kind == "heaviside":
         out[np.where(out < 0)] = 0.0
         out[np.where(out > 1)] = 1.0
-    return amplitude * out
+    return np.array(amplitude * out)

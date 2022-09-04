@@ -117,7 +117,7 @@ class PreProcessing:
         return _df
 
     @staticmethod
-    def oversampling(df: pd.DataFrame, args: dict) -> pd.DataFrame:
+    def oversampling(df: pd.DataFrame, args: Dict[str, Any]) -> pd.DataFrame:
         """Oversampling the data to increase the resolution of the data.
 
         !!! note "About Oversampling"
@@ -217,7 +217,7 @@ class PostProcessing:
         Returns:
             Optional[int]: The number of spectra of the global fitting.
         """
-        if self.args["global"]:
+        if self.args["global_"]:
             return max(
                 int(self.result.params[i].name.split("_")[-1])
                 for i in self.result.params
@@ -241,7 +241,7 @@ class PostProcessing:
                  and `intensity_1`, `intensity_2`, `intensity_...` depending on
                  the dataset size.
         """
-        if self.args["global"]:
+        if self.args["global_"]:
             return df.rename(
                 columns={
                     col: "energy" if i == 0 else f"intensity_{i}"
@@ -307,7 +307,7 @@ class PostProcessing:
             separately.
         """
         _df = self.df.copy()
-        if self.args["global"]:
+        if self.args["global_"]:
 
             residual = self.result.residual.reshape((-1, self.data_size)).T
             for i, _residual in enumerate(residual, start=1):
@@ -331,7 +331,7 @@ class PostProcessing:
             params=self.result.params,
             x=self.df.iloc[:, 0].to_numpy(),
             df=self.df,
-            global_fit=self.args["global"],
+            global_fit=self.args["global_"],
         )
 
     @property
@@ -526,7 +526,7 @@ def load_data(args: Dict[str, str]) -> pd.DataFrame:
              extended by the single contribution of the model.
     """
     try:
-        if args["global"]:
+        if args["global_"]:
             return pd.read_csv(
                 args["infile"],
                 sep=args["separator"],

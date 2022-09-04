@@ -32,7 +32,7 @@ class PlotSpectra:
     def __call__(self) -> None:
         """Plot the data and the fit."""
         if not self.args["noplot"]:
-            if self.args["global"]:
+            if self.args["global_"]:
                 self.plot_global_spectra
             else:
                 self.plot_local_spectra
