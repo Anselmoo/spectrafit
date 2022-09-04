@@ -79,7 +79,6 @@ def test_succeeds(plt: pyplot) -> None:
     args = {"noplot": True, "global_": False}
     PlotSpectra(df=df, args=args)()
     plt.show()
-    assert True
 
 
 def test_empty(plt: pyplot) -> None:
@@ -156,4 +155,3 @@ def test_empty(plt: pyplot) -> None:
     args = {"noplot": False, "global_": False}
     PlotSpectra(df=df, args=args)()
     plt.show()
-    assert True
