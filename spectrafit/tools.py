@@ -56,7 +56,9 @@ class PreProcessing:
             percentiles=np.arange(0.1, 1, 0.1)
         ).to_dict(orient="list")
         try:
-            if self.args["energy_start"] or self.args["energy_stop"]:
+            if isinstance(self.args["energy_start"], (int, float)) or isinstance(
+                self.args["energy_stop"], (int, float)
+            ):
                 _df = self.energy_range(_df, self.args)
             if self.args["shift"]:
                 _df = self.energy_shift(_df, self.args)
@@ -93,6 +95,7 @@ class PreProcessing:
                 (df[args["column"][0]] >= _e0) & (df[args["column"][0]] <= _e1)
             ]
         elif isinstance(_e0, (int, float)):
+
             return _df.loc[df[args["column"][0]] >= _e0]
         elif isinstance(_e1, (int, float)):
             return _df.loc[df[args["column"][0]] <= _e1]

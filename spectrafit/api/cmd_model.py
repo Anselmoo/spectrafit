@@ -62,8 +62,8 @@ class Model(BaseModel):
     oversampling: bool = False
     energy_start: Optional[int] = None
     energy_stop: Optional[int] = None
-    smooth: Optional[int] = None
-    shift: Optional[Union[int, float]] = None
+    smooth: int = Field(default=0, ge=0)
+    shift: Union[int, float] = 0
     column: List[Union[int, str]] = Field(
         min_items=1, default=[0, 1], dtypes=[int, str]
     )

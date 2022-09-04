@@ -77,14 +77,14 @@ def get_args() -> Dict[str, Any]:
         "-s",
         "--smooth",
         type=int,
-        default=None,
-        help="Number of smooth points for lmfit; default to None.",
+        default=0,
+        help="Number of smooth points for lmfit; default to 0.",
     )
     parser.add_argument(
         "-sh",
         "--shift",
         type=float,
-        default=None,
+        default=0,
         help="Constant applied energy shift; default to 0.",
     )
     parser.add_argument(
@@ -237,6 +237,7 @@ def extracted_from_command_line_runner() -> Dict[str, Any]:
         for key in _args["settings"].keys():
             result[key] = _args["settings"][key]
     result = cmd_model.Model(**result).dict()
+    print(result)
     if "description" in _args["fitting"].keys():
         result["description"] = _args["fitting"]["description"]
     if "parameters" in _args["fitting"].keys():
@@ -262,11 +263,6 @@ def extracted_from_command_line_runner() -> Dict[str, Any]:
             result["conf_interval"] = None
     if "peaks" in _args["fitting"].keys():
         result["peaks"] = _args["fitting"]["peaks"]
-    # result["timestamp"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    # result["ID"] = str(uuid4())
-    # result["user_name"] = getuser()
-    # result["user_system"] = gethostname()
-    # result["used_version"] = __version__
     return result
 
 
