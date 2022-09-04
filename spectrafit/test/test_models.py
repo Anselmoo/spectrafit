@@ -1071,8 +1071,6 @@ class TestAutoPeakDetection:
             args=args,
         )
 
-        assert True
-
     def test_autopeakdetection_userdef_voigt(self) -> None:
         """Test of auto default detection with voigt model."""
         args = {
