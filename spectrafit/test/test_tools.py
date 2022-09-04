@@ -7,7 +7,6 @@ import pytest
 
 from pandas._testing import assert_frame_equal
 from spectrafit.models import SolverModels
-from spectrafit.tool import RegressionMetrics
 from spectrafit.tools import PostProcessing
 from spectrafit.tools import PreProcessing
 from spectrafit.tools import SaveResult
@@ -293,23 +292,3 @@ class TestPostProcessing:
         )()
         assert type(df) == pd.DataFrame
         assert type(args) == dict
-
-
-class TestRegressionMetrics:
-    """Test of the regression metrics module."""
-
-    def test_raise_error(self) -> None:
-        """Testing raise error."""
-        with pytest.raises(ValueError) as excinfo:
-            _ = RegressionMetrics(
-                pd.DataFrame(
-                    {
-                        "intensity_0": np.random.rand(10),
-                        "intensity_1": np.random.rand(10),
-                        "fit_0": np.random.rand(10),
-                    }
-                )
-            )
-        assert "The shape of the real and fit data-values are not equal!" in str(
-            excinfo.value
-        )
