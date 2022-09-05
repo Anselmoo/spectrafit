@@ -63,6 +63,9 @@ plugins:
   - mkdocstrings
   - autorefs
   - section-index
+  - mkdocs-jupyter:
+      ignore_h1_titles: True
+      include_source: True
   - literate-nav:
       nav_file: SUMMARY.md
   - minify:
@@ -111,7 +114,7 @@ markdown_extensions:
   - pymdownx.superfences:
       custom_fences:
         - name: mermaid
-          class: mermaid-experimental
+          class: mermaid
           format: !!python/name:pymdownx.superfences.fence_code_format
         - name: math
           class: arithmatex
