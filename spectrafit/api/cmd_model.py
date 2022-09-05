@@ -4,8 +4,6 @@ from __future__ import annotations
 from datetime import datetime
 from getpass import getuser
 from socket import gethostname
-from typing import Dict
-from typing import List
 from typing import Optional
 from typing import Union
 from uuid import uuid4
@@ -19,11 +17,11 @@ class Autopeak(BaseModel):
     """Model for the autopeak command line argument."""
 
     model_type: str
-    height: List[float]
-    threshold: List[float]
+    height: list[float]
+    threshold: list[float]
     distance: int
-    prominence: List[float]
-    width: List[float]
+    prominence: list[float]
+    width: list[float]
     wlen: int
 
 
@@ -40,11 +38,11 @@ class Description(BaseModel):
         alias="projectDetails",
         description="Project details",
     )
-    keywords: List[str] = Field(
+    keywords: list[str] = Field(
         default=["spectra"], description="Keywords for the project"
     )
-    authors: List[str] = Field(default=[], description="Authors of the project")
-    references: List[str] = Field(default=[], description="References for the project")
+    authors: list[str] = Field(default=[], description="Authors of the project")
+    references: list[str] = Field(default=[], description="References for the project")
     version: str = __version__
     user_system: str = f"{getuser()}@{gethostname()}"
     timestamp: str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -64,7 +62,7 @@ class Model(BaseModel):
     energy_stop: Optional[int] = None
     smooth: int = Field(default=0, ge=0)
     shift: Union[int, float] = 0
-    column: List[Union[int, str]] = Field(
+    column: list[Union[int, str]] = Field(
         min_items=1, default=[0, 1], dtypes=[int, str]
     )
     separator: str = "\t"
@@ -76,4 +74,4 @@ class Model(BaseModel):
     noplot: bool = False
     version: bool = False
     verbose: int = Field(default=0, ge=0, le=2)
-    description: Dict[str, Description] = Description().dict()
+    description: dict[str, Description] = Description().dict()
