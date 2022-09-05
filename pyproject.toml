@@ -36,7 +36,7 @@ include = [
   { path = "spectrafit/test/", format = "sdist" },
   { path = "examples/", format = "sdist" },
 ]
-exclude = [ "docs/", "tools/", "tests/" ]
+exclude = [ "docs/", "tools/" ]
 
   [tool.poetry.dependencies]
   python = ">=3.7.2,<3.11"
@@ -50,13 +50,14 @@ exclude = [ "docs/", "tools/", "tests/" ]
   seaborn = "^0.11.2"
   numdifftools = "^0.9.39"
   tqdm = "^4.64.0"
-  scikit-learn = "^1"
+  scikit-learn = "^1.0.2"
   art = "^5.7"
   jupyterlab = { version = "^3.4.5", optional = true }
   pydantic = "^1.10.1"
+  ipywidgets = { version = "^8.0.2", optional = true }
 
 
-  [tool.poetry.dev-dependencies]
+  [tool.poetry.group.dev.dependencies]
   pylama = "^8.4.1"
   pylint = "^2.15.0"
   mypy = "^0.971"
@@ -73,13 +74,16 @@ exclude = [ "docs/", "tools/", "tests/" ]
   types-toml = "^0.10.8"
   types-PyYAML = "^6.0.11"
   types-tabulate = "^0.8.11"
+
+
+  [tool.poetry.group.docs.dependencies]
+  mkdocs-jupyter = "^0.21.0"
   mkdocstrings = "^0.18.1"
   mkdocs-material = "^8.4.2"
   mkdocs-minify-plugin = "^0.5.0"
   mathjax = "^0.1.2"
   mkdocs-literate-nav = "^0.4.1"
   mkdocs-section-index = "^0.3.4"
-
 
 [build-system]
 requires = [ "poetry-core>=1.0.0" ]
@@ -90,7 +94,7 @@ spectrafit = "spectrafit.spectrafit:command_line_runner"
 spectrafit-converter = "spectrafit.plugins.converter:command_line_runner"
 
 [tool.poetry.extras]
-jupyter = [ "jupyterlab" ]
+jupyter = [ "jupyterlab", "ipywidgets" ]
 
 
 [tool.isort]
