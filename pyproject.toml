@@ -3,8 +3,8 @@ name = "SpectraFit"
 version = "0.12.0"
 description = "Fast fitting of 2D-Spectra with established routines"
 readme = "README.md"
-authors = [ "Anselm Hahn <Anselm.Hahn@gmail.com>" ]
-maintainers = [ "Anselm Hahn <Anselm.Hahn@gmail.com>" ]
+authors = [ "Anselm Hahn <anselm.hahn@gmail.com>" ]
+maintainers = [ "Anselm Hahn <anselm.hahn@gmail.com>" ]
 license = "BSD-3-Clause"
 repository = "https://github.com/Anselmoo/spectrafit"
 documentation = "https://anselmoo.github.io/spectrafit/"
@@ -55,6 +55,8 @@ exclude = [ "docs/", "tools/" ]
   jupyterlab = { version = "^3.4.5", optional = true }
   pydantic = "^1.10.1"
   ipywidgets = { version = "^8.0.2", optional = true }
+  plotly = { version = "^5.10.0", optional = true }
+  dash = { version = "^2.6.1", optional = true }
 
 
   [tool.poetry.group.dev.dependencies]
@@ -94,7 +96,7 @@ spectrafit = "spectrafit.spectrafit:command_line_runner"
 spectrafit-converter = "spectrafit.plugins.converter:command_line_runner"
 
 [tool.poetry.extras]
-jupyter = [ "jupyterlab", "ipywidgets" ]
+jupyter = [ "jupyterlab", "ipywidgets", "plotly", "dash" ]
 
 
 [tool.isort]
