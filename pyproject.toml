@@ -52,8 +52,8 @@ exclude = [ "docs/", "tools/" ]
   tqdm = "^4.64.0"
   scikit-learn = "^1.0.2"
   art = "^5.7"
-  jupyterlab = { version = "^3.4.5", optional = true }
   pydantic = "^1.10.1"
+  jupyterlab = { version = "^3.4.5", optional = true }
   ipywidgets = { version = "^8.0.2", optional = true }
   plotly = { version = "^5.10.0", optional = true }
   dash = { version = "^2.6.1", optional = true }

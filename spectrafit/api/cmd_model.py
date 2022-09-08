@@ -53,17 +53,34 @@ class Description(BaseModel):
     )
 
 
+class DataPreProcessing(BaseModel):
+    """Model for the data preprocessing command line argument."""
+
+    oversampling: bool = Field(
+        default=False,
+        description="Oversampling the spectra by using factor of 5; default to False.",
+        alias="over_sampling",
+    )
+    energy_start: Optional[Union[int, float]] = Field(
+        default=None, dtypes=[int, float], alias="energyStart"
+    )
+    energy_stop: Optional[Union[int, float]] = Field(
+        default=None, dtypes=[int, float], alias="energyStop"
+    )
+    smooth: int = Field(default=0, ge=0, dtypes=int)
+
+
 class Model(BaseModel):
     """Model for the model command line argument."""
 
     infile: str
     outfile: str = Field(default="spectrafit_results")
     input: str = Field(default="fitting_input.toml")
-    oversampling: bool = False
-    energy_start: Optional[int] = None
-    energy_stop: Optional[int] = None
-    smooth: int = Field(default=0, ge=0)
-    shift: Union[int, float] = 0
+    oversampling: bool = DataPreProcessing().oversampling
+    energy_start: Optional[Union[int, float]] = DataPreProcessing().energy_start
+    energy_stop: Optional[Union[int, float]] = DataPreProcessing().energy_stop
+    smooth: int = DataPreProcessing().smooth
+    shift: Union[int, float] = Field(default=0, dtypes=[int, float])
     column: List[Union[int, str]] = Field(
         min_items=1, default=[0, 1], dtypes=[int, str]
     )
