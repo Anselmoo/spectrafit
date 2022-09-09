@@ -236,7 +236,9 @@ def extracted_from_command_line_runner() -> Dict[str, Any]:
     if "settings" in _args.keys():
         for key in _args["settings"].keys():
             result[key] = _args["settings"][key]
-    result = cmd_model.Model(**result).dict()
+    print(result)
+    result = cmd_model.CMDModel(**result).dict()
+    print(result)
     if "description" in _args["fitting"].keys():
         result["description"] = _args["fitting"]["description"]
     if "parameters" in _args["fitting"].keys():
@@ -282,7 +284,7 @@ def fitting_routine(args: Dict[str, Any]) -> Tuple[pd.DataFrame, Dict[str, Any]]
     """
     df = load_data(args)
     df, args = PreProcessing(df=df, args=args)()
-
+    # print(args)
     minimizer, result = SolverModels(df=df, args=args)()
 
     df, args = PostProcessing(df=df, args=args, minimizer=minimizer, result=result)()

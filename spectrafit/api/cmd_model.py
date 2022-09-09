@@ -4,6 +4,7 @@ from __future__ import annotations
 from datetime import datetime
 from getpass import getuser
 from socket import gethostname
+from typing import Any
 from typing import Dict
 from typing import List
 from typing import Optional
@@ -15,18 +16,6 @@ from pydantic import Field
 from spectrafit import __version__
 from spectrafit.api.tools_model import DataPreProcessing
 from spectrafit.api.tools_model import GlobalFitting
-
-
-class Autopeak(BaseModel):
-    """Model for the autopeak command line argument."""
-
-    model_type: str
-    height: List[float]
-    threshold: List[float]
-    distance: int
-    prominence: List[float]
-    width: List[float]
-    wlen: int
 
 
 class Description(BaseModel):
@@ -55,17 +44,17 @@ class Description(BaseModel):
     )
 
 
-class Model(BaseModel):
+class CMDModel(BaseModel):
     """Model for the model command line argument."""
 
     infile: str
     outfile: str = Field(default="spectrafit_results")
     input: str = Field(default="fitting_input.toml")
     oversampling: bool = DataPreProcessing().oversampling
-    energy_start: Optional[Union[int, float]] = DataPreProcessing().energy_start
-    energy_stop: Optional[Union[int, float]] = DataPreProcessing().energy_stop
-    smooth: int = DataPreProcessing().smooth
-    shift: Union[int, float] = DataPreProcessing().shift
+    energy_start: Optional[float] = DataPreProcessing().energy_start
+    energy_stop: Optional[float] = DataPreProcessing().energy_stop
+    smooth: Optional[int] = DataPreProcessing().smooth
+    shift: Optional[float] = DataPreProcessing().shift
     column: List[Union[int, str]] = Field(
         min_items=1, default=[0, 1], dtypes=[int, str]
     )
@@ -73,9 +62,9 @@ class Model(BaseModel):
     decimal: str = "."
     header: Optional[int] = None
     comment: Optional[str] = None
-    global_: int = GlobalFitting().global_
-    autopeak: Union[Autopeak, bool] = False
+    global_: int = Field(GlobalFitting().global_, alias="global")
+    autopeak: Union[Dict[str, Any], bool] = False
     noplot: bool = False
     version: bool = False
     verbose: int = Field(default=0, ge=0, le=2)
-    description: Dict[str, Description] = Description().dict()
+    description: Optional[Description] = Field(Description())
