@@ -13,6 +13,8 @@ from uuid import uuid4
 from pydantic import BaseModel
 from pydantic import Field
 from spectrafit import __version__
+from spectrafit.api.tools_model import DataPreProcessing
+from spectrafit.api.tools_model import GlobalFitting
 
 
 class Autopeak(BaseModel):
@@ -53,23 +55,6 @@ class Description(BaseModel):
     )
 
 
-class DataPreProcessing(BaseModel):
-    """Model for the data preprocessing command line argument."""
-
-    oversampling: bool = Field(
-        default=False,
-        description="Oversampling the spectra by using factor of 5; default to False.",
-        alias="over_sampling",
-    )
-    energy_start: Optional[Union[int, float]] = Field(
-        default=None, dtypes=[int, float], alias="energyStart"
-    )
-    energy_stop: Optional[Union[int, float]] = Field(
-        default=None, dtypes=[int, float], alias="energyStop"
-    )
-    smooth: int = Field(default=0, ge=0, dtypes=int)
-
-
 class Model(BaseModel):
     """Model for the model command line argument."""
 
@@ -80,7 +65,7 @@ class Model(BaseModel):
     energy_start: Optional[Union[int, float]] = DataPreProcessing().energy_start
     energy_stop: Optional[Union[int, float]] = DataPreProcessing().energy_stop
     smooth: int = DataPreProcessing().smooth
-    shift: Union[int, float] = Field(default=0, dtypes=[int, float])
+    shift: Union[int, float] = DataPreProcessing().shift
     column: List[Union[int, str]] = Field(
         min_items=1, default=[0, 1], dtypes=[int, str]
     )
@@ -88,7 +73,7 @@ class Model(BaseModel):
     decimal: str = "."
     header: Optional[int] = None
     comment: Optional[str] = None
-    global_: int = Field(default=0, ge=0, le=2, alias="global")
+    global_: int = GlobalFitting().global_
     autopeak: Union[Autopeak, bool] = False
     noplot: bool = False
     version: bool = False

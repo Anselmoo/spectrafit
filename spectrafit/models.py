@@ -3,6 +3,7 @@ from collections import defaultdict
 from dataclasses import dataclass
 from typing import Any
 from typing import Dict
+from typing import Optional
 from typing import Tuple
 from typing import Union
 
@@ -1016,7 +1017,10 @@ def lorentzian(
 
 
 def voigt(
-    x: NDArray[np.float64], center: float = 0.0, fwhmv: float = 1.0, gamma: float = None
+    x: NDArray[np.float64],
+    center: float = 0.0,
+    fwhmv: float = 1.0,
+    gamma: Optional[float] = None,
 ) -> NDArray[np.float64]:
     r"""Return a 1-dimensional Voigt distribution.
 
@@ -1133,7 +1137,9 @@ def power(
 
 
 def linear(
-    x: NDArray[np.float64], slope: float = 1.0, intercept: float = 0.0
+    x: NDArray[np.float64],
+    slope: float = 1.0,
+    intercept: float = 0.0,
 ) -> NDArray[np.float64]:
     """Return a 1-dimensional linear function.
 
@@ -1148,7 +1154,10 @@ def linear(
     return np.array(slope * x + intercept)
 
 
-def constant(x: NDArray[np.float64], amplitude: float = 1.0) -> NDArray[np.float64]:
+def constant(
+    x: NDArray[np.float64],
+    amplitude: float = 1.0,
+) -> NDArray[np.float64]:
     """Return a 1-dimensional constant value.
 
     Args:
