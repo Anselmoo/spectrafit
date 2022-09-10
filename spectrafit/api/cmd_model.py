@@ -13,22 +13,9 @@ from uuid import uuid4
 from pydantic import BaseModel
 from pydantic import Field
 from spectrafit import __version__
+from spectrafit.api.tools_model import Autopeak
 from spectrafit.api.tools_model import DataPreProcessing
 from spectrafit.api.tools_model import GlobalFitting
-
-
-class Autopeak(BaseModel):
-    """Model for the auto detection of peak command line argument."""
-
-    model_type: Optional[str] = None
-    height: Optional[List[float]] = None
-    threshold: Optional[List[float]] = None
-    distance: Optional[int] = None
-    prominence: Optional[List[float]] = None
-    width: Optional[List[float]] = None
-    wlen: Optional[int] = None
-    rel_height: Optional[float] = None
-    plateau_size: Optional[float] = None
 
 
 class Description(BaseModel):

@@ -17,6 +17,7 @@ from scipy.signal import find_peaks
 from scipy.special import erf
 from scipy.special import wofz
 from scipy.stats import hmean
+from spectrafit.api.tools_model import Autopeak
 
 
 @dataclass(frozen=True)
@@ -36,17 +37,6 @@ class ReferenceKeys:
         "atan",
         "log",
         "heaviside",
-    ]
-    __findpeaks__ = [
-        "height",
-        "threshold",
-        "distance",
-        "prominence",
-        "width",
-        "wlen",
-        "rel_height",
-        "plateau_size",
-        "model_type",
     ]
 
     __automodels__ = [
@@ -88,16 +78,10 @@ class ReferenceKeys:
                  additional information beyond the command line arguments.
 
         Raises:
-            KeyError: If the key is not parameter of the
-                 `scipy.signal.find_peaks` function.
+            KeyError: If the key is not parameter of the `scipy.signal.find_peaks`
+                function. This will be checked via `pydantic` in `spectrafit.api`.
         """
-        if args:
-            for key in args:
-                if key.lower() not in self.__findpeaks__:
-                    raise KeyError(
-                        f"{key} is no function parameter of "
-                        "`scipy.signal.find_peaks`!"
-                    )
+        Autopeak(**args)
 
 
 @dataclass(frozen=True)
@@ -494,7 +478,6 @@ class ModelParameters(AutoPeakDetection):
     def define_parameters_auto(self) -> None:
         """Auto define the model parameters for local fitting."""
         positions, properties = self.__autodetect__()
-        print(len(positions))
         if (
             not isinstance(self.args["autopeak"], bool)
             and "model_type" in self.args["autopeak"]

@@ -4,6 +4,7 @@ import pandas as pd
 import pytest
 
 from lmfit import Parameters
+from pydantic import ValidationError
 from spectrafit.models import AutoPeakDetection
 from spectrafit.models import Constants
 from spectrafit.models import ModelParameters
@@ -1036,19 +1037,15 @@ class TestAutoPeakDetection:
     def test_raise_autopeaks(self) -> None:
         """Test raise of AutoPeakDetection."""
         args = {"autopeak": {"no_implimented": 0}}
-        with pytest.raises(KeyError) as pytest_wrapped_e:
+        with pytest.raises(ValidationError) as excinfo:
             auto = AutoPeakDetection(
                 x=np.arange(2, dtype=float), data=np.arange(2, dtype=float), args=args
             )
             auto.initialize_peak_detection()
-            peaks, properties = auto.__autodetect__()
+            _, _ = auto.__autodetect__()
 
-        assert pytest_wrapped_e.type == KeyError
-        assert (
-            pytest_wrapped_e.value.args[0]
-            == f"{list(args['autopeak'].keys())[0]} is no function parameter of "
-            "`scipy.signal.find_peaks`!"
-        )
+        assert "no_implimented" in str(excinfo.value)
+        assert excinfo.type is ValidationError
 
     def test_raise_autopeaks_type(self) -> None:
         """Test raise of AutoPeakDetection for wrong type."""
