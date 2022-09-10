@@ -16,6 +16,7 @@ def test_default() -> None:
     assert result["column"] == [0, 1]
     assert result["separator"] == "\t"
     assert result["decimal"] == "."
+    assert result["autopeak"] is False
 
 
 def test_overwrite() -> None:
@@ -31,15 +32,13 @@ def test_overwrite() -> None:
         column=["col_1", "col_2"],
         separator="s+",
         autopeak={
-            "autopeak": {
-                "model_type": "ga",
-                "height": [1],
-                "threshold": [0.1],
-                "distance": 10,
-                "prominence": [1],
-                "width": [1],
-                "wlen": 1,
-            }
+            "model_type": "ga",
+            "height": [1],
+            "threshold": [0.1],
+            "distance": 10,
+            "prominence": [1],
+            "width": [1],
+            "wlen": 1,
         },
     ).dict()
     assert result["infile"] == ""

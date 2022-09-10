@@ -4,7 +4,6 @@ from __future__ import print_function
 
 from typing import Any
 from typing import Dict
-from typing import List
 from typing import Optional
 
 from pydantic import BaseModel
@@ -72,17 +71,3 @@ class GeneralSolverModels(BaseModel):
     global_: int = GlobalFitting().global_
     minimizer: Dict[str, Any] = SolverModels().minimizer
     optimizer: Dict[str, Any] = SolverModels().optimizer
-
-
-class Autopeak(BaseModel):
-    """Model for the auto detection of peak command line argument."""
-
-    model_type: str = "Gaussian"
-    height: List[float] | None = None
-    threshold: List[float] | None = None
-    distance: int | None = None
-    prominence: List[float] | None = None
-    width: List[float] | None = None
-    wlen: int | None = None
-    rel_height: float | None = None
-    plateau_size: float | None = None

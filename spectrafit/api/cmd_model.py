@@ -5,7 +5,6 @@ from datetime import datetime
 from getpass import getuser
 from socket import gethostname
 from typing import Any
-from typing import Dict
 from typing import List
 from typing import Optional
 from typing import Union
@@ -16,6 +15,20 @@ from pydantic import Field
 from spectrafit import __version__
 from spectrafit.api.tools_model import DataPreProcessing
 from spectrafit.api.tools_model import GlobalFitting
+
+
+class Autopeak(BaseModel):
+    """Model for the auto detection of peak command line argument."""
+
+    model_type: Optional[str] = None
+    height: Optional[List[float]] = None
+    threshold: Optional[List[float]] = None
+    distance: Optional[int] = None
+    prominence: Optional[List[float]] = None
+    width: Optional[List[float]] = None
+    wlen: Optional[int] = None
+    rel_height: Optional[float] = None
+    plateau_size: Optional[float] = None
 
 
 class Description(BaseModel):
@@ -63,7 +76,7 @@ class CMDModel(BaseModel):
     header: Optional[int] = None
     comment: Optional[str] = None
     global_: int = Field(GlobalFitting().global_, alias="global")
-    autopeak: Union[Dict[str, Any], bool] = False
+    autopeak: Union[Autopeak, bool, Any] = False
     noplot: bool = False
     version: bool = False
     verbose: int = Field(default=0, ge=0, le=2)

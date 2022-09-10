@@ -236,9 +236,7 @@ def extracted_from_command_line_runner() -> Dict[str, Any]:
     if "settings" in _args.keys():
         for key in _args["settings"].keys():
             result[key] = _args["settings"][key]
-    print(result)
     result = cmd_model.CMDModel(**result).dict()
-    print(result)
     if "description" in _args["fitting"].keys():
         result["description"] = _args["fitting"]["description"]
     if "parameters" in _args["fitting"].keys():
