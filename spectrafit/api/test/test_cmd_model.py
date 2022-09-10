@@ -1,10 +1,10 @@
 """Test of CMD and Tool Model."""
-from spectrafit.api.cmd_model import CMDModel
+from spectrafit.api.cmd_model import CMDModelAPI
 
 
 def test_default() -> None:
     """Test for default settings of CMD Model."""
-    result = CMDModel(infile="").dict()
+    result = CMDModelAPI(infile="").dict()
     assert result["infile"] == ""
     assert result["outfile"] == "spectrafit_results"
     assert result["input"] == "fitting_input.toml"
@@ -21,7 +21,7 @@ def test_default() -> None:
 
 def test_overwrite() -> None:
     """Test for overwriting settings of CMD Model."""
-    result = CMDModel(
+    result = CMDModelAPI(
         infile="",
         outfile="test",
         oversampling=True,
@@ -63,6 +63,6 @@ def test_overwrite() -> None:
 
 def test_global_fit() -> None:
     """Test for global fitting settings of CMD Model."""
-    result = CMDModel(infile="")
+    result = CMDModelAPI(infile="")
     result.global_ = 1
     assert result.dict()["global_"] == 1

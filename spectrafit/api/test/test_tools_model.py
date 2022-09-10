@@ -3,12 +3,12 @@
 import pytest
 
 from pydantic import ValidationError
-from spectrafit.api.tools_model import Autopeak
+from spectrafit.api.tools_model import AutopeakAPI
 
 
 def test_raise_autopeak() -> None:
     """Test for raising exception of Autopeak Model."""
     with pytest.raises(ValidationError) as excinfo:
-        Autopeak(not_=2)  # type: ignore
+        AutopeakAPI(not_=2)  # type: ignore
     assert "not_" in str(excinfo.value)
     assert excinfo.type is ValidationError
