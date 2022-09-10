@@ -17,7 +17,7 @@ from scipy.signal import find_peaks
 from scipy.special import erf
 from scipy.special import wofz
 from scipy.stats import hmean
-from spectrafit.api.tools_model import Autopeak
+from spectrafit.api.tools_model import AutopeakAPI
 
 
 @dataclass(frozen=True)
@@ -81,7 +81,7 @@ class ReferenceKeys:
             KeyError: If the key is not parameter of the `scipy.signal.find_peaks`
                 function. This will be checked via `pydantic` in `spectrafit.api`.
         """
-        Autopeak(**args)
+        AutopeakAPI(**args)
 
 
 @dataclass(frozen=True)

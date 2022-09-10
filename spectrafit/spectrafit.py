@@ -7,7 +7,7 @@ from typing import Tuple
 
 import pandas as pd
 
-from spectrafit.api import cmd_model
+from spectrafit.api.cmd_model import CMDModelAPI
 from spectrafit.models import SolverModels
 from spectrafit.plotting import PlotSpectra
 from spectrafit.report import PrintingResults
@@ -236,7 +236,7 @@ def extracted_from_command_line_runner() -> Dict[str, Any]:
     if "settings" in _args.keys():
         for key in _args["settings"].keys():
             result[key] = _args["settings"][key]
-    result = cmd_model.CMDModel(**result).dict()
+    result = CMDModelAPI(**result).dict()
     if "description" in _args["fitting"].keys():
         result["description"] = _args["fitting"]["description"]
     if "parameters" in _args["fitting"].keys():

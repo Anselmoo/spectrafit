@@ -13,12 +13,12 @@ from uuid import uuid4
 from pydantic import BaseModel
 from pydantic import Field
 from spectrafit import __version__
-from spectrafit.api.tools_model import Autopeak
-from spectrafit.api.tools_model import DataPreProcessing
-from spectrafit.api.tools_model import GlobalFitting
+from spectrafit.api.tools_model import AutopeakAPI
+from spectrafit.api.tools_model import DataPreProcessingAPI
+from spectrafit.api.tools_model import GlobalFittingAPI
 
 
-class Description(BaseModel):
+class DescriptionAPI(BaseModel):
     """Model for the description command line argument."""
 
     project_name: str = Field(
@@ -44,17 +44,17 @@ class Description(BaseModel):
     )
 
 
-class CMDModel(BaseModel):
+class CMDModelAPI(BaseModel):
     """Model for the model command line argument."""
 
     infile: str
     outfile: str = Field(default="spectrafit_results")
     input: str = Field(default="fitting_input.toml")
-    oversampling: bool = DataPreProcessing().oversampling
-    energy_start: Optional[float] = DataPreProcessing().energy_start
-    energy_stop: Optional[float] = DataPreProcessing().energy_stop
-    smooth: Optional[int] = DataPreProcessing().smooth
-    shift: Optional[float] = DataPreProcessing().shift
+    oversampling: bool = DataPreProcessingAPI().oversampling
+    energy_start: Optional[float] = DataPreProcessingAPI().energy_start
+    energy_stop: Optional[float] = DataPreProcessingAPI().energy_stop
+    smooth: Optional[int] = DataPreProcessingAPI().smooth
+    shift: Optional[float] = DataPreProcessingAPI().shift
     column: List[Union[int, str]] = Field(
         min_items=1, default=[0, 1], dtypes=[int, str]
     )
@@ -62,9 +62,9 @@ class CMDModel(BaseModel):
     decimal: str = "."
     header: Optional[int] = None
     comment: Optional[str] = None
-    global_: int = Field(GlobalFitting().global_, alias="global")
-    autopeak: Union[Autopeak, bool, Any] = False
+    global_: int = Field(GlobalFittingAPI().global_, alias="global")
+    autopeak: Union[AutopeakAPI, bool, Any] = False
     noplot: bool = False
     version: bool = False
     verbose: int = Field(default=0, ge=0, le=2)
-    description: Optional[Description] = Field(Description())
+    description: Optional[DescriptionAPI] = Field(DescriptionAPI())

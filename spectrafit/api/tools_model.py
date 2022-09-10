@@ -12,7 +12,7 @@ from pydantic import Extra
 from pydantic import Field
 
 
-class Autopeak(BaseModel):
+class AutopeakAPI(BaseModel):
     """Model for the auto detection of peak command line argument.
 
     The auto detection of peaks is performed by the SpectraFit tools. Here is listed the
@@ -40,7 +40,7 @@ class Autopeak(BaseModel):
         validate_assignment = True
 
 
-class DataPreProcessing(BaseModel):
+class DataPreProcessingAPI(BaseModel):
     """Model for the data preprocessing command line argument."""
 
     oversampling: bool = Field(
@@ -70,13 +70,13 @@ class DataPreProcessing(BaseModel):
     )
 
 
-class GlobalFitting(BaseModel):
+class GlobalFittingAPI(BaseModel):
     """Model for the global fitting routine."""
 
     global_: int = Field(default=0, ge=0, le=2, alias="global")
 
 
-class SolverModels(BaseModel):
+class SolverModelsAPI(BaseModel):
     """Model for the solver command line argument."""
 
     minimizer: Dict[str, Any] = Field(
@@ -89,7 +89,7 @@ class SolverModels(BaseModel):
     )
 
 
-class GeneralSolverModels(BaseModel):
+class GeneralSolverModelsAPI(BaseModel):
     """Model for the general solver command line argument.
 
     !!! note "GeneralSolver"
@@ -98,6 +98,6 @@ class GeneralSolverModels(BaseModel):
         fitting settings.
     """
 
-    global_: int = GlobalFitting().global_
-    minimizer: Dict[str, Any] = SolverModels().minimizer
-    optimizer: Dict[str, Any] = SolverModels().optimizer
+    global_: int = GlobalFittingAPI().global_
+    minimizer: Dict[str, Any] = SolverModelsAPI().minimizer
+    optimizer: Dict[str, Any] = SolverModelsAPI().optimizer
