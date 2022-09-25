@@ -1,8 +1,6 @@
 {
   "settings": {
-    "column": [
-      "energy"
-    ],
+    "column": ["energy"],
     "decimal": ".",
     "header": 0,
     "infile": "data_global.csv",

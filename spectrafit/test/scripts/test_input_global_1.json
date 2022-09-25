@@ -1,8 +1,6 @@
 {
   "settings": {
-    "column": [
-      "energy"
-    ],
+    "column": ["energy"],
     "decimal": ".",
     "header": 0,
     "infile": "spectrafit/test/import/test_data_global_3.csv",

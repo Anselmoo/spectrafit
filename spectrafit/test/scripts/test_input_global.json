@@ -1,8 +1,6 @@
 {
   "settings": {
-    "column": [
-      "Energy"
-    ],
+    "column": ["Energy"],
     "decimal": ".",
     "energy_start": -1,
     "energy_stop": 1.0,
