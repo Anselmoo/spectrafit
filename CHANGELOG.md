@@ -14,6 +14,7 @@
   [sklearn-metrics-regression][23]
 - Add [art][24] for generating ASCII Decor in the terminal / output.
 - Using transposed dataframes for the tabulated output to the terminal.
+- Change `global` to `global_` to avoid keyword clash.
 
 ## v0.11.0
 

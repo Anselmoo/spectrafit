@@ -80,7 +80,7 @@ class DataPreProcessingAPI(BaseModel):
 class GlobalFittingAPI(BaseModel):
     """Definition of the global fitting routine."""
 
-    global_: int = Field(default=0, ge=0, le=2, alias="global")
+    global_: int = Field(default=0, ge=0, le=2, description="Global fitting routine.")
 
 
 class SolverModelsAPI(BaseModel):

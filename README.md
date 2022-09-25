@@ -125,7 +125,7 @@ optional arguments:
   -cm COMMENT, --comment COMMENT
                         Lines with comment characters like '#' should not be
                         parsed; default to None.
-  -g {0,1,2}, --global {0,1,2}
+  -g {0,1,2}, --global_ {0,1,2}
                         Perform a global fit over the complete dataframe. The
                         options are '0' for classic fit (default). The
                         option '1' for global fitting with auto-definition

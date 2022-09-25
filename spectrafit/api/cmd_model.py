@@ -60,7 +60,7 @@ class CMDModelAPI(BaseModel):
     decimal: str = "."
     header: Optional[int] = None
     comment: Optional[str] = None
-    global_: int = Field(GlobalFittingAPI().global_, alias="global")
+    global_: int = Field(GlobalFittingAPI().global_)
     autopeak: Union[AutopeakAPI, bool, Any] = False
     noplot: bool = False
     version: bool = False

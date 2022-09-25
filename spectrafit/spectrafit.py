@@ -132,7 +132,7 @@ def get_args() -> Dict[str, Any]:
     )
     parser.add_argument(
         "-g",
-        "--global",
+        "--global_",
         type=int,
         default=0,
         choices=[0, 1, 2],

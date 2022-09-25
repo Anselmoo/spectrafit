@@ -1,6 +1,8 @@
 {
   "settings": {
-    "column": ["energy"],
+    "column": [
+      "energy"
+    ],
     "decimal": ".",
     "header": 0,
     "infile": "data_global.csv",
@@ -26,11 +28,18 @@
         "spectrum"
       ]
     },
-
     "parameters": {
-      "minimizer": { "nan_policy": "propagate", "calc_covar": false },
-      "optimizer": { "max_nfev": 1000, "method": "leastsq" },
-      "report": { "min_correl": 0.0 }
+      "minimizer": {
+        "nan_policy": "propagate",
+        "calc_covar": false
+      },
+      "optimizer": {
+        "max_nfev": 1000,
+        "method": "leastsq"
+      },
+      "report": {
+        "min_correl": 0.0
+      }
     },
     "peaks": {
       "1": {
