@@ -55,9 +55,7 @@ class CMDModelAPI(BaseModel):
     energy_stop: Optional[float] = DataPreProcessingAPI().energy_stop
     smooth: Optional[int] = DataPreProcessingAPI().smooth
     shift: Optional[float] = DataPreProcessingAPI().shift
-    column: List[Union[int, str]] = Field(
-        min_items=1, default=[0, 1], dtypes=[int, str]
-    )
+    column: List[Union[int, str]] = DataPreProcessingAPI().column
     separator: str = "\t"
     decimal: str = "."
     header: Optional[int] = None

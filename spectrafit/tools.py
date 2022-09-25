@@ -17,6 +17,7 @@ import yaml
 from lmfit import Minimizer
 from lmfit import conf_interval
 from lmfit.minimizer import MinimizerException
+from spectrafit.api.tools_model import ColumnNamesAPI
 from spectrafit.models import calculated_model
 from spectrafit.report import RegressionMetrics
 from spectrafit.report import fit_report_as_dict
@@ -247,11 +248,18 @@ class PostProcessing:
         if self.args["global_"]:
             return df.rename(
                 columns={
-                    col: "energy" if i == 0 else f"intensity_{i}"
+                    col: ColumnNamesAPI().energy
+                    if i == 0
+                    else f"{ColumnNamesAPI().intensity}_{i}"
                     for i, col in enumerate(df.columns)
                 }
             )
-        return df.rename(columns={df.columns[0]: "energy", df.columns[1]: "intensity"})
+        return df.rename(
+            columns={
+                df.columns[0]: ColumnNamesAPI().energy,
+                df.columns[1]: ColumnNamesAPI().intensity,
+            }
+        )
 
     @property
     def make_insight_report(self) -> None:
@@ -314,13 +322,17 @@ class PostProcessing:
 
             residual = self.result.residual.reshape((-1, self.data_size)).T
             for i, _residual in enumerate(residual, start=1):
-                _df[f"residual_{i}"] = _residual
-                _df[f"fit_{i}"] = self.df[f"intensity_{i}"].to_numpy() + _residual
-            _df["residual_avg"] = np.mean(residual, axis=0)
+                _df[f"{ColumnNamesAPI().residual}_{i}"] = _residual
+                _df[f"{ColumnNamesAPI().fit}_{i}"] = (
+                    self.df[f"{ColumnNamesAPI().intensity}_{i}"].to_numpy() + _residual
+                )
+            _df[f"{ColumnNamesAPI().residual}_avg"] = np.mean(residual, axis=0)
         else:
             residual = self.result.residual
-            _df["residual"] = residual
-            _df["fit"] = self.df["intensity"].to_numpy() + residual
+            _df[ColumnNamesAPI().residual] = residual
+            _df[ColumnNamesAPI().fit] = (
+                self.df[ColumnNamesAPI().intensity].to_numpy() + residual
+            )
         self.df = _df
 
     @property

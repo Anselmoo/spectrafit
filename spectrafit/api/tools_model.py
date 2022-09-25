@@ -6,6 +6,7 @@ from typing import Any
 from typing import Dict
 from typing import List
 from typing import Optional
+from typing import Union
 
 from pydantic import BaseModel
 from pydantic import Extra
@@ -13,7 +14,7 @@ from pydantic import Field
 
 
 class AutopeakAPI(BaseModel):
-    """Model for the auto detection of peak command line argument.
+    """Definition of the auto detection of peak command line argument.
 
     The auto detection of peaks is performed by the SpectraFit tools. Here is listed the
     set of parameters that are used to control the auto detection of peaks according to
@@ -41,7 +42,7 @@ class AutopeakAPI(BaseModel):
 
 
 class DataPreProcessingAPI(BaseModel):
-    """Model for the data preprocessing command line argument."""
+    """Definition of the data preprocessing command line argument."""
 
     oversampling: bool = Field(
         default=False,
@@ -68,16 +69,22 @@ class DataPreProcessingAPI(BaseModel):
         dtypes=float,
         description="Shift the energy axis; default to 0.",
     )
+    column: List[Union[int, str]] = Field(
+        min_items=1,
+        default=[0, 1],
+        dtypes=[int, str],
+        description="Column of the data.",
+    )
 
 
 class GlobalFittingAPI(BaseModel):
-    """Model for the global fitting routine."""
+    """Definition of the global fitting routine."""
 
     global_: int = Field(default=0, ge=0, le=2, alias="global")
 
 
 class SolverModelsAPI(BaseModel):
-    """Model for the solver command line argument."""
+    """Definition of the solver of SpectraFit."""
 
     minimizer: Dict[str, Any] = Field(
         default={"nan_policy": "propagate", "calc_covar": True},
@@ -90,7 +97,7 @@ class SolverModelsAPI(BaseModel):
 
 
 class GeneralSolverModelsAPI(BaseModel):
-    """Model for the general solver command line argument.
+    """Definition of the general solver of SpectraFit.
 
     !!! note "GeneralSolver"
 
@@ -101,3 +108,12 @@ class GeneralSolverModelsAPI(BaseModel):
     global_: int = GlobalFittingAPI().global_
     minimizer: Dict[str, Any] = SolverModelsAPI().minimizer
     optimizer: Dict[str, Any] = SolverModelsAPI().optimizer
+
+
+class ColumnNamesAPI(BaseModel, frozen=True):
+    """Definition of the column names of the exported model."""
+
+    energy: str = "energy"
+    intensity: str = "intensity"
+    residual: str = "residual"
+    fit: str = "fit"

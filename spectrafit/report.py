@@ -156,8 +156,15 @@ def fit_report_as_dict(
 ) -> Dict[str, Dict[Any, Any]]:
     """Generate the best fit report as dictionary.
 
-    The report contains the best-fit values for the parameters and their
-    uncertainties and correlations.
+    !!! info "About `fit_report_as_dict`"
+
+        The report contains the best-fit values for the parameters and their
+        uncertainties and correlations. The report is generated as dictionary and
+        consits of the following three main criteria:
+
+            1. Fit Statistics
+            2. Fit variables
+            3. Fit correlations
 
     Args:
         inpars (minimize): Input Parameters from a fit or the  Minimizer results
@@ -181,9 +188,6 @@ def fit_report_as_dict(
         "correlations": {},
         "covariance_matrix": {},
     }
-    # Fit Statistics
-    # Fit variables
-    # Fit correlations
     if result is not None:
 
         buffer["configurations"]["fitting_method"] = result.method
@@ -350,9 +354,6 @@ class PrintingResults:
         pp.pprint(self.args["linear_correlation"])
         print("\nRegression Metrics:\n")
         pp.pprint(self.args["regression_metrics"])
-
-
-#        pp.pprint(self.args["regression_metrics"])
 
 
 class PrintingStatus:

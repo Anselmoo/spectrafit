@@ -18,6 +18,8 @@ from scipy.special import erf
 from scipy.special import wofz
 from scipy.stats import hmean
 from spectrafit.api.tools_model import AutopeakAPI
+from spectrafit.api.tools_model import GlobalFittingAPI
+from spectrafit.api.tools_model import SolverModelsAPI
 
 
 @dataclass(frozen=True)
@@ -698,7 +700,8 @@ class SolverModels(ModelParameters):
                  additional information beyond the command line arguments.
         """
         super().__init__(df=df, args=args)
-        self.args = args
+        self.args_solver = SolverModelsAPI(**args).dict()
+        self.args_global = GlobalFittingAPI(**args).dict()
         self.params = self.return_params
 
     def __call__(self) -> Tuple[Minimizer, Any]:
@@ -707,7 +710,7 @@ class SolverModels(ModelParameters):
         Returns:
             Tuple[Minimizer, Any]: Minimizer class and the fitting results.
         """
-        if self.args["global_"]:
+        if self.args_global["global_"]:
             minimizer = Minimizer(
                 self.solve_global_fitting,
                 params=self.params,
@@ -719,10 +722,10 @@ class SolverModels(ModelParameters):
                 self.solve_local_fitting,
                 params=self.params,
                 fcn_args=(self.x, self.data),
-                **self.args["minimizer"],
+                **self.args_solver["minimizer"],
             )
 
-        return (minimizer, minimizer.minimize(**self.args["optimizer"]))
+        return (minimizer, minimizer.minimize(**self.args_solver["optimizer"]))
 
     @staticmethod
     def solve_local_fitting(
