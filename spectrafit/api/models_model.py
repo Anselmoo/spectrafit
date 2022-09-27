@@ -1,6 +1,8 @@
 """Reference model for the API of the models distributions."""
 from __future__ import annotations
 
+from typing import Callable
+from typing import List
 from typing import Optional
 
 from pydantic import BaseModel
@@ -262,3 +264,26 @@ class DistributionModelAPI(BaseModel):
     linear: LinearAPI = LinearAPI()
     constant: ConstantAPI = ConstantAPI()
     step: StepAPI = StepAPI()
+
+
+class ConfIntervalAPI(BaseModel):
+    """Definition of Confidence Interval Function."""
+
+    p_names: Optional[List[str]] = Field(
+        default=None, description="List of parameters names."
+    )
+    trace: bool = Field(
+        default=True, description="Trace of the confidence interfall matrix."
+    )
+    maxiter: int = Field(
+        default=200,
+        gt=1,
+        le=2000,
+        description="Maximum number of iteration",
+    )
+    verbose: bool = Field(
+        default=False, description="Print information about the fit process."
+    )
+    prob_func: Optional[Callable[[float], float]] = Field(
+        default=None, description="Probing function."
+    )

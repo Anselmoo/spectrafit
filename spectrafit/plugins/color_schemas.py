@@ -37,3 +37,24 @@ class DraculaColor(BaseModel, frozen=True):
     zero_line: str = "#8be9fd"
     ticks: str = "#f8f8f2"
     font: str = "#f8f8f2"
+
+
+class DraculaFont(BaseModel, frozen=True):
+    """Dracula font schema for SpectraFit.
+
+    !!! info "Dracula Font"
+
+        The [Dracula Font](https://draculatheme.com/contribute) is a font schema is
+        used for the dark mode of the `SpectraFit` application. This font schema is
+        used in the following way:
+
+        * Font Family	"Fira Code" &rarr; **family**
+        * Font Size	12 &rarr; **size**
+        * Font Color dracula white &rarr; **color**
+
+        See also: https://github.com/tonsky/FiraCode
+    """
+
+    family: str = "Fira Code"
+    size: int = 12
+    color: str = "#f8f8f2"

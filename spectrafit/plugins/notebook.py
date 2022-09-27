@@ -1,6 +1,5 @@
 """Jupyter Notebook plugin for SpectraFit."""
 from __future__ import annotations
-from __future__ import print_function
 
 from typing import Any
 from typing import Dict
@@ -16,9 +15,8 @@ from dtale import show as dtale_show
 from IPython.display import display
 from IPython.display import display_markdown
 from itables import show as itables_show
-
-# from plotly.graph_objs import Figure
 from plotly.subplots import make_subplots
+from spectrafit.api.models_model import ConfIntervalAPI
 from spectrafit.api.models_model import DistributionModelAPI
 from spectrafit.api.notebook_model import ColorAPI
 from spectrafit.api.notebook_model import FontAPI
@@ -38,35 +36,83 @@ from spectrafit.tools import PreProcessing
 class DataFrameDisplay:
     """Class for displaying a dataframe in different ways."""
 
-    def __init__(self, df: pd.DataFrame) -> None:
-        """Initialize the DataframeDisplay class.
+    def df_display(self, df: pd.DataFrame, mode: Optional[str] = None) -> None:
+        """Call the DataframeDisplay class.
+
+        !!! info "About `df_display`"
+
+            This function is used to display a dataframe in two different ways.
+
+            1. Regular display mode:
+                1. Via `IPython.display` for regular sliced displaying of the dataframe
+                   in the notebook.
+                2. Via `IPython.display` as Markdown for regular displaying of the
+                    complete dataframe in the notebook.
+            2. Interactive display mode:
+                1. Via `itables` for interactive displaying of the dataframe in the
+                    notebook, which allows for sorting, filtering, and jumping. For
+                    more information see [itables](https://github.com/mwouts/itables).
+                2. Via `dtale` for interactive displaying of the dataframe in the
+                    notebook, which allows advanced data analysis of the dataframe in
+                    an external window. For more information see
+                    [dtale](https://github.com/man-group/dtale).
+
+        Args:
+            df (pd.DataFrame): Dataframe to display.
+            mode (str, Optional): Display mode. Defaults to None.
+
+        Raises:
+            ValueError: Raises ValueError if mode of displaying is not supported.
+        """
+        if mode == "regular":
+            self.regular_display(df=df)
+        elif mode == "markdown":
+            self.markdown_display(df=df)
+        elif mode == "interactive":
+            self.interactive_display(df=df)
+        elif mode == "dtale":
+            self.dtale_display(df=df)
+        elif mode is not None:
+            raise ValueError(
+                f"Invalid mode: {mode}. "
+                "Valid modes are: regular, interactive, dtale, markdown."
+            )
+
+    @staticmethod
+    def regular_display(df: pd.DataFrame) -> None:
+        """Display the dataframe in a regular way.
 
         Args:
             df (pd.DataFrame): Dataframe to display.
         """
-        self.df = df
+        display(df)
 
-    def __call__(self, mode: str) -> None:
-        """Call the DataframeDisplay class.
+    @staticmethod
+    def interactive_display(df: pd.DataFrame) -> None:
+        """Display the dataframe in an interactive way.
 
         Args:
-            mode (str): _description_
-
-        Raises:
-            ValueError: _description_
+            df (pd.DataFrame): Dataframe to display.
         """
-        if mode == "regular":
-            display(self.df)
-        elif mode == "interactive":
-            itables_show(self.df)
-        elif mode == "dtale":
-            dtale_show(self.df)
-        elif mode == "markdown":
-            display_markdown(self.df.to_markdown())
-        else:
-            raise ValueError(
-                "mode must be one of 'regular', 'interactive', 'dtale', or 'markdown'"
-            )
+        itables_show(df)
+
+    @staticmethod
+    def dtale_display(df: pd.DataFrame) -> None:
+        """Display the dataframe in a dtale way.
+
+        Args:
+            df (pd.DataFrame): Dataframe to display.
+        """
+        dtale_show(df)
+
+    @staticmethod
+    def markdown_display(df: pd.DataFrame) -> None:
+        """Display the dataframe in a markdown way.
+
+        Args:
+            df (pd.DataFrame): Dataframe to display.
+        """
+        display_markdown(df.to_markdown(), raw=True)
 
 
 class DataFramePlot:
@@ -268,19 +314,21 @@ class DataFramePlot:
         fig.show()
 
 
-# class ExportResults:
-#    ...
+class ExportResults:
+    """Class for exporting results as csv."""
 
 
-# class ExportReport:
-#    ...
+class ExportReport:
+    """Class for exporting results as toml."""
 
 
-class SpectraFitNotebook(DataFramePlot):
+class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
     """Jupyter Notebook plugin for SpectraFit."""
 
     global_: Union[bool, int] = False
     autopeak: bool = False
+    df_fit: pd.DataFrame
+    df_pre: pd.DataFrame
 
     def __init__(
         self,
@@ -390,6 +438,7 @@ class SpectraFitNotebook(DataFramePlot):
         """Pre-processing class."""
         self.df, _pre_statistic = PreProcessing(df=self.df, args=self.args_pre)()
         self.pre_statistic = _pre_statistic["data_statistic"]
+        self.df_pre = self.df.copy()
 
     @property
     def return_pre_statistic(self) -> Dict[str, Any]:
@@ -402,33 +451,55 @@ class SpectraFitNotebook(DataFramePlot):
         return self.df
 
     @property
-    def plot_init_df(self) -> None:
-        """Plot the initial spectra."""
+    def return_df_fit(self) -> pd.DataFrame:
+        """Return the fit dataframe."""
+        return self.df_fit
+
+    @property
+    def return_original_df(self) -> pd.DataFrame:
+        """Return the original dataframe."""
+        return self.df_original
+
+    @property
+    def plot_original_df(self) -> None:
+        """Plot the original spectra."""
         self.plot_dataframe(self.df_original)
 
     @property
     def plot_current_df(self) -> None:
-        """Plot the initial spectra."""
+        """Plot the current spectra."""
         self.plot_dataframe(self.df)
 
     @property
     def plot_preprocessed_df(self) -> None:
         """Plot the current processed spectra."""
-        self.plot_2dataframes(df_1=self.df, df_2=self.df_original)
+        self.plot_2dataframes(df_1=self.df_pre, df_2=self.df_original)
 
     @property
-    def plot_fit(self) -> None:
+    def plot_df_fit(self) -> None:
         """Plot the fit."""
-        # self.plot_2dataframes(...)
+        self.plot_2dataframes(df_1=self.df_fit)
 
     def solver_model(
-        self, peaks_list: List[Dict[str, Dict[str, Dict[str, Any]]]]
+        self,
+        peaks_list: List[dict[str, dict[str, dict[str, Any]]]],
+        show_plot: bool = True,
+        show_df: bool = False,
+        conf_interval: dict[str, Any] = dict(),
     ) -> None:
-        """Solver model class."""
-        PostProcessing(
+        """Solves the fit problem based on the proposed model.
+
+        Args:
+            peaks_list (List[Dict[str, Dict[str, Dict[str, Any]]]]): _description_
+            show_plot (bool, optional): _description_. Defaults to True.
+            show_df (bool, optional): _description_. Defaults to False.
+            conf_interval (Dict[str, Any], optional): _description_. Defaults to dict().
+        """
+        self.df_fit, self.args = PostProcessing(
             self.df,
             {
                 "global_": self.global_,
+                "conf_interval": ConfIntervalAPI(**conf_interval).dict(),
             },
             *SolverModels(
                 df=self.df,
@@ -440,6 +511,43 @@ class SpectraFitNotebook(DataFramePlot):
                 },
             )(),
         )()
+
+        if show_plot:
+            self.plot_df_fit
+        if show_df:
+            self.interactive_display(df=self.df_fit)
+
+    def display_df_fit(self, mode: Optional[str] = "regular") -> None:
+        """Display the fit dataframe.
+
+        Args:
+            mode (str, optional): Display mode. Defaults to "regular".
+        """
+        self.df_display(df=self.df_fit, mode=mode)
+
+    def display_preprocessed_df(self, mode: Optional[str] = "regular") -> None:
+        """Display the preprocessed dataframe.
+
+        Args:
+            mode (str, optional): Display mode. Defaults to "regular".
+        """
+        self.df_display(df=self.df_pre, mode=mode)
+
+    def display_original_df(self, mode: Optional[str] = "regular") -> None:
+        """Display the original dataframe.
+
+        Args:
+            mode (str, optional): Display mode. Defaults to "regular".
+        """
+        self.df_display(df=self.df_original, mode=mode)
+
+    def display_current_df(self, mode: Optional[str] = "regular") -> None:
+        """Display the current dataframe.
+
+        Args:
+            mode (str, optional): Display mode. Defaults to "regular".
+        """
+        self.df_display(df=self.df, mode=mode)
 
     @staticmethod
     def converter_list2dict(
