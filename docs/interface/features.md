@@ -2489,8 +2489,6 @@ results. For interactive working the following tools are implemented:
 
 For more information, please check the [Jupyter Notebook Interface][24] section.
 
-
-
 [1]: https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.describe.html
 [2]: ../../api/spectrafit_api/#spectrafit.spectrafit.extracted_from_command_line_runner
 [3]: https://lmfit.github.io/lmfit-py/model.html?highlight=report#lmfit.model.ModelResult.fit_report

@@ -563,7 +563,7 @@ in the Jupyter Notebook, the `SpectraFit` has to be imported as follows:
 from spectrafit.plugins import jupyter
 ```
 
-Next, the __peak__ definition has to be defined now as follows:
+Next, the **peak** definition has to be defined now as follows:
 
 ```python
 [
@@ -595,7 +595,6 @@ Next, the __peak__ definition has to be defined now as follows:
 
     Also the _global fitting routine_ is not yet implemented for the `Jupyter`
     interface.
-
 
 More information about the Jupyter Notebook interface can be found in the
 [Jupyter Example][20] and the plugin documentation for

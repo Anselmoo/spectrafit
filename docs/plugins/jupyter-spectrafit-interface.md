@@ -1,17 +1,16 @@
 ## Input
 
-
 ## DataFlow
 
 The interface is divided into four sections:
 
 1. _Input_: Data, Model, and Method
 2. _Fitting_: Solving and Statistic of the Model
-2. _Fitting_: Plotting and Display of Data
+3. _Fitting_: Plotting and Display of Data
 4. _Export_: Save the Fitting and Statistic Results
 
-
 > Overview of the data flow in SpectraFit Jupyter Notebook Interface
+
 ```mermaid
 flowchart LR
     subgraph DataModel
@@ -56,7 +55,6 @@ to display the results and the `Dictionary` is used to export the results.
 
 ## Input Parameter Model
 
-
 ## Output
 
 The output file of the SpectraFit Jupyter interface is a [`toml`][1] file that
@@ -66,6 +64,7 @@ be still used as a basis for exporting (parts of) the data to a [NoSql][2] and
 [Graph][3] databases.
 
 > The details of the _Input_ and _Model_, and _Output_ sections are shown below.
+
 ```mermaid
 flowchart TB
 
