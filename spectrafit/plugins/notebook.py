@@ -226,25 +226,16 @@ class DataFramePlot:
             paper_bgcolor=self.args_plot.color.paper,
             plot_bgcolor=self.args_plot.color.plot,
         )
+
         fig.update_xaxes(
-            minor=dict(
-                tickcolor=self.args_plot.color.ticks,
-                showgrid=self.args_plot.grid.show,
-                ticks=self.args_plot.grid.ticks,
-                griddash=self.args_plot.grid.dash,
-            ),
+            minor=self.get_minor,
             gridcolor=self.args_plot.color.grid,
             linecolor=self.args_plot.color.line,
             zerolinecolor=self.args_plot.color.zero_line,
             color=self.args_plot.color.color,
         )
         fig.update_yaxes(
-            minor=dict(
-                tickcolor=self.args_plot.color.ticks,
-                showgrid=self.args_plot.grid.show,
-                ticks=self.args_plot.grid.ticks,
-                griddash=self.args_plot.grid.dash,
-            ),
+            minor=self.get_minor,
             gridcolor=self.args_plot.color.grid,
             linecolor=self.args_plot.color.line,
             zerolinecolor=self.args_plot.color.zero_line,
@@ -299,28 +290,27 @@ class DataFramePlot:
             paper_bgcolor=self.args_plot.color.paper,
             plot_bgcolor=self.args_plot.color.plot,
         )
+
         fig.update_xaxes(
-            minor=dict(
-                tickcolor=self.args_plot.color.ticks,
-                showgrid=self.args_plot.grid.show,
-                ticks=self.args_plot.grid.ticks,
-                griddash=self.args_plot.grid.dash,
-            ),
+            minor=self.get_minor,
             gridcolor=self.args_plot.color.grid,
             linecolor=self.args_plot.color.line,
             zerolinecolor=self.args_plot.color.zero_line,
             color=self.args_plot.color.color,
         )
-        fig.update_yaxes(
-            minor=dict(
-                tickcolor=self.args_plot.color.ticks,
-                showgrid=self.args_plot.grid.show,
-                ticks=self.args_plot.grid.ticks,
-                griddash=self.args_plot.grid.dash,
-            )
-        )
+        fig.update_yaxes(minor=self.get_minor)
 
         fig.show()
+
+    @property
+    def get_minor(self) -> Dict[str, Union[str, bool]]:
+        """Get the minor axis arguments."""
+        return dict(
+            tickcolor=self.args_plot.color.ticks,
+            showgrid=self.args_plot.grid.show,
+            ticks=self.args_plot.grid.ticks,
+            griddash=self.args_plot.grid.dash,
+        )
 
 
 class ExportResults:
