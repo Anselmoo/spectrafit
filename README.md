@@ -200,6 +200,7 @@ spf.solver_model(initial_model)
 Which results in the following output:
 
 ![img_jupyter](docs/images/jupyter_plot.png)
+
 ## Documentation
 
 Please see the [extended documentation](https://anselmoo.github.io/spectrafit/)

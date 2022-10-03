@@ -11,6 +11,7 @@
     [pydantic](https://pydantic-docs.helpmanual.io/) library.
 
 ## Data Model API
+
 ### Command Line Interface
 
 ::: spectrafit.api.cmd_model
