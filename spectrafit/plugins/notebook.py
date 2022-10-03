@@ -1,6 +1,7 @@
 """Jupyter Notebook plugin for SpectraFit."""
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Any
 from typing import Dict
 from typing import List
@@ -10,15 +11,17 @@ from typing import Union
 
 import pandas as pd
 import plotly.express as px
+import tomli_w
 
 from dtale import show as dtale_show
 from IPython.display import display
 from IPython.display import display_markdown
 from itables import show as itables_show
 from plotly.subplots import make_subplots
+from spectrafit.api.cmd_model import DescriptionAPI
 from spectrafit.api.models_model import ConfIntervalAPI
-from spectrafit.api.models_model import DistributionModelAPI
 from spectrafit.api.notebook_model import ColorAPI
+from spectrafit.api.notebook_model import FnameAPI
 from spectrafit.api.notebook_model import FontAPI
 from spectrafit.api.notebook_model import GridAPI
 from spectrafit.api.notebook_model import LegendAPI
@@ -26,11 +29,17 @@ from spectrafit.api.notebook_model import PlotAPI
 from spectrafit.api.notebook_model import ResidualAPI
 from spectrafit.api.notebook_model import XAxisAPI
 from spectrafit.api.notebook_model import YAxisAPI
+from spectrafit.api.report_model import FitMethodAPI
+from spectrafit.api.report_model import InputAPI
+from spectrafit.api.report_model import OutputAPI
+from spectrafit.api.report_model import ReportAPI
+from spectrafit.api.report_model import SolverAPI
 from spectrafit.api.tools_model import ColumnNamesAPI
 from spectrafit.api.tools_model import DataPreProcessingAPI
 from spectrafit.models import SolverModels
 from spectrafit.tools import PostProcessing
 from spectrafit.tools import PreProcessing
+from spectrafit.utilities.transformer import list2dict
 
 
 class DataFrameDisplay:
@@ -122,16 +131,16 @@ class DataFramePlot:
         """Initialize the DataFramePlot class.
 
         Args:
-            args_plot (PlotAPI): _description_
+            args_plot (PlotAPI): PlotAPI object for the settings of the plot.
         """
         self.args_plot = args_plot
 
     @staticmethod
-    def post_process_plot(df_orginal: pd.DataFrame, df: pd.DataFrame) -> None:
+    def post_process_plot(df_org: pd.DataFrame, df: pd.DataFrame) -> None:
         """Plot of the post processed datafrme.
 
         Args:
-            df_orginal (pd.DataFrame): _description_
+            df_org (pd.DataFrame): _description_
             df (pd.DataFrame): _description_
         """
 
@@ -317,18 +326,311 @@ class DataFramePlot:
 class ExportResults:
     """Class for exporting results as csv."""
 
+    def export_df(self, df: pd.DataFrame, args: FnameAPI) -> None:
+        """Export the dataframe as csv."""
+        df.to_csv(
+            self.fname2Path(
+                fname=args.fname,
+                prefix=args.prefix,
+                suffix=args.suffix,
+                folder=args.folder,
+            ),
+            index=False,
+        )
 
-class ExportReport:
+    def export_report(self, report: Dict[Any, Any], args: FnameAPI) -> None:
+        """Export the results as toml file.
+
+        Args:
+            report (Dict[Any, Any]): _description_
+            args (FnameAPI): _description_
+        """
+        with open(
+            self.fname2Path(
+                fname=args.fname,
+                prefix=args.prefix,
+                suffix=args.suffix,
+                folder=args.folder,
+            ),
+            "wb+",
+        ) as f:
+            tomli_w.dump(report, f)
+
+    @staticmethod
+    def fname2Path(
+        fname: str,
+        suffix: str,
+        prefix: Optional[str] = None,
+        folder: Optional[str] = None,
+    ) -> Path:
+        """Translate string to Path object.
+
+        Args:
+            fname (str): Filename
+            suffix (str): Name of the suffix of the file.
+            prefix (Optional[str], optional): Name of the prefix of the file. Defaults
+                 to None.
+            folder (Optional[str], optional): Folder, where it will be saved.
+                 This folders will be created, if not exist. Defaults to None.
+
+        Returns:
+            Path: Path object of the file.
+        """
+        if prefix:
+            fname = f"{prefix}_{fname}"
+        _fname = Path(fname).with_suffix(f".{suffix}")
+        if folder:
+            Path(folder).mkdir(parents=True, exist_ok=True)
+            _fname = Path(folder) / _fname
+        return _fname
+
+
+class SolverResults:
+    """Class for storing the results of the solver."""
+
+    def __init__(self, args: Dict[str, Any]) -> None:
+        """Initialize the SolverResults class.
+
+        Args:
+            args (Dict[str, Any]): Dictionary of SpectraFit settings and results.
+        """
+        self.args = args
+
+    @property
+    def settings_global_fitting(self) -> Union[bool, int]:
+        """Global fitting settings.
+
+        Returns:
+            Union[bool, int]: Global fitting settings.
+        """
+        return self.args["global_"]
+
+    @property
+    def settings_conf_interval(self) -> Dict[str, Any]:
+        """Confidence interval settings.
+
+        Returns:
+            Dict[str, Any]: Confidence interval settings.
+        """
+        return self.args["conf_interval"]
+
+    @property
+    def settings_configurations(self) -> Dict[str, Any]:
+        """Configuration settings.
+
+        Returns:
+            Dict[str, Any]: Configuration settings.
+        """
+        return self.args["fit_insights"]["configurations"]
+
+    @staticmethod
+    def dict2df(dict_: Dict[str, Any], index_: str = "values") -> pd.DataFrame:
+        """Convert dictionary to dataframe.
+
+        Args:
+            dict_ (Dict[str, Any]): Dictionary with single values which will be
+                 transformed to a dataframe
+            index_ (str, optional): Name of the index. Defaults to "values".
+
+        Returns:
+            pd.DataFrame: _description_
+        """
+        return pd.DataFrame(
+            {key: [value] for key, value in dict_.items()}, index=[index_]
+        ).T
+
+    @property
+    def get_gof(self) -> Dict[str, float]:
+        """Get the goodness of fit values.
+
+        Args:
+            export_df (bool, optional): Export the dictionary as dataframe, if True.
+                 Defaults to False.
+
+        Returns:
+            Dict[str, float]: Goodness of fit values as dictionary.
+        """
+        return self.args["fit_insights"]["statistics"]
+
+    @property
+    def get_variables(self) -> Dict[str, Dict[str, float]]:
+        """Get the variables of the fit.
+
+        Returns:
+            Dict[str, Dict[str, float]]: Variables of the fit.
+        """
+        return self.args["fit_insights"]["variables"]
+
+    @property
+    def get_errorbars(self) -> Dict[str, float]:
+        """Get the comments about the error bars of fit values.
+
+        Returns:
+            Dict[str, float]: Comments about the error bars as dictionary or dataframe.
+        """
+        return self.args["fit_insights"]["errorbars"]
+
+    @property
+    def get_regression_metrics(self) -> Dict[str, Any]:
+        """Get the regression metrics.
+
+        Returns:
+            Dict[str, Any]: Regression metrics as dictionary.
+        """
+        return self.args["regression_metrics"]
+
+    @property
+    def get_descriptive_statistic(self) -> Dict[str, Any]:
+        """Get the descriptive statistic.
+
+        Returns:
+            Dict[str, Any]: Descriptive statistic as dictionary of the spectra, fit, and
+                 components as dictionary.
+        """
+        return self.args["descriptive_statistic"]
+
+    @property
+    def get_linear_correlation(self) -> Dict[str, Any]:
+        """Get the linear correlation.
+
+        Returns:
+            Dict[str, Any]: Linear correlation of the spectra, fit, and components
+                 as dictionary.
+        """
+        return self.args["linear_correlation"]
+
+    @property
+    def get_component_correlation(self) -> Dict[str, Any]:
+        """Get the linear correlation of the components.
+
+        Returns:
+            Dict[str, Any]: Linear correlation of the components as dictionary.
+        """
+        return self.args["fit_insights"]["correlations"]
+
+    @property
+    def get_covariance_matrix(self) -> Dict[str, Any]:
+        """Get the covariance matrix.
+
+        Returns:
+            Dict[str, Any]: Covariance matrix as dictionary.
+        """
+        return self.args["fit_insights"]["covariance_matrix"]
+
+    @property
+    def get_confidence_interval(self) -> Dict[Any, Any]:
+        """Get the confidence interval.
+
+        Returns:
+            Dict[Any, Any]: Confidence interval as dictionary.
+        """
+        return self.args["confidence_interval"]
+
+
+class ExportReport(SolverResults):
     """Class for exporting results as toml."""
 
+    def __init__(
+        self,
+        description: DescriptionAPI,
+        initial_model: List[Dict[str, Dict[str, Dict[str, Any]]]],
+        pre_processing: DataPreProcessingAPI,
+        fname: FnameAPI,
+        args: Dict[str, Any],
+        df_org: pd.DataFrame,
+        df_fit: pd.DataFrame,
+        df_pre: pd.DataFrame = pd.DataFrame(),
+    ):
+        """Initialize the ExportReport class.
 
-class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
+        Args:
+            description (DescriptionAPI): _description_
+            initial_model (List[Dict[str, Dict[str, Dict[str, Any]]]]): _description_
+            pre_processing (DataPreProcessingAPI): _description_
+            fname (FnameAPI): _description_
+            args (Dict[str, Any]): _description_
+            df_org (pd.DataFrame): _description_
+            df_fit (pd.DataFrame): _description_
+            df_pre (Optional[pd.DataFrame], optional): _description_. Defaults to None.
+        """
+        super().__init__(args=args)
+        self.description = description
+        self.initial_model = initial_model
+        self.pre_processing = pre_processing
+        self.fname = fname
+
+        self.df_org = df_org.to_dict(orient="list")
+        self.df_fit = df_fit.to_dict(orient="list")
+        self.df_pre = df_pre.to_dict(orient="list")
+
+    @property
+    def make_input_contribution(self) -> InputAPI:
+        """Make input contribution of the report.
+
+        Returns:
+            InputAPI: Input contribution of the report as class.
+        """
+        return InputAPI(
+            description=self.description,
+            initial_model=self.initial_model,
+            pre_processing=self.pre_processing,
+            method=FitMethodAPI(
+                global_fitting=self.settings_global_fitting,
+                confidence_interval=self.settings_conf_interval,
+                configurations=self.settings_configurations,
+            ),
+        )
+
+    @property
+    def make_solver_contribution(self) -> SolverAPI:
+        """Make solver contribution of the report.
+
+        Returns:
+            SolverAPI: Solver contribution of the report as class.
+        """
+        return SolverAPI(
+            goodness_of_fit=self.get_gof,
+            regression_metrics=self.get_regression_metrics,
+            descriptive_statistic=self.get_descriptive_statistic,
+            linear_correlation=self.get_linear_correlation,
+            component_correlation=self.get_component_correlation,
+            confidence_interval=self.get_confidence_interval,
+            covariance_matrix=self.get_component_correlation,
+            variables=self.get_variables,
+            errorbars=self.get_errorbars,
+        )
+
+    @property
+    def make_output_contribution(self) -> OutputAPI:
+        """Make output contribution of the report.
+
+        Returns:
+            OutputAPI: Output contribution of the report as class.
+        """
+        return OutputAPI(df_org=self.df_org, df_fit=self.df_fit, df_pre=self.df_pre)
+
+    def __call__(self) -> Dict[str, Any]:
+        """Get the complete report as dictionary.
+
+        Returns:
+            Dict[str, Any]: Report as dictionary by using the `.dict()` option of
+                 pydantic. `None` is excluded.
+        """
+        return ReportAPI(
+            input=self.make_input_contribution,
+            solver=self.make_solver_contribution,
+            output=self.make_output_contribution,
+        ).dict(exclude_none=True)
+
+
+class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults, ExportReport):
     """Jupyter Notebook plugin for SpectraFit."""
 
     global_: Union[bool, int] = False
     autopeak: bool = False
     df_fit: pd.DataFrame
-    df_pre: pd.DataFrame
+    df_pre: pd.DataFrame = pd.DataFrame()
+    initial_model: List[Dict[str, Dict[str, Dict[str, Any]]]]
 
     def __init__(
         self,
@@ -354,6 +656,9 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
         color: ColorAPI = ColorAPI(),
         grid: GridAPI = GridAPI(),
         size: Tuple[int, int] = (800, 600),
+        fname: str = "results",
+        folder: Optional[str] = None,
+        description: DescriptionAPI = DescriptionAPI(),
     ) -> None:
         """Initialize the SpectraFitNotebook class.
 
@@ -385,9 +690,11 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
             color (ColorAPI, optional): _description_. Defaults to ColorAPI().
             grid (GridAPI, optional): _description_. Defaults to GridAPI().
             size (Tuple[int, int], optional): _description_. Defaults to (800, 600).
+            fname (str, optional): _description_. Defaults to "results".
+            folder (Optional[str], optional): _description_. Defaults to None.
 
         Raises:
-            ValueError: _description_
+            ValueError: If the dataframe only contains one column.
         """
         self.x_column = x_column
         self.y_column = y_column
@@ -397,7 +704,7 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
             self.df = df[[self.x_column, *self.y_column]]
         else:
             self.df = df[[self.x_column, self.y_column]]
-        self.df_original = self.df
+        self.df_org = self.df.copy()
 
         if self.df.shape[1] < 2:
             raise ValueError("The dataframe must have 2 or more columns.")
@@ -409,8 +716,8 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
             smooth=smooth,
             shift=shift,
             column=list(self.df.columns),
-        ).dict()
-
+        )
+        self.args_desc = description
         super().__init__(
             args_plot=PlotAPI(
                 x=self.x_column,
@@ -427,8 +734,10 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
                 color=color,
                 grid=grid,
                 size=size,
-            )
+            ),
         )
+        self.export_args_df = FnameAPI(fname=fname, folder=folder, suffix="csv")
+        self.export_args_out = FnameAPI(fname=fname, folder=folder, suffix="lock")
 
         self.args_solver: Dict[str, Any] = {}
         self.pre_statistic: Dict[str, Any] = {}
@@ -436,7 +745,7 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
     @property
     def pre_process(self) -> None:
         """Pre-processing class."""
-        self.df, _pre_statistic = PreProcessing(df=self.df, args=self.args_pre)()
+        self.df, _pre_statistic = PreProcessing(df=self.df, args=self.args_pre.dict())()
         self.pre_statistic = _pre_statistic["data_statistic"]
         self.df_pre = self.df.copy()
 
@@ -444,6 +753,16 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
     def return_pre_statistic(self) -> Dict[str, Any]:
         """Return the pre-processing statistic."""
         return self.pre_statistic
+
+    @property
+    def return_df_org(self) -> pd.DataFrame:
+        """Return the original dataframe."""
+        return self.df_org
+
+    @property
+    def return_df_pre(self) -> Union[pd.DataFrame, None]:
+        """Return the pre-processed dataframe."""
+        return self.df_pre
 
     @property
     def return_df(self) -> pd.DataFrame:
@@ -456,14 +775,34 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
         return self.df_fit
 
     @property
-    def return_original_df(self) -> pd.DataFrame:
-        """Return the original dataframe."""
-        return self.df_original
+    def export_df_act(self) -> None:
+        """Export the dataframe."""
+        self.export_args_df.prefix = "act"
+        self.export_df(df=self.df, args=self.export_args_df)
+
+    @property
+    def export_df_fit(self) -> None:
+        """Export the dataframe."""
+        self.export_args_df.prefix = "fit"
+        self.export_df(df=self.df_fit, args=self.export_args_df)
+
+    @property
+    def export_df_org(self) -> None:
+        """Export the dataframe."""
+        self.export_args_df.prefix = "org"
+        self.export_df(df=self.df_org, args=self.export_args_df)
+
+    @property
+    def export_df_pre(self) -> None:
+        """Export the dataframe."""
+        if self.df_pre:
+            self.export_args_df.prefix = "pre"
+            self.export_df(df=self.df_pre, args=self.export_args_df)
 
     @property
     def plot_original_df(self) -> None:
         """Plot the original spectra."""
-        self.plot_dataframe(self.df_original)
+        self.plot_dataframe(self.df_org)
 
     @property
     def plot_current_df(self) -> None:
@@ -473,33 +812,59 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
     @property
     def plot_preprocessed_df(self) -> None:
         """Plot the current processed spectra."""
-        self.plot_2dataframes(df_1=self.df_pre, df_2=self.df_original)
+        self.plot_2dataframes(df_1=self.df_pre, df_2=self.df_org)
 
     @property
     def plot_df_fit(self) -> None:
         """Plot the fit."""
         self.plot_2dataframes(df_1=self.df_fit)
 
+    @property
+    def generate_report(self) -> None:
+        """Generate the SpectraFit report of the final fit."""
+        self.export_report(
+            report=ExportReport(
+                description=self.args_desc,
+                initial_model=self.initial_model,
+                pre_processing=self.args_pre,
+                fname=self.export_args_out,
+                args=self.args,
+                df_org=self.df_org,
+                df_pre=self.df_pre,
+                df_fit=self.df_fit,
+            )(),
+            args=self.export_args_out,
+        )
+
     def solver_model(
         self,
-        peaks_list: List[dict[str, dict[str, dict[str, Any]]]],
+        initial_model: List[Dict[str, Dict[str, Dict[str, Any]]]],
         show_plot: bool = True,
         show_df: bool = False,
-        conf_interval: dict[str, Any] = dict(),
+        conf_interval: Dict[str, Any] = dict(),
     ) -> None:
         """Solves the fit problem based on the proposed model.
 
         Args:
-            peaks_list (List[Dict[str, Dict[str, Dict[str, Any]]]]): _description_
-            show_plot (bool, optional): _description_. Defaults to True.
-            show_df (bool, optional): _description_. Defaults to False.
-            conf_interval (Dict[str, Any], optional): _description_. Defaults to dict().
+            initial_model (List[Dict[str, Dict[str, Dict[str, Any]]]]): List of
+                 dictionary with the initial model and its fitting parameters and
+                 options for the components.
+            show_plot (bool, optional): Show current fit results as plot.
+                 Defaults to True.
+            show_df (bool, optional): Show current fit results as dataframe. Defaults
+                 to False.
+            conf_interval (Dict[str, Any], optional): Dictionary for the parameter with
+                 the parameter for calculating the confidence interval. Defaults to
+                 dict().
         """
+        self.initial_model = initial_model
         self.df_fit, self.args = PostProcessing(
             self.df,
             {
                 "global_": self.global_,
-                "conf_interval": ConfIntervalAPI(**conf_interval).dict(),
+                "conf_interval": ConfIntervalAPI(**conf_interval).dict(
+                    exclude_none=True
+                ),
             },
             *SolverModels(
                 df=self.df,
@@ -507,11 +872,10 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
                     "global_": self.global_,
                     "column": list(self.df.columns),
                     "autopeak": self.autopeak,
-                    **self.converter_list2dict(peaks_list=peaks_list),
+                    **list2dict(list_=self.initial_model),
                 },
             )(),
         )()
-
         if show_plot:
             self.plot_df_fit
         if show_df:
@@ -539,7 +903,7 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
         Args:
             mode (str, optional): Display mode. Defaults to "regular".
         """
-        self.df_display(df=self.df_original, mode=mode)
+        self.df_display(df=self.df_org, mode=mode)
 
     def display_current_df(self, mode: Optional[str] = "regular") -> None:
         """Display the current dataframe.
@@ -548,17 +912,3 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
             mode (str, optional): Display mode. Defaults to "regular".
         """
         self.df_display(df=self.df, mode=mode)
-
-    @staticmethod
-    def converter_list2dict(
-        peaks_list: List[Dict[str, Dict[str, Dict[str, Any]]]]
-    ) -> Dict[str, Dict[str, Dict[str, Any]]]:
-        """Convert the list of peaks to dictionary.
-
-        # TODO: Using Pydantic DistributionModelAPI to check models
-        """
-        peaks_dict: Dict[str, Dict[Any, Any]] = {"peaks": {}}
-        for i, peak in enumerate(peaks_list, start=1):
-            if list(peak.keys())[0] in DistributionModelAPI().__dict__.keys():
-                peaks_dict["peaks"][f"{i}"] = peak
-        return peaks_dict

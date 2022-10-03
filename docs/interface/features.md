@@ -2477,6 +2477,20 @@ different types of output files will be generated
     }
     ```
 
+## Jupyter Notebook Interface
+
+`SpectraFit` provides also an interface to [Jupyter Notebook][20] as an package
+import. This interface is useful for interactive fitting and plotting of the
+results. For interactive working the following tools are implemented:
+
+1. [Plotly][21] for interactive plotting of the results
+2. [Dtale][22] for interactive data exploration (_external_)
+3. [itables][23] for interactive data exploration (_internal_)
+
+For more information, please check the [Jupyter Notebook Interface][24] section.
+
+
+
 [1]: https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.describe.html
 [2]: ../../api/spectrafit_api/#spectrafit.spectrafit.extracted_from_command_line_runner
 [3]: https://lmfit.github.io/lmfit-py/model.html?highlight=report#lmfit.model.ModelResult.fit_report
@@ -2496,3 +2510,8 @@ different types of output files will be generated
 [17]: https://en.wikipedia.org/wiki/Correlation
 [18]: https://docs.python.org/3/library/socket.html
 [19]: https://docs.python.org/3/library/getpass.html
+[20]: https://jupyter.org
+[21]: https://plotly.com/python/
+[22]: https://github.com/man-group/dtale
+[23]: https://mwouts.github.io/itables/quick_start.html
+[24]: ../../plugins/jupyter-spectrafit-interface

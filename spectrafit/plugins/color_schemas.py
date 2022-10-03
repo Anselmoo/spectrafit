@@ -11,7 +11,7 @@ class DraculaColor(BaseModel, frozen=True):
         used for the dark mode of the `SpectraFit` application. This color schema is
         used in the following way:
 
-        * Background    #282a36 &rarr; _not used_
+        * Background    #282a36 &rarr; **paper**, **plot**
         * Current Line	#44475a &rarr; _not used_
         * Foreground	#f8f8f2 &rarr; **color**, **grid**, **ticks**,  **font**
         * Comment	#6272a4 &rarr; **line**
@@ -29,8 +29,8 @@ class DraculaColor(BaseModel, frozen=True):
     residual: str = "#ff5555"
     fit: str = "#50fa7b"
     components: str = "#ff79c6"
-    paper: str = "rgba(0,0,0,0)"
-    plot: str = "rgba(0,0,0,0)"
+    paper: str = "#282a36"
+    plot: str = "#282a36"
     color: str = "#f8f8f2"
     grid: str = "#f8f8f2"
     line: str = "#6272a4"

@@ -12,6 +12,7 @@ from uuid import uuid4
 
 from pydantic import BaseModel
 from pydantic import Field
+from pydantic import HttpUrl
 from spectrafit import __version__
 from spectrafit.api.tools_model import AutopeakAPI
 from spectrafit.api.tools_model import DataPreProcessingAPI
@@ -34,8 +35,14 @@ class DescriptionAPI(BaseModel):
     keywords: List[str] = Field(
         default=["spectra"], description="Keywords for the project"
     )
-    authors: List[str] = Field(default=[], description="Authors of the project")
-    references: List[str] = Field(default=[], description="References for the project")
+    authors: List[str] = Field(
+        default=["authors"], description="Authors of the project"
+    )
+    references: List[HttpUrl] = Field(
+        default=["https://github.com/Anselmoo/spectrafit"],
+        alias="refs",
+        description="References for the project",
+    )
     version: str = __version__
     user_system: str = f"{getuser()}@{gethostname()}"
     timestamp: str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")

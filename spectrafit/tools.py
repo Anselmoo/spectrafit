@@ -46,7 +46,7 @@ class PreProcessing:
             pd.DataFrame: DataFrame containing the input data (`x` and `data`), which
                  are optionally:
 
-                    1. shrinked
+                    1. shrinked to a given range
                     2. shifted
                     3. linear oversampled
                     4. smoothed
@@ -55,7 +55,7 @@ class PreProcessing:
         _df = self.df.copy()
         self.args["data_statistic"] = _df.describe(
             percentiles=np.arange(0.1, 1, 0.1)
-        ).to_dict(orient="list")
+        ).to_dict(orient="split")
         try:
             if isinstance(self.args["energy_start"], (int, float)) or isinstance(
                 self.args["energy_stop"], (int, float)
@@ -209,6 +209,7 @@ class PostProcessing:
         self.export_correlation2args
         self.export_results2args
         self.export_regression_metrics2args
+        self.export_desprective_statistic2args
         return (self.df, self.args)
 
     def check_global_fitting(self) -> Optional[int]:
@@ -272,7 +273,7 @@ class PostProcessing:
                 1. Configurations
                 2. Statistics
                 3. Variables
-                4. Errorbars
+                4. Error-bars
                 5. Correlations
                 6. Covariance Matrix
                 7. _Optional_: Confidence Interval
@@ -290,7 +291,7 @@ class PostProcessing:
                 )
             except MinimizerException as exc:
                 print(f"Error: {exc} -> No confidence interval could be calculated!")
-                self.args["confidence_interval"] = None
+                self.args["confidence_interval"] = {}
 
     @property
     def make_residual_fit(self) -> None:
@@ -354,19 +355,36 @@ class PostProcessing:
         """Export the correlation matrix to the input file arguments.
 
         !!! note "About Correlation Matrix"
-            The correlation matrix is calculated from and for the pandas dataframe and
-            divided into two parts:
+
+            The linear correlation matrix is calculated from and for the pandas
+            dataframe and divided into two parts:
 
             1. Linear correlation matrix
             2. Non-linear correlation matrix (coming later ...)
 
+        !!! note "About reading the correlation matrix"
+
+            The correlation matrix is stored in the `args` as a dictionary with the
+            following keys:
+
+            * `index`
+            * `columns`
+            * `data`
+
+            For re-reading the data, it is important to use the following code:
+
+            >>> import pandas as pd
+            >>> pd.DataFrame(**args["linear_correlation"])
+
+            Important is to use the generator function for access the three keys and
+            their values.
         """
-        self.args["linear_correlation"] = self.df.corr().to_dict(orient="list")
+        self.args["linear_correlation"] = self.df.corr().to_dict(orient="split")
 
     @property
     def export_results2args(self) -> None:
         """Export the results of the fit to the input file arguments."""
-        self.args["fit_result"] = self.df.to_dict(orient="list")
+        self.args["fit_result"] = self.df.to_dict(orient="split")
 
     @property
     def export_regression_metrics2args(self) -> None:
@@ -377,6 +395,13 @@ class PostProcessing:
             module.
         """
         self.args["regression_metrics"] = RegressionMetrics(self.df)()
+
+    @property
+    def export_desprective_statistic2args(self) -> None:
+        """Export the descriptive statistic of the spectra, fit, and contributions."""
+        self.args["descriptive_statistic"] = self.df.describe(
+            percentiles=np.arange(0.1, 1, 0.1)
+        ).to_dict(orient="split")
 
 
 class SaveResult:

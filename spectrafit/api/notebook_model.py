@@ -50,7 +50,7 @@ class FontAPI(BaseModel):
         default="Open Sans, monospace", description="Font family of the plot."
     )
     size: int = Field(default=12, description="Font size of the plot.")
-    color: str = Field("black", description="Font color of the plot.")
+    color: str = Field(default="black", description="Font color of the plot.")
 
 
 class LegendAPI(BaseModel):
@@ -103,6 +103,7 @@ class ColorAPI(BaseModel):
         "font",
         check_fields=False,
     )
+    @classmethod
     def transparent_rgb(cls, v: str) -> str:
         """Convert string to transparent RGB color.
 
@@ -135,7 +136,13 @@ class PlotAPI(BaseModel):
     grid: GridAPI = GridAPI()
     size: Tuple[int, int] = Field(default=(800, 600), description="Size of the plot.")
 
-    class Config:
-        """Allows abitrary additional types like dataframes."""
 
-        arbitrary_types_allowed = True
+class FnameAPI(BaseModel):
+    """Definition of the file name."""
+
+    fname: str = Field(..., description="Name of the file to save.")
+    suffix: str = Field(..., description="Suffix of the file to save.")
+    prefix: Optional[str] = Field(
+        default=None, description="Prefix of the file to save."
+    )
+    folder: Optional[str] = Field(default=None, description="Folder to save the file.")

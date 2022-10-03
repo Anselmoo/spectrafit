@@ -17,6 +17,8 @@
 - Change `global` to `global_` to avoid keyword clash.
 - Add plugin for [jupyter-notebook][25] integration in VSCode; see also
   [jupyter-notebook-VSCode][26]
+- Change from `to_dict(orient="list")` to `to_dict(orient="split")` for the
+  `json` output for including the index.
 
 ## v0.11.0
 
