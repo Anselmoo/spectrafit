@@ -14,6 +14,11 @@
   [sklearn-metrics-regression][23]
 - Add [art][24] for generating ASCII Decor in the terminal / output.
 - Using transposed dataframes for the tabulated output to the terminal.
+- Change `global` to `global_` to avoid keyword clash.
+- Add plugin for [jupyter-notebook][25] integration in VSCode; see also
+  [jupyter-notebook-VSCode][26]
+- Change from `to_dict(orient="list")` to `to_dict(orient="split")` for the
+  `json` output for including the index.
 
 ## v0.11.0
 
@@ -258,3 +263,5 @@
 [22]: https://sonarcloud.io
 [23]: https://scikit-learn.org/stable/modules/model_evaluation.html
 [24]: https://www.4r7.ir
+[25]: https://jupyter.org
+[26]: https://code.visualstudio.com/docs/datascience/jupyter-notebooks

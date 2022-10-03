@@ -11,7 +11,7 @@
   "separator": ",",
   "decimal": ".",
   "header": 0,
-  "global": 0,
+  "global_": 0,
   "autopeak": {
     "model_type": "gaussian",
     "height": [0.0, 16],

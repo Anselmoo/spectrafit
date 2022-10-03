@@ -12,7 +12,7 @@
     "verbose": 1,
     "version": false,
     "noplot": false,
-    "global": 1
+    "global_": 1
   },
   "fitting": {
     "description": {
@@ -26,11 +26,18 @@
         "spectrum"
       ]
     },
-
     "parameters": {
-      "minimizer": { "nan_policy": "propagate", "calc_covar": false },
-      "optimizer": { "max_nfev": 1000, "method": "leastsq" },
-      "report": { "min_correl": 0.0 }
+      "minimizer": {
+        "nan_policy": "propagate",
+        "calc_covar": false
+      },
+      "optimizer": {
+        "max_nfev": 1000,
+        "method": "leastsq"
+      },
+      "report": {
+        "min_correl": 0.0
+      }
     },
     "peaks": {
       "1": {

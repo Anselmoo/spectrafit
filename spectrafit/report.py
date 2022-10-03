@@ -3,7 +3,7 @@ import pprint
 
 from typing import Any
 from typing import Dict
-from typing import List
+from typing import Hashable
 from typing import Optional
 from typing import Tuple
 
@@ -127,8 +127,12 @@ class RegressionMetrics:
             else (np.array([_true]), np.array([_pred]))
         )
 
-    def __call__(self) -> Dict[str, Any]:
-        """Calculate the regression metrics of the Fit(s) for the post analysis."""
+    def __call__(self) -> Dict[Hashable, Any]:
+        """Calculate the regression metrics of the Fit(s) for the post analysis.
+
+        Returns:
+            Dict[Hashable, Any]: Dictionary containing the regression metrics.
+        """
         metrics_fnc = (
             explained_variance_score,
             r2_score,
@@ -140,7 +144,7 @@ class RegressionMetrics:
             mean_absolute_percentage_error,
             mean_poisson_deviance,
         )
-        metric_dict: Dict[str, List[float]] = {}
+        metric_dict: Dict[Hashable, Any] = {}
         for fnc in metrics_fnc:
             metric_dict[fnc.__name__] = []
             for y_true, y_pred in zip(self.y_true.T, self.y_pred.T):
@@ -148,7 +152,7 @@ class RegressionMetrics:
                     metric_dict[fnc.__name__].append(np.nan)
                 else:
                     metric_dict[fnc.__name__].append(fnc(y_true, y_pred))
-        return metric_dict
+        return pd.DataFrame(metric_dict).T.to_dict(orient="split")
 
 
 def fit_report_as_dict(
@@ -156,8 +160,15 @@ def fit_report_as_dict(
 ) -> Dict[str, Dict[Any, Any]]:
     """Generate the best fit report as dictionary.
 
-    The report contains the best-fit values for the parameters and their
-    uncertainties and correlations.
+    !!! info "About `fit_report_as_dict`"
+
+        The report contains the best-fit values for the parameters and their
+        uncertainties and correlations. The report is generated as dictionary and
+        consits of the following three main criteria:
+
+            1. Fit Statistics
+            2. Fit variables
+            3. Fit correlations
 
     Args:
         inpars (minimize): Input Parameters from a fit or the  Minimizer results
@@ -173,7 +184,7 @@ def fit_report_as_dict(
 
     parnames = list(params.keys())
 
-    buffer: dict = {
+    buffer: Dict[str, Dict[Any, Any]] = {
         "configurations": {},
         "statistics": {},
         "variables": {},
@@ -181,9 +192,6 @@ def fit_report_as_dict(
         "correlations": {},
         "covariance_matrix": {},
     }
-    # Fit Statistics
-    # Fit variables
-    # Fit correlations
     if result is not None:
 
         buffer["configurations"]["fitting_method"] = result.method
@@ -301,10 +309,10 @@ class PrintingResults:
         """
         print(
             tabulate(
-                pd.DataFrame.from_dict(args).T,
+                pd.DataFrame(**args).T,
                 headers="keys",
                 tablefmt="fancy_grid",
-                floatfmt=".2f",
+                floatfmt=".3f",
             )
         )
 
@@ -328,7 +336,7 @@ class PrintingResults:
                 )
             except MinimizerException as exc:
                 print(f"Error: {exc} -> No confidence interval could be calculated!")
-                self.args["confidence_interval"] = None
+                self.args["confidence_interval"] = {}
         print("\nOverall Linear-Correlation:\n")
         self.print_tabulate(args=self.args["linear_correlation"])
         print("\nRegression Metrics:\n")
@@ -350,9 +358,6 @@ class PrintingResults:
         pp.pprint(self.args["linear_correlation"])
         print("\nRegression Metrics:\n")
         pp.pprint(self.args["regression_metrics"])
-
-
-#        pp.pprint(self.args["regression_metrics"])
 
 
 class PrintingStatus:

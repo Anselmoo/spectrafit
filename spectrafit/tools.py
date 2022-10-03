@@ -17,6 +17,7 @@ import yaml
 from lmfit import Minimizer
 from lmfit import conf_interval
 from lmfit.minimizer import MinimizerException
+from spectrafit.api.tools_model import ColumnNamesAPI
 from spectrafit.models import calculated_model
 from spectrafit.report import RegressionMetrics
 from spectrafit.report import fit_report_as_dict
@@ -45,7 +46,7 @@ class PreProcessing:
             pd.DataFrame: DataFrame containing the input data (`x` and `data`), which
                  are optionally:
 
-                    1. shrinked
+                    1. shrinked to a given range
                     2. shifted
                     3. linear oversampled
                     4. smoothed
@@ -54,9 +55,11 @@ class PreProcessing:
         _df = self.df.copy()
         self.args["data_statistic"] = _df.describe(
             percentiles=np.arange(0.1, 1, 0.1)
-        ).to_dict(orient="list")
+        ).to_dict(orient="split")
         try:
-            if self.args["energy_start"] or self.args["energy_stop"]:
+            if isinstance(self.args["energy_start"], (int, float)) or isinstance(
+                self.args["energy_stop"], (int, float)
+            ):
                 _df = self.energy_range(_df, self.args)
             if self.args["shift"]:
                 _df = self.energy_shift(_df, self.args)
@@ -93,6 +96,7 @@ class PreProcessing:
                 (df[args["column"][0]] >= _e0) & (df[args["column"][0]] <= _e1)
             ]
         elif isinstance(_e0, (int, float)):
+
             return _df.loc[df[args["column"][0]] >= _e0]
         elif isinstance(_e1, (int, float)):
             return _df.loc[df[args["column"][0]] <= _e1]
@@ -117,7 +121,7 @@ class PreProcessing:
         return _df
 
     @staticmethod
-    def oversampling(df: pd.DataFrame, args: dict) -> pd.DataFrame:
+    def oversampling(df: pd.DataFrame, args: Dict[str, Any]) -> pd.DataFrame:
         """Oversampling the data to increase the resolution of the data.
 
         !!! note "About Oversampling"
@@ -205,6 +209,7 @@ class PostProcessing:
         self.export_correlation2args
         self.export_results2args
         self.export_regression_metrics2args
+        self.export_desprective_statistic2args
         return (self.df, self.args)
 
     def check_global_fitting(self) -> Optional[int]:
@@ -217,7 +222,7 @@ class PostProcessing:
         Returns:
             Optional[int]: The number of spectra of the global fitting.
         """
-        if self.args["global"]:
+        if self.args["global_"]:
             return max(
                 int(self.result.params[i].name.split("_")[-1])
                 for i in self.result.params
@@ -241,14 +246,21 @@ class PostProcessing:
                  and `intensity_1`, `intensity_2`, `intensity_...` depending on
                  the dataset size.
         """
-        if self.args["global"]:
+        if self.args["global_"]:
             return df.rename(
                 columns={
-                    col: "energy" if i == 0 else f"intensity_{i}"
+                    col: ColumnNamesAPI().energy
+                    if i == 0
+                    else f"{ColumnNamesAPI().intensity}_{i}"
                     for i, col in enumerate(df.columns)
                 }
             )
-        return df.rename(columns={df.columns[0]: "energy", df.columns[1]: "intensity"})
+        return df.rename(
+            columns={
+                df.columns[0]: ColumnNamesAPI().energy,
+                df.columns[1]: ColumnNamesAPI().intensity,
+            }
+        )
 
     @property
     def make_insight_report(self) -> None:
@@ -261,7 +273,7 @@ class PostProcessing:
                 1. Configurations
                 2. Statistics
                 3. Variables
-                4. Errorbars
+                4. Error-bars
                 5. Correlations
                 6. Covariance Matrix
                 7. _Optional_: Confidence Interval
@@ -279,7 +291,7 @@ class PostProcessing:
                 )
             except MinimizerException as exc:
                 print(f"Error: {exc} -> No confidence interval could be calculated!")
-                self.args["confidence_interval"] = None
+                self.args["confidence_interval"] = {}
 
     @property
     def make_residual_fit(self) -> None:
@@ -307,17 +319,21 @@ class PostProcessing:
             separately.
         """
         _df = self.df.copy()
-        if self.args["global"]:
+        if self.args["global_"]:
 
             residual = self.result.residual.reshape((-1, self.data_size)).T
             for i, _residual in enumerate(residual, start=1):
-                _df[f"residual_{i}"] = _residual
-                _df[f"fit_{i}"] = self.df[f"intensity_{i}"].to_numpy() + _residual
-            _df["residual_avg"] = np.mean(residual, axis=0)
+                _df[f"{ColumnNamesAPI().residual}_{i}"] = _residual
+                _df[f"{ColumnNamesAPI().fit}_{i}"] = (
+                    self.df[f"{ColumnNamesAPI().intensity}_{i}"].to_numpy() + _residual
+                )
+            _df[f"{ColumnNamesAPI().residual}_avg"] = np.mean(residual, axis=0)
         else:
             residual = self.result.residual
-            _df["residual"] = residual
-            _df["fit"] = self.df["intensity"].to_numpy() + residual
+            _df[ColumnNamesAPI().residual] = residual
+            _df[ColumnNamesAPI().fit] = (
+                self.df[ColumnNamesAPI().intensity].to_numpy() + residual
+            )
         self.df = _df
 
     @property
@@ -331,7 +347,7 @@ class PostProcessing:
             params=self.result.params,
             x=self.df.iloc[:, 0].to_numpy(),
             df=self.df,
-            global_fit=self.args["global"],
+            global_fit=self.args["global_"],
         )
 
     @property
@@ -339,19 +355,36 @@ class PostProcessing:
         """Export the correlation matrix to the input file arguments.
 
         !!! note "About Correlation Matrix"
-            The correlation matrix is calculated from and for the pandas dataframe and
-            divided into two parts:
+
+            The linear correlation matrix is calculated from and for the pandas
+            dataframe and divided into two parts:
 
             1. Linear correlation matrix
             2. Non-linear correlation matrix (coming later ...)
 
+        !!! note "About reading the correlation matrix"
+
+            The correlation matrix is stored in the `args` as a dictionary with the
+            following keys:
+
+            * `index`
+            * `columns`
+            * `data`
+
+            For re-reading the data, it is important to use the following code:
+
+            >>> import pandas as pd
+            >>> pd.DataFrame(**args["linear_correlation"])
+
+            Important is to use the generator function for access the three keys and
+            their values.
         """
-        self.args["linear_correlation"] = self.df.corr().to_dict(orient="list")
+        self.args["linear_correlation"] = self.df.corr().to_dict(orient="split")
 
     @property
     def export_results2args(self) -> None:
         """Export the results of the fit to the input file arguments."""
-        self.args["fit_result"] = self.df.to_dict(orient="list")
+        self.args["fit_result"] = self.df.to_dict(orient="split")
 
     @property
     def export_regression_metrics2args(self) -> None:
@@ -362,6 +395,13 @@ class PostProcessing:
             module.
         """
         self.args["regression_metrics"] = RegressionMetrics(self.df)()
+
+    @property
+    def export_desprective_statistic2args(self) -> None:
+        """Export the descriptive statistic of the spectra, fit, and contributions."""
+        self.args["descriptive_statistic"] = self.df.describe(
+            percentiles=np.arange(0.1, 1, 0.1)
+        ).to_dict(orient="split")
 
 
 class SaveResult:
@@ -526,7 +566,7 @@ def load_data(args: Dict[str, str]) -> pd.DataFrame:
              extended by the single contribution of the model.
     """
     try:
-        if args["global"]:
+        if args["global_"]:
             return pd.read_csv(
                 args["infile"],
                 sep=args["separator"],

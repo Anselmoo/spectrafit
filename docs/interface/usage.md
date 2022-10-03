@@ -553,6 +553,53 @@ types.
     }
     ```
 
+## Jupyter Notebook Interface
+
+The `SpectraFit` can be used in the [Jupyter Notebook][18]. First, the plugin
+has to be installed as described in [Installation][19]. To use the `SpectraFit`
+in the Jupyter Notebook, the `SpectraFit` has to be imported as follows:
+
+```python
+from spectrafit.plugins import jupyter
+```
+
+Next, the **peak** definition has to be defined now as follows:
+
+```python
+[
+    {
+        "pseudovoigt": {
+            "amplitude": {"max": 2, "min": 0, "vary": True, "value": 1},
+            "center": {"max": 2, "min": -2, "vary": True, "value": 0},
+            "fwhmg": {"max": 0.1, "min": 0.02, "vary": True, "value": 0.01},
+            "fwhml": {"max": 0.1, "min": 0.01, "vary": True, "value": 0.01},
+        }
+    },
+    {
+        "gaussian": {
+            "amplitude": {"max": 2, "min": 0, "vary": True, "value": 1},
+            "center": {"max": 2, "min": -2, "vary": True, "value": 0},
+            "fwhmg": {"max": 0.1, "min": 0.02, "vary": True, "value": 0.01},
+            "fwhml": {"max": 0.1, "min": 0.01, "vary": True, "value": 0.01},
+        }
+    },
+]
+```
+
+!!! info "About the `Jupyter` Interface"
+
+    The `Jupyter` interface is still under development and not yet fully
+    functional. Furthermore, the peak definition is changes a little bit.
+    From a `dictionary` of `dictionary` to a `list` of `dictionaries`.
+    As a consequence, the peak number is not needed anymore.
+
+    Also the _global fitting routine_ is not yet implemented for the `Jupyter`
+    interface.
+
+More information about the Jupyter Notebook interface can be found in the
+[Jupyter Example][20] and the plugin documentation for
+[Jupyter-SpectraFit-Interface][21] of `SpectraFit`
+
 [1]: https://en.wikipedia.org/wiki/Voigt_profile#Pseudo-Voigt_approximation
 [2]: https://en.wikipedia.org/wiki/Power_law
 [3]: https://en.wikipedia.org/wiki/Inverse_trigonometric_functions
@@ -570,3 +617,7 @@ types.
 [15]: https://en.wikipedia.org/wiki/Voigt_profile#Pseudo-Voigt_approximation
 [16]: https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.find_peaks.html
 [17]: https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_csv.html
+[18]: https://jupyter.org
+[19]: ../interface/installation
+[20]: ../../examples/example9
+[21]: ../../plugins/jupyter-spectrafit-interface

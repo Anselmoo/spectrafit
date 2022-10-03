@@ -11,10 +11,11 @@
 
 # SpectraFit
 
-`SpectraFit` is a command line tool for quick data fitting based on the regular
-expression of distribution and linear functions. Furthermore, it can be also
-used as a module in existing python code. A previous version of `SpectraFit` was
-used for the following publication:
+`SpectraFit` is a tool for quick data fitting based on the regular
+expression of distribution and linear functions via command line or
+[Jupyter Notebook](https://jupyter.org). Furthermore, it can be also used as
+a module in existing python code. A previous version of `SpectraFit` was used
+for the following publication:
 
 - [Measurement of the Ligand Field Spectra of Ferrous and Ferric Iron Chlorides Using 2p3d RIXS](https://pubs.acs.org/doi/abs/10.1021/acs.inorgchem.7b00940)
 
@@ -23,7 +24,7 @@ common ASCII-data formats and it runs on `Linux`, `Windows`, and `MacOS`.
 
 ## Scope
 
-- Fitting of 2D data
+- Fitting of 2D data, also with multiple columns as _global fitting_
 - Using established and advanced solver methods
 - Extensibility of the fitting function
 - Guarantee traceability of the fitting results
@@ -37,6 +38,10 @@ via pip:
 
 ```terminal
 pip install spectrafit
+
+# with suppot for Jupyter Notebook
+
+pip install spectrafit[jupyter]
 
 # Upgrade
 
@@ -125,7 +130,7 @@ optional arguments:
   -cm COMMENT, --comment COMMENT
                         Lines with comment characters like '#' should not be
                         parsed; default to None.
-  -g {0,1,2}, --global {0,1,2}
+  -g {0,1,2}, --global_ {0,1,2}
                         Perform a global fit over the complete dataframe. The
                         options are '0' for classic fit (default). The
                         option '1' for global fitting with auto-definition
@@ -143,6 +148,58 @@ optional arguments:
                         the terminal '0'. The default option is set to 1 for
                         table `printout`.
 ```
+
+### Jupyter Notebook
+
+Open the `Jupyter Notebook` and run the following code:
+
+```python
+from spectrafit.plugins import jupyter
+```
+
+Next define your initial model and the reference data:
+
+```python
+from spectrafit.plugins.notebook import SpectraFitNotebook
+import pandas as pd
+
+df = pd.read_csv(
+    "https://raw.githubusercontent.com/Anselmoo/spectrafit/main/Examples/data.csv"
+)
+
+initial_model = [
+    {
+        "pseudovoigt": {
+            "amplitude": {"max": 2, "min": 0, "vary": True, "value": 1},
+            "center": {"max": 2, "min": -2, "vary": True, "value": 0},
+            "fwhmg": {"max": 0.4, "min": 0.1, "vary": True, "value": 0.21},
+            "fwhml": {"max": 0.4, "min": 0.1, "vary": True, "value": 0.21},
+        }
+    },
+    {
+        "pseudovoigt": {
+            "amplitude": {"max": 2, "min": 0, "vary": True, "value": 1},
+            "center": {"max": 2, "min": -2, "vary": True, "value": 1},
+            "fwhmg": {"max": 0.4, "min": 0.1, "vary": True, "value": 0.21},
+            "fwhml": {"max": 0.4, "min": 0.1, "vary": True, "value": 0.21},
+        }
+    },
+    {
+        "pseudovoigt": {
+            "amplitude": {"max": 2, "min": 0, "vary": True, "value": 1},
+            "center": {"max": 2, "min": -2, "vary": True, "value": 1},
+            "fwhmg": {"max": 0.4, "min": 0.1, "vary": True, "value": 0.21},
+            "fwhml": {"max": 0.4, "min": 0.1, "vary": True, "value": 0.21},
+        }
+    },
+]
+spf = SpectraFitNotebook(df=df, x_column="Energy", y_column="Noisy")
+spf.solver_model(initial_model)
+```
+
+Which results in the following output:
+
+![img_jupyter](docs/images/jupyter_plot.png)
 
 ## Documentation
 

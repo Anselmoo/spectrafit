@@ -7,6 +7,7 @@ import pandas as pd
 import seaborn as sns
 
 from matplotlib.widgets import MultiCursor
+from spectrafit.api.tools_model import ColumnNamesAPI
 
 
 sns.set_theme(style="whitegrid")
@@ -32,7 +33,7 @@ class PlotSpectra:
     def __call__(self) -> None:
         """Plot the data and the fit."""
         if not self.args["noplot"]:
-            if self.args["global"]:
+            if self.args["global_"]:
                 self.plot_global_spectra
             else:
                 self.plot_local_spectra
@@ -60,21 +61,21 @@ class PlotSpectra:
         for i in range(n_spec):
             axs[0, i].set_title(f"Spectrum #{i+1}")
             sns.regplot(
-                x="energy",
-                y=f"residual_{i+1}",
+                x=ColumnNamesAPI().energy,
+                y=f"{ColumnNamesAPI().residual}_{i+1}",
                 data=self.df,
                 ax=axs[0, i],
                 color=color[5],
             )
             axs[1, i] = sns.lineplot(
-                x="energy",
-                y=f"intensity_{i+1}",
+                x=ColumnNamesAPI().energy,
+                y=f"{ColumnNamesAPI().intensity}_{i+1}",
                 data=self.df,
                 ax=axs[1, i],
                 color=color[1],
             )
             axs[1, i] = sns.lineplot(
-                x="energy",
+                x=ColumnNamesAPI().energy,
                 y=f"fit_{i+1}",
                 data=self.df,
                 ax=axs[1, i],
@@ -84,13 +85,13 @@ class PlotSpectra:
             peaks = [
                 peak
                 for peak in self.df.columns
-                if not peak.startswith(("residual", "energy", "intensity", "fit"))
+                if not peak.startswith(tuple(ColumnNamesAPI().dict().values()))
                 and peak.endswith(f"_{i+1}")
             ]
             color_peaks = sns.color_palette("rocket", len(peaks))
             for j, peak in enumerate(peaks):
                 axs[1, i] = sns.lineplot(
-                    x="energy",
+                    x=ColumnNamesAPI().energy,
                     y=peak,
                     data=self.df,
                     ax=axs[1, i],
@@ -128,23 +129,41 @@ class PlotSpectra:
             2, sharex=True, figsize=(9, 9), gridspec_kw={"height_ratios": [1, 2]}
         )
         ax1 = sns.regplot(
-            x="energy", y="residual", data=self.df, ax=ax1, color=color[5]
+            x=ColumnNamesAPI().energy,
+            y=ColumnNamesAPI().residual,
+            data=self.df,
+            ax=ax1,
+            color=color[5],
         )
         ax2 = sns.lineplot(
-            x="energy", y="intensity", data=self.df, ax=ax2, color=color[1]
+            x=ColumnNamesAPI().energy,
+            y=ColumnNamesAPI().intensity,
+            data=self.df,
+            ax=ax2,
+            color=color[1],
         )
         ax2 = sns.lineplot(
-            x="energy", y="fit", data=self.df, ax=ax2, ls="--", color=color[0]
+            x=ColumnNamesAPI().energy,
+            y=ColumnNamesAPI().fit,
+            data=self.df,
+            ax=ax2,
+            ls="--",
+            color=color[0],
         )
         peaks = [
             peak
             for peak in self.df.columns
-            if peak not in ["residual", "energy", "intensity", "fit"]
+            if peak not in list(ColumnNamesAPI().dict().values())
         ]
         color_peaks = sns.color_palette("rocket", len(peaks))
         for i, peak in enumerate(peaks):
             ax2 = sns.lineplot(
-                x="energy", y=peak, data=self.df, ax=ax2, ls=":", color=color_peaks[i]
+                x=ColumnNamesAPI().energy,
+                y=peak,
+                data=self.df,
+                ax=ax2,
+                ls=":",
+                color=color_peaks[i],
             )
 
         _ = MultiCursor(

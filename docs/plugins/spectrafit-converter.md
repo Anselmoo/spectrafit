@@ -48,7 +48,7 @@ With the command `spectrafit-converter` input and output files can be converted.
         "decimal": ".",
         "header": null,
         "comment": "#",
-        "global": 0,
+        "global_": 0,
         "autopeak": false,
         "noplot": false,
         "version": false,
@@ -1463,7 +1463,7 @@ With the command `spectrafit-converter` input and output files can be converted.
       separator = "\\s+"
       decimal = "."
       comment = "#"
-      global = 0
+      global_ = 0
       autopeak = false
       noplot = false
       version = false

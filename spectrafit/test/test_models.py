@@ -4,6 +4,7 @@ import pandas as pd
 import pytest
 
 from lmfit import Parameters
+from pydantic import ValidationError
 from spectrafit.models import AutoPeakDetection
 from spectrafit.models import Constants
 from spectrafit.models import ModelParameters
@@ -14,23 +15,23 @@ from spectrafit.models import calculated_model
 class TestConstants:
     """Test constants."""
 
-    def test_log2(self):
+    def test_log2(self) -> None:
         """Test the Constants class."""
         assert Constants.log2 == np.log(2)
 
-    def test_sq2pi(self):
+    def test_sq2pi(self) -> None:
         """Test the Constants class."""
         assert Constants.sq2pi == np.sqrt(2.0 * np.pi)
 
-    def test_sqpi(self):
+    def test_sqpi(self) -> None:
         """Test the Constants class."""
         assert Constants.sqpi == np.sqrt(np.pi)
 
-    def test_sq2(self):
+    def test_sq2(self) -> None:
         """Test the Constants class."""
         assert Constants.sq2 == np.sqrt(2.0)
 
-    def test_sig2fwhm(self):
+    def test_sig2fwhm(self) -> None:
         """Test the Constants class."""
         assert Constants.sig2fwhm == 2.0 * np.sqrt(2.0 * np.log(2.0))
 
@@ -41,7 +42,7 @@ class TestNotSupported:
     args = {
         "autopeak": False,
         "column": ["energy", "intensity"],
-        "global": 0,
+        "global_": 0,
         "minimizer": {"method": "Nelder-Mead", "tol": 1e-6},
         "optimizer": {"method": "Nelder-Mead", "tol": 1e-6},
         "peaks": {
@@ -62,27 +63,29 @@ class TestNotSupported:
         }
     )
 
-    def test_solver_model_exit_local(self):
+    def test_solver_model_exit_local(self) -> None:
         """Exit-Test of solver_model for local fitting."""
         with pytest.raises(KeyError) as pytest_wrapped_e:
-            SolverModels(
+            _ = SolverModels(
                 df=self.df, args=self.args
-            )().will_exit_somewhere_down_the_stack()
+            )().will_exit_somewhere_down_the_stack()  # type: ignore
 
         assert pytest_wrapped_e.type == KeyError
         assert pytest_wrapped_e.value.args[0] == "dummy_amplitude_1 is not supported!"
 
-    def test_solver_model_exit_global(self):
+    def test_solver_model_exit_global(self) -> None:
         """Exit-Test of solver_model for global fitting."""
         _args = self.args
-        _args["global"] = 1
+        _args["global_"] = 1
         with pytest.raises(KeyError) as pytest_wrapped_e:
-            SolverModels(df=self.df, args=_args)().will_exit_somewhere_down_the_stack()
+            _ = SolverModels(
+                df=self.df, args=_args
+            )().will_exit_somewhere_down_the_stack()  # type: ignore
 
         assert pytest_wrapped_e.type == KeyError
         assert pytest_wrapped_e.value.args[0] == "dummy_amplitude_1_1 is not supported!"
 
-    def test_calculated_model_exit(self):
+    def test_calculated_model_exit(self) -> None:
         """Exit-Test of solver_model."""
         params = Parameters()
         params.add("dummy_amplitude_1", value=1.0)
@@ -96,16 +99,16 @@ class TestNotSupported:
         assert pytest_wrapped_e.type == KeyError
         assert pytest_wrapped_e.value.args[0] == "dummy_amplitude_1 is not supported!"
 
-    def test_auto_global_fail(self):
+    def test_auto_global_fail(self) -> None:
         """Test of no global fitting and auto peak is allowed."""
         _args = self.args
-        _args["global"] = 1
+        _args["global_"] = 1
         _args["autopeak"] = True
 
         with pytest.raises(KeyError) as pytest_wrapped_e:
             _ = SolverModels(
                 df=self.df, args=_args
-            )().will_exit_somewhere_down_the_stack()
+            )().will_exit_somewhere_down_the_stack()  # type: ignore
 
         assert pytest_wrapped_e.type == KeyError
         assert (
@@ -119,7 +122,7 @@ class TestModelParametersSolver:
     """Test of model parameters."""
 
     args = {
-        "global": 0,
+        "global_": 0,
         "autopeak": False,
         "column": ["Energy", "Intensity"],
         "minimizer": {"nan_policy": "propagate", "calc_covar": False},
@@ -145,7 +148,7 @@ class TestModelParametersSolver:
     }
     args_global_1 = {
         "autopeak": False,
-        "global": 1,
+        "global_": 1,
         "column": ["Energy"],
         "minimizer": {"nan_policy": "propagate", "calc_covar": False},
         "optimizer": {"max_nfev": 10, "method": "leastsq"},
@@ -170,7 +173,7 @@ class TestModelParametersSolver:
     }
     args_global_2 = {
         "autopeak": False,
-        "global": 2,
+        "global_": 2,
         "column": ["Energy"],
         "minimizer": {"nan_policy": "propagate", "calc_covar": False},
         "optimizer": {"max_nfev": 10, "method": "leastsq"},
@@ -251,49 +254,49 @@ class TestModelParametersSolver:
         }
     )
 
-    def test_str_return(self):
+    def test_str_return(self) -> None:
         """Test of str-return."""
         mp = ModelParameters(df=self.df, args=self.args)
         mp.define_parameters()
         assert type(mp.__str__()) == str
 
-    def test_param_return(self):
+    def test_param_return(self) -> None:
         """Test of str-return."""
         mp = ModelParameters(df=self.df, args=self.args)
         mp.define_parameters()
         assert str(type(mp.return_params)) == "<class 'lmfit.parameter.Parameters'>"
 
-    def test_len_param_normal(self):
+    def test_len_param_normal(self) -> None:
         """Test of length of the paramaters for normal fitting."""
         mp = ModelParameters(df=self.df, args=self.args)
         mp.define_parameters()
         assert len(mp.return_params.keys()) == 8
 
-    def test_len_param_global_1(self):
+    def test_len_param_global_1(self) -> None:
         """Test of length of the paramaters for global fitting."""
         mp = ModelParameters(df=self.df_global, args=self.args_global_1)
         mp.define_parameters_global()
         assert len(mp.return_params.keys()) == 32
 
-    def test_solver_local(self):
+    def test_solver_local(self) -> None:
         """Test of SolverModels for local fitting."""
         mp = SolverModels(df=self.df, args=self.args)()
         assert type(mp.__str__()) == str
         assert type(mp) == tuple
 
-    def test_solver_global_1(self):
+    def test_solver_global_1(self) -> None:
         """Test of SolverModels for global fitting."""
         mp = SolverModels(df=self.df_global, args=self.args_global_1)()
         assert type(mp.__str__()) == str
         assert type(mp) == tuple
 
-    def test_solver_global_2(self):
+    def test_solver_global_2(self) -> None:
         """Test of SolverModels for global fitting."""
         mp = SolverModels(df=self.df_global, args=self.args_global_2)()
         assert type(mp.__str__()) == str
         assert type(mp) == tuple
 
-    def test_all_model_local(self):
+    def test_all_model_local(self) -> None:
         """Test of the AllModel class for local fitting."""
         df = pd.DataFrame(
             {
@@ -306,7 +309,7 @@ class TestModelParametersSolver:
         )
         args = {
             "autopeak": False,
-            "global": 0,
+            "global_": 0,
             "column": ["Energy", "Intensity_1"],
             "minimizer": {"nan_policy": "propagate", "calc_covar": False},
             "optimizer": {"max_nfev": 10, "method": "leastsq"},
@@ -585,7 +588,7 @@ class TestModelParametersSolver:
         assert type(mp.__str__()) == str
         assert type(mp) == tuple
 
-    def test_all_model_global(self):
+    def test_all_model_global(self) -> None:
         """Test of the AllModel class for global fitting."""
         df = pd.DataFrame(
             {
@@ -598,7 +601,7 @@ class TestModelParametersSolver:
         )
         args = {
             "autopeak": False,
-            "global": 1,
+            "global_": 1,
             "column": ["Energy"],
             "minimizer": {"nan_policy": "propagate", "calc_covar": False},
             "optimizer": {"max_nfev": 10, "method": "leastsq"},
@@ -878,7 +881,7 @@ class TestModelParametersSolver:
         assert type(mp.__str__()) == str
         assert type(mp) == tuple
 
-    def test_all_model_global_fail(self):
+    def test_all_model_global_fail(self) -> None:
         """Test of the AllModel class for global fitting."""
         df = pd.DataFrame(
             {
@@ -891,14 +894,16 @@ class TestModelParametersSolver:
         )
         args = {
             "autopeak": True,
-            "global": 1,
+            "global_": 1,
             "column": ["Energy"],
             "minimizer": {"nan_policy": "propagate", "calc_covar": False},
             "optimizer": {"max_nfev": 10, "method": "leastsq"},
         }
 
         with pytest.raises(KeyError) as pytest_wrapped_e:
-            _ = SolverModels(df=df, args=args)().will_exit_somewhere_down_the_stack()
+            _ = SolverModels(
+                df=df, args=args
+            )().will_exit_somewhere_down_the_stack()  # type: ignore
 
         assert pytest_wrapped_e.type == KeyError
         assert (
@@ -911,9 +916,9 @@ class TestModelParametersSolver:
 class TestAutoPeakDetection:
     """Testing of the Auto Peak Detection Class."""
 
-    def test_key_not_available(self):
+    def test_key_not_available(self) -> None:
         """Test if the key is not available."""
-        args = {"autopeak": True, "global": 0}
+        args = {"autopeak": True, "global_": 0}
         x = np.arange(0, 10, 0.1)
         data = (
             np.sin(np.arange(0, 10, 0.1)) ** 3 + 2 * np.cos(np.arange(0, 10, 0.1)) ** 2
@@ -923,9 +928,9 @@ class TestAutoPeakDetection:
         _val = auto.check_key_exists(key="missing", args=args, value=2)
         assert _val == 2
 
-    def test_rel_heigh_1(self):
+    def test_rel_heigh_1(self) -> None:
         """Test if the relative height is calculated correctly."""
-        args = {"autopeak": True, "global": 0}
+        args = {"autopeak": True, "global_": 0}
         x = np.arange(10)
         data = np.arange(10)
 
@@ -933,9 +938,9 @@ class TestAutoPeakDetection:
         _val = auto.estimated_rel_height
         assert _val == 0.0
 
-    def test_rel_heigh_2(self):
+    def test_rel_heigh_2(self) -> None:
         """Test if the relative height is calculated correctly."""
-        args = {"autopeak": True, "global": 0}
+        args = {"autopeak": True, "global_": 0}
         x = np.arange(10)
         data = np.sin(10) * np.arange(10)
 
@@ -943,9 +948,9 @@ class TestAutoPeakDetection:
         _val = auto.estimated_rel_height
         assert _val > 0.0
 
-    def test_plateau_size(self):
+    def test_plateau_size(self) -> None:
         """Test if the plateau_size is calculated correctly."""
-        args = {"autopeak": True, "global": 0}
+        args = {"autopeak": True, "global_": 0}
         x = np.arange(10, dtype=np.float64)
         data = np.arange(10, dtype=np.float64)
 
@@ -953,9 +958,9 @@ class TestAutoPeakDetection:
         _val = auto.estimated_plateau_size
         assert _val == (0.0, 9.0)
 
-    def test_distance(self):
+    def test_distance(self) -> None:
         """Test if the distance is calculated correctly."""
-        args = {"autopeak": True, "global": 0}
+        args = {"autopeak": True, "global_": 0}
         x = 3 * np.arange(10, dtype=np.float64)
         data = 3 * np.exp(10, dtype=np.float64)
 
@@ -963,9 +968,9 @@ class TestAutoPeakDetection:
         _val = auto.estimate_distance
         assert _val != 1.0
 
-    def test_autopeakdetection_mean(self):
+    def test_autopeakdetection_mean(self) -> None:
         """Test of auto default detection with negative values."""
-        args = {"autopeak": True, "global": 0}
+        args = {"autopeak": True, "global_": 0}
         x = np.arange(0, 10, 0.1)
         data = (
             np.sin(np.arange(0, 10, 0.1)) ** 3 + 2 * np.cos(np.arange(0, 10, 0.1)) ** 2
@@ -978,7 +983,7 @@ class TestAutoPeakDetection:
         assert type(peaks) == np.ndarray
         assert type(properties) == dict
 
-    def test_autopeakdetection_hmean(self):
+    def test_autopeakdetection_hmean(self) -> None:
         """Test of auto default detection only positive values."""
         args = {"autopeak": True}
         df = pd.read_csv("spectrafit/test/import/test_data.csv")
@@ -992,7 +997,7 @@ class TestAutoPeakDetection:
         assert len(peaks) == 21
         assert type(properties) == dict
 
-    def test_autopeakdetection_userdef(self):
+    def test_autopeakdetection_userdef(self) -> None:
         """Test of auto default detection with user definitions."""
         args = {
             "autopeak": {
@@ -1018,7 +1023,7 @@ class TestAutoPeakDetection:
         assert type(properties) == dict
         assert len(properties.keys()) == 13
 
-    def test_wlen(self):
+    def test_wlen(self) -> None:
         """Test numerical return of wlen."""
         ad = AutoPeakDetection(
             x=np.arange(2, dtype=float),
@@ -1029,24 +1034,20 @@ class TestAutoPeakDetection:
 
         assert val == 1 + 1e-9
 
-    def test_raise_autopeaks(self):
+    def test_raise_autopeaks(self) -> None:
         """Test raise of AutoPeakDetection."""
         args = {"autopeak": {"no_implimented": 0}}
-        with pytest.raises(KeyError) as pytest_wrapped_e:
+        with pytest.raises(ValidationError) as excinfo:
             auto = AutoPeakDetection(
                 x=np.arange(2, dtype=float), data=np.arange(2, dtype=float), args=args
             )
             auto.initialize_peak_detection()
-            peaks, properties = auto.__autodetect__()
+            _, _ = auto.__autodetect__()
 
-        assert pytest_wrapped_e.type == KeyError
-        assert (
-            pytest_wrapped_e.value.args[0]
-            == f"{list(args['autopeak'].keys())[0]} is no function parameter of "
-            "`scipy.signal.find_peaks`!"
-        )
+        assert "no_implimented" in str(excinfo.value)
+        assert excinfo.type is ValidationError
 
-    def test_raise_autopeaks_type(self):
+    def test_raise_autopeaks_type(self) -> None:
         """Test raise of AutoPeakDetection for wrong type."""
         args = {"autopeak": [{"no_implimented": 0}]}
         with pytest.raises(TypeError) as pytest_wrapped_e:
@@ -1058,7 +1059,7 @@ class TestAutoPeakDetection:
 
         assert pytest_wrapped_e.type == TypeError
 
-    def test_noraise_autopeaks(self):
+    def test_noraise_autopeaks(self) -> None:
         """Test no raise of AutoPeakDetection."""
         args = {"autopeak": True}
         _ = AutoPeakDetection(
@@ -1067,12 +1068,10 @@ class TestAutoPeakDetection:
             args=args,
         )
 
-        assert True
-
-    def test_autopeakdetection_userdef_voigt(self):
+    def test_autopeakdetection_userdef_voigt(self) -> None:
         """Test of auto default detection with voigt model."""
         args = {
-            "global": 0,
+            "global_": 0,
             "column": ["Energy", "Noisy_Intensity"],
             "autopeak": {
                 "model_type": "voigt",
@@ -1092,10 +1091,10 @@ class TestAutoPeakDetection:
         mp.__perform__()
         assert len(mp.return_params.keys()) == 522
 
-    def test_autopeakdetection_userdef_pseudovoigt(self):
+    def test_autopeakdetection_userdef_pseudovoigt(self) -> None:
         """Test of auto default detection with pseudovoigt model."""
         args = {
-            "global": 0,
+            "global_": 0,
             "column": ["Energy", "Noisy_Intensity"],
             "autopeak": {
                 "model_type": "pseudovoigt",
@@ -1115,10 +1114,10 @@ class TestAutoPeakDetection:
         mp.__perform__()
         assert len(mp.return_params.keys()) > 0
 
-    def test_autopeakdetection_userdef_lorentzian(self):
+    def test_autopeakdetection_userdef_lorentzian(self) -> None:
         """Test of auto default detection with lorentzian model."""
         args = {
-            "global": 0,
+            "global_": 0,
             "column": ["Energy", "Noisy_Intensity"],
             "autopeak": {
                 "model_type": "lorentzian",
@@ -1138,10 +1137,10 @@ class TestAutoPeakDetection:
         mp.__perform__()
         assert len(mp.return_params.keys()) > 0
 
-    def test_autopeakdetection_userdef_default(self):
+    def test_autopeakdetection_userdef_default(self) -> None:
         """Test of auto specific detection with default model."""
         args = {
-            "global": 0,
+            "global_": 0,
             "column": ["Energy", "Noisy_Intensity"],
             "autopeak": {
                 "height": (0.0, 10),
@@ -1160,10 +1159,10 @@ class TestAutoPeakDetection:
         mp.__perform__()
         assert len(mp.return_params.keys()) == 522
 
-    def test_autopeakdetection_userdef_failmodel(self):
+    def test_autopeakdetection_userdef_failmodel(self) -> None:
         """Test of auto specific detection with wrong model."""
         args = {
-            "global": 0,
+            "global_": 0,
             "column": ["Energy", "Noisy_Intensity"],
             "autopeak": {
                 "model_type": "nomodel",

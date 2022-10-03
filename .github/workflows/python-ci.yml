@@ -73,9 +73,9 @@ jobs:
           key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
       - name: Install dependencies
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-        run: poetry install --no-interaction --no-root
+        run: poetry install --no-interaction --no-root --with dev -E jupyter
       - name: Install library
-        run: poetry install --no-interaction
+        run: poetry install --no-interaction --with dev -E jupyter
       - name: Test SpectraFit
         run: poetry run pytest --diff-symbols --cov=./spectrafit -vv --cov-report=xml --plots
       - name: Codecov
@@ -107,9 +107,9 @@ jobs:
           key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
       - name: Install dependencies
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-        run: poetry install --no-interaction --no-root --no-dev
+        run: poetry install --no-interaction --no-root --only main
       - name: Install library
-        run: poetry install --no-interaction --no-dev
+        run: poetry install --no-interaction --only main
   documentation:
     name: Build Documentation
     runs-on: ubuntu-latest
@@ -134,9 +134,9 @@ jobs:
           key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
       - name: Install dependencies
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-        run: poetry install --no-interaction --no-root
+        run: poetry install --no-interaction --no-root --with docs
       - name: Install library
-        run: poetry install --no-interaction
+        run: poetry install --no-interaction --with docs
       - name: Set git config
         run: |
           git config --local user.email "action@github.com"

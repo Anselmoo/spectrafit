@@ -14,7 +14,7 @@
   "noplot": false,
   "version": false,
   "verbose": 1,
-  "global": 1,
+  "global_": 1,
   "description": {
     "project_name": "Template",
     "project_details": "Template for testing",

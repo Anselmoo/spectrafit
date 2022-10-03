@@ -4,6 +4,7 @@ import json
 
 from pathlib import Path
 from tempfile import TemporaryDirectory
+from typing import Any
 
 import pytest
 import toml
@@ -12,7 +13,7 @@ import yaml
 from spectrafit.plugins.converter import convert
 
 
-def test_cmd_converter(script_runner) -> None:
+def test_cmd_converter(script_runner: Any) -> None:
     """Test the converter plugin."""
     ret = script_runner.run("spectrafit-converter", "-h")
 
@@ -21,7 +22,7 @@ def test_cmd_converter(script_runner) -> None:
     assert ret.stderr == ""
 
 
-def test_raise_input_output():
+def test_raise_input_output() -> None:
     """Test raise error input format is similar to ouptut."""
     args = {
         "infile": Path("tests/data/input/input_1.yaml"),
@@ -36,7 +37,7 @@ def test_raise_input_output():
     )
 
 
-def test_raise_no_guilty_ouput():
+def test_raise_no_guilty_ouput() -> None:
     """Test illegal output format."""
     args = {
         "infile": Path("tests/data/input/input_1.yaml"),
@@ -47,7 +48,7 @@ def test_raise_no_guilty_ouput():
     assert "The output file format 'illegal' is not supported." in str(excinfo.value)
 
 
-def test_json_conversion():
+def test_json_conversion() -> None:
     """Test json to yaml conversion."""
     with TemporaryDirectory() as tmpdir:
         infile = Path(tmpdir) / "input_1.json"
@@ -66,7 +67,7 @@ def test_json_conversion():
         assert data == {"a": 1, "b": 2}
 
 
-def test_yaml_conversion():
+def test_yaml_conversion() -> None:
     """Test yaml to json conversion."""
     with TemporaryDirectory() as tmpdir:
         infile = Path(tmpdir) / "input_1.yaml"
@@ -85,7 +86,7 @@ def test_yaml_conversion():
         assert data == {"a": 1, "b": 2}
 
 
-def test_toml_conversion():
+def test_toml_conversion() -> None:
     """Test toml to json conversion."""
     with TemporaryDirectory() as tmpdir:
         infile = Path(tmpdir) / "input_1.toml"
