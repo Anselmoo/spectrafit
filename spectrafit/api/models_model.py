@@ -9,6 +9,9 @@ from pydantic import BaseModel
 from pydantic import Field
 
 
+__description__ = "Lmfit expression for explicit dependencies."
+
+
 class AmplitudeAPI(BaseModel):
     """Definition of the amplitude of the models distributions."""
 
@@ -16,9 +19,7 @@ class AmplitudeAPI(BaseModel):
     min: Optional[int] = Field(default=None, description="Minimum amplitude.")
     vary: bool = Field(default=True, description="Vary the amplitude.")
     value: Optional[float] = Field(default=None, description="Initial Amplitude value.")
-    expr: Optional[str] = Field(
-        default=None, description="Lmfit expression for explicit dependencies."
-    )
+    expr: Optional[str] = Field(default=None, description=__description__)
 
 
 class CenterAPI(BaseModel):
@@ -28,9 +29,7 @@ class CenterAPI(BaseModel):
     min: Optional[int] = Field(default=None, description="Minimum center.")
     vary: bool = Field(default=True, description="Vary the center.")
     value: Optional[float] = Field(default=None, description="Initial Center value.")
-    expr: Optional[str] = Field(
-        default=None, description="Lmfit expression for explicit dependencies."
-    )
+    expr: Optional[str] = Field(default=None, description=__description__)
 
 
 class FwhmgAPI(BaseModel):
@@ -53,9 +52,7 @@ class FwhmgAPI(BaseModel):
         description="Initial Full Width Half Maximum of "
         "the Gaussian Distribution value.",
     )
-    expr: Optional[str] = Field(
-        default=None, description="Lmfit expression for explicit dependencies."
-    )
+    expr: Optional[str] = Field(default=None, description=__description__)
 
 
 class FwhmlAPI(BaseModel):
@@ -78,9 +75,7 @@ class FwhmlAPI(BaseModel):
         description="Initial Full Width Half Maximum of "
         "the Lorentzian Distribution value.",
     )
-    expr: Optional[str] = Field(
-        default=None, description="Lmfit expression for explicit dependencies."
-    )
+    expr: Optional[str] = Field(default=None, description=__description__)
 
 
 class FwhmvAPI(BaseModel):
@@ -102,9 +97,7 @@ class FwhmvAPI(BaseModel):
         default=None,
         description="Initial Full Width Half Maximum of the Voigt Distribution value.",
     )
-    expr: Optional[str] = Field(
-        default=None, description="Lmfit expression for explicit dependencies."
-    )
+    expr: Optional[str] = Field(default=None, description=__description__)
 
 
 class GammaAPI(BaseModel):
@@ -114,9 +107,7 @@ class GammaAPI(BaseModel):
     min: Optional[int] = Field(default=None, description="Minimum gamma.")
     vary: bool = Field(default=True, description="Vary the gamma.")
     value: Optional[float] = Field(default=None, description="Initial Gamma value.")
-    expr: Optional[str] = Field(
-        default=None, description="Lmfit expression for explicit dependencies."
-    )
+    expr: Optional[str] = Field(default=None, description=__description__)
 
 
 class DecayAPI(BaseModel):
@@ -128,9 +119,7 @@ class DecayAPI(BaseModel):
     value: Optional[float] = Field(
         default=None, description="Initial decay rate value."
     )
-    expr: Optional[str] = Field(
-        default=None, description="Lmfit expression for explicit dependencies."
-    )
+    expr: Optional[str] = Field(default=None, description=__description__)
 
 
 class InterceptAPI(BaseModel):
@@ -140,9 +129,7 @@ class InterceptAPI(BaseModel):
     min: Optional[int] = Field(default=None, description="Minimum intercept.")
     vary: bool = Field(default=True, description="Vary the intercept.")
     value: Optional[float] = Field(default=None, description="Initial intercept value.")
-    expr: Optional[str] = Field(
-        default=None, description="Lmfit expression for explicit dependencies."
-    )
+    expr: Optional[str] = Field(default=None, description=__description__)
 
 
 class ExponentAPI(BaseModel):
@@ -152,9 +139,7 @@ class ExponentAPI(BaseModel):
     min: Optional[int] = Field(default=None, description="Minimum exponent.")
     vary: bool = Field(default=True, description="Vary the exponent.")
     value: Optional[float] = Field(default=None, description="Initial exponent value.")
-    expr: Optional[str] = Field(
-        default=None, description="Lmfit expression for explicit dependencies."
-    )
+    expr: Optional[str] = Field(default=None, description=__description__)
 
 
 class SlopeAPI(BaseModel):
@@ -164,9 +149,7 @@ class SlopeAPI(BaseModel):
     min: Optional[int] = Field(default=None, description="Minimum slope.")
     vary: bool = Field(default=True, description="Vary the slope.")
     value: Optional[float] = Field(default=None, description="Inital slope value.")
-    expr: Optional[str] = Field(
-        default=None, description="Lmfit expression for explicit dependencies."
-    )
+    expr: Optional[str] = Field(default=None, description=__description__)
 
 
 class SigmaAPI(BaseModel):
@@ -176,9 +159,7 @@ class SigmaAPI(BaseModel):
     min: Optional[int] = Field(default=None, description="Minimum sigma.")
     vary: bool = Field(default=True, description="Vary the sigma.")
     value: Optional[float] = Field(default=None, description="Initial sigma value.")
-    expr: Optional[str] = Field(
-        default=None, description="Lmfit expression for explicit dependencies."
-    )
+    expr: Optional[str] = Field(default=None, description=__description__)
 
 
 class PseudovoigtAPI(BaseModel):
