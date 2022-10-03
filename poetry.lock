@@ -1333,7 +1333,7 @@ mkdocs = ">=1.0.3,<2.0.0"
 
 [[package]]
 name = "mkdocs-material"
-version = "8.5.5"
+version = "8.5.6"
 description = "Documentation that simply works"
 category = "dev"
 optional = false
@@ -2797,7 +2797,7 @@ jupyter = ["jupyterlab", "plotly", "itables", "kaleido", "dtale"]
 
 [metadata]
 lock-version = "1.1"
-  python-versions = ">=3.7.2,<3.11"
+python-versions = ">=3.7.2,<3.11"
 content-hash = "3a22427feab2f6f08a4396267352a49f158c3d683078f698d946ae90a30d9cd0"
 
 [metadata.files]
@@ -3681,8 +3681,8 @@ mkdocs-literate-nav = [
     {file = "mkdocs_literate_nav-0.4.1-py3-none-any.whl", hash = "sha256:a4b761792ba21defbe2dfd5e0de6ba451639e1ca0f0661c37eda83cc6261e4f9"},
 ]
 mkdocs-material = [
-    {file = "mkdocs_material-8.5.5-py3-none-any.whl", hash = "sha256:0a95965db858cae5c75201726ffc871b8ba54b1ef70b237ca63fd150cfee9f39"},
-    {file = "mkdocs_material-8.5.5.tar.gz", hash = "sha256:ad57e861ad00cf96714bcab91d7e8095192a536a92156fed82ac8b34f928df86"},
+    {file = "mkdocs_material-8.5.6-py3-none-any.whl", hash = "sha256:b473162c800321b9760453f301a91f7cb40a120a85a9d0464e1e484e74b76bb2"},
+    {file = "mkdocs_material-8.5.6.tar.gz", hash = "sha256:38a21d817265d0c203ab3dad64996e45859c983f72180f6937bd5540a4eb84e4"},
 ]
 mkdocs-material-extensions = [
     {file = "mkdocs-material-extensions-1.0.3.tar.gz", hash = "sha256:bfd24dfdef7b41c312ede42648f9eb83476ea168ec163b613f9abd12bbfddba2"},
