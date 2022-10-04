@@ -1,16 +1,8 @@
-name: Build Devcontainer
-on:
-  # run on PRs to main branch, if any
-  # devcontainer files have changed
-  push:
-    branches: main
-    paths:
-      - .devcontainer/**
+on: # rebuild any PRs and main branch changes
   pull_request:
+  push:
     branches:
       - main
-    paths:
-      - .devcontainer/**
 
 jobs:
   build:
