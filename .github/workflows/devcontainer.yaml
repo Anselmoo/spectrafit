@@ -16,5 +16,4 @@ jobs:
     - name: Build and use devcontainer
       uses: devcontainers/ci@v0.2
       with:
-        imageName: ghcr.io/${{ github.repository }}/devcontainers-ci
         runCmd: python --version
