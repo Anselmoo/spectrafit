@@ -2,6 +2,10 @@ name: Build Devcontainer
 on:
   # run on PRs to main branch, if any
   # devcontainer files have changed
+  push:
+    branches: main
+    paths:
+      - .devcontainer/**
   pull_request:
     branches:
       - main
