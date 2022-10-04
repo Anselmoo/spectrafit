@@ -44,14 +44,12 @@
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
   // "forwardPorts": [],
   // Use 'postCreateCommand' to run commands after the container is created.
-  "postCreateCommand": [
-    "python -m pip install --upgrade pip; pip install poetry; poetry config virtualenvs.in-project true; python -m poetry install -E jupyter; "
-  ],
+  "postCreateCommand": "bash .devcontainer/setup.sh",
   // Comment out to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
   "remoteUser": "vscode",
   "features": {
     "github-cli": "latest",
-    "fish": "latest",
-    "homebrew": "latest"
+    "fish": "latest"
+    // "homebrew": "latest"
   }
 }
