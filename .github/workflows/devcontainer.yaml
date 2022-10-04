@@ -4,16 +4,28 @@ on:
   # devcontainer files have changed
   pull_request:
     branches:
-    - main
+      - main
     paths:
-    - .devcontainer/**
+      - .devcontainer/**
 
 jobs:
   use-devcontainer:
     runs-on: ubuntu-latest
+    permissions:
+      packages: write
+
     steps:
-    - uses: actions/checkout@v3
-    - name: Build and use devcontainer
-      uses: devcontainers/ci@v0.2
-      with:
-        runCmd: python --version
+      - uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
+      - uses: actions/checkout@v3
+      - name: Build and use devcontainer
+        uses: devcontainers/ci@v0.2
+        with:
+          imageName: ghcr.io/${{ github.repository }}/devcontainers-ci
+          runCmd: |
+            python --version
+            poetry shell
+            spectrafit --help
