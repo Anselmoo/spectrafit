@@ -28,7 +28,7 @@ jobs:
           IS_PR: ${{ github.head_ref }}
           BRANCH: ${{ github.ref }}
         with:
-          imageName: ghcr.io/anselmoo/spectrafit/devcontainers-spectrafit
+          imageName: ghcr.io/anselmoo/spectrafit-devcontainer
           imageTag: ${{ steps.set_image_tag.outputs.image_tag }}
           runCmd: |
             python --version
