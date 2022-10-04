@@ -49,7 +49,7 @@
   "remoteUser": "vscode",
   "features": {
     "github-cli": "latest",
-    "fish": "latest",
+    "fish": "latest"
     // "homebrew": "latest"
   }
 }
