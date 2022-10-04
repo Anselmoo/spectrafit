@@ -1,4 +1,4 @@
-name: Package Publishing
+name: CD - Package Publishing
 on:
   release:
     types:
