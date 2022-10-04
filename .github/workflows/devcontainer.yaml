@@ -1,5 +1,7 @@
 name: Build Devcontainer
 on:
+  # run on PRs to main branch, if any
+  # devcontainer files have changed
   pull_request:
     branches:
       - main
@@ -23,6 +25,7 @@ jobs:
         uses: devcontainers/ci@v0.2
         with:
           imageName: ghcr.io/${{ github.repository }}/devcontainers-ci
+          push: always
           runCmd: |
             make install-packages
             make ci-build
