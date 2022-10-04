@@ -71,7 +71,8 @@ _Result_:
 
 ### Plugins
 
-The `SpectraFit` package is designed to be extended by plugins. Currently available plugins are:
+The `SpectraFit` package is designed to be extended by plugins. Currently
+available plugins are:
 
 - [x] Input-File-Converter (_built-in_)
 - [x] Jupyter-Notebook-Interface (`pip install spectrafit[jupyter]`)

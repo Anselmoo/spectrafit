@@ -7,8 +7,10 @@ currently being supported with security updates.
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 0.10.x  | :white_check_mark: |
-| 0.9.x   | :white_check_mark: |
+| 0.12.x  | :white_check_mark: |
+| 0.11.x  | :white_check_mark: |
+| 0.10.x  | :x:                |
+| 0.9.x   | :x:                |
 | 0.8.x   | :x:                |
 | 0.7.x   | :x:                |
 | 0.6.x   | :x:                |
@@ -25,7 +27,9 @@ currently being supported with security updates.
 Use this section to tell people how to report a vulnerability.
 
 Tell them where to go, how often they can expect to get an update on a reported
-vulnerability, what to expect if the vulnerability is accepted or declined, etc.
+vulnerability, what to expect if the vulnerability is accepted or declined, etc;
+see also [GitHub Advisory Database][3].
 
 [1]: https://securitylab.github.com/tools/codeql/
 [2]: https://github.com/Anselmoo/spectrafit/blob/main/.github/workflows/codeql-analysis.yml
+[3]: https://github.com/advisories?query=type%3Areviewed+ecosystem%3Apip
