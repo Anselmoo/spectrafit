@@ -32,8 +32,6 @@ jobs:
           imageTag: ${{ steps.set_image_tag.outputs.image_tag }}
           runCmd: |
             python --version
-            poetry shell
-            spectrafit --help
           push: ${{ steps.set_image_push_option.outputs.image_push_option }}
           eventFilterForPush: |
             push
