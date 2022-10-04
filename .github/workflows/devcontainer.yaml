@@ -1,0 +1,20 @@
+name: Build Devcontainer
+on:
+  # run on PRs to main branch, if any
+  # devcontainer files have changed
+  pull_request:
+    branches:
+    - main
+    paths:
+    - .devcontainer/**
+
+jobs:
+  use-devcontainer:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build and use devcontainer
+      uses: devcontainers/ci@v0.2
+      imageName: ghcr.io/${{ github.repository }}/devcontainers-ci
+      with:
+        runCmd: python --version
