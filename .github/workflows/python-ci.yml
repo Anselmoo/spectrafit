@@ -155,3 +155,18 @@ jobs:
       - name: Build the Docker image
         run: |
           docker build . --file Dockerfile --tag spectrafit:$(date +%s)
+  devcontainer:
+    name: Devcontainer
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build and use devcontainer
+        uses: devcontainers/ci@v0.2
+        with:
+          runCmd: |
+            make install-packages
+            make ci-build
+            python --version
+            poetry shell
+            spectrafit --help
