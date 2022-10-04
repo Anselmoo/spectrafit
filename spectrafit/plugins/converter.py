@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any
 from typing import Dict
 
-import toml
+import tomli_w
 import yaml
 
 from spectrafit.tools import read_input_file
@@ -69,8 +69,11 @@ def convert(args: Dict[str, Any]) -> None:
         with open(args["infile"].with_suffix(".yaml"), "w", encoding="utf8") as f:
             yaml.dump(data, f, default_flow_style=False)
     elif args["format"] in ["toml", "lock"]:
-        with open(args["infile"].with_suffix(".toml"), "w", encoding="utf8") as f:
-            toml.dump(data, f)
+        with open(
+            args["infile"].with_suffix(".toml"),
+            "wb+",
+        ) as f:
+            tomli_w.dump(dict(**data), f)
 
 
 def command_line_runner() -> None:
