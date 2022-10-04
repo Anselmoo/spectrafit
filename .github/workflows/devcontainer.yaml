@@ -15,6 +15,6 @@ jobs:
     - uses: actions/checkout@v3
     - name: Build and use devcontainer
       uses: devcontainers/ci@v0.2
-      imageName: ghcr.io/${{ github.repository }}/devcontainers-ci
       with:
+        imageName: ghcr.io/${{ github.repository }}/devcontainers-ci
         runCmd: python --version
