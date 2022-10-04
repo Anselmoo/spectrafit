@@ -27,12 +27,24 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build and use devcontainer
         uses: devcontainers/ci@v0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BUILD_NUMBER: ${{ steps.build_number.outputs.build_number }}
+          IS_PR: ${{ github.head_ref }}
+          BRANCH: ${{ github.ref }}
         with:
-          imageName: ghcr.io/${{ github.repository }}/devcontainers-ci
-          push: always
+          imageName: ghcr.io/${{ github.repository }}/devcontainers-spectrafit
+          imageTag: ${{ steps.set_image_tag.outputs.image_tag }}
           runCmd: |
-            make install-packages
-            make ci-build
             python --version
             poetry shell
             spectrafit --help
+          push: ${{ steps.set_image_push_option.outputs.image_push_option }}
+          eventFilterForPush: |
+            push
+            pull_request
+          env: |
+            BUILD_NUMBER
+            IS_CI=1
+            IS_PR
+            BRANCH
