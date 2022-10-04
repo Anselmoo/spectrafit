@@ -1,4 +1,4 @@
-name: Release Drafter
+name: CI - Release Drafter
 
 on:
   push:
