@@ -1,0 +1,38 @@
+name: Build Devcontainer
+on:
+  # run on PRs to main branch, if any
+  # devcontainer files have changed
+  push:
+    branches: main
+    paths:
+      - .devcontainer/**
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .devcontainer/**
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (GitHub)
+        uses: actions/checkout@v3
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and use devcontainer
+        uses: devcontainers/ci@v0.2
+        with:
+          imageName: ghcr.io/anselmoo/spectrafit/devcontainers-spectrafit
+          push: always
+          runCmd: |
+            make install-packages
+            make ci-build
+            python --version
+            poetry shell
+            spectrafit --help
