@@ -983,7 +983,7 @@ test = ["coverage", "ipykernel", "pre-commit", "pytest (>=6.0)", "pytest-console
 
 [[package]]
 name = "jupyterlab"
-version = "3.4.7"
+version = "3.4.8"
 description = "JupyterLab computational environment"
 category = "main"
 optional = true
@@ -2797,7 +2797,7 @@ jupyter = ["jupyterlab", "plotly", "itables", "kaleido", "dtale"]
 
 [metadata]
 lock-version = "1.1"
-  python-versions = ">=3.7.2,<3.11"
+python-versions = ">=3.7.2,<3.11"
 content-hash = "1c471c5e870e9dc02dcf9766f6a0763c8c58370c694039d11fa50e1fd9f98909"
 
 [metadata.files]
@@ -3317,8 +3317,8 @@ jupyter-server = [
     {file = "jupyter_server-1.19.1.tar.gz", hash = "sha256:d1cc3596945849742bc3eedf0699feeb50ad6c6045ebef02a9298b7f13c27e9f"},
 ]
 jupyterlab = [
-    {file = "jupyterlab-3.4.7-py3-none-any.whl", hash = "sha256:30c64bc0aa0ba09959ab6fd5c74f08a6ae64656b46a29e2522142a5fda0dc486"},
-    {file = "jupyterlab-3.4.7.tar.gz", hash = "sha256:4dc48ab0980e3af2e921dff26e0013dd03b104b1b67f0d85b67448e16e25311e"},
+    {file = "jupyterlab-3.4.8-py3-none-any.whl", hash = "sha256:4626a0434c76a3a22f11c4efaa1d031d2586367f72cfdbdbff6b08b6ef0060f7"},
+    {file = "jupyterlab-3.4.8.tar.gz", hash = "sha256:1fafb8b657005d91603f3c3adfd6d9e8eaf33fdc601537fef09283332efe67cb"},
 ]
 jupyterlab-pygments = [
     {file = "jupyterlab_pygments-0.2.2-py2.py3-none-any.whl", hash = "sha256:2405800db07c9f770863bcf8049a529c3dd4d3e28536638bd7c1c01d2748309f"},
