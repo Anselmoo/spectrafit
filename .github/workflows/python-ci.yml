@@ -161,12 +161,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Build and use devcontainer
+      - name: Build devcontainer
         uses: devcontainers/ci@v0.2
-        with:
-          runCmd: |
-            make install-packages
-            make ci-build
-            python --version
-            poetry shell
-            spectrafit --help

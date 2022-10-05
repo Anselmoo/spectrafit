@@ -1,8 +1,6 @@
 name: CI - Devcontainer
 on:
-  pull_request:
-    branches:
-      - main
+  # Trigger the workflow only if PR is merged
   push:
     branches:
       - main

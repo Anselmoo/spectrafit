@@ -135,15 +135,6 @@ class DataFramePlot:
         """
         self.args_plot = args_plot
 
-    @staticmethod
-    def post_process_plot(df_org: pd.DataFrame, df: pd.DataFrame) -> None:
-        """Plot of the post processed datafrme.
-
-        Args:
-            df_org (pd.DataFrame): _description_
-            df (pd.DataFrame): _description_
-        """
-
     def plot_2dataframes(
         self, df_1: pd.DataFrame, df_2: Optional[pd.DataFrame] = None
     ) -> None:
@@ -284,7 +275,7 @@ class DataFramePlot:
             yaxis_title=yaxis_title,
             legend=self.args_plot.legend.dict(),
             font=self.args_plot.font.dict(),
-            showlegend=self.args_plot.legend,
+            showlegend=self.args_plot.show_legend,
             width=self.args_plot.size[0],
             height=self.args_plot.size[1],
             paper_bgcolor=self.args_plot.color.paper,
@@ -378,13 +369,13 @@ class ExportResults:
 class SolverResults:
     """Class for storing the results of the solver."""
 
-    def __init__(self, args: Dict[str, Any]) -> None:
+    def __init__(self, args_out: Dict[str, Any]) -> None:
         """Initialize the SolverResults class.
 
         Args:
-            args (Dict[str, Any]): Dictionary of SpectraFit settings and results.
+            args_out (Dict[str, Any]): Dictionary of SpectraFit settings and results.
         """
-        self.args = args
+        self.args_out = args_out
 
     @property
     def settings_global_fitting(self) -> Union[bool, int]:
@@ -393,7 +384,7 @@ class SolverResults:
         Returns:
             Union[bool, int]: Global fitting settings.
         """
-        return self.args["global_"]
+        return self.args_out["global_"]
 
     @property
     def settings_conf_interval(self) -> Dict[str, Any]:
@@ -402,7 +393,7 @@ class SolverResults:
         Returns:
             Dict[str, Any]: Confidence interval settings.
         """
-        return self.args["conf_interval"]
+        return self.args_out["conf_interval"]
 
     @property
     def settings_configurations(self) -> Dict[str, Any]:
@@ -411,7 +402,7 @@ class SolverResults:
         Returns:
             Dict[str, Any]: Configuration settings.
         """
-        return self.args["fit_insights"]["configurations"]
+        return self.args_out["fit_insights"]["configurations"]
 
     @staticmethod
     def dict2df(dict_: Dict[str, Any], index_: str = "values") -> pd.DataFrame:
@@ -440,7 +431,7 @@ class SolverResults:
         Returns:
             Dict[str, float]: Goodness of fit values as dictionary.
         """
-        return self.args["fit_insights"]["statistics"]
+        return self.args_out["fit_insights"]["statistics"]
 
     @property
     def get_variables(self) -> Dict[str, Dict[str, float]]:
@@ -449,7 +440,7 @@ class SolverResults:
         Returns:
             Dict[str, Dict[str, float]]: Variables of the fit.
         """
-        return self.args["fit_insights"]["variables"]
+        return self.args_out["fit_insights"]["variables"]
 
     @property
     def get_errorbars(self) -> Dict[str, float]:
@@ -458,7 +449,7 @@ class SolverResults:
         Returns:
             Dict[str, float]: Comments about the error bars as dictionary or dataframe.
         """
-        return self.args["fit_insights"]["errorbars"]
+        return self.args_out["fit_insights"]["errorbars"]
 
     @property
     def get_regression_metrics(self) -> Dict[str, Any]:
@@ -467,7 +458,7 @@ class SolverResults:
         Returns:
             Dict[str, Any]: Regression metrics as dictionary.
         """
-        return self.args["regression_metrics"]
+        return self.args_out["regression_metrics"]
 
     @property
     def get_descriptive_statistic(self) -> Dict[str, Any]:
@@ -477,7 +468,7 @@ class SolverResults:
             Dict[str, Any]: Descriptive statistic as dictionary of the spectra, fit, and
                  components as dictionary.
         """
-        return self.args["descriptive_statistic"]
+        return self.args_out["descriptive_statistic"]
 
     @property
     def get_linear_correlation(self) -> Dict[str, Any]:
@@ -487,7 +478,7 @@ class SolverResults:
             Dict[str, Any]: Linear correlation of the spectra, fit, and components
                  as dictionary.
         """
-        return self.args["linear_correlation"]
+        return self.args_out["linear_correlation"]
 
     @property
     def get_component_correlation(self) -> Dict[str, Any]:
@@ -496,7 +487,7 @@ class SolverResults:
         Returns:
             Dict[str, Any]: Linear correlation of the components as dictionary.
         """
-        return self.args["fit_insights"]["correlations"]
+        return self.args_out["fit_insights"]["correlations"]
 
     @property
     def get_covariance_matrix(self) -> Dict[str, Any]:
@@ -505,7 +496,7 @@ class SolverResults:
         Returns:
             Dict[str, Any]: Covariance matrix as dictionary.
         """
-        return self.args["fit_insights"]["covariance_matrix"]
+        return self.args_out["fit_insights"]["covariance_matrix"]
 
     @property
     def get_confidence_interval(self) -> Dict[Any, Any]:
@@ -514,7 +505,7 @@ class SolverResults:
         Returns:
             Dict[Any, Any]: Confidence interval as dictionary.
         """
-        return self.args["confidence_interval"]
+        return self.args_out["confidence_interval"]
 
 
 class ExportReport(SolverResults):
@@ -526,7 +517,7 @@ class ExportReport(SolverResults):
         initial_model: List[Dict[str, Dict[str, Dict[str, Any]]]],
         pre_processing: DataPreProcessingAPI,
         fname: FnameAPI,
-        args: Dict[str, Any],
+        args_out: Dict[str, Any],
         df_org: pd.DataFrame,
         df_fit: pd.DataFrame,
         df_pre: pd.DataFrame = pd.DataFrame(),
@@ -538,12 +529,12 @@ class ExportReport(SolverResults):
             initial_model (List[Dict[str, Dict[str, Dict[str, Any]]]]): _description_
             pre_processing (DataPreProcessingAPI): _description_
             fname (FnameAPI): _description_
-            args (Dict[str, Any]): _description_
+            args_out (Dict[str, Any]): _description_
             df_org (pd.DataFrame): _description_
             df_fit (pd.DataFrame): _description_
             df_pre (Optional[pd.DataFrame], optional): _description_. Defaults to None.
         """
-        super().__init__(args=args)
+        super().__init__(args_out=args_out)
         self.description = description
         self.initial_model = initial_model
         self.pre_processing = pre_processing
@@ -818,7 +809,7 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults, ExportR
                 initial_model=self.initial_model,
                 pre_processing=self.args_pre,
                 fname=self.export_args_out,
-                args=self.args,
+                args_out=self.args,
                 df_org=self.df_org,
                 df_pre=self.df_pre,
                 df_fit=self.df_fit,

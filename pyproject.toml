@@ -59,6 +59,7 @@ exclude = ["docs/", "tools/"]
   dtale = { version = "^2.8.1", optional = true }
   tomli = "^2.0.1"
   tomli-w = "^1.0.0"
+  gunicorn = { version = "^20.1.0", optional = true }
 
   [tool.poetry.group.dev.dependencies]
   pylama = "^8.4.1"
@@ -77,6 +78,8 @@ exclude = ["docs/", "tools/"]
   types-toml = "^0.10.8"
   types-PyYAML = "^6.0.11"
   types-tabulate = "^0.8.11"
+  mock = "^4.0.3"
+  types-mock = "^4.0.15"
 
   [tool.poetry.group.docs.dependencies]
   mkdocs-jupyter = "^0.21.0"
@@ -97,6 +100,8 @@ spectrafit-converter = "spectrafit.plugins.converter:command_line_runner"
 
 [tool.poetry.extras]
 jupyter = ["jupyterlab", "plotly", "itables", "kaleido", "dtale"]
+docker = ["gunicorn"]
+all = ["jupyterlab", "plotly", "itables", "kaleido", "dtale", "gunicorn"]
 
 [tool.isort]
 profile = "black"
