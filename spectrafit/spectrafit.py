@@ -12,8 +12,6 @@ from spectrafit.models import SolverModels
 from spectrafit.plotting import PlotSpectra
 from spectrafit.report import PrintingResults
 from spectrafit.report import PrintingStatus
-
-# from spectrafit.tools import check_keywords_consistency
 from spectrafit.tools import PostProcessing
 from spectrafit.tools import PreProcessing
 from spectrafit.tools import SaveResult
@@ -232,7 +230,7 @@ def extracted_from_command_line_runner() -> Dict[str, Any]:
     """
     result = get_args()
     _args = read_input_file(result["input"])
-    # check_keywords_consistency(check_args=_args["settings"], ref_args=result)
+
     if "settings" in _args.keys():
         for key in _args["settings"].keys():
             result[key] = _args["settings"][key]
@@ -260,6 +258,7 @@ def extracted_from_command_line_runner() -> Dict[str, Any]:
             result["conf_interval"] = _args["fitting"]["parameters"]["conf_interval"]
         else:
             result["conf_interval"] = None
+
     if "peaks" in _args["fitting"].keys():
         result["peaks"] = _args["fitting"]["peaks"]
     return result
@@ -282,9 +281,7 @@ def fitting_routine(args: Dict[str, Any]) -> Tuple[pd.DataFrame, Dict[str, Any]]
     """
     df = load_data(args)
     df, args = PreProcessing(df=df, args=args)()
-    # print(args)
     minimizer, result = SolverModels(df=df, args=args)()
-
     df, args = PostProcessing(df=df, args=args, minimizer=minimizer, result=result)()
     PrintingResults(args=args, minimizer=minimizer, result=result)()
 

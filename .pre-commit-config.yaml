@@ -9,6 +9,7 @@ repos:
         exclude: .devcontainer/devcontainer.json
       - id: check-symlinks
       - id: end-of-file-fixer
+        exclude: docs/images/logo.svg
       - id: trailing-whitespace
       - id: check-ast
       - id: check-merge-conflict
