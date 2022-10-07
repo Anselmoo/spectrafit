@@ -148,6 +148,7 @@ nav:
       - Global Fitting: examples/example6.md
       - Automatic Fitting: examples/example7.md
       - Working with Athena Data: examples/example8.md
+      # - Working in Jupyter Notebooks: examples/example9.ipynb
   - Documentation:
       - Models: doc/models.md
       - Expression: doc/expression.md
@@ -160,6 +161,7 @@ nav:
   - API:
       - SpectraFit: api/spectrafit_api.md
       - Plotting: api/plotting_api.md
+      - Jupyter-Notebook: api/notebook_api.md
       - Modelling: api/modelling_api.md
       - Reporting: api/reporting_api.md
       - Tools: api/tools_api.md
