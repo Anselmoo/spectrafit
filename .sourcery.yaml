@@ -1,0 +1,5 @@
+refactor:
+  python_version: "3.7"
+github:
+  request_review: anselmoo
+  sourcery_branch: sourcery/{base_branch}

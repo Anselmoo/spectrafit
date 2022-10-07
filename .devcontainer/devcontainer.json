@@ -37,7 +37,6 @@
     "codezombiech.gitignore",
     "eamodio.gitlens",
     "esbenp.prettier-vscode",
-    "sourcery.sourcery",
     "vivaxy.vscode-conventional-commits",
     "tamasfe.even-better-toml"
   ],
@@ -49,7 +48,10 @@
   "remoteUser": "vscode",
   "features": {
     "github-cli": "latest",
-    "fish": "latest"
-    // "homebrew": "latest"
+    "fish": "latest",
+    "homebrew": "latest",
+    "docker-in-docker": "latest",
+    "docker-from-docker": "latest",
+    "jupyterlab": "latest"
   }
 }
