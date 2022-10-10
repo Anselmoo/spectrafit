@@ -37,21 +37,24 @@
     "codezombiech.gitignore",
     "eamodio.gitlens",
     "esbenp.prettier-vscode",
+    "sourcery.sourcery",
     "vivaxy.vscode-conventional-commits",
     "tamasfe.even-better-toml"
   ],
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
   // "forwardPorts": [],
   // Use 'postCreateCommand' to run commands after the container is created.
-  "postCreateCommand": "bash .devcontainer/setup.sh",
+  "postCreateCommand": [
+    "pip install poetry; ",
+    "python -m pip install --upgrade pip; ",
+    "poetry config virtualenvs.in-project true; ",
+    "python -m poetry install; "
+  ],
   // Comment out to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
   "remoteUser": "vscode",
   "features": {
     "github-cli": "latest",
     "fish": "latest",
-    "homebrew": "latest",
-    "docker-in-docker": "latest",
-    "docker-from-docker": "latest",
-    "jupyterlab": "latest"
+    "homebrew": "latest"
   }
 }

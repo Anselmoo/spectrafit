@@ -11,7 +11,7 @@ from typing import Tuple
 
 import numpy as np
 import pandas as pd
-import tomli
+import toml
 import yaml
 
 from lmfit import Minimizer
@@ -530,8 +530,7 @@ def read_input_file(fname: Path) -> MutableMapping[str, Any]:
     fname = Path(fname)
 
     if fname.suffix == ".toml":
-        with open(fname, "rb") as f:
-            args = tomli.load(f)
+        args = toml.load(fname)
     elif fname.suffix == ".json":
         with open(fname, "r", encoding="utf8") as f:
             args = json.load(f)

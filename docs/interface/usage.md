@@ -560,13 +560,13 @@ has to be installed as described in [Installation][19]. To use the `SpectraFit`
 in the Jupyter Notebook, the `SpectraFit` has to be imported as follows:
 
 ```python
-from spectrafit.plugins import notebook
+from spectrafit.plugins import jupyter
 ```
 
 Next, the **peak** definition has to be defined now as follows:
 
 ```python
-initial_model = [
+[
     {
         "pseudovoigt": {
             "amplitude": {"max": 2, "min": 0, "vary": True, "value": 1},
@@ -580,25 +580,10 @@ initial_model = [
             "amplitude": {"max": 2, "min": 0, "vary": True, "value": 1},
             "center": {"max": 2, "min": -2, "vary": True, "value": 0},
             "fwhmg": {"max": 0.1, "min": 0.02, "vary": True, "value": 0.01},
+            "fwhml": {"max": 0.1, "min": 0.01, "vary": True, "value": 0.01},
         }
     },
 ]
-```
-
-For generating the first fit via `spectrafit.plugins.notebook`, the following
-code has to be used:
-
-```python
-spf = SpectraFitNotebook(df=df, x_column="Energy", y_column="Noisy")
-spf.solver_model(
-    initial_model,
-)
-```
-
-and to save the results as `toml` file, just save the `spf` object as follows:
-
-```python
-spf.generate_report
 ```
 
 !!! info "About the `Jupyter` Interface"

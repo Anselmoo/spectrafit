@@ -43,8 +43,7 @@ jobs:
       fail-fast: false
       matrix:
         python-version: ["3.7", "3.8", "3.9", "3.10"]
-        os: [ubuntu-latest, macOS-latest]
-        # os: [ubuntu-latest, windows-latest, macOS-latest]
+        os: [ubuntu-latest, windows-latest, macOS-latest]
         arch: [x64]
     steps:
       - uses: actions/checkout@v3
@@ -74,9 +73,9 @@ jobs:
           key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
       - name: Install dependencies
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-        run: poetry install --no-interaction --no-root --with dev --all-extras
+        run: poetry install --no-interaction --no-root --with dev -E jupyter
       - name: Install library
-        run: poetry install --no-interaction --with dev --all-extras
+        run: poetry install --no-interaction --with dev -E jupyter
       - name: Test SpectraFit
         run: poetry run pytest --diff-symbols --cov=./spectrafit -vv --cov-report=xml --plots
       - name: Codecov
@@ -135,9 +134,9 @@ jobs:
           key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
       - name: Install dependencies
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-        run: poetry install --no-interaction --no-root --with docs --all-extras
+        run: poetry install --no-interaction --no-root --with docs
       - name: Install library
-        run: poetry install --no-interaction --with docs --all-extras
+        run: poetry install --no-interaction --with docs
       - name: Set git config
         run: |
           git config --local user.email "action@github.com"
@@ -156,11 +155,3 @@ jobs:
       - name: Build the Docker image
         run: |
           docker build . --file Dockerfile --tag spectrafit:$(date +%s)
-  devcontainer:
-    name: Devcontainer
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Build devcontainer
-        uses: devcontainers/ci@v0.2

@@ -19,9 +19,6 @@
   [jupyter-notebook-VSCode][26]
 - Change from `to_dict(orient="list")` to `to_dict(orient="split")` for the
   `json` output for including the index.
-- Add link to the [GitHub Advisory Database][27] for security issues in the
-  `Security nodes`.
-- Add CI-Test for `devcontainer` in VSCode; see also [devcontainer-ci][28].
 
 ## v0.11.0
 
@@ -268,5 +265,3 @@
 [24]: https://www.4r7.ir
 [25]: https://jupyter.org
 [26]: https://code.visualstudio.com/docs/datascience/jupyter-notebooks
-[27]: https://github.com/advisories?query=type%3Areviewed+ecosystem%3Apip
-[28]: https://github.com/marketplace/actions/devcontainers-ci

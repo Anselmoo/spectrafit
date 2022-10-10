@@ -199,7 +199,7 @@ spf.solver_model(initial_model)
 
 Which results in the following output:
 
-![img_jupyter](https://github.com/Anselmoo/spectrafit/blob/8962a277b0c3d2aa05970617f0ac323a07de2fec/docs/images/jupyter_plot.png?raw=true)
+![img_jupyter](docs/images/jupyter_plot.png)
 
 ## Documentation
 

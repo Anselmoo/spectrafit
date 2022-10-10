@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "SpectraFit"
-version = "0.12.0b1"
+version = "0.12.0b0"
 description = "Fast fitting of 2D-Spectra with established routines"
 readme = "README.md"
 authors = ["Anselm Hahn <anselm.hahn@gmail.com>"]
@@ -43,7 +43,8 @@ exclude = ["docs/", "tools/"]
   lmfit = "^1.0.3"
   pandas = "^1.3.0"
   emcee = "^3.1.2"
-  tabulate = ">=0.8.10,<0.10.0"
+  tabulate = "^0.8.10"
+  toml = "^0.10.2"
   PyYAML = "^6.0"
   openpyxl = "^3.0.9"
   seaborn = "^0.11.2"
@@ -77,8 +78,6 @@ exclude = ["docs/", "tools/"]
   types-toml = "^0.10.8"
   types-PyYAML = "^6.0.11"
   types-tabulate = "^0.8.11"
-  mock = "^4.0.3"
-  types-mock = "^4.0.15"
 
   [tool.poetry.group.docs.dependencies]
   mkdocs-jupyter = "^0.21.0"
@@ -96,10 +95,9 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry.scripts]
 spectrafit = "spectrafit.spectrafit:command_line_runner"
 spectrafit-converter = "spectrafit.plugins.converter:command_line_runner"
-spectrafit-jupyter = "spectrafit.app.app:jupyter"
 
 [tool.poetry.extras]
-jupyter = ["jupyterlab", "plotly", "itables", "kaleido", "dtale", "dash"]
+jupyter = ["jupyterlab", "plotly", "itables", "kaleido", "dtale"]
 
 [tool.isort]
 profile = "black"
