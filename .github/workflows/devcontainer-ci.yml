@@ -1,0 +1,41 @@
+name: CI - Devcontainer
+on:
+  # Trigger the workflow only if PR is merged
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (GitHub)
+        uses: actions/checkout@v3
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and use devcontainer
+        uses: devcontainers/ci@v0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BUILD_NUMBER: ${{ github.run_id  }}
+          IS_PR: ${{ github.head_ref }}
+          BRANCH: ${{ github.ref }}
+        with:
+          imageName: ghcr.io/anselmoo/spectrafit-devcontainer
+          imageTag: ${{ steps.set_image_tag.outputs.image_tag }}
+          runCmd: |
+            python --version
+          push: ${{ steps.set_image_push_option.outputs.image_push_option }}
+          eventFilterForPush: |
+            push
+            pull_request
+          env: |
+            BUILD_NUMBER
+            IS_CI=1
+            IS_PR
+            BRANCH

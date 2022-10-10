@@ -7,7 +7,8 @@ from tempfile import TemporaryDirectory
 from typing import Any
 
 import pytest
-import toml
+import tomli
+import tomli_w
 import yaml
 
 from spectrafit.plugins.converter import convert
@@ -80,8 +81,8 @@ def test_yaml_conversion() -> None:
             "format": "toml",
         }
         convert(args)
-        with open(infile.with_suffix(".toml"), encoding="utf8") as f:
-            data = toml.load(f)
+        with open(infile.with_suffix(".toml"), "rb") as f:
+            data = tomli.load(f)
 
         assert data == {"a": 1, "b": 2}
 
@@ -92,8 +93,8 @@ def test_toml_conversion() -> None:
         infile = Path(tmpdir) / "input_1.toml"
 
         # write input toml
-        with open(infile, "w", encoding="utf8") as f:
-            toml.dump({"a": 1, "b": 2}, f)
+        with open(infile, "wb+") as f:
+            tomli_w.dump({"a": 1, "b": 2}, f)
         args = {
             "infile": infile,
             "format": "json",

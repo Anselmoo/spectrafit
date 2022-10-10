@@ -5,17 +5,19 @@ repos:
       - id: check-yaml
         exclude: mkdocs.yaml
       - id: check-toml
+        exclude: poetry.lock
       - id: check-json
         exclude: .devcontainer/devcontainer.json
       - id: check-symlinks
       - id: end-of-file-fixer
+        exclude: docs/images/logo.svg
       - id: trailing-whitespace
       - id: check-ast
       - id: check-merge-conflict
       - id: check-added-large-files
         args: ["--maxkb=1000"]
   - repo: https://github.com/psf/black.git
-    rev: 22.8.0
+    rev: 22.10.0
     hooks:
       - id: black
   - repo: https://github.com/asottile/blacken-docs
@@ -35,7 +37,7 @@ repos:
         exclude: ^spectrafit/test/, ^examples/
         entry: flake8  --max-doc-length 100 --max-line-length  88 --ignore E203,W503,W605
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v0.971
+    rev: v0.982
     hooks:
       - id: mypy
         additional_dependencies:
@@ -43,6 +45,7 @@ repos:
             types-toml==0.10.8,
             types-PyYAML==6.0.10,
             types-tabulate==0.8.11,
+            types-mock==4.0.15,
             numpy==1.21.4,
             pydantic==1.10.1,
           ]
@@ -52,7 +55,11 @@ repos:
       - id: pydocstyle
         additional_dependencies: [toml==0.10.2]
   - repo: https://github.com/PyCQA/pylint
-    rev: "v2.15.0"
+    rev: "v2.15.4"
     hooks:
       - id: pylint
         additional_dependencies: [toml==0.10.2]
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: "v3.0.0-alpha.1"
+    hooks:
+      - id: prettier
