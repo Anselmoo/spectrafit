@@ -5,6 +5,7 @@ repos:
       - id: check-yaml
         exclude: mkdocs.yaml
       - id: check-toml
+        exclude: poetry.lock
       - id: check-json
         exclude: .devcontainer/devcontainer.json
       - id: check-symlinks
@@ -15,6 +16,7 @@ repos:
       - id: check-merge-conflict
       - id: check-added-large-files
         args: ["--maxkb=1000"]
+        exclude: \.ipynb
   - repo: https://github.com/psf/black.git
     rev: 22.10.0
     hooks:

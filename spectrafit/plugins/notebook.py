@@ -387,15 +387,6 @@ class SolverResults:
         return self.args_out["global_"]
 
     @property
-    def settings_conf_interval(self) -> Dict[str, Any]:
-        """Confidence interval settings.
-
-        Returns:
-            Dict[str, Any]: Confidence interval settings.
-        """
-        return self.args_out["conf_interval"]
-
-    @property
     def settings_configurations(self) -> Dict[str, Any]:
         """Configuration settings.
 
@@ -403,22 +394,6 @@ class SolverResults:
             Dict[str, Any]: Configuration settings.
         """
         return self.args_out["fit_insights"]["configurations"]
-
-    @staticmethod
-    def dict2df(dict_: Dict[str, Any], index_: str = "values") -> pd.DataFrame:
-        """Convert dictionary to dataframe.
-
-        Args:
-            dict_ (Dict[str, Any]): Dictionary with single values which will be
-                 transformed to a dataframe
-            index_ (str, optional): Name of the index. Defaults to "values".
-
-        Returns:
-            pd.DataFrame: _description_
-        """
-        return pd.DataFrame(
-            {key: [value] for key, value in dict_.items()}, index=[index_]
-        ).T
 
     @property
     def get_gof(self) -> Dict[str, float]:
@@ -452,6 +427,24 @@ class SolverResults:
         return self.args_out["fit_insights"]["errorbars"]
 
     @property
+    def get_component_correlation(self) -> Dict[str, Any]:
+        """Get the linear correlation of the components.
+
+        Returns:
+            Dict[str, Any]: Linear correlation of the components as dictionary.
+        """
+        return self.args_out["fit_insights"]["correlations"]
+
+    @property
+    def get_covariance_matrix(self) -> Dict[str, Any]:
+        """Get the covariance matrix.
+
+        Returns:
+            Dict[str, Any]: Covariance matrix as dictionary.
+        """
+        return self.args_out["fit_insights"]["covariance_matrix"]
+
+    @property
     def get_regression_metrics(self) -> Dict[str, Any]:
         """Get the regression metrics.
 
@@ -481,22 +474,13 @@ class SolverResults:
         return self.args_out["linear_correlation"]
 
     @property
-    def get_component_correlation(self) -> Dict[str, Any]:
-        """Get the linear correlation of the components.
+    def settings_conf_interval(self) -> Dict[str, Any]:
+        """Confidence interval settings.
 
         Returns:
-            Dict[str, Any]: Linear correlation of the components as dictionary.
+            Dict[str, Any]: Confidence interval settings.
         """
-        return self.args_out["fit_insights"]["correlations"]
-
-    @property
-    def get_covariance_matrix(self) -> Dict[str, Any]:
-        """Get the covariance matrix.
-
-        Returns:
-            Dict[str, Any]: Covariance matrix as dictionary.
-        """
-        return self.args_out["fit_insights"]["covariance_matrix"]
+        return self.args_out["conf_interval"]
 
     @property
     def get_confidence_interval(self) -> Dict[Any, Any]:
@@ -643,9 +627,14 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults, ExportR
     ) -> None:
         """Initialize the SpectraFitNotebook class.
 
+        # TODO:
+            - Export of the current component model
+            - Export pictures
+            - Showing current goodness of fit
+
         Args:
-            df (pd.DataFrame): _description_
-            x_column (str): _description_
+            df (pd.DataFrame): Dataframe with the data to fit.
+            x_column (str): Name of the x column
             y_column (Union[str, List[str]]): _description_
             oversampling (bool, optional): _description_. Defaults to False.
             smooth (int, optional): _description_. Defaults to 0.

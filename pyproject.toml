@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "SpectraFit"
-version = "0.12.0b1"
+version = "0.12.0b2"
 description = "Fast fitting of 2D-Spectra with established routines"
 readme = "README.md"
 authors = ["Anselm Hahn <anselm.hahn@gmail.com>"]
@@ -11,6 +11,7 @@ documentation = "https://anselmoo.github.io/spectrafit/"
 homepage = "https://pypi.org/project/spectrafit/"
 keywords = [
   "2D-Spectra",
+  "3D-Spectra",
   "fitting",
   "curve-fitting",
   "peak-fitting",
@@ -22,6 +23,7 @@ classifiers = [
   "License :: OSI Approved :: BSD License",
   "Environment :: Console",
   "Framework :: Matplotlib",
+  "Framework :: Jupyter :: JupyterLab",
   "Operating System :: OS Independent",
   "Programming Language :: Python :: 3.7",
   "Programming Language :: Python :: 3.8",
@@ -86,6 +88,7 @@ exclude = ["docs/", "tools/"]
   types-tabulate = "^0.8.11"
   mock = "^4.0.3"
   types-mock = "^4.0.15"
+  pytest-mock = "^3.10.0"
 
   [tool.poetry.group.docs.dependencies]
   mkdocs-jupyter = "^0.21.0"
