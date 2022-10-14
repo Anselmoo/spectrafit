@@ -1,3 +1,6 @@
 [submodule "vendor/lmfit-py"]
 	path = vendor/lmfit-py
 	url = https://github.com/lmfit/lmfit-py.git
+[submodule "vendor/docker-stacks"]
+	path = vendor/docker-stacks
+	url = https://github.com/jupyter/docker-stacks.git

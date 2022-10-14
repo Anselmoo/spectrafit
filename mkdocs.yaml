@@ -66,6 +66,7 @@ plugins:
   - mkdocs-jupyter:
       ignore_h1_titles: True
       include_source: True
+      execute: true
   - literate-nav:
       nav_file: SUMMARY.md
   - minify:
@@ -148,7 +149,10 @@ nav:
       - Global Fitting: examples/example6.md
       - Automatic Fitting: examples/example7.md
       - Working with Athena Data: examples/example8.md
-      # - Working in Jupyter Notebooks: examples/example9.ipynb
+      - Working in Jupyter Notebooks:
+          - Default Plot: examples/example9_1.ipynb
+          - Dark Theme: examples/example9_2.ipynb
+          - Export Results: examples/example9_3.ipynb
   - Documentation:
       - Models: doc/models.md
       - Expression: doc/expression.md

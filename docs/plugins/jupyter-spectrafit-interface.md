@@ -1,4 +1,52 @@
-## Input
+!!! abstract "About the _new_ Jupyter Notebook-Interface"
+
+    The Jupyter Notebook-Interface is a new interface for the `SpectraFit` for
+    faster and more convenient usage. It is still in development and not all
+    features are implemented yet. If you have any questions or suggestions, feel
+    free to contact us.
+
+    One of the main advantages of the Jupyter Notebook-Interface is that it
+    allows you to use the `SpectraFit` in a more interactive way. You can
+    directly see the results of your fitting, while changing the parameters.
+    This is especially useful for the fitting of spectra with many parameters,
+    where it is hard to keep track of the changes in the parameters.
+
+    Also by using the [Plotly](https://plotly.com/python/) library, the plots
+    are interactive. You can zoom in and out, change the axis, and even save
+    the plots as a `.png` file.
+
+    By working in [JupyterLab](https://jupyterlab.readthedocs.io/en/stable/),
+    [VSCode](https://code.visualstudio.com), or
+    [PyCharms](https://www.jetbrains.com/pycharm/), the usage of the Git
+    versionising system is very easy. You can easily track your changes and
+    revert them if you made a mistake. Final results can be merged into the
+    `main` or `release` branch, so that the data are available for everyone and
+    ready to be published.
+
+    ```mermaid
+       gitGraph
+        commit
+        commit
+        branch develop
+        commit
+        commit
+        checkout main
+        commit
+        commit
+        checkout develop
+        commit
+        commit
+        merge main
+        commit
+        checkout main
+        commit
+        branch release
+        commit
+    ```
+
+    Finally, the Jupyter Notebook-Interface is a good starting point for
+    developing your own fitting routines. You can easily change the fitting
+    routine and add your own functions.
 
 ## DataFlow
 
@@ -54,6 +102,42 @@ The `Dictionary` is used to store the model and method. The `DataFrame` is used
 to display the results and the `Dictionary` is used to export the results.
 
 ## Input Parameter Model
+
+For the easiere usage of the `SpectraFit` the intial model is _now_ defined as
+a `List` of `Dict` objects. While every `Dict` object represents:
+
+1. The name of the model like `Gaussian` or `Lorentzian` or so on.
+2. The parameters of the model with their initial values and bounds as a
+   `Dict` object.
+
+!!! example "Example of an Intial-Parameter-Model"
+
+    ```python
+    model = [
+        {
+            "pseudovoigt": {
+                "amplitude": {"max": 2, "min": 0, "vary": True, "value": 1},
+                "center": {"max": 2, "min": -2, "vary": True, "value": 0},
+                "fwhmg": {"max": 0.4, "min": 0.1, "vary": True, "value": 0.21},
+                "fwhml": {"max": 0.4, "min": 0.1, "vary": True, "value": 0.21},
+            }
+        },
+        {
+            "gaussian": {
+                "amplitude": {"max": 2, "min": 0, "vary": True, "value": 1},
+                "center": {"max": 2, "min": -2, "vary": True, "value": 1},
+                "fwhmg": {"max": 0.4, "min": 0.1, "vary": True, "value": 0.21},
+            }
+        },
+        {
+            "lorentzian": {
+                "amplitude": {"max": 2, "min": 0, "vary": True, "value": 1},
+                "center": {"max": 2, "min": -2, "vary": True, "value": 1},
+                "fwhml": {"max": 0.4, "min": 0.1, "vary": True, "value": 0.21},
+            }
+        },
+    ]
+    ```
 
 ## Output
 

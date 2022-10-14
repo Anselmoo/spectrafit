@@ -613,7 +613,13 @@ spf.generate_report
 
 More information about the Jupyter Notebook interface can be found in the
 [Jupyter Example][20] and the plugin documentation for
-[Jupyter-SpectraFit-Interface][21] of `SpectraFit`
+[Jupyter-SpectraFit-Interface][21] of `SpectraFit`.
+
+The Jupyter Lab for the `SpectraFit` can be also start via the command line:
+
+```bash
+spectrafit-jupyter
+```
 
 [1]: https://en.wikipedia.org/wiki/Voigt_profile#Pseudo-Voigt_approximation
 [2]: https://en.wikipedia.org/wiki/Power_law
