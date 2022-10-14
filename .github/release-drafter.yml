@@ -39,7 +39,7 @@ version-resolver:
       - "codespaces"
       - "bug"
       - "maintenance"
-      - "github_actions"
+      - "github actions"
       - "documentation"
       - "dependencies"
       - "security"

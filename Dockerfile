@@ -1,29 +1,81 @@
-# For more information, please refer to https://aka.ms/vscode-docker-python
-FROM python:3.8-slim
+# Copyright (c) Jupyter Development Team.
+# Distributed under the terms of the Modified BSD License.
+ARG OWNER=jupyter
+ARG BASE_CONTAINER=$OWNER/minimal-notebook
+FROM $BASE_CONTAINER
 
-EXPOSE 8888
+LABEL maintainer="Jupyter Project <jupyter@googlegroups.com>"
+LABEL project="SpectraFit"
 
-# Keeps Python from generating .pyc files in the container
-ENV PYTHONDONTWRITEBYTECODE=1
+# Fix: https://github.com/hadolint/hadolint/wiki/DL4006
+# Fix: https://github.com/koalaman/shellcheck/wiki/SC3014
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-# Turns off buffering for easier container logging
-ENV PYTHONUNBUFFERED=1
+USER root
 
-# Export via poetry and install via pip requirements
-COPY pyproject.toml poetry.lock ./
-#COPY spectrafit ./spectrafit
-RUN python -m pip install pip --upgrade
-RUN python -m pip install poetry
-RUN poetry config virtualenvs.create false
-RUN poetry install --no-interaction --only main --all-extras
+RUN apt-get update --yes && \
+    apt-get install --yes --no-install-recommends \
+    # for cython: https://cython.readthedocs.io/en/latest/src/quickstart/install.html
+    build-essential \
+    # for latex labels
+    cm-super \
+    dvipng \
+    # for matplotlib anim
+    ffmpeg && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /app
-COPY . /app
+USER ${NB_UID}
 
-# Creates a non-root user with an explicit UID and adds permission to access the /app folder
-# For more info, please refer to https://aka.ms/vscode-docker-python-configure-containers
-RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /app
-USER appuser
+# Install Python 3 packages
+RUN mamba install --quiet --yes \
+    'altair' \
+    'beautifulsoup4' \
+    'bokeh' \
+    'bottleneck' \
+    'cloudpickle' \
+    'conda-forge::blas=*=openblas' \
+    'cython' \
+    'dask' \
+    'dill' \
+    'h5py' \
+    'ipympl'\
+    'ipywidgets' \
+    'matplotlib-base' \
+    'numba' \
+    'numexpr' \
+    'openpyxl' \
+    'pandas' \
+    'patsy' \
+    'protobuf' \
+    'pytables' \
+    'scikit-image' \
+    'scikit-learn' \
+    'scipy' \
+    'seaborn' \
+    'spectrafit' \
+    'sqlalchemy' \
+    'statsmodels' \
+    'sympy' \
+    'widgetsnbextension'\
+    'xlrd' && \
+    mamba clean --all -f -y && \
+    fix-permissions "${CONDA_DIR}" && \
+    fix-permissions "/home/${NB_USER}"
 
-# During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
-CMD ["poetry", "run", "spectrafit-jupyter"]
+# Install facets which does not have a pip or conda package at the moment
+WORKDIR /tmp
+RUN git clone https://github.com/PAIR-code/facets.git && \
+    jupyter nbextension install facets/facets-dist/ --sys-prefix && \
+    rm -rf /tmp/facets && \
+    fix-permissions "${CONDA_DIR}" && \
+    fix-permissions "/home/${NB_USER}"
+
+# Import matplotlib the first time to build the font cache.
+ENV XDG_CACHE_HOME="/home/${NB_USER}/.cache/"
+
+RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot; from spectrafit.plugins import notebook, color_schemas" && \
+    fix-permissions "/home/${NB_USER}"
+
+USER ${NB_UID}
+
+WORKDIR "${HOME}"
