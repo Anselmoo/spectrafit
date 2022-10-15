@@ -80,14 +80,29 @@ available plugins are:
 
 ## via Docker
 
-```docker
-docker pull ghcr.io/anselmoo/spectrafit:latest
-```
+!!! info "About Docker-Image"
 
-!!! caution "About Docker-Image"
+    Since version 0.12.0, the `SpectraFit` package is available as a
+    [Docker-Image][4]. The Docker-Image is based on an modified
+    [Jupyter-Scipy-Image][5] and contains the `SpectraFit` package and
+    the [Jupyter-Notebook][6] interface.
 
-    The docker-image of `SpectraFit` is still under development!
+    The Docker-Image can be installed and used via:
+
+    ```terminal
+    docker pull ghcr.io/anselmoo/spectrafit:latest
+    docker run -it -p 8888:8888 spectrafit:latest
+    ```
+
+    or just via:
+
+    ```terminal
+    docker run -it -p 8888:8888 ghcr.io/anselmoo/spectrafit:latest
+    ```
 
 [1]: https://github.com/pypa/pipx
 [2]: https://conda.io/docs/
 [3]: https://anaconda.org/conda-forge/spectrafit
+[4]: https://github.com/Anselmoo/spectrafit/pkgs/container/spectrafit
+[5]: https://github.com/jupyter/docker-stacks/blob/main/scipy-notebook/Dockerfile
+[6]: ../../plugins/jupyter-spectrafit-interface

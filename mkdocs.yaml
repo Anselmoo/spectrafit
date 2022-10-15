@@ -141,14 +141,15 @@ nav:
       - Usage: interface/usage.md
       - Features: interface/features.md
   - Examples:
-      - Fitting of a Single Feature via Command-Line: examples/example1.md
-      - JSON, TOML, YAML Inputs: examples/example2.md
-      - Multi Peak Fitting: examples/example3.md
-      - Working with Real Life Data: examples/example4.md
-      - Working with Expressions: examples/example5.md
-      - Global Fitting: examples/example6.md
-      - Automatic Fitting: examples/example7.md
-      - Working with Athena Data: examples/example8.md
+      - Working via CMD:
+          - Fitting of a Single Feature via Command-Line: examples/example1.md
+          - JSON, TOML, YAML Inputs: examples/example2.md
+          - Multi Peak Fitting: examples/example3.md
+          - Working with Real Life Data: examples/example4.md
+          - Working with Expressions: examples/example5.md
+          - Global Fitting: examples/example6.md
+          - Automatic Fitting: examples/example7.md
+          - Working with Athena Data: examples/example8.md
       - Working in Jupyter Notebooks:
           - Default Plot: examples/example9_1.ipynb
           - Dark Theme: examples/example9_2.ipynb

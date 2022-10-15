@@ -153,8 +153,21 @@ optional arguments:
 
 Open the `Jupyter Notebook` and run the following code:
 
-```python
-from spectrafit.plugins import jupyter
+```terminal
+spectrafit-jupyter
+```
+
+or via Docker Image:
+
+```terminal
+docker pull ghcr.io/anselmoo/spectrafit:latest
+docker run -it -p 8888:8888 spectrafit:latest
+```
+
+or just:
+
+```terminal
+docker run -p 8888:8888 ghcr.io/anselmoo/spectrafit:latest
 ```
 
 Next define your initial model and the reference data:

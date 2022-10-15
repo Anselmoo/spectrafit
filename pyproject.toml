@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "SpectraFit"
-version = "0.12.0b2"
+version = "0.12.0b3"
 description = "Fast fitting of 2D-Spectra with established routines"
 readme = "README.md"
 authors = ["Anselm Hahn <anselm.hahn@gmail.com>"]
@@ -92,7 +92,7 @@ exclude = ["docs/", "tools/"]
 
   [tool.poetry.group.docs.dependencies]
   mkdocs-jupyter = "^0.21.0"
-  mkdocstrings = "^0.18.1"
+  mkdocstrings = {extras = ["python"], version = "^0.19.0"}
   mkdocs-material = "^8.4.2"
   mkdocs-minify-plugin = "^0.5.0"
   mathjax = "^0.1.2"
