@@ -1,5 +1,5 @@
 """Test of the Jupiter plugin app."""
-import mock
+from unittest import mock
 
 
 def test_jupyter() -> None:
