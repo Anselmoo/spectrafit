@@ -533,10 +533,10 @@ def read_input_file(fname: Path) -> MutableMapping[str, Any]:
         with open(fname, "rb") as f:
             args = tomli.load(f)
     elif fname.suffix == ".json":
-        with open(fname, "r", encoding="utf8") as f:
+        with open(fname, encoding="utf8") as f:
             args = json.load(f)
     elif fname.suffix in [".yaml", ".yml"]:
-        with open(fname, "r", encoding="utf8") as f:
+        with open(fname, encoding="utf8") as f:
             args = yaml.load(f, Loader=yaml.FullLoader)
     else:
         raise OSError(

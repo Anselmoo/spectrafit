@@ -1,5 +1,5 @@
 """Reference model for the API of the command line interface."""
-from __future__ import annotations
+
 
 from datetime import datetime
 from getpass import getuser

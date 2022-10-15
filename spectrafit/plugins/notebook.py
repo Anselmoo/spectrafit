@@ -1,5 +1,5 @@
 """Jupyter Notebook plugin for SpectraFit."""
-from __future__ import annotations
+
 
 from pathlib import Path
 from typing import Any

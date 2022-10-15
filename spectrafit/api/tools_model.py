@@ -1,6 +1,5 @@
 """Reference model for the API of the SpectraFit tools."""
-from __future__ import annotations
-from __future__ import print_function
+
 
 from typing import Any
 from typing import Dict
