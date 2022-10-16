@@ -17,11 +17,15 @@
 - Change `global` to `global_` to avoid keyword clash.
 - Add plugin for [jupyter-notebook][25] integration in VSCode; see also
   [jupyter-notebook-VSCode][26]
+- Change `Dockerimage` to use [jupyter/scipy][27] as base image, see also
+  [SpectraFit-Dockerfile][31]
+- Adding devcontainer for VSCode; see also [devcontainer][30]
 - Change from `to_dict(orient="list")` to `to_dict(orient="split")` for the
   `json` output for including the index.
-- Add link to the [GitHub Advisory Database][27] for security issues in the
+- Add link to the [GitHub Advisory Database][28] for security issues in the
   `Security nodes`.
-- Add CI-Test for `devcontainer` in VSCode; see also [devcontainer-ci][28].
+- Add CI-Test for `devcontainer` in VSCode; see also [devcontainer-ci][29].
+- Add [`pyupgrade`][32] to pre-commit hooks.
 
 ## v0.11.0
 
@@ -268,5 +272,9 @@
 [24]: https://www.4r7.ir
 [25]: https://jupyter.org
 [26]: https://code.visualstudio.com/docs/datascience/jupyter-notebooks
-[27]: https://github.com/advisories?query=type%3Areviewed+ecosystem%3Apip
-[28]: https://github.com/marketplace/actions/devcontainers-ci
+[27]: https://github.com/jupyter/docker-stacks/blob/main/scipy-notebook/Dockerfile
+[28]: https://github.com/advisories?query=type%3Areviewed+ecosystem%3Apip
+[29]: https://github.com/marketplace/actions/devcontainers-ci
+[30]: https://github.com/Anselmoo/spectrafit/pkgs/container/spectrafit-devcontainer
+[31]: https://github.com/Anselmoo/spectrafit/pkgs/container/spectrafit
+[32]: https://github.com/Anselmoo/spectrafit/blob/6ca69132a199d3bf458927cf3d4ce6f8fdef0eae/.pre-commit-config.yaml
