@@ -2,7 +2,7 @@ name: CI - Python Package
 
 on:
   push:
-    branches: [main, feature/*]
+    branches: [main, feature/*, release/*, hotfix/*]
   pull_request:
     branches: [main, develop]
 
