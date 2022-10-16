@@ -7,6 +7,7 @@ from tempfile import TemporaryDirectory
 from typing import Any
 from typing import Dict
 from typing import List
+from unittest import mock
 
 import pandas as pd
 import pytest
@@ -22,6 +23,10 @@ from spectrafit.plugins.notebook import DataFrameDisplay
 from spectrafit.plugins.notebook import DataFramePlot
 from spectrafit.plugins.notebook import ExportReport
 from spectrafit.plugins.notebook import ExportResults
+from spectrafit.plugins.notebook import SpectraFitNotebook
+
+
+__plotly_io_show__ = "plotly.io.show"
 
 
 @pytest.fixture(name="dataframe")
@@ -39,6 +44,24 @@ def dataframe_2_fixture() -> pd.DataFrame:
         "https://raw.githubusercontent.com/Anselmoo/"
         "spectrafit/main/Examples/example_1_fit.csv"
     )
+
+
+@pytest.fixture(name="x_column")
+def x_column_fixture(dataframe: pd.DataFrame) -> str:
+    """Create a x_column object."""
+    return str(dataframe.columns[1])
+
+
+@pytest.fixture(name="y_column")
+def y_column_fixture(dataframe: pd.DataFrame) -> str:
+    """Create a y_column object."""
+    return str(dataframe.columns[2])
+
+
+@pytest.fixture(name="y_columns")
+def y_columns_fixture(dataframe: pd.DataFrame) -> List[str]:
+    """Create a y_column object."""
+    return [str(dataframe.columns[2]), str(dataframe.columns[3])]
 
 
 @pytest.fixture(name="initial_model")
@@ -111,6 +134,26 @@ def export_report_fixture(
     }
 
 
+@pytest.fixture(name="class_spectrafit")
+def class_spectrafit_fixture(
+    dataframe_2: pd.DataFrame, initial_model: List[Dict[str, Dict[str, Dict[str, Any]]]]
+) -> Dict[Any, Any]:
+    """Create a SpectraFitNotebook object."""
+    with TemporaryDirectory() as tmpdir:
+        _df = pd.DataFrame(data={"x": [1, 2, 3], "y": [1, 2, 3]})
+        sp = SpectraFitNotebook(
+            df=_df,
+            x_column="x",
+            y_column="y",
+            folder=str(tmpdir),
+            fname="test",
+        )
+        sp.df_fit = dataframe_2
+        sp.initial_model = initial_model
+        sp.df_pre = _df
+        return {"sp": sp, "tmpdir": str(tmpdir)}
+
+
 def test_dataframe_display(dataframe: pd.DataFrame) -> None:
     """Test the DataFrameDisplay class."""
     DataFrameDisplay().df_display(df=dataframe, mode="regular")
@@ -125,30 +168,39 @@ def test_dataframe_display(dataframe: pd.DataFrame) -> None:
 
 
 @pytest.mark.skipif(sys.platform == "win32", reason="does not run on windows")
+@pytest.mark.webtest
 class TestDataFramePlot:
     """Test the DataFramePlot class."""
 
     def test_dataframe_plot_1(self, dataframe: pd.DataFrame) -> None:
         """Test single plot with one y-column."""
-        dp = DataFramePlot(args_plot=PlotAPI(x="Energy", y="Noisy", title="Test"))
-        dp.plot_dataframe(dataframe)
+        pp = DataFramePlot(args_plot=PlotAPI(x="Energy", y="Noisy", title="Test"))
+        with mock.patch(__plotly_io_show__) as mock_show:
+            pp.plot_dataframe(df=dataframe)
+            mock_show.assert_called_once()
 
     def test_dataframe_plot_2(self, dataframe: pd.DataFrame) -> None:
         """Test single plot with two y-column."""
-        dp = DataFramePlot(
+        pp = DataFramePlot(
             args_plot=PlotAPI(x="Energy", y=["Intensity", "Noisy"], title="Test")
         )
-        dp.plot_dataframe(dataframe)
+        with mock.patch(__plotly_io_show__) as mock_show:
+            pp.plot_dataframe(dataframe)
+            mock_show.assert_called_once()
 
     def test_dataframe_plot_3(self, dataframe_2: pd.DataFrame) -> None:
         """Test douple plot."""
-        dp = DataFramePlot(args_plot=PlotAPI(x="energy", y="intensity", title="Test"))
-        dp.plot_2dataframes(df_1=dataframe_2, df_2=dataframe_2)
+        pp = DataFramePlot(args_plot=PlotAPI(x="energy", y="intensity", title="Test"))
+        with mock.patch(__plotly_io_show__) as mock_show:
+            pp.plot_2dataframes(df_1=dataframe_2, df_2=dataframe_2)
+            mock_show.assert_called_once()
 
     def test_dataframe_plot_4(self, dataframe_2: pd.DataFrame) -> None:
         """Test double plot with residual."""
-        dp = DataFramePlot(args_plot=PlotAPI(x="energy", y="intensity", title="Test"))
-        dp.plot_2dataframes(df_1=dataframe_2)
+        pp = DataFramePlot(args_plot=PlotAPI(x="energy", y="intensity", title="Test"))
+        with mock.patch(__plotly_io_show__) as mock_show:
+            pp.plot_2dataframes(df_1=dataframe_2)
+            mock_show.assert_called_once()
 
 
 def test_dataframe_display_all(dataframe: pd.DataFrame) -> None:
@@ -224,3 +276,169 @@ class TestExportReport:
         assert isinstance(
             ExportReport(**export_report).make_output_contribution, OutputAPI
         )
+
+
+class TestSpectraFitNotebook:
+    """Test the SpectraFitNotebook class."""
+
+    def test_init(
+        self,
+        dataframe: pd.DataFrame,
+        x_column: str,
+        y_column: str,
+        y_columns: List[str],
+    ) -> None:
+        """Test the initialization of the class."""
+        assert isinstance(
+            SpectraFitNotebook(df=dataframe, x_column=x_column, y_column=y_column),
+            SpectraFitNotebook,
+        )
+        assert isinstance(
+            SpectraFitNotebook(df=dataframe, x_column=x_column, y_column=y_columns),
+            SpectraFitNotebook,
+        )
+
+    def test_init_fail(self, dataframe: pd.DataFrame, x_column: str) -> None:
+        """Test the initialization of the class."""
+        with pytest.raises(ValueError) as excinfo:
+            SpectraFitNotebook(
+                df=dataframe[[x_column]], x_column=x_column, y_column="wrong"
+            )
+
+        assert "The dataframe must have 2 or more columns." in str(excinfo.value)
+
+    def test_pre_process(
+        self, dataframe: pd.DataFrame, x_column: str, y_column: str
+    ) -> None:
+        """Test the pre_process function."""
+        sp = SpectraFitNotebook(df=dataframe, x_column=x_column, y_column=y_column)
+        sp.pre_process
+        sp.df_fit = dataframe
+        assert isinstance(sp.return_df_org, pd.DataFrame)
+        assert isinstance(sp.return_df_pre, pd.DataFrame)
+        assert isinstance(sp.return_df_fit, pd.DataFrame)
+        assert isinstance(sp.return_df, pd.DataFrame)
+        assert isinstance(sp.return_pre_statistic, dict)
+
+    def test_export_df(self, class_spectrafit: Dict[Any, Any]) -> None:
+        """Test the export_df function."""
+        class_spectrafit["sp"].export_df_act
+        class_spectrafit["sp"].export_df_fit
+        class_spectrafit["sp"].export_df_org
+        class_spectrafit["sp"].export_df_pre
+        assert ExportResults.fname2Path(
+            folder=class_spectrafit["tmpdir"], fname="test", prefix="act", suffix="csv"
+        ).exists()
+        assert ExportResults.fname2Path(
+            folder=class_spectrafit["tmpdir"], fname="test", prefix="fit", suffix="csv"
+        ).exists()
+        assert ExportResults.fname2Path(
+            folder=class_spectrafit["tmpdir"], fname="test", prefix="org", suffix="csv"
+        ).exists()
+        assert ExportResults.fname2Path(
+            folder=class_spectrafit["tmpdir"], fname="test", prefix="pre", suffix="csv"
+        ).exists()
+
+    @pytest.mark.skipif(sys.platform == "win32", reason="does not run on windows")
+    @pytest.mark.webtest
+    def test_plot_org(
+        self,
+        class_spectrafit: Dict[Any, Any],
+    ) -> None:
+        """Test the plot function."""
+        with mock.patch(__plotly_io_show__) as mock_show:
+            class_spectrafit["sp"].plot_original_df
+            mock_show.assert_called_once()
+
+    @pytest.mark.skipif(sys.platform == "win32", reason="does not run on windows")
+    @pytest.mark.webtest
+    def test_plot_current(
+        self,
+        class_spectrafit: Dict[Any, Any],
+    ) -> None:
+        """Test the plot function."""
+        with mock.patch(__plotly_io_show__) as mock_show:
+            class_spectrafit["sp"].plot_current_df
+            mock_show.assert_called_once()
+
+    @pytest.mark.skipif(sys.platform == "win32", reason="does not run on windows")
+    @pytest.mark.webtest
+    def test_plot_preprocess(
+        self,
+        class_spectrafit: Dict[Any, Any],
+    ) -> None:
+        """Test the plot function."""
+        with mock.patch(__plotly_io_show__) as mock_show:
+            class_spectrafit["sp"].plot_preprocessed_df
+            mock_show.assert_called_once()
+
+    @pytest.mark.skipif(sys.platform == "win32", reason="does not run on windows")
+    @pytest.mark.webtest
+    def test_plot_fit(
+        self,
+        class_spectrafit: Dict[Any, Any],
+    ) -> None:
+        """Test the plot function."""
+        with mock.patch(__plotly_io_show__) as mock_show:
+            class_spectrafit["sp"].plot_fit_df
+            mock_show.assert_called_once()
+
+    def test_display(
+        self,
+        class_spectrafit: Dict[Any, Any],
+    ) -> None:
+        """Test the display function."""
+        class_spectrafit["sp"].display_preprocessed_df
+        class_spectrafit["sp"].display_original_df
+        class_spectrafit["sp"].display_current_df
+        class_spectrafit["sp"].display_fit_df
+
+    def test_generate_report(
+        self,
+        class_spectrafit: Dict[Any, Any],
+        dataframe: pd.DataFrame,
+        dataframe_2: pd.DataFrame,
+        x_column: str,
+        y_column: str,
+        initial_model: List[Dict[str, Dict[str, Dict[str, Any]]]],
+        args_out: Dict[str, Any],
+    ) -> None:
+        """Test the generate_report function."""
+        sp = SpectraFitNotebook(
+            df=dataframe,
+            x_column=x_column,
+            y_column=y_column,
+            fname="test",
+            folder=class_spectrafit["tmpdir"],
+        )
+        sp.initial_model = initial_model
+        sp.args = args_out
+        sp.df_fit = dataframe_2
+        sp.generate_report
+
+        assert ExportResults.fname2Path(
+            folder=class_spectrafit["tmpdir"],
+            fname="test",
+            suffix="lock",
+        ).exists()
+
+    def test_fit(
+        self,
+        class_spectrafit: Dict[Any, Any],
+        dataframe: pd.DataFrame,
+        x_column: str,
+        y_column: str,
+        initial_model: List[Dict[str, Dict[str, Dict[str, Any]]]],
+    ) -> None:
+        """Test the fit function."""
+        sp = SpectraFitNotebook(
+            df=dataframe,
+            x_column=x_column,
+            y_column=y_column,
+            fname="test",
+            folder=class_spectrafit["tmpdir"],
+        )
+
+        with mock.patch(__plotly_io_show__) as mock_show:
+            sp.solver_model(initial_model=initial_model, show_plot=True, show_df=True)
+            mock_show.assert_called_once()

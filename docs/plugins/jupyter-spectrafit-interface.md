@@ -110,7 +110,7 @@ a `List` of `Dict` objects. While every `Dict` object represents:
 2. The parameters of the model with their initial values and bounds as a
    `Dict` object.
 
-!!! example "Example of an Intial-Parameter-Model"
+!!! example "Example of an Initial-Parameter-Model"
 
     ```python
     model = [
@@ -138,6 +138,35 @@ a `List` of `Dict` objects. While every `Dict` object represents:
         },
     ]
     ```
+
+## The SpectraFitNotebook Class
+
+For running the `SpectraFit` in the Jupyter Notebook-Interface, the
+`SpectraFitNotebook` class is used. It is a **new** module, which is
+part of the `SpectraFit` plugins. All important settings are defined in the
+`__init__` method of the class.
+
+::: spectrafit.plugins.notebook.SpectraFitNotebook
+    handler: python
+    options:
+      members:
+        - __init__
+      show_root_heading: true
+      show_signature: false
+      show_source: false
+
+The _initial parameter model_ of the section
+[Input Parameter Model](#input-parameter-model) is used in the function call of
+the `SpectraFitNotebook` class.
+
+::: spectrafit.plugins.notebook.SpectraFitNotebook
+    handler: python
+    options:
+      members:
+        - solver_model
+      show_root_heading: true
+      show_signature: false
+      show_source: false
 
 ## Output
 

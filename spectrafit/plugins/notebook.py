@@ -259,7 +259,7 @@ class DataFramePlot:
         """Plot the dataframe according to the PlotAPI arguments.
 
         Args:
-            df (pd.DataFrame): _description_
+            df (pd.DataFrame): Dataframe to plot.
         """
         fig = px.line(df, x=self.args_plot.x, y=self.args_plot.y)
         xaxis_title = (
@@ -308,7 +308,13 @@ class ExportResults:
     """Class for exporting results as csv."""
 
     def export_df(self, df: pd.DataFrame, args: FnameAPI) -> None:
-        """Export the dataframe as csv."""
+        """Export the dataframe as csv.
+
+        Args:
+            df (pd.DataFrame): Dataframe to export.
+            args (FnameAPI): Arguments for the file export including the path, prefix,
+                 and suffix.
+        """
         df.to_csv(
             self.fname2Path(
                 fname=args.fname,
@@ -323,8 +329,9 @@ class ExportResults:
         """Export the results as toml file.
 
         Args:
-            report (Dict[Any, Any]): _description_
-            args (FnameAPI): _description_
+            report (Dict[Any, Any]): Results as dictionary to export.
+            args (FnameAPI): Arguments for the file export including the path, prefix,
+                 and suffix.
         """
         with open(
             self.fname2Path(
@@ -509,14 +516,18 @@ class ExportReport(SolverResults):
         """Initialize the ExportReport class.
 
         Args:
-            description (DescriptionAPI): _description_
-            initial_model (List[Dict[str, Dict[str, Dict[str, Any]]]]): _description_
-            pre_processing (DataPreProcessingAPI): _description_
-            fname (FnameAPI): _description_
-            args_out (Dict[str, Any]): _description_
-            df_org (pd.DataFrame): _description_
-            df_fit (pd.DataFrame): _description_
-            df_pre (Optional[pd.DataFrame], optional): _description_. Defaults to None.
+            description (DescriptionAPI): Description of the fit project.
+            initial_model (List[Dict[str, Dict[str, Dict[str, Any]]]]): Initial model
+                 for the fit.
+            pre_processing (DataPreProcessingAPI): Data pre-processing settings.
+            fname (FnameAPI): Filename of the fit project including the path, prefix,
+                 and suffix.
+            args_out (Dict[str, Any]): Dictionary of SpectraFit settings and results.
+            df_org (pd.DataFrame): Dataframe of the original data for performing
+                 the fit.
+            df_fit (pd.DataFrame): Dataframe of the final fit data.
+            df_pre (Optional[pd.DataFrame], optional): Dataframe of the pre-processed.
+                 Defaults to pd.DataFrame().
         """
         super().__init__(args_out=args_out)
         self.description = description
@@ -591,6 +602,7 @@ class ExportReport(SolverResults):
 class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults, ExportReport):
     """Jupyter Notebook plugin for SpectraFit."""
 
+    args: Dict[str, Any]
     global_: Union[bool, int] = False
     autopeak: bool = False
     df_fit: pd.DataFrame
@@ -627,41 +639,64 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults, ExportR
     ) -> None:
         """Initialize the SpectraFitNotebook class.
 
-        # TODO:
-            - Export of the current component model
-            - Export pictures
-            - Showing current goodness of fit
+        !!! info "About `Pydantic`-Definition"
+
+            For being consistent with the `SpectraFit` class, the `SpectraFitNotebook`
+            class refers to the `Pydantic`-Definition of the `SpectraFit` class.
+            Currently, the following definitions are used:
+
+            - `XAxisAPI`: Definition of the x-axis including units
+            - `YAxisAPI`: Definition of the y-axis including units
+            - `ResidualAPI`: Definition of the residual including units
+            - `LegendAPI`: Definition of the legend according to `Plotly`
+            - `FontAPI`: Definition of the font according to `Plotly`, which can be
+                replaced by _built-in_ definitions
+            - `ColorAPI`: Definition of the colors according to `Plotly`, which can be
+                replace by _built-in_ definitions
+            - `GridAPI`: Definition of the grid according to `Plotly`
+            - `DescriptionAPI`: Definition of the description of the fit project
+
+            All classes can be replaced by the corresponding `dict`-definition.
+
+            ```python
+            LegendAPI(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
+            ```
+
+            can be also
+
+            ```python
+            dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
+            ```
 
         Args:
             df (pd.DataFrame): Dataframe with the data to fit.
-            x_column (str): Name of the x column
-            y_column (Union[str, List[str]]): _description_
-            oversampling (bool, optional): _description_. Defaults to False.
-            smooth (int, optional): _description_. Defaults to 0.
-            shift (float, optional): _description_. Defaults to 0.
-            energy_start (Optional[float], optional): _description_. Defaults to None.
-            energy_stop (Optional[float], optional): _description_. Defaults to None.
-            title (Optional[str], optional): _description_. Defaults to None.
-            xaxis_title (XAxisAPI, optional): _description_.
-                 Defaults to XAxisAPI(name="Energy", unit="eV").
-            yaxis_title (YAxisAPI, optional): _description_.
-                 Defaults to YAxisAPI(name="Intensity", unit="a.u.").
-            residual_title (ResidualAPI, optional): _description_.
-                 Defaults to ResidualAPI(name="Residual", unit="a.u.").
-            legend_title (str, optional): _description_. Defaults to "Spectra".
-            show_legend (bool, optional): _description_. Defaults to True.
-            legend (LegendAPI, optional): _description_.
-                 Defaults to LegendAPI( orientation="h", yanchor="bottom", y=1.02,
-                 xanchor="right", x=1 ).
-            font (FontAPI, optional): _description_.
-                 Defaults to FontAPI(family="Open Sans, monospace", size=12,
-                 color="black").
-            minor_ticks (bool, optional): _description_. Defaults to True.
-            color (ColorAPI, optional): _description_. Defaults to ColorAPI().
-            grid (GridAPI, optional): _description_. Defaults to GridAPI().
-            size (Tuple[int, int], optional): _description_. Defaults to (800, 600).
-            fname (str, optional): _description_. Defaults to "results".
-            folder (Optional[str], optional): _description_. Defaults to None.
+            x_column (str): Name of the x column.
+            y_column (Union[str, List[str]]): Name of the y column(s).
+            oversampling (bool, optional): Activate the oversampling options.
+                 Defaults to False.
+            smooth (int, optional): Activate the smoothing functions setting an
+                 `int>0`. Defaults to 0.
+            shift (float, optional): Apply shift to the x-column. Defaults to 0.
+            energy_start (Optional[float], optional): Energy start. Defaults to None.
+            energy_stop (Optional[float], optional): Energy stop. Defaults to None.
+            title (Optional[str], optional): Plot title. Defaults to None.
+            xaxis_title (XAxisAPI, optional): X-Axis title. Defaults to XAxisAPI().
+            yaxis_title (YAxisAPI, optional): Y-Axis title. Defaults to YAxisAPI().
+            residual_title (ResidualAPI, optional): Residual title. Defaults to
+                 ResidualAPI().
+            legend_title (str, optional): Legend title. Defaults to "Spectra".
+            show_legend (bool, optional): Show legend. Defaults to True.
+            legend (LegendAPI, optional): Legend options. Defaults to LegendAPI().
+            font (FontAPI, optional): Font options. Defaults to FontAPI().
+            minor_ticks (bool, optional): Show minor ticks. Defaults to True.
+            color (ColorAPI, optional): Color options. Defaults to ColorAPI().
+            grid (GridAPI, optional): Grid options. Defaults to GridAPI().
+            size (Tuple[int, int], optional): Size of the plot. Defaults to (800, 600).
+            fname (str, optional): Filename of the export. Defaults to "results".
+            folder (Optional[str], optional): Folder of the export. Defaults to None.
+            description (DescriptionAPI, optional): Description of the data. Defaults
+                 to DescriptionAPI()..
+
 
         Raises:
             ValueError: If the dataframe only contains one column.
@@ -669,15 +704,15 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults, ExportR
         self.x_column = x_column
         self.y_column = y_column
 
+        if df.shape[1] < 2:
+            raise ValueError("The dataframe must have 2 or more columns.")
+
         if isinstance(self.y_column, list):
             self.global_ = 1
             self.df = df[[self.x_column, *self.y_column]]
         else:
             self.df = df[[self.x_column, self.y_column]]
         self.df_org = self.df.copy()
-
-        if self.df.shape[1] < 2:
-            raise ValueError("The dataframe must have 2 or more columns.")
 
         self.args_pre = DataPreProcessingAPI(
             oversampling=oversampling,
@@ -765,7 +800,7 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults, ExportR
     @property
     def export_df_pre(self) -> None:
         """Export the dataframe."""
-        if self.df_pre:
+        if self.df_pre.empty is False:
             self.export_args_df.prefix = "pre"
             self.export_df(df=self.df_pre, args=self.export_args_df)
 
@@ -785,7 +820,7 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults, ExportR
         self.plot_2dataframes(df_1=self.df_pre, df_2=self.df_org)
 
     @property
-    def plot_df_fit(self) -> None:
+    def plot_fit_df(self) -> None:
         """Plot the fit."""
         self.plot_2dataframes(df_1=self.df_fit)
 
@@ -847,11 +882,11 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults, ExportR
             )(),
         )()
         if show_plot:
-            self.plot_df_fit
+            self.plot_fit_df
         if show_df:
             self.interactive_display(df=self.df_fit)
 
-    def display_df_fit(self, mode: Optional[str] = "regular") -> None:
+    def display_fit_df(self, mode: Optional[str] = "regular") -> None:
         """Display the fit dataframe.
 
         Args:
