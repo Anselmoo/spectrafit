@@ -26,6 +26,9 @@ from spectrafit.plugins.notebook import ExportResults
 from spectrafit.plugins.notebook import SpectraFitNotebook
 
 
+__plotly_io_show__ = "plotly.io.show"
+
+
 @pytest.fixture(name="dataframe")
 def dataframe_fixture() -> pd.DataFrame:
     """Create a DataFrameDisplay object."""
@@ -172,7 +175,7 @@ class TestDataFramePlot:
     def test_dataframe_plot_1(self, dataframe: pd.DataFrame) -> None:
         """Test single plot with one y-column."""
         pp = DataFramePlot(args_plot=PlotAPI(x="Energy", y="Noisy", title="Test"))
-        with mock.patch("plotly.io.show") as mock_show:
+        with mock.patch(__plotly_io_show__) as mock_show:
             pp.plot_dataframe(df=dataframe)
             mock_show.assert_called_once()
 
@@ -181,21 +184,21 @@ class TestDataFramePlot:
         pp = DataFramePlot(
             args_plot=PlotAPI(x="Energy", y=["Intensity", "Noisy"], title="Test")
         )
-        with mock.patch("plotly.io.show") as mock_show:
+        with mock.patch(__plotly_io_show__) as mock_show:
             pp.plot_dataframe(dataframe)
             mock_show.assert_called_once()
 
     def test_dataframe_plot_3(self, dataframe_2: pd.DataFrame) -> None:
         """Test douple plot."""
         pp = DataFramePlot(args_plot=PlotAPI(x="energy", y="intensity", title="Test"))
-        with mock.patch("plotly.io.show") as mock_show:
+        with mock.patch(__plotly_io_show__) as mock_show:
             pp.plot_2dataframes(df_1=dataframe_2, df_2=dataframe_2)
             mock_show.assert_called_once()
 
     def test_dataframe_plot_4(self, dataframe_2: pd.DataFrame) -> None:
         """Test double plot with residual."""
         pp = DataFramePlot(args_plot=PlotAPI(x="energy", y="intensity", title="Test"))
-        with mock.patch("plotly.io.show") as mock_show:
+        with mock.patch(__plotly_io_show__) as mock_show:
             pp.plot_2dataframes(df_1=dataframe_2)
             mock_show.assert_called_once()
 
@@ -343,7 +346,7 @@ class TestSpectraFitNotebook:
         class_spectrafit: Dict[Any, Any],
     ) -> None:
         """Test the plot function."""
-        with mock.patch("plotly.io.show") as mock_show:
+        with mock.patch(__plotly_io_show__) as mock_show:
             class_spectrafit["sp"].plot_original_df
             mock_show.assert_called_once()
 
@@ -354,7 +357,7 @@ class TestSpectraFitNotebook:
         class_spectrafit: Dict[Any, Any],
     ) -> None:
         """Test the plot function."""
-        with mock.patch("plotly.io.show") as mock_show:
+        with mock.patch(__plotly_io_show__) as mock_show:
             class_spectrafit["sp"].plot_current_df
             mock_show.assert_called_once()
 
@@ -365,7 +368,7 @@ class TestSpectraFitNotebook:
         class_spectrafit: Dict[Any, Any],
     ) -> None:
         """Test the plot function."""
-        with mock.patch("plotly.io.show") as mock_show:
+        with mock.patch(__plotly_io_show__) as mock_show:
             class_spectrafit["sp"].plot_preprocessed_df
             mock_show.assert_called_once()
 
@@ -376,7 +379,7 @@ class TestSpectraFitNotebook:
         class_spectrafit: Dict[Any, Any],
     ) -> None:
         """Test the plot function."""
-        with mock.patch("plotly.io.show") as mock_show:
+        with mock.patch(__plotly_io_show__) as mock_show:
             class_spectrafit["sp"].plot_fit_df
             mock_show.assert_called_once()
 
@@ -436,6 +439,6 @@ class TestSpectraFitNotebook:
             folder=class_spectrafit["tmpdir"],
         )
 
-        with mock.patch("plotly.io.show") as mock_show:
+        with mock.patch(__plotly_io_show__) as mock_show:
             sp.solver_model(initial_model=initial_model, show_plot=True, show_df=True)
             mock_show.assert_called_once()
