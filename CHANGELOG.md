@@ -6,6 +6,12 @@
 
 > See also: [https://github.com/Anselmoo/spectrafit/releases][1]
 
+## v0.12.1
+
+---
+
+- New release for triggering `Conda-Forge` build
+
 ## v0.12.0
 
 ---
