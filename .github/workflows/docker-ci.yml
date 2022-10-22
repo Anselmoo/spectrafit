@@ -1,4 +1,4 @@
-name: Docker CI
+name: CI - Docker Image
 on:
   push:
     branches: [main]
@@ -12,14 +12,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: dorny/paths-filter@v2.2.1
-        id: filter
-        with:
-          filters: |
-            docker:
-              - './.dockerignore'
-              - './Dockerfile'
+      # - uses: dorny/paths-filter@v2.2.1
+      #   id: filter
+      #   with:
+      #     filters: |
+      #       docker:
+      #         - 'Dockerfile'
       - name: Build the Docker image
-        if: ${{ steps.filter.outputs.docker == 'true' }}
+        #  if: ${{ steps.filter.outputs.docker == 'true' }}
         run: |
           docker build . --file Dockerfile --tag spectrafit:$(date +%s)
