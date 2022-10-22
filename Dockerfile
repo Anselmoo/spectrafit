@@ -52,7 +52,7 @@ RUN mamba install --quiet --yes \
     'scikit-learn' \
     'scipy' \
     'seaborn' \
-    'spectrafit' \
+    'spectrafit=0.12.1' \
     'sqlalchemy' \
     'statsmodels' \
     'sympy' \
