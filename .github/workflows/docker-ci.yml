@@ -1,0 +1,25 @@
+name: Docker CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  docker:
+    # Only if Dockerfile is changed
+    name: Docker Image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dorny/paths-filter@v2.2.1
+        id: filter
+        with:
+          filters: |
+            docker:
+              - './.dockerignore'
+              - './Dockerfile'
+      - name: Build the Docker image
+        if: ${{ steps.filter.outputs.docker == 'true' }}
+        run: |
+          docker build . --file Dockerfile --tag spectrafit:$(date +%s)
