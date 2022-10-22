@@ -137,7 +137,8 @@ jobs:
         run: poetry run mkdocs gh-deploy --clean --force
   docker:
     name: Docker Image
-    needs: build
+    # because it refers to the conda-forge package, it is not necessary to build it on every push
+    # needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
