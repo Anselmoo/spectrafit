@@ -52,7 +52,7 @@ RUN mamba install --quiet --yes \
     'scikit-learn' \
     'scipy' \
     'seaborn' \
-    'spectrafit' \
+    'spectrafit=0.12.1' \
     'sqlalchemy' \
     'statsmodels' \
     'sympy' \
@@ -75,7 +75,7 @@ ENV XDG_CACHE_HOME="/home/${NB_USER}/.cache/"
 
 #RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot; from spectrafit.plugins import notebook, color_schemas" && \
 #    fix-permissions "/home/${NB_USER}"
-RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot" && \
+RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot; from spectrafit.plugins import notebook" && \
     fix-permissions "/home/${NB_USER}"
 
 USER ${NB_UID}

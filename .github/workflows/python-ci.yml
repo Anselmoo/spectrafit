@@ -135,15 +135,6 @@ jobs:
       - name: Deploy documentation develops
         if: contains(github.ref, 'refs/heads/main')
         run: poetry run mkdocs gh-deploy --clean --force
-  docker:
-    name: Docker Image
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Build the Docker image
-        run: |
-          docker build . --file Dockerfile --tag spectrafit:$(date +%s)
   devcontainer:
     name: Devcontainer
     needs: build
