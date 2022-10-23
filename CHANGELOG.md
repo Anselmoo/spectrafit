@@ -6,6 +6,12 @@
 
 > See also: [https://github.com/Anselmoo/spectrafit/releases][1]
 
+## v0.12.2.
+
+---
+
+- Update `Dockerimage` to use `SpectraFit` in the Jupyter Notebook.
+
 ## v0.12.1
 
 ---
