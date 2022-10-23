@@ -1,4 +1,4 @@
-name: Docker CI
+name: CI - Docker Image
 on:
   push:
     branches: [main]
@@ -19,6 +19,6 @@ jobs:
             docker:
               - 'Dockerfile'
       - name: Build the Docker image
-        if: ${{ steps.filter.outputs.docker == 'true' }}
+        #  if: ${{ steps.filter.outputs.docker == 'true' }}
         run: |
           docker build . --file Dockerfile --tag spectrafit:$(date +%s)
