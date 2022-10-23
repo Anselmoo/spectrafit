@@ -17,8 +17,7 @@ jobs:
         with:
           filters: |
             docker:
-              - './.dockerignore'
-              - './Dockerfile'
+              - 'Dockerfile'
       - name: Build the Docker image
         if: ${{ steps.filter.outputs.docker == 'true' }}
         run: |
