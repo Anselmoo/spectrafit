@@ -6,6 +6,13 @@
 
 > See also: [https://github.com/Anselmoo/spectrafit/releases][1]
 
+## v0.12.3
+
+---
+
+- Update `Dockerimage` to the previous version of the [Conda-Forge-Recipe][33]
+- Reformat license in the docs
+
 ## v0.12.2.
 
 ---
@@ -290,3 +297,4 @@
 [30]: https://github.com/Anselmoo/spectrafit/pkgs/container/spectrafit-devcontainer
 [31]: https://github.com/Anselmoo/spectrafit/pkgs/container/spectrafit
 [32]: https://github.com/Anselmoo/spectrafit/blob/6ca69132a199d3bf458927cf3d4ce6f8fdef0eae/.pre-commit-config.yaml
+[33]: https://github.com/conda-forge/spectrafit-feedstock
