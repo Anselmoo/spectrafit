@@ -1,9 +1,7 @@
 codespaces:
   - .devcontainer/**
-
-"dependencies":
+dependencies:
   - poetry.lock
-
 documentation:
   - docs/**
   - .github/ISSUE_TEMPLATE/**
@@ -11,21 +9,19 @@ documentation:
   - Examples/**
   - mkdocs.yml
   - README.md
-
 github-actions:
   - .github/workflows/**
-
+pre-commit:
+  - .pre-commit-config.yaml
+  - .pre-commit-hooks.yaml
 python:
   - spectrafit/**
-
 testings:
   - all: ["spectrafit/**/test_*.py"]
-
 docker:
   - Dockerfile
   - .dockerignore
   - .devcontainer/Dockerfile
-
 vendor:
   - vendor/**
 maintenance:
@@ -36,12 +32,12 @@ maintenance:
   - .github/labeler.yml
   - .github/workflows/label.yml
   - .sonarcloud.properties
-  - "LICENSE"
-  - "CHANGELOG.md"
-  - "CODE_OF_CONDUCT.md"
-  - "CONTRIBUTING.md"
+  - LICENSE
+  - CHANGELOG.md
+  - CODE_OF_CONDUCT.md
+  - CONTRIBUTING.md
   - "SECURITY.md"
-  - ".pre-commit-config.yaml"
-  - ".prettierignore"
-  - ".sonarcloud.properties"
-  - ".sourcery.yaml"
+  - .pre-commit-config.yaml
+  - .prettierignore
+  - .sonarcloud.properties
+  - .sourcery.yaml
