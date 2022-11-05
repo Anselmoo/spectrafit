@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "SpectraFit"
-version = "0.12.3"
+version = "0.12.4"
 description = "Fast fitting of 2D-Spectra with established routines"
 readme = "README.md"
 authors = ["Anselm Hahn <anselm.hahn@gmail.com>"]
@@ -108,7 +108,7 @@ spectrafit-converter = "spectrafit.plugins.converter:command_line_runner"
 spectrafit-jupyter = "spectrafit.app.app:jupyter"
 
 [tool.poetry.extras]
-jupyter = ["jupyterlab", "plotly", "itables", "kaleido", "dtale", "dash"]
+jupyter = ["jupyterlab", "plotly", "itables", "kaleido", "dtale"]
 
 [tool.isort]
 profile = "black"
