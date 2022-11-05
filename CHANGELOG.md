@@ -6,12 +6,19 @@
 
 > See also: [https://github.com/Anselmoo/spectrafit/releases][1]
 
+## v0.12.4
+
+---
+
+- Removed `dash` dependency from `pyproject.toml`.
+- Removed `spectrafit`-dependency from `Dockerfile`.
+
 ## v0.12.3
 
 ---
 
-- Update `Dockerimage` to the previous version of the [Conda-Forge-Recipe][33]
-- Reformat license in the docs
+- Update `Dockerimage` to the previous version of the [Conda-Forge-Recipe][33].
+- Reformat license in the docs.
 
 ## v0.12.2.
 
