@@ -174,32 +174,42 @@ class TestDataFramePlot:
 
     def test_dataframe_plot_1(self, dataframe: pd.DataFrame) -> None:
         """Test single plot with one y-column."""
-        pp = DataFramePlot(args_plot=PlotAPI(x="Energy", y="Noisy", title="Test"))
+        pp = DataFramePlot()
         with mock.patch(__plotly_io_show__) as mock_show:
-            pp.plot_dataframe(df=dataframe)
+            pp.plot_dataframe(
+                args_plot=PlotAPI(x="Energy", y="Noisy", title="Test"), df=dataframe
+            )
             mock_show.assert_called_once()
 
     def test_dataframe_plot_2(self, dataframe: pd.DataFrame) -> None:
         """Test single plot with two y-column."""
-        pp = DataFramePlot(
-            args_plot=PlotAPI(x="Energy", y=["Intensity", "Noisy"], title="Test")
-        )
+        pp = DataFramePlot()
         with mock.patch(__plotly_io_show__) as mock_show:
-            pp.plot_dataframe(dataframe)
+            pp.plot_dataframe(
+                args_plot=PlotAPI(x="Energy", y=["Intensity", "Noisy"], title="Test"),
+                df=dataframe,
+            )
             mock_show.assert_called_once()
 
     def test_dataframe_plot_3(self, dataframe_2: pd.DataFrame) -> None:
         """Test douple plot."""
-        pp = DataFramePlot(args_plot=PlotAPI(x="energy", y="intensity", title="Test"))
+        pp = DataFramePlot()
         with mock.patch(__plotly_io_show__) as mock_show:
-            pp.plot_2dataframes(df_1=dataframe_2, df_2=dataframe_2)
+            pp.plot_2dataframes(
+                args_plot=PlotAPI(x="energy", y="intensity", title="Test"),
+                df_1=dataframe_2,
+                df_2=dataframe_2,
+            )
             mock_show.assert_called_once()
 
     def test_dataframe_plot_4(self, dataframe_2: pd.DataFrame) -> None:
         """Test double plot with residual."""
-        pp = DataFramePlot(args_plot=PlotAPI(x="energy", y="intensity", title="Test"))
+        pp = DataFramePlot()
         with mock.patch(__plotly_io_show__) as mock_show:
-            pp.plot_2dataframes(df_1=dataframe_2)
+            pp.plot_2dataframes(
+                args_plot=PlotAPI(x="energy", y="intensity", title="Test"),
+                df_1=dataframe_2,
+            )
             mock_show.assert_called_once()
 
 

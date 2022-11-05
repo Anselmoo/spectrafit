@@ -127,16 +127,11 @@ class DataFrameDisplay:
 class DataFramePlot:
     """Class to plot a dataframe."""
 
-    def __init__(self, args_plot: PlotAPI) -> None:
-        """Initialize the DataFramePlot class.
-
-        Args:
-            args_plot (PlotAPI): PlotAPI object for the settings of the plot.
-        """
-        self.args_plot = args_plot
-
     def plot_2dataframes(
-        self, df_1: pd.DataFrame, df_2: Optional[pd.DataFrame] = None
+        self,
+        args_plot: PlotAPI,
+        df_1: pd.DataFrame,
+        df_2: Optional[pd.DataFrame] = None,
     ) -> None:
         """Plot of two dataframes.
 
@@ -153,6 +148,7 @@ class DataFramePlot:
             are not labeled in the dataframe.
 
         Args:
+            args_plot (PlotAPI): PlotAPI object for the settings of the plot.
             df_1 (pd.DataFrame): First dataframe to plot, which will generate
                  automatically a fit plot with residual plot. The ratio is 70% to 20%
                  with 10% space in between.
@@ -165,7 +161,7 @@ class DataFramePlot:
                 df_1,
                 x=ColumnNamesAPI().energy,
                 y=ColumnNamesAPI().residual,
-                color_discrete_sequence=[self.args_plot.color.residual],
+                color_discrete_sequence=[args_plot.color.residual],
             )
             _y = df_1.columns.drop([ColumnNamesAPI().energy, ColumnNamesAPI().residual])
             _fig2 = px.line(
@@ -173,10 +169,10 @@ class DataFramePlot:
                 x=ColumnNamesAPI().energy,
                 y=_y,
                 color_discrete_map={
-                    ColumnNamesAPI().intensity: self.args_plot.color.intensity,
-                    ColumnNamesAPI().fit: self.args_plot.color.fit,
+                    ColumnNamesAPI().intensity: args_plot.color.intensity,
+                    ColumnNamesAPI().fit: args_plot.color.fit,
                     **{
-                        key: self.args_plot.color.components
+                        key: args_plot.color.components
                         for key in _y.drop(
                             [ColumnNamesAPI().intensity, ColumnNamesAPI().fit]
                         )
@@ -194,8 +190,8 @@ class DataFramePlot:
                 },
             )
         else:
-            _fig1 = px.line(df_1, x=self.args_plot.x, y=self.args_plot.y)
-            _fig2 = px.line(df_2, x=self.args_plot.x, y=self.args_plot.y)
+            _fig1 = px.line(df_1, x=args_plot.x, y=args_plot.y)
+            _fig2 = px.line(df_2, x=args_plot.x, y=args_plot.y)
 
         fig = make_subplots(
             rows=2, cols=1, shared_xaxes=True, shared_yaxes=True, vertical_spacing=0.05
@@ -207,45 +203,44 @@ class DataFramePlot:
             fig.append_trace(_spec_2, row=2, col=1)
 
         fig.update_layout(
-            title=self.args_plot.title,
-            legend_title=self.args_plot.legend_title,
-            legend=self.args_plot.legend.dict(),
-            font=self.args_plot.font.dict(),
-            showlegend=self.args_plot.show_legend,
-            width=self.args_plot.size[0],
-            height=self.args_plot.size[1],
-            paper_bgcolor=self.args_plot.color.paper,
-            plot_bgcolor=self.args_plot.color.plot,
+            title=args_plot.title,
+            legend_title=args_plot.legend_title,
+            legend=args_plot.legend.dict(),
+            font=args_plot.font.dict(),
+            showlegend=args_plot.show_legend,
+            width=args_plot.size[0],
+            height=args_plot.size[1],
+            paper_bgcolor=args_plot.color.paper,
+            plot_bgcolor=args_plot.color.plot,
         )
 
         fig.update_xaxes(
-            minor=self.get_minor,
-            gridcolor=self.args_plot.color.grid,
-            linecolor=self.args_plot.color.line,
-            zerolinecolor=self.args_plot.color.zero_line,
-            color=self.args_plot.color.color,
+            minor=self.get_minor(args_plot=args_plot),
+            gridcolor=args_plot.color.grid,
+            linecolor=args_plot.color.line,
+            zerolinecolor=args_plot.color.zero_line,
+            color=args_plot.color.color,
         )
         fig.update_yaxes(
-            minor=self.get_minor,
-            gridcolor=self.args_plot.color.grid,
-            linecolor=self.args_plot.color.line,
-            zerolinecolor=self.args_plot.color.zero_line,
-            color=self.args_plot.color.color,
+            minor=self.get_minor(args_plot=args_plot),
+            gridcolor=args_plot.color.grid,
+            linecolor=args_plot.color.line,
+            zerolinecolor=args_plot.color.zero_line,
+            color=args_plot.color.color,
         )
 
-        xaxis_title = (
-            f"{self.args_plot.xaxis_title.name} [{self.args_plot.xaxis_title.unit}]",
-        )[0]
-        yaxis_title = (
-            f"{self.args_plot.yaxis_title.name} [{self.args_plot.yaxis_title.unit}]",
-        )[0]
+        xaxis_title = (f"{args_plot.xaxis_title.name} [{args_plot.xaxis_title.unit}]",)[
+            0
+        ]
+        yaxis_title = (f"{args_plot.yaxis_title.name} [{args_plot.yaxis_title.unit}]",)[
+            0
+        ]
 
         fig.update_xaxes(title_text=xaxis_title, row=1, col=1)
         fig.update_xaxes(title_text=xaxis_title, row=2, col=1)
         if df_2 is None:
             residual_title = (
-                f"{self.args_plot.residual_title.name}"
-                f" [{self.args_plot.residual_title.unit}]",
+                f"{args_plot.residual_title.name} [{args_plot.residual_title.unit}]",
             )[0]
             fig["layout"]["yaxis1"].update(domain=[0.8, 1])
             fig["layout"]["yaxis2"].update(domain=[0, 0.7])
@@ -255,52 +250,57 @@ class DataFramePlot:
         fig.update_yaxes(title_text=yaxis_title, row=2, col=1)
         fig.show()
 
-    def plot_dataframe(self, df: pd.DataFrame) -> None:
+    def plot_dataframe(self, args_plot: PlotAPI, df: pd.DataFrame) -> None:
         """Plot the dataframe according to the PlotAPI arguments.
 
         Args:
+            args_plot (PlotAPI): PlotAPI object for the settings of the plot.
             df (pd.DataFrame): Dataframe to plot.
         """
-        fig = px.line(df, x=self.args_plot.x, y=self.args_plot.y)
-        xaxis_title = (
-            f"{self.args_plot.xaxis_title.name} [{self.args_plot.xaxis_title.unit}]",
-        )[0]
-        yaxis_title = (
-            f"{self.args_plot.yaxis_title.name} [{self.args_plot.yaxis_title.unit}]",
-        )[0]
+        fig = px.line(df, x=args_plot.x, y=args_plot.y)
+        xaxis_title = (f"{args_plot.xaxis_title.name} [{args_plot.xaxis_title.unit}]",)[
+            0
+        ]
+        yaxis_title = (f"{args_plot.yaxis_title.name} [{args_plot.yaxis_title.unit}]",)[
+            0
+        ]
         fig.update_layout(
-            title=self.args_plot.title,
-            legend_title=self.args_plot.legend_title,
+            title=args_plot.title,
+            legend_title=args_plot.legend_title,
             xaxis_title=xaxis_title,
             yaxis_title=yaxis_title,
-            legend=self.args_plot.legend.dict(),
-            font=self.args_plot.font.dict(),
-            showlegend=self.args_plot.show_legend,
-            width=self.args_plot.size[0],
-            height=self.args_plot.size[1],
-            paper_bgcolor=self.args_plot.color.paper,
-            plot_bgcolor=self.args_plot.color.plot,
+            legend=args_plot.legend.dict(),
+            font=args_plot.font.dict(),
+            showlegend=args_plot.show_legend,
+            width=args_plot.size[0],
+            height=args_plot.size[1],
+            paper_bgcolor=args_plot.color.paper,
+            plot_bgcolor=args_plot.color.plot,
         )
-
         fig.update_xaxes(
-            minor=self.get_minor,
-            gridcolor=self.args_plot.color.grid,
-            linecolor=self.args_plot.color.line,
-            zerolinecolor=self.args_plot.color.zero_line,
-            color=self.args_plot.color.color,
+            minor=self.get_minor(args_plot=args_plot),
+            gridcolor=args_plot.color.grid,
+            linecolor=args_plot.color.line,
+            zerolinecolor=args_plot.color.zero_line,
+            color=args_plot.color.color,
         )
-        fig.update_yaxes(minor=self.get_minor)
-
+        fig.update_yaxes(minor=self.get_minor(args_plot=args_plot))
         fig.show()
 
-    @property
-    def get_minor(self) -> Dict[str, Union[str, bool]]:
-        """Get the minor axis arguments."""
+    def get_minor(self, args_plot: PlotAPI) -> Dict[str, Union[str, bool]]:
+        """Get the minor axis arguments.
+
+        Args:
+            args_plot (PlotAPI): PlotAPI object for the settings of the plot.
+
+        Returns:
+            Dict[str, Union[str, bool]]: Dictionary with the minor axis arguments.
+        """
         return dict(
-            tickcolor=self.args_plot.color.ticks,
-            showgrid=self.args_plot.grid.show,
-            ticks=self.args_plot.grid.ticks,
-            griddash=self.args_plot.grid.dash,
+            tickcolor=args_plot.color.ticks,
+            showgrid=args_plot.grid.show,
+            ticks=args_plot.grid.ticks,
+            griddash=args_plot.grid.dash,
         )
 
 
@@ -723,24 +723,24 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults, ExportR
             column=list(self.df.columns),
         )
         self.args_desc = description
-        super().__init__(
-            args_plot=PlotAPI(
-                x=self.x_column,
-                y=self.y_column,
-                title=title,
-                xaxis_title=xaxis_title,
-                yaxis_title=yaxis_title,
-                residual_title=residual_title,
-                legend_title=legend_title,
-                show_legend=show_legend,
-                legend=legend,
-                font=font,
-                minor_ticks=minor_ticks,
-                color=color,
-                grid=grid,
-                size=size,
-            ),
+
+        self.args_plot = PlotAPI(
+            x=self.x_column,
+            y=self.y_column,
+            title=title,
+            xaxis_title=xaxis_title,
+            yaxis_title=yaxis_title,
+            residual_title=residual_title,
+            legend_title=legend_title,
+            show_legend=show_legend,
+            legend=legend,
+            font=font,
+            minor_ticks=minor_ticks,
+            color=color,
+            grid=grid,
+            size=size,
         )
+        # self.args_metric = MetricAPI()
         self.export_args_df = FnameAPI(fname=fname, folder=folder, suffix="csv")
         self.export_args_out = FnameAPI(fname=fname, folder=folder, suffix="lock")
 
@@ -807,22 +807,24 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults, ExportR
     @property
     def plot_original_df(self) -> None:
         """Plot the original spectra."""
-        self.plot_dataframe(self.df_org)
+        self.plot_dataframe(args_plot=self.args_plot, df=self.df_org)
 
     @property
     def plot_current_df(self) -> None:
         """Plot the current spectra."""
-        self.plot_dataframe(self.df)
+        self.plot_dataframe(args_plot=self.args_plot, df=self.df)
 
     @property
     def plot_preprocessed_df(self) -> None:
         """Plot the current processed spectra."""
-        self.plot_2dataframes(df_1=self.df_pre, df_2=self.df_org)
+        self.plot_2dataframes(
+            args_plot=self.args_plot, df_1=self.df_pre, df_2=self.df_org
+        )
 
     @property
     def plot_fit_df(self) -> None:
         """Plot the fit."""
-        self.plot_2dataframes(df_1=self.df_fit)
+        self.plot_2dataframes(args_plot=self.args_plot, df_1=self.df_fit)
 
     @property
     def generate_report(self) -> None:
@@ -845,6 +847,7 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults, ExportR
         self,
         initial_model: List[Dict[str, Dict[str, Dict[str, Any]]]],
         show_plot: bool = True,
+        show_metric: bool = True,
         show_df: bool = False,
         conf_interval: Dict[str, Any] = dict(),
     ) -> None:
@@ -856,6 +859,7 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults, ExportR
                  options for the components.
             show_plot (bool, optional): Show current fit results as plot.
                  Defaults to True.
+            show_metric (bool, optional): Show the metric of the fit. Defaults to True.
             show_df (bool, optional): Show current fit results as dataframe. Defaults
                  to False.
             conf_interval (Dict[str, Any], optional): Dictionary for the parameter with
@@ -883,6 +887,12 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults, ExportR
         )()
         if show_plot:
             self.plot_fit_df
+
+        if show_metric:
+            ...
+        # self.make_solver_contribution.goodness_of_fit
+        # self.make_solver_contribution.regression_metrics
+
         if show_df:
             self.interactive_display(df=self.df_fit)
 

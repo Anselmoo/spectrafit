@@ -436,11 +436,11 @@ class SaveResult:
                 5. The name of the column containing the residuum (`residuum`)
                 6. The name of the column containing the model contribution (`model`)
                 7. The name of the column containing the error of the model
-                contribution (`model_error`)
+                    contribution (`model_error`)
                 8. The name of the column containing the error of the best fit
-                (`best_fit_error`)
+                    (`best_fit_error`)
                 9. The name of the column containing the error of the residuum
-                (`residuum_error`)
+                    (`residuum_error`)
 
             The `correlation analysis` file contains the following information about all
             attributes of the model:
