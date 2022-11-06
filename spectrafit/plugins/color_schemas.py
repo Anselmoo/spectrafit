@@ -1,4 +1,6 @@
 """Color Schemas for the Plots in Jupyter Notebooks."""
+from typing import List
+
 from pydantic import BaseModel
 
 
@@ -28,6 +30,8 @@ class DraculaColor(BaseModel, frozen=True):
     intensity: str = "#bd93f9"
     residual: str = "#ff5555"
     fit: str = "#50fa7b"
+    bars: List[str] = ["#803C62", "#FFC4E6", "#FF79C6", "#806273", "#CC609D"]
+    lines: List[str] = ["#805C36", "#FFDCB8", "#FFB86C", "#806E5C", "#CC9356"]
     components: str = "#ff79c6"
     paper: str = "#282a36"
     plot: str = "#282a36"

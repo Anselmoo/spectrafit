@@ -6,6 +6,9 @@ from typing import Optional
 from typing import Tuple
 from typing import Union
 
+from _plotly_utils.colors.carto import Burg
+from _plotly_utils.colors.carto import Purp_r
+from _plotly_utils.colors.carto import Teal_r
 from _plotly_utils.colors.qualitative import Plotly as PlotlyColors
 from pydantic import BaseModel
 from pydantic import Field
@@ -40,6 +43,32 @@ class ResidualAPI(BaseModel):
     )
     unit: Optional[str] = Field(
         default="a.u.", description="Name of the residual-axis units of the plot."
+    )
+
+
+class MetricAPI(BaseModel):
+    """Definition of the residual plot (Y-Axis) of the plotly figure."""
+
+    name_0: str = Field(
+        default="Metrics", description="Name of the first metrics-axis of the plot."
+    )
+    unit_0: Optional[str] = Field(
+        default="a.u.", description="Name of the first metrics-axis units of the plot."
+    )
+    name_1: str = Field(
+        default="Metrics", description="Name of the second metrics-axis of the plot."
+    )
+    unit_1: Optional[str] = Field(
+        default="a.u.", description="Name of the second metrics-axis units of the plot."
+    )
+
+
+class RunAPI(BaseModel):
+    """Definition of the residual plot (Y-Axis) of the plotly figure."""
+
+    name: str = Field(default="Run", description="Name of the Run-axis of the plot.")
+    unit: Optional[str] = Field(
+        default="#", description="Name of the run-axis units of the plot."
     )
 
 
@@ -84,6 +113,12 @@ class ColorAPI(BaseModel):
     components: str = Field(
         default=PlotlyColors[6], description="Color of the components, mainly peaks."
     )
+    # Merging two color list to onw list with switchin the order of the colors
+    bars: List[str] = Field(
+        default=[i for j in zip(Teal_r, Purp_r) for i in j],
+        description="Color of the bar plot of the metrics.",
+    )
+    lines: List[str] = Field(default=Burg, description="Color of the lines plot.")
     paper: str = Field(default="white", description="Color of the paper.")
     plot: str = Field(default="white", description="Color of the plot.")
     color: str = Field(default="black", description="Color of the text.")
@@ -127,6 +162,8 @@ class PlotAPI(BaseModel):
     xaxis_title: XAxisAPI = XAxisAPI()
     yaxis_title: YAxisAPI = YAxisAPI()
     residual_title: ResidualAPI = ResidualAPI()
+    metric_title: MetricAPI = MetricAPI()
+    run_title: RunAPI = RunAPI()
     legend_title: str = Field(default="Spectra", description="Title of the legend.")
     show_legend: bool = Field(default=True, description="Show legend.")
     legend: LegendAPI = LegendAPI()
@@ -134,7 +171,9 @@ class PlotAPI(BaseModel):
     minor_ticks: bool = Field(default=True, description="Show minor ticks.")
     color: ColorAPI = ColorAPI()
     grid: GridAPI = GridAPI()
-    size: Tuple[int, int] = Field(default=(800, 600), description="Size of the plot.")
+    size: Tuple[int, Tuple[int, int]] = Field(
+        default=(800, (600, 300)), description="Size of the fit- and metric-plot."
+    )
 
 
 class FnameAPI(BaseModel):
