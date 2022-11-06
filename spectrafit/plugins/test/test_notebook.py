@@ -151,6 +151,7 @@ def class_spectrafit_fixture(
         sp.df_fit = dataframe_2
         sp.initial_model = initial_model
         sp.df_pre = _df
+        sp.df_metric = _df
         return {"sp": sp, "tmpdir": str(tmpdir)}
 
 
