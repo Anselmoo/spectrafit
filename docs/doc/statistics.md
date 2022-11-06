@@ -290,6 +290,35 @@ following metrics are not implemented yet:
     | `mean absolute percentage error` |    441.19     |     0.25      |     0.62      |
     | `mean poisson deviance`          |     0.02      |     0.02      |     0.01      |
 
+## Metric Plots
+
+In case of using the [Jupyter Notebook][24] interface of the `SpectraFit`
+package, the metrics will be plotted automatically. It uses the
+
+1. [Goodness of Fit Metrics](#Standard-Statistics)
+2. [Regression Metrics](#regression-metrics)
+
+to plot the results for each run and can be also exported as `.csv`. The idea
+is to use multiple runs and metrics together to get a better overview of the
+fitting performance.
+
+![_](images/example_3.png)
+![_](images/example_4.png)
+
+> _Example 3_ and _Example 4_ show the fit abd metric plots for the fitting
+> results of four runs of the `Reference Data` above.
+
+The user can select any of the metrics **1** and **2** by using the keywords
+`bar_criteria` and `line_criteria`.
+
+```python
+sp.solver_model(
+    initial_model=initial_model,
+    bar_criteria=["reduced_chi_square"],
+    line_criteria=["explained_variance_score", "r2_score", "max_error"],
+)
+```
+
 [1]: https://en.wikipedia.org/wiki/Goodness_of_fit
 [2]: https://lmfit.github.io/lmfit-py/fitting.html?highlight=goodness
 [3]: https://en.wikipedia.org/wiki/Chi-squared_test
@@ -313,6 +342,7 @@ following metrics are not implemented yet:
 [21]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.d2_tweedie_score.html
 [22]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.d2_pinball_score.html
 [23]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.d2_absolute_error_score.html
+[24]: https://jupyter.org/
 
 [^1]: requires a strictly postive `y_true` and `y_pred` array
 [^2]: requires `sklearn >= 1.1.2`

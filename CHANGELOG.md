@@ -10,6 +10,7 @@
 
 ---
 
+- Include metric plots into the [jupyter-notebook][25] interface.
 - Removed `dash` dependency from `pyproject.toml`.
 - Removed `spectrafit`-dependency from `Dockerfile`.
 
