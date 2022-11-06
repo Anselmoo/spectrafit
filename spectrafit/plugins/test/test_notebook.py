@@ -450,5 +450,36 @@ class TestSpectraFitNotebook:
         )
 
         with mock.patch(__plotly_io_show__) as mock_show:
-            sp.solver_model(initial_model=initial_model, show_plot=True, show_df=True)
+            sp.solver_model(
+                initial_model=initial_model,
+                show_plot=True,
+                show_df=True,
+                show_metric=False,
+            )
+            mock_show.assert_called_once()
+
+    def test_metric(
+        self,
+        class_spectrafit: Dict[Any, Any],
+        dataframe: pd.DataFrame,
+        x_column: str,
+        y_column: str,
+        initial_model: List[Dict[str, Dict[str, Dict[str, Any]]]],
+    ) -> None:
+        """Test the metric plot function."""
+        sp = SpectraFitNotebook(
+            df=dataframe,
+            x_column=x_column,
+            y_column=y_column,
+            fname="test",
+            folder=class_spectrafit["tmpdir"],
+        )
+
+        with mock.patch(__plotly_io_show__) as mock_show:
+            sp.solver_model(
+                initial_model=initial_model,
+                show_plot=False,
+                show_df=True,
+                show_metric=True,
+            )
             mock_show.assert_called_once()

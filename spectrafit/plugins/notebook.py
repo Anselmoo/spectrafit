@@ -1,6 +1,5 @@
 """Jupyter Notebook plugin for SpectraFit."""
 
-
 from pathlib import Path
 from typing import Any
 from typing import Dict
@@ -9,6 +8,7 @@ from typing import Optional
 from typing import Tuple
 from typing import Union
 
+import numpy as np
 import pandas as pd
 import plotly.express as px
 import tomli_w
@@ -25,8 +25,10 @@ from spectrafit.api.notebook_model import FnameAPI
 from spectrafit.api.notebook_model import FontAPI
 from spectrafit.api.notebook_model import GridAPI
 from spectrafit.api.notebook_model import LegendAPI
+from spectrafit.api.notebook_model import MetricAPI
 from spectrafit.api.notebook_model import PlotAPI
 from spectrafit.api.notebook_model import ResidualAPI
+from spectrafit.api.notebook_model import RunAPI
 from spectrafit.api.notebook_model import XAxisAPI
 from spectrafit.api.notebook_model import YAxisAPI
 from spectrafit.api.report_model import FitMethodAPI
@@ -209,7 +211,7 @@ class DataFramePlot:
             font=args_plot.font.dict(),
             showlegend=args_plot.show_legend,
             width=args_plot.size[0],
-            height=args_plot.size[1],
+            height=args_plot.size[1][0],
             paper_bgcolor=args_plot.color.paper,
             plot_bgcolor=args_plot.color.plot,
         )
@@ -229,19 +231,19 @@ class DataFramePlot:
             color=args_plot.color.color,
         )
 
-        xaxis_title = (f"{args_plot.xaxis_title.name} [{args_plot.xaxis_title.unit}]",)[
-            0
-        ]
-        yaxis_title = (f"{args_plot.yaxis_title.name} [{args_plot.yaxis_title.unit}]",)[
-            0
-        ]
+        xaxis_title = self.title_text(
+            name=args_plot.xaxis_title.name, unit=args_plot.xaxis_title.unit
+        )
+        yaxis_title = self.title_text(
+            name=args_plot.yaxis_title.name, unit=args_plot.yaxis_title.unit
+        )
 
         fig.update_xaxes(title_text=xaxis_title, row=1, col=1)
         fig.update_xaxes(title_text=xaxis_title, row=2, col=1)
         if df_2 is None:
-            residual_title = (
-                f"{args_plot.residual_title.name} [{args_plot.residual_title.unit}]",
-            )[0]
+            residual_title = self.title_text(
+                name=args_plot.residual_title.name, unit=args_plot.residual_title.unit
+            )
             fig["layout"]["yaxis1"].update(domain=[0.8, 1])
             fig["layout"]["yaxis2"].update(domain=[0, 0.7])
             fig.update_yaxes(title_text=residual_title, row=1, col=1)
@@ -258,22 +260,14 @@ class DataFramePlot:
             df (pd.DataFrame): Dataframe to plot.
         """
         fig = px.line(df, x=args_plot.x, y=args_plot.y)
-        xaxis_title = (f"{args_plot.xaxis_title.name} [{args_plot.xaxis_title.unit}]",)[
-            0
-        ]
-        yaxis_title = (f"{args_plot.yaxis_title.name} [{args_plot.yaxis_title.unit}]",)[
-            0
-        ]
         fig.update_layout(
             title=args_plot.title,
             legend_title=args_plot.legend_title,
-            xaxis_title=xaxis_title,
-            yaxis_title=yaxis_title,
             legend=args_plot.legend.dict(),
             font=args_plot.font.dict(),
             showlegend=args_plot.show_legend,
             width=args_plot.size[0],
-            height=args_plot.size[1],
+            height=args_plot.size[1][0],
             paper_bgcolor=args_plot.color.paper,
             plot_bgcolor=args_plot.color.plot,
         )
@@ -284,8 +278,113 @@ class DataFramePlot:
             zerolinecolor=args_plot.color.zero_line,
             color=args_plot.color.color,
         )
-        fig.update_yaxes(minor=self.get_minor(args_plot=args_plot))
+        fig.update_yaxes(
+            minor=self.get_minor(args_plot=args_plot),
+            gridcolor=args_plot.color.grid,
+            linecolor=args_plot.color.line,
+            zerolinecolor=args_plot.color.zero_line,
+            color=args_plot.color.color,
+        )
+        fig.update_xaxes(
+            title_text=self.title_text(
+                name=args_plot.xaxis_title.name, unit=args_plot.xaxis_title.unit
+            )
+        )
+        fig.update_yaxes(
+            title_text=self.title_text(
+                name=args_plot.yaxis_title.name, unit=args_plot.yaxis_title.unit
+            )
+        )
         fig.show()
+
+    def plot_metric(
+        self,
+        args_plot: PlotAPI,
+        df_metric: pd.DataFrame,
+        bar_criteria: Union[str, List[str]],
+        line_criteria: Union[str, List[str]],
+    ) -> None:
+        """Plot the metric according to the PlotAPI arguments.
+
+        Args:
+            args_plot (PlotAPI): PlotAPI object for the settings of the plot.
+            df_metric (pd.DataFrame): Metric dataframe to plot.
+            bar_criteria (Union[str, List[str]]): String or list of criteria to plot as
+                 bars.
+            line_criteria (Union[str, List[str]]): String or l of criteria to plot as
+                 lines.
+        """
+        fig = make_subplots(specs=[[{"secondary_y": True}]])
+        _fig_bar = px.bar(
+            df_metric,
+            y=bar_criteria,
+            color_discrete_sequence=args_plot.color.bars,
+        )
+        _fig_line = px.line(
+            df_metric,
+            y=line_criteria,
+            color_discrete_sequence=args_plot.color.lines,
+        )
+        _fig_line.update_traces(mode="lines+markers", yaxis="y2")
+        fig.add_traces(_fig_bar.data + _fig_line.data)
+
+        fig.update_layout(
+            title=args_plot.title,
+            legend_title=args_plot.legend_title,
+            legend=args_plot.legend.dict(),
+            font=args_plot.font.dict(),
+            showlegend=args_plot.show_legend,
+            width=args_plot.size[0],
+            height=args_plot.size[1][1],
+            paper_bgcolor=args_plot.color.paper,
+            plot_bgcolor=args_plot.color.plot,
+        )
+        fig.update_layout(xaxis_type="category")
+        fig.update_xaxes(
+            minor=self.get_minor(args_plot=args_plot),
+            gridcolor=args_plot.color.grid,
+            linecolor=args_plot.color.line,
+            zerolinecolor=args_plot.color.zero_line,
+            color=args_plot.color.color,
+        )
+
+        fig.update_yaxes(
+            minor=self.get_minor(args_plot=args_plot),
+            gridcolor=args_plot.color.grid,
+            linecolor=args_plot.color.line,
+            zerolinecolor=args_plot.color.zero_line,
+            color=args_plot.color.color,
+        )
+        fig.update_xaxes(
+            title_text=self.title_text(
+                name=args_plot.run_title.name, unit=args_plot.run_title.unit
+            )
+        )
+        fig.update_yaxes(
+            title_text=self.title_text(
+                name=args_plot.metric_title.name_0, unit=args_plot.metric_title.unit_0
+            ),
+            secondary_y=False,
+        )
+        fig.update_yaxes(
+            title_text=self.title_text(
+                name=args_plot.metric_title.name_1, unit=args_plot.metric_title.unit_1
+            ),
+            secondary_y=True,
+        )
+        fig.show()
+
+    def title_text(self, name: str, unit: Optional[str] = None) -> str:
+        """Return the title text.
+
+        Args:
+            name (str): Name of the variable.
+            unit (Optional[str], optional): Unit of the variable. Defaults to None.
+
+        Returns:
+            str: Title text.
+        """
+        return name if unit is None else f"{name} [{unit}]"
 
     def get_minor(self, args_plot: PlotAPI) -> Dict[str, Union[str, bool]]:
         """Get the minor axis arguments.
@@ -498,6 +597,31 @@ class SolverResults:
         """
         return self.args_out["confidence_interval"]
 
+    @property
+    def get_current_metric(self) -> pd.DataFrame:
+        """Get the current metric.
+
+        !!! note "About the regression metrics"
+
+            For using the regression metrics, the `regression_metrics` must be averaged
+            to merge the results of the different configurations together with the
+            `goodness_of_fit` and `variables` results.
+
+        Returns:
+            pd.DataFrame: Current metric based on `regression_metrics` and
+            `goodness_of_fit` as dataframe.
+        """
+        gof = {key: [value] for key, value in self.get_gof.items()}
+        reg = {
+            key: [np.average(val)]
+            for key, val in zip(
+                self.get_regression_metrics["index"],
+                self.get_regression_metrics["data"],
+            )
+        }
+        metric = {**gof, **reg}
+        return pd.DataFrame(metric)
+
 
 class ExportReport(SolverResults):
     """Class for exporting results as toml."""
@@ -512,7 +636,7 @@ class ExportReport(SolverResults):
         df_org: pd.DataFrame,
         df_fit: pd.DataFrame,
         df_pre: pd.DataFrame = pd.DataFrame(),
-    ):
+    ) -> None:
         """Initialize the ExportReport class.
 
         Args:
@@ -599,7 +723,9 @@ class ExportReport(SolverResults):
         ).dict(exclude_none=True)
 
 
-class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults, ExportReport):
+class SpectraFitNotebook(
+    DataFramePlot, DataFrameDisplay, ExportResults, ExportReport, SolverResults
+):
     """Jupyter Notebook plugin for SpectraFit."""
 
     args: Dict[str, Any]
@@ -607,6 +733,7 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults, ExportR
     autopeak: bool = False
     df_fit: pd.DataFrame
     df_pre: pd.DataFrame = pd.DataFrame()
+    df_metric: pd.DataFrame = pd.DataFrame()
     initial_model: List[Dict[str, Dict[str, Dict[str, Any]]]]
 
     def __init__(
@@ -623,6 +750,10 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults, ExportR
         xaxis_title: XAxisAPI = XAxisAPI(name="Energy", unit="eV"),
         yaxis_title: YAxisAPI = YAxisAPI(name="Intensity", unit="a.u."),
         residual_title: ResidualAPI = ResidualAPI(name="Residual", unit="a.u."),
+        metric_title: MetricAPI = MetricAPI(
+            name_0="Metrics", unit_0="a.u.", name_1="Metrics", unit_1="a.u."
+        ),
+        run_title: RunAPI = RunAPI(name="Run", unit="#"),
         legend_title: str = "Spectra",
         show_legend: bool = True,
         legend: LegendAPI = LegendAPI(
@@ -632,7 +763,7 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults, ExportR
         minor_ticks: bool = True,
         color: ColorAPI = ColorAPI(),
         grid: GridAPI = GridAPI(),
-        size: Tuple[int, int] = (800, 600),
+        size: Tuple[int, Tuple[int, int]] = (800, (600, 300)),
         fname: str = "results",
         folder: Optional[str] = None,
         description: DescriptionAPI = DescriptionAPI(),
@@ -684,6 +815,9 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults, ExportR
             yaxis_title (YAxisAPI, optional): Y-Axis title. Defaults to YAxisAPI().
             residual_title (ResidualAPI, optional): Residual title. Defaults to
                  ResidualAPI().
+            metric_title (MetricAPI, optional): Metric title for both axes, bar and
+                 line plot. Defaults to MetricAPI().
+            run_title (RunAPI, optional): Run title. Defaults to RunAPI().
             legend_title (str, optional): Legend title. Defaults to "Spectra".
             show_legend (bool, optional): Show legend. Defaults to True.
             legend (LegendAPI, optional): Legend options. Defaults to LegendAPI().
@@ -691,7 +825,9 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults, ExportR
             minor_ticks (bool, optional): Show minor ticks. Defaults to True.
             color (ColorAPI, optional): Color options. Defaults to ColorAPI().
             grid (GridAPI, optional): Grid options. Defaults to GridAPI().
-            size (Tuple[int, int], optional): Size of the plot. Defaults to (800, 600).
+            size (Tuple[int, Tuple[int, int]] , optional): Size of the fit- and metric-
+                 plot. First width defines the fit, the second the metrics.
+                 Defaults to (800, (600,300)).
             fname (str, optional): Filename of the export. Defaults to "results".
             folder (Optional[str], optional): Folder of the export. Defaults to None.
             description (DescriptionAPI, optional): Description of the data. Defaults
@@ -731,6 +867,8 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults, ExportR
             xaxis_title=xaxis_title,
             yaxis_title=yaxis_title,
             residual_title=residual_title,
+            metric_title=metric_title,
+            run_title=run_title,
             legend_title=legend_title,
             show_legend=show_legend,
             legend=legend,
@@ -740,7 +878,6 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults, ExportR
             grid=grid,
             size=size,
         )
-        # self.args_metric = MetricAPI()
         self.export_args_df = FnameAPI(fname=fname, folder=folder, suffix="csv")
         self.export_args_out = FnameAPI(fname=fname, folder=folder, suffix="lock")
 
@@ -805,6 +942,12 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults, ExportR
             self.export_df(df=self.df_pre, args=self.export_args_df)
 
     @property
+    def export_df_metric(self) -> None:
+        """Export the dataframe."""
+        self.export_args_df.prefix = "metric"
+        self.export_df(df=self.df_metric, args=self.export_args_df)
+
+    @property
     def plot_original_df(self) -> None:
         """Plot the original spectra."""
         self.plot_dataframe(args_plot=self.args_plot, df=self.df_org)
@@ -825,6 +968,37 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults, ExportR
     def plot_fit_df(self) -> None:
         """Plot the fit."""
         self.plot_2dataframes(args_plot=self.args_plot, df_1=self.df_fit)
+
+    def plot_current_metric(
+        self,
+        bar_criteria: Optional[Union[str, List[str]]] = None,
+        line_criteria: Optional[Union[str, List[str]]] = None,
+    ) -> None:
+        """Plot the current metric.
+
+        Args:
+            bar_criteria (Optional[Union[str, List[str]]], optional): Criteria for the
+                    bar plot. Defaults to None.
+            line_criteria (Optional[Union[str, List[str]]], optional): Criteria for
+                    the line plot. Defaults to None.
+        """
+        if bar_criteria is None:
+            bar_criteria = [
+                "akaike_information",
+                "bayesian_information",
+            ]
+
+        if line_criteria is None:
+            line_criteria = [
+                "mean_squared_error",
+            ]
+
+        self.plot_metric(
+            args_plot=self.args_plot,
+            df_metric=self.df_metric,
+            bar_criteria=bar_criteria,
+            line_criteria=line_criteria,
+        )
 
     @property
     def generate_report(self) -> None:
@@ -850,6 +1024,8 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults, ExportR
         show_metric: bool = True,
         show_df: bool = False,
         conf_interval: Dict[str, Any] = dict(),
+        bar_criteria: Optional[Union[str, List[str]]] = None,
+        line_criteria: Optional[Union[str, List[str]]] = None,
     ) -> None:
         """Solves the fit problem based on the proposed model.
 
@@ -865,6 +1041,12 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults, ExportR
             conf_interval (Dict[str, Any], optional): Dictionary for the parameter with
                  the parameter for calculating the confidence interval. Defaults to
                  dict().
+            bar_criteria (Optional[Union[str, List[str]]], optional): Criteria for the
+                bar plot. It is recommended to use attributes from `goodness of fit`
+                module. Defaults to None.
+            line_criteria (Optional[Union[str, List[str]]], optional): Criteria for
+                the line plot. It is recommended to use attributes from
+                `regression metric` module. Defaults to None.
         """
         self.initial_model = initial_model
         self.df_fit, self.args = PostProcessing(
@@ -885,16 +1067,25 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults, ExportR
                 },
             )(),
         )()
+        self.update_metric
         if show_plot:
             self.plot_fit_df
 
         if show_metric:
-            ...
-        # self.make_solver_contribution.goodness_of_fit
-        # self.make_solver_contribution.regression_metrics
+            self.plot_current_metric(
+                bar_criteria=bar_criteria, line_criteria=line_criteria
+            )
 
         if show_df:
             self.interactive_display(df=self.df_fit)
+
+    @property
+    def update_metric(self) -> None:
+        """Update the metric dataframe."""
+        self.df_metric = pd.concat(
+            [self.df_metric, SolverResults(self.args).get_current_metric],
+            ignore_index=True,
+        )
 
     def display_fit_df(self, mode: Optional[str] = "regular") -> None:
         """Display the fit dataframe.
