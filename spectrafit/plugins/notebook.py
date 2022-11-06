@@ -17,6 +17,7 @@ from dtale import show as dtale_show
 from IPython.display import display
 from IPython.display import display_markdown
 from itables import show as itables_show
+from plotly.graph_objects import Figure
 from plotly.subplots import make_subplots
 from spectrafit.api.cmd_model import DescriptionAPI
 from spectrafit.api.models_model import ConfIntervalAPI
@@ -203,34 +204,8 @@ class DataFramePlot:
             fig.append_trace(_spec_1, row=1, col=1)
         for _spec_2 in _fig2["data"]:
             fig.append_trace(_spec_2, row=2, col=1)
-
-        fig.update_layout(
-            title=args_plot.title,
-            legend_title=args_plot.legend_title,
-            legend=args_plot.legend.dict(),
-            font=args_plot.font.dict(),
-            showlegend=args_plot.show_legend,
-            width=args_plot.size[0],
-            height=args_plot.size[1][0],
-            paper_bgcolor=args_plot.color.paper,
-            plot_bgcolor=args_plot.color.plot,
-        )
-
-        fig.update_xaxes(
-            minor=self.get_minor(args_plot=args_plot),
-            gridcolor=args_plot.color.grid,
-            linecolor=args_plot.color.line,
-            zerolinecolor=args_plot.color.zero_line,
-            color=args_plot.color.color,
-        )
-        fig.update_yaxes(
-            minor=self.get_minor(args_plot=args_plot),
-            gridcolor=args_plot.color.grid,
-            linecolor=args_plot.color.line,
-            zerolinecolor=args_plot.color.zero_line,
-            color=args_plot.color.color,
-        )
-
+        height = args_plot.size[1][0]
+        self.update_layout_axes(fig, args_plot, height)
         xaxis_title = self.title_text(
             name=args_plot.xaxis_title.name, unit=args_plot.xaxis_title.unit
         )
@@ -260,31 +235,8 @@ class DataFramePlot:
             df (pd.DataFrame): Dataframe to plot.
         """
         fig = px.line(df, x=args_plot.x, y=args_plot.y)
-        fig.update_layout(
-            title=args_plot.title,
-            legend_title=args_plot.legend_title,
-            legend=args_plot.legend.dict(),
-            font=args_plot.font.dict(),
-            showlegend=args_plot.show_legend,
-            width=args_plot.size[0],
-            height=args_plot.size[1][0],
-            paper_bgcolor=args_plot.color.paper,
-            plot_bgcolor=args_plot.color.plot,
-        )
-        fig.update_xaxes(
-            minor=self.get_minor(args_plot=args_plot),
-            gridcolor=args_plot.color.grid,
-            linecolor=args_plot.color.line,
-            zerolinecolor=args_plot.color.zero_line,
-            color=args_plot.color.color,
-        )
-        fig.update_yaxes(
-            minor=self.get_minor(args_plot=args_plot),
-            gridcolor=args_plot.color.grid,
-            linecolor=args_plot.color.line,
-            zerolinecolor=args_plot.color.zero_line,
-            color=args_plot.color.color,
-        )
+        height = args_plot.size[1][0]
+        self.update_layout_axes(fig, args_plot, height)
         fig.update_xaxes(
             title_text=self.title_text(
                 name=args_plot.xaxis_title.name, unit=args_plot.xaxis_title.unit
@@ -327,34 +279,9 @@ class DataFramePlot:
         )
         _fig_line.update_traces(mode="lines+markers", yaxis="y2")
         fig.add_traces(_fig_bar.data + _fig_line.data)
-
-        fig.update_layout(
-            title=args_plot.title,
-            legend_title=args_plot.legend_title,
-            legend=args_plot.legend.dict(),
-            font=args_plot.font.dict(),
-            showlegend=args_plot.show_legend,
-            width=args_plot.size[0],
-            height=args_plot.size[1][1],
-            paper_bgcolor=args_plot.color.paper,
-            plot_bgcolor=args_plot.color.plot,
-        )
         fig.update_layout(xaxis_type="category")
-        fig.update_xaxes(
-            minor=self.get_minor(args_plot=args_plot),
-            gridcolor=args_plot.color.grid,
-            linecolor=args_plot.color.line,
-            zerolinecolor=args_plot.color.zero_line,
-            color=args_plot.color.color,
-        )
-
-        fig.update_yaxes(
-            minor=self.get_minor(args_plot=args_plot),
-            gridcolor=args_plot.color.grid,
-            linecolor=args_plot.color.line,
-            zerolinecolor=args_plot.color.zero_line,
-            color=args_plot.color.color,
-        )
+        height = args_plot.size[1][1]
+        self.update_layout_axes(fig, args_plot, height)
         fig.update_xaxes(
             title_text=self.title_text(
                 name=args_plot.run_title.name, unit=args_plot.run_title.unit
@@ -373,6 +300,48 @@ class DataFramePlot:
             secondary_y=True,
         )
         fig.show()
+
+    def update_layout_axes(
+        self, fig: Figure, args_plot: PlotAPI, height: int
+    ) -> Figure:
+        """Update the layout of the plot.
+
+        Args:
+            fig (Figure): Figure to update.
+            args_plot (PlotAPI): PlotAPI object for the settings of the plot.
+            height (int): Height of the plot.
+
+        Returns:
+            Figure: Updated figure.
+        """
+        fig.update_layout(
+            title=args_plot.title,
+            legend_title=args_plot.legend_title,
+            legend=args_plot.legend.dict(),
+            font=args_plot.font.dict(),
+            showlegend=args_plot.show_legend,
+            width=args_plot.size[0],
+            height=height,
+            paper_bgcolor=args_plot.color.paper,
+            plot_bgcolor=args_plot.color.plot,
+        )
+
+        fig.update_xaxes(
+            minor=self.get_minor(args_plot=args_plot),
+            gridcolor=args_plot.color.grid,
+            linecolor=args_plot.color.line,
+            zerolinecolor=args_plot.color.zero_line,
+            color=args_plot.color.color,
+        )
+
+        fig.update_yaxes(
+            minor=self.get_minor(args_plot=args_plot),
+            gridcolor=args_plot.color.grid,
+            linecolor=args_plot.color.line,
+            zerolinecolor=args_plot.color.zero_line,
+            color=args_plot.color.color,
+        )
+        return fig
 
     def title_text(self, name: str, unit: Optional[str] = None) -> str:
         """Return the title text.
@@ -944,8 +913,9 @@ class SpectraFitNotebook(
     @property
     def export_df_metric(self) -> None:
         """Export the dataframe."""
-        self.export_args_df.prefix = "metric"
-        self.export_df(df=self.df_metric, args=self.export_args_df)
+        if self.df_metric.empty is False:
+            self.export_args_df.prefix = "metric"
+            self.export_df(df=self.df_metric, args=self.export_args_df)
 
     @property
     def plot_original_df(self) -> None:

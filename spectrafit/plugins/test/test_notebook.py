@@ -336,6 +336,7 @@ class TestSpectraFitNotebook:
         class_spectrafit["sp"].export_df_fit
         class_spectrafit["sp"].export_df_org
         class_spectrafit["sp"].export_df_pre
+        class_spectrafit["sp"].export_df_metric
         assert ExportResults.fname2Path(
             folder=class_spectrafit["tmpdir"], fname="test", prefix="act", suffix="csv"
         ).exists()
@@ -347,6 +348,12 @@ class TestSpectraFitNotebook:
         ).exists()
         assert ExportResults.fname2Path(
             folder=class_spectrafit["tmpdir"], fname="test", prefix="pre", suffix="csv"
+        ).exists()
+        assert ExportResults.fname2Path(
+            folder=class_spectrafit["tmpdir"],
+            fname="test",
+            prefix="metric",
+            suffix="csv",
         ).exists()
 
     @pytest.mark.skipif(sys.platform == "win32", reason="does not run on windows")
