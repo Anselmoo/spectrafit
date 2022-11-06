@@ -542,6 +542,7 @@ class TestSpectraFitNotebook:
                 show_plot=False,
                 show_df=True,
                 show_metric=True,
-                conf_interval=dict(),
+                conf_interval={},
             )
+
             mock_show.assert_called_once()
