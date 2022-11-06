@@ -491,3 +491,57 @@ class TestSpectraFitNotebook:
                 show_metric=True,
             )
             mock_show.assert_called_once()
+
+    def test_conv_1(
+        self,
+        class_spectrafit: Dict[Any, Any],
+        dataframe: pd.DataFrame,
+        x_column: str,
+        y_column: str,
+        initial_model: List[Dict[str, Dict[str, Dict[str, Any]]]],
+    ) -> None:
+        """Test conf interval via bool."""
+        sp = SpectraFitNotebook(
+            df=dataframe,
+            x_column=x_column,
+            y_column=y_column,
+            fname="test",
+            folder=class_spectrafit["tmpdir"],
+        )
+
+        with mock.patch(__plotly_io_show__) as mock_show:
+            sp.solver_model(
+                initial_model=initial_model,
+                show_plot=False,
+                show_df=True,
+                show_metric=True,
+                conf_interval=True,
+            )
+            mock_show.assert_called_once()
+
+    def test_conv_2(
+        self,
+        class_spectrafit: Dict[Any, Any],
+        dataframe: pd.DataFrame,
+        x_column: str,
+        y_column: str,
+        initial_model: List[Dict[str, Dict[str, Dict[str, Any]]]],
+    ) -> None:
+        """Test conf interval via bool."""
+        sp = SpectraFitNotebook(
+            df=dataframe,
+            x_column=x_column,
+            y_column=y_column,
+            fname="test",
+            folder=class_spectrafit["tmpdir"],
+        )
+
+        with mock.patch(__plotly_io_show__) as mock_show:
+            sp.solver_model(
+                initial_model=initial_model,
+                show_plot=False,
+                show_df=True,
+                show_metric=True,
+                conf_interval=dict(),
+            )
+            mock_show.assert_called_once()

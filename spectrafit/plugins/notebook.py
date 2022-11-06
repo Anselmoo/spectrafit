@@ -993,7 +993,7 @@ class SpectraFitNotebook(
         show_plot: bool = True,
         show_metric: bool = True,
         show_df: bool = False,
-        conf_interval: Dict[str, Any] = dict(),
+        conf_interval: Union[bool, Dict[str, Any]] = False,
         bar_criteria: Optional[Union[str, List[str]]] = None,
         line_criteria: Optional[Union[str, List[str]]] = None,
     ) -> None:
@@ -1008,24 +1008,38 @@ class SpectraFitNotebook(
             show_metric (bool, optional): Show the metric of the fit. Defaults to True.
             show_df (bool, optional): Show current fit results as dataframe. Defaults
                  to False.
-            conf_interval (Dict[str, Any], optional): Dictionary for the parameter with
-                 the parameter for calculating the confidence interval. Defaults to
-                 dict().
+            conf_interval (Union[bool,Dict[str, Any]], optional): Bool or dictionary for
+                 the parameter with the parameter for calculating the confidence
+                 interval. Using `conf_interval=False` turns of the calculation of
+                 the confidence interval and accelerate its. Defaults to False.
             bar_criteria (Optional[Union[str, List[str]]], optional): Criteria for the
                 bar plot. It is recommended to use attributes from `goodness of fit`
                 module. Defaults to None.
             line_criteria (Optional[Union[str, List[str]]], optional): Criteria for
                 the line plot. It is recommended to use attributes from
                 `regression metric` module. Defaults to None.
+
+        !!! info: "About criteria"
+
+            The criteria for the bar and line plot are defined as a list of strings.
+            The supported keywords are defined by the built-in metrics for
+            `goodness of fit` and `regression` and can be checked in [documentation](
+                https://anselmoo.github.io/spectrafit/doc/statistics/
+            ).
+
         """
         self.initial_model = initial_model
+
+        if isinstance(conf_interval, bool):
+            conf_interval = ConfIntervalAPI().dict() if conf_interval is True else False
+        elif isinstance(conf_interval, dict):
+            conf_interval = ConfIntervalAPI(**conf_interval).dict(exclude_none=True)
+
         self.df_fit, self.args = PostProcessing(
             self.df,
             {
                 "global_": self.global_,
-                "conf_interval": ConfIntervalAPI(**conf_interval).dict(
-                    exclude_none=True
-                ),
+                "conf_interval": conf_interval,
             },
             *SolverModels(
                 df=self.df,
