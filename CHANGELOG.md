@@ -11,6 +11,7 @@
 ---
 
 - Updating `spectrafit`-installer in `Dockerfile`.
+- Adding images to `Jupyter-Notebook-Examples`.
 
 ## v0.12.4
 
