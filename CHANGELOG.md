@@ -6,6 +6,12 @@
 
 > See also: [https://github.com/Anselmoo/spectrafit/releases][1]
 
+## v0.12.5
+
+---
+
+- Updating `spectrafit`-installer in `Dockerfile`.
+
 ## v0.12.4
 
 ---
