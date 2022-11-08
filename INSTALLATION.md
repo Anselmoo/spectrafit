@@ -100,6 +100,9 @@ available plugins are:
     docker run -it -p 8888:8888 ghcr.io/anselmoo/spectrafit:latest
     ```
 
+
+    ![Docker-Image](https://github.com/Anselmoo/spectrafit/blob/9094da4472db889d50652d4ded870d42dd0ed559/docs/images/docker.png?raw=true)
+
 [1]: https://github.com/pypa/pipx
 [2]: https://conda.io/docs/
 [3]: https://anaconda.org/conda-forge/spectrafit
