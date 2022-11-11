@@ -256,7 +256,7 @@ class AutoPeakDetection:
 
             The relative height of a peak is approximated by the difference of the
             harmonic mean value of the `data` and the minimum value of the `data`
-            divided by the factor of `2`. In case of negative ratios, the value will be
+            divided by the factor of `4`. In case of negative ratios, the value will be
             set to `Zero`.
 
         Returns:
@@ -265,8 +265,8 @@ class AutoPeakDetection:
         try:
             rel_height = (hmean(self.data) - self.data.min()) / 4
         except ValueError as exc:
-            rel_height = (self.data.mean() - self.data.min()) / 4
             print(f"{exc}: Using standard arithmetic mean of NumPy.\n")
+            rel_height = (self.data.mean() - self.data.min()) / 4
         return rel_height if rel_height > 0 else 0.0
 
     @property
@@ -635,9 +635,48 @@ class ModelParameters(AutoPeakDetection):
     def define_parameters(self) -> None:
         """Define the input parameters for a `params`-dictionary for classic fitting."""
         for key_1, value_1 in self.args["peaks"].items():
-            for key_2, value_2 in value_1.items():
-                for key_3, value_3 in value_2.items():
-                    self.params.add(f"{key_2}_{key_3}_{key_1}", **value_3)
+            self.define_parameters_loop(key_1=key_1, value_1=value_1)
+
+    def define_parameters_loop(self, key_1: str, value_1: Dict[str, Any]) -> None:
+        """Loop through the input parameters for a `params`-dictionary.
+
+        Args:
+            key_1 (str): The key of the first level of the input dictionary.
+            value_1 (Dict[str, Any]): The value of the first level of the input
+                 dictionary.
+        """
+        for key_2, value_2 in value_1.items():
+            self.define_parameters_loop_2(key_1=key_1, key_2=key_2, value_2=value_2)
+
+    def define_parameters_loop_2(
+        self, key_1: str, key_2: str, value_2: Dict[str, Any]
+    ) -> None:
+        """Loop through the input parameters for a `params`-dictionary.
+
+        Args:
+            key_1 (str): The key of the first level of the input dictionary.
+            key_2 (str): The key of the second level of the input dictionary.
+            value_2 (Dict[str, Any]): The value of the second level of the input
+                 dictionary.
+        """
+        for key_3, value_3 in value_2.items():
+            self.define_parameters_loop_3(
+                key_1=key_1, key_2=key_2, key_3=key_3, value_3=value_3
+            )
+
+    def define_parameters_loop_3(
+        self, key_1: str, key_2: str, key_3: str, value_3: Dict[str, Any]
+    ) -> None:
+        """Loop through the input parameters for a `params`-dictionary.
+
+        Args:
+            key_1 (str): The key of the first level of the input dictionary.
+            key_2 (str): The key of the second level of the input dictionary.
+            key_3 (str): The key of the third level of the input dictionary.
+            value_3 (Dict[str, Any]): The value of the third level of the input
+                 dictionary.
+        """
+        self.params.add(f"{key_2}_{key_3}_{key_1}", **value_3)
 
     def define_parameters_global(self) -> None:
         """Define the input parameters for a `params`-dictionary for global fitting."""
@@ -645,20 +684,41 @@ class ModelParameters(AutoPeakDetection):
             for key_1, value_1 in self.args["peaks"].items():
                 for key_2, value_2 in value_1.items():
                     for key_3, value_3 in value_2.items():
-                        if col_i:
-                            if key_3 != "amplitude":
-                                self.params.add(
-                                    f"{key_2}_{key_3}_{key_1}_{col_i+1}",
-                                    expr=f"{key_2}_{key_3}_{key_1}_1",
-                                )
-                            else:
-                                self.params.add(
-                                    f"{key_2}_{key_3}_{key_1}_{col_i+1}",
-                                    **value_3,
-                                )
+                        self._define_parameter(
+                            col_i=col_i,
+                            key_1=key_1,
+                            key_2=key_2,
+                            key_3=key_3,
+                            value_3=value_3,
+                        )
 
-                        else:
-                            self.params.add(f"{key_2}_{key_3}_{key_1}_1", **value_3)
+    def _define_parameter(
+        self, col_i: int, key_1: str, key_2: str, key_3: str, value_3: Dict[str, Any]
+    ) -> None:
+        """Define the input parameters for a `params`-dictionary for global fitting.
+
+        Args:
+            col_i (int): The column index.
+            key_1 (str): The key of the first level of the input dictionary.
+            key_2 (str): The key of the second level of the input dictionary.
+            key_3 (str): The key of the third level of the input dictionary.
+            value_3 (Dict[str, Any]): The value of the third level of the input
+                 dictionary.
+        """
+        if col_i:
+            if key_3 != "amplitude":
+                self.params.add(
+                    f"{key_2}_{key_3}_{key_1}_{col_i+1}",
+                    expr=f"{key_2}_{key_3}_{key_1}_1",
+                )
+            else:
+                self.params.add(
+                    f"{key_2}_{key_3}_{key_1}_{col_i+1}",
+                    **value_3,
+                )
+
+        else:
+            self.params.add(f"{key_2}_{key_3}_{key_1}_1", **value_3)
 
     def define_parameters_global_pre(self) -> None:
         """Define the input parameters for a `params`-dictionary for global fitting.

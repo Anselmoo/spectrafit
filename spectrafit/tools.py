@@ -8,6 +8,7 @@ from typing import Dict
 from typing import MutableMapping
 from typing import Optional
 from typing import Tuple
+from typing import Union
 
 import numpy as np
 import pandas as pd
@@ -52,25 +53,25 @@ class PreProcessing:
                     4. smoothed
             Dict[str,Any]: Adding a descriptive statistics to the input dictionary.
         """
-        _df = self.df.copy()
-        self.args["data_statistic"] = _df.describe(
-            percentiles=np.arange(0.1, 1, 0.1)
+        df_copy: pd.DataFrame = self.df.copy()
+        self.args["data_statistic"] = df_copy.describe(
+            percentiles=np.arange(0.1, 1.0, 0.1)
         ).to_dict(orient="split")
         try:
             if isinstance(self.args["energy_start"], (int, float)) or isinstance(
                 self.args["energy_stop"], (int, float)
             ):
-                _df = self.energy_range(_df, self.args)
+                df_copy = self.energy_range(df_copy, self.args)
             if self.args["shift"]:
-                _df = self.energy_shift(_df, self.args)
+                df_copy = self.energy_shift(df_copy, self.args)
             if self.args["oversampling"]:
-                _df = self.oversampling(_df, self.args)
+                df_copy = self.oversampling(df_copy, self.args)
             if self.args["smooth"]:
-                _df = self.intensity_smooth(_df, self.args)
+                df_copy = self.smooth_signal(df_copy, self.args)
         except KeyError as exc:
             print(f"KeyError: {exc} is not part of the dataframe!")
             sys.exit(1)
-        return (_df, self.args)
+        return (df_copy, self.args)
 
     @staticmethod
     def energy_range(df: pd.DataFrame, args: Dict[str, Any]) -> pd.DataFrame:
@@ -87,19 +88,21 @@ class PreProcessing:
             pd.DataFrame: DataFrame containing the `optimized` input data
                  (`x` and `data`), which are shrinked according to the energy range.
         """
-        _e0 = args["energy_start"]
-        _e1 = args["energy_stop"]
+        energy_start: Union[int, float] = args["energy_start"]
+        energy_stop: Union[int, float] = args["energy_stop"]
 
-        _df = df.copy()
-        if isinstance(_e0, (int, float)) and isinstance(_e1, (int, float)):
-            return _df.loc[
-                (df[args["column"][0]] >= _e0) & (df[args["column"][0]] <= _e1)
+        df_copy: pd.DataFrame = df.copy()
+        if isinstance(energy_start, (int, float)) and isinstance(
+            energy_stop, (int, float)
+        ):
+            return df_copy.loc[
+                (df[args["column"][0]] >= energy_start)
+                & (df[args["column"][0]] <= energy_stop)
             ]
-        elif isinstance(_e0, (int, float)):
-
-            return _df.loc[df[args["column"][0]] >= _e0]
-        elif isinstance(_e1, (int, float)):
-            return _df.loc[df[args["column"][0]] <= _e1]
+        elif isinstance(energy_start, (int, float)):
+            return df_copy.loc[df[args["column"][0]] >= energy_start]
+        elif isinstance(energy_stop, (int, float)):
+            return df_copy.loc[df[args["column"][0]] <= energy_stop]
 
     @staticmethod
     def energy_shift(df: pd.DataFrame, args: Dict[str, Any]) -> pd.DataFrame:
@@ -116,9 +119,11 @@ class PreProcessing:
             pd.DataFrame: DataFrame containing the `optimized` input data
                  (`x` and `data`), which are energy-shifted by the given value.
         """
-        _df = df.copy()
-        _df.loc[:, args["column"][0]] = df[args["column"][0]].to_numpy() + args["shift"]
-        return _df
+        df_copy: pd.DataFrame = df.copy()
+        df_copy.loc[:, args["column"][0]] = (
+            df[args["column"][0]].to_numpy() + args["shift"]
+        )
+        return df_copy
 
     @staticmethod
     def oversampling(df: pd.DataFrame, args: Dict[str, Any]) -> pd.DataFrame:
@@ -146,19 +151,15 @@ class PreProcessing:
             df[args["column"][0]].max(),
             5 * df.shape[0],
         )
-        return pd.DataFrame(
-            {
-                args["column"][0]: x_values,
-                args["column"][1]: np.interp(
-                    x_values,
-                    df[args["column"][0]].to_numpy(),
-                    df[args["column"][1]].to_numpy(),
-                ),
-            }
+        y_values = np.interp(
+            x_values,
+            df[args["column"][0]].to_numpy(),
+            df[args["column"][1]].to_numpy(),
         )
+        return pd.DataFrame({args["column"][0]: x_values, args["column"][1]: y_values})
 
     @staticmethod
-    def intensity_smooth(df: pd.DataFrame, args: Dict[str, Any]) -> pd.DataFrame:
+    def smooth_signal(df: pd.DataFrame, args: Dict[str, Any]) -> pd.DataFrame:
         """Smooth the intensity values.
 
         Args:
@@ -171,11 +172,11 @@ class PreProcessing:
                  (`x` and `data`), which are smoothed by the given value.
         """
         box = np.ones(args["smooth"]) / args["smooth"]
-        _df = df.copy()
-        _df.loc[:, args["column"][1]] = np.convolve(
+        df_copy: pd.DataFrame = df.copy()
+        df_copy.loc[:, args["column"][1]] = np.convolve(
             df[args["column"][1]].to_numpy(), box, mode="same"
         )
-        return _df
+        return df_copy
 
 
 class PostProcessing:
@@ -318,23 +319,22 @@ class PostProcessing:
             of a global fitting, the residuals are calculated for each `spectra`
             separately.
         """
-        _df = self.df.copy()
+        df_copy: pd.DataFrame = self.df.copy()
         if self.args["global_"]:
-
             residual = self.result.residual.reshape((-1, self.data_size)).T
             for i, _residual in enumerate(residual, start=1):
-                _df[f"{ColumnNamesAPI().residual}_{i}"] = _residual
-                _df[f"{ColumnNamesAPI().fit}_{i}"] = (
+                df_copy[f"{ColumnNamesAPI().residual}_{i}"] = _residual
+                df_copy[f"{ColumnNamesAPI().fit}_{i}"] = (
                     self.df[f"{ColumnNamesAPI().intensity}_{i}"].to_numpy() + _residual
                 )
-            _df[f"{ColumnNamesAPI().residual}_avg"] = np.mean(residual, axis=0)
+            df_copy[f"{ColumnNamesAPI().residual}_avg"] = np.mean(residual, axis=0)
         else:
             residual = self.result.residual
-            _df[ColumnNamesAPI().residual] = residual
-            _df[ColumnNamesAPI().fit] = (
+            df_copy[ColumnNamesAPI().residual] = residual
+            df_copy[ColumnNamesAPI().fit] = (
                 self.df[ColumnNamesAPI().intensity].to_numpy() + residual
             )
-        self.df = _df
+        self.df = df_copy
 
     @property
     def make_fit_contributions(self) -> None:

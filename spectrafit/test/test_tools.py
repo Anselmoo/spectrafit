@@ -105,9 +105,7 @@ class TestPreProcessing:
             "smooth": 5,
             "column": ["energy", "intensity"],
         }
-        assert (
-            PreProcessing(self.df, args).intensity_smooth(self.df, args).shape[0] == 100
-        )
+        assert PreProcessing(self.df, args).smooth_signal(self.df, args).shape[0] == 100
 
     def test_energy_shift(self) -> None:
         """Testing energy shift for no shift."""
