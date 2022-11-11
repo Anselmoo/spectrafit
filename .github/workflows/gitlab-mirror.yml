@@ -1,9 +1,13 @@
 name: Mirroring
 
-on: [pull_request, issues, delete]
+on:
+  pull_request:
+    types:
+      - closed
 
 jobs:
   to_gitlab:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
