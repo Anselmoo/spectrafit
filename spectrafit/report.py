@@ -111,11 +111,11 @@ class RegressionMetrics:
             Tuple[NDArray[np.float64], NDArray[np.float64]]: Tuple of true and predicted
                 (fit) intensities.
         """
-        true: np.ndarray = df[
+        true = df[
             [col_name for col_name in df.columns if name_true in col_name]
         ].to_numpy()
 
-        pred: np.ndarray = df[
+        pred = df[
             [col_name for col_name in df.columns if name_pred in col_name]
         ].to_numpy()
 

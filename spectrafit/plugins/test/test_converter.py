@@ -54,7 +54,6 @@ def test_json_conversion() -> None:
     with TemporaryDirectory() as tmpdir:
         infile = Path(tmpdir) / "input_1.json"
 
-        # write input json
         with open(infile, "w", encoding="utf8") as f:
             json.dump({"a": 1, "b": 2}, f)
         args = {
@@ -73,7 +72,6 @@ def test_yaml_conversion() -> None:
     with TemporaryDirectory() as tmpdir:
         infile = Path(tmpdir) / "input_1.yaml"
 
-        # write input yaml
         with open(infile, "w", encoding="utf8") as f:
             yaml.dump({"a": 1, "b": 2}, f)
         args = {
@@ -92,7 +90,6 @@ def test_toml_conversion() -> None:
     with TemporaryDirectory() as tmpdir:
         infile = Path(tmpdir) / "input_1.toml"
 
-        # write input toml
         with open(infile, "wb+") as f:
             tomli_w.dump({"a": 1, "b": 2}, f)
         args = {

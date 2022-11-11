@@ -54,7 +54,7 @@ class PreProcessing:
             Dict[str,Any]: Adding a descriptive statistics to the input dictionary.
         """
         df_copy: pd.DataFrame = self.df.copy()
-        self.args["data_statistic"]: Dict[str, Any] = df_copy.describe(
+        self.args["data_statistic"] = df_copy.describe(
             percentiles=np.arange(0.1, 1.0, 0.1)
         ).to_dict(orient="split")
         try:
@@ -146,12 +146,12 @@ class PreProcessing:
             pd.DataFrame: DataFrame containing the `optimized` input data
                  (`x` and `data`), which are oversampled by the factor of 5.
         """
-        x_values: np.ndarray = np.linspace(
+        x_values = np.linspace(
             df[args["column"][0]].min(),
             df[args["column"][0]].max(),
             5 * df.shape[0],
         )
-        y_values: np.ndarray = np.interp(
+        y_values = np.interp(
             x_values,
             df[args["column"][0]].to_numpy(),
             df[args["column"][1]].to_numpy(),
@@ -171,11 +171,8 @@ class PreProcessing:
             pd.DataFrame: DataFrame containing the `optimized` input data
                  (`x` and `data`), which are smoothed by the given value.
         """
-        # Create a box of ones that is the size of the smoothing value
-        box: np.ndarray = np.ones(args["smooth"]) / args["smooth"]
-        # Copy the data frame so that we don't modify the original
+        box = np.ones(args["smooth"]) / args["smooth"]
         df_copy: pd.DataFrame = df.copy()
-        # Smooth the data using a convolution of the box and the data
         df_copy.loc[:, args["column"][1]] = np.convolve(
             df[args["column"][1]].to_numpy(), box, mode="same"
         )
@@ -324,7 +321,7 @@ class PostProcessing:
         """
         df_copy: pd.DataFrame = self.df.copy()
         if self.args["global_"]:
-            residual: np.ndarray = self.result.residual.reshape((-1, self.data_size)).T
+            residual = self.result.residual.reshape((-1, self.data_size)).T
             for i, _residual in enumerate(residual, start=1):
                 df_copy[f"{ColumnNamesAPI().residual}_{i}"] = _residual
                 df_copy[f"{ColumnNamesAPI().fit}_{i}"] = (
@@ -332,7 +329,7 @@ class PostProcessing:
                 )
             df_copy[f"{ColumnNamesAPI().residual}_avg"] = np.mean(residual, axis=0)
         else:
-            residual: np.ndarray = self.result.residual
+            residual = self.result.residual
             df_copy[ColumnNamesAPI().residual] = residual
             df_copy[ColumnNamesAPI().fit] = (
                 self.df[ColumnNamesAPI().intensity].to_numpy() + residual
