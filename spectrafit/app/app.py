@@ -20,11 +20,8 @@ def jupyter() -> None:
     )
     sys.exit(main())
 
-
 def __app__() -> None:
     """Run jupyter lab as app if file is run as main."""
     if __name__ == "__main__":
         jupyter()
-
-
 __app__()

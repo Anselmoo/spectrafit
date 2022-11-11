@@ -1,7 +1,7 @@
 """SpectraFit, the command line tool for fitting."""
 import argparse
 
-from typing import Any
+from typing import Any, MutableMapping
 from typing import Dict
 from typing import Tuple
 
@@ -228,8 +228,8 @@ def extracted_from_command_line_runner() -> Dict[str, Any]:
         Dict[str, Any]: The input file arguments as a dictionary with additional
              information beyond the command line arguments.
     """
-    result = get_args()
-    _args = read_input_file(result["input"])
+    result: Dict[str, Any] = get_args()
+    _args: MutableMapping[str, Any] = read_input_file(result["input"])
 
     if "settings" in _args.keys():
         for key in _args["settings"].keys():
@@ -279,7 +279,7 @@ def fitting_routine(args: Dict[str, Any]) -> Tuple[pd.DataFrame, Dict[str, Any]]
              contributions and the corresponding residuum. Furthermore, the dictionary
              is extended by advanced statistical information of the fit.
     """
-    df = load_data(args)
+    df: pd.DataFrame = load_data(args)
     df, args = PreProcessing(df=df, args=args)()
     minimizer, result = SolverModels(df=df, args=args)()
     df, args = PostProcessing(df=df, args=args, minimizer=minimizer, result=result)()

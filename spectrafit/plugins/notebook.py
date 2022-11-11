@@ -1047,7 +1047,7 @@ class SpectraFitNotebook(
                     "global_": self.global_,
                     "column": list(self.df.columns),
                     "autopeak": self.autopeak,
-                    **list2dict(list_=self.initial_model),
+                    **list2dict(peak_list=self.initial_model),
                 },
             )(),
         )()

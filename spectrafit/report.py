@@ -4,6 +4,7 @@ import pprint
 from typing import Any
 from typing import Dict
 from typing import Hashable
+from typing import List
 from typing import Optional
 from typing import Tuple
 
@@ -110,21 +111,19 @@ class RegressionMetrics:
             Tuple[NDArray[np.float64], NDArray[np.float64]]: Tuple of true and predicted
                 (fit) intensities.
         """
-        _true = df[
+        true: np.ndarray = df[
             [col_name for col_name in df.columns if name_true in col_name]
         ].to_numpy()
 
-        _pred = df[
+        pred: np.ndarray = df[
             [col_name for col_name in df.columns if name_pred in col_name]
         ].to_numpy()
 
-        if _pred.shape != _true.shape:
+        if pred.shape != true.shape:
             raise ValueError("The shape of the real and fit data-values are not equal!")
 
         return (
-            (_true, _pred)
-            if _true.shape[1] > 1
-            else (np.array([_true]), np.array([_pred]))
+            (true, pred) if true.shape[1] > 1 else (np.array([true]), np.array([pred]))
         )
 
     def __call__(self) -> Dict[Hashable, Any]:
@@ -182,7 +181,7 @@ def fit_report_as_dict(
     result = inpars
     params = inpars.params
 
-    parnames = list(params.keys())
+    parnames: List[str] = list(params.keys())
 
     buffer: Dict[str, Dict[Any, Any]] = {
         "configurations": {},
@@ -221,6 +220,7 @@ def fit_report_as_dict(
                     buffer["errorbars"]["at_initial_value"] = name
                 if np.allclose(par.value, par.min) or np.allclose(par.value, par.max):
                     buffer["errorbars"]["at_boundary"] = name
+
     for name in parnames:
         par = params[name]
         buffer["variables"][name] = {}
@@ -319,15 +319,28 @@ class PrintingResults:
     @property
     def printing_regular_mode(self) -> None:
         """Print the fitting results in the regular mode."""
+        self.print_statistic()
+        self.print_fit_results()
+        self.print_confidence_interval()
+        self.print_linear_correlation()
+        self.print_regression_metrics()
+
+    def print_statistic(self) -> None:
+        """Print the statistic."""
         print("\nStatistic:\n")
         self.print_tabulate(args=self.args["data_statistic"])
 
+    def print_fit_results(self) -> None:
+        """Print the fit results."""
         print("\nFit Results and Insights:\n")
         print(
             report_fit(self.result, modelpars=self.result.params, **self.args["report"])
         )
+
+    def print_confidence_interval(self) -> None:
+        """Print the confidence interval."""
+        print("\nConfidence Interval:\n")
         if self.args["conf_interval"]:
-            print("\nConfidence Interval:\n")
             try:
                 report_ci(
                     conf_interval(
@@ -337,25 +350,55 @@ class PrintingResults:
             except MinimizerException as exc:
                 print(f"Error: {exc} -> No confidence interval could be calculated!")
                 self.args["confidence_interval"] = {}
+
+    def print_linear_correlation(self) -> None:
+        """Print the linear correlation."""
         print("\nOverall Linear-Correlation:\n")
         self.print_tabulate(args=self.args["linear_correlation"])
+
+    def print_regression_metrics(self) -> None:
+        """Print the regression metrics."""
         print("\nRegression Metrics:\n")
         self.print_tabulate(args=self.args["regression_metrics"])
 
     @property
     def printing_verbose_mode(self) -> None:
         """Print all results in verbose mode."""
+        self.print_statistic_verbose()
+        self.print_input_parameters_verbose()
+        self.print_fit_results_verbose()
+        self.print_confidence_interval_verbose()
+        self.print_linear_correlation_verbose()
+        self.print_regression_metrics_verbose()
+
+    def print_statistic_verbose(self) -> None:
+        """Print the data statistic in verbose mode."""
         print("\nStatistic:\n")
         pp.pprint(self.args["data_statistic"])
+
+    def print_input_parameters_verbose(self) -> None:
+        """Print input parameters in verbose mode."""
         print("Input Parameter:\n")
         pp.pprint(self.args)
+
+    def print_fit_results_verbose(self) -> None:
+        """Print fit results in verbose mode."""
         print("\nFit Results and Insights:\n")
         pp.pprint(self.args["fit_insights"])
+
+    def print_confidence_interval_verbose(self) -> None:
+        """Print confidence interval in verbose mode."""
         if self.args["conf_interval"]:
             print("\nConfidence Interval:\n")
             pp.pprint(self.args["confidence_interval"])
+
+    def print_linear_correlation_verbose(self) -> None:
+        """Print overall linear-correlation in verbose mode."""
         print("\nOverall Linear-Correlation:\n")
         pp.pprint(self.args["linear_correlation"])
+
+    def print_regression_metrics_verbose(self) -> None:
+        """Print regression metrics in verbose mode."""
         print("\nRegression Metrics:\n")
         pp.pprint(self.args["regression_metrics"])
 

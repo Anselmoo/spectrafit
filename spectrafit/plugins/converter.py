@@ -63,14 +63,18 @@ def convert(args: Dict[str, Any]) -> None:
 
     if args["format"] == "json":
         # Convert the input file to a JSON file
-        with open(args["infile"].with_suffix(".json"), "w", encoding="utf8") as f:
+        with open(
+            args["infile"].with_suffix(f".{args['format']}"), "w", encoding="utf8"
+        ) as f:
             json.dump(data, f, indent=4)
     elif args["format"] == "yaml":
-        with open(args["infile"].with_suffix(".yaml"), "w", encoding="utf8") as f:
+        with open(
+            args["infile"].with_suffix(f".{args['format']}"), "w", encoding="utf8"
+        ) as f:
             yaml.dump(data, f, default_flow_style=False)
     elif args["format"] in ["toml", "lock"]:
         with open(
-            args["infile"].with_suffix(".toml"),
+            args["infile"].with_suffix(f".{args['format']}"),
             "wb+",
         ) as f:
             tomli_w.dump(dict(**data), f)
