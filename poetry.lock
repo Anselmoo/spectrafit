@@ -1,12 +1,4 @@
 [[package]]
-name = "algopy"
-version = "0.5.7"
-description = "ALGOPY: Taylor Arithmetic Computation and Algorithmic Differentiation"
-category = "main"
-optional = false
-python-versions = "*"
-
-[[package]]
 name = "anyio"
 version = "3.6.2"
 description = "High level compatibility layer for multiple asynchronous event loop implementations"
@@ -983,7 +975,7 @@ format-nongpl = ["fqdn", "idna", "isoduration", "jsonpointer (>1.13)", "rfc3339-
 
 [[package]]
 name = "jupyter-client"
-version = "7.4.4"
+version = "7.4.5"
 description = "Jupyter protocol implementation and client libraries"
 category = "main"
 optional = false
@@ -1019,7 +1011,7 @@ test = ["ipykernel", "pre-commit", "pytest", "pytest-cov", "pytest-timeout"]
 
 [[package]]
 name = "jupyter-server"
-version = "1.23.0"
+version = "1.23.1"
 description = "=?utf-8?q?The_backend=E2=80=94i=2Ee=2E_core_services=2C_APIs=2C_and_REST_endpoints=E2=80=94to_Jupyter_web_applications=2E?="
 category = "main"
 optional = true
@@ -1080,7 +1072,7 @@ python-versions = ">=3.7"
 
 [[package]]
 name = "jupyterlab-server"
-version = "2.16.2"
+version = "2.16.3"
 description = "A set of server components for JupyterLab and JupyterLab like applications."
 category = "main"
 optional = true
@@ -1099,7 +1091,7 @@ requests = "*"
 [package.extras]
 docs = ["autodoc-traits", "docutils (<0.19)", "jinja2 (<3.1.0)", "mistune (<1)", "myst-parser", "pydata-sphinx-theme", "sphinx", "sphinx-copybutton", "sphinxcontrib-openapi"]
 openapi = ["openapi-core (>=0.14.2)", "ruamel-yaml"]
-test = ["codecov", "ipykernel", "jupyter-server[test]", "openapi-core (>=0.14.2,<0.15.0)", "openapi-spec-validator (<0.5)", "pytest (>=7.0)", "pytest-console-scripts", "pytest-cov", "ruamel-yaml", "strict-rfc3339"]
+test = ["codecov", "ipykernel", "jupyter-server[test]", "openapi-core (>=0.14.2,<0.15.0)", "openapi-spec-validator (<0.5)", "pytest (>=7.0)", "pytest-console-scripts", "pytest-cov", "requests-mock", "ruamel-yaml", "strict-rfc3339"]
 
 [[package]]
 name = "jupytext"
@@ -1708,17 +1700,15 @@ test = ["pytest", "pytest-console-scripts", "pytest-tornasync"]
 
 [[package]]
 name = "numdifftools"
-version = "0.9.40"
+version = "0.9.41"
 description = "Solves automatic numerical differentiation problems in one or more variables."
 category = "main"
 optional = false
 python-versions = "*"
 
 [package.dependencies]
-algopy = ">=0.4"
 numpy = ">=1.9"
 scipy = ">=0.8"
-statsmodels = ">=0.6"
 
 [package.extras]
 build-sphinx = ["sphinx (>=1.3.1)"]
@@ -1833,7 +1823,7 @@ name = "patsy"
 version = "0.5.3"
 description = "A Python package for describing statistical models and for building design matrices."
 category = "main"
-optional = false
+optional = true
 python-versions = "*"
 
 [package.dependencies]
@@ -2509,7 +2499,7 @@ name = "statsmodels"
 version = "0.12.2"
 description = "Statistical computations and models for Python"
 category = "main"
-optional = false
+optional = true
 python-versions = ">=3.6"
 
 [package.dependencies]
@@ -2528,7 +2518,7 @@ name = "statsmodels"
 version = "0.13.1"
 description = "Statistical computations and models for Python"
 category = "main"
-optional = false
+optional = true
 python-versions = ">=3.7"
 
 [package.dependencies]
@@ -2707,7 +2697,7 @@ python-versions = "*"
 
 [[package]]
 name = "types-pyyaml"
-version = "6.0.12.1"
+version = "6.0.12.2"
 description = "Typing stubs for PyYAML"
 category = "dev"
 optional = false
@@ -2900,12 +2890,9 @@ jupyter = ["jupyterlab", "plotly", "itables", "kaleido", "dtale"]
 [metadata]
 lock-version = "1.1"
   python-versions = ">=3.7.2,<3.11"
-content-hash = "db4b4ac32c05914124629617f2d690e6bb7762a3725e86a2e0522773fc6e23d5"
+content-hash = "f79d6d0076793ae64f28ea4cde75ae1c421c30fd25eba6a0be14d5a6ea3ae031"
 
 [metadata.files]
-algopy = [
-    {file = "algopy-0.5.7.zip", hash = "sha256:6955f676fce3858fa3585cb7f3f7e1796cb93377d24016419b6699291584b7df"},
-]
 anyio = [
     {file = "anyio-3.6.2-py3-none-any.whl", hash = "sha256:fbbe32bd270d2a2ef3ed1c5d45041250284e31fc0a4df4a5a6071842051a51e3"},
     {file = "anyio-3.6.2.tar.gz", hash = "sha256:25ea0d673ae30af41a0c442f81cf3b38c7e79fdc7b60335a4c14e05eb0947421"},
@@ -3410,16 +3397,16 @@ jsonschema = [
     {file = "jsonschema-4.17.0.tar.gz", hash = "sha256:5bfcf2bca16a087ade17e02b282d34af7ccd749ef76241e7f9bd7c0cb8a9424d"},
 ]
 jupyter-client = [
-    {file = "jupyter_client-7.4.4-py3-none-any.whl", hash = "sha256:1c1d418ef32a45a1fae0b243e6f01cc9bf65fa8ddbd491a034b9ba6ac6502951"},
-    {file = "jupyter_client-7.4.4.tar.gz", hash = "sha256:5616db609ac720422e6a4b893d6572b8d655ff41e058367f4459a0d2c0726832"},
+    {file = "jupyter_client-7.4.5-py3-none-any.whl", hash = "sha256:feaad9c04871254067d3b8c41192b7aba8e9bbbf9df9830ecf2673939510c5b7"},
+    {file = "jupyter_client-7.4.5.tar.gz", hash = "sha256:63eae06c40e1f2d9afa14447511fddc065c95dea3f2491fda2acccf91221954a"},
 ]
 jupyter-core = [
     {file = "jupyter_core-4.11.2-py3-none-any.whl", hash = "sha256:3815e80ec5272c0c19aad087a0d2775df2852cfca8f5a17069e99c9350cecff8"},
     {file = "jupyter_core-4.11.2.tar.gz", hash = "sha256:c2909b9bc7dca75560a6c5ae78c34fd305ede31cd864da3c0d0bb2ed89aa9337"},
 ]
 jupyter-server = [
-    {file = "jupyter_server-1.23.0-py3-none-any.whl", hash = "sha256:0adbb94fc41bc5d7217a17c51003fea7d0defb87d8a6aff4b95fa45fa029e129"},
-    {file = "jupyter_server-1.23.0.tar.gz", hash = "sha256:45d706e049ca2486491b1bb459c04f34966a606018be5b16287c91e33689e359"},
+    {file = "jupyter_server-1.23.1-py3-none-any.whl", hash = "sha256:4bdcde2aa576b05da5cf89f33b7d97adcaea5cad4f5863a0db09dcc9eecd66bf"},
+    {file = "jupyter_server-1.23.1.tar.gz", hash = "sha256:cee48d9d96cecd0f94b7cb41ecd4f0ab05b01643769f61c5d397b7873bc9a1e2"},
 ]
 jupyterlab = [
     {file = "jupyterlab-3.5.0-py3-none-any.whl", hash = "sha256:f433059fe0e12d75ea90a81a0b6721113bb132857e3ec2197780b6fe84cbcbde"},
@@ -3430,8 +3417,8 @@ jupyterlab-pygments = [
     {file = "jupyterlab_pygments-0.2.2.tar.gz", hash = "sha256:7405d7fde60819d905a9fa8ce89e4cd830e318cdad22a0030f7a901da705585d"},
 ]
 jupyterlab-server = [
-    {file = "jupyterlab_server-2.16.2-py3-none-any.whl", hash = "sha256:7ad1a37a716f6d10e90185c636c122d55a58ef3141ae50f9d0601d3ccf54d43e"},
-    {file = "jupyterlab_server-2.16.2.tar.gz", hash = "sha256:07007a3a0a30bfc6424b28b76df8d67386cc2d5f9f42886773b1b3c473cb9a3f"},
+    {file = "jupyterlab_server-2.16.3-py3-none-any.whl", hash = "sha256:d18eb623428b4ee732c2258afaa365eedd70f38b609981ea040027914df32bc6"},
+    {file = "jupyterlab_server-2.16.3.tar.gz", hash = "sha256:635a0b176a901f19351c02221a124e59317c476f511200409b7d867e8b2905c3"},
 ]
 jupytext = [
     {file = "jupytext-1.14.1-py3-none-any.whl", hash = "sha256:216bddba8bbb9355831ba17fd8d45cfe5d1355e7152bc8980f39175fc2584875"},
@@ -3859,8 +3846,8 @@ notebook-shim = [
     {file = "notebook_shim-0.2.2.tar.gz", hash = "sha256:090e0baf9a5582ff59b607af523ca2db68ff216da0c69956b62cab2ef4fc9c3f"},
 ]
 numdifftools = [
-    {file = "numdifftools-0.9.40-py2.py3-none-any.whl", hash = "sha256:57bb19ba0abc914ad8373ad48a1416f186bf0a24dc677f138350b26895301d40"},
-    {file = "numdifftools-0.9.40.tar.gz", hash = "sha256:940692fd795e47083fad481d93c432b7fa9378758b5681dfc73a65152abfcd57"},
+    {file = "numdifftools-0.9.41-py2.py3-none-any.whl", hash = "sha256:a8b162e06889ea73643a47b84935a63d8214d4b4b0805d36a3c28c56379b3e51"},
+    {file = "numdifftools-0.9.41.tar.gz", hash = "sha256:4ef705cd3c06211b3a4e9fd05ad622be916dcfda40732f0128805a2c4be389b4"},
 ]
 numpy = [
     {file = "numpy-1.21.6-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:8737609c3bbdd48e380d463134a35ffad3b22dc56295eff6f79fd85bd0eeeb25"},
@@ -4695,8 +4682,8 @@ types-mock = [
     {file = "types_mock-4.0.15.2-py3-none-any.whl", hash = "sha256:39d489b6d9361b75448677680a3087701c0cfab61260363cfc0f646d2bf0a8b2"},
 ]
 types-pyyaml = [
-    {file = "types-PyYAML-6.0.12.1.tar.gz", hash = "sha256:70ccaafcf3fb404d57bffc1529fdd86a13e8b4f2cf9fc3ee81a6408ce0ad59d2"},
-    {file = "types_PyYAML-6.0.12.1-py3-none-any.whl", hash = "sha256:aaf5e51444c13bd34104695a89ad9c48412599a4f615d65a60e649109714f608"},
+    {file = "types-PyYAML-6.0.12.2.tar.gz", hash = "sha256:6840819871c92deebe6a2067fb800c11b8a063632eb4e3e755914e7ab3604e83"},
+    {file = "types_PyYAML-6.0.12.2-py3-none-any.whl", hash = "sha256:1e94e80aafee07a7e798addb2a320e32956a373f376655128ae20637adb2655b"},
 ]
 types-tabulate = [
     {file = "types-tabulate-0.8.11.tar.gz", hash = "sha256:17a5fa3b5ca453815778fc9865e8ecd0118b07b2b9faff3e2b06fe448174dd5e"},
