@@ -1,8 +1,9 @@
 """SpectraFit, the command line tool for fitting."""
 import argparse
 
-from typing import Any, MutableMapping
+from typing import Any
 from typing import Dict
+from typing import MutableMapping
 from typing import Tuple
 
 import pandas as pd
