@@ -1,4 +1,4 @@
-name: Mirroring
+name: CI - Mirroring
 
 on:
   pull_request:
