@@ -4,6 +4,7 @@ import argparse
 from typing import Any
 from typing import Dict
 from typing import MutableMapping
+from typing import Optional
 from typing import Tuple
 
 import pandas as pd
@@ -182,7 +183,7 @@ def get_args() -> Dict[str, Any]:
     return vars(parser.parse_args())
 
 
-def command_line_runner(args: Dict[str, Any] = None) -> None:
+def command_line_runner(args: Optional[Dict[str, Any]] = None) -> None:
     """Run spectrafit from the command line.
 
     Args:

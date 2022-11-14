@@ -10,4 +10,4 @@ def test_jupyter() -> None:
         with mock.patch.object(app, "sys"):
             with mock.patch.object(app, "main"):
                 app.__app__()
-                app.sys.exit.assert_called_once_with(app.main())
+                app.sys.exit.assert_called_once_with(app.main())  # type: ignore
