@@ -6,10 +6,3 @@
   types: [python]
   files: ""
   minimum_pre_commit_version: 0.15.0
-- id: sourcery
-  name: sourcery
-  description: Magically refactor Python
-  language: python
-  additional_dependencies: [sourcery-cli==0.13.0]
-  entry: sourcery review --check
-  types: [python]
