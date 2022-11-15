@@ -70,3 +70,8 @@ repos:
     hooks:
       - id: pyupgrade
         args: [--py37-plus]
+  - repo: https://github.com/sourcery-ai/sourcery
+    rev: v0.13.0
+    hooks:
+      - id: sourcery
+        args: [--diff=git diff HEAD, --no-summary, --in-place]
