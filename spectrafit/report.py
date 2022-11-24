@@ -193,7 +193,9 @@ def fit_report_as_dict(
         "covariance_matrix": {},
     }
 
-    result, buffer, params = _extracted_gof_from_results(result, buffer, params)
+    result, buffer, params = _extracted_gof_from_results(
+        result=result, buffer=buffer, params=params
+    )
     for name in parnames:
         par = params[name]
         buffer["variables"][name] = {}
