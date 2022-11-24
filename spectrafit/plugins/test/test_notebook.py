@@ -516,3 +516,16 @@ class TestSpectraFitNotebook:
             )
 
             mock_show.assert_called_once()
+
+    def test_display_current_df(
+        self,
+        class_spectrafit_fit: SpectraFitNotebook,
+        dataframe_2: pd.DataFrame,
+    ) -> None:
+        """Test the display_current_df function."""
+        sp = class_spectrafit_fit
+        sp.df_pre = sp.df_org = sp.df_fit = dataframe_2
+        sp.display_current_df()
+        sp.display_original_df()
+        sp.display_preprocessed_df()
+        sp.display_fit_df()

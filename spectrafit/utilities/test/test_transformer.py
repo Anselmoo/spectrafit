@@ -6,6 +6,7 @@ from typing import List
 import pytest
 
 from spectrafit.utilities.transformer import list2dict
+from spectrafit.utilities.transformer import remove_none_type
 
 
 @pytest.fixture
@@ -75,3 +76,9 @@ def test_converter(
         reference_dict (Dict[str, Dict[str, Any]]): Reference dictionary of two peaks.
     """
     assert list2dict(reference_list) == reference_dict
+
+
+def test_remove_none_type() -> None:
+    """Test remove_none_type function."""
+    d = {"a": None, "b": {"c": None, "d": {"e": None, "f": 1}}}
+    assert remove_none_type(d) == {"b": {"d": {"f": 1}}}
