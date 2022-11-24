@@ -59,7 +59,7 @@ exclude = ["docs/", "tools/"]
   numdifftools = "^0.9.41"
   tqdm = "^4.64.0"
   scikit-learn = "^1.0.2"
-  art = "^5.7"
+  art = "^5.8"
   pydantic = "^1.10.1"
   jupyterlab = { version = "^3.4.5", optional = true }
   plotly = { version = "^5.11.0", optional = true }
