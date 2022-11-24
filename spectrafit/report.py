@@ -13,6 +13,7 @@ import pandas as pd
 
 from art import tprint
 from lmfit import Minimizer
+from lmfit import Parameters
 from lmfit import conf_interval
 from lmfit import report_ci
 from lmfit import report_fit
@@ -191,36 +192,8 @@ def fit_report_as_dict(
         "correlations": {},
         "covariance_matrix": {},
     }
-    if result is not None:
 
-        buffer["configurations"]["fitting_method"] = result.method
-        buffer["configurations"]["function_evals"] = result.nfev
-        buffer["configurations"]["data_points"] = result.ndata
-        buffer["configurations"]["variable_names"] = result.var_names
-        buffer["configurations"]["variable_numbers"] = result.nvarys
-        buffer["configurations"]["degree_of_freedom"] = result.nfree
-
-        buffer["statistics"]["chi-square"] = result.chisqr
-        buffer["statistics"]["reduced_chi_square"] = result.redchi
-        buffer["statistics"]["akaike_information"] = result.aic
-        buffer["statistics"]["bayesian_information"] = result.bic
-
-        if not result.errorbars:
-            print("##  Warning: uncertainties could not be estimated:")
-            if result.method not in ("leastsq", "least_squares"):
-                print(
-                    f"The fitting method '{result.method}' does not natively calculate"
-                    " and uncertainties cannot be estimated due to be out of region!"
-                )
-
-            parnames_varying = [par for par in result.params if result.params[par].vary]
-            for name in parnames_varying:
-                par = params[name]
-                if par.init_value and np.allclose(par.value, par.init_value):
-                    buffer["errorbars"]["at_initial_value"] = name
-                if np.allclose(par.value, par.min) or np.allclose(par.value, par.max):
-                    buffer["errorbars"]["at_boundary"] = name
-
+    result, buffer, params = _extracted_gof_from_results(result, buffer, params)
     for name in parnames:
         par = params[name]
         buffer["variables"][name] = {}
@@ -268,6 +241,52 @@ def fit_report_as_dict(
     except (AttributeError, IndexError) as exc:
         print(f"{exc}: Covariance Matrix could not be calculated.\n")
     return buffer
+
+
+def _extracted_gof_from_results(
+    result: minimize, buffer: Dict[str, Any], params: Parameters
+) -> Tuple[minimize, Dict[str, Any], Parameters]:
+    """Extract the goodness of fit from the results.
+
+    Args:
+        result (minimize): Input Parameters from a fit or the  Minimizer results
+        buffer (Dict[str, Any]): The buffer to store the results.
+        params (Parameters): The parameters of the fit.
+
+    Returns:
+        minimize: The results.
+        Dict[str, Any]: The buffer with updated results.
+        Parameters: The parameters.
+    """
+    if result is not None:
+        buffer["configurations"]["fitting_method"] = result.method
+        buffer["configurations"]["function_evals"] = result.nfev
+        buffer["configurations"]["data_points"] = result.ndata
+        buffer["configurations"]["variable_names"] = result.var_names
+        buffer["configurations"]["variable_numbers"] = result.nvarys
+        buffer["configurations"]["degree_of_freedom"] = result.nfree
+
+        buffer["statistics"]["chi-square"] = result.chisqr
+        buffer["statistics"]["reduced_chi_square"] = result.redchi
+        buffer["statistics"]["akaike_information"] = result.aic
+        buffer["statistics"]["bayesian_information"] = result.bic
+
+        if not result.errorbars:
+            print("##  Warning: uncertainties could not be estimated:")
+            if result.method not in ("leastsq", "least_squares"):
+                print(
+                    f"The fitting method '{result.method}' does not natively calculate"
+                    " and uncertainties cannot be estimated due to be out of region!"
+                )
+
+            parnames_varying = [par for par in result.params if result.params[par].vary]
+            for name in parnames_varying:
+                par = params[name]
+                if par.init_value and np.allclose(par.value, par.init_value):
+                    buffer["errorbars"]["at_initial_value"] = name
+                if np.allclose(par.value, par.min) or np.allclose(par.value, par.max):
+                    buffer["errorbars"]["at_boundary"] = name
+    return result, buffer, params
 
 
 class PrintingResults:
