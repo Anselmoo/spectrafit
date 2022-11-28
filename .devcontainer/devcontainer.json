@@ -48,7 +48,7 @@
   "remoteUser": "vscode",
   "features": {
     "github-cli": "latest",
-    "fish": "latest",
+    // "fish": "latest",
     "homebrew": "latest",
     "docker-in-docker": "latest",
     "docker-from-docker": "latest",
