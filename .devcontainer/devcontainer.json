@@ -47,7 +47,7 @@
         "sourcery.sourcery"
       ]
     }
-  },
+  }
   // Configure tool-specific properties.
   // "customizations": {},
   // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
