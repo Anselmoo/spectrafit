@@ -6,6 +6,14 @@
 
 > See also: [https://github.com/Anselmoo/spectrafit/releases][1]
 
+## v0.13.0
+
+---
+
+- Update `devcontainer` to use `VScode`.
+- Removed [`fish-shell`][34] from `devcontainer`.
+- Applied code refactoring performed by [Copilot Labs][35]
+
 ## v0.12.5
 
 ---
@@ -313,3 +321,5 @@
 [31]: https://github.com/Anselmoo/spectrafit/pkgs/container/spectrafit
 [32]: https://github.com/Anselmoo/spectrafit/blob/6ca69132a199d3bf458927cf3d4ce6f8fdef0eae/.pre-commit-config.yaml
 [33]: https://github.com/conda-forge/spectrafit-feedstock
+[34]: https://fishshell.com
+[35]: https://githubnext.com/projects/copilot-labs/
