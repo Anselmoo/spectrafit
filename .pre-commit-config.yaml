@@ -18,7 +18,7 @@ repos:
         args: ["--maxkb=1000"]
         exclude: \.ipynb
   - repo: https://github.com/psf/black.git
-    rev: 22.10.0
+    rev: 22.12.0
     hooks:
       - id: black
   - repo: https://github.com/asottile/blacken-docs
@@ -66,7 +66,7 @@ repos:
       - id: prettier
         exclude: docs/plugins/jupyter-spectrafit-interface.md
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.3.0
+    rev: v3.3.1
     hooks:
       - id: pyupgrade
         args: [--py37-plus]
