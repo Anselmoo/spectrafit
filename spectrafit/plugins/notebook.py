@@ -1080,15 +1080,21 @@ class SpectraFitNotebook(
         tuples = []
         _list = []
         for key_1, _dict in self.args["fit_insights"]["variables"].items():
-            for key_2, val in _dict.items():
-                tuples.append((key_1, key_2))
-                _list.append(val)
-
-        index = pd.MultiIndex.from_tuples(tuples, names=["component", "parameter"])
-        _df = pd.DataFrame(pd.Series(_list, index=index)).T
+            tuples.extend([(key_1, key_2) for key_2, val in _dict.items()])
+            _list.extend([val for _, val in _dict.items()])
 
         self.df_peaks = pd.concat(
-            [self.df_peaks, _df],
+            [
+                self.df_peaks,
+                pd.DataFrame(
+                    pd.Series(
+                        _list,
+                        index=pd.MultiIndex.from_tuples(
+                            tuples, names=["component", "parameter"]
+                        ),
+                    )
+                ).T,
+            ],
             ignore_index=True,
         )
 
