@@ -494,6 +494,7 @@ class TestSpectraFitNotebook:
                 show_plot=False,
                 show_df=True,
                 show_metric=True,
+                show_peaks=True,
                 conf_interval=True,
             )
             mock_show.assert_called_once()
@@ -512,6 +513,7 @@ class TestSpectraFitNotebook:
                 show_plot=False,
                 show_df=True,
                 show_metric=True,
+                show_peaks=True,
                 conf_interval={},
             )
 
