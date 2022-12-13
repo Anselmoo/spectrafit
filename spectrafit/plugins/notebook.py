@@ -703,6 +703,7 @@ class SpectraFitNotebook(
     df_fit: pd.DataFrame
     df_pre: pd.DataFrame = pd.DataFrame()
     df_metric: pd.DataFrame = pd.DataFrame()
+    df_peaks: pd.DataFrame = pd.DataFrame()
     initial_model: List[Dict[str, Dict[str, Dict[str, Any]]]]
 
     def __init__(
@@ -993,6 +994,7 @@ class SpectraFitNotebook(
         show_plot: bool = True,
         show_metric: bool = True,
         show_df: bool = False,
+        show_peaks: bool = False,
         conf_interval: Union[bool, Dict[str, Any]] = False,
         bar_criteria: Optional[Union[str, List[str]]] = None,
         line_criteria: Optional[Union[str, List[str]]] = None,
@@ -1008,6 +1010,7 @@ class SpectraFitNotebook(
             show_metric (bool, optional): Show the metric of the fit. Defaults to True.
             show_df (bool, optional): Show current fit results as dataframe. Defaults
                  to False.
+            show_peaks (bool, optional): Show the peaks of fit. Defaults to False.
             conf_interval (Union[bool,Dict[str, Any]], optional): Bool or dictionary for
                  the parameter with the parameter for calculating the confidence
                  interval. Using `conf_interval=False` turns of the calculation of
@@ -1052,6 +1055,7 @@ class SpectraFitNotebook(
             )(),
         )()
         self.update_metric
+        self.update_peaks
         if show_plot:
             self.plot_fit_df
 
@@ -1062,6 +1066,37 @@ class SpectraFitNotebook(
 
         if show_df:
             self.interactive_display(df=self.df_fit)
+
+        if show_peaks:
+            self.interactive_display(df=self.df_peaks)
+
+    @property
+    def update_peaks(self) -> None:
+        """Update the peaks dataframe as multi-column dataframe.
+
+        The multi-column dataframe is used for the interactive display of the
+        peaks with initial, current (model), and best fit values.
+        """
+        tuples = []
+        _list = []
+        for key_1, _dict in self.args["fit_insights"]["variables"].items():
+            tuples.extend([(key_1, key_2) for key_2, val in _dict.items()])
+            _list.extend([val for _, val in _dict.items()])
+
+        self.df_peaks = pd.concat(
+            [
+                self.df_peaks,
+                pd.DataFrame(
+                    pd.Series(
+                        _list,
+                        index=pd.MultiIndex.from_tuples(
+                            tuples, names=["component", "parameter"]
+                        ),
+                    )
+                ).T,
+            ],
+            ignore_index=True,
+        )
 
     @property
     def update_metric(self) -> None:

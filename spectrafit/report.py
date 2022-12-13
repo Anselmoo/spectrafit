@@ -151,7 +151,7 @@ class RegressionMetrics:
                 try:
                     metric_dict[fnc.__name__].append(fnc(y_true, y_pred))
                 except ValueError as err:
-                    print(f"ValueError: {err} for {fnc.__name__}!")
+                    print(f"## Warning: {err} for {fnc.__name__}!")
                     metric_dict[fnc.__name__].append(np.nan)
         return pd.DataFrame(metric_dict).T.to_dict(orient="split")
 
