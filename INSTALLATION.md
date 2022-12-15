@@ -54,6 +54,59 @@ To keep the system environment clean, the installation is done via the:
     spectrafit --help
     ```
 
+    For include the `jupyter` support, the following command can be used:
+
+    ```terminal
+
+    conda install -c conda-forge spectrafit-jupyter
+
+    # To test
+    python -c "from spectrafit.plugins.notebook import SpectraFitNotebook"
+    ```
+
+    Extended documentation about the installation of `SpectraFit` via conda can
+    be found [here][7]. In general, the following command can be useful for
+    working with conda:
+
+    ```terminal
+    conda config --add channels conda-forge
+    conda config --set channel_priority strict
+    ```
+
+=== "Poetry"
+
+    For installing `SpectraFit` via [Poetry][8], first `SpectraFit` has to be
+    downloaded or cloned from the [GitHub repository][9]. Optionally, the
+    `SpectraFit` repo has to be unpacked. Next, `poetry` has to be installed
+    via `pip`:
+
+    ```terminal
+    pip install poetry
+    ```
+
+    or via `conda`:
+
+    ```terminal
+    conda install -c conda-forge poetry
+    ```
+    _Installation_:
+
+    ```terminal
+    poetry install -E jupyter
+    ```
+    _Usage_:
+
+    ```terminal
+    poetry run spectrafit --help
+    ```
+
+    or using the `poetry shell`:
+
+    ```terminal
+    poetry shell
+    spectrafit --help
+    ```
+
 _Result_:
 
 ```terminal
@@ -109,3 +162,6 @@ available plugins are:
 [4]: https://github.com/Anselmoo/spectrafit/pkgs/container/spectrafit
 [5]: https://github.com/jupyter/docker-stacks/blob/main/scipy-notebook/Dockerfile
 [6]: ../../plugins/jupyter-spectrafit-interface
+[7]: https://github.com/conda-forge/spectrafit-feedstock
+[8]: https://python-poetry.org/docs/
+[9]: https://github.com/Anselmoo/spectrafit/

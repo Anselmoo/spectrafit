@@ -6,6 +6,16 @@
 
 > See also: [https://github.com/Anselmoo/spectrafit/releases][1]
 
+## _Unreleased_
+
+- Add `SpectraFit` to [Conda-Forge][2] as [spectrafit][3] package.
+- Extend `SpectraFit` to print current peak values as `dataframe`
+  in Jupyter-Notebook.
+
+## v0.13.1
+
+- Fix crashed regression analysis due to _negative_ values in the `y`-data.
+
 ## v0.13.0
 
 ---
