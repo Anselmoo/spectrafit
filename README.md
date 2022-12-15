@@ -39,7 +39,7 @@ via pip:
 ```terminal
 pip install spectrafit
 
-# with suppot for Jupyter Notebook
+# with support for Jupyter Notebook
 
 pip install spectrafit[jupyter]
 
@@ -48,10 +48,18 @@ pip install spectrafit[jupyter]
 pip install spectrafit --upgrade
 ```
 
-via conda:
+via conda, see also [conda-forge](https://github.com/conda-forge/spectrafit-feedstock):
 
 ```terminal
 conda install -c conda-forge spectrafit
+
+# with support for Jupyter Notebook
+
+conda install -c conda-forge spectrafit-jupyter
+
+# with all upcomming features
+
+conda install -c conda-forge spectrafit-all
 ```
 
 ## Usage
