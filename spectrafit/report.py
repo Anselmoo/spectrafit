@@ -148,10 +148,11 @@ class RegressionMetrics:
         for fnc in metrics_fnc:
             metric_dict[fnc.__name__] = []
             for y_true, y_pred in zip(self.y_true.T, self.y_pred.T):
-                if np.isnan(y_pred).any():
-                    metric_dict[fnc.__name__].append(np.nan)
-                else:
+                try:
                     metric_dict[fnc.__name__].append(fnc(y_true, y_pred))
+                except ValueError as err:
+                    print(f"## Warning: {err} for {fnc.__name__}!")
+                    metric_dict[fnc.__name__].append(np.nan)
         return pd.DataFrame(metric_dict).T.to_dict(orient="split")
 
 
