@@ -3,7 +3,6 @@
 import sys
 
 from pathlib import Path
-from tempfile import TemporaryDirectory
 from typing import Any
 from typing import Dict
 from typing import List
@@ -136,38 +135,38 @@ def export_report_fixture(
 
 @pytest.fixture(name="class_spectrafit")
 def class_spectrafit_fixture(
-    dataframe_2: pd.DataFrame, initial_model: List[Dict[str, Dict[str, Dict[str, Any]]]]
+    dataframe_2: pd.DataFrame,
+    initial_model: List[Dict[str, Dict[str, Dict[str, Any]]]],
+    tmp_path: Path,
 ) -> Dict[Any, Any]:
     """Create a SpectraFitNotebook object."""
-    with TemporaryDirectory() as tmpdir:
-        _df = pd.DataFrame(data={"x": [1, 2, 3], "y": [1, 2, 3]})
-        sp = SpectraFitNotebook(
-            df=_df,
-            x_column="x",
-            y_column="y",
-            folder=str(tmpdir),
-            fname="test",
-        )
-        sp.df_fit = dataframe_2
-        sp.initial_model = initial_model
-        sp.df_pre = _df
-        sp.df_metric = _df
-        return {"sp": sp, "tmpdir": str(tmpdir)}
+    _df = pd.DataFrame(data={"x": [1, 2, 3], "y": [1, 2, 3]})
+    sp = SpectraFitNotebook(
+        df=_df,
+        x_column="x",
+        y_column="y",
+        folder=str(tmp_path),
+        fname="test",
+    )
+    sp.df_fit = dataframe_2
+    sp.initial_model = initial_model
+    sp.df_pre = _df
+    sp.df_metric = _df
+    return {"sp": sp, "tmpdir": tmp_path}
 
 
 @pytest.fixture(name="class_spectrafit_fit")
 def class_spectrafit_fixture_fit(
-    dataframe: pd.DataFrame, x_column: str, y_column: str
+    dataframe: pd.DataFrame, x_column: str, y_column: str, tmp_path: Path
 ) -> SpectraFitNotebook:
     """Create a SpectraFitNotebook object."""
-    with TemporaryDirectory() as tmpdir:
-        return SpectraFitNotebook(
-            df=dataframe,
-            x_column=x_column,
-            y_column=y_column,
-            fname="test",
-            folder=str(tmpdir),
-        )
+    return SpectraFitNotebook(
+        df=dataframe,
+        x_column=x_column,
+        y_column=y_column,
+        fname="test",
+        folder=str(tmp_path),
+    )
 
 
 def test_dataframe_display(dataframe: pd.DataFrame) -> None:
@@ -245,31 +244,29 @@ def test_dataframe_display_all(dataframe: pd.DataFrame) -> None:
 class TestExportResults:
     """Test of the Export Results class."""
 
-    def test_export_df(self, dataframe: pd.DataFrame) -> None:
+    def test_export_df(self, dataframe: pd.DataFrame, tmp_path: Path) -> None:
         """Test the export function."""
-        with TemporaryDirectory() as tmpdir:
-            fname = "test"
-            prefix = "test"
-            suffix = "csv"
-            folder = str(tmpdir)
-            ExportResults().export_df(
-                df=dataframe,
-                args=FnameAPI(fname=fname, prefix=prefix, suffix=suffix, folder=folder),
-            )
-            assert Path(folder).joinpath(f"{prefix}_{fname}.{suffix}").exists()
+        fname = "test"
+        prefix = "test"
+        suffix = "csv"
+        folder = str(tmp_path)
+        ExportResults().export_df(
+            df=dataframe,
+            args=FnameAPI(fname=fname, prefix=prefix, suffix=suffix, folder=folder),
+        )
+        assert Path(folder).joinpath(f"{prefix}_{fname}.{suffix}").exists()
 
-    def test_export_report(self, dataframe: pd.DataFrame) -> None:
+    def test_export_report(self, dataframe: pd.DataFrame, tmp_path: Path) -> None:
         """Test the export function."""
-        with TemporaryDirectory() as tmpdir:
-            fname = "test"
-            prefix = "test"
-            suffix = "lock"
-            folder = str(tmpdir)
-            ExportResults().export_report(
-                report=dataframe.to_dict(orient="list"),
-                args=FnameAPI(fname=fname, prefix=prefix, suffix=suffix, folder=folder),
-            )
-            assert Path(folder).joinpath(f"{prefix}_{fname}.{suffix}").exists()
+        fname = "test"
+        prefix = "test"
+        suffix = "lock"
+        folder = str(tmp_path)
+        ExportResults().export_report(
+            report=dataframe.to_dict(orient="list"),
+            args=FnameAPI(fname=fname, prefix=prefix, suffix=suffix, folder=folder),
+        )
+        assert Path(folder).joinpath(f"{prefix}_{fname}.{suffix}").exists()
 
     def test_static_fname(self) -> None:
         """Test the static function of generating PathPosixs."""
