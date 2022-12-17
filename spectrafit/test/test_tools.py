@@ -61,10 +61,10 @@ def args_0() -> Dict[str, Any]:
             },
             "2": {
                 "pseudovoigt": {
-                    "amplitude": {"max": 200, "min": 0, "vary": True, "value": 1},
-                    "center": {"max": 200, "min": -200, "vary": True, "value": 0},
-                    "fwhmg": {"max": 2.5, "min": 0.00002, "vary": True, "value": 1.0},
-                    "fwhml": {"max": 2.5, "min": 0.0001, "vary": True, "value": 0.01},
+                    "amplitude": {"max": 100, "min": 1, "vary": True, "value": 5},
+                    "center": {"max": 20, "min": -20, "vary": True, "value": 0.0},
+                    "fwhmg": {"max": 2.51, "min": 0.00002, "vary": True, "value": 1.0},
+                    "fwhml": {"max": 2.52, "min": 0.001, "vary": True, "value": 0.01},
                 }
             },
         },
