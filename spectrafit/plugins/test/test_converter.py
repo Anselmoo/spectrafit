@@ -10,12 +10,12 @@ import tomli
 import tomli_w
 import yaml
 
-from spectrafit.plugins.converter import convert
+from spectrafit.plugins.input_converter import InputConverter
 
 
 def test_cmd_converter(script_runner: Any) -> None:
     """Test the converter plugin."""
-    ret = script_runner.run("spectrafit-converter", "-h")
+    ret = script_runner.run("spectrafit-input-converter", "-h")
 
     assert ret.success
     assert "Converter for 'SpectraFit' input and output files." in ret.stdout
@@ -29,7 +29,7 @@ def test_raise_input_output() -> None:
         "format": "yaml",
     }
     with pytest.raises(ValueError) as excinfo:
-        convert(args)
+        InputConverter().convert(args)
 
     assert (
         "The input file suffix 'yaml' is similar to the output file format 'yaml'."
@@ -44,7 +44,7 @@ def test_raise_no_guilty_ouput() -> None:
         "format": "illegal",
     }
     with pytest.raises(ValueError) as excinfo:
-        convert(args)
+        InputConverter().convert(args)
     assert "The output file format 'illegal' is not supported." in str(excinfo.value)
 
 
@@ -58,7 +58,7 @@ def test_json_conversion(tmp_path: Path) -> None:
         "infile": infile,
         "format": "yaml",
     }
-    convert(args)
+    InputConverter().convert(args)
     with open(infile.with_suffix(".yaml"), encoding="utf8") as f:
         data = yaml.safe_load(f)
 
@@ -75,7 +75,7 @@ def test_yaml_conversion(tmp_path: Path) -> None:
         "infile": infile,
         "format": "toml",
     }
-    convert(args)
+    InputConverter().convert(args)
     with open(infile.with_suffix(".toml"), "rb") as f:
         data = tomli.load(f)
 
@@ -92,7 +92,7 @@ def test_toml_conversion(tmp_path: Path) -> None:
         "infile": infile,
         "format": "json",
     }
-    convert(args)
+    InputConverter().convert(args)
     with open(infile.with_suffix(".json"), encoding="utf8") as f:
         data = json.load(f)
 
