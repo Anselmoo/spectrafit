@@ -161,7 +161,7 @@ nav:
       - Fitting: doc/fitting.md
       - Statistics: doc/statistics.md
   - Plugins:
-      - File-Format-Conversion: plugins/spectrafit-converter.md
+      - File-Format-Conversion: plugins/spectrafit-file-converter.md
       - Jupyter-Notebook-Integration: plugins/jupyter-spectrafit-interface.md
   - API:
       - SpectraFit: api/spectrafit_api.md
