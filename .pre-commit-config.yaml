@@ -56,7 +56,7 @@ repos:
       - id: pydocstyle
         additional_dependencies: [toml==0.10.2]
   - repo: https://github.com/PyCQA/pylint
-    rev: "v2.15.8"
+    rev: "v2.15.9"
     hooks:
       - id: pylint
         additional_dependencies: [toml==0.10.2]
