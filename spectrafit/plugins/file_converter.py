@@ -13,17 +13,19 @@ from spectrafit.plugins.converter import Converter
 from spectrafit.tools import read_input_file
 
 
-choices = ["json", "yaml", "yml", "toml", "lock"]
+choices = {"json", "yaml", "yml", "toml", "lock"}
 
 
-class InputConverter(Converter):
-    """Convert the input file to the preferred file format.
+class FileConverter(Converter):
+    """Convert the input and output file to the preferred file format.
 
-    Currently supported file formats:
+    !!! info "Supported file formats"
 
-    - JSON
-    - YAML
-    - TOML
+        Currently supported file formats:
+
+        -[x] JSON
+        -[x] YAML (YML)
+        -[x] TOML (LOCK for the lock file)
     """
 
     def get_args(self) -> Dict[str, Any]:
@@ -43,61 +45,57 @@ class InputConverter(Converter):
         )
         parser.add_argument(
             "-f",
-            "--format",
+            "--file-format",
             help="File format for the conversion.",
             type=str,
             choices=choices,
         )
         return vars(parser.parse_args())
 
-    def convert(self, args: Dict[str, Any]) -> None:
+    def convert(self, infile: Path, file_format: str) -> None:
         """Convert the input file to the output file.
 
         Args:
-            args (Dict[str, Any]): The input file arguments as a dictionary with
-                additional information beyond the command line arguments.
+            infile (Path): The input file as a path object.
+            file_format (str): The output file format.
 
         Raises:
             ValueError: If the input file format is identical with the output format.
             ValueError: If the output file format is not supported.
         """
-        if args["infile"].suffix[1:] == args["format"]:
+        if infile.suffix[1:] == file_format:
             raise ValueError(
-                f"The input file suffix '{args['infile'].suffix[1:]}' is similar to the"
-                f" output file format '{args['format']}'."
+                f"The input file suffix '{infile.suffix[1:]}' is similar to the"
+                f" output file format '{file_format}'."
                 "Please use a different output file suffix."
             )
 
-        if args["format"] not in choices:
+        if file_format not in choices:
             raise ValueError(
-                f"The output file format '{args['format']}' is not supported."
+                f"The output file format '{file_format}' is not supported."
             )
 
-        data = read_input_file(args["infile"])
+        data = read_input_file(infile)
 
-        if args["format"] == "json":
+        if file_format == "json":
             # Convert the input file to a JSON file
-            with open(
-                args["infile"].with_suffix(f".{args['format']}"), "w", encoding="utf8"
-            ) as f:
+            with open(infile.with_suffix(f".{file_format}"), "w", encoding="utf8") as f:
                 json.dump(data, f, indent=4)
-        elif args["format"] == "yaml":
-            with open(
-                args["infile"].with_suffix(f".{args['format']}"), "w", encoding="utf8"
-            ) as f:
+        elif file_format in {"yaml", "yml"}:
+            with open(infile.with_suffix(f".{file_format}"), "w", encoding="utf8") as f:
                 yaml.dump(data, f, default_flow_style=False)
-        elif args["format"] in ["toml", "lock"]:
+        elif file_format in {"toml", "lock"}:
             with open(
-                args["infile"].with_suffix(f".{args['format']}"),
+                infile.with_suffix(f".{file_format}"),
                 "wb+",
             ) as f:
                 tomli_w.dump(dict(**data), f)
 
     def __call__(self) -> None:
         """Run the converter via cmd commands."""
-        self.convert(self.get_args())
+        self.convert(**self.get_args())
 
 
 def command_line_runner() -> None:
     """Run the converter from the command line."""
-    InputConverter()()
+    FileConverter()()

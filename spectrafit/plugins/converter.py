@@ -1,6 +1,7 @@
 """Abstract base class for the converter plugins."""
 from abc import ABC
 from abc import abstractmethod
+from pathlib import Path
 from typing import Any
 from typing import Dict
 
@@ -27,16 +28,21 @@ class Converter(ABC):
         Returns:
             Dict[str, Any]: Return the input file arguments as a dictionary without
                  additional information beyond the command line arguments.
+
+        Raises:
+            ValueError: If the output file format is not supported.
         """
         pass
 
     @abstractmethod
-    def convert(self, args: Dict[str, Any]) -> None:
-        """Convert the input file to the output file.
+    def convert(self, infile: Path, file_format: str) -> None:
+        """Convert the input file to the target file format.
+
+        It is an abstract method and must be implemented in the derived class.
 
         Args:
-            args (Dict[str, Any]): The input file arguments as a dictionary with
-                    additional information beyond the command line arguments.
+            infile (Path): Input file as a path object.
+            file_format (str): Target file format.
         """
         pass
 
