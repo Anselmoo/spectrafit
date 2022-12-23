@@ -64,7 +64,7 @@ repos:
     rev: "v3.0.0-alpha.4"
     hooks:
       - id: prettier
-        exclude: docs/plugins/jupyter-spectrafit-interface.md
+        exclude: docs/plugins/jupyter-interface.md
   - repo: https://github.com/asottile/pyupgrade
     rev: v3.3.1
     hooks:
