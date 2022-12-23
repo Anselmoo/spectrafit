@@ -32,7 +32,6 @@ class Converter(ABC):
         Raises:
             ValueError: If the output file format is not supported.
         """
-        pass
 
     @abstractmethod
     def convert(self, infile: Path, file_format: str) -> None:
@@ -44,9 +43,7 @@ class Converter(ABC):
             infile (Path): Input file as a path object.
             file_format (str): Target file format.
         """
-        pass
 
     @abstractmethod
     def __call__(self) -> None:
         """Call the converter plugin."""
-        pass
