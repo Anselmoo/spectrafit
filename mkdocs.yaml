@@ -162,6 +162,7 @@ nav:
       - Statistics: doc/statistics.md
   - Plugins:
       - File-Format-Conversion: plugins/spectrafit-file-converter.md
+      - Data-Format-Conversion: plugins/spectrafit-data-converter.md
       - Jupyter-Notebook-Integration: plugins/jupyter-spectrafit-interface.md
   - API:
       - SpectraFit: api/spectrafit_api.md
@@ -171,6 +172,7 @@ nav:
       - Reporting: api/reporting_api.md
       - Tools: api/tools_api.md
       - Data Model: api/data_model_api.md
+      - Converters: api/converter_api.md
   - Support:
       - Contact: contact.md
       - License: license.md

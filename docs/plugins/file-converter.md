@@ -5,10 +5,10 @@ With the command `spectrafit-file-converter` input and also output files can be 
 3. `.toml` or `.lock`(output only)
 
 ```shell
-   ❯ spectrafit-file-converter -h
+   ➜  spectrafit-file-converter -h
    usage: spectrafit-file-converter [-h] [-f {lock,toml,yml,yaml,json}] infile
 
-   Input-Converter for 'SpectraFit' input and output files.
+   Converter for 'SpectraFit' input and output files.
 
    positional arguments:
      infile                Filename of the 'SpectraFit' input or output file.
