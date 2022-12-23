@@ -34,7 +34,7 @@ def get_athena_column(fname: Path, comment: str = "#") -> Optional[List[str]]:
             (
                 lines[i - 1].split(comment)[-1].split()
                 for i, line in enumerate(lines)
-                if re.match(r"^\s*[0-9]", line)
+                if re.match(r"^\s*\d", line)
             ),
             None,
         )
