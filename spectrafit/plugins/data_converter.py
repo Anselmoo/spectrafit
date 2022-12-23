@@ -150,7 +150,7 @@ class DataConverter(Converter):
         """Run the converter."""
         args = self.get_args()
         df = self.convert(**args)
-        self.save(**args, df=df)
+        self.save(args["infile"], df=df)
 
 
 def command_line_runner() -> None:

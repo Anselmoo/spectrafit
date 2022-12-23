@@ -282,3 +282,23 @@ def test_cmd_data_converter(script_runner: Any) -> None:
     assert ret.success
     assert "Converter for 'SpectraFit' from data files to CSV files." in ret.stdout
     assert ret.stderr == ""
+
+
+def test_cmd_data_converter_nor_to_csv(script_runner: Any, tmp_file_nor: Path) -> None:
+    """Test the data converter plugin.
+
+    Args:
+        script_runner (Any): Script runner.
+        tmp_file_nor (Path): Path to temporary file.
+    """
+    ret = script_runner.run(
+        "spectrafit-data-converter",
+        str(tmp_file_nor),
+        "-f",
+        "ATHENA",
+    )
+
+    assert ret.success
+    assert ret.stdout == ""
+    assert ret.stderr == ""
+    assert tmp_file_nor.with_suffix(".csv").exists()
