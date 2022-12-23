@@ -1,12 +1,12 @@
-With the command `spectrafit-converter` input and output files can be converted. The supported file formats are:
+With the command `spectrafit-file-converter` input and also output files can be converted. The supported file formats are:
 
 1. `.json`
-2. `.yaml`
-3. `.toml`
+2. `.yaml` or `.yml`
+3. `.toml` or `.lock`(output only)
 
 ```shell
-   ❯ spectrafit-converter -h
-   usage: spectrafit-converter [-h] [-f {lock,ymltoml,yaml,json}] infile
+   ➜  spectrafit-file-converter -h
+   usage: spectrafit-file-converter [-h] [-f {lock,toml,yml,yaml,json}] infile
 
    Converter for 'SpectraFit' input and output files.
 
@@ -15,7 +15,7 @@ With the command `spectrafit-converter` input and output files can be converted.
 
    options:
      -h, --help            show this help message and exit
-     -f {lock,ymltoml,yaml,json}, --format {lock,ymltoml,yaml,json}
+     -f {lock,toml,yml,yaml,json}, --format {lock,ymltoml,yaml,json}
                            File format for the conversion.
 
 ```

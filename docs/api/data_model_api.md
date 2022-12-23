@@ -31,3 +31,7 @@
 ### Tools and Utilities
 
 ::: spectrafit.api.tools_model
+
+### File Model API
+
+::: spectrafit.api.file_model

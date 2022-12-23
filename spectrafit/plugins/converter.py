@@ -1,85 +1,49 @@
-"""Convert the input and output files to the preferred file format."""
-import argparse
-import json
-
+"""Abstract base class for the converter plugins."""
+from abc import ABC
+from abc import abstractmethod
 from pathlib import Path
 from typing import Any
 from typing import Dict
 
-import tomli_w
-import yaml
 
-from spectrafit.tools import read_input_file
+class Converter(ABC):
+    """Abstract base class for the converter plugin.
 
+    The abstract base class is used to define the interface for the converter plugins:
 
-choices = ["json", "yaml", "yml", "toml", "lock"]
+    - get_args: Get the arguments from the command line.
+    - convert: Convert the input file to the output file.
+    - __call__: Call the converter plugin.
 
+    Currently used for:
 
-def get_args() -> Dict[str, Any]:
-    """Get the arguments from the command line.
-
-    Returns:
-        Dict[str, Any]: Return the input file arguments as a dictionary without
-             additional information beyond the command line arguments.
+    - Convertion of the input file.
+    - Convertion of the output file.
     """
-    parser = argparse.ArgumentParser(
-        description="Converter for 'SpectraFit' input and output files."
-    )
-    parser.add_argument(
-        "infile", type=Path, help="Filename of the 'SpectraFit' input or output file."
-    )
-    parser.add_argument(
-        "-f",
-        "--format",
-        help="File format for the conversion.",
-        type=str,
-        choices=choices,
-    )
-    return vars(parser.parse_args())
 
+    @abstractmethod
+    def get_args(self) -> Dict[str, Any]:
+        """Get the arguments from the command line.
 
-def convert(args: Dict[str, Any]) -> None:
-    """Convert the input file to the output file.
+        Returns:
+            Dict[str, Any]: Return the input file arguments as a dictionary without
+                 additional information beyond the command line arguments.
 
-    Args:
-        args (Dict[str, Any]): The input file arguments as a dictionary with
-             additional information beyond the command line arguments.
+        Raises:
+            ValueError: If the output file format is not supported.
+        """
 
-    Raises:
-        ValueError: If the input file format is identical with the output format.
-        ValueError: If the output file format is not supported.
-    """
-    if args["infile"].suffix[1:] == args["format"]:
-        raise ValueError(
-            f"The input file suffix '{args['infile'].suffix[1:]}' is similar to the"
-            f" output file format '{args['format']}'."
-            "Please use a different output file suffix."
-        )
+    @abstractmethod
+    def convert(self, infile: Path, file_format: str) -> None:
+        """Convert the input file to the target file format.
 
-    if args["format"] not in choices:
-        raise ValueError(f"The output file format '{args['format']}' is not supported.")
+        It is an abstract method and must be implemented in the derived class.
 
-    data = read_input_file(args["infile"])
+        Args:
+            infile (Path): Input file as a path object.
+            file_format (str): Target file format.
+        """
 
-    if args["format"] == "json":
-        # Convert the input file to a JSON file
-        with open(
-            args["infile"].with_suffix(f".{args['format']}"), "w", encoding="utf8"
-        ) as f:
-            json.dump(data, f, indent=4)
-    elif args["format"] == "yaml":
-        with open(
-            args["infile"].with_suffix(f".{args['format']}"), "w", encoding="utf8"
-        ) as f:
-            yaml.dump(data, f, default_flow_style=False)
-    elif args["format"] in ["toml", "lock"]:
-        with open(
-            args["infile"].with_suffix(f".{args['format']}"),
-            "wb+",
-        ) as f:
-            tomli_w.dump(dict(**data), f)
-
-
-def command_line_runner() -> None:
-    """Run the converter via cmd commands."""
-    convert(get_args())
+    @abstractmethod
+    def __call__(self) -> None:
+        """Call the converter plugin."""
