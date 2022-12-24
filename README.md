@@ -228,6 +228,6 @@ Which results in the following output:
 Please see the [extended documentation](https://anselmoo.github.io/spectrafit/)
 for the full usage of `SpectraFit`.
 
-
 ## License
+
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FAnselmoo%2Fspectrafit.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FAnselmoo%2Fspectrafit?ref=badge_large)
