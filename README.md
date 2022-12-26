@@ -4,7 +4,6 @@
 [![Conda](https://img.shields.io/conda/v/conda-forge/spectrafit?label=Anaconda.org&logo=anaconda)](https://anaconda.org/conda-forge/spectrafit)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/spectrafit?color=gree&logo=Python&logoColor=yellow)](https://pypi.org/project/spectrafit/)
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/Anselmoo/spectrafit/main.svg)](https://results.pre-commit.ci/latest/github/Anselmoo/spectrafit/main)
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FAnselmoo%2Fspectrafit.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FAnselmoo%2Fspectrafit?ref=badge_shield)
 
 <p align="center">
 <img src="https://github.com/Anselmoo/spectrafit/blob/c5f7ee05e5610fb8ef4e237a88f62977b6f832e5/docs/images/spectrafit_synopsis.png?raw=true">
@@ -227,7 +226,3 @@ Which results in the following output:
 
 Please see the [extended documentation](https://anselmoo.github.io/spectrafit/)
 for the full usage of `SpectraFit`.
-
-## License
-
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FAnselmoo%2Fspectrafit.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FAnselmoo%2Fspectrafit?ref=badge_large)
