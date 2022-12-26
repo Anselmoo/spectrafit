@@ -829,7 +829,7 @@ requirements-deprecated-finder = ["pip-api", "pipreqs"]
 
 [[package]]
 name = "itables"
-version = "1.4.1"
+version = "1.4.2"
 description = "Interactive Tables in Jupyter"
 category = "main"
 optional = true
@@ -3335,8 +3335,8 @@ isort = [
     {file = "isort-5.10.1.tar.gz", hash = "sha256:e8443a5e7a020e9d7f97f1d7d9cd17c88bcb3bc7e218bf9cf5095fe550be2951"},
 ]
 itables = [
-    {file = "itables-1.4.1-py3-none-any.whl", hash = "sha256:18050ce8f33a62f8cfaad46662ffbd477ae1d5f0ac63f09a2187241bec662298"},
-    {file = "itables-1.4.1.tar.gz", hash = "sha256:3b050e9e955669e4f6e3c260ce77709c6bdccabbd63ff723a2d6bb8a1c98ff65"},
+    {file = "itables-1.4.2-py3-none-any.whl", hash = "sha256:2c16a73cb33842f678255070e5a892d81cb37eecfeb52f218f33a3d21101d146"},
+    {file = "itables-1.4.2.tar.gz", hash = "sha256:5e01cd1986b4f29f239c5e6d03e2ec912b956504dd96de7b7613a20794eaa6ad"},
 ]
 itsdangerous = [
     {file = "itsdangerous-2.1.2-py3-none-any.whl", hash = "sha256:2c2349112351b88699d8d4b6b075022c0808887cb7ad10069318a8b0bc88db44"},
