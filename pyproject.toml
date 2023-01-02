@@ -68,6 +68,10 @@ exclude = ["docs/", "tools/"]
   dtale = { version = "^2.8.1", optional = true }
   tomli = "^2.0.1"
   tomli-w = "^1.0.0"
+  networkx = [
+    { version = "2.6.3", optional = true, python = "<3.8" },
+    { version = "^2.8.8", optional = true, python = ">=3.8" },
+  ]
 
   [tool.poetry.group.dev.dependencies]
   pylama = "^8.4.1"
@@ -109,7 +113,7 @@ spectrafit-data-converter = "spectrafit.plugins.data_converter:command_line_runn
 spectrafit-jupyter = "spectrafit.app.app:jupyter"
 
 [tool.poetry.extras]
-jupyter = ["jupyterlab", "plotly", "itables", "kaleido", "dtale"]
+jupyter = ["jupyterlab", "plotly", "itables", "kaleido", "dtale", "networkx"]
 
 [tool.isort]
 profile = "black"
