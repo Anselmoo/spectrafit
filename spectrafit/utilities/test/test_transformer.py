@@ -11,7 +11,7 @@ from spectrafit.utilities.transformer import remove_none_type
 
 @pytest.fixture
 def reference_dict() -> Dict[str, Dict[str, Any]]:
-    """Reference dictionary.
+    """Check reference dictionary.
 
     Returns:
         Dict[str, Dict[str, Any]]: Reference dictionary of two peaks.
@@ -40,7 +40,7 @@ def reference_dict() -> Dict[str, Dict[str, Any]]:
 
 @pytest.fixture
 def reference_list() -> List[Dict[str, Any]]:
-    """Reference list dictionary.
+    """Check reference list dictionary.
 
     Returns:
         Dict[str, Dict[str, Any]]: Reference list of dictionaries of two peaks.
