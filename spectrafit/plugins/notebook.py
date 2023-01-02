@@ -463,7 +463,7 @@ class SolverResults:
 
     @property
     def settings_configurations(self) -> Dict[str, Any]:
-        """Configuration settings.
+        """Configure settings.
 
         Returns:
             Dict[str, Any]: Configuration settings.

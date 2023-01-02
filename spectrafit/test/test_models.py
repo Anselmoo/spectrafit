@@ -931,8 +931,8 @@ class TestAutoPeakDetection:
     def test_rel_heigh_1(self) -> None:
         """Test if the relative height is calculated correctly."""
         args = {"autopeak": True, "global_": 0}
-        x = np.arange(10)
-        data = np.arange(10)
+        x = np.arange(10, dtype=np.float64)
+        data = np.arange(10, dtype=np.float64)
 
         auto = AutoPeakDetection(x=x, data=data, args=args)
         _val = auto.estimated_rel_height
@@ -941,8 +941,8 @@ class TestAutoPeakDetection:
     def test_rel_heigh_2(self) -> None:
         """Test if the relative height is calculated correctly."""
         args = {"autopeak": True, "global_": 0}
-        x = np.arange(10)
-        data = np.sin(10) * np.arange(10)
+        x = np.arange(10, dtype=np.float64)
+        data = np.sin(10) * np.arange(10, dtype=np.float64)
 
         auto = AutoPeakDetection(x=x, data=data, args=args)
         _val = auto.estimated_rel_height
