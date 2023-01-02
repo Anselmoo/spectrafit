@@ -44,11 +44,11 @@ repos:
         additional_dependencies:
           [
             types-toml==0.10.8,
-            types-PyYAML==6.0.10,
+            types-PyYAML==6.0.11,
             types-tabulate==0.8.11,
             types-mock==4.0.15,
-            numpy==1.21.4,
-            pydantic==1.10.1,
+            numpy>=1.21.6,
+            pydantic==1.10.4,
           ]
   - repo: https://github.com/pycqa/pydocstyle
     rev: 6.1.1 # pick a git hash / tag to point to
