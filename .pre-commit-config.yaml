@@ -51,12 +51,12 @@ repos:
             pydantic==1.10.3,
           ]
   - repo: https://github.com/pycqa/pydocstyle
-    rev: 6.1.1 # pick a git hash / tag to point to
+    rev: 6.2.3 # pick a git hash / tag to point to
     hooks:
       - id: pydocstyle
         additional_dependencies: [toml==0.10.2]
   - repo: https://github.com/PyCQA/pylint
-    rev: "v2.15.9"
+    rev: "v2.15.10"
     hooks:
       - id: pylint
         additional_dependencies: [toml==0.10.2]
