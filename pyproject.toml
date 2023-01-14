@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "SpectraFit"
-version = "0.15.0"
+version = "0.15.0b0"
 description = "Fast fitting of 2D- and 3D-Spectra with established routines"
 readme = "README.md"
 authors = ["Anselm Hahn <anselm.hahn@gmail.com>"]
@@ -45,13 +45,13 @@ exclude = ["docs/", "tools/"]
   pandas = "^1.5.0"
   numpy = "^1.23.4"
   emcee = "^3.1.2"
-  tabulate = "^0.8.10"
+  tabulate = "^0.9.0"
   PyYAML = "^6.0"
   openpyxl = "^3.0.9"
   seaborn = "^0.12.0"
   numdifftools = "^0.9.41"
   tqdm = "^4.64.0"
-  scikit-learn = "^1.0.2"
+  scikit-learn = "^1.2.0"
   art = "^5.8"
   tomli = "^2.0.1"
   tomli-w = "^1.0.0"
