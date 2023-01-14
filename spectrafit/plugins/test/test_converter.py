@@ -680,7 +680,9 @@ class TestPklConverter:
         assert ret.success
         assert ret.stdout == ""
         assert ret.stderr == ""
-        len(list(Path(tmp_file_pkl.parent).glob(f"*level_*.{export_format}"))) == 3
+        assert (
+            len(list(Path(tmp_file_pkl.parent).glob(f"*level_*.{export_format}"))) == 3
+        )
 
 
 class TestPklAsGraph:
