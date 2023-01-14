@@ -14,6 +14,7 @@ import numpy as np
 
 from spectrafit.plugins.converter import Converter
 from spectrafit.tools import pkl2dict
+from spectrafit.tools import pure_fname
 
 
 pkl_gz = "pkl.gz"
@@ -228,8 +229,10 @@ class PklConverter(Converter):
         if export_format.lower() not in choices_export:
             raise ValueError(f"Unsupported file format '{export_format}'.")
 
+        fname = pure_fname(fname)
+
         for key, value in data.items():
-            _fname = fname.parent / f"{fname.stem}_{key}"
+            _fname = Path(f"{fname}_{key}").with_suffix(f".{export_format}")
             ExportData(data=value, fname=_fname, export_format=export_format)()
 
     def __call__(self) -> None:

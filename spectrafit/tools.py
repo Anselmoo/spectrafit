@@ -656,3 +656,24 @@ def pkl2dict(pkl_fname: Path, encoding: str = "latin1") -> Dict[str, Any]:
             f"File format '{pkl_fname.suffix}' is not supported. "
             f"Supported file formats are: {choices}"
         )
+
+
+def pure_fname(fname: Path) -> Path:
+    """Return the filename without the suffix.
+
+    Pure filename without the suffix is implemented to avoid the problem with
+    multiple dots in the filename like `test.pkl.gz` or `test.tar.gz`.
+    The `stem` attribute of the `Path` class returns the filename without the
+    suffix, but it also removes only the last suffix. Hence, the `test.pkl.gz`
+    will be returned as `test.pkl` and not as `test`. This function returns
+    the filename without the suffix. It is implemented recursively to remove
+    all suffixes.
+
+    Args:
+        fname (Path): The filename to be processed.
+
+    Returns:
+        Path: The filename without the suffix.
+    """
+    _fname = fname.parent / fname.stem
+    return pure_fname(_fname) if _fname.suffix else _fname

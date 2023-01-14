@@ -17,6 +17,7 @@ from spectrafit.tools import PreProcessing
 from spectrafit.tools import SaveResult
 from spectrafit.tools import check_keywords_consistency
 from spectrafit.tools import pkl2dict
+from spectrafit.tools import pure_fname
 from spectrafit.tools import unicode_check
 
 
@@ -419,3 +420,10 @@ class TestPickle:
         # read test file as pickle file
         with pytest.raises(ValueError):
             pkl2dict(args["outfile"])
+
+
+def test_pure_fname(tmp_path: Path) -> None:
+    """Testing pure_fname."""
+    tmp_name = "test_pure_fname"
+    tmp_fname = tmp_path / f"{tmp_name}.pkl.gz.test"
+    assert pure_fname(tmp_fname) == tmp_path / tmp_name

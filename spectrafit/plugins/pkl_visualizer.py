@@ -14,6 +14,7 @@ import numpy as np
 
 from spectrafit.plugins.converter import Converter
 from spectrafit.tools import pkl2dict
+from spectrafit.tools import pure_fname
 
 
 choices = {"latin1", "utf-8", "utf-16", "utf-32"}
@@ -101,7 +102,7 @@ class PklVisualizer(Converter):
             raise ValueError(f"Export format '{export_format}' is not supported.")
 
         plt.savefig(
-            Path(fname.parent / f"{fname.stem}.{export_format}"),
+            pure_fname(fname).with_suffix(f".{export_format}"),
             format=export_format,
         )
 
