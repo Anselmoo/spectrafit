@@ -24,8 +24,26 @@
 
 ::: spectrafit.plugins.data_converter
 
+### Pkl Converter for pickle files
+
+::: spectrafit.plugins.pkl_converter
+
+!!! info "About [pickle file][6] and the PklVisualizer"
+
+    In addition to exploring the nested structure of the Python's
+    [pickle file][6], the `PklVisualizer` provides two methods to visualize
+    the data:
+
+    1. As graph via [`networkx`][7] and [`matplotlib`][8]
+    2. As json file with  used types
+
+::: spectrafit.plugins.pkl_visualizer
+
 [1]: https://docs.python.org/3/tutorial/datastructures.html#dictionaries
 [2]: https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html
 [3]: https://docs.python.org/3/library/abc.html#abc.ABC
 [4]: https://docs.python.org/3/library/abc.html#abc.abstractmethod
 [5]: https://pydantic-docs.helpmanual.io/
+[6]: https://docs.python.org/3/library/pickle.html
+[7]: https://networkx.org
+[8]: https://matplotlib.org

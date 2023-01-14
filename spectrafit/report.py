@@ -367,7 +367,7 @@ class PrintingResults:
                         self.minimizer, self.result, **self.args["conf_interval"]
                     )
                 )
-            except (MinimizerException, ValueError, KeyError) as exc:
+            except (MinimizerException, ValueError, KeyError, TypeError) as exc:
                 print(f"Error: {exc} -> No confidence interval could be calculated!")
                 self.args["confidence_interval"] = {}
 

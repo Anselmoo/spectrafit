@@ -1,136 +1,206 @@
 """Test of the converter plugin."""
 
+import gzip
 import json
+import pickle
 
 from pathlib import Path
 from typing import Any
+from typing import Dict
 
+import numpy as np
 import pandas as pd
 import pytest
 import tomli
 import tomli_w
 import yaml
 
+from matplotlib import pyplot
+from nptyping import Float
+from nptyping import NDArray
+from nptyping import Shape
 from spectrafit.plugins.data_converter import DataConverter
 from spectrafit.plugins.file_converter import FileConverter
+from spectrafit.plugins.pkl_converter import ExportData
+from spectrafit.plugins.pkl_converter import PklConverter
+from spectrafit.plugins.pkl_visualizer import PklVisualizer
 
 
-def test_cmd_file_converter(script_runner: Any) -> None:
+class TestFileConverter:
     """Test the file converter plugin."""
-    ret = script_runner.run("spectrafit-file-converter", "-h")
 
-    assert ret.success
-    assert "Converter for 'SpectraFit' input and output files." in ret.stdout
-    assert ret.stderr == ""
+    def test_cmd_file_converter(self, script_runner: Any) -> None:
+        """Test the file converter plugin."""
+        ret = script_runner.run("spectrafit-file-converter", "-h")
 
+        assert ret.success
+        assert "Converter for 'SpectraFit' input and output files." in ret.stdout
+        assert ret.stderr == ""
 
-def test_raise_input_output() -> None:
-    """Test raise error input format is similar to ouptut."""
-    with pytest.raises(ValueError) as excinfo:
-        FileConverter().convert(
-            infile=Path("spectrafit/test/scripts/fitting_input.yaml"),
-            file_format="yaml",
+    def test_raise_input_output(
+        self,
+    ) -> None:
+        """Test raise error input format is similar to ouptut."""
+        with pytest.raises(ValueError) as excinfo:
+            data = FileConverter.convert(
+                infile=Path("spectrafit/test/scripts/fitting_input.yaml"),
+                file_format="yaml",
+            )
+            FileConverter().save(
+                data=data,
+                fname=Path("spectrafit/test/scripts/fitting_input.yaml"),
+                export_format="yaml",
+            )
+
+        assert (
+            "The input file suffix 'yaml' is similar to the output file format 'yaml'."
+            in str(excinfo.value)
         )
 
-    assert (
-        "The input file suffix 'yaml' is similar to the output file format 'yaml'."
-        in str(excinfo.value)
-    )
+    def test_raise_no_guilty_input(
+        self,
+    ) -> None:
+        """Test illegal output format."""
+        with pytest.raises(ValueError) as excinfo:
+            FileConverter.convert(
+                infile=Path("tests/data/input/input.yaml"),
+                file_format="illegal",
+            )
+        assert "The input file format 'illegal' is not supported." in str(excinfo.value)
 
+    def test_raise_no_guilty_output(self, tmp_path: Path) -> None:
+        """Test illegal output format."""
+        infile = tmp_path / "input_1.yaml"
 
-def test_raise_no_guilty_ouput() -> None:
-    """Test illegal output format."""
-    with pytest.raises(ValueError) as excinfo:
-        FileConverter().convert(
-            infile=Path("tests/data/input/input_1.yaml"),
-            file_format="illegal",
+        with open(infile, "w", encoding="utf8") as f:
+            yaml.dump({"a": [1, 2], "b": [2, 3]}, f)
+
+        with pytest.raises(ValueError) as excinfo:
+            FileConverter().save(
+                data=FileConverter.convert(
+                    infile=infile,
+                    file_format="yaml",
+                ),
+                fname=infile,
+                export_format="illegal",
+            )
+
+        assert "The output file format 'illegal' is not supported." in str(
+            excinfo.value
         )
-    assert "The output file format 'illegal' is not supported." in str(excinfo.value)
 
+    def test_json_conversion(self, tmp_path: Path) -> None:
+        """Test json to yaml conversion."""
+        infile = tmp_path / "input_1.json"
 
-def test_json_conversion(tmp_path: Path) -> None:
-    """Test json to yaml conversion."""
-    infile = tmp_path / "input_1.json"
+        with open(infile, "w", encoding="utf8") as f:
+            json.dump({"a": 1, "b": 2}, f)
 
-    with open(infile, "w", encoding="utf8") as f:
-        json.dump({"a": 1, "b": 2}, f)
-    FileConverter().convert(
-        infile=infile,
-        file_format="yaml",
+        FileConverter().save(
+            data=FileConverter.convert(
+                infile=infile,
+                file_format="yaml",
+            ),
+            fname=infile,
+            export_format="yaml",
+        )
+        with open(infile.with_suffix(".yaml"), encoding="utf8") as f:
+            data = yaml.safe_load(f)
+
+        assert data == {"a": 1, "b": 2}
+
+    def test_yaml_conversion(self, tmp_path: Path) -> None:
+        """Test yaml to json conversion."""
+        infile = tmp_path / "input_2.yaml"
+
+        with open(infile, "w", encoding="utf8") as f:
+            yaml.dump({"a": 1, "b": 2}, f)
+        FileConverter().save(
+            data=FileConverter.convert(
+                infile=infile,
+                file_format="toml",
+            ),
+            fname=infile,
+            export_format="toml",
+        )
+        with open(infile.with_suffix(".toml"), "rb") as f:
+            data = tomli.load(f)
+
+        assert data == {"a": 1, "b": 2}
+
+    def test_cmd_file_converter_2(self, script_runner: Any, tmp_path: Path) -> None:
+        """Test the file converter plugin."""
+        fname = tmp_path / "input_4.yaml"
+        with open(fname, "w", encoding="utf8") as f:
+            yaml.dump({"a": [1, 1], "b": [2, 2]}, f)
+
+        ret = script_runner.run(
+            "spectrafit-file-converter",
+            str(fname),
+            "--file-format",
+            "json",
+        )
+
+        assert ret.success
+        assert Path(fname.with_suffix(".json")).exists()
+
+    def test_toml_conversion(self, tmp_path: Path) -> None:
+        """Test toml to json conversion."""
+        infile = tmp_path / "input_1.toml"
+
+        with open(infile, "wb+") as f:
+            tomli_w.dump({"a": 1, "b": 2}, f)
+        FileConverter().save(
+            data=FileConverter.convert(
+                infile=infile,
+                file_format="json",
+            ),
+            fname=infile,
+            export_format="json",
+        )
+        with open(infile.with_suffix(".json"), encoding="utf8") as f:
+            data = json.load(f)
+
+        assert data == {"a": 1, "b": 2}
+
+    @pytest.mark.parametrize(
+        "file_format",
+        [
+            "json",
+            "toml",
+        ],
     )
-    with open(infile.with_suffix(".yaml"), encoding="utf8") as f:
-        data = yaml.safe_load(f)
+    def test_conversion(self, tmp_path: Path, file_format: str) -> None:
+        """Test conversion of the input file.
 
-    assert data == {"a": 1, "b": 2}
+        Args:
+            tmp_path (Path): Temporary path.
+            file_format (str): File format to convert to.
+        """
+        infile = tmp_path / "input_3.yaml"
+        with open(infile, "w", encoding="utf8") as f:
+            yaml.dump({"a": 1, "b": 2}, f)
 
+        FileConverter().save(
+            data=FileConverter.convert(
+                infile=infile,
+                file_format="yaml",
+            ),
+            fname=infile,
+            export_format=file_format,
+        )
 
-def test_yaml_conversion(tmp_path: Path) -> None:
-    """Test yaml to json conversion."""
-    infile = tmp_path / "input_1.yaml"
+        if file_format == "json":
+            with open(infile.with_suffix(f".{file_format}"), encoding="utf8") as f:
+                data_json = json.load(f)
+                assert data_json == {"a": 1, "b": 2}
 
-    with open(infile, "w", encoding="utf8") as f:
-        yaml.dump({"a": 1, "b": 2}, f)
-    FileConverter().convert(
-        infile=infile,
-        file_format="toml",
-    )
-    with open(infile.with_suffix(".toml"), "rb") as f:
-        data = tomli.load(f)
-
-    assert data == {"a": 1, "b": 2}
-
-
-def test_toml_conversion(tmp_path: Path) -> None:
-    """Test toml to json conversion."""
-    infile = tmp_path / "input_1.toml"
-
-    with open(infile, "wb+") as f:
-        tomli_w.dump({"a": 1, "b": 2}, f)
-    FileConverter().convert(
-        infile=infile,
-        file_format="json",
-    )
-    with open(infile.with_suffix(".json"), encoding="utf8") as f:
-        data = json.load(f)
-
-    assert data == {"a": 1, "b": 2}
+        if file_format == "toml":
+            with open(infile.with_suffix(f".{file_format}"), "rb") as f:
+                data_toml = tomli.load(f)
+                assert data_toml == {"a": 1, "b": 2}
 
 
-@pytest.mark.parametrize(
-    "file_format",
-    [
-        "json",
-        "toml",
-    ],
-)
-def test_conversion(tmp_path: Path, file_format: str) -> None:
-    """Test conversion of the input file.
-
-    Args:
-        tmp_path (Path): Temporary path.
-        file_format (str): File format to convert to.
-    """
-    infile = tmp_path / "input_1.yaml"
-    with open(infile, "w", encoding="utf8") as f:
-        yaml.dump({"a": 1, "b": 2}, f)
-
-    FileConverter().convert(
-        infile=infile,
-        file_format=file_format,
-    )
-
-    if file_format == "json":
-        with open(infile.with_suffix(f".{file_format}"), encoding="utf8") as f:
-            data_json = json.load(f)
-            assert data_json == {"a": 1, "b": 2}
-
-    if file_format == "toml":
-        with open(infile.with_suffix(f".{file_format}"), "rb") as f:
-            data_toml = tomli.load(f)
-            assert data_toml == {"a": 1, "b": 2}
-
-
-# Create temporary writen file.
 @pytest.fixture(scope="function", autouse=True, name="tmp_file_nor")
 def tmp_file_nor(tmp_path: Path) -> Path:
     """Create temporary file.
@@ -228,77 +298,423 @@ def reference_dataframe() -> pd.DataFrame:
     )
 
 
-def test_nor_to_csv(tmp_file_nor: Path, reference_dataframe: pd.DataFrame) -> None:
-    """Test nor to csv conversion.
+class TestDataConverter:
+    """Test DataConverter class."""
+
+    def test_nor_to_csv(
+        self, tmp_file_nor: Path, reference_dataframe: pd.DataFrame
+    ) -> None:
+        """Test nor to csv conversion.
+
+        Args:
+            tmp_file_nor (Path): Path to temporary file.
+            reference_dataframe (pd.DataFrame): Reference dataframe.
+        """
+        dc = DataConverter()
+        df = dc.convert(tmp_file_nor, "ATHENA")
+
+        assert isinstance(df, pd.DataFrame)
+        pd.testing.assert_frame_equal(df, reference_dataframe)
+
+        dc.save(data=df, fname=tmp_file_nor.with_suffix(".csv"), export_format="csv")
+        assert tmp_file_nor.with_suffix(".csv").exists()
+
+    def test_txt_to_csv(
+        self, tmp_file_txt: Path, reference_dataframe: pd.DataFrame
+    ) -> None:
+        """Test txt to csv conversion.
+
+        Args:
+            tmp_file_txt (Path): Path to temporary file.
+            reference_dataframe (pd.DataFrame): Reference dataframe.
+        """
+        dc = DataConverter()
+        df = dc.convert(tmp_file_txt, "TXT")
+
+        assert isinstance(df, pd.DataFrame)
+        pd.testing.assert_frame_equal(df, reference_dataframe)
+        dc.save(data=df, fname=tmp_file_txt.with_suffix(".csv"), export_format="csv")
+        assert tmp_file_txt.with_suffix(".csv").exists()
+
+    def test_fail_convert(self, tmp_file_txt: Path) -> None:
+        """Test fail conversion.
+
+        Args:
+            tmp_file_txt (Path): Path to temporary file.
+        """
+        file_format = "WRONG"
+        with pytest.raises(ValueError) as excinfo:
+            DataConverter.convert(tmp_file_txt, file_format)
+
+        assert isinstance(excinfo.value, ValueError)
+        assert f"File format '{file_format}' is not supported." in str(excinfo.value)
+
+    def test_fail_convert_export(
+        self, reference_dataframe: pd.DataFrame, tmp_file_txt: Path
+    ) -> None:
+        """Test fail conversion.
+
+        Args:
+            reference_dataframe (pd.DataFrame): Reference dataframe.
+            tmp_file_txt (Path): Path to temporary file.
+        """
+        export_format = "WRONG"
+        with pytest.raises(ValueError) as excinfo:
+            DataConverter().save(reference_dataframe, tmp_file_txt, export_format)
+
+        assert isinstance(excinfo.value, ValueError)
+        assert f"Export format '{export_format}' is not supported." in str(
+            excinfo.value
+        )
+
+    def test_cmd_data_converter(self, script_runner: Any) -> None:
+        """Test the data converter plugin."""
+        ret = script_runner.run("spectrafit-data-converter", "-h")
+
+        assert ret.success
+        assert "Converter for 'SpectraFit' from data files to CSV files." in ret.stdout
+        assert ret.stderr == ""
+
+    def test_cmd_data_converter_nor_to_csv(
+        self, script_runner: Any, tmp_file_nor: Path
+    ) -> None:
+        """Test the data converter plugin.
+
+        Args:
+            script_runner (Any): Script runner.
+            tmp_file_nor (Path): Path to temporary file.
+        """
+        ret = script_runner.run(
+            "spectrafit-data-converter",
+            str(tmp_file_nor),
+            "-f",
+            "ATHENA",
+        )
+
+        assert ret.success
+        assert ret.stdout == ""
+        assert ret.stderr == ""
+        assert tmp_file_nor.with_suffix(".csv").exists()
+
+
+@pytest.fixture(scope="function", autouse=True, name="tmp_file_dict")
+def tmp_file_dict() -> Dict[str, Dict[str, NDArray[Shape["200"], Float]]]:
+    """Create temporary file with pickle data."""
+    return {
+        "level_1": {
+            "sub_level_1": np.arange(10),
+            "sub_level_2": np.linspace(0, 20, 200),
+        },
+        "level_2": {
+            "sub_level_1": np.arange(10),
+            "sub_level_2": np.linspace(0, 20, 200),
+        },
+        "level_3": {
+            "sub_level_1": np.arange(20),
+            "sub_level_2": np.linspace(-20, 20, 200),
+        },
+    }
+
+
+@pytest.fixture(scope="function", autouse=True, name="tmp_file_nested_dict")
+def tmp_file_nested_dict() -> Dict[str, Dict[str, Any]]:
+    """Create temporary file with nested pickle data."""
+    return {
+        "level_4": {
+            "sub_level_1": np.arange(10),
+            "sub_level_2": {
+                "sub_sub_level_1": np.arange(10),
+                "sub_sub_level_2": {
+                    "sub_sub_sub_level_1": np.linspace(0, 20, 200),
+                    "sub_sub_sub_level_2": [
+                        np.linspace(0, 20, 200),
+                        {"sub_sub_sub_level_3": np.linspace(0, 20, 200)},
+                    ],
+                    "sub_sub_sub_level_4": [1, 2, 3, 4, 5],
+                },
+            },
+        },
+    }
+
+
+@pytest.fixture(scope="function", autouse=True, name="tmp_pkl_gz_file")
+def tmp_pkl_gz_file(
+    tmp_path: Path, tmp_file_dict: Dict[str, Dict[str, NDArray[Shape["200"], Float]]]
+) -> Path:
+    """Create temporary file with pickle data.
 
     Args:
-        tmp_file_nor (Path): Path to temporary file.
-        reference_dataframe (pd.DataFrame): Reference dataframe.
+        tmp_path (Path): Temporary path.
+
+    Returns:
+        Path: Path to temporary file.
     """
-    dc = DataConverter()
-    df = dc.convert(tmp_file_nor, "ATHENA")
-
-    assert isinstance(df, pd.DataFrame)
-    pd.testing.assert_frame_equal(df, reference_dataframe)
-
-    dc.save(tmp_file_nor.with_suffix(".csv"), df)
-    assert tmp_file_nor.with_suffix(".csv").exists()
+    tmp_file = tmp_path / "tmp_file_comp.pkl.gz"
+    with gzip.open(tmp_file, "wb") as f:
+        pickle.dump(tmp_file_dict, f)
+    return tmp_file
 
 
-def test_txt_to_csv(tmp_file_txt: Path, reference_dataframe: pd.DataFrame) -> None:
-    """Test txt to csv conversion.
+@pytest.fixture(scope="function", autouse=True, name="tmp_file_pkl")
+def tmp_file_pkl(
+    tmp_path: Path, tmp_file_dict: Dict[str, Dict[str, NDArray[Shape["200"], Float]]]
+) -> Path:
+    """Create temporary file with pickle data.
 
     Args:
-        tmp_file_txt (Path): Path to temporary file.
-        reference_dataframe (pd.DataFrame): Reference dataframe.
+        tmp_path (Path): Temporary path.
+
+    Returns:
+        Path: Path to temporary file.
     """
-    dc = DataConverter()
-    df = dc.convert(tmp_file_txt, "TXT")
-
-    assert isinstance(df, pd.DataFrame)
-    pd.testing.assert_frame_equal(df, reference_dataframe)
-    dc.save(tmp_file_txt.with_suffix(".csv"), df)
-    assert tmp_file_txt.with_suffix(".csv").exists()
+    tmp_file = tmp_path / "tmp_file.pkl"
+    with open(tmp_file, "wb") as f:
+        pickle.dump(tmp_file_dict, f)
+    return tmp_file
 
 
-def test_fail_convert(tmp_file_txt: Path) -> None:
-    """Test fail conversion.
+@pytest.fixture(scope="function", autouse=True, name="tmp_file_pkl_nested")
+def tmp_file_pkl_nested(
+    tmp_path: Path, tmp_file_nested_dict: Dict[str, Dict[str, Any]]
+) -> Path:
+    """Create temporary file with nested pickle data.
 
     Args:
-        tmp_file_txt (Path): Path to temporary file.
+        tmp_path (Path): Temporary path.
+
+    Returns:
+        Path: Path to temporary file.
     """
-    file_format = "WRONG"
-    with pytest.raises(ValueError) as excinfo:
-        DataConverter().convert(tmp_file_txt, file_format)
-
-    assert isinstance(excinfo.value, ValueError)
-    assert f"File format '{file_format}' is not supported." in str(excinfo.value)
+    tmp_file = tmp_path / "tmp_file_pkl_nested.pkl"
+    with open(tmp_file, "wb") as f:
+        pickle.dump(tmp_file_nested_dict, f)
+    return tmp_file
 
 
-def test_cmd_data_converter(script_runner: Any) -> None:
-    """Test the data converter plugin."""
-    ret = script_runner.run("spectrafit-data-converter", "-h")
+class TestPklConverter:
+    """Test PklConverter."""
 
-    assert ret.success
-    assert "Converter for 'SpectraFit' from data files to CSV files." in ret.stdout
-    assert ret.stderr == ""
-
-
-def test_cmd_data_converter_nor_to_csv(script_runner: Any, tmp_file_nor: Path) -> None:
-    """Test the data converter plugin.
-
-    Args:
-        script_runner (Any): Script runner.
-        tmp_file_nor (Path): Path to temporary file.
-    """
-    ret = script_runner.run(
-        "spectrafit-data-converter",
-        str(tmp_file_nor),
-        "-f",
-        "ATHENA",
+    @pytest.mark.parametrize(
+        "export_format",
+        ["npy", "npz", "pkl", "pkl.gz"],
     )
+    def test_export_data(
+        self,
+        tmp_path: Path,
+        tmp_file_dict: Dict[str, Dict[str, NDArray[Shape["200"], Float]]],
+        export_format: str,
+    ) -> None:
+        """Test export data.
 
-    assert ret.success
-    assert ret.stdout == ""
-    assert ret.stderr == ""
-    assert tmp_file_nor.with_suffix(".csv").exists()
+        Args:
+            tmp_path (Path): Temporary path.
+            tmp_file_dict (Dict[str, Dict[str, np.ndarray]]): Temporary file.
+            export_format (str): Export format.
+        """
+        tmp_file = tmp_path / "tmp_file"
+        ExportData(
+            data=tmp_file_dict,
+            fname=tmp_file,
+            export_format=export_format,
+        )()
+        assert tmp_file.with_suffix(f".{export_format}").exists()
+
+        if export_format == "pkl.gz":
+            with gzip.open(tmp_file.with_suffix(f".{export_format}"), "rb") as f:
+                data = pickle.load(f)
+                assert np.array_equal(data["level_1"]["sub_level_1"], np.arange(10))
+                assert np.array_equal(
+                    data["level_1"]["sub_level_2"], np.linspace(0, 20, 200)
+                )
+        if export_format == "pkl":
+            with open(tmp_file.with_suffix(f".{export_format}"), "rb") as f:
+                data = pickle.load(f)
+                assert np.array_equal(data["level_1"]["sub_level_1"], np.arange(10))
+                assert np.array_equal(
+                    data["level_1"]["sub_level_2"], np.linspace(0, 20, 200)
+                )
+
+        if export_format == "npz":
+            data = np.load(tmp_file.with_suffix(f".{export_format}"), allow_pickle=True)
+            assert isinstance(data, np.lib.npyio.NpzFile)
+            assert data.get("data") is not None
+            assert isinstance(data.get("data"), np.ndarray)
+
+    def test_numpy2list(
+        self,
+        tmp_file_dict: Dict[str, Dict[str, NDArray[Shape["200"], Float]]],
+    ) -> None:
+        """Test numpy2list.
+
+        Args:
+            tmp_file_dict (Dict[str, Dict[str, np.ndarray]]): Temporary file.
+        """
+        conv_data = ExportData.numpy2list(data=list(tmp_file_dict.values()))
+        assert isinstance(conv_data, list)
+        assert isinstance(conv_data[0], dict)
+        assert isinstance(conv_data[0]["sub_level_1"], list)
+        assert isinstance(conv_data[0]["sub_level_2"], list)
+
+    @pytest.mark.parametrize(
+        "export_format",
+        ["npy", "npz", "pkl", "pkl.gz"],
+    )
+    def test_pkl_converter(self, tmp_file_pkl: Path, export_format: str) -> None:
+        """Test pickle converter.
+
+        Args:
+            tmp_file_pkl (Path): Path to temporary file.
+            export_format (str): Export format.
+        """
+        converter = PklConverter()
+        data = converter.convert(
+            tmp_file_pkl,
+            file_format="latin1",
+        )
+        converter.save(data, tmp_file_pkl, export_format=export_format)
+        assert isinstance(data, dict)
+        assert np.array_equal(data["level_1"][0]["sub_level_1"], np.arange(10))
+        assert data.keys() == {"level_1", "level_2", "level_3"}
+        for key in data.keys():
+            _fname = tmp_file_pkl.parent / f"{tmp_file_pkl.stem}_{key}.{export_format}"
+            assert _fname.exists()
+
+    def test_pkl_converter_nested(
+        self, tmp_path: Path, tmp_file_nested_dict: Dict[str, Any]
+    ) -> None:
+        """Test pickle converter for nested dictionaries.
+
+        Args:
+            tmp_path (Path): Temporary path.
+            tmp_file_nested_dict (Dict[str, Any]): Temporary file.
+        """
+        converter = PklConverter()
+        tmp_file = tmp_path / "tmp_file_nested_dict.pkl"
+        with open(tmp_file, "wb") as f:
+            pickle.dump(tmp_file_nested_dict, f)
+        data = converter.convert(
+            tmp_file,
+            file_format="latin1",
+        )
+        converter.save(data, tmp_file, export_format="pkl")
+        assert isinstance(data, dict)
+
+    def test_pkl_converter_fail(self, tmp_file_pkl: Path) -> None:
+        """Test pickle converter.
+
+        Args:
+            tmp_file_pkl (Path): Path to temporary file.
+        """
+        converter = PklConverter()
+        with pytest.raises(ValueError) as excinfo:
+            data = converter.convert(
+                tmp_file_pkl,
+                file_format="latin2",
+            )
+            converter.save(data, tmp_file_pkl, export_format="not_existing")
+        assert "Unsupported file format" in str(excinfo.value)
+
+    def test_cmd_pkl_converter(self, script_runner: Any, tmp_file_pkl: Path) -> None:
+        """Test the data converter plugin.
+
+        Args:
+            script_runner (Any): Script runner.
+            tmp_file_pkl (Path): Path to temporary file.
+        """
+        ret = script_runner.run(
+            "spectrafit-pkl-converter",
+            str(tmp_file_pkl),
+            "--export-format",
+            "npz",
+        )
+
+        assert ret.success
+        assert ret.stdout == ""
+        assert ret.stderr == ""
+        assert len(list(tmp_file_pkl.parent.glob(f"{tmp_file_pkl.stem}*.npz"))) == 3
+
+
+class TestPklAsGraph:
+    """Test the pkl visualizer."""
+
+    def test_converter(self, tmp_file_pkl: Path, plt: pyplot) -> None:
+        """Test the converter.
+
+        Args:
+            tmp_file_pkl (Path): Path to temporary file.
+            plt (pyplot): Pyplot.
+        """
+        converter = PklVisualizer()
+        data = converter.convert(tmp_file_pkl, file_format="latin1")
+
+        assert isinstance(data, dict)
+        plt.show()
+
+    @pytest.mark.parametrize("export_format", ["pdf", "png", "jpg", "jpeg"])
+    def test_save(self, tmp_file_pkl: Path, export_format: str) -> None:
+        """Test the save function for various export formats.
+
+        Args:
+            tmp_file_pkl (Path): Path to temporary file.
+            plt (pyplot): Pyplot.
+            export_format (str): Export format.
+        """
+        converter = PklVisualizer()
+        data = converter.convert(tmp_file_pkl, file_format="latin1")
+        converter.save(data, tmp_file_pkl, export_format=export_format)
+
+        assert Path(
+            tmp_file_pkl.parent / f"{tmp_file_pkl.stem}.{export_format}"
+        ).exists()
+        assert Path(tmp_file_pkl.parent / f"{tmp_file_pkl.stem}.json").exists()
+
+    def test_save_fail(self, tmp_file_pkl: Path) -> None:
+        """Test fail save function.
+
+        Args:
+            tmp_file_pkl (Path): Path to temporary file.
+            plt (pyplot): Pyplot.
+            export_format (str): Export format.
+        """
+        converter = PklVisualizer()
+        data = converter.convert(tmp_file_pkl, file_format="latin1")
+        with pytest.raises(ValueError) as excinfo:
+            converter.save(data, tmp_file_pkl, export_format="not_existing")
+        assert "Export format" in str(excinfo.value)
+
+    def test_cmd_converter(self, script_runner: Any, tmp_file_pkl_nested: Path) -> None:
+        """Test the data converter plugin.
+
+        Args:
+            script_runner (Any): Script runner.
+            tmp_file_pkl_nested (Path): Path to temporary file of nested dictionary.
+        """
+        ret = script_runner.run(
+            "spectrafit-pkl-visualizer",
+            str(tmp_file_pkl_nested),
+            "--export-format",
+            "pdf",
+        )
+
+        assert ret.success
+        assert ret.stdout == ""
+        assert ret.stderr == ""
+        assert Path(
+            tmp_file_pkl_nested.parent / f"{tmp_file_pkl_nested.stem}.pdf"
+        ).exists()
+        assert Path(
+            tmp_file_pkl_nested.parent / f"{tmp_file_pkl_nested.stem}.json"
+        ).exists()
+
+    def test_converter_fail(self, tmp_path: Path) -> None:
+        """Test fail of the converter.
+
+        Args:
+            tmp_path (Path): Temporary path.
+        """
+        fname = tmp_path / "tmp_not_a_dict.pkl"
+        with open(fname, "wb") as f:
+            pickle.dump("test", f)
+        with pytest.raises(ValueError) as excinfo:
+            PklVisualizer.convert(fname, file_format="latin2")
+        assert "Data is not a dictionary:" in str(excinfo.value)

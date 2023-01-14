@@ -47,8 +47,9 @@ repos:
             types-PyYAML==6.0.11,
             types-tabulate==0.8.11,
             types-mock==4.0.15,
-            numpy>=1.21.4,
-            pydantic==1.10.3,
+            numpy==1.23.4,
+            pydantic==1.10.1,
+            pytest==6.2.5,
           ]
   - repo: https://github.com/pycqa/pydocstyle
     rev: 6.2.3 # pick a git hash / tag to point to

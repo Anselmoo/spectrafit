@@ -7,17 +7,19 @@ With the command `spectrafit-data-converter` data files can be converted to
 
 ```shell
 ➜ spectrafit-data-converter -f ATHENA -h
-usage: spectrafit-data-converter [-h] [-f {TXT,ATHENA}] infile
+  usage: spectrafit-data-converter [-h] [-f {ATHENA,TXT}] [-e {txt,csv,out,dat}] infile
 
-Converter for 'SpectraFit' from data files to CSV files.
+  Converter for 'SpectraFit' from data files to CSV files.
 
-positional arguments:
-  infile                Filename of the data file to convert.
+  positional arguments:
+    infile                Filename of the data file to convert.
 
-options:
-  -h, --help            show this help message and exit
-  -f {TXT,ATHENA}, --file-format {TXT,ATHENA}
-                        File format for the conversion.
+  options:
+    -h, --help            show this help message and exit
+    -f {ATHENA,TXT}, --file-format {ATHENA,TXT}
+                          File format for the conversion.
+    -e {txt,csv,out,dat}, --export-format {txt,csv,out,dat}
+                          File format for the export.
 ```
 
 !!! example "From ATHENA to CSV"

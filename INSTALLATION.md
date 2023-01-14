@@ -156,6 +156,19 @@ available plugins are:
 
     ![Docker-Image](https://github.com/Anselmoo/spectrafit/blob/9094da4472db889d50652d4ded870d42dd0ed559/docs/images/docker.png?raw=true)
 
+    To include the _home directory_ of the host system, the following command can
+    be used:
+
+    ```terminal
+    docker run -it -p 8888:8888 -v $HOME:/home/user/work spectrafit:latest
+    ```
+
+    or via:
+
+    ```terminal
+    docker run -it -p 8888:8888 -v $HOME:/home/user/work ghcr.io/anselmoo/spectrafit:latest
+    ```
+
 [1]: https://github.com/pypa/pipx
 [2]: https://conda.io/docs/
 [3]: https://anaconda.org/conda-forge/spectrafit

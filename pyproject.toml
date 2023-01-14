@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "SpectraFit"
-version = "0.14.0"
+version = "0.15.0"
 description = "Fast fitting of 2D- and 3D-Spectra with established routines"
 readme = "README.md"
 authors = ["Anselm Hahn <anselm.hahn@gmail.com>"]
@@ -25,7 +25,6 @@ classifiers = [
   "Framework :: Matplotlib",
   "Framework :: Jupyter :: JupyterLab",
   "Operating System :: OS Independent",
-  "Programming Language :: Python :: 3.7",
   "Programming Language :: Python :: 3.8",
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
@@ -41,33 +40,30 @@ include = [
 exclude = ["docs/", "tools/"]
 
   [tool.poetry.dependencies]
-  python = ">=3.7.2,<3.11"
+  python = ">=3.8,<3.11"
   lmfit = "^1.1.0"
-  pandas = [
-    { version = "1.3.5", python = "<3.8" },
-    { version = "^1.5.0", python = ">=3.8" },
-  ]
-  numpy = [
-    { version = "1.21.6", python = "<3.8" },
-    { version = "^1.23.4", python = ">=3.8" },
-  ]
+  pandas = "^1.5.0"
+  numpy = "^1.23.4"
   emcee = "^3.1.2"
-  tabulate = ">=0.8.10,<0.10.0"
+  tabulate = "^0.8.10"
   PyYAML = "^6.0"
   openpyxl = "^3.0.9"
-  seaborn = ">=0.11.2,<0.13.0"
+  seaborn = "^0.12.0"
   numdifftools = "^0.9.41"
   tqdm = "^4.64.0"
   scikit-learn = "^1.0.2"
   art = "^5.8"
+  tomli = "^2.0.1"
+  tomli-w = "^1.0.0"
   pydantic = "^1.10.1"
   jupyterlab = { version = "^3.5.2", optional = true }
   plotly = { version = "^5.11.0", optional = true }
   itables = { version = "^1.3.4", optional = true }
   kaleido = { version = "0.2.1", optional = true }
   dtale = { version = "^2.8.1", optional = true }
-  tomli = "^2.0.1"
-  tomli-w = "^1.0.0"
+  networkx = { extras = ["all"], version = "^3.0", optional = true }
+  pydot = { version = "^1.4.2", optional = true }
+
 
   [tool.poetry.group.dev.dependencies]
   pylama = "^8.4.1"
@@ -88,6 +84,7 @@ exclude = ["docs/", "tools/"]
   types-tabulate = "^0.8.11"
   types-mock = "^4.0.15"
   pytest-mock = "^3.10.0"
+  nptyping = {extras = ["complete"], version = "^2.4.1"}
 
   [tool.poetry.group.docs.dependencies]
   mkdocs-jupyter = "^0.21.0"
@@ -106,10 +103,23 @@ build-backend = "poetry.core.masonry.api"
 spectrafit = "spectrafit.spectrafit:command_line_runner"
 spectrafit-file-converter = "spectrafit.plugins.file_converter:command_line_runner"
 spectrafit-data-converter = "spectrafit.plugins.data_converter:command_line_runner"
+spectrafit-pkl-visualizer = "spectrafit.plugins.pkl_visualizer:command_line_runner"
+spectrafit-pkl-converter = "spectrafit.plugins.pkl_converter:command_line_runner"
 spectrafit-jupyter = "spectrafit.app.app:jupyter"
+
 
 [tool.poetry.extras]
 jupyter = ["jupyterlab", "plotly", "itables", "kaleido", "dtale"]
+graph = ["networkx", "pydot"]
+all = [
+  "jupyterlab",
+  "plotly",
+  "itables",
+  "kaleido",
+  "dtale",
+  "networkx",
+  "pydot",
+]
 
 [tool.isort]
 profile = "black"
