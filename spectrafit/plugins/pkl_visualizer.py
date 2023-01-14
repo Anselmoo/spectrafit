@@ -107,7 +107,7 @@ class PklVisualizer(Converter):
         )
 
         with open(
-            Path(fname.parent / f"{fname.stem}.json"), "w+", encoding="utf-8"
+            pure_fname(fname).with_suffix(".json"), "w+", encoding="utf-8"
         ) as outfile:
             json.dump(data, outfile, indent=4)
 
