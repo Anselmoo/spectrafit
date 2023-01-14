@@ -5245,4 +5245,4 @@ jupyter = ["jupyterlab", "plotly", "itables", "kaleido", "dtale"]
 [metadata]
 lock-version = "2.0"
   python-versions = ">=3.8,<3.11"
-content-hash = "4d66bf82500fbcb2d9e262d0e56056baa67c0b15d99262e00a64c9aceb57f1ae"
+content-hash = "ece2923d3848cdeecbfcaee1b92db066b17b9b184fc52653ad34fb2063d283bb"
