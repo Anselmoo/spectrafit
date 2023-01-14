@@ -473,6 +473,24 @@ def tmp_file_pkl(
     return tmp_file
 
 
+@pytest.fixture(scope="function", autouse=True, name="tmp_file_pkl_gz")
+def tmp_file_pkl_gz(
+    tmp_path: Path, tmp_file_dict: Dict[str, Dict[str, NDArray[Shape["200"], Float]]]
+) -> Path:
+    """Create temporary file with pickle data.
+
+    Args:
+        tmp_path (Path): Temporary path.
+
+    Returns:
+        Path: Path to temporary file.
+    """
+    tmp_file = tmp_path / "tmp_file.pkl.gz"
+    with gzip.open(tmp_file, "wb") as f:
+        pickle.dump(tmp_file_dict, f)
+    return tmp_file
+
+
 @pytest.fixture(scope="function", autouse=True, name="tmp_file_pkl_nested")
 def tmp_file_pkl_nested(
     tmp_path: Path, tmp_file_nested_dict: Dict[str, Dict[str, Any]]
@@ -575,9 +593,33 @@ class TestPklConverter:
         assert isinstance(data, dict)
         assert np.array_equal(data["level_1"][0]["sub_level_1"], np.arange(10))
         assert data.keys() == {"level_1", "level_2", "level_3"}
-        for key in data.keys():
-            _fname = tmp_file_pkl.parent / f"{tmp_file_pkl.stem}_{key}.{export_format}"
-            assert _fname.exists()
+        assert (
+            len(list(Path(tmp_file_pkl.parent).glob(f"*level_*.{export_format}"))) == 3
+        )
+
+    @pytest.mark.parametrize(
+        "export_format",
+        ["npy", "npz", "pkl", "pkl.gz"],
+    )
+    def test_pkl_gz_converter(self, tmp_file_pkl_gz: Path, export_format: str) -> None:
+        """Test pickle converter.
+
+        Args:
+            tmp_file_pkl_gz (Path): Path to temporary file.
+            export_format (str): Export format.
+        """
+        converter = PklConverter()
+        data = converter.convert(
+            tmp_file_pkl_gz,
+            file_format="latin1",
+        )
+        converter.save(data, tmp_file_pkl_gz, export_format=export_format)
+        assert isinstance(data, dict)
+        assert np.array_equal(data["level_1"][0]["sub_level_1"], np.arange(10))
+        assert (
+            len(list(Path(tmp_file_pkl_gz.parent).glob(f"*level_*.{export_format}")))
+            == 3
+        )
 
     def test_pkl_converter_nested(
         self, tmp_path: Path, tmp_file_nested_dict: Dict[str, Any]
@@ -614,24 +656,33 @@ class TestPklConverter:
             converter.save(data, tmp_file_pkl, export_format="not_existing")
         assert "Unsupported file format" in str(excinfo.value)
 
-    def test_cmd_pkl_converter(self, script_runner: Any, tmp_file_pkl: Path) -> None:
+    @pytest.mark.parametrize(
+        "export_format",
+        ["npy", "npz", "pkl", "pkl.gz"],
+    )
+    def test_cmd_pkl_converter(
+        self, script_runner: Any, tmp_file_pkl: Path, export_format: str
+    ) -> None:
         """Test the data converter plugin.
 
         Args:
             script_runner (Any): Script runner.
             tmp_file_pkl (Path): Path to temporary file.
+            export_format (str): Export format.
         """
         ret = script_runner.run(
             "spectrafit-pkl-converter",
             str(tmp_file_pkl),
             "--export-format",
-            "npz",
+            export_format,
         )
 
         assert ret.success
         assert ret.stdout == ""
         assert ret.stderr == ""
-        assert len(list(tmp_file_pkl.parent.glob(f"{tmp_file_pkl.stem}*.npz"))) == 3
+        assert (
+            len(list(Path(tmp_file_pkl.parent).glob(f"*level_*.{export_format}"))) == 3
+        )
 
 
 class TestPklAsGraph:

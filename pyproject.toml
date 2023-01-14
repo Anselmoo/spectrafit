@@ -84,7 +84,7 @@ exclude = ["docs/", "tools/"]
   types-tabulate = "^0.8.11"
   types-mock = "^4.0.15"
   pytest-mock = "^3.10.0"
-  nptyping = {extras = ["complete"], version = "^2.4.1"}
+  nptyping = { extras = ["complete"], version = "^2.4.1" }
 
   [tool.poetry.group.docs.dependencies]
   mkdocs-jupyter = "^0.21.0"

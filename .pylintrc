@@ -14,6 +14,7 @@ ignore=CVS
 # Add files or directories matching the regex patterns to the ignore-list. The
 # regex matches against paths and can be in Posix or Windows format.
 ignore-paths=^spectrafit/test/.*?,
+            ^spectrafit/plugins/test/.*?,
             ^tools/.*?,
 
 # Files or directories matching the regex patterns are skipped. The regex

@@ -14,9 +14,11 @@ import numpy as np
 
 from spectrafit.plugins.converter import Converter
 from spectrafit.tools import pkl2dict
+from spectrafit.tools import pure_fname
 
 
-choices = {"png", "pdf", "jpg", "jpeg"}
+choices = {"latin1", "utf-8", "utf-16", "utf-32"}
+choices_export = {"png", "pdf", "jpg", "jpeg"}
 
 
 class PklVisualizer(Converter):
@@ -40,9 +42,10 @@ class PklVisualizer(Converter):
         parser.add_argument(
             "-f",
             "--file-format",
-            help="File format for the optional encoding of the pickle file.",
+            help="File format for the optional encoding of the pickle file."
+            " Default is 'latin1'.",
             type=str,
-            default="pdf",
+            default="latin1",
             choices=choices,
         )
         parser.add_argument(
@@ -51,7 +54,7 @@ class PklVisualizer(Converter):
             help="File extension for the graph export.",
             type=str,
             default="pdf",
-            choices=choices,
+            choices=choices_export,
         )
 
         return vars(parser.parse_args())
@@ -95,16 +98,16 @@ class PklVisualizer(Converter):
         Raises:
             ValueError: If the export format is not supported.
         """
-        if export_format.lower() not in choices:
+        if export_format.lower() not in choices_export:
             raise ValueError(f"Export format '{export_format}' is not supported.")
 
         plt.savefig(
-            Path(fname.parent / f"{fname.stem}.{export_format}"),
+            pure_fname(fname).with_suffix(f".{export_format}"),
             format=export_format,
         )
 
         with open(
-            Path(fname.parent / f"{fname.stem}.json"), "w+", encoding="utf-8"
+            pure_fname(fname).with_suffix(".json"), "w+", encoding="utf-8"
         ) as outfile:
             json.dump(data, outfile, indent=4)
 

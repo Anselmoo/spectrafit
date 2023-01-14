@@ -14,11 +14,12 @@ import numpy as np
 
 from spectrafit.plugins.converter import Converter
 from spectrafit.tools import pkl2dict
+from spectrafit.tools import pure_fname
 
 
-choices = {"latin1", "utf-8", "utf-16", "utf-32"}
 pkl_gz = "pkl.gz"
-choices_ext = {"npy", "npz", "pkl", pkl_gz}
+choices = {"latin1", "utf-8", "utf-16", "utf-32"}
+choices_export = {"npy", "npz", "pkl", pkl_gz}
 
 
 class ExportData:
@@ -146,7 +147,8 @@ class PklConverter(Converter):
         parser.add_argument(
             "-f",
             "--file-format",
-            help="File format for the optional encoding of the pickle file.",
+            help="File format for the optional encoding of the pickle file."
+            " Default is 'latin1'.",
             type=str,
             default="latin1",
             choices=choices,
@@ -154,10 +156,10 @@ class PklConverter(Converter):
         parser.add_argument(
             "-e",
             "--export-format",
-            help="File format for export of the output file.",
+            help="File format for export of the output file. Default is 'pkl'.",
             type=str,
             default="pkl",
-            choices=choices_ext,
+            choices=choices_export,
         )
         return vars(parser.parse_args())
 
@@ -224,11 +226,13 @@ class PklConverter(Converter):
         Raises:
             ValueError: If the export format is not supported.
         """
-        if export_format.lower() not in choices_ext:
+        if export_format.lower() not in choices_export:
             raise ValueError(f"Unsupported file format '{export_format}'.")
 
+        fname = pure_fname(fname)
+
         for key, value in data.items():
-            _fname = fname.parent / f"{fname.stem}_{key}"
+            _fname = Path(f"{fname}_{key}").with_suffix(f".{export_format}")
             ExportData(data=value, fname=_fname, export_format=export_format)()
 
     def __call__(self) -> None:
