@@ -1,4 +1,7 @@
 """Pytest of tools model."""
+import gzip
+import pickle
+
 from pathlib import Path
 from typing import Any
 from typing import Dict
@@ -13,6 +16,8 @@ from spectrafit.tools import PostProcessing
 from spectrafit.tools import PreProcessing
 from spectrafit.tools import SaveResult
 from spectrafit.tools import check_keywords_consistency
+from spectrafit.tools import pkl2dict
+from spectrafit.tools import unicode_check
 
 
 @pytest.fixture(name="random_dataframe")
@@ -355,3 +360,62 @@ class TestPostProcessing:
         )
         pp.make_insight_report
         assert pp.args["confidence_interval"] == {}
+
+
+class TestPickle:
+    """Test Pickle tool."""
+
+    def test_unicode(self, random_dataframe: pd.DataFrame, tmp_path: Path) -> None:
+        """Testing unicode."""
+        args = {
+            "outfile": str(tmp_path / "test_unicode"),
+            "data": random_dataframe,
+        }
+        # write test file as pickle file with unicode utf-8
+        with open(args["outfile"], "wb") as f:
+            pickle.dump(args["data"], f, protocol=pickle.HIGHEST_PROTOCOL)
+
+        # read test file as pickle file
+        with open(args["outfile"], "rb") as f:
+            df = unicode_check(f)
+
+        assert type(df) == pd.DataFrame
+
+    def test_pkl2dict(self, random_dataframe: pd.DataFrame, tmp_path: Path) -> None:
+        """Testing pkl2dict."""
+        args = {
+            "outfile": tmp_path / "test_pkl2dict.pkl",
+            "data": random_dataframe,
+        }
+        # write test file as pickle file with unicode utf-8
+        with open(args["outfile"], "wb") as f:
+            pickle.dump(args["data"], f, protocol=pickle.HIGHEST_PROTOCOL)
+
+        # read test file as pickle file
+        df = pkl2dict(args["outfile"])
+
+        assert type(df) == pd.DataFrame
+
+    def test_pkl2dict_gz(self, random_dataframe: pd.DataFrame, tmp_path: Path) -> None:
+        """Testing pkl2dict."""
+        args = {
+            "outfile": tmp_path / "test_pkl2dict.pkl.gz",
+            "data": random_dataframe,
+        }
+        # write test file as pickle file with unicode utf-8
+        with gzip.open(args["outfile"], "wb") as f:
+            pickle.dump(args["data"], f, protocol=pickle.HIGHEST_PROTOCOL)
+
+        # read test file as pickle file
+        df = pkl2dict(args["outfile"])
+
+        assert type(df) == pd.DataFrame
+
+    def test_pkl2dict_fail(self, tmp_path: Path) -> None:
+        """Testing pkl2dict."""
+        args = {
+            "outfile": tmp_path / "test_pkl2dict_fail.fail",
+        }
+        # read test file as pickle file
+        with pytest.raises(ValueError):
+            pkl2dict(args["outfile"])

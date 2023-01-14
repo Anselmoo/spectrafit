@@ -7,6 +7,7 @@ import pandas as pd
 import pytest
 
 from pytest_mock.plugin import MockerFixture
+from spectrafit.report import PrintingResults
 from spectrafit.report import RegressionMetrics
 from spectrafit.report import _extracted_gof_from_results
 
@@ -65,3 +66,22 @@ def test_extracted_gof_from_results(mocker: MockerFixture) -> None:
                 "covariance_matrix": {},
             }
             _extracted_gof_from_results(result, buffer, params)
+
+
+def test_printing_results() -> None:
+    """Test of the printing results."""
+    pr = PrintingResults(
+        args={
+            "conf_interval": {
+                "wrong_key": "wrong_value",
+            },
+            "linear_correlation": {
+                "intensity_0": np.arange(10),
+                "intensity_1": np.arange(10),
+            },
+        },
+        result=None,
+        minimizer=None,
+    )
+    pr.print_confidence_interval()
+    assert pr.args["confidence_interval"] == {}

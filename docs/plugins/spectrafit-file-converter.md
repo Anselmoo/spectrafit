@@ -6,7 +6,7 @@ With the command `spectrafit-file-converter` input and also output files can be 
 
 ```shell
    ➜  spectrafit-file-converter -h
-   usage: spectrafit-file-converter [-h] [-f {lock,toml,yml,yaml,json}] infile
+   usage: spectrafit-file-converter [-h] [-f {yml,lock,yaml,json,toml}] [-e {yml,lock,yaml,json,toml}] infile
 
    Converter for 'SpectraFit' input and output files.
 
@@ -15,9 +15,10 @@ With the command `spectrafit-file-converter` input and also output files can be 
 
    options:
      -h, --help            show this help message and exit
-     -f {lock,toml,yml,yaml,json}, --format {lock,ymltoml,yaml,json}
+     -f {yml,lock,yaml,json,toml}, --file-format {yml,lock,yaml,json,toml}
                            File format for the conversion.
-
+     -e {yml,lock,yaml,json,toml}, --export-format {yml,lock,yaml,json,toml}
+                           File format for the export.
 ```
 
 === "File Change from `json` to `lock`"

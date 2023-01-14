@@ -72,6 +72,8 @@ choices = {
     choice for choice in list(DataFormats.__dict__.keys()) if not choice.startswith("_")
 }
 
+choices_export = {"csv", "txt", "dat", "out"}
+
 
 class DataConverter(Converter):
     """Convert the data files to a CSV file.
@@ -109,16 +111,25 @@ class DataConverter(Converter):
             type=str,
             choices=choices,
         )
+        parser.add_argument(
+            "-e",
+            "--export-format",
+            help="File format for the export.",
+            type=str,
+            default="csv",
+            choices=choices_export,
+        )
         return vars(parser.parse_args())
 
-    def convert(self, infile: Path, file_format: str) -> pd.DataFrame:
+    @staticmethod
+    def convert(infile: Path, file_format: str) -> pd.DataFrame:
         """Convert the input file to the target file format.
 
         Args:
             infile (Path): Input file as a path object.
             file_format (str): Target file format.
 
-        Raise:
+        Raises:
             ValueError: If the file format is not supported.
 
         Returns:
@@ -137,20 +148,32 @@ class DataConverter(Converter):
             infile, **DataFormats.__dict__[file_format].dict(exclude={"file_suffixes"})
         )
 
-    def save(self, infile: Path, df: pd.DataFrame) -> None:
+    def save(self, data: Any, fname: Path, export_format: str) -> None:
         """Save the converted data to a CSV file.
 
+        Raises:
+            ValueError: If the export format is not supported.
+
         Args:
-            infile (Path): Input file as a path object.
-            df (pd.DataFrame): The converted data as a pandas DataFrame.
+            data (Any): The converted data, which is a pandas DataFrame.
+            fname (Path): The file name of the data file.
+            export_format (str): The file format of the exported file.
         """
-        df.to_csv(infile.with_suffix(".csv"), index=False)
+        if export_format.lower() not in choices_export:
+            raise ValueError(f"Export format '{export_format}' is not supported.")
+        data.to_csv(fname.with_suffix(f".{export_format}"), index=False)
 
     def __call__(self) -> None:
         """Run the converter."""
         args = self.get_args()
-        df = self.convert(**args)
-        self.save(args["infile"], df=df)
+        self.save(
+            data=self.convert(
+                args["infile"],
+                args["file_format"],
+            ),
+            fname=args["infile"],
+            export_format=args["export_format"],
+        )
 
 
 def command_line_runner() -> None:

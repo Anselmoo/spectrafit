@@ -1,5 +1,7 @@
 """Collection of essential tools for running SpectraFit."""
+import gzip
 import json
+import pickle
 import sys
 
 from pathlib import Path
@@ -608,3 +610,49 @@ def check_keywords_consistency(
     for key in check_args:
         if key not in ref_args.keys():
             raise KeyError(f"ERROR: The {key} is not parameter of the `cmd-input`!")
+
+
+def unicode_check(f: Any, encoding: str = "latin1") -> Any:
+    """Check if the pkl file is encoded in unicode.
+
+    Args:
+        f (Any): The pkl file to load.
+        encoding (str, optional): The encoding to use. Defaults to "latin1".
+
+    Returns:
+        Any: The pkl file, which can be a nested dictionary containing raw data,
+            metadata, and other information.
+    """
+    try:
+        data_dict = pickle.load(f)
+    except UnicodeDecodeError:  # pragma: no cover
+        data_dict = pickle.load(f, encoding=encoding)  # pragma: no cover
+    return data_dict
+
+
+def pkl2dict(pkl_fname: Path, encoding: str = "latin1") -> Dict[str, Any]:
+    """Load a pkl file and return the data as a dictionary.
+
+    Args:
+        pkl_fname (Path): The pkl file to load.
+        encoding (str, optional): The encoding to use. Defaults to "latin1".
+
+    Raises:
+        ValueError: If the file format is not supported.
+
+    Returns:
+        Dict[str, Any]: The data as a dictionary, which can be a nested dictionary
+            containing raw data, metadata, and other information.
+    """
+    if pkl_fname.suffix == ".gz":
+        with gzip.open(pkl_fname, "rb") as f:
+            return unicode_check(f, encoding=encoding)
+    elif pkl_fname.suffix == ".pkl":
+        with open(pkl_fname, "rb") as f:
+            return unicode_check(f, encoding=encoding)
+    else:
+        choices = [".pkl", ".pkl.gz"]
+        raise ValueError(
+            f"File format '{pkl_fname.suffix}' is not supported. "
+            f"Supported file formats are: {choices}"
+        )
