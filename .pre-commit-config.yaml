@@ -52,7 +52,7 @@ repos:
             pytest==6.2.5,
           ]
   - repo: https://github.com/pycqa/pydocstyle
-    rev: 6.2.3 # pick a git hash / tag to point to
+    rev: 6.2.3
     hooks:
       - id: pydocstyle
         additional_dependencies: [toml==0.10.2]
