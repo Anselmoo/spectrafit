@@ -343,7 +343,8 @@ class DataFramePlot:
         )
         return fig
 
-    def title_text(self, name: str, unit: Optional[str] = None) -> str:
+    @staticmethod
+    def title_text(name: str, unit: Optional[str] = None) -> str:
         """Return the title text.
 
         Args:
