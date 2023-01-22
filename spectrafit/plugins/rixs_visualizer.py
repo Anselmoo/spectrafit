@@ -1,5 +1,7 @@
 """This module contains the RIXS visualizer class."""
 
+import logging
+
 from pathlib import Path
 from typing import Dict
 from typing import List
@@ -17,12 +19,13 @@ from dash import dcc
 from dash import html
 from dash_bootstrap_templates import ThemeChangerAIO
 from dash_bootstrap_templates import template_from_url
+from jupyter_dash import JupyterDash
 from numpy.typing import NDArray
-from spectrafit.api.RIXS_model import MainTitleAPI
-from spectrafit.api.RIXS_model import SizeRatioAPI
-from spectrafit.api.RIXS_model import XAxisAPI
-from spectrafit.api.RIXS_model import YAxisAPI
-from spectrafit.api.RIXS_model import ZAxisAPI
+from spectrafit.api.rixs_model import MainTitleAPI
+from spectrafit.api.rixs_model import SizeRatioAPI
+from spectrafit.api.rixs_model import XAxisAPI
+from spectrafit.api.rixs_model import YAxisAPI
+from spectrafit.api.rixs_model import ZAxisAPI
 from spectrafit.plugins.notebook import DataFramePlot
 
 
@@ -43,40 +46,40 @@ class RIXSFigure:
         self,
         incident_energy: NDArray[np.float64],
         emission_energy: NDArray[np.float64],
-        RIXS: NDArray[np.float64],
+        rixs_map: NDArray[np.float64],
         size: SizeRatioAPI = SizeRatioAPI(
             size=(500, 500),
             ratio_rixs=(2, 2),
             ratio_xes=(3, 1),
             ratio_xas=(3, 1),
         ),
-        x_axes: XAxisAPI = XAxisAPI(name="Incident Energy", unit="eV"),
-        y_axes: YAxisAPI = YAxisAPI(name="Emission Energy", unit="eV"),
-        z_axes: ZAxisAPI = ZAxisAPI(name="Intensity", unit="a.u."),
+        x_axis: XAxisAPI = XAxisAPI(name="Incident Energy", unit="eV"),
+        y_axis: YAxisAPI = YAxisAPI(name="Emission Energy", unit="eV"),
+        z_axis: ZAxisAPI = ZAxisAPI(name="Intensity", unit="a.u."),
     ):
         """Initialize the RIXS figure.
 
         Args:
             incident_energy (NDArray[np.float64]): Incident energy.
             emission_energy (NDArray[np.float64]): Emission energy.
-            RIXS (NDArray[np.float64]): RIXS data.
+            rixs_map (NDArray[np.float64]): RIXS data as a 2D array.
             size (SizeRatioAPI, optional): Size of the figure.
                  Defaults to SizeRatioAPI(size=(500, 500), ratio_rixs=(2, 2),
                  ratio_xes=(3, 1), ratio_xas=(3, 1)).
-            x_axes (XAxisAPI, optional): X-Axis of the figure.
+            x_axis (XAxisAPI, optional): X-Axis of the figure.
                  Defaults to XAxisAPI(name="Incident Energy", unit="eV").
-            y_axes (YAxisAPI, optional): Y-Axis of the figure.
+            y_axis (YAxisAPI, optional): Y-Axis of the figure.
                  Defaults to YAxisAPI(name="Emission Energy", unit="eV").
-            z_axes (ZAxisAPI, optional): Z-Axis of the figure.
+            z_axis (ZAxisAPI, optional): Z-Axis of the figure.
                  Defaults to ZAxisAPI(name="Intensity", unit="a.u.").
         """
         self.incident_energy = incident_energy
         self.emission_energy = emission_energy
-        self.RIXS = RIXS
+        self.rixs_map = rixs_map
 
-        self.x_axes = x_axes
-        self.y_axes = y_axes
-        self.z_axes = z_axes
+        self.x_axis = x_axis
+        self.y_axis = y_axis
+        self.z_axis = z_axis
         self.initialize_figure_size(size)
 
     def initialize_figure_size(self, size: SizeRatioAPI) -> None:
@@ -113,7 +116,7 @@ class RIXSFigure:
                 go.Surface(
                     x=self.incident_energy,
                     y=self.emission_energy,
-                    z=self.RIXS,
+                    z=self.rixs_map,
                     colorscale=colorscale,
                     opacity=opacity,
                     contours_z=dict(
@@ -132,13 +135,13 @@ class RIXSFigure:
             height=self.rixs_height,
             scene=dict(
                 xaxis_title=DataFramePlot.title_text(
-                    name=self.x_axes.name, unit=self.x_axes.unit
+                    name=self.x_axis.name, unit=self.x_axis.unit
                 ),
                 yaxis_title=DataFramePlot.title_text(
-                    name=self.y_axes.name, unit=self.y_axes.unit
+                    name=self.y_axis.name, unit=self.y_axis.unit
                 ),
                 zaxis_title=DataFramePlot.title_text(
-                    name=self.z_axes.name, unit=self.z_axes.unit
+                    name=self.z_axis.name, unit=self.z_axis.unit
                 ),
                 aspectmode="cube",
             ),
@@ -176,13 +179,13 @@ class RIXSFigure:
         # Udate the xaxis title
         fig.update_xaxes(
             title_text=DataFramePlot.title_text(
-                name=self.y_axes.name, unit=self.y_axes.unit
+                name=self.y_axis.name, unit=self.y_axis.unit
             )
         )
         # Update the yaxis title
         fig.update_yaxes(
             title_text=DataFramePlot.title_text(
-                name=self.z_axes.name, unit=self.z_axes.unit
+                name=self.z_axis.name, unit=self.z_axis.unit
             )
         )
         return fig
@@ -211,18 +214,18 @@ class RIXSFigure:
         )
         fig.update_xaxes(
             title_text=DataFramePlot.title_text(
-                name=self.x_axes.name, unit=self.x_axes.unit
+                name=self.x_axis.name, unit=self.x_axis.unit
             )
         )
         fig.update_yaxes(
             title_text=DataFramePlot.title_text(
-                name=self.z_axes.name, unit=self.z_axes.unit
+                name=self.z_axis.name, unit=self.z_axis.unit
             )
         )
         return fig
 
 
-class App(RIXSFigure):
+class RIXSApp(RIXSFigure):
     """Create the RIXS app.
 
     !!! info "About the RIXS app"
@@ -245,7 +248,7 @@ class App(RIXSFigure):
         self,
         incident_energy: NDArray[np.float64],
         emission_energy: NDArray[np.float64],
-        RIXS: NDArray[np.float64],
+        rixs_map: NDArray[np.float64],
         size: SizeRatioAPI = SizeRatioAPI(
             size=(500, 500),
             ratio_rixs=(2, 2),
@@ -255,6 +258,8 @@ class App(RIXSFigure):
         main_title: MainTitleAPI = MainTitleAPI(rixs="RIXS", xes="XES", xas="XAS"),
         fdir: Path = Path("./"),
         mode: str = "server",
+        jupyter_dash: bool = False,
+        port: int = 8050,
         debug: bool = False,
     ) -> None:
         """Create the RIXS app.
@@ -262,7 +267,7 @@ class App(RIXSFigure):
         Args:
             incident_energy (NDArray[np.float64]): Incident energy.
             emission_energy (NDArray[np.float64]): Emission energy.
-            RIXS (NDArray[np.float64]): RIXS data.
+            rixs_map (NDArray[np.float64]): RIXS data as a 2D array.
             size (SizeRatioAPI, optional): Size of the figures. Defaults to
                  SizeRatioAPI(size=(500, 500), ratio_rixs=(2, 2), ratio_xas=(3, 1),
                  ratio_xes=(3, 1)).
@@ -271,19 +276,30 @@ class App(RIXSFigure):
             fdir (Path, optional): Directory to save the figures. Defaults to
                  Path("./").
             mode (str, optional): Mode of the app. Defaults to "server".
+            port (int, optional): Port of the app. Defaults to 8050.
+            jupyter_dash (bool, optional): Jupyter Dash mode. Defaults to False.
             debug (bool, optional): Debug mode. Defaults to False.
 
         """
         super().__init__(
             incident_energy=incident_energy,
             emission_energy=emission_energy,
-            RIXS=RIXS,
+            rixs_map=rixs_map,
             size=size,
         )
         self.fdir = fdir
         self.main_title = main_title
         self.mode = mode
+        self.jupyter_dash = jupyter_dash
+        self.port = port
         self.debug = debug
+        if not self.debug:
+            self.logging_flask()
+
+    def logging_flask(self) -> None:
+        """Set the logging level of the Flask server to ERROR."""
+        log = logging.getLogger("werkzeug")
+        log.setLevel(logging.ERROR)
 
     def colorscale(self) -> html.Div:
         """Create the color scale dropdown.
@@ -356,7 +372,7 @@ class App(RIXSFigure):
             dbc.CardBody(
                 [
                     html.H4(
-                        "Theme Explorer Sample App",
+                        "RIXS Visualizer App",
                         className="bg-primary text-white p-2 mb-2 text-center",
                     )
                 ]
@@ -429,7 +445,6 @@ class App(RIXSFigure):
                         ),
                         html.Br(),
                     ],
-                    fluent=True,
                 ),
                 class_name="mt-4",
             ),
@@ -466,15 +481,25 @@ class App(RIXSFigure):
             ),
         )[0]
 
-    def run(self) -> None:
+    def app_run(self) -> None:
         """Run the app."""
         dbc_css = (
             "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.min.css"
         )
-        app = dash.Dash(
-            __name__,
-            external_stylesheets=[dbc.themes.COSMO, dbc_css],
-        )
+        external_stylesheets = [dbc.themes.COSMO, dbc_css]
+        if self.jupyter_dash:
+            app = JupyterDash(__name__, external_stylesheets=external_stylesheets)
+        else:
+            app = dash.Dash(
+                __name__,
+                external_stylesheets=external_stylesheets,
+                meta_tags=[
+                    {
+                        "name": "viewport",
+                        "content": "width=device-width, initial-scale=1",
+                    }
+                ],
+            )
         app.layout = dbc.Container(
             [
                 self.header(),
@@ -509,12 +534,12 @@ class App(RIXSFigure):
                 return (
                     self.create_xes(
                         x=self.incident_energy,
-                        y=self.RIXS[:, int(self.emission_energy.size / 2)],
+                        y=self.rixs_map[:, int(self.emission_energy.size / 2)],
                         template=template_from_url(theme),
                     ),
                     self.create_xas(
                         x=self.emission_energy,
-                        y=self.RIXS[int(self.incident_energy.size / 2), :],
+                        y=self.rixs_map[int(self.incident_energy.size / 2), :],
                         template=template_from_url(theme),
                     ),
                     self.create_rixs(
@@ -527,12 +552,12 @@ class App(RIXSFigure):
             y = hoverData["points"][0]["y"]
             xes_fig = self.create_xes(
                 x=self.incident_energy,
-                y=self.RIXS[:, int(y)],
+                y=self.rixs_map[:, int(y)],
                 template=template_from_url(theme),
             )
             xas_fig = self.create_xas(
                 x=self.emission_energy,
-                y=self.RIXS[int(x), :],
+                y=self.rixs_map[int(x), :],
                 template=template_from_url(theme),
             )
             rixs_fig = self.create_rixs(
@@ -545,20 +570,20 @@ class App(RIXSFigure):
             cx = clickData["points"][0]["x"]
             cy = clickData["points"][0]["y"]
             pd.DataFrame(
-                {"energy": self.incident_energy, "xes": self.RIXS[:, int(cy)]}
+                {"energy": self.incident_energy, "intensity": self.rixs_map[:, int(cy)]}
             ).to_csv(
-                self.fdir / f"xes_cut_{cx}_{cy}.txt",
+                self.fdir / f"xes_cut_{np.round(cy, 8)}.txt",
                 index=False,
             )
             pd.DataFrame(
-                {"energy": self.emission_energy, "xas": self.RIXS[int(cx), :]}
+                {"energy": self.emission_energy, "intensity": self.rixs_map[int(cx), :]}
             ).to_csv(
-                self.fdir / f"xas_cut_{cx}_{cy}.txt",
+                self.fdir / f"xas_cut_{np.round(cx, 8)}.txt",
                 index=False,
             )
             return xes_fig, xas_fig, rixs_fig
 
-        if self.mode == "jupyterlab":
-            app.run_server(mode="jupyterlab", debug=self.debug)
+        if self.jupyter_dash:
+            app.run_server(mode=self.mode, debug=self.debug, port=self.port)
         else:
-            app.run_server(debug=self.debug)
+            app.run_server(debug=self.debug, port=self.port)

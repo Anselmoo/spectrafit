@@ -1,11 +1,12 @@
 """Reference model for the API of the Jupyter Notebook interface."""
 
 
-from typing import List
 from typing import Optional
 from typing import Tuple
-from typing import Union
 
+import numpy as np
+
+from numpy.typing import NDArray
 from pydantic import BaseModel
 from pydantic import Field
 
@@ -71,12 +72,29 @@ class SizeRatioAPI(BaseModel):
 class RIXSPlotAPI(BaseModel):
     """Definition of the plotly figure."""
 
-    x: str = Field(..., description="Name of the x column to plot.")
-    y: Union[str, List[str]] = Field(
-        ..., description="List of the names of the y columns to plot."
+    incident_energy: NDArray[np.float64] = Field(
+        ..., description="Incident energy values."
     )
-    xaxis_title: XAxisAPI = XAxisAPI()
-    yaxis_title: YAxisAPI = YAxisAPI()
-    zaxis_title: ZAxisAPI = ZAxisAPI()
+    emission_energy: NDArray[np.float64] = Field(
+        ..., description="Emission energy values."
+    )
+    emission_intensity: NDArray[np.float64] = Field(
+        ..., description="Emission intensity values (RIXS), which has to be a 2D array."
+    )
+    energy_loss: Optional[NDArray[np.float64]] = Field(
+        default=None, description="Energy loss values."
+    )
+    energy_loss_intensity: Optional[NDArray[np.float64]] = Field(
+        default=None,
+        description="Energy loss intensity values (XES), which has to be a 2D array.",
+    )
+    x_axis: XAxisAPI = XAxisAPI()
+    y_axis: YAxisAPI = YAxisAPI()
+    z_axis: ZAxisAPI = ZAxisAPI()
     main_title: MainTitleAPI = MainTitleAPI()
     size_ratio: SizeRatioAPI = SizeRatioAPI()
+
+    class Config:
+        """Configurations for the RIXSPlotAPI class."""
+
+        arbitrary_types_allowed = True

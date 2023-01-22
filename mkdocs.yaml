@@ -154,6 +154,7 @@ nav:
           - Default Plot: examples/example9_1.ipynb
           - Dark Theme: examples/example9_2.ipynb
           - Export Results: examples/example9_3.ipynb
+          - RIXS Map Visualization: examples/example9_4.ipynb
   - Documentation:
       - Models: doc/models.md
       - Expression: doc/expression.md
