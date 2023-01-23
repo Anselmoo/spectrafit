@@ -335,9 +335,9 @@ class PrintingResults:
     def __call__(self) -> None:
         """Print the results of the fitting process."""
         if self.args["verbose"] == 1:
-            self.printing_verbose_mode
+            self.printing_verbose_mode()
         elif self.args["verbose"] == 2:
-            self.printing_regular_mode
+            self.printing_regular_mode()
 
     @staticmethod
     def print_tabulate(args: Dict[str, Any]) -> None:
@@ -355,7 +355,6 @@ class PrintingResults:
             )
         )
 
-    @property
     def printing_regular_mode(self) -> None:
         """Print the fitting results in the regular mode."""
         self.print_statistic()
@@ -400,7 +399,6 @@ class PrintingResults:
         print("\nRegression Metrics:\n")
         self.print_tabulate(args=self.args["regression_metrics"])
 
-    @property
     def printing_verbose_mode(self) -> None:
         """Print all results in verbose mode."""
         self.print_statistic_verbose()
