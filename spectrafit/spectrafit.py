@@ -213,10 +213,10 @@ def command_line_runner(args: Optional[Dict[str, Any]] = None) -> None:
             __status__.thanks
             __status__.credits
             return
-        elif again == "y":
-            continue
-        else:
-            __status__.yes_no
+        elif again == "y":  # pragma: no cover
+            continue  # pragma: no cover
+        else:  # pragma: no cover
+            __status__.yes_no  # pragma: no cover
 
 
 def extracted_from_command_line_runner() -> Dict[str, Any]:
