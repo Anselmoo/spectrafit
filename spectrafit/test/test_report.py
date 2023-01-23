@@ -1,15 +1,19 @@
 """Pytest of report model."""
 from typing import Any
 from typing import Dict
+from typing import Union
 
 import numpy as np
 import pandas as pd
 import pytest
 
+from lmfit import Parameter
+from lmfit import Parameters
 from pytest_mock.plugin import MockerFixture
 from spectrafit.report import PrintingResults
 from spectrafit.report import RegressionMetrics
 from spectrafit.report import _extracted_gof_from_results
+from spectrafit.report import get_init_value
 
 
 class TestRegressionMetrics:
@@ -85,3 +89,55 @@ def test_printing_results() -> None:
     )
     pr.print_confidence_interval()
     assert pr.args["confidence_interval"] == {}
+
+
+@pytest.fixture(
+    scope="module",
+    name="par_init",
+)
+def par_init() -> Parameter:
+    """Parameter with init value."""
+    return Parameter(name="par_init", value=1.0)
+
+
+@pytest.fixture(
+    scope="module",
+    name="par_expr",
+)
+def par_expr() -> Parameter:
+    """Parameter with expression."""
+    return Parameter(name="par_expr", expr="par_init")
+
+
+@pytest.fixture(
+    scope="module",
+    name="par_model",
+)
+def par_model() -> Dict[str, Union[Parameter, Parameters]]:
+    """Parameter with expression."""
+    modelpars = Parameters()
+    modelpars.add("param", value=2.0)
+
+    return {"param": Parameter(name="param"), "modelpars": modelpars}
+
+
+@pytest.fixture(
+    scope="module",
+    name="par_fixed",
+)
+def par_fixed() -> Parameter:
+    """Parameter with expression."""
+    return Parameter(name="par_fixed", value=None, vary=False, min=3.0)
+
+
+def test_get_init_value(
+    par_init: Parameter,
+    par_expr: Parameter,
+    par_model: Dict[str, Union[Parameter, Parameters]],
+    par_fixed: Parameter,
+) -> None:
+    """Test of the get init value."""
+    assert get_init_value(par_init) == 1.0
+    assert get_init_value(par_expr) == f"As expressed value: {par_expr.expr}"
+    assert get_init_value(**par_model) == 2.0
+    assert get_init_value(par_fixed) == f"As fixed value: {par_fixed.min}"

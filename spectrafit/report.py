@@ -7,12 +7,14 @@ from typing import Hashable
 from typing import List
 from typing import Optional
 from typing import Tuple
+from typing import Union
 
 import numpy as np
 import pandas as pd
 
 from art import tprint
 from lmfit import Minimizer
+from lmfit import Parameter
 from lmfit import Parameters
 from lmfit import conf_interval
 from lmfit import report_ci
@@ -199,28 +201,24 @@ def fit_report_as_dict(
     )
     for name in parnames:
         par = params[name]
-        buffer["variables"][name] = {}
+        buffer["variables"][name] = {"init_value": get_init_value(param=par)}
 
-        if par.init_value is not None:
-            buffer["variables"][name]["init_value"] = par.init_value
-        elif par.expr is not None:
-            buffer["variables"][name]["init_value"] = f"As expressed value: {par.expr}"
-        else:
-            buffer["variables"][name]["init_value"] = f"As fixed value: {par.value}"
         if modelpars is not None and name in modelpars:
             buffer["variables"][name]["model_value"] = modelpars[name].value
         try:
             buffer["variables"][name]["best_value"] = par.value
-        except (TypeError, ValueError):
-            buffer["variables"][name]["init_value"] = "NonNumericValue"
+        except (TypeError, ValueError):  # pragma: no cover
+            buffer["variables"][name][
+                "init_value"
+            ] = "NonNumericValue"  # pragma: no cover
         if par.stderr is not None:
             buffer["variables"][name]["error_relative"] = par.stderr
             try:
                 buffer["variables"][name]["error_absolute"] = (
                     abs(par.stderr / par.value) * 100
                 )
-            except ZeroDivisionError:
-                buffer["variables"][name]["error_absolute"] = np.inf
+            except ZeroDivisionError:  # pragma: no cover
+                buffer["variables"][name]["error_absolute"] = np.inf  # pragma: no cover
 
     for i, name_1 in enumerate(parnames):
         par = params[name_1]
@@ -242,6 +240,27 @@ def fit_report_as_dict(
                 name_2: result.covar[i, j] for j, name_2 in enumerate(parnames)
             }
     return buffer
+
+
+def get_init_value(
+    param: Parameter, modelpars: Optional[Parameter] = None
+) -> Union[float, str]:
+    """Get the initial value of a parameter.
+
+    Args:
+        param (Parameter): The Parameter to extract the initial value from.
+        modelpars (Parameter], optional): Known Model Parameters. Defaults to None.
+
+    Returns:
+        Union[float, str]: The initial value.
+    """
+    if param.init_value is not None:
+        return param.init_value
+    if param.expr is not None:
+        return f"As expressed value: {param.expr}"
+    if modelpars is not None and param.name in modelpars:
+        return modelpars[param.name].value
+    return f"As fixed value: {param.value}"
 
 
 def _extracted_gof_from_results(

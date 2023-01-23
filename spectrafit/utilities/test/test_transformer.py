@@ -80,5 +80,5 @@ def test_converter(
 
 def test_remove_none_type() -> None:
     """Test remove_none_type function."""
-    d = {"a": None, "b": {"c": None, "d": {"e": None, "f": 1}}}
-    assert remove_none_type(d) == {"b": {"d": {"f": 1}}}
+    d = {"a": None, "b": {"c": None, "d": {"e": None, "f": [1, None]}}}
+    assert remove_none_type(d) == {"b": {"d": {"f": [1]}}}

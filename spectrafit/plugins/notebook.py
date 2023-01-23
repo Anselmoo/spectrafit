@@ -665,7 +665,7 @@ class ExportReport(SolverResults):
             linear_correlation=self.get_linear_correlation,
             component_correlation=self.get_component_correlation,
             confidence_interval=self.get_confidence_interval,
-            covariance_matrix=self.get_component_correlation,
+            covariance_matrix=self.get_covariance_matrix,
             variables=self.get_variables,
             errorbars=self.get_errorbars,
         )
