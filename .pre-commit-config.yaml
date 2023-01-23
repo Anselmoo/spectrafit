@@ -52,12 +52,12 @@ repos:
             pytest==6.2.5,
           ]
   - repo: https://github.com/pycqa/pydocstyle
-    rev: 6.2.3
+    rev: 6.3.0
     hooks:
       - id: pydocstyle
         additional_dependencies: [toml==0.10.2]
   - repo: https://github.com/PyCQA/pylint
-    rev: "v2.16.0b0"
+    rev: "v2.16.0b1"
     hooks:
       - id: pylint
         additional_dependencies: [toml==0.10.2]
