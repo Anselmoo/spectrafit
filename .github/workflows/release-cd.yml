@@ -4,6 +4,10 @@ on:
     types:
       - published
 
+permissions:
+  contents: read
+  packages: write
+
 env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: ghcr.io
@@ -21,35 +25,21 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: 3.x
-      - name: Install Poetry
-        uses: snok/install-poetry@v1
-        with:
-          virtualenvs-create: true
-          virtualenvs-in-project: true
-          virtualenvs-path: .venv
-          installer-parallel: true
-      # - name: Load cached venv
-      #   id: cached-poetry-dependencies
-      #   uses: actions/cache@v3
-      #   with:
-      #     path: .venv
-      #     key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
-      # - name: Install dependencies
-      #   if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-      #   run: poetry install --no-interaction --no-root --only main --all-extras
-      - name: Install library
-        run: poetry install --no-interaction --only main --all-extras
-      - name: Build and publish
+      - name: Install dependencies
         run: |
-          poetry config pypi-token.pypi ${{ secrets.TWINE_TOKEN }}
-          poetry publish --build
+          python -m pip install --upgrade pip
+          pip install build
+      - name: Build package
+        run: python -m build
+      - name: Publish package
+        uses: pypa/gh-action-pypi-publish@27b31702a0e7fc50959f5ad993c78deac1bdfc29
+        with:
+          user: __token__
+          password: ${{ secrets.TWINE_TOKEN }}
         continue-on-error: true
   Docker:
     if: github.repository == 'Anselmoo/spectrafit'
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
 
     steps:
       - name: Checkout repository
