@@ -113,12 +113,13 @@ class ColorAPI(BaseModel):
     components: str = Field(
         default=PlotlyColors[6], description="Color of the components, mainly peaks."
     )
-    # Merging two color list to onw list with switchin the order of the colors
     bars: List[str] = Field(
         default=[i for j in zip(Teal_r, Purp_r) for i in j],
         description="Color of the bar plot of the metrics.",
     )
-    lines: List[str] = Field(default=Burg, description="Color of the lines plot.")
+    lines: List[str] = Field(
+        default=Burg, description="Color of the lines of the plot."
+    )
     paper: str = Field(default="white", description="Color of the paper.")
     plot: str = Field(default="white", description="Color of the plot.")
     color: str = Field(default="black", description="Color of the text.")
@@ -129,7 +130,7 @@ class ColorAPI(BaseModel):
     font: str = Field(default="black", description="Font color of the plot.")
 
     @validator(
-        "page",
+        "paper",
         "layout",
         "grid",
         "line",
