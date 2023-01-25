@@ -108,11 +108,11 @@ jobs:
       - name: Deploy documentation develops
         if: contains(github.ref, 'refs/heads/main')
         run: poetry run mkdocs gh-deploy --clean --force
-  devcontainer:
-    name: Devcontainer
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Build devcontainer
-        uses: devcontainers/ci@v0.2
+  # devcontainer:
+  #   name: Devcontainer
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - name: Build devcontainer
+  #       uses: devcontainers/ci@v0.2
