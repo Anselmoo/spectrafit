@@ -157,30 +157,30 @@ class TestPrintingStatus:
 
     def test_welcome(self, capfd: Any) -> None:
         """Test of the welcome message."""
-        self.ps.welcome
+        self.ps.welcome()
         self.assert_capfd(capfd=capfd)
 
     def test_version(self, capfd: Any) -> None:
         """Test of the version message."""
-        self.ps.version
+        self.ps.version()
         self.assert_capfd(capfd=capfd)
 
     def test_start(self, capfd: Any) -> None:
         """Test of the start message."""
-        self.ps.start
+        self.ps.start()
         self.assert_capfd(capfd=capfd)
 
     def test_end(self, capfd: Any) -> None:
         """Test of the end message."""
-        self.ps.end
+        self.ps.end()
         self.assert_capfd(capfd=capfd)
 
     def test_yes_no(self, capfd: Any) -> None:
         """Test of the yes no message."""
-        self.ps.yes_no
+        self.ps.yes_no()
         self.assert_capfd(capfd=capfd)
 
     def test_credits(self, capfd: Any) -> None:
         """Test of the credits message."""
-        self.ps.credits
+        self.ps.credits()
         self.assert_capfd(capfd=capfd)
