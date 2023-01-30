@@ -155,6 +155,7 @@ nav:
           - Dark Theme: examples/example9_2.ipynb
           - Export Results: examples/example9_3.ipynb
           - RIXS Map Visualization: examples/example9_4.ipynb
+          - Using Converters as Module: examples/example9_5.ipynb
   - Documentation:
       - Models: doc/models.md
       - Expression: doc/expression.md
@@ -165,6 +166,9 @@ nav:
       - File-Format-Conversion: plugins/file-converter.md
       - Data-Format-Conversion: plugins/data-converter.md
       - Jupyter-Notebook-Integration: plugins/jupyter-interface.md
+      - RIXS-Visualization: plugins/rixs-visualization.md
+      - RIXS-Converter: plugins/rixs-converter.md
+      - PKL-Converter and Visualizer: plugins/pkl-converter_visualization.md
   - API:
       - SpectraFit: api/spectrafit_api.md
       - Plotting: api/plotting_api.md

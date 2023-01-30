@@ -15,6 +15,26 @@ pip install git+https://github.com/Anselmoo/SpectraFit.git
 pip install spectrafit
 ```
 
+### With extensions
+
+For the `jupyter` support, the following command can be used:
+
+```terminal
+pip install spectrafit[jupyter-dash]
+```
+
+For the graph visualization, the following command can be used:
+
+```terminal
+pip install spectrafit[graph]
+```
+
+For all extensions, the following command can be used:
+
+```terminal
+pip install spectrafit[all]
+```
+
 ## via Environment
 
 To keep the system environment clean, the installation is done via the:
@@ -62,6 +82,26 @@ To keep the system environment clean, the installation is done via the:
 
     # To test
     python -c "from spectrafit.plugins.notebook import SpectraFitNotebook"
+    ```
+
+    For include the `graph` support, the following command can be used:
+
+    ```terminal
+
+    conda install -c conda-forge spectrafit-graph
+
+    # To test
+    python -c "from spectrafit.plugins.graph import SpectraFitGraph"
+    ```
+    For include the `all` support, the following command can be used:
+
+    ```terminal
+
+    conda install -c conda-forge spectrafit-all
+
+    # To test
+    python -c "from spectrafit.plugins.notebook import SpectraFitNotebook"
+    python -c "from spectrafit.plugins.graph import SpectraFitGraph"
     ```
 
     Extended documentation about the installation of `SpectraFit` via conda can

@@ -43,6 +43,10 @@ pip install spectrafit
 
 pip install spectrafit[jupyter]
 
+# with all upcomming features
+
+pip install spectrafit[all]
+
 # Upgrade
 
 pip install spectrafit --upgrade
