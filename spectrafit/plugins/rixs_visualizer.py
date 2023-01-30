@@ -1,8 +1,11 @@
 """This module contains the RIXS visualizer class."""
 
+import argparse
+import json
 import logging
 
 from pathlib import Path
+from typing import Any
 from typing import Dict
 from typing import List
 from typing import Optional
@@ -14,6 +17,7 @@ import numpy as np
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
+import tomli
 
 from dash import dcc
 from dash import html
@@ -22,6 +26,7 @@ from dash_bootstrap_templates import template_from_url
 from jupyter_dash import JupyterDash
 from numpy.typing import NDArray
 from spectrafit.api.rixs_model import MainTitleAPI
+from spectrafit.api.rixs_model import RIXSModelAPI
 from spectrafit.api.rixs_model import SizeRatioAPI
 from spectrafit.api.rixs_model import XAxisAPI
 from spectrafit.api.rixs_model import YAxisAPI
@@ -225,7 +230,7 @@ class RIXSFigure:
         return fig
 
 
-class RIXSApp(RIXSFigure):
+class RIXSApp(RIXSFigure):  # pragma: no cover
     """Create the RIXS app.
 
     !!! info "About the RIXS app"
@@ -532,12 +537,12 @@ class RIXSApp(RIXSFigure):
         ) -> Tuple[go.Figure, go.Figure, go.Figure]:
             if hoverData is None:
                 return (
-                    self.create_xes(
+                    self.create_xas(
                         x=self.incident_energy,
                         y=self.rixs_map[:, int(self.emission_energy.size / 2)],
                         template=template_from_url(theme),
                     ),
-                    self.create_xas(
+                    self.create_xes(
                         x=self.emission_energy,
                         y=self.rixs_map[int(self.incident_energy.size / 2), :],
                         template=template_from_url(theme),
@@ -550,14 +555,14 @@ class RIXSApp(RIXSFigure):
                 )
             x = hoverData["points"][0]["x"]
             y = hoverData["points"][0]["y"]
-            xes_fig = self.create_xes(
+            xes_fig = self.create_xas(
                 x=self.incident_energy,
-                y=self.rixs_map[:, int(y)],
+                y=self.rixs_map[:, int(x)],
                 template=template_from_url(theme),
             )
-            xas_fig = self.create_xas(
+            xas_fig = self.create_xes(
                 x=self.emission_energy,
-                y=self.rixs_map[int(x), :],
+                y=self.rixs_map[int(y), :],
                 template=template_from_url(theme),
             )
             rixs_fig = self.create_rixs(
@@ -570,15 +575,15 @@ class RIXSApp(RIXSFigure):
             cx = clickData["points"][0]["x"]
             cy = clickData["points"][0]["y"]
             pd.DataFrame(
-                {"energy": self.incident_energy, "intensity": self.rixs_map[:, int(cy)]}
+                {"energy": self.emission_energy, "intensity": self.rixs_map[int(cy), :]}
             ).to_csv(
-                self.fdir / f"xes_cut_{np.round(cy, 8)}.txt",
+                self.fdir / f"xes_cut_{np.round(cx, 8)}.txt",
                 index=False,
             )
             pd.DataFrame(
-                {"energy": self.emission_energy, "intensity": self.rixs_map[int(cx), :]}
+                {"energy": self.incident_energy, "intensity": self.rixs_map[:, int(cx)]}
             ).to_csv(
-                self.fdir / f"xas_cut_{np.round(cx, 8)}.txt",
+                self.fdir / f"xas_cut_{np.round(cy, 8)}.txt",
                 index=False,
             )
             return xes_fig, xas_fig, rixs_fig
@@ -587,3 +592,70 @@ class RIXSApp(RIXSFigure):
             app.run_server(mode=self.mode, debug=self.debug, port=self.port)
         else:
             app.run_server(debug=self.debug, port=self.port)
+
+
+class RIXSVisualizer:
+    """RIXS Visualizer. This class is used to visualize RIXS data."""
+
+    def get_args(self) -> Dict[str, Any]:
+        """Get the arguments from the command line.
+
+        Returns:
+            Dict[str, Any]: Return the input file arguments as a dictionary without
+                additional information beyond the command line arguments.
+        """
+        parser = argparse.ArgumentParser(
+            description="`RIXS-Visualizer` is a simple RIXS plane viewer, which "
+            "allows to visualize RIXS data in a 2D plane."
+        )
+        parser.add_argument(
+            "infile",
+            type=Path,
+            help="The input file. This can be a json, toml, npy, or npz file.",
+        )
+        return vars(parser.parse_args())
+
+    @staticmethod
+    def load_data(infile: Path) -> RIXSModelAPI:
+        """Load the data from the input file.
+
+        Args:
+            infile (Path): The input file path. This can be a json, toml, npy, or npz
+                file.
+
+        Raises:
+            ValueError: If the file type is not supported.
+
+        Returns:
+            RIXSModelAPI: The data as a pydantic model object with the following
+                attributes: incident_energy, emission_energy, and rixs_map. The
+                incident_energy and emission_energy are 1D arrays, and the rixs_map is
+                a 2D array.
+        """
+        if infile.suffix == ".npy":
+            data = np.load(infile, allow_pickle=True).item()
+        elif infile.suffix == ".npz":
+            data = np.load(infile, allow_pickle=True)
+        elif infile.suffix == ".json":
+            with open(infile, encoding="utf-8") as f:
+                data = json.load(f)
+        elif infile.suffix in {".toml", ".lock"}:
+            with open(infile, "rb") as f:
+                data = tomli.load(f)
+        else:
+            raise ValueError(f"File type {infile.suffix} is not supported.")
+        return RIXSModelAPI(
+            incident_energy=np.array(data["incident_energy"]),
+            emission_energy=np.array(data["emission_energy"]),
+            rixs_map=np.array(data["rixs_map"]),
+        )
+
+    def __call__(self) -> None:  # pragma: no cover
+        """Run the RIXS Visualizer."""
+        app = RIXSApp(**self.load_data(self.get_args()["infile"]).dict())
+        app.app_run()
+
+
+def command_line_runner() -> None:
+    """Run the RIXS Visualizer from the command line."""
+    RIXSVisualizer()()

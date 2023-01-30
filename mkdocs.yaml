@@ -64,8 +64,8 @@ plugins:
   - autorefs
   - section-index
   - mkdocs-jupyter:
-      ignore_h1_titles: True
-      include_source: True
+      ignore_h1_titles: true
+      include_source: true
       execute: true
   - literate-nav:
       nav_file: SUMMARY.md
@@ -173,7 +173,7 @@ nav:
       - Reporting: api/reporting_api.md
       - Tools: api/tools_api.md
       - Data Model: api/data_model_api.md
-      - Converters: api/converter_api.md
+      - Converters and Visualizer: api/converter_api.md
   - Support:
       - Contact: contact.md
       - License: license.md

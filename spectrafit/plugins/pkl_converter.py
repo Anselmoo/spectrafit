@@ -13,12 +13,12 @@ from typing import Optional
 import numpy as np
 
 from spectrafit.plugins.converter import Converter
-from spectrafit.tools import pkl2dict
+from spectrafit.tools import pkl2any
 from spectrafit.tools import pure_fname
 
 
 pkl_gz = "pkl.gz"
-choices = {"latin1", "utf-8", "utf-16", "utf-32"}
+choices_fformat = {"latin1", "utf-8", "utf-16", "utf-32"}
 choices_export = {"npy", "npz", "pkl", pkl_gz}
 
 
@@ -69,11 +69,10 @@ class ExportData:
     def __call__(self) -> None:
         """Export the data to a file."""
         if self.export_format in {"npy", "npz"}:
-            self.to_numpy
+            self.to_numpy()
         elif self.export_format in {"pkl", pkl_gz}:
-            self.to_pickle
+            self.to_pickle()
 
-    @property
     def to_numpy(self) -> None:
         """Export the data to a numpy file."""
         _data: Any = self.data
@@ -82,7 +81,6 @@ class ExportData:
         elif self.export_format.lower() == "npz":
             np.savez(self.fname, data=_data)
 
-    @property
     def to_pickle(self) -> None:
         """Export the data to a pickle file."""
         if self.export_format.lower() == "pkl":
@@ -151,7 +149,7 @@ class PklConverter(Converter):
             " Default is 'latin1'.",
             type=str,
             default="latin1",
-            choices=choices,
+            choices=choices_fformat,
         )
         parser.add_argument(
             "-e",
@@ -210,7 +208,7 @@ class PklConverter(Converter):
             return data_list
 
         data_dict = {}
-        for key, value in pkl2dict(infile, file_format).items():
+        for key, value in pkl2any(infile, file_format).items():
             if isinstance(value, dict):
                 data_dict[key] = _convert(value)
         return data_dict

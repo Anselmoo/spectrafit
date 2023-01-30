@@ -410,7 +410,7 @@ class TestSpectraFitNotebook:
     ) -> None:
         """Test the plot function."""
         with mock.patch(__plotly_io_show__) as mock_show:
-            class_spectrafit["sp"].plot_fit_df
+            class_spectrafit["sp"].plot_fit_df()
             mock_show.assert_called_once()
 
     def test_display(

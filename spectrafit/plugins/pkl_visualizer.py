@@ -13,11 +13,11 @@ import networkx as nx
 import numpy as np
 
 from spectrafit.plugins.converter import Converter
-from spectrafit.tools import pkl2dict
+from spectrafit.tools import pkl2any
 from spectrafit.tools import pure_fname
 
 
-choices = {"latin1", "utf-8", "utf-16", "utf-32"}
+choices_fformat = {"latin1", "utf-8", "utf-16", "utf-32"}
 choices_export = {"png", "pdf", "jpg", "jpeg"}
 
 
@@ -46,7 +46,7 @@ class PklVisualizer(Converter):
             " Default is 'latin1'.",
             type=str,
             default="latin1",
-            choices=choices,
+            choices=choices_fformat,
         )
         parser.add_argument(
             "-e",
@@ -73,7 +73,7 @@ class PklVisualizer(Converter):
         Returns:
             Dict[str, Any]: The data as a dictionary, which can be a nested dictionary.
         """
-        data = PklVisualizer().get_type(pkl2dict(infile, encoding=file_format))
+        data = PklVisualizer().get_type(pkl2any(infile, encoding=file_format))
         if not isinstance(data, dict):
             raise ValueError(f"Data is not a dictionary: {data}")
         graph = PklVisualizer().create_graph(fname=infile, data_dict=data)

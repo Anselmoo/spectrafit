@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "SpectraFit"
-version = "0.15.0b3"
+version = "0.15.0b4"
 description = "Fast fitting of 2D- and 3D-Spectra with established routines"
 readme = "README.md"
 authors = ["Anselm Hahn <anselm.hahn@gmail.com>"]
@@ -82,11 +82,11 @@ exclude = ["docs/", "tools/"]
   pytest-console-scripts = "^1.3.1"
   pytest-xdist = "^2.5.0"
   pytest-plt = "^1.1.0"
+  pytest-mock = "^3.10.0"
   types-toml = "^0.10.8"
   types-PyYAML = "^6.0.11"
   types-tabulate = "^0.8.11"
   types-mock = "^4.0.15"
-  pytest-mock = "^3.10.0"
   nptyping = { extras = ["complete"], version = "^2.4.1" }
   dash = { extras = ["testing"], version = "^2.7.1" }
 
@@ -109,6 +109,8 @@ spectrafit-file-converter = "spectrafit.plugins.file_converter:command_line_runn
 spectrafit-data-converter = "spectrafit.plugins.data_converter:command_line_runner"
 spectrafit-pkl-visualizer = "spectrafit.plugins.pkl_visualizer:command_line_runner"
 spectrafit-pkl-converter = "spectrafit.plugins.pkl_converter:command_line_runner"
+spectrafit-rixs-converter = "spectrafit.plugins.rixs_converter:command_line_runner"
+spectrafit-rixs-visualizer = "spectrafit.plugins.rixs_visualizer:command_line_runner"
 spectrafit-jupyter = "spectrafit.app.app:jupyter"
 
 
@@ -178,7 +180,7 @@ ignore = ["E203", "W503", "W605"]
 script_launch_mode = "subprocess"
   [tool.pytest.ini_options]
   minversion = "7.0"
-  addopts = "--cov=spectrafit/ --cov-report=xml -ra -q"
+  addopts = "--cov=./spectrafit/ --cov-report=xml -ra -q  -s -vv --diff-symbols --plots"
   testpaths = ["spectrafit"]
 
 [tool.pydocstyle]

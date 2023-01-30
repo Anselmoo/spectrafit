@@ -69,6 +69,23 @@ class SizeRatioAPI(BaseModel):
     )
 
 
+class RIXSModelAPI(BaseModel):
+    """Definition of the RIXS model."""
+
+    incident_energy: NDArray[np.float64] = Field(
+        ..., description="Incident energy values."
+    )
+    emission_energy: NDArray[np.float64] = Field(
+        ..., description="Emission energy values."
+    )
+    rixs_map: NDArray[np.float64] = Field(..., description="RIXS map values.")
+
+    class Config:
+        """Configurations for the RIXSModelAPI class."""
+
+        arbitrary_types_allowed = True
+
+
 class RIXSPlotAPI(BaseModel):
     """Definition of the plotly figure."""
 

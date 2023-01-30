@@ -2,6 +2,3 @@ coverage:
   precision: 2
   round: up
   range: "90...100"
-
-ignore:
-  - "spectrafit/plugins/rixs_visualizer.py"

@@ -208,9 +208,7 @@ def fit_report_as_dict(
         try:
             buffer["variables"][name]["best_value"] = par.value
         except (TypeError, ValueError):  # pragma: no cover
-            buffer["variables"][name][
-                "init_value"
-            ] = "NonNumericValue"  # pragma: no cover
+            buffer["variables"][name]["init_value"] = "NonNumericValue"
         if par.stderr is not None:
             buffer["variables"][name]["error_relative"] = par.stderr
             try:
@@ -218,7 +216,7 @@ def fit_report_as_dict(
                     abs(par.stderr / par.value) * 100
                 )
             except ZeroDivisionError:  # pragma: no cover
-                buffer["variables"][name]["error_absolute"] = np.inf  # pragma: no cover
+                buffer["variables"][name]["error_absolute"] = np.inf
 
     for i, name_1 in enumerate(parnames):
         par = params[name_1]
@@ -249,7 +247,7 @@ def get_init_value(
 
     Args:
         param (Parameter): The Parameter to extract the initial value from.
-        modelpars (Parameter], optional): Known Model Parameters. Defaults to None.
+        modelpars (Parameter, optional): Known Model Parameters. Defaults to None.
 
     Returns:
         Union[float, str]: The initial value.
@@ -443,37 +441,30 @@ class PrintingResults:
 class PrintingStatus:
     """Print the status of the fitting process."""
 
-    @property
     def welcome(self) -> None:
         """Print the welcome message."""
         tprint("SpectraFit", font="3-d")
 
-    @property
     def version(self) -> None:
         """Print current version of the SpectraFit."""
         print(f"Currently used version is: {__version__}")
 
-    @property
     def start(self) -> None:
         """Print the start of the fitting process."""
         print("\nStart of the fitting process:\n")
 
-    @property
     def end(self) -> None:
         """Print the end of the fitting process."""
         print("\nEnd of the fitting process:\n")
 
-    @property
     def thanks(self) -> None:
         """Print the end of the fitting process."""
         print("\nThanks for using SpectraFit!")
 
-    @property
     def yes_no(self) -> None:
         """Print the end of the fitting process."""
         print("\nDo you want to continue? (y/n)")
 
-    @property
     def credits(self) -> None:
         """Print the credits of the fitting process."""
         tprint("\nCredits:\n", font="3-d")

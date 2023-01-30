@@ -7,10 +7,12 @@ import pickle
 from pathlib import Path
 from typing import Any
 from typing import Dict
+from typing import Tuple
 
 import numpy as np
 import pandas as pd
 import pytest
+import toml
 import tomli
 import tomli_w
 import yaml
@@ -24,6 +26,7 @@ from spectrafit.plugins.file_converter import FileConverter
 from spectrafit.plugins.pkl_converter import ExportData
 from spectrafit.plugins.pkl_converter import PklConverter
 from spectrafit.plugins.pkl_visualizer import PklVisualizer
+from spectrafit.plugins.rixs_converter import RIXSConverter
 
 
 class TestFileConverter:
@@ -72,7 +75,7 @@ class TestFileConverter:
         """Test illegal output format."""
         infile = tmp_path / "input_1.yaml"
 
-        with open(infile, "w", encoding="utf8") as f:
+        with open(infile, "w", encoding="utf-8") as f:
             yaml.dump({"a": [1, 2], "b": [2, 3]}, f)
 
         with pytest.raises(ValueError) as excinfo:
@@ -93,7 +96,7 @@ class TestFileConverter:
         """Test json to yaml conversion."""
         infile = tmp_path / "input_1.json"
 
-        with open(infile, "w", encoding="utf8") as f:
+        with open(infile, "w", encoding="utf-8") as f:
             json.dump({"a": 1, "b": 2}, f)
 
         FileConverter().save(
@@ -104,7 +107,7 @@ class TestFileConverter:
             fname=infile,
             export_format="yaml",
         )
-        with open(infile.with_suffix(".yaml"), encoding="utf8") as f:
+        with open(infile.with_suffix(".yaml"), encoding="utf-8") as f:
             data = yaml.safe_load(f)
 
         assert data == {"a": 1, "b": 2}
@@ -113,7 +116,7 @@ class TestFileConverter:
         """Test yaml to json conversion."""
         infile = tmp_path / "input_2.yaml"
 
-        with open(infile, "w", encoding="utf8") as f:
+        with open(infile, "w", encoding="utf-8") as f:
             yaml.dump({"a": 1, "b": 2}, f)
         FileConverter().save(
             data=FileConverter.convert(
@@ -131,7 +134,7 @@ class TestFileConverter:
     def test_cmd_file_converter_2(self, script_runner: Any, tmp_path: Path) -> None:
         """Test the file converter plugin."""
         fname = tmp_path / "input_4.yaml"
-        with open(fname, "w", encoding="utf8") as f:
+        with open(fname, "w", encoding="utf-8") as f:
             yaml.dump({"a": [1, 1], "b": [2, 2]}, f)
 
         ret = script_runner.run(
@@ -158,7 +161,7 @@ class TestFileConverter:
             fname=infile,
             export_format="json",
         )
-        with open(infile.with_suffix(".json"), encoding="utf8") as f:
+        with open(infile.with_suffix(".json"), encoding="utf-8") as f:
             data = json.load(f)
 
         assert data == {"a": 1, "b": 2}
@@ -178,7 +181,7 @@ class TestFileConverter:
             file_format (str): File format to convert to.
         """
         infile = tmp_path / "input_3.yaml"
-        with open(infile, "w", encoding="utf8") as f:
+        with open(infile, "w", encoding="utf-8") as f:
             yaml.dump({"a": 1, "b": 2}, f)
 
         FileConverter().save(
@@ -191,7 +194,7 @@ class TestFileConverter:
         )
 
         if file_format == "json":
-            with open(infile.with_suffix(f".{file_format}"), encoding="utf8") as f:
+            with open(infile.with_suffix(f".{file_format}"), encoding="utf-8") as f:
                 data_json = json.load(f)
                 assert data_json == {"a": 1, "b": 2}
 
@@ -212,7 +215,7 @@ def tmp_file_nor(tmp_path: Path) -> Path:
         Path: Path to temporary file.
     """
     tmp_file = tmp_path / "tmp_file.nor"
-    with open(tmp_file, "w", encoding="utf8") as f:
+    with open(tmp_file, "w", encoding="utf-8") as f:
         nor_format = (
             "# Demeter.output_filetype: multicolumn normalized mu(E)\n"
             "# Element.symbol: V\n"
@@ -246,7 +249,7 @@ def tmp_file_txt(tmp_path: Path) -> Path:
         Path: Path to temporary file.
     """
     tmp_file = tmp_path / "tmp_file.txt"
-    with open(tmp_file, "w", encoding="utf8") as f:
+    with open(tmp_file, "w", encoding="utf-8") as f:
         txt_format = (
             "energy\tJZP-4-merged\n"
             "5263.8492\t0.12737417\n"
@@ -769,3 +772,221 @@ class TestPklAsGraph:
         with pytest.raises(ValueError) as excinfo:
             PklVisualizer.convert(fname, file_format="latin2")
         assert "Data is not a dictionary:" in str(excinfo.value)
+
+
+@pytest.fixture(scope="function", autouse=True, name="tmp_list_dict_rixs")
+def fixture_tmp_list_dict_rixs(
+    tmp_path: Path,
+) -> Tuple[Path, Tuple[str, str, str]]:
+    """Fixture for temporary list of dictionaries.
+
+    Args:
+        tmp_path (Path): Temporary path.
+
+    Returns:
+        Tuple[Path, Tuple[str, str, str]]: Path to temporary file and keys of the
+            list of dictionaries.
+    """
+    fname = tmp_path / "tmp_list_dict_rixs.pkl"
+    inc_eng = np.linspace(0, 10, 11, dtype=np.float32)
+    exc_eng = np.linspace(0, 10, 11, dtype=np.float32)
+    xx, yy = np.meshgrid(inc_eng, exc_eng)
+    rixa_map = np.sin(xx) * np.cos(yy)
+    keys = ("inc_eng", "exc_eng", "rixs_map")
+    data_list_dict = [
+        {
+            keys[0]: inc_eng,
+            keys[1]: exc_eng,
+            keys[2]: rixa_map,
+        }
+    ]
+    with open(fname, "wb") as f:
+        pickle.dump(data_list_dict, f)
+    return fname, keys
+
+
+class TestRixsConverter:
+    """Test the rixs converter."""
+
+    def test_convertet(
+        self, tmp_list_dict_rixs: Tuple[Path, Tuple[str, str, str]]
+    ) -> None:
+        """Test the converter.
+
+        Args:
+            tmp_list_dict_rixs (Tuple[Path, Tuple[str, str, str]]): Path to temporary
+                file and keys of the list of dictionaries.
+        """
+        fname, keys = tmp_list_dict_rixs
+        converter = RIXSConverter()
+        data = converter.convert(fname, file_format="latin1")
+
+        assert isinstance(data, dict)
+        assert keys[0] in data
+        assert keys[1] in data
+        assert keys[2] in data
+
+    @pytest.mark.parametrize("export_format", ["json", "toml", "lock", "npy", "npz"])
+    def test_save(
+        self,
+        tmp_list_dict_rixs: Tuple[Path, Tuple[str, str, str]],
+        export_format: str,
+    ) -> None:
+        """Test the save function for various export formats.
+
+        Args:
+            tmp_list_dict_rixs (Tuple[Path, Tuple[str, str, str]]): Path to temporary
+                file and keys of the list of dictionaries.
+            export_format (str): Export format.
+        """
+        fname, keys = tmp_list_dict_rixs
+        converter = RIXSConverter()
+        data = converter.convert(fname, file_format="latin1")
+        converter.save(data, fname, export_format=export_format)
+
+        assert Path(fname.parent / f"{fname.stem}.{export_format}").exists()
+
+        if export_format == "json":
+            with open(fname.parent / f"{fname.stem}.json") as f:
+                data_json = json.load(f)
+            assert isinstance(data_json, dict)
+            assert np.allclose(data_json[keys[0]], data[keys[0]])
+
+        if export_format in {"toml", "lock"}:
+            with open(fname.parent / f"{fname.stem}.{export_format}") as f:
+                data_toml = toml.load(f)
+            assert isinstance(data_toml, dict)
+            assert np.allclose(data_toml[keys[0]], data[keys[0]])
+
+        if export_format == "npy":
+            data_npy = np.load(fname.parent / f"{fname.stem}.npy", allow_pickle=True)
+            assert isinstance(data_npy, np.ndarray)
+            assert np.allclose(data_npy.item()[keys[0]], data[keys[0]])
+
+        if export_format == "npz":
+            data_npz = np.load(fname.parent / f"{fname.stem}.npz", allow_pickle=True)
+            assert isinstance(data_npz, np.lib.npyio.NpzFile)
+            assert np.allclose(data_npz[keys[0]], data[keys[0]])
+
+    def test_raise_error_save(
+        self, tmp_list_dict_rixs: Tuple[Path, Tuple[str, str, str]]
+    ) -> None:
+        """Test the raise error.
+
+        Args:
+            tmp_list_dict_rixs (Tuple[Path, Tuple[str, str, str]]): Path to temporary
+                file and keys of the list of dictionaries.
+        """
+        fname, _ = tmp_list_dict_rixs
+        converter = RIXSConverter()
+        data = converter.convert(fname, file_format="latin1")
+        with pytest.raises(ValueError) as excinfo:
+            converter.save(data, fname, export_format="pdf")
+        assert "Export format" in str(excinfo.value)
+
+    @pytest.mark.parametrize("mode", ["sum", "mean"])
+    def test_create_rixs(
+        self, tmp_list_dict_rixs: Tuple[Path, Tuple[str, str, str]], mode: str
+    ) -> None:
+        """Test the create rixs.
+
+        Args:
+            tmp_list_dict_rixs (Tuple[Path, Tuple[str, str, str]]): Path to temporary
+                file and keys of the list of dictionaries.
+            mode (str): Mode for the rixs map.
+        """
+        fname, keys = tmp_list_dict_rixs
+        converter = RIXSConverter()
+        data = converter.convert(fname, file_format="latin1")
+        rixs_map = converter.create_rixs(data, *keys, mode=mode).dict()
+
+        assert isinstance(rixs_map["rixs_map"], np.ndarray)
+        if mode == "mean":
+            assert np.allclose(rixs_map["rixs_map"], data[keys[2]].mean(axis=0))
+        elif mode == "sum":
+            assert np.allclose(rixs_map["rixs_map"], data[keys[2]].sum(axis=0))
+
+    def test_create_rixs_fail_1(
+        self, tmp_list_dict_rixs: Tuple[Path, Tuple[str, str, str]]
+    ) -> None:
+        """Test the create rixs fail.
+
+        Args:
+            tmp_list_dict_rixs (Tuple[Path, Tuple[str, str, str]]): Path to temporary
+                file and keys of the list of dictionaries.
+        """
+        fname, keys = tmp_list_dict_rixs
+        converter = RIXSConverter()
+        data = converter.convert(fname, file_format="latin1")
+
+        with pytest.raises(ValueError) as excinfo:
+            converter.create_rixs(data, *keys, mode="test")
+        assert "Mode" in str(excinfo.value)
+
+    @pytest.mark.parametrize(
+        "keys",
+        [
+            ("wrong_key", "exc_eng", "rixs_map"),
+            ("inc_eng", "wrong_key", "rixs_map"),
+            ("inc_eng", "exc_eng", "wrong_key"),
+        ],
+    )
+    def test_create_rixs_fail_2(
+        self,
+        tmp_list_dict_rixs: Tuple[Path, Tuple[str, str, str]],
+        keys: Tuple[str, str, str],
+    ) -> None:
+        """Test the create rixs fail.
+
+        Args:
+            tmp_list_dict_rixs (Tuple[Path, Tuple[str, str, str]]): Path to temporary
+                file and keys of the list of dictionaries.
+            keys (Tuple[str, str,str]): Tuple of the three keys, which contains one
+                wrong key for each.
+        """
+        fname, _ = tmp_list_dict_rixs
+        converter = RIXSConverter()
+        data = converter.convert(fname, file_format="latin1")
+
+        with pytest.raises(KeyError) as excinfo:
+            converter.create_rixs(data, *keys, mode="sum")
+        assert "Key" in str(excinfo.value)
+
+    @pytest.mark.parametrize(
+        "export_format",
+        ["npy", "npz", "json", "toml", "lock"],
+    )
+    def test_cmd_pkl_converter(
+        self,
+        script_runner: Any,
+        tmp_list_dict_rixs: Tuple[Path, Tuple[str, str, str]],
+        export_format: str,
+    ) -> None:
+        """Test the data converter plugin.
+
+        Args:
+            script_runner (Any): Script runner.
+            tmp_list_dict_rixs (Tuple[Path, Tuple[str, str, str]]): Path to temporary
+                file and keys of the list of dictionaries.
+            export_format (str): Export format.
+        """
+        ret = script_runner.run(
+            "spectrafit-rixs-converter",
+            str(tmp_list_dict_rixs[0]),
+            "--export-format",
+            export_format,
+            "-ie",
+            tmp_list_dict_rixs[1][0],
+            "-ee",
+            tmp_list_dict_rixs[1][1],
+            "-rm",
+            tmp_list_dict_rixs[1][2],
+        )
+
+        assert ret.success
+        assert ret.stdout == ""
+        assert ret.stderr == ""
+        assert Path(
+            tmp_list_dict_rixs[0].parent
+            / f"{tmp_list_dict_rixs[0].stem}.{export_format}"
+        ).exists()
