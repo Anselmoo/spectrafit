@@ -49,8 +49,7 @@ class DataFileAPI(BaseModel):
         """Check if the delimiter is valid."""
         if v in {" ", "\t", ",", ";", "|", r"\s+"}:
             return v
-        else:
-            raise ValueError(f" {v} is not a valid delimiter.")
+        raise ValueError(f" {v} is not a valid delimiter.")
 
     @validator("comment")
     @classmethod
@@ -58,5 +57,4 @@ class DataFileAPI(BaseModel):
         """Check if the comment marker is valid."""
         if v is None or v in {"#", "%"}:
             return v
-        else:
-            raise ValueError(f" {v} is not a valid comment marker.")
+        raise ValueError(f" {v} is not a valid comment marker.")

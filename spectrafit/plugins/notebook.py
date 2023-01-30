@@ -475,10 +475,6 @@ class SolverResults:
     def get_gof(self) -> Dict[str, float]:
         """Get the goodness of fit values.
 
-        Args:
-            export_df (bool, optional): Export the dictionary as dataframe, if True.
-                 Defaults to False.
-
         Returns:
             Dict[str, float]: Goodness of fit values as dictionary.
         """
@@ -693,9 +689,7 @@ class ExportReport(SolverResults):
         ).dict(exclude_none=True)
 
 
-class SpectraFitNotebook(
-    DataFramePlot, DataFrameDisplay, ExportResults, ExportReport, SolverResults
-):
+class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
     """Jupyter Notebook plugin for SpectraFit."""
 
     args: Dict[str, Any]
@@ -936,7 +930,6 @@ class SpectraFitNotebook(
             args_plot=self.args_plot, df_1=self.df_pre, df_2=self.df_org
         )
 
-    @property
     def plot_fit_df(self) -> None:
         """Plot the fit."""
         self.plot_2dataframes(args_plot=self.args_plot, df_1=self.df_fit)
@@ -1055,10 +1048,10 @@ class SpectraFitNotebook(
                 },
             )(),
         )()
-        self.update_metric
-        self.update_peaks
+        self.update_metric()
+        self.update_peaks()
         if show_plot:
-            self.plot_fit_df
+            self.plot_fit_df()
 
         if show_metric:
             self.plot_current_metric(
@@ -1071,7 +1064,6 @@ class SpectraFitNotebook(
         if show_peaks:
             self.interactive_display(df=self.df_peaks)
 
-    @property
     def update_peaks(self) -> None:
         """Update the peaks dataframe as multi-column dataframe.
 
@@ -1099,7 +1091,6 @@ class SpectraFitNotebook(
             ignore_index=True,
         )
 
-    @property
     def update_metric(self) -> None:
         """Update the metric dataframe."""
         self.df_metric = pd.concat(

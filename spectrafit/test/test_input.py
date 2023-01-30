@@ -1,8 +1,12 @@
 """Testing of the command line interface."""
+
+import sys
+
 from pathlib import Path
 from typing import Any
 
 import pandas as pd
+import pytest
 
 from numpy.testing import assert_almost_equal
 
@@ -38,6 +42,11 @@ class TestCommandLineRunner:
         assert ret.success
         assert ret.stderr == ""
 
+    @pytest.mark.skipif(
+        sys.platform == "win32",
+        reason="Skipping test on Windows due to different "
+        "behavior due to encoding issues.",
+    )
     def test_extended_verbose(self, monkeypatch: Any, script_runner: Any) -> None:
         """Testing the extended with verbose command."""
         monkeypatch.setattr("builtins.input", lambda _: "n")
@@ -54,6 +63,11 @@ class TestCommandLineRunner:
 class TestFileFormat:
     """Testing the file formats."""
 
+    @pytest.mark.skipif(
+        sys.platform == "win32",
+        reason="Skipping test on Windows due to different "
+        "behavior due to encoding issues.",
+    )
     def test_json_input(
         self, monkeypatch: Any, script_runner: Any, tmp_path: Path
     ) -> None:
@@ -72,6 +86,11 @@ class TestFileFormat:
         assert len(list(Path(tmp_path).glob("result_json*.json"))) == 1
         assert len(list(Path(tmp_path).glob("result_json*.csv"))) == 3
 
+    @pytest.mark.skipif(
+        sys.platform == "win32",
+        reason="Skipping test on Windows due to different "
+        "behavior due to encoding issues.",
+    )
     def test_yml_input(
         self, monkeypatch: Any, script_runner: Any, tmp_path: Path
     ) -> None:
@@ -90,6 +109,11 @@ class TestFileFormat:
         assert len(list(Path(tmp_path).glob("result_yml*.json"))) == 1
         assert len(list(Path(tmp_path).glob("result_yml*.csv"))) == 3
 
+    @pytest.mark.skipif(
+        sys.platform == "win32",
+        reason="Skipping test on Windows due to different "
+        "behavior due to encoding issues.",
+    )
     def test_yaml_input(
         self, monkeypatch: Any, script_runner: Any, tmp_path: Path
     ) -> None:
@@ -108,6 +132,11 @@ class TestFileFormat:
         assert len(list(Path(tmp_path).glob("result_yaml*.json"))) == 1
         assert len(list(Path(tmp_path).glob("result_yaml*.csv"))) == 3
 
+    @pytest.mark.skipif(
+        sys.platform == "win32",
+        reason="Skipping test on Windows due to different "
+        "behavior due to encoding issues.",
+    )
     def test_toml_input(
         self, monkeypatch: Any, script_runner: Any, tmp_path: Path
     ) -> None:
@@ -228,6 +257,11 @@ class TestMoreFeatures:
         assert_almost_equal(df_test["energy"].max(), 5.0, decimal=0)
         assert_almost_equal(df_test["energy"].min(), 0.0, decimal=0)
 
+    @pytest.mark.skipif(
+        sys.platform == "win32",
+        reason="Skipping test on Windows due to different "
+        "behavior due to encoding issues.",
+    )
     def test_all_models(self, monkeypatch: Any, script_runner: Any) -> None:
         """Testing test all models of spectrafit."""
         monkeypatch.setattr("builtins.input", lambda _: "n")
@@ -252,11 +286,6 @@ class TestMoreFeatures:
         )
         assert not ret.success
 
-        # assert ret.stderr == (
-        # f"ERROR: Input file {fname} has not supported file format.\n"
-        # "Supported fileformats are: '*.json', '*.yaml', and '*.toml'\n"
-        # )
-
     def test_not_allowed_input_2(self, monkeypatch: Any, script_runner: Any) -> None:
         """Testing missing mininizmer parameter in input."""
         monkeypatch.setattr("builtins.input", lambda _: "n")
@@ -267,7 +296,6 @@ class TestMoreFeatures:
             "spectrafit/test/scripts/test_missing_parameters_1.json",
         )
         assert not ret.success
-        # assert ret.stderr == "Missing 'minimizer' in 'parameters'!\n"
 
     def test_not_allowed_input_3(self, monkeypatch: Any, script_runner: Any) -> None:
         """Testing missing optimizer parameter in input."""
@@ -279,7 +307,6 @@ class TestMoreFeatures:
             "spectrafit/test/scripts/test_missing_parameters_2.json",
         )
         assert not ret.success
-        # assert ret.stderr == "Missing key 'optimizer' in 'parameters'!\n"
 
     def test_no_input(self, monkeypatch: Any, script_runner: Any) -> None:
         """Testing no provided input for spectrafit."""

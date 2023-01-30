@@ -795,15 +795,6 @@ class SolverModels(ModelParameters):
     ) -> NDArray[np.float64]:
         r"""Solving the fitting problem.
 
-        Args:
-            params (Dict[str, Parameters): The best-fit parameters resulting
-                 from the fit.
-            x (NDArray[np.float64]): `x`-values of the data.
-            data (NDArray[np.float64]): `y`-values of the data as 1d-array.
-
-        Returns:
-            NDArray[np.float64]: The best-fitted data based on the proposed model.
-
         !!! note "About implemented models"
             `solve_local_fitting` is a wrapper function for the calling the implemented
             moldels. Based on the `params` dictionary, the function calls the
@@ -827,6 +818,14 @@ class SolverModels(ModelParameters):
             [1]: https://en.wikipedia.org/wiki/Voigt_profile#Pseudo-Voigt_approximation
             [2]: https://en.wikipedia.org/wiki/Power_law
             [3]: https://en.wikipedia.org/wiki/Inverse_trigonometric_functions
+
+        Args:
+            params (Dict[str, Parameters]): The best optimized parameters of the fit.
+            x (NDArray[np.float64]): `x`-values of the data.
+            data (NDArray[np.float64]): `y`-values of the data as 1d-array.
+
+        Returns:
+            NDArray[np.float64]: The best-fitted data based on the proposed model.
         """
         val = np.zeros(x.shape)
         peak_kwargs: Dict[Tuple[str, str], Parameters] = defaultdict(dict)
@@ -887,8 +886,7 @@ class SolverModels(ModelParameters):
 
 
         Args:
-            params (Dict[str, Parameters): The best-fit parameters resulting
-                 from the fit.
+            params (Dict[str, Parameters]): The best optimized parameters of the fit.
             x (NDArray[np.float64]): `x`-values of the data.
             data (NDArray[np.float64]): `y`-values of the data as 2D-array.
 
@@ -943,6 +941,11 @@ def calculated_model(
 ) -> pd.DataFrame:
     r"""Calculate the single contributions of the models and add them to the dataframe.
 
+    !!! note "About calculated models"
+        `calculated_model` are also wrapper functions similar to `solve_model`. The
+        overall goal is to extract from the best parameters the single contributions in
+        the model. Currently, `lmfit` provides only a single model, so the best-fit.
+
     Args:
         params (Dict[str, Parameters]): The best optimized parameters of the fit.
         x (NDArray[np.float64]): `x`-values of the data.
@@ -954,11 +957,6 @@ def calculated_model(
     Returns:
         pd.DataFrame: Extended dataframe containing the single contributions of the
             models.
-
-    !!! note "About calculated models"
-        `calculated_model` are also wrapper functions similar to `solve_model`. The
-        overall goal is to extract from the best parameters the single contributions in
-        the model. Currently, `lmfit` provides only a single model, so the best-fit.
     """
     peak_kwargs: Dict[Any, Parameters] = defaultdict(dict)
 

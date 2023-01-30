@@ -16,7 +16,7 @@ from spectrafit.tools import PostProcessing
 from spectrafit.tools import PreProcessing
 from spectrafit.tools import SaveResult
 from spectrafit.tools import check_keywords_consistency
-from spectrafit.tools import pkl2dict
+from spectrafit.tools import pkl2any
 from spectrafit.tools import pure_fname
 from spectrafit.tools import unicode_check
 
@@ -303,7 +303,7 @@ class TestSaving:
             "data": random_dataframe,
         }
         with pytest.raises(FileNotFoundError):
-            SaveResult(random_dataframe, args).save_as_json
+            SaveResult(random_dataframe, args).save_as_json()
 
     def test_save_all(self, random_dataframe: pd.DataFrame, tmp_path: Path) -> None:
         """Testing save all for no file."""
@@ -359,7 +359,7 @@ class TestPostProcessing:
             minimizer=minimizer,
             result=result,
         )
-        pp.make_insight_report
+        pp.make_insight_report()
         assert pp.args["confidence_interval"] == {}
 
 
@@ -382,10 +382,10 @@ class TestPickle:
 
         assert type(df) == pd.DataFrame
 
-    def test_pkl2dict(self, random_dataframe: pd.DataFrame, tmp_path: Path) -> None:
-        """Testing pkl2dict."""
+    def test_pkl2any(self, random_dataframe: pd.DataFrame, tmp_path: Path) -> None:
+        """Testing pkl2any."""
         args = {
-            "outfile": tmp_path / "test_pkl2dict.pkl",
+            "outfile": tmp_path / "test_pkl2any.pkl",
             "data": random_dataframe,
         }
         # write test file as pickle file with unicode utf-8
@@ -393,14 +393,14 @@ class TestPickle:
             pickle.dump(args["data"], f, protocol=pickle.HIGHEST_PROTOCOL)
 
         # read test file as pickle file
-        df = pkl2dict(args["outfile"])
+        df = pkl2any(args["outfile"])
 
         assert type(df) == pd.DataFrame
 
-    def test_pkl2dict_gz(self, random_dataframe: pd.DataFrame, tmp_path: Path) -> None:
-        """Testing pkl2dict."""
+    def test_pkl2any_gz(self, random_dataframe: pd.DataFrame, tmp_path: Path) -> None:
+        """Testing pkl2any."""
         args = {
-            "outfile": tmp_path / "test_pkl2dict.pkl.gz",
+            "outfile": tmp_path / "test_pkl2any.pkl.gz",
             "data": random_dataframe,
         }
         # write test file as pickle file with unicode utf-8
@@ -408,18 +408,18 @@ class TestPickle:
             pickle.dump(args["data"], f, protocol=pickle.HIGHEST_PROTOCOL)
 
         # read test file as pickle file
-        df = pkl2dict(args["outfile"])
+        df = pkl2any(args["outfile"])
 
         assert type(df) == pd.DataFrame
 
-    def test_pkl2dict_fail(self, tmp_path: Path) -> None:
-        """Testing pkl2dict."""
+    def test_pkl2any_fail(self, tmp_path: Path) -> None:
+        """Testing pkl2any."""
         args = {
-            "outfile": tmp_path / "test_pkl2dict_fail.fail",
+            "outfile": tmp_path / "test_pkl2any_fail.fail",
         }
         # read test file as pickle file
         with pytest.raises(ValueError):
-            pkl2dict(args["outfile"])
+            pkl2any(args["outfile"])
 
 
 def test_pure_fname(tmp_path: Path) -> None:

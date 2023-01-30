@@ -34,11 +34,10 @@ class PlotSpectra:
         """Plot the data and the fit."""
         if not self.args["noplot"]:
             if self.args["global_"]:
-                self.plot_global_spectra
+                self.plot_global_spectra()
             else:
-                self.plot_local_spectra
+                self.plot_local_spectra()
 
-    @property
     def plot_global_spectra(self) -> None:
         """Plot spectra for global fitting.
 
@@ -102,7 +101,6 @@ class PlotSpectra:
         plt.tight_layout()
         plt.show()
 
-    @property
     def plot_local_spectra(self) -> None:
         """Plot spectra for local fitting.
 

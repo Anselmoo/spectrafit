@@ -191,32 +191,32 @@ def command_line_runner(args: Optional[Dict[str, Any]] = None) -> None:
              dictionary with additional information beyond the command line arguments.
              Defaults to None.
     """
-    __status__.welcome
+    __status__.welcome()
     while True:
         if not args:
             args = extracted_from_command_line_runner()
         if args["version"]:
-            __status__.version
+            __status__.version()
             return
 
-        __status__.start
+        __status__.start()
 
         df_result, args = fitting_routine(args=args)
         PlotSpectra(df=df_result, args=args)()
         SaveResult(df=df_result, args=args)()
         args = None
 
-        __status__.end
+        __status__.end()
 
         again = input("Would you like to fit again ...? Enter y/n: ").lower()
         if again == "n":
-            __status__.thanks
-            __status__.credits
+            __status__.thanks()
+            __status__.credits()
             return
         elif again == "y":  # pragma: no cover
-            continue  # pragma: no cover
+            continue
         else:  # pragma: no cover
-            __status__.yes_no  # pragma: no cover
+            __status__.yes_no()
 
 
 def extracted_from_command_line_runner() -> Dict[str, Any]:

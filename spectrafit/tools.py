@@ -206,13 +206,13 @@ class PostProcessing:
 
     def __call__(self) -> Tuple[pd.DataFrame, Dict[str, Any]]:
         """Call the post-processing."""
-        self.make_insight_report
-        self.make_residual_fit
-        self.make_fit_contributions
-        self.export_correlation2args
-        self.export_results2args
-        self.export_regression_metrics2args
-        self.export_desprective_statistic2args
+        self.make_insight_report()
+        self.make_residual_fit()
+        self.make_fit_contributions()
+        self.export_correlation2args()
+        self.export_results2args()
+        self.export_regression_metrics2args()
+        self.export_desprective_statistic2args()
         return (self.df, self.args)
 
     def check_global_fitting(self) -> Optional[int]:
@@ -265,7 +265,6 @@ class PostProcessing:
             }
         )
 
-    @property
     def make_insight_report(self) -> None:
         """Make an insight-report of the fit statistic.
 
@@ -296,7 +295,6 @@ class PostProcessing:
                 print(f"Error: {exc} -> No confidence interval could be calculated!")
                 self.args["confidence_interval"] = {}
 
-    @property
     def make_residual_fit(self) -> None:
         r"""Make the residuals of the model and the fit.
 
@@ -338,7 +336,6 @@ class PostProcessing:
             )
         self.df = df_copy
 
-    @property
     def make_fit_contributions(self) -> None:
         """Make the fit contributions of the best fit model.
 
@@ -352,7 +349,6 @@ class PostProcessing:
             global_fit=self.args["global_"],
         )
 
-    @property
     def export_correlation2args(self) -> None:
         """Export the correlation matrix to the input file arguments.
 
@@ -383,12 +379,10 @@ class PostProcessing:
         """
         self.args["linear_correlation"] = self.df.corr().to_dict(orient="split")
 
-    @property
     def export_results2args(self) -> None:
         """Export the results of the fit to the input file arguments."""
         self.args["fit_result"] = self.df.to_dict(orient="split")
 
-    @property
     def export_regression_metrics2args(self) -> None:
         """Export the regression metrics of the fit to the input file arguments.
 
@@ -398,7 +392,6 @@ class PostProcessing:
         """
         self.args["regression_metrics"] = RegressionMetrics(self.df)()
 
-    @property
     def export_desprective_statistic2args(self) -> None:
         """Export the descriptive statistic of the spectra, fit, and contributions."""
         self.args["descriptive_statistic"] = self.df.describe(
@@ -474,10 +467,9 @@ class SaveResult:
 
     def __call__(self) -> None:
         """Call the SaveResult class."""
-        self.save_as_json
-        self.save_as_csv
+        self.save_as_json()
+        self.save_as_csv()
 
-    @property
     def save_as_csv(self) -> None:
         """Save the the fit results to csv files.
 
@@ -501,12 +493,11 @@ class SaveResult:
             index_label="attributes",
         )
 
-    @property
     def save_as_json(self) -> None:
         """Save the fitting result as json file."""
         if self.args["outfile"]:
             with open(
-                Path(f"{self.args['outfile']}_summary.json"), "w", encoding="utf8"
+                Path(f"{self.args['outfile']}_summary.json"), "w", encoding="utf-8"
             ) as f:
                 json.dump(self.args, f, indent=4)
         else:
@@ -535,10 +526,10 @@ def read_input_file(fname: Path) -> MutableMapping[str, Any]:
         with open(fname, "rb") as f:
             args = tomli.load(f)
     elif fname.suffix == ".json":
-        with open(fname, encoding="utf8") as f:
+        with open(fname, encoding="utf-8") as f:
             args = json.load(f)
     elif fname.suffix in [".yaml", ".yml"]:
-        with open(fname, encoding="utf8") as f:
+        with open(fname, encoding="utf-8") as f:
             args = yaml.load(f, Loader=yaml.FullLoader)
     else:
         raise OSError(
@@ -626,12 +617,12 @@ def unicode_check(f: Any, encoding: str = "latin1") -> Any:
     try:
         data_dict = pickle.load(f)
     except UnicodeDecodeError:  # pragma: no cover
-        data_dict = pickle.load(f, encoding=encoding)  # pragma: no cover
+        data_dict = pickle.load(f, encoding=encoding)
     return data_dict
 
 
-def pkl2dict(pkl_fname: Path, encoding: str = "latin1") -> Dict[str, Any]:
-    """Load a pkl file and return the data as a dictionary.
+def pkl2any(pkl_fname: Path, encoding: str = "latin1") -> Any:
+    """Load a pkl file and return the data as a any type of data or object.
 
     Args:
         pkl_fname (Path): The pkl file to load.
@@ -641,8 +632,7 @@ def pkl2dict(pkl_fname: Path, encoding: str = "latin1") -> Dict[str, Any]:
         ValueError: If the file format is not supported.
 
     Returns:
-        Dict[str, Any]: The data as a dictionary, which can be a nested dictionary
-            containing raw data, metadata, and other information.
+        Any: Data or objects, which can contain various data types supported by pickle.
     """
     if pkl_fname.suffix == ".gz":
         with gzip.open(pkl_fname, "rb") as f:

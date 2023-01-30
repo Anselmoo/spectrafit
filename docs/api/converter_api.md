@@ -39,6 +39,16 @@
 
 ::: spectrafit.plugins.pkl_visualizer
 
+### RIXS Converter for RIXS data
+
+::: spectrafit.plugins.rixs_converter
+
+On top of the `RIXSConverter` class, the `RIXSVisualizer` class is
+available to visualize the RIXS data and provide a method to take
+RIXS cuts.
+
+::: spectrafit.plugins.rixs_visualizer
+
 [1]: https://docs.python.org/3/tutorial/datastructures.html#dictionaries
 [2]: https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html
 [3]: https://docs.python.org/3/library/abc.html#abc.ABC

@@ -41,7 +41,7 @@ def test_size_ratio() -> None:
     assert size_ratio_api.ratio_rixs == (1, 1)
 
 
-def test_raise_rixs_model() -> None:
+def test_rixs_model() -> None:
     """Test for raising exception of RIXS Model."""
     _model = RIXSPlotAPI(
         incident_energy=np.array([1, 2, 3]),
