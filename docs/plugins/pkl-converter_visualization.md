@@ -83,26 +83,26 @@ dict_4 --> dict_4.pkl
 
 !!! info "Using the `spectrafit-pkl-converter` as a Python module"
 
-In the case of using `spectrafit-pkl-converter` as a Python module, the
-following:
+    In the case of using `spectrafit-pkl-converter` as a Python module, the
+    following:
 
-```python
-from spectrafit.plugins.pkl_converter import PklConverter
+    ```python
+    from spectrafit.plugins.pkl_converter import PklConverter
 
-pkl_converter = PklConverter()
-list_dict = pkl_converter.convert_pkl_to_csv(
-    infile="test.pkl",
-)
-```
+    pkl_converter = PklConverter()
+    list_dict = pkl_converter.convert_pkl_to_csv(
+        infile="test.pkl",
+    )
+    ```
 
     The `list_dict` variable contains the converted data as a list of
     dictionaries.
 
-See also:
+    See also:
 
-::: spectrafit.plugins.pkl_converter.PklConverter
-:members:
-:undoc-members:
+    ::: spectrafit.plugins.pkl_converter.PklConverter
+    :members:
+    :undoc-members:
 
 ## PKL Visualizer
 
@@ -135,52 +135,54 @@ structure of the JSON file:
 
 ??? example "Example of the JSON file"
 
-```json
-{
-  "file_1": {
-    "attribute_1": "<class 'list'>",
-    "attribute_2": "<class 'str'>",
-    "attribute_3": "<class 'numpy.ndarray'> of shape (201,)",
-    "attribute_4": "<class 'numpy.ndarray'> of shape (199,)",
-    "attribute_5": "<class 'numpy.ndarray'> of shape (10, 201, 10000)",
-    "attribute_6": "<class 'numpy.ndarray'> of shape (10, 201, 10000)",
-    "attribute_7": "<class 'numpy.ndarray'> of shape (10, 201, 10000)",
-    "attribute_8": "<class 'numpy.ndarray'> of shape (10, 199, 10000)",
-    "attribute_9": "<class 'numpy.ndarray'> of shape (10, 199, 10000)",
-    "attribute_10": "<class 'numpy.ndarray'> of shape (10, 199, 10000)",
-    "attribute_11": "<class 'numpy.ndarray'> of shape (10, 199, 10000)",
-    "attribute_12": "<class 'numpy.ndarray'> of shape (10000,)",
-    "attribute_13": "<class 'list'>",
-    "attribute_14": "<class 'numpy.ndarray'> of shape (10, 201)",
-    "attribute_16": "<class 'int'>",
-    "attribute_17": "<class 'str'>",
-    "attribute_19": "<class 'str'>"
-  },
-  "file_2": {
-    "attribute_1": "<class 'list'>",
-    "attribute_2": "<class 'str'>",
-    "attribute_3": "<class 'numpy.ndarray'> of shape (201,)",
-    "attribute_4": "<class 'numpy.ndarray'> of shape (199,)",
-    "attribute_5": "<class 'numpy.ndarray'> of shape (10, 201, 10000)",
-    "attribute_6": "<class 'numpy.ndarray'> of shape (10, 201, 10000)",
-    "attribute_7": "<class 'numpy.ndarray'> of shape (10, 201, 10000)",
-    "attribute_8": "<class 'numpy.ndarray'> of shape (10, 199, 10000)",
-    "attribute_9": "<class 'numpy.ndarray'> of shape (10, 199, 10000)",
-    "attribute_10": "<class 'numpy.ndarray'> of shape (10, 199, 10000)",
-    "attribute_11": "<class 'numpy.ndarray'> of shape (10, 199, 10000)",
-    "attribute_12": "<class 'numpy.ndarray'> of shape (10000,)",
-    "attribute_13": "<class 'list'>",
-    "attribute_14": "<class 'numpy.ndarray'> of shape (10, 201)",
-    "attribute_16": "<class 'int'>",
-    "attribute_17": "<class 'str'>",
-    "attribute_19": "<class 'str'>"
-  }
-}
-```
+    ```json
+    {
+      "file_1": {
+        "attribute_1": "<class 'list'>",
+        "attribute_2": "<class 'str'>",
+        "attribute_3": "<class 'numpy.ndarray'> of shape (201,)",
+        "attribute_4": "<class 'numpy.ndarray'> of shape (199,)",
+        "attribute_5": "<class 'numpy.ndarray'> of shape (10, 201, 10000)",
+        "attribute_6": "<class 'numpy.ndarray'> of shape (10, 201, 10000)",
+        "attribute_7": "<class 'numpy.ndarray'> of shape (10, 201, 10000)",
+        "attribute_8": "<class 'numpy.ndarray'> of shape (10, 199, 10000)",
+        "attribute_9": "<class 'numpy.ndarray'> of shape (10, 199, 10000)",
+        "attribute_10": "<class 'numpy.ndarray'> of shape (10, 199, 10000)",
+        "attribute_11": "<class 'numpy.ndarray'> of shape (10, 199, 10000)",
+        "attribute_12": "<class 'numpy.ndarray'> of shape (10000,)",
+        "attribute_13": "<class 'list'>",
+        "attribute_14": "<class 'numpy.ndarray'> of shape (10, 201)",
+        "attribute_16": "<class 'int'>",
+        "attribute_17": "<class 'str'>",
+        "attribute_19": "<class 'str'>"
+      },
+      "file_2": {
+        "attribute_1": "<class 'list'>",
+        "attribute_2": "<class 'str'>",
+        "attribute_3": "<class 'numpy.ndarray'> of shape (201,)",
+        "attribute_4": "<class 'numpy.ndarray'> of shape (199,)",
+        "attribute_5": "<class 'numpy.ndarray'> of shape (10, 201, 10000)",
+        "attribute_6": "<class 'numpy.ndarray'> of shape (10, 201, 10000)",
+        "attribute_7": "<class 'numpy.ndarray'> of shape (10, 201, 10000)",
+        "attribute_8": "<class 'numpy.ndarray'> of shape (10, 199, 10000)",
+        "attribute_9": "<class 'numpy.ndarray'> of shape (10, 199, 10000)",
+        "attribute_10": "<class 'numpy.ndarray'> of shape (10, 199, 10000)",
+        "attribute_11": "<class 'numpy.ndarray'> of shape (10, 199, 10000)",
+        "attribute_12": "<class 'numpy.ndarray'> of shape (10000,)",
+        "attribute_13": "<class 'list'>",
+        "attribute_14": "<class 'numpy.ndarray'> of shape (10, 201)",
+        "attribute_16": "<class 'int'>",
+        "attribute_17": "<class 'str'>",
+        "attribute_19": "<class 'str'>"
+      }
+    }
+    ```
 
-The resulting graph looks like this:
+!!! info "Example of the graph"
 
-![_](images/pkl_visualizer.png)
+    The resulting graph looks like this:
+
+    ![_](images/pkl_visualizer.png)
 
 [1]: http
 [1]: https://docs.python.org/3/library/pickle.html
