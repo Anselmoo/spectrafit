@@ -65,7 +65,7 @@ plugins:
   - section-index
   - mkdocs-jupyter:
       ignore_h1_titles: true
-      include_source: true
+      include_source: false
       execute: true
   - literate-nav:
       nav_file: SUMMARY.md
@@ -74,9 +74,6 @@ plugins:
 
 # Customization
 extra:
-  # analytics:
-  #  provider: google
-  #  property: !ENV GOOGLE_ANALYTICS_KEY
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/Anselmoo
