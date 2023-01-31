@@ -60,7 +60,7 @@ repos:
     rev: "v2.16.0b1"
     hooks:
       - id: pylint
-        additional_dependencies: [toml==0.10.2]
+        additional_dependencies: [toml==0.10.2, numpy==1.23.4, pydantic==1.10.1]
   - repo: https://github.com/pre-commit/mirrors-prettier
     rev: "v3.0.0-alpha.4"
     hooks:
