@@ -886,14 +886,14 @@ files = [
 
 [[package]]
 name = "dash"
-version = "2.8.0"
+version = "2.8.1"
 description = "A Python framework for building reactive web-apps. Developed by Plotly."
 category = "main"
 optional = false
 python-versions = ">=3.6"
 files = [
-    {file = "dash-2.8.0-py3-none-any.whl", hash = "sha256:2a52b7286858080f8f9619d7dd0bdb1ad7614f7be52491fd4589ea36d46e5652"},
-    {file = "dash-2.8.0.tar.gz", hash = "sha256:4f976a90b9a7f68c2e6fbfbc16d817a37eb0e78d317b7087688839d69c3a794d"},
+    {file = "dash-2.8.1-py3-none-any.whl", hash = "sha256:3a9eea30f83733df1b7631fc5248eb87445e7458394558d784c91d072b7f41aa"},
+    {file = "dash-2.8.1.tar.gz", hash = "sha256:a71dd81d167fa5e0ad41f356a221357d92724ae84f9faedb6f7ffa1fddfd4969"},
 ]
 
 [package.dependencies]
