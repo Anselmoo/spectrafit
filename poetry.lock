@@ -1040,7 +1040,6 @@ files = [
     {file = "debugpy-1.6.6-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:9b5d1b13d7c7bf5d7cf700e33c0b8ddb7baf030fcf502f76fc061ddd9405d16c"},
     {file = "debugpy-1.6.6-cp38-cp38-win32.whl", hash = "sha256:70ab53918fd907a3ade01909b3ed783287ede362c80c75f41e79596d5ccacd32"},
     {file = "debugpy-1.6.6-cp38-cp38-win_amd64.whl", hash = "sha256:c05349890804d846eca32ce0623ab66c06f8800db881af7a876dc073ac1c2225"},
-    {file = "debugpy-1.6.6-cp39-cp39-macosx_11_0_x86_64.whl", hash = "sha256:11a0f3a106f69901e4a9a5683ce943a7a5605696024134b522aa1bfda25b5fec"},
     {file = "debugpy-1.6.6-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:a771739902b1ae22a120dbbb6bd91b2cae6696c0e318b5007c5348519a4211c6"},
     {file = "debugpy-1.6.6-cp39-cp39-win32.whl", hash = "sha256:549ae0cb2d34fc09d1675f9b01942499751d174381b6082279cf19cdb3c47cbe"},
     {file = "debugpy-1.6.6-cp39-cp39-win_amd64.whl", hash = "sha256:de4a045fbf388e120bb6ec66501458d3134f4729faed26ff95de52a754abddb1"},
@@ -1101,17 +1100,18 @@ files = [
 
 [[package]]
 name = "dtale"
-version = "2.11.0"
+version = "2.12.1"
 description = "Web Client for Visualizing Pandas Objects"
 category = "main"
 optional = true
 python-versions = "*"
 files = [
-    {file = "dtale-2.11.0-py2.py3-none-any.whl", hash = "sha256:8997e3d873d3d5f0c9d2e0af6fb08822bc5d88f864c0e83848a1de300c6abf01"},
-    {file = "dtale-2.11.0.tar.gz", hash = "sha256:83e03424351f91d939103ed143601827c54282298af0055fe7a1c3a0ea426cf6"},
+    {file = "dtale-2.12.1-py2.py3-none-any.whl", hash = "sha256:44da2414abc117e67d9ed5dce9aca961367d69844805972bba7c56bbcdb55ce5"},
+    {file = "dtale-2.12.1.tar.gz", hash = "sha256:f502912cf2bed940ab7ab0cce4f0287629a09768c2242f3e103b8a6d3b016c9f"},
 ]
 
 [package.dependencies]
+beautifulsoup4 = {version = "*", markers = "python_version > \"3.0\""}
 certifi = {version = "*", markers = "python_version > \"3.0\""}
 cycler = {version = "*", markers = "python_version > \"3.0\""}
 dash = {version = ">=2.0.0", markers = "python_version > \"3.6\""}
