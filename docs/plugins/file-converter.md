@@ -253,8 +253,8 @@ With the command `spectrafit-file-converter` input and also output files can be 
         },
         "timestamp": "2022-06-26 12:35:11",
         "ID": "e5c7fc20-bd57-4578-abbf-7736cef3be9b",
-        "user_name": "user_name",
-        "user_system": "user_system",
+        "host_info": "host_info",
+        "host_info": "host_info",
         "used_version": "0.9.0",
         "data_statistic": {
           "0": [
@@ -1471,8 +1471,8 @@ With the command `spectrafit-file-converter` input and also output files can be 
       verbose = 0
       timestamp = "2022-06-26 12:35:11"
       ID = "e5c7fc20-bd57-4578-abbf-7736cef3be9b"
-      user_name = "user_name"
-      user_system = "user_system"
+      host_info = "host_info"
+      host_info = "host_info"
       used_version = "0.9.0"
 
       [description]

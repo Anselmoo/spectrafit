@@ -231,8 +231,8 @@ different types of output files will be generated
              {
              "timestamp": "2021-08-22 12:33:26",
              "ID": "89b1a4ef-320a-4ac0-80da-e8d946b00e13",
-             "user_name": "user_name",
-             "user_system": "user_system",
+             "host_info": "host_info",
+             "host_info": "host_info",
              "used_version": "0.3.0",
              }
              ```
@@ -455,8 +455,8 @@ different types of output files will be generated
       },
       "timestamp": "2021-08-19 21:08:57",
       "ID": "ce43d306-43e4-4350-9f09-fd1b13064f39",
-      "user_name": "username",
-      "user_system": "user_system",
+      "host_info": "username",
+      "host_info": "host_info",
       "used_version": "0.2.0",
       "data_statistic": {
         "0": {
