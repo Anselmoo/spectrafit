@@ -43,8 +43,8 @@ repos:
       - id: mypy
         additional_dependencies:
           [
-            types-toml==0.10.8.1,
-            types-PyYAML==6.0.12.3,
+            types-toml==0.10.8.2,
+            types-PyYAML==6.0.12.4,
             types-tabulate==0.9.0.0,
             types-mock==5.0.0.2,
             numpy==1.23.4,
@@ -57,10 +57,10 @@ repos:
       - id: pydocstyle
         additional_dependencies: [toml==0.10.2]
   - repo: https://github.com/PyCQA/pylint
-    rev: "v2.16.0"
+    rev: "v2.16.1"
     hooks:
       - id: pylint
-        additional_dependencies: [toml==0.10.2]
+        additional_dependencies: [toml==0.10.2, numpy==1.23.4, pydantic==1.10.1]
   - repo: https://github.com/pre-commit/mirrors-prettier
     rev: "v3.0.0-alpha.4"
     hooks:
