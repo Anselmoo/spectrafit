@@ -1,5 +1,8 @@
 [MAIN]
 
+# Add file to the whitelist. It should be a base name, not a path.
+extension-pkg-whitelist=pydantic
+
 # Specify a configuration file.
 #rcfile=
 

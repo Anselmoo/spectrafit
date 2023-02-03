@@ -44,7 +44,7 @@ class DescriptionAPI(BaseModel):
         description="References for the project",
     )
     version: str = __version__
-    user_system: str = f"{getuser()}@{gethostname()}"
+    host_info: str = f"{getuser()}@{gethostname()}"
     timestamp: str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     id_: str = Field(
         default=str(uuid4()), alias="id", description="Unique ID of the project"

@@ -98,8 +98,7 @@
   },
   "timestamp": "2021-11-05 19:01:15",
   "ID": "5453056f-95d4-41b4-adeb-830ecedc0064",
-  "user_name": "user_name",
-  "user_system": "user_system",
+  "host_info": "host_info",
   "used_version": "0.6.0",
   "data_statistic": {
     "energy": [

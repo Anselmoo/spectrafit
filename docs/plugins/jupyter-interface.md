@@ -239,7 +239,7 @@ accidental overwriting of the input file. The `.lock`-suffix can be replaced.
             "https://github.com/Anselmoo/spectrafit",
         ]
         version = "0.12.0b0"
-        user_system = "vscode@codespaces-c3ab6e"
+        host_info = "vscode@codespaces-c3ab6e"
         timestamp = "2022-10-05 18:29:35"
         id_ = "563e6d71-d872-4e63-85aa-6780a4fd8cb0"
 
