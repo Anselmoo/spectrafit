@@ -40,9 +40,7 @@ def remove_none_type(d: Any) -> Union[Dict[str, Any], List[Any]]:
         Union[Dict[str, Any], List[Any]]: Dictionary without None type.
     """
     if isinstance(d, dict):
-
         return {k: remove_none_type(v) for k, v in d.items() if v is not None}
     if isinstance(d, list):
-
         return [remove_none_type(v) for v in d if v is not None]
     return d
