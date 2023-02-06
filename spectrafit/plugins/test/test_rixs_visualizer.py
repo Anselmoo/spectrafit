@@ -17,9 +17,9 @@ from spectrafit.plugins.rixs_visualizer import RIXSVisualizer
 
 
 @pytest.fixture(scope="module", autouse=True, name="test_data")
-def fixture_test_data() -> Tuple[
-    NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]
-]:
+def fixture_test_data() -> (
+    Tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]]
+):
     """Test data."""
     space_x_y = np.arange(0, 10, 0.1)
     space_x, space_y = np.meshgrid(space_x_y, space_x_y)

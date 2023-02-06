@@ -897,7 +897,6 @@ class SolverModels(ModelParameters):
         peak_kwargs: Dict[Tuple[str, str, str], Parameters] = defaultdict(dict)
 
         for model in params:
-
             model = model.lower()
             ReferenceKeys().model_check(model=model)
             c_name = model.split("_")
