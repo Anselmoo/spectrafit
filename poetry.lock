@@ -2036,14 +2036,14 @@ test = ["pre-commit", "pytest", "pytest-asyncio", "websockets (>=10.0)", "ypy-we
 
 [[package]]
 name = "jupyterlab"
-version = "3.6.0"
+version = "3.6.1"
 description = "JupyterLab computational environment"
 category = "main"
 optional = true
 python-versions = ">=3.7"
 files = [
-    {file = "jupyterlab-3.6.0-py3-none-any.whl", hash = "sha256:68f16042144aa2b623ca5ca0fe8a0a006d13a15a76b70cb7484325fb83c179a0"},
-    {file = "jupyterlab-3.6.0.tar.gz", hash = "sha256:536bce7d8d6caf094e63d81d2b05097ca133b89f41d057def68b688da26d8138"},
+    {file = "jupyterlab-3.6.1-py3-none-any.whl", hash = "sha256:ad6707dd0149b629d0ed5b56916cfcdb816b376c6af3190337faba09e27ea29e"},
+    {file = "jupyterlab-3.6.1.tar.gz", hash = "sha256:aee98c174180e98a30470297d10b959e8e64f2288970c0de65f0a6d2b4807034"},
 ]
 
 [package.dependencies]
