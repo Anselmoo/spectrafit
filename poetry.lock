@@ -1124,14 +1124,14 @@ files = [
 
 [[package]]
 name = "dtale"
-version = "2.12.1"
+version = "2.12.2"
 description = "Web Client for Visualizing Pandas Objects"
 category = "main"
 optional = true
 python-versions = "*"
 files = [
-    {file = "dtale-2.12.1-py2.py3-none-any.whl", hash = "sha256:44da2414abc117e67d9ed5dce9aca961367d69844805972bba7c56bbcdb55ce5"},
-    {file = "dtale-2.12.1.tar.gz", hash = "sha256:f502912cf2bed940ab7ab0cce4f0287629a09768c2242f3e103b8a6d3b016c9f"},
+    {file = "dtale-2.12.2-py2.py3-none-any.whl", hash = "sha256:0b30775a9cd61944e1ce36253c44f0d3758056c95815ae31d236605d61f0b4b3"},
+    {file = "dtale-2.12.2.tar.gz", hash = "sha256:10e72f29aed7340711273009cc551f64d347e1a3eb9e6e8ece5defb35181de3d"},
 ]
 
 [package.dependencies]
@@ -1175,7 +1175,7 @@ xlrd = "*"
 arctic = ["arctic (<=1.79.4)"]
 dash-bio = ["dash-bio", "dash-bio (==0.7.1)"]
 r = ["rpy2"]
-redis = ["redislite"]
+redis = ["redis (<=4.4.2)", "redislite"]
 streamlit = ["streamlit"]
 swifter = ["swifter"]
 tests = ["importlib-metadata", "importlib-metadata (<=3.7.3)", "ipython (<8.0.0)", "mock", "nbconvert", "pytest", "pytest-cov", "pytest-server-fixtures"]
