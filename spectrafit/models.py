@@ -775,7 +775,7 @@ class SolverModels(ModelParameters):
                 self.solve_global_fitting,
                 params=self.params,
                 fcn_args=(self.x, self.data),
-                **self.args["minimizer"],
+                **self.args_solver["minimizer"],
             )
         else:
             minimizer = Minimizer(
