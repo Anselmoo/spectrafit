@@ -312,14 +312,7 @@ class AutoPeakDetection:
             TypeError: If the `initialize` attribute is not of type `bool` or `dict`.
         """
         if isinstance(self._args, bool):
-            self.height = self.estimate_height
-            self.threshold = self.estimate_threshold
-            self.distance = self.estimate_distance
-            self.prominence = self.estimate_prominence
-            self.width = self.estimated_width
-            self.wlen = self.estimated_wlen
-            self.rel_height = self.estimated_rel_height
-            self.plateau_size = 0
+            self.default_values()
         elif isinstance(self._args, dict):
             ReferenceKeys().detection_check(self._args)
             self.height = self.check_key_exists(
@@ -350,6 +343,18 @@ class AutoPeakDetection:
             raise TypeError(
                 f"The type of the `args` is not supported: {type(self._args)}"
             )
+
+    # TODO Rename this here and in `initialize_peak_detection`
+    def default_values(self) -> None:
+        """Set the default values for the peak detection."""
+        self.height = self.estimate_height
+        self.threshold = self.estimate_threshold
+        self.distance = self.estimate_distance
+        self.prominence = self.estimate_prominence
+        self.width = self.estimated_width
+        self.wlen = self.estimated_wlen
+        self.rel_height = self.estimated_rel_height
+        self.plateau_size = 0
 
     def __autodetect__(self) -> Any:
         """Return peak positions and properties."""
@@ -740,6 +745,21 @@ class ModelParameters(AutoPeakDetection):
                         self.params.add(f"{key_3}_{key_4}_{key_2}_{key_1}", **value_4)
 
 
+def raise_missing_model_error(_key: Union[str, Tuple[str]]) -> None:
+    """Raise an error if the model is not implemented.
+
+    Args:
+        key (Union[str, Tuple[str]]): The model name, which can be also a tuple of
+                strings in case of global fitting.
+
+    Raises:
+        NotImplementedError: If the model is not implemented.
+    """
+    raise NotImplementedError(
+        f"Model {_key[0]} is not implemented. Please check the documentation."
+    )
+
+
 class SolverModels(ModelParameters):
     """Solving models for 2D and 3D data sets.
 
@@ -837,30 +857,10 @@ class SolverModels(ModelParameters):
             peak_kwargs[(c_name[0], c_name[2])][c_name[1]] = params[model]
 
         for key, _kwarg in peak_kwargs.items():
-            if key[0] == "gaussian":
-                val += gaussian(x, **_kwarg)
-            elif key[0] == "lorentzian":
-                val += lorentzian(x, **_kwarg)
-            elif key[0] == "voigt":
-                val += voigt(x, **_kwarg)
-            elif key[0] == "pseudovoigt":
-                val += pseudovoigt(x, **_kwarg)
-            elif key[0] == "exponential":
-                val += exponential(x, **_kwarg)
-            elif key[0] == "power":
-                val += power(x, **_kwarg)
-            elif key[0] == "linear":
-                val += linear(x, **_kwarg)
-            elif key[0] == "constant":
-                val += constant(x, **_kwarg)
-            elif key[0] == "erf":
-                val += step(x, kind="erf", **_kwarg)
-            elif key[0] == "atan":
-                val += step(x, kind="atan", **_kwarg)
-            elif key[0] == "log":
-                val += step(x, kind="log", **_kwarg)
-            elif key[0] == "heaviside":
-                val += step(x, kind="heaviside", **_kwarg)
+            if key[0] in DistributionModels.__dict__:
+                val += DistributionModels.__dict__[key[0]](x, **_kwarg)
+            else:
+                raise_missing_model_error(_key=key[0])
         return val - data
 
     @staticmethod
@@ -902,31 +902,11 @@ class SolverModels(ModelParameters):
             c_name = model.split("_")
             peak_kwargs[(c_name[0], c_name[2], c_name[3])][c_name[1]] = params[model]
         for key, _kwarg in peak_kwargs.items():
-            i = int(key[2]) - 1
-            if key[0] == "gaussian":
-                val[:, i] += gaussian(x, **_kwarg)
-            elif key[0] == "lorentzian":
-                val[:, i] += lorentzian(x, **_kwarg)
-            elif key[0] == "voigt":
-                val[:, i] += voigt(x, **_kwarg)
-            elif key[0] == "pseudovoigt":
-                val[:, i] += pseudovoigt(x, **_kwarg)
-            elif key[0] == "exponential":
-                val[:, i] += exponential(x, **_kwarg)
-            elif key[0] == "power":
-                val[:, i] += power(x, **_kwarg)
-            elif key[0] == "linear":
-                val[:, i] += linear(x, **_kwarg)
-            elif key[0] == "constant":
-                val[:, i] += constant(x, **_kwarg)
-            elif key[0] == "erf":
-                val[:, i] += step(x, kind="erf", **_kwarg)
-            elif key[0] == "atan":
-                val[:, i] += step(x, kind="atan", **_kwarg)
-            elif key[0] == "log":
-                val[:, i] += step(x, kind="log", **_kwarg)
-            elif key[0] == "heaviside":
-                val[:, i] += step(x, kind="heaviside", **_kwarg)
+            if key[0] in DistributionModels.__dict__:
+                i = int(key[2]) - 1
+                val[:, i] += DistributionModels.__dict__[key[0]](x, **_kwarg)
+            else:
+                raise_missing_model_error(_key=key[0])
 
         val -= data
         return val.flatten()
@@ -971,289 +951,400 @@ def calculated_model(
     _df = df.copy()
     for key, _kwarg in peak_kwargs.items():
         c_name = f"{key[0]}_{key[1]}_{key[2]}" if global_fit else f"{key[0]}_{key[1]}"
-        if key[0] == "gaussian":
-            _df[c_name] = gaussian(x, **_kwarg)
-        elif key[0] == "lorentzian":
-            _df[c_name] = lorentzian(x, **_kwarg)
-        elif key[0] == "voigt":
-            _df[c_name] = voigt(x, **_kwarg)
-        elif key[0] == "pseudovoigt":
-            _df[c_name] = pseudovoigt(x, **_kwarg)
-        elif key[0] == "exponential":
-            _df[c_name] = exponential(x, **_kwarg)
-        elif key[0] == "power":
-            _df[c_name] = power(x, **_kwarg)
-        elif key[0] == "linear":
-            _df[c_name] = linear(x, **_kwarg)
-        elif key[0] == "constant":
-            _df[c_name] = constant(x, **_kwarg)
-        elif key[0] == "erf":
-            _df[c_name] = step(x, kind="erf", **_kwarg)
-        elif key[0] == "atan":
-            _df[c_name] = step(x, kind="atan", **_kwarg)
-        elif key[0] == "log":
-            _df[c_name] = step(x, kind="log", **_kwarg)
-        elif key[0] == "heaviside":
-            _df[c_name] = step(x, kind="heaviside", **_kwarg)
+        if key[0] in DistributionModels.__dict__:
+            _df[c_name] = DistributionModels.__dict__[key[0]](x, **_kwarg)
+        else:
+            raise_missing_model_error(_key=key[0])
     return _df
 
 
-def gaussian(
-    x: NDArray[np.float64],
-    amplitude: float = 1.0,
-    center: float = 0.0,
-    fwhmg: float = 1.0,
-) -> NDArray[np.float64]:
-    r"""Return a 1-dimensional Gaussian distribution.
+class DistributionModels:
+    """Distribution models for the fit.
 
-    $$
-    {\displaystyle g(x)={\frac {1}{\sigma {\sqrt {2\pi }}}}\exp
-    (  -{\frac {1}{2}}{\frac {(x-\mu )^{2}}{\sigma ^{2}}} ) }
-    $$
-
-    Args:
-        x (NDArray[np.float64]): `x`-values of the data.
-        amplitude (float, optional): Amplitude of the Gaussian distribution. Defaults
-             to 1.0.
-        center (float, optional): Center of the Gaussian distribution. Defaults to 0.0.
-        fwhmg (float, optional): Full width at half maximum (FWHM) of the Gaussian
-             distribution. Defaults to 1.0.
-
-    Returns:
-        NDArray[np.float64]: Gaussian distribution of `x` given.
+    !!! note "About distribution models"
+        `DistributionModels` are wrapper functions for the distribution models. The
+        overall goal is to extract from the best parameters the single contributions in
+        the model. The superposition of the single contributions is the final model.
     """
-    sigma = fwhmg / Constants.sig2fwhm
-    return np.array(amplitude / (Constants.sq2pi * sigma)) * np.exp(
-        -((1.0 * x - center) ** 2) / (2 * sigma**2)
-    )
+
+    def gaussian(
+        self,
+        x: NDArray[np.float64],
+        amplitude: float = 1.0,
+        center: float = 0.0,
+        fwhmg: float = 1.0,
+    ) -> NDArray[np.float64]:
+        r"""Return a 1-dimensional Gaussian distribution.
+
+        $$
+        {\displaystyle g(x)={\frac {1}{\sigma {\sqrt {2\pi }}}}\exp
+        (  -{\frac {1}{2}}{\frac {(x-\mu )^{2}}{\sigma ^{2}}} ) }
+        $$
+
+        Args:
+            x (NDArray[np.float64]): `x`-values of the data.
+            amplitude (float, optional): Amplitude of the Gaussian distribution.
+                 Defaults to 1.0.
+            center (float, optional): Center of the Gaussian distribution.
+                 Defaults to 0.0.
+            fwhmg (float, optional): Full width at half maximum (FWHM) of the Gaussian
+                distribution. Defaults to 1.0.
+
+        Returns:
+            NDArray[np.float64]: Gaussian distribution of `x` given.
+        """
+        sigma = fwhmg / Constants.sig2fwhm
+        return np.array(amplitude / (Constants.sq2pi * sigma)) * np.exp(
+            -((1.0 * x - center) ** 2) / (2 * sigma**2)
+        )
+
+    def lorentzian(
+        self,
+        x: NDArray[np.float64],
+        amplitude: float = 1.0,
+        center: float = 0.0,
+        fwhml: float = 1.0,
+    ) -> NDArray[np.float64]:
+        r"""Return a 1-dimensional Lorentzian distribution.
+
+        $$
+        f(x;x_{0},\gamma )={\frac  {1}{\pi \gamma
+        [ 1+ ( {\frac  {x-x_{0}}{\gamma }})^{2} ]
+        }} ={1 \over \pi \gamma } [ {\gamma ^{2} \over (x-x_{0})^{2}+\gamma ^{2}} ]
+        $$
+
+        Args:
+            x (NDArray[np.float64]): `x`-values of the data.
+            amplitude (float, optional): Amplitude of the Lorentzian distribution.
+                Defaults to 1.0.
+            center (float, optional): Center of the Lorentzian distribution. Defaults to
+                0.0.
+            fwhml (float, optional): Full width at half maximum (FWHM) of the Lorentzian
+                distribution. Defaults to 1.0.
+
+        Returns:
+            Union[NDArray[np.float64], float]: Lorentzian distribution of `x` given.
+        """
+        sigma = fwhml / 2.0
+        return np.array(amplitude / (1 + ((1.0 * x - center) / sigma) ** 2)) / (
+            np.pi * sigma
+        )
+
+    def voigt(
+        self,
+        x: NDArray[np.float64],
+        center: float = 0.0,
+        fwhmv: float = 1.0,
+        gamma: Optional[float] = None,
+    ) -> NDArray[np.float64]:
+        r"""Return a 1-dimensional Voigt distribution.
+
+        $$
+        {\displaystyle V(x;\sigma ,\gamma )\equiv
+        \int_{-\infty }^{\infty }G(x';\sigma )
+        L(x-x';\gamma )\,dx'}
+        $$
+
+        Args:
+            x (NDArray[np.float64]): `x`-values of the data.
+            center (float, optional): Center of the Voigt distribution. Defaults to 0.0.
+            fwhmv (float, optional): Full width at half maximum (FWHM) of the Lorentzian
+                distribution. Defaults to 1.0.
+            gamma (float, optional): Scaling factor of the complex part of the
+                [Faddeeva Function](https://en.wikipedia.org/wiki/Faddeeva_function).
+                Defaults to None.
+
+        Returns:
+            NDArray[np.float64]: Voigt distribution of `x` given.
+        """
+        sigma = fwhmv / 3.60131
+        if gamma is None:
+            gamma = sigma
+        z = (x - center + 1j * gamma) / (sigma * Constants.sq2)
+        return np.array(wofz(z).real / (sigma * Constants.sq2pi))
+
+    def pseudovoigt(
+        self,
+        x: NDArray[np.float64],
+        amplitude: float = 1.0,
+        center: float = 0.0,
+        fwhmg: float = 1.0,
+        fwhml: float = 1.0,
+    ) -> NDArray[np.float64]:
+        """Return a 1-dimensional Pseudo-Voigt distribution.
+
+        !!! note "See also:"
+
+            J. Appl. Cryst. (2000). 33, 1311-1316
+            https://doi.org/10.1107/S0021889800010219
+
+        Args:
+            x (NDArray[np.float64]):  `x`-values of the data.
+            amplitude (float, optional): Amplitude of the Pseudo-Voigt distribution.
+                Defaults to 1.0.
+            center (float, optional): Center of the Pseudo-Voigt distribution.
+                Defaults to 0.0.
+            fwhmg (float, optional): Full width half maximum of the Gaussian
+                distribution in the Pseudo-Voigt distribution. Defaults to 1.0.
+            fwhml (float, optional): Full width half maximum of the Lorentzian
+                distribution in the Pseudo-Voigt distribution. Defaults to 1.0.
+
+        Returns:
+            NDArray[np.float64]: Pseudo-Voigt distribution of `x` given.
+        """
+        f = np.power(
+            fwhmg**5
+            + 2.69269 * fwhmg**4 * fwhml
+            + 2.42843 * fwhmg**3 * fwhml**2
+            + 4.47163 * fwhmg**2 * fwhml**3
+            + 0.07842 * fwhmg * fwhml**4
+            + fwhml**5,
+            0.2,
+        )
+        n = (
+            1.36603 * (fwhml / f)
+            - 0.47719 * (fwhml / f) ** 2
+            + 0.11116 * (fwhml / f) ** 3
+        )
+        return np.array(
+            n * self.lorentzian(x=x, amplitude=amplitude, center=center, fwhml=fwhml)
+            + (1 - n)
+            * self.gaussian(x=x, amplitude=amplitude, center=center, fwhmg=fwhmg)
+        )
+
+    def exponential(
+        self,
+        x: NDArray[np.float64],
+        amplitude: float = 1.0,
+        decay: float = 1.0,
+        intercept: float = 0.0,
+    ) -> NDArray[np.float64]:
+        """Return a 1-dimensional exponential decay.
+
+        Args:
+            x (NDArray[np.float64]): `x`-values of the data.
+            amplitude (float, optional): Amplitude of the exponential function.
+                 Defaults to 1.0.
+            decay (float, optional): Decay of the exponential function. Defaults to 1.0.
+            intercept (float, optional): Intercept of the exponential function.
+                 Defaults to 0.0.
+
+        Returns:
+            NDArray[np.float64]: Exponential decay of `x` given.
+        """
+        return np.array(amplitude * np.exp(-x / decay) + intercept)
+
+    def power(
+        self,
+        x: NDArray[np.float64],
+        amplitude: float = 1.0,
+        exponent: float = 1.0,
+        intercept: float = 0.0,
+    ) -> NDArray[np.float64]:
+        """Return a 1-dimensional power function.
+
+        Args:
+            x (NDArray[np.float64]): `x`-values of the data.
+            amplitude (float, optional): Amplitude of the power function. Defaults to
+                1.0.
+            exponent (float, optional): Exponent of the power function. Defaults to 1.0.
+            intercept (float, optional): Intercept of the power function. Defaults to
+                0.0.
+
+        Returns:
+            NDArray[np.float64]: power function of `x` given.
+        """
+        return np.array(amplitude * np.power(x, exponent) + intercept)
+
+    def linear(
+        self,
+        x: NDArray[np.float64],
+        slope: float = 1.0,
+        intercept: float = 0.0,
+    ) -> NDArray[np.float64]:
+        """Return a 1-dimensional linear function.
+
+        Args:
+            x (NDArray[np.float64]): `x`-values of the data.
+            slope (float, optional): Slope of the linear function. Defaults to 1.0.
+            intercept (float, optional): Intercept of the linear function.
+                 Defaults to 0.0.
+
+        Returns:
+            NDArray[np.float64]: Linear function of `x` given.
+        """
+        return np.array(slope * x + intercept)
+
+    def constant(
+        self,
+        x: NDArray[np.float64],
+        amplitude: float = 1.0,
+    ) -> NDArray[np.float64]:
+        """Return a 1-dimensional constant value.
+
+        Args:
+            x (NDArray[np.float64]): `x`-values of the data.
+            amplitude (float, optional): Amplitude of the constant. Defaults to 1.0.
+
+        Returns:
+            NDArray[np.float64]: Constant value of `x` given.
+        """
+        return np.array(np.linspace(amplitude, amplitude, len(x)))
+
+    def _norm(
+        self, x: NDArray[np.float64], center: float, sigma: float
+    ) -> NDArray[np.float64]:
+        """Normalize the data for step functions.
+
+        Args:
+            x (NDArray[np.float64]): `x`-values of the data.
+            center (float): Center of the step function.
+            sigma (float): Sigma of the step function.
+
+        Returns:
+            NDArray[np.float64]: Normalized data.
+        """
+        if abs(sigma) < 1.0e-13:
+            sigma = 1.0e-13
+        return np.subtract(x, center) / sigma
+
+    def erf(
+        self,
+        x: NDArray[np.float64],
+        amplitude: float = 1.0,
+        center: float = 0.0,
+        sigma: float = 1.0,
+    ) -> NDArray[np.float64]:
+        r"""Return a 1-dimensional error function.
+
+        $$
+        f(x) = \frac{2}{\sqrt{\pi}} \int_{0}^{x} e^{-t^2} dt
+        $$
+
+        Args:
+            x (NDArray[np.float64]): `x`-values of the data.
+            amplitude (float, optional): Amplitude of the error function.
+                    Defaults to 1.0.
+            center (float, optional): Center of the error function. Defaults to 0.0.
+            sigma (float, optional): Sigma of the error function. Defaults to 1.0.
+
+        Returns:
+            NDArray[np.float64]: Error function of `x` given.
+        """
+        return np.array(amplitude * 0.5 * (1 + erf(self._norm(x, center, sigma))))
+
+    def heaviside(
+        self,
+        x: NDArray[np.float64],
+        amplitude: float = 1.0,
+        center: float = 0.0,
+        sigma: float = 1.0,
+    ) -> NDArray[np.float64]:
+        r"""Return a 1-dimensional Heaviside step function.
+
+        $$
+        f(x) = \begin{cases}
+        0 & x < 0 \\
+        0.5 & x = 0 \\
+        1 & x > 0
+        \end{cases}
+        $$
+        Args:
+            x (NDArray[np.float64]): `x`-values of the data.
+            amplitude (float, optional): Amplitude of the Heaviside step function.
+                    Defaults to 1.0.
+            center (float, optional): Center of the Heaviside step function.
+                 Defaults to 0.0.
+            sigma (float, optional): Sigma of the Heaviside step function.
+                 Defaults to 1.0.
 
 
-def lorentzian(
-    x: NDArray[np.float64],
-    amplitude: float = 1.0,
-    center: float = 0.0,
-    fwhml: float = 1.0,
-) -> NDArray[np.float64]:
-    r"""Return a 1-dimensional Lorentzian distribution.
+        Returns:
+            NDArray[np.float64]: Heaviside step function of `x` given.
+        """
+        return np.array(amplitude * 0.5 * (1 + np.sign(self._norm(x, center, sigma))))
 
-    $$
-    f(x;x_{0},\gamma )={\frac  {1}{\pi \gamma [ 1+ ( {\frac  {x-x_{0}}{\gamma }})^{2} ]
-    }} ={1 \over \pi \gamma } [ {\gamma ^{2} \over (x-x_{0})^{2}+\gamma ^{2}} ]
-    $$
+    def atan(
+        self,
+        x: NDArray[np.float64],
+        amplitude: float = 1.0,
+        center: float = 0.0,
+        sigma: float = 1.0,
+    ) -> NDArray[np.float64]:
+        r"""Return a 1-dimensional arctan step function.
 
-    Args:
-        x (NDArray[np.float64]): `x`-values of the data.
-        amplitude (float, optional): Amplitude of the Lorentzian distribution. Defaults
-             to 1.0.
-        center (float, optional): Center of the Lorentzian distribution. Defaults to
-             0.0.
-        fwhml (float, optional): Full width at half maximum (FWHM) of the Lorentzian
-             distribution. Defaults to 1.0.
+        $$
+        f(x) = \frac{1}{\pi} \arctan(\frac{x - c}{s})
+        $$
 
-    Returns:
-        Union[NDArray[np.float64], float]: Lorentzian distribution of `x` given.
-    """
-    sigma = fwhml / 2.0
-    return np.array(amplitude / (1 + ((1.0 * x - center) / sigma) ** 2)) / (
-        np.pi * sigma
-    )
+        Args:
+            x (NDArray[np.float64]): `x`-values of the data.
+            amplitude (float, optional): Amplitude of the arctan step function.
+                    Defaults to 1.0.
+            center (float, optional): Center of the arctan step function.
+                 Defaults to 0.0.
+            sigma (float, optional): Sigma of the arctan step function.
+                 Defaults to 1.0.
 
+        Returns:
+            NDArray[np.float64]: Arctan step function of `x` given.
+        """
+        return np.array(
+            amplitude * 0.5 * (1 + np.arctan(self._norm(x, center, sigma)) / np.pi)
+        )
 
-def voigt(
-    x: NDArray[np.float64],
-    center: float = 0.0,
-    fwhmv: float = 1.0,
-    gamma: Optional[float] = None,
-) -> NDArray[np.float64]:
-    r"""Return a 1-dimensional Voigt distribution.
+    def log(
+        self,
+        x: NDArray[np.float64],
+        amplitude: float = 1.0,
+        center: float = 0.0,
+        sigma: float = 1.0,
+    ) -> NDArray[np.float64]:
+        r"""Return a 1-dimensional logarithmic step function.
 
-    $$
-    {\displaystyle V(x;\sigma ,\gamma )\equiv \int _{-\infty }^{\infty }G(x';\sigma )
-    L(x-x';\gamma )\,dx'}
-    $$
+        $$
+        f(x) = \frac{1}{1 + e^{-\frac{x - c}{s}}}
+        $$
 
-    Args:
-        x (NDArray[np.float64]): `x`-values of the data.
-        center (float, optional): Center of the Voigt distribution. Defaults to 0.0.
-        fwhmv (float, optional): Full width at half maximum (FWHM) of the Lorentzian
-             distribution. Defaults to 1.0.
-        gamma (float, optional): Scaling factor of the complex part of the
-             [Faddeeva Function](https://en.wikipedia.org/wiki/Faddeeva_function).
-             Defaults to None.
+        Args:
+            x (NDArray[np.float64]): `x`-values of the data.
+            amplitude (float, optional): Amplitude of the logarithmic step function.
+                    Defaults to 1.0.
+            center (float, optional): Center of the logarithmic step function.
+                 Defaults to 0.0.
+            sigma (float, optional): Sigma of the logarithmic step function.
+                 Defaults to 1.0.
 
-    Returns:
-        NDArray[np.float64]: Voigt distribution of `x` given.
-    """
-    sigma = fwhmv / 3.60131
-    if gamma is None:
-        gamma = sigma
-    z = (x - center + 1j * gamma) / (sigma * Constants.sq2)
-    return np.array(wofz(z).real / (sigma * Constants.sq2pi))
+        Returns:
+            NDArray[np.float64]: Logarithmic step function of `x` given.
+        """
+        return np.array(
+            amplitude * 0.5 * (1 + np.log(self._norm(x, center, sigma)) / np.pi)
+        )
 
+    def cumulative_gaussian(
+        self,
+        x: NDArray[np.float64],
+        amplitude: float = 1.0,
+        center: float = 0.0,
+        sigma: float = 1.0,
+    ) -> NDArray[np.float64]:
+        r"""Return a 1-dimensional cumulative Gaussian function.
 
-def pseudovoigt(
-    x: NDArray[np.float64],
-    amplitude: float = 1.0,
-    center: float = 0.0,
-    fwhmg: float = 1.0,
-    fwhml: float = 1.0,
-) -> NDArray[np.float64]:
-    """Return a 1-dimensional Pseudo-Voigt distribution.
+        $$
+        f(x) = \frac{1}{2} \left[1 + erf\left(\frac{x - c}{s \sqrt{2}}\right)\right]
+        $$
 
-    !!! note "See also:"
+        Args:
+            x (NDArray[np.float64]): `x`-values of the data.
+            amplitude (float, optional): Amplitude of the Gaussian function. Defaults to
+                1.0.
+            center (float, optional): Center of the Gaussian function. Defaults to 0.0.
+            sigma (float, optional): Sigma of the Gaussian function. Defaults to 1.0.
 
-        J. Appl. Cryst. (2000). 33, 1311-1316
-        https://doi.org/10.1107/S0021889800010219
-
-    Args:
-        x (NDArray[np.float64]):  `x`-values of the data.
-        amplitude (float, optional): Amplitude of the Pseudo-Voigt distribution.
-             Defaults to 1.0.
-        center (float, optional): Center of the Pseudo-Voigt distribution.
-             Defaults to 0.0.
-        fwhmg (float, optional): Full width half maximum of the Gaussian distribution
-            in the Pseudo-Voigt distribution. Defaults to 1.0.
-        fwhml (float, optional): Full width half maximum of the Lorentzian distribution
-            in the Pseudo-Voigt distribution. Defaults to 1.0.
-
-    Returns:
-        NDArray[np.float64]: Pseudo-Voigt distribution of `x` given.
-    """
-    f = np.power(
-        fwhmg**5
-        + 2.69269 * fwhmg**4 * fwhml
-        + 2.42843 * fwhmg**3 * fwhml**2
-        + 4.47163 * fwhmg**2 * fwhml**3
-        + 0.07842 * fwhmg * fwhml**4
-        + fwhml**5,
-        0.2,
-    )
-    n = 1.36603 * (fwhml / f) - 0.47719 * (fwhml / f) ** 2 + 0.11116 * (fwhml / f) ** 3
-    return np.array(
-        n * lorentzian(x=x, amplitude=amplitude, center=center, fwhml=fwhml)
-        + (1 - n) * gaussian(x=x, amplitude=amplitude, center=center, fwhmg=fwhmg)
-    )
-
-
-def exponential(
-    x: NDArray[np.float64],
-    amplitude: float = 1.0,
-    decay: float = 1.0,
-    intercept: float = 0.0,
-) -> NDArray[np.float64]:
-    """Return a 1-dimensional exponential decay.
-
-    Args:
-        x (NDArray[np.float64]): `x`-values of the data.
-        amplitude (float, optional): Amplitude of the exponential function. Defaults to
-             1.0.
-        decay (float, optional): Decay of the exponential function. Defaults to 1.0.
-        intercept (float, optional): Intercept of the exponential function. Defaults to
-             0.0.
-
-    Returns:
-        NDArray[np.float64]: Exponential decay of `x` given.
-    """
-    return np.array(amplitude * np.exp(-x / decay) + intercept)
-
-
-def power(
-    x: NDArray[np.float64],
-    amplitude: float = 1.0,
-    exponent: float = 1.0,
-    intercept: float = 0.0,
-) -> NDArray[np.float64]:
-    """Return a 1-dimensional power function.
-
-    Args:
-        x (NDArray[np.float64]): `x`-values of the data.
-        amplitude (float, optional): Amplitude of the power function. Defaults to
-             1.0.
-        exponent (float, optional): Exponent of the power function. Defaults to 1.0.
-        intercept (float, optional): Intercept of the power function. Defaults to
-             0.0.
-
-    Returns:
-        NDArray[np.float64]: power function of `x` given.
-    """
-    return np.array(amplitude * np.power(x, exponent) + intercept)
-
-
-def linear(
-    x: NDArray[np.float64],
-    slope: float = 1.0,
-    intercept: float = 0.0,
-) -> NDArray[np.float64]:
-    """Return a 1-dimensional linear function.
-
-    Args:
-        x (NDArray[np.float64]): `x`-values of the data.
-        slope (float, optional): Slope of the linear function. Defaults to 1.0.
-        intercept (float, optional): Intercept of the linear function. Defaults to 0.0.
-
-    Returns:
-        NDArray[np.float64]: Linear function of `x` given.
-    """
-    return np.array(slope * x + intercept)
-
-
-def constant(
-    x: NDArray[np.float64],
-    amplitude: float = 1.0,
-) -> NDArray[np.float64]:
-    """Return a 1-dimensional constant value.
-
-    Args:
-        x (NDArray[np.float64]): `x`-values of the data.
-        amplitude (float, optional): Amplitude of the constant. Defaults to 1.0.
-
-    Returns:
-        NDArray[np.float64]: Constant value of `x` given.
-    """
-    return np.array(np.linspace(amplitude, amplitude, len(x)))
-
-
-def step(
-    x: NDArray[np.float64],
-    amplitude: float = 1.0,
-    center: float = 0.0,
-    sigma: float = 1.0,
-    kind: str = "linear",
-) -> NDArray[np.float64]:
-    r"""Return a 1-dimensional step function.
-
-    Args:
-        x (NDArray[np.float64]): `x`-values of the data.
-        amplitude (float, optional): Amplitude of the step function. Defaults to 1.0.
-        center (float, optional): Center of the step function. Defaults to 0.0.
-        sigma (float, optional): Sigma of the step function. Defaults to 1.0.
-        kind (str, optional): Kind of the step function; can be 'heaviside',
-             'atan' or 'arctan', 'log' or 'logarithmic', 'erf'. Defaults to "heaviside".
-
-    Returns:
-        NDArray[np.float64]: Step function of `x` given.
-
-
-    !!! note "Available step functions"
-        ```python
-        step_linear = amplitude * min(1, max(0, arg))
-        step_atan = amplitude * (0.5 + atan(arg) / pi)
-        step_erf = amplitude * (1 + erf(arg)) / 2.0
-        step_log = amplitude * [1 - 1 / (1 + exp(arg))]
-        # where arg = (x - center)/sigma
-        ```
-    """
-    if abs(sigma) < 1.0e-13:
-        sigma = 1.0e-13
-
-    out: NDArray[np.float64] = np.subtract(x, center) / sigma
-    if kind == "erf":
-        out = 0.5 * (1 + erf(out))
-    elif kind.startswith("log"):
-        out = 1.0 - 1.0 / (1.0 + np.exp(out))
-    elif kind in {"atan", "arctan"}:
-        out = 0.5 + np.arctan(out) / np.pi
-    elif kind == "heaviside":
-        out[np.where(out < 0)] = 0.0
-        out[np.where(out > 1)] = 1.0
-    return np.array(amplitude * out)
+        Returns:
+            NDArray[np.float64]: Cumulative Gaussian function of `x` given.
+        """
+        return np.array(
+            amplitude * 0.5 * (1 + erf((x - center) / (sigma * np.sqrt(2.0))))
+        )
