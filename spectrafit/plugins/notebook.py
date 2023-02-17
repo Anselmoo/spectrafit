@@ -249,6 +249,29 @@ class DataFramePlot:
         )
         fig.show()
 
+    def plot_global_fit(self, args_plot: PlotAPI, df: pd.DataFrame) -> None:
+        """Plot the global dataframe according to the PlotAPI arguments.
+
+        Args:
+            args_plot (PlotAPI): PlotAPI object for the settings of the plot.
+            df (pd.DataFrame): Dataframe to plot.
+        """
+        for i in range(
+            1,
+            sum(1 for _col in df.columns if _col.startswith(ColumnNamesAPI().fit)) + 1,
+        ):
+            _col = [col for col in df.columns if col.endswith(str(i))]
+            _col.append(ColumnNamesAPI().energy)
+            _df = df[_col]
+            _df = _df.rename(
+                columns={
+                    f"{ColumnNamesAPI().intensity}_{i}": ColumnNamesAPI().intensity,
+                    f"{ColumnNamesAPI().fit}_{i}": ColumnNamesAPI().fit,
+                    f"{ColumnNamesAPI().residual}_{i}": ColumnNamesAPI().residual,
+                }
+            )
+            self.plot_2dataframes(args_plot, _df)
+
     def plot_metric(
         self,
         args_plot: PlotAPI,
@@ -385,7 +408,7 @@ class ExportResults:
                  and suffix.
         """
         df.to_csv(
-            self.fname2Path(
+            self.fname2path(
                 fname=args.fname,
                 prefix=args.prefix,
                 suffix=args.suffix,
@@ -403,7 +426,7 @@ class ExportResults:
                  and suffix.
         """
         with open(
-            self.fname2Path(
+            self.fname2path(
                 fname=args.fname,
                 prefix=args.prefix,
                 suffix=args.suffix,
@@ -414,7 +437,7 @@ class ExportResults:
             tomli_w.dump(report, f)
 
     @staticmethod
-    def fname2Path(
+    def fname2path(
         fname: str,
         suffix: str,
         prefix: Optional[str] = None,
@@ -932,7 +955,10 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
 
     def plot_fit_df(self) -> None:
         """Plot the fit."""
-        self.plot_2dataframes(args_plot=self.args_plot, df_1=self.df_fit)
+        if self.global_ == 1:
+            self.plot_global_fit(args_plot=self.args_plot, df=self.df_fit)
+        else:
+            self.plot_2dataframes(args_plot=self.args_plot, df_1=self.df_fit)
 
     def plot_current_metric(
         self,
