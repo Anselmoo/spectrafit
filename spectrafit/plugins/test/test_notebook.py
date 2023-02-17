@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 from typing import Dict
 from typing import List
+from typing import Union
 from unittest import mock
 
 import pandas as pd
@@ -42,6 +43,15 @@ def dataframe_2_fixture() -> pd.DataFrame:
     return pd.read_csv(
         "https://raw.githubusercontent.com/Anselmoo/"
         "spectrafit/main/Examples/example_1_fit.csv"
+    )
+
+
+@pytest.fixture(name="dataframe_global")
+def dataframe_global_fixture() -> pd.DataFrame:
+    """Create a DataFrameDisplay object."""
+    return pd.read_csv(
+        "https://github.com/Anselmoo/spectrafit/blob/"
+        "9cf51ce020925228be26468763466c7fd91fedf0/Examples/example_6_fit.csv?raw=true"
     )
 
 
@@ -138,7 +148,7 @@ def class_spectrafit_fixture(
     dataframe_2: pd.DataFrame,
     initial_model: List[Dict[str, Dict[str, Dict[str, Any]]]],
     tmp_path: Path,
-) -> Dict[Any, Any]:
+) -> Dict[str, Union[SpectraFitNotebook, Path]]:
     """Create a SpectraFitNotebook object."""
     _df = pd.DataFrame(data={"x": [1, 2, 3], "y": [1, 2, 3]})
     sp = SpectraFitNotebook(
@@ -152,6 +162,30 @@ def class_spectrafit_fixture(
     sp.initial_model = initial_model
     sp.df_pre = _df
     sp.df_metric = _df
+    return {"sp": sp, "tmpdir": tmp_path}
+
+
+@pytest.fixture(name="class_spectrafit_fit_global")
+def class_spectrafit_fixture_fit_global(
+    dataframe_global: pd.DataFrame,
+    initial_model: List[Dict[str, Dict[str, Dict[str, Any]]]],
+    tmp_path: Path,
+) -> Dict[str, Union[SpectraFitNotebook, Path]]:
+    """Create a SpectraFitNotebook object."""
+    dataframe_init = pd.read_csv(
+        "https://github.com/Anselmoo/spectrafit/blob/"
+        "9cf51ce020925228be26468763466c7fd91fedf0/Examples/data_global.csv?raw=true"
+    )
+
+    sp = SpectraFitNotebook(
+        df=dataframe_init,
+        x_column="energy",
+        y_column=["y_1", "y_2", "y_3"],
+        fname="test",
+        folder=str(tmp_path),
+    )
+    sp.df_fit = dataframe_global
+    sp.initial_model = initial_model
     return {"sp": sp, "tmpdir": tmp_path}
 
 
@@ -227,6 +261,16 @@ class TestDataFramePlot:
             )
             mock_show.assert_called_once()
 
+    def test_dataframe_plot_global(self, dataframe_global: pd.DataFrame) -> None:
+        """Test global plot."""
+        pp = DataFramePlot()
+        with mock.patch(__plotly_io_show__) as mock_show:
+            pp.plot_global_fit(
+                args_plot=PlotAPI(x="Energy", y="Intensity", title="Test"),
+                df=dataframe_global,
+            )
+            mock_show.assert_called()
+
 
 def test_dataframe_display_all(dataframe: pd.DataFrame) -> None:
     """Test the DataFrameDisplay class."""
@@ -270,9 +314,9 @@ class TestExportResults:
 
     def test_static_fname(self) -> None:
         """Test the static function of generating PathPosixs."""
-        assert isinstance(ExportResults.fname2Path(fname="test", suffix="csv"), Path)
+        assert isinstance(ExportResults.fname2path(fname="test", suffix="csv"), Path)
         assert isinstance(
-            ExportResults.fname2Path(
+            ExportResults.fname2path(
                 fname="test", suffix="csv", folder="tmp", prefix="prefix"
             ),
             Path,
@@ -350,19 +394,19 @@ class TestSpectraFitNotebook:
         class_spectrafit["sp"].export_df_org
         class_spectrafit["sp"].export_df_pre
         class_spectrafit["sp"].export_df_metric
-        assert ExportResults.fname2Path(
+        assert ExportResults.fname2path(
             folder=class_spectrafit["tmpdir"], fname="test", prefix="act", suffix="csv"
         ).exists()
-        assert ExportResults.fname2Path(
+        assert ExportResults.fname2path(
             folder=class_spectrafit["tmpdir"], fname="test", prefix="fit", suffix="csv"
         ).exists()
-        assert ExportResults.fname2Path(
+        assert ExportResults.fname2path(
             folder=class_spectrafit["tmpdir"], fname="test", prefix="org", suffix="csv"
         ).exists()
-        assert ExportResults.fname2Path(
+        assert ExportResults.fname2path(
             folder=class_spectrafit["tmpdir"], fname="test", prefix="pre", suffix="csv"
         ).exists()
-        assert ExportResults.fname2Path(
+        assert ExportResults.fname2path(
             folder=class_spectrafit["tmpdir"],
             fname="test",
             prefix="metric",
@@ -413,6 +457,17 @@ class TestSpectraFitNotebook:
             class_spectrafit["sp"].plot_fit_df()
             mock_show.assert_called_once()
 
+    @pytest.mark.skipif(sys.platform == "win32", reason="does not run on windows")
+    @pytest.mark.webtest
+    def test_plot_global(
+        self,
+        class_spectrafit_fit_global: Dict[Any, Any],
+    ) -> None:
+        """Test the plot function for global fitting routine."""
+        with mock.patch(__plotly_io_show__) as mock_show:
+            class_spectrafit_fit_global["sp"].plot_fit_df()
+            mock_show.assert_called()
+
     def test_display(
         self,
         class_spectrafit: Dict[Any, Any],
@@ -437,7 +492,7 @@ class TestSpectraFitNotebook:
         sp.df_fit = dataframe_2
         sp.generate_report
 
-        assert ExportResults.fname2Path(
+        assert ExportResults.fname2path(
             folder=sp.export_args_out.folder,
             fname="test",
             suffix="lock",
