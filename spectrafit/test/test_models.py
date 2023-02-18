@@ -1041,7 +1041,6 @@ class TestAutoPeakDetection:
                 x=np.arange(2, dtype=float), data=np.arange(2, dtype=float), args=args
             )
             auto.initialize_peak_detection()
-            _ = auto.__autodetect__()
 
         assert pytest_wrapped_e.type == TypeError
 
