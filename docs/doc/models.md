@@ -67,23 +67,31 @@
 
 Here is a list of implemented models of `spectrafit`:
 
-::: spectrafit.models.gaussian
+::: spectrafit.models.DistributionModels.gaussian
 
-::: spectrafit.models.lorentzian
+::: spectrafit.models.DistributionModels.lorentzian
 
-::: spectrafit.models.pseudovoigt
+::: spectrafit.models.DistributionModels.pseudovoigt
 
-::: spectrafit.models.voigt
+::: spectrafit.models.DistributionModels.voigt
 
-::: spectrafit.models.exponential
+::: spectrafit.models.DistributionModels.exponential
 
-::: spectrafit.models.power
+::: spectrafit.models.DistributionModels.power
 
-::: spectrafit.models.linear
+::: spectrafit.models.DistributionModels.linear
 
-::: spectrafit.models.constant
+::: spectrafit.models.DistributionModels.constant
 
-::: spectrafit.models.step
+::: spectrafit.models.DistributionModels.erf
+
+::: spectrafit.models.DistributionModels.heaviside
+
+::: spectrafit.models.DistributionModels.atan
+
+::: spectrafit.models.DistributionModels.log
+
+::: spectrafit.models.DistributionModels.c_gaussian
 
 ## Important constans for the models
 
