@@ -1,12 +1,16 @@
 """Pytest of the model-module."""
+from typing import Dict
+
 import numpy as np
 import pandas as pd
 import pytest
 
 from lmfit import Parameters
+from numpy.typing import NDArray
 from pydantic import ValidationError
 from spectrafit.models import AutoPeakDetection
 from spectrafit.models import Constants
+from spectrafit.models import DistributionModels
 from spectrafit.models import ModelParameters
 from spectrafit.models import SolverModels
 from spectrafit.models import calculated_model
@@ -65,38 +69,38 @@ class TestNotSupported:
 
     def test_solver_model_exit_local(self) -> None:
         """Exit-Test of solver_model for local fitting."""
-        with pytest.raises(KeyError) as pytest_wrapped_e:
+        with pytest.raises(NotImplementedError) as pytest_wrapped_e:
             _ = SolverModels(
                 df=self.df, args=self.args
             )().will_exit_somewhere_down_the_stack()  # type: ignore
 
-        assert pytest_wrapped_e.type == KeyError
+        assert pytest_wrapped_e.type == NotImplementedError
         assert pytest_wrapped_e.value.args[0] == "dummy_amplitude_1 is not supported!"
 
     def test_solver_model_exit_global(self) -> None:
         """Exit-Test of solver_model for global fitting."""
         _args = self.args
         _args["global_"] = 1
-        with pytest.raises(KeyError) as pytest_wrapped_e:
+        with pytest.raises(NotImplementedError) as pytest_wrapped_e:
             _ = SolverModels(
                 df=self.df, args=_args
             )().will_exit_somewhere_down_the_stack()  # type: ignore
 
-        assert pytest_wrapped_e.type == KeyError
+        assert pytest_wrapped_e.type == NotImplementedError
         assert pytest_wrapped_e.value.args[0] == "dummy_amplitude_1_1 is not supported!"
 
     def test_calculated_model_exit(self) -> None:
         """Exit-Test of solver_model."""
         params = Parameters()
         params.add("dummy_amplitude_1", value=1.0)
-        with pytest.raises(KeyError) as pytest_wrapped_e:
+        with pytest.raises(NotImplementedError) as pytest_wrapped_e:
             calculated_model(
                 params=params,
                 x=self.df["energy"].values,
                 df=self.df["intensity"].values,
                 global_fit=0,
             ).will_exit_somewhere_down_the_stack()
-        assert pytest_wrapped_e.type == KeyError
+        assert pytest_wrapped_e.type == NotImplementedError
         assert pytest_wrapped_e.value.args[0] == "dummy_amplitude_1 is not supported!"
 
     def test_auto_global_fail(self) -> None:
@@ -133,7 +137,7 @@ class TestModelParametersSolver:
                     "amplitude": {"max": 200, "min": 0, "vary": True, "value": 1},
                     "center": {"max": 200, "min": -200, "vary": True, "value": 0},
                     "fwhmg": {"max": 2.5, "min": 0.00002, "vary": True, "value": 0.1},
-                    "fwhml": {"max": 2.5, "min": 0.00001, "vary": True, "value": 1},
+                    # "fwhml": {"max": 2.5, "min": 0.00001, "vary": True, "value": 1},
                 }
             },
             "2": {
@@ -142,6 +146,13 @@ class TestModelParametersSolver:
                     "center": {"max": 200, "min": -200, "vary": True, "value": 0},
                     "fwhmg": {"max": 2.5, "min": 0.00002, "vary": True, "value": 1.0},
                     "fwhml": {"max": 2.5, "min": 0.0001, "vary": True, "value": 0.01},
+                }
+            },
+            "3": {
+                "gaussian": {
+                    "amplitude": {"max": 200, "min": 0, "vary": True, "value": 1},
+                    "center": {"max": 200, "min": -200, "vary": True, "value": 0},
+                    "fwhmg": {"max": 2.5, "min": 0.00002, "vary": True, "value": 1.0},
                 }
             },
         },
@@ -181,46 +192,21 @@ class TestModelParametersSolver:
             "1": {
                 "1": {
                     "pseudovoigt": {
-                        "amplitude": {
-                            "max": 200,
-                            "min": 0,
-                            "vary": True,
-                            "value": 1,
-                        },
-                        "center": {
-                            "max": 200,
-                            "min": -200,
-                            "vary": True,
-                            "value": 0,
-                        },
+                        "amplitude": {"max": 200, "min": 0, "vary": True, "value": 1},
+                        "center": {"max": 200, "min": -200, "vary": True, "value": 0},
                         "fwhmg": {
                             "max": 2.5,
                             "min": 0.00002,
                             "vary": True,
                             "value": 0.1,
                         },
-                        "fwhml": {
-                            "max": 2.5,
-                            "min": 0.00001,
-                            "vary": True,
-                            "value": 1,
-                        },
+                        "fwhml": {"max": 2.5, "min": 0.00001, "vary": True, "value": 1},
                     }
                 },
                 "2": {
                     "pseudovoigt": {
-                        "amplitude": {
-                            "max": 200,
-                            "min": 0,
-                            "vary": True,
-                            "value": 1,
-                        },
-                        "center": {
-                            "max": 200,
-                            "min": -200,
-                            "vary": True,
-                            "value": 0,
-                        },
+                        "amplitude": {"max": 200, "min": 0, "vary": True, "value": 1},
+                        "center": {"max": 200, "min": -200, "vary": True, "value": 0},
                         "fwhmg": {
                             "max": 2.5,
                             "min": 0.00002,
@@ -1183,3 +1169,41 @@ class TestAutoPeakDetection:
             mp.__perform__()
         # peaks, properties = auto.__autodetect__()
         assert pytest_wrapped_e.type == KeyError
+
+
+class TestModel:
+    """Test the distribution class and its models."""
+
+    @pytest.fixture
+    def x_data(self) -> NDArray[np.float64]:
+        """Create x data."""
+        return np.linspace(0, 10, 100, dtype=float)
+
+    @pytest.mark.parametrize(
+        "model, params",
+        [
+            ("gaussian", {"amplitude": 1.0, "center": 5.0, "fwhmg": 1.0}),
+            ("lorentzian", {"amplitude": 1.0, "center": 5.0, "fwhml": 1.0}),
+            ("voigt", {"center": 5.0, "fwhmv": 1.0, "gamma": 1}),
+            (
+                "pseudovoigt",
+                {"amplitude": 1.0, "center": 5.0, "fwhmg": 1, "fwhml": 1.0},
+            ),
+            ("exponential", {"amplitude": 1.0, "decay": 1, "intercept": 1.0}),
+            ("power", {"amplitude": 1.0, "exponent": 1.0, "intercept": 1.0}),
+            ("linear", {"slope": 1.0, "intercept": 1.0}),
+            ("constant", {"amplitude": 1.0}),
+            ("erf", {"amplitude": 1.0, "center": 5.0, "sigma": 1.0}),
+            ("heaviside", {"amplitude": 1.0, "center": 5.0, "sigma": 1.0}),
+            ("atan", {"amplitude": 1.0, "center": 5.0, "sigma": 1.0}),
+            ("log", {"amplitude": 1.0, "center": 5.0, "sigma": 1.0}),
+            ("c_gaussian", {"amplitude": 1.0, "center": 5.0, "sigma": 1.0}),
+        ],
+    )
+    def test_distrubtion_models(
+        self, x_data: NDArray[np.float64], model: str, params: Dict[str, float]
+    ) -> None:
+        """Test of all distribution models."""
+        y_data = getattr(DistributionModels(), model)(x_data, **params)
+        assert isinstance(y_data, np.ndarray)
+        assert len(y_data) == 100
