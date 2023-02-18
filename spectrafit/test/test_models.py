@@ -256,7 +256,7 @@ class TestModelParametersSolver:
         """Test of length of the paramaters for normal fitting."""
         mp = ModelParameters(df=self.df, args=self.args)
         mp.define_parameters()
-        assert len(mp.return_params.keys()) == 8
+        assert len(mp.return_params.keys()) == 10
 
     def test_len_param_global_1(self) -> None:
         """Test of length of the paramaters for global fitting."""
