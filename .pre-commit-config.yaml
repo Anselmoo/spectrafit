@@ -38,7 +38,7 @@ repos:
         exclude: ^spectrafit/test/, ^examples/
         entry: flake8  --max-doc-length 100 --max-line-length  88 --ignore E203,W503,W605
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.0.0
+    rev: v1.0.1
     hooks:
       - id: mypy
         additional_dependencies:
@@ -57,7 +57,7 @@ repos:
       - id: pydocstyle
         additional_dependencies: [toml==0.10.2]
   - repo: https://github.com/PyCQA/pylint
-    rev: "v2.16.1"
+    rev: "v2.16.2"
     hooks:
       - id: pylint
         additional_dependencies: [toml==0.10.2, numpy==1.23.4, pydantic==1.10.1]
