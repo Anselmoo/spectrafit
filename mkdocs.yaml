@@ -153,6 +153,7 @@ nav:
           - Export Results: examples/example9_3.ipynb
           - RIXS Map Visualization: examples/example9_4.ipynb
           - Using Converters as Module: examples/example9_5.ipynb
+          - RIXS Global-Fitting in Jupyter: examples/example9_6.ipynb
   - Documentation:
       - Models: doc/models.md
       - Expression: doc/expression.md

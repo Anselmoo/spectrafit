@@ -10,6 +10,27 @@
 
 ---
 
+## v0.16.0
+
+---
+
+- Add [Cumulative Distribution Function][38] to the `SpectraFit` package
+- Refactor the `model.py` of `SpectraFit` package
+
+## v0.15.1
+
+---
+
+- Maintenance of the `SpectraFit` package
+
+## v0.15.0
+
+---
+
+- Add `plugins` to the `SpectraFit` package for working with [RIXS][36] data
+- `pikle`-file converter and visualizer for [RIXS][36] data
+- Simplify the `SpectraFit` continous deployment by using [build][37]
+
 ## v0.14.0
 
 ---
@@ -343,3 +364,6 @@
 [33]: https://github.com/conda-forge/spectrafit-feedstock
 [34]: https://fishshell.com
 [35]: https://githubnext.com/projects/copilot-labs/
+[36]: https://en.wikipedia.org/wiki/Resonant_inelastic_X-ray_scattering
+[37]: https://github.com/pypa/build
+[38]: https://en.wikipedia.org/wiki/Cumulative_distribution_function
