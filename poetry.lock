@@ -966,14 +966,14 @@ pandas = ["numpy", "pandas"]
 
 [[package]]
 name = "dash-bootstrap-templates"
-version = "1.0.7"
+version = "1.0.8"
 description = "A collection of Plotly figure templates with a Bootstrap theme"
 category = "main"
 optional = true
 python-versions = "*"
 files = [
-    {file = "dash-bootstrap-templates-1.0.7.tar.gz", hash = "sha256:746a3e30a2fd963c00b07cbcc23204d27434f2e2793d73d11ffbc5cde0193610"},
-    {file = "dash_bootstrap_templates-1.0.7-py3-none-any.whl", hash = "sha256:f1fcda66d4860ac1747c220ca5fbd8f2d49c2ce4338f32809d75b666ae2a12b7"},
+    {file = "dash-bootstrap-templates-1.0.8.tar.gz", hash = "sha256:cdd7971b2af7bf5ed2f73c771eed97505a42246d7b00299f380de5ed372402b3"},
+    {file = "dash_bootstrap_templates-1.0.8-py3-none-any.whl", hash = "sha256:92a39bc5693a7ba224b34bc08e27ce94622e1d1eea239ce0dc6ba50579bc7c32"},
 ]
 
 [package.dependencies]
