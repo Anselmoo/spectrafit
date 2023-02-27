@@ -19,7 +19,7 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build and use devcontainer
-        uses: devcontainers/ci@v0.2
+        uses: devcontainers/ci@v0.3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BUILD_NUMBER: ${{ github.run_id  }}
