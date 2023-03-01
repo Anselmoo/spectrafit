@@ -1,5 +1,6 @@
 """Fit-Results as Report."""
 import pprint
+import sys
 
 from typing import Any
 from typing import Dict
@@ -348,7 +349,7 @@ class PrintingResults:
             tabulate(
                 pd.DataFrame(**args).T,
                 headers="keys",
-                tablefmt="mixed_grid",
+                tablefmt="fancy_grid" if sys.platform != "win32" else "grid",
                 floatfmt=".3f",
             )
         )
