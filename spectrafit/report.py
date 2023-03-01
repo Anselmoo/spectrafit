@@ -1,5 +1,6 @@
 """Fit-Results as Report."""
 import pprint
+import sys
 
 from typing import Any
 from typing import Dict
@@ -333,9 +334,9 @@ class PrintingResults:
     def __call__(self) -> None:
         """Print the results of the fitting process."""
         if self.args["verbose"] == 1:
-            self.printing_verbose_mode()
-        elif self.args["verbose"] == 2:
             self.printing_regular_mode()
+        elif self.args["verbose"] == 2:
+            self.printing_verbose_mode()
 
     @staticmethod
     def print_tabulate(args: Dict[str, Any]) -> None:
@@ -348,7 +349,7 @@ class PrintingResults:
             tabulate(
                 pd.DataFrame(**args).T,
                 headers="keys",
-                tablefmt="fancy_grid",
+                tablefmt="fancy_grid" if sys.platform != "win32" else "grid",
                 floatfmt=".3f",
             )
         )
