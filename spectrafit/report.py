@@ -348,7 +348,7 @@ class PrintingResults:
             tabulate(
                 pd.DataFrame(**args).T,
                 headers="keys",
-                tablefmt="fancy_grid",
+                tablefmt="mixed_grid",
                 floatfmt=".3f",
             )
         )
