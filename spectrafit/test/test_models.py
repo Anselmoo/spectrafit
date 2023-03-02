@@ -1196,7 +1196,9 @@ class TestModel:
             ("heaviside", {"amplitude": 1.0, "center": 5.0, "sigma": 1.0}),
             ("atan", {"amplitude": 1.0, "center": 5.0, "sigma": 1.0}),
             ("log", {"amplitude": 1.0, "center": 5.0, "sigma": 1.0}),
-            ("c_gaussian", {"amplitude": 1.0, "center": 5.0, "sigma": 1.0}),
+            ("cgaussian", {"amplitude": 1.0, "center": 5.0, "fwhmg": 1.0}),
+            ("clorentzian", {"amplitude": 1.0, "center": 5.0, "fwhml": 1.0}),
+            ("cvoigt", {"amplitude": 1.0, "center": 5.0, "fwhmv": 1.0}),
         ],
     )
     def test_distrubtion_models(
