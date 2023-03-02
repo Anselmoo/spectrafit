@@ -26,9 +26,20 @@ class DistributionModels:
     """Distribution models for the fit.
 
     !!! note "About distribution models"
+
         `DistributionModels` are wrapper functions for the distribution models. The
         overall goal is to extract from the best parameters the single contributions in
         the model. The superposition of the single contributions is the final model.
+
+    !!! note "About the cumulative distribution"
+
+        The cumulative distribution is the sum of the single contributions. The
+        cumulative distribution is the model that is fitted to the data. In contrast to
+        the single contributions, the cumulative distribution is not normalized and
+        therefore the amplitude of the single contributions is not directly comparable
+        to the amplitude of the cumulative distribution. Also, the cumulative
+        distributions are consquently using the `fwhm` parameter instead of the
+        `sigma` parameter.
     """
 
     def gaussian(
@@ -387,12 +398,12 @@ class DistributionModels:
             amplitude * 0.5 * (1 + np.log(self._norm(x, center, sigma)) / np.pi)
         )
 
-    def c_gaussian(
+    def cgaussian(
         self,
         x: NDArray[np.float64],
         amplitude: float = 1.0,
         center: float = 0.0,
-        sigma: float = 1.0,
+        fwhmg: float = 1.0,
     ) -> NDArray[np.float64]:
         r"""Return a 1-dimensional cumulative Gaussian function.
 
@@ -405,13 +416,78 @@ class DistributionModels:
             amplitude (float, optional): Amplitude of the Gaussian function. Defaults to
                 1.0.
             center (float, optional): Center of the Gaussian function. Defaults to 0.0.
-            sigma (float, optional): Sigma of the Gaussian function. Defaults to 1.0.
+            fwhmg (float, optional): Full width at half maximum of the Gaussian
+                 function. Defaults to 1.0.
+
 
         Returns:
             NDArray[np.float64]: Cumulative Gaussian function of `x` given.
         """
+        sigma = fwhmg / Constants.sig2fwhm
         return np.array(
             amplitude * 0.5 * (1 + erf((x - center) / (sigma * np.sqrt(2.0))))
+        )
+
+    def clorentzian(
+        self,
+        x: NDArray[np.float64],
+        amplitude: float = 1.0,
+        center: float = 0.0,
+        fwhml: float = 1.0,
+    ) -> NDArray[np.float64]:
+        r"""Return a 1-dimensional cumulative Lorentzian function.
+
+        $$
+        f(x) = \frac{1}{\pi} \arctan\left(\frac{x - c}{s}\right) + \frac{1}{2}
+        $$
+
+        Args:
+            x (NDArray[np.float64]): `x`-values of the data.
+            amplitude (float, optional): Amplitude of the Lorentzian function.
+                    Defaults to 1.0.
+            center (float, optional): Center of the Lorentzian function.
+                 Defaults to 0.0.
+            fwhml (float, optional): Full width at half maximum of the Lorentzian
+                function. Defaults to 1.0.
+
+        Returns:
+            NDArray[np.float64]: Cumulative Lorentzian function of `x` given.
+        """
+        sigma = fwhml / 2.0
+        return np.array(amplitude * (np.arctan((x - center) / sigma) / np.pi) + 0.5)
+
+    def cvoigt(
+        self,
+        x: NDArray[np.float64],
+        amplitude: float = 1.0,
+        center: float = 0.0,
+        fwhmv: float = 1.0,
+        gamma: float = 1.0,
+    ) -> NDArray[np.float64]:
+        r"""Return a 1-dimensional cumulative Voigt function.
+
+        $$
+        f(x) = \frac{1}{2} \left[1 + erf\left(\frac{x - c}{s \sqrt{2}}\right)\right]
+        $$
+
+        Args:
+            x (NDArray[np.float64]): `x`-values of the data.
+            amplitude (float, optional): Amplitude of the Voigt function. Defaults to
+                1.0.
+            center (float, optional): Center of the Voigt function. Defaults to 0.0.
+            fwhmv (float, optional): Full width at half maximum of the Voigt function.
+                Defaults to 1.0.
+            gamma (float, optional): Gamma of the Voigt function. Defaults to 1.0.
+
+        Returns:
+            NDArray[np.float64]: Cumulative Voigt function of `x` given.
+        """
+        sigma = fwhmv / 3.60131
+        return np.array(
+            amplitude
+            * 0.5
+            * (1 + erf((x - center) / (sigma * np.sqrt(2.0))))
+            * np.exp(-(((x - center) / gamma) ** 2))
         )
 
 
