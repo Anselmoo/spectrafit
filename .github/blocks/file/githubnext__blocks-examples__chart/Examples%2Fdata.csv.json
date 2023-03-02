@@ -1,5 +1,3 @@
 {
-  "configs": [
-    "Energy, Intensity, area"
-  ]
+  "configs": ["Energy, Intensity, area"]
 }
