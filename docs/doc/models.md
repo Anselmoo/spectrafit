@@ -91,9 +91,13 @@ Here is a list of implemented models of `spectrafit`:
 
 ::: spectrafit.models.DistributionModels.log
 
-::: spectrafit.models.DistributionModels.c_gaussian
+::: spectrafit.models.DistributionModels.cgaussian
 
-## Important constans for the models
+::: spectrafit.models.DistributionModels.clorentzian
+
+::: spectrafit.models.DistributionModels.cvoigt
+
+## Important constants for the models
 
 For calculating the models a few math constants are needed, which are
 implemented in the `constants` module.
