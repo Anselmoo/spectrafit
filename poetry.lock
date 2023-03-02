@@ -5198,14 +5198,14 @@ wsproto = ">=0.14"
 
 [[package]]
 name = "types-mock"
-version = "4.0.15.2"
+version = "5.0.0.5"
 description = "Typing stubs for mock"
 category = "dev"
 optional = false
 python-versions = "*"
 files = [
-    {file = "types-mock-4.0.15.2.tar.gz", hash = "sha256:83fe479741adb92210c3c92f006fe058297d5051e93c2cec36f1a9e0bae16e9e"},
-    {file = "types_mock-4.0.15.2-py3-none-any.whl", hash = "sha256:39d489b6d9361b75448677680a3087701c0cfab61260363cfc0f646d2bf0a8b2"},
+    {file = "types-mock-5.0.0.5.tar.gz", hash = "sha256:171e6618583db52cfa72386538022892e2d341b2b5bc47c07cba90c96d0e8735"},
+    {file = "types_mock-5.0.0.5-py3-none-any.whl", hash = "sha256:03790888cd33d9fef408f0391aa20803d44d4c21b021dd8a08de8763ffdd2c91"},
 ]
 
 [[package]]
@@ -5715,4 +5715,4 @@ jupyter-dash = ["jupyter-dash", "ipywidgets", "dash-bootstrap-components", "dash
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8,<3.11"
-content-hash = "e796c08b648c5914a8e9e2408bca243f0b51738cf62850287eea3200f71c8ba3"
+content-hash = "17c838b81fe179a45ba48d5ca8fb92ac1fdf9f58c86b2adaf24f1d0970d0244b"
