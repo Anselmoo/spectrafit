@@ -1,5 +1,6 @@
 {
   "configs": [
-    "energy, y_1, area"
+    "energy, y_1, area",
+    "energy, y_2, area"
   ]
 }
