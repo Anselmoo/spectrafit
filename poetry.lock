@@ -2853,13 +2853,13 @@ mkdocs = ">=1.1"
 
 [[package]]
 name = "mkdocs-jupyter"
-version = "0.21.0"
+version = "0.22.0"
 description = "Use Jupyter in mkdocs websites"
 category = "dev"
 optional = false
 python-versions = ">=3.7.1,<4"
 files = [
-    {file = "mkdocs-jupyter-0.21.0.tar.gz", hash = "sha256:c8c00ce44456e3cf50c5dc3fe0cb18fab6467fb5bafc2c0bfe1efff3e0a52470"},
+    {file = "mkdocs-jupyter-0.22.0.tar.gz", hash = "sha256:585cc69bea4cb9faf6898131978dc9a9b225091ed4b6084f5ab65652a5e12185"},
 ]
 
 [package.dependencies]
@@ -5842,4 +5842,4 @@ jupyter-dash = ["jupyter-dash", "ipywidgets", "dash-bootstrap-components", "dash
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8,<3.11"
-content-hash = "5d860847533c7d09591ea2154e949e5e471e738b45f04139ef0037232cf8c6cc"
+content-hash = "315d54ac0d83da4e91142bf37632bb7c7ef04daaa2845f5a9a4a9a497d2304fa"
