@@ -1,4 +1,6 @@
 """Pytest of the model-module."""
+import math
+
 from math import log
 from math import pi
 from math import sqrt
@@ -45,6 +47,10 @@ class TestConstants:
     def test_fwhml2sig(self) -> None:
         """Test the Constants class."""
         assert Constants.fwhml2sig == 1 / 2.0
+
+    def test_fwhmv2sig(self) -> None:
+        """Test the Constants class."""
+        assert math.isclose(Constants.fwhmv2sig, 1 / 3.60131, rel_tol=1e-5)
 
 
 class TestNotSupported:
@@ -144,7 +150,6 @@ class TestModelParametersSolver:
                     "amplitude": {"max": 200, "min": 0, "vary": True, "value": 1},
                     "center": {"max": 200, "min": -200, "vary": True, "value": 0},
                     "fwhmg": {"max": 2.5, "min": 0.00002, "vary": True, "value": 0.1},
-                    # "fwhml": {"max": 2.5, "min": 0.00001, "vary": True, "value": 1},
                 }
             },
             "2": {

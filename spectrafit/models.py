@@ -135,7 +135,7 @@ class DistributionModels:
         Returns:
             NDArray[np.float64]: Voigt distribution of `x` given.
         """
-        sigma = fwhmv / 3.60131
+        sigma = fwhmv * Constants.fwhmv2sig
         if gamma is None:
             gamma = sigma
         z = (x - center + 1j * gamma) / (sigma * Constants.sq2)
@@ -485,7 +485,7 @@ class DistributionModels:
         Returns:
             NDArray[np.float64]: Cumulative Voigt function of `x` given.
         """
-        sigma = fwhmv / 3.60131
+        sigma = fwhmv * Constants.fwhmv2sig
         return np.array(
             amplitude
             * 0.5
@@ -576,21 +576,48 @@ class Constants:
         4. Square root of 2
 
             $$
-            sq2 = \sqrt{2 }
+            sq2 = \sqrt{2}
             $$
 
         5. Full width at half maximum to sigma for Gaussian
 
             $$
-            fwhmg2sig = frac{1}{ 2 \sqrt{2\log{2 }}}
+            fwhmg2sig = \frac{1}{ 2 \sqrt{2\log{2}}}
             $$
 
         6. Full width at half maximum to sigma for Lorentzian
 
             $$
-            fwhml2sig = frac{1}{2.0}
+            fwhml2sig = \frac{1}{2}
             $$
 
+        7. Full width at half maximum to sigma for Voigt according to the article by
+            Olivero and Longbothum[^1], check also
+            [XPSLibary website](https://xpslibrary.com/voigt-peak-shape/).
+
+            $$
+            fwhm_{\text{Voigt}} \approx 0.5346 \cdot fwhm_{\text{Gaussian}} +
+              \sqrt{ 0.2166 fwhm_{\text{Lorentzian}}^2  + fwhm_{\text{Gaussian}}^2 }
+
+            $$
+
+            In case of equal FWHM for Gaussian and Lorentzian, the Voigt FWHM can be
+            defined as:
+
+            $$
+            fwhm_{\text{Voigt}} \approx 1.0692 + \sqrt{ 0.8676 + 8 \ln{2} }\cdot \sigma
+            $$
+
+            $$
+            fwhmv2sig = \frac{1}{fwhm_{\text{Voigt}}}
+            $$
+
+        [^1]:
+            J.J. Olivero, R.L. Longbothum,
+            _Empirical fits to the Voigt line width: A brief review_,
+            **Journal of Quantitative Spectroscopy and Radiative Transfer**,
+            Volume 17, Issue 2, 1977, Pages 233-236, ISSN 0022-4073,
+            https://doi.org/10.1016/0022-4073(77)90161-3.
     """
 
     ln2 = log(2.0)
@@ -599,8 +626,7 @@ class Constants:
     sq2 = sqrt(2.0)
     fwhmg2sig = 1 / (2.0 * sqrt(2.0 * log(2.0)))
     fwhml2sig = 1 / 2.0
-    # Fwhm Voigt to Sigma
-    # fwhmv2sig =
+    fwhmv2sig = 1 / (2 * 0.5346 + sqrt(4 * 0.2166 + log(2) * 8))
 
 
 class AutoPeakDetection:
