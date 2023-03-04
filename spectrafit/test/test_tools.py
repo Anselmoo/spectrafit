@@ -309,7 +309,7 @@ class TestSaving:
         """Testing save all for no file."""
         args = {
             "outfile": str(tmp_path / "test_SaveResult"),
-            "linear_correlation": random_dataframe.to_dict(),
+            "linear_correlation": random_dataframe.corr().to_dict(orient="split"),
             "fit_insights": {"variables": random_dataframe.to_dict()},
         }
         SaveResult(random_dataframe, args)()
