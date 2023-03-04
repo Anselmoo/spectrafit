@@ -1,4 +1,9 @@
 """Pytest of the model-module."""
+import math
+
+from math import log
+from math import pi
+from math import sqrt
 from typing import Dict
 
 import numpy as np
@@ -19,25 +24,33 @@ from spectrafit.models import calculated_model
 class TestConstants:
     """Test constants."""
 
-    def test_log2(self) -> None:
+    def test_ln2(self) -> None:
         """Test the Constants class."""
-        assert Constants.log2 == np.log(2)
+        assert Constants.ln2 == log(2.0)
 
     def test_sq2pi(self) -> None:
         """Test the Constants class."""
-        assert Constants.sq2pi == np.sqrt(2.0 * np.pi)
+        assert Constants.sq2pi == sqrt(2.0 * pi)
 
     def test_sqpi(self) -> None:
         """Test the Constants class."""
-        assert Constants.sqpi == np.sqrt(np.pi)
+        assert Constants.sqpi == sqrt(pi)
 
     def test_sq2(self) -> None:
         """Test the Constants class."""
-        assert Constants.sq2 == np.sqrt(2.0)
+        assert Constants.sq2 == sqrt(2.0)
 
-    def test_sig2fwhm(self) -> None:
+    def test_fwhmg2sig(self) -> None:
         """Test the Constants class."""
-        assert Constants.sig2fwhm == 2.0 * np.sqrt(2.0 * np.log(2.0))
+        assert Constants.fwhmg2sig == 1 / (2.0 * sqrt(2.0 * log(2.0)))
+
+    def test_fwhml2sig(self) -> None:
+        """Test the Constants class."""
+        assert Constants.fwhml2sig == 1 / 2.0
+
+    def test_fwhmv2sig(self) -> None:
+        """Test the Constants class."""
+        assert math.isclose(Constants.fwhmv2sig, 1 / 3.60131, rel_tol=1e-5)
 
 
 class TestNotSupported:
@@ -137,7 +150,6 @@ class TestModelParametersSolver:
                     "amplitude": {"max": 200, "min": 0, "vary": True, "value": 1},
                     "center": {"max": 200, "min": -200, "vary": True, "value": 0},
                     "fwhmg": {"max": 2.5, "min": 0.00002, "vary": True, "value": 0.1},
-                    # "fwhml": {"max": 2.5, "min": 0.00001, "vary": True, "value": 1},
                 }
             },
             "2": {

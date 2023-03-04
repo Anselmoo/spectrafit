@@ -482,7 +482,8 @@ class SaveResult:
                 3. The `error analysis` of the optimization process.
         """
         self.df.to_csv(Path(f"{self.args['outfile']}_fit.csv"), index=False)
-        pd.DataFrame.from_dict(self.args["linear_correlation"]).to_csv(
+        print(self.args["fit_insights"]["variables"])
+        pd.DataFrame(**self.args["linear_correlation"]).to_csv(
             Path(f"{self.args['outfile']}_correlation.csv"),
             index=True,
             index_label="attributes",
