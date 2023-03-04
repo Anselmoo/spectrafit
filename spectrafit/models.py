@@ -605,7 +605,7 @@ class Constants:
             defined as:
 
             $$
-            fwhm_{\text{Voigt}} \approx 1.0692 + \sqrt{ 0.8676 + 8 \ln{2} }\cdot \sigma
+            fwhm_{\text{Voigt}} \approx 1.0692 + 2 \sqrt{0.2166 + 2 \ln{2}} \cdot \sigma
             $$
 
             $$
@@ -626,7 +626,7 @@ class Constants:
     sq2 = sqrt(2.0)
     fwhmg2sig = 1 / (2.0 * sqrt(2.0 * log(2.0)))
     fwhml2sig = 1 / 2.0
-    fwhmv2sig = 1 / (2 * 0.5346 + sqrt(4 * 0.2166 + log(2) * 8))
+    fwhmv2sig = 1 / (2 * 0.5346 + 2 * sqrt(0.2166 + log(2) * 2))
 
 
 class AutoPeakDetection:

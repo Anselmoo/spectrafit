@@ -42,7 +42,7 @@ class TestConstants:
 
     def test_fwhmg2sig(self) -> None:
         """Test the Constants class."""
-        assert Constants.fwhmg2sig == 1 / 2.0 * sqrt(2.0 * log(2.0))
+        assert Constants.fwhmg2sig == 1 / (2.0 * sqrt(2.0 * log(2.0)))
 
     def test_fwhml2sig(self) -> None:
         """Test the Constants class."""
