@@ -1,6 +1,9 @@
 """Minimization models for curve fitting."""
 from collections import defaultdict
 from dataclasses import dataclass
+from math import log
+from math import pi
+from math import sqrt
 from typing import Any
 from typing import Dict
 from typing import Optional
@@ -68,7 +71,7 @@ class DistributionModels:
         Returns:
             NDArray[np.float64]: Gaussian distribution of `x` given.
         """
-        sigma = fwhmg / Constants.sig2fwhm
+        sigma = fwhmg * Constants.fwhmg2sig
         return np.array(amplitude / (Constants.sq2pi * sigma)) * np.exp(
             -((1.0 * x - center) ** 2) / (2 * sigma**2)
         )
@@ -100,9 +103,9 @@ class DistributionModels:
         Returns:
             Union[NDArray[np.float64], float]: Lorentzian distribution of `x` given.
         """
-        sigma = fwhml / 2.0
+        sigma = fwhml * Constants.fwhml2sig
         return np.array(amplitude / (1 + ((1.0 * x - center) / sigma) ** 2)) / (
-            np.pi * sigma
+            pi * sigma
         )
 
     def voigt(
@@ -366,7 +369,7 @@ class DistributionModels:
             NDArray[np.float64]: Arctan step function of `x` given.
         """
         return np.array(
-            amplitude * 0.5 * (1 + np.arctan(self._norm(x, center, sigma)) / np.pi)
+            amplitude * 0.5 * (1 + np.arctan(self._norm(x, center, sigma)) / pi)
         )
 
     def log(
@@ -395,7 +398,7 @@ class DistributionModels:
             NDArray[np.float64]: Logarithmic step function of `x` given.
         """
         return np.array(
-            amplitude * 0.5 * (1 + np.log(self._norm(x, center, sigma)) / np.pi)
+            amplitude * 0.5 * (1 + np.log(self._norm(x, center, sigma)) / pi)
         )
 
     def cgaussian(
@@ -423,7 +426,7 @@ class DistributionModels:
         Returns:
             NDArray[np.float64]: Cumulative Gaussian function of `x` given.
         """
-        sigma = fwhmg / Constants.sig2fwhm
+        sigma = fwhmg * Constants.fwhmg2sig
         return np.array(
             amplitude * 0.5 * (1 + erf((x - center) / (sigma * np.sqrt(2.0))))
         )
@@ -453,8 +456,8 @@ class DistributionModels:
         Returns:
             NDArray[np.float64]: Cumulative Lorentzian function of `x` given.
         """
-        sigma = fwhml / 2.0
-        return np.array(amplitude * (np.arctan((x - center) / sigma) / np.pi) + 0.5)
+        sigma = fwhml * Constants.fwhml2sig
+        return np.array(amplitude * (np.arctan((x - center) / sigma) / pi) + 0.5)
 
     def cvoigt(
         self,
@@ -551,34 +554,53 @@ class Constants:
     r"""Mathematical constants for the curve models.
 
     !!! info "Constants"
-        $$
-        log2 = \log{2 }
-        $$
 
-        $$
-        sq2pi = \sqrt{2 \pi}
-        $$
+        1. Natural logarithm of 2
 
-        $$
-        sqpi = \sqrt{ \pi}
-        $$
+            $$
+            ln2 = \log{2}
+            $$
 
-        $$
-        sq2 = \sqrt{2 }
-        $$
+        2. Square root of 2 times pi
 
-        $$
-        sig2fwhm = 2 \sqrt{2\log{2 }}
-        $$
+            $$
+            sq2pi = \sqrt{2 \pi}
+            $$
 
+        3. Square root of pi
+
+            $$
+            sqpi = \sqrt{ \pi}
+            $$
+
+        4. Square root of 2
+
+            $$
+            sq2 = \sqrt{2 }
+            $$
+
+        5. Full width at half maximum to sigma for Gaussian
+
+            $$
+            fwhmg2sig = frac{1}{ 2 \sqrt{2\log{2 }}}
+            $$
+
+        6. Full width at half maximum to sigma for Lorentzian
+
+            $$
+            fwhml2sig = frac{1}{2.0}
+            $$
 
     """
 
-    log2 = np.log(2.0)
-    sq2pi = np.sqrt(2.0 * np.pi)
-    sqpi = np.sqrt(np.pi)
-    sq2 = np.sqrt(2.0)
-    sig2fwhm = 2.0 * np.sqrt(2.0 * np.log(2.0))
+    ln2 = log(2.0)
+    sq2pi = sqrt(2.0 * pi)
+    sqpi = sqrt(pi)
+    sq2 = sqrt(2.0)
+    fwhmg2sig = 1 / (2.0 * sqrt(2.0 * log(2.0)))
+    fwhml2sig = 1 / 2.0
+    # Fwhm Voigt to Sigma
+    # fwhmv2sig =
 
 
 class AutoPeakDetection:
