@@ -176,7 +176,7 @@ class GaussianAPI(BaseModel):
 
     amplitude: AmplitudeAPI = AmplitudeAPI()
     center: CenterAPI = CenterAPI()
-    sigma: SigmaAPI = SigmaAPI()
+    fwhmg: FwhmgAPI = FwhmgAPI()
 
 
 class LorentzianAPI(BaseModel):
@@ -224,27 +224,80 @@ class ConstantAPI(BaseModel):
     amplitude: AmplitudeAPI = AmplitudeAPI()
 
 
-class StepAPI(BaseModel):
+class ErfAPI(BaseModel):
     """Definition of the Step of the models distributions."""
 
     amplitude: AmplitudeAPI = AmplitudeAPI()
     center: CenterAPI = CenterAPI()
     sigma: SigmaAPI = SigmaAPI()
-    kind: str = Field(default="step", description="Kind of step function.")
+
+
+class HeavisideAPI(BaseModel):
+    """Definition of the Step of the models distributions."""
+
+    amplitude: AmplitudeAPI = AmplitudeAPI()
+    center: CenterAPI = CenterAPI()
+    sigma: SigmaAPI = SigmaAPI()
+
+
+class AtanAPI(BaseModel):
+    """Definition of the Step of the models distributions."""
+
+    amplitude: AmplitudeAPI = AmplitudeAPI()
+    center: CenterAPI = CenterAPI()
+    sigma: SigmaAPI = SigmaAPI()
+
+
+class LogAPI(BaseModel):
+    """Definition of the Step of the models distributions."""
+
+    amplitude: AmplitudeAPI = AmplitudeAPI()
+    center: CenterAPI = CenterAPI()
+    sigma: SigmaAPI = SigmaAPI()
+
+
+class CGaussAPI(BaseModel):
+    """Definition of the CGauss of the models distributions."""
+
+    amplitude: AmplitudeAPI = AmplitudeAPI()
+    center: CenterAPI = CenterAPI()
+    fwhmg: FwhmgAPI = FwhmgAPI()
+
+
+class CLorentzAPI(BaseModel):
+    """Definition of the CLorentz of the models distributions."""
+
+    amplitude: AmplitudeAPI = AmplitudeAPI()
+    center: CenterAPI = CenterAPI()
+    fwhml: FwhmlAPI = FwhmlAPI()
+
+
+class CVoigtAPI(BaseModel):
+    """Definition of the CVoigt of the models distributions."""
+
+    center: CenterAPI = CenterAPI()
+    fwhmv: FwhmvAPI = FwhmvAPI()
+    gamma: GammaAPI = GammaAPI()
 
 
 class DistributionModelAPI(BaseModel):
     """Definition of the models distributions."""
 
-    pseudovoigt: PseudovoigtAPI = PseudovoigtAPI()
     gaussian: GaussianAPI = GaussianAPI()
     lorentzian: LorentzianAPI = LorentzianAPI()
     voigt: VoigtAPI = VoigtAPI()
-    exponent: ExponentAPI = ExponentAPI()
+    pseudovoigt: PseudovoigtAPI = PseudovoigtAPI()
+    exponential: ExponentialAPI = ExponentialAPI()
     power: PowerAPI = PowerAPI()
     linear: LinearAPI = LinearAPI()
     constant: ConstantAPI = ConstantAPI()
-    step: StepAPI = StepAPI()
+    erf: ErfAPI = ErfAPI()
+    heaviside: HeavisideAPI = HeavisideAPI()
+    atan: AtanAPI = AtanAPI()
+    log: LogAPI = LogAPI()
+    cgauss: CGaussAPI = CGaussAPI()
+    clorentz: CLorentzAPI = CLorentzAPI()
+    cvoigt: CVoigtAPI = CVoigtAPI()
 
 
 class ConfIntervalAPI(BaseModel):

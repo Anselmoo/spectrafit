@@ -20,6 +20,7 @@ from scipy.signal import find_peaks
 from scipy.special import erf
 from scipy.special import wofz
 from scipy.stats import hmean
+from spectrafit.api.models_model import DistributionModelAPI
 from spectrafit.api.tools_model import AutopeakAPI
 from spectrafit.api.tools_model import GlobalFittingAPI
 from spectrafit.api.tools_model import SolverModelsAPI
@@ -498,11 +499,7 @@ class DistributionModels:
 class ReferenceKeys:
     """Reference keys for model fitting and peak detection."""
 
-    __models__ = [
-        func
-        for func in dir(DistributionModels)
-        if callable(getattr(DistributionModels, func)) and not func.startswith("_")
-    ]
+    __models__ = list(DistributionModelAPI.schema()["properties"].keys())
 
     __automodels__ = [
         "gaussian",
