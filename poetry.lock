@@ -5269,14 +5269,14 @@ files = [
 
 [[package]]
 name = "types-tabulate"
-version = "0.8.11"
+version = "0.9.0.1"
 description = "Typing stubs for tabulate"
 category = "dev"
 optional = false
 python-versions = "*"
 files = [
-    {file = "types-tabulate-0.8.11.tar.gz", hash = "sha256:17a5fa3b5ca453815778fc9865e8ecd0118b07b2b9faff3e2b06fe448174dd5e"},
-    {file = "types_tabulate-0.8.11-py3-none-any.whl", hash = "sha256:af811268241e8fb87b63c052c87d1e329898a93191309d5d42111372232b2e0e"},
+    {file = "types-tabulate-0.9.0.1.tar.gz", hash = "sha256:e486292c279f19247865bdabe802419740a0e74b53444e7f7a8009e08129da5d"},
+    {file = "types_tabulate-0.9.0.1-py3-none-any.whl", hash = "sha256:be2ea0de05f615ccfcbadf6206aa720e265955eb1de23e343aec9d8bf3fa9aaa"},
 ]
 
 [[package]]
@@ -5800,4 +5800,4 @@ jupyter-dash = ["jupyter-dash", "ipywidgets", "dash-bootstrap-components", "dash
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8,<3.11"
-content-hash = "7820d1d1ae4f7eaaa37aad535c0aa28ea0b2ce843431f16b942e8634a03d90a4"
+content-hash = "686f6f6f1ec8e617d0b57d8cd1d9613782a2a24e23c00a862271d99a4fc97ea1"
