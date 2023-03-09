@@ -1,50 +1,30 @@
-name-template: "v$RESOLVED_VERSION 🌈"
-tag-template: "v$RESOLVED_VERSION"
-template: |
-  # 🧭 What's Changed
-  $CHANGES
-  # ⚙️ Who Contributes
-  $CONTRIBUTORS
-categories:
-  - title: "🏆 Milestone"
-    label: "milestone"
-  - title: "🚀 New"
-    label: "enhancement"
-  - title: "💻 New"
-    label: "codespaces"
-  - title: "🐛 Bug Fixes"
-    label: "bug"
-  - title: "🧰 Maintenance"
-    label: "maintenance"
-  - title: ":octocat: Github Actions"
-    label: "github-actions"
-  - title: "🗂 Documentation"
-    label: "documentation"
-  - title: "🔗 Dependency Updates"
-    label: "dependencies"
-  - title: "🔬 Testing & Coverage"
-    label: "testing"
-  - title: "👋 Welcome"
-    label: "good first issue"
-
-version-resolver:
-  major:
-    labels:
-      - "milestone"
-  minor:
-    labels:
-      - "enhancement"
-  patch:
-    labels:
-      - "codespaces"
-      - "bug"
-      - "maintenance"
-      - "github-actions"
-      - "documentation"
-      - "dependencies"
-      - "security"
-      - "testing"
-      - "good first issue"
-
-exclude-labels:
-  - "skip-changelog"
+changelog:
+  categories:
+    - title: "🏆 Milestone"
+      labels: "milestone"
+    - title: "🚀 New"
+      labels: "enhancement"
+    - title: "💻 New"
+      labels: "codespaces"
+    - title: "🐛 Bug Fixes"
+      labels: "bug"
+    - title: "🧰 Maintenance"
+      labels: "maintenance"
+    - title: ":octocat: Github Actions"
+      labels: "github-actions"
+    - title: "🗂 Documentation"
+      labels: "documentation"
+    - title: "🔗 Dependency Updates"
+      labels: "dependencies"
+    - title: "🔬 Testing & Coverage"
+      labels: "testing"
+    - title: "👋 Welcome"
+      labels: "good first issue"
+    - title: "🔒 Security"
+      labels:
+        - "security"
+        - "dependabot"
+    - title: "🚨 Breaking Changes"
+      labels: "breaking"
+    - title: "📝 Changelog"
+      labels: "changelog"
