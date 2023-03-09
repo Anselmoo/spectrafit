@@ -1,12 +1,4 @@
-<!-- @format -->
-
 # CHANGELOG
-
----
-
-> See also: [https://github.com/Anselmoo/spectrafit/releases][1]
-
-## _Unreleased_
 
 ---
 
@@ -328,6 +320,8 @@
 
 - The orginal program `fastfit` is now running as `spectrafit` with an own
   installer besed on [POETRY](https://python-poetry.org).
+
+> See also: [https://github.com/Anselmoo/spectrafit/releases][1]
 
 [1]: https://github.com/Anselmoo/spectrafit/releases
 [2]: https://ghcr.io/anselmoo/spectrafit:latest
