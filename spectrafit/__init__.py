@@ -1,2 +1,2 @@
 """SpectraFit, fast command line tool for fitting data."""
-__version__ = "0.16.4"
+__version__ = "1.0.0a0"
