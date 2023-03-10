@@ -26,11 +26,15 @@ release:
   - all: ["spectrafit/__init__.py", "pyproject.toml"]
 vendor:
   - vendor/**
+forms:
+  - .github/ISSUE_TEMPLATE/**
+  - .github/pull_request_template.md
 maintenance:
   - pyproject.toml
   - poetry.lock
-  - .github/dependabot.yml
   - .gitignore
+  - .github/dependabot.yml
+  - .github/release-drafter.yml
   - .github/labeler.yml
   - .github/workflows/label.yml
   - .sonarcloud.properties
