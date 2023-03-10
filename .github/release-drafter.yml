@@ -35,6 +35,8 @@ categories:
     label: "security"
   - title: "📝 Changelog"
     label: "changelog"
+  - title: "🧾 Forms"
+    label: "forms"
 
 version-resolver:
   major:
