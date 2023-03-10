@@ -42,5 +42,8 @@ maintenance:
   - .prettierignore
   - .sonarcloud.properties
   - .sourcery.yaml
+security:
+  - SECURITY.md
+  - poetry.lock
 changelog:
   - CONTRIBUTING.md

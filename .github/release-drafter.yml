@@ -1,0 +1,57 @@
+name-template: "v$RESOLVED_VERSION 🌈"
+tag-template: "v$RESOLVED_VERSION"
+template: |
+  # 🧭 What's Changed
+  $CHANGES
+  # ⚙️ Who Contributes
+  $CONTRIBUTORS
+categories:
+  - title: "🏆 Milestone"
+    label: "milestone"
+  - title: "🚀 New"
+    label: "enhancement"
+  - title: "💻 New"
+    label: "codespaces"
+  - title: "🐛 Bug Fixes"
+    label: "bug"
+  - title: "🧰 Maintenance"
+    label: "maintenance"
+  - title: ":octocat: Github Actions"
+    label: "github-actions"
+  - title: "🗂 Documentation"
+    label: "documentation"
+  - title: "🔗 Dependency Updates"
+    label: "dependencies"
+  - title: "🔬 Testing & Coverage"
+    label: "testing"
+  - title: "👋 Welcome"
+    label: "good first issue"
+  - title: "🔒 Security"
+    label: "security"
+  - title: "📝 Changelog"
+    label: "changelog"
+
+version-resolver:
+  major:
+    labels:
+      - "milestone"
+  minor:
+    labels:
+      - "enhancement"
+  patch:
+    labels:
+      - "codespaces"
+      - "bug"
+      - "maintenance"
+      - "github-actions"
+      - "documentation"
+      - "dependencies"
+      - "security"
+      - "testing"
+      - "good first issue"
+
+exclude-labels:
+  - "skip-changelog"
+  - "duplicate"
+  - "invalid"
+  - "wontfix"
