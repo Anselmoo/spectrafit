@@ -37,9 +37,10 @@ maintenance:
   - LICENSE
   - CHANGELOG.md
   - CODE_OF_CONDUCT.md
-  - CONTRIBUTING.md
   - "SECURITY.md"
   - .pre-commit-config.yaml
   - .prettierignore
   - .sonarcloud.properties
   - .sourcery.yaml
+changelog:
+  - CONTRIBUTING.md
