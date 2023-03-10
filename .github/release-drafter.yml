@@ -3,8 +3,13 @@ tag-template: "v$RESOLVED_VERSION"
 template: |
   # 🧭 What's Changed
   $CHANGES
+
+  $ 📦 Full Changelog
+  **Full Changelog**: https://github.com/$OWNER/$REPOSITORY/compare/$PREVIOUS_TAG...v$RESOLVED_VERSION
+
   # ⚙️ Who Contributes
   $CONTRIBUTORS
+
 categories:
   - title: "🏆 Milestone"
     label: "milestone"
@@ -55,3 +60,11 @@ exclude-labels:
   - "duplicate"
   - "invalid"
   - "wontfix"
+
+exclude-contributors:
+  - dependabot[bot]
+  - ImgBotApp
+  - dependabot
+  - imgbot
+  - pre-commit-ci
+  - pre-commit-ci[bot]
