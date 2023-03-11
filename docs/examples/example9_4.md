@@ -4,7 +4,7 @@ jupyter:
     text_representation:
       extension: .md
       format_name: markdown
-      format_version: "1.3"
+      format_version: '1.3'
       jupytext_version: 1.14.0
   kernelspec:
     display_name: .venv
@@ -28,6 +28,7 @@ For visualization of a RIXS map, we use the `RIXSApp` class. The class only requ
 The RIXS map itself has to be stored as a 2D meshgrid of intensities. By default the RIXS map is assumed to be in units of eV.
 
 > Information "it is an early version of the RIXS map visualization tool"
+
 
 ```python
 from typing import Tuple

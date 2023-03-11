@@ -4,7 +4,7 @@ jupyter:
     text_representation:
       extension: .md
       format_name: markdown
-      format_version: "1.3"
+      format_version: '1.3'
       jupytext_version: 1.14.0
   kernelspec:
     display_name: .venv
@@ -16,6 +16,7 @@ jupyter:
 
 For working with different color themes, you can import `color_schemas` into the Notebook and overwrite the default theme.
 
+
 ```python
 # Loading packages and default data
 from spectrafit.plugins import notebook as nb
@@ -25,6 +26,7 @@ df = pd.read_csv(
     "https://raw.githubusercontent.com/Anselmoo/spectrafit/main/Examples/data.csv"
 )
 ```
+
 
 ### Loading of the dark color theme
 
@@ -96,6 +98,8 @@ initial_model = [
 spn.solver_model(initial_model=initial_model)
 ```
 
+
 ![example_9_2](https://github.com/Anselmoo/spectrafit/blob/e2f1616a2ca0eda15f2de1d1aa25281b3e05fc8c/docs/examples/images/Figure_9_2.png?raw=true)
+
 
 ![example_9_2_](https://github.com/Anselmoo/spectrafit/blob/617774defc5a42da302b7c594ccb10d3974ebe0c/docs/examples/images/Figure_9_2_m.png?raw=true)

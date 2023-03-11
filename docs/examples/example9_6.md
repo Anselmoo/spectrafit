@@ -4,7 +4,7 @@ jupyter:
     text_representation:
       extension: .md
       format_name: markdown
-      format_version: "1.3"
+      format_version: '1.3'
       jupytext_version: 1.14.0
   kernelspec:
     display_name: .venv
@@ -94,5 +94,6 @@ spn.solver_model(initial_model=initial_model, show_plot=True, show_metric=False)
 
 Currently, the global fitting routine provides each spectrum as its own.
 This also allows to use other color schemes.
+
 
 ![](https://github.com/Anselmoo/spectrafit/raw/main/docs/examples/images/Figure_9_6.png)
