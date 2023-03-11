@@ -3,7 +3,7 @@ repos:
     rev: v4.4.0
     hooks:
       - id: check-yaml
-        exclude: mkdocs.yaml
+        exclude: mkdocs.yml
       - id: check-toml
         exclude: poetry.lock
       - id: check-json
