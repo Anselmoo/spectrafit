@@ -7,6 +7,7 @@
   # for backward compatibility
   files: ""
   minimum_pre_commit_version: 0.15.0
+
 - id: poetry-check
   name: poetry-check
   description: run poetry check to validate config
@@ -33,3 +34,11 @@
   pass_filenames: false
   files: ^poetry.lock$
   args: ["-f", "requirements.txt", "-o", "requirements.txt"]
+
+- id: jupytext
+  name: jupytext
+  description: Runs jupytext on all notebooks and paired files.
+  language: python
+  entry: jupytext --pre-commit-mode
+  require_serial: true
+  types_or: [jupyter, markdown]
