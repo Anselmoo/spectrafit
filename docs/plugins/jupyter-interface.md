@@ -147,24 +147,26 @@ part of the `SpectraFit` plugins. All important settings are defined in the
 `__init__` method of the class.
 
 ::: spectrafit.plugins.notebook.SpectraFitNotebook
-handler: python
-options:
-members: - **init**
-show_root_heading: true
-show_signature: false
-show_source: false
+    handler: python
+    options:
+        members:
+           - __init__
+       show_root_heading: true
+       show_signature: false
+       show_source: false
 
 The _initial parameter model_ of the section
 [Input Parameter Model](#input-parameter-model) is used in the function call of
 the `SpectraFitNotebook` class.
 
 ::: spectrafit.plugins.notebook.SpectraFitNotebook
-handler: python
-options:
-members: - solver_model
-show_root_heading: true
-show_signature: false
-show_source: false
+   handler: python
+   options:
+      members:
+         - solver_model
+      show_root_heading: true
+      show_signature: false
+      show_source: false
 
 ## Output
 
