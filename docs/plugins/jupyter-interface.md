@@ -150,7 +150,7 @@ part of the `SpectraFit` plugins. All important settings are defined in the
     handler: python
     options:
         members:
-           - __init__
+          - __init__
        show_root_heading: true
        show_signature: false
        show_source: false
@@ -160,13 +160,13 @@ The _initial parameter model_ of the section
 the `SpectraFitNotebook` class.
 
 ::: spectrafit.plugins.notebook.SpectraFitNotebook
-   handler: python
-   options:
-      members:
-         - solver_model
-      show_root_heading: true
-      show_signature: false
-      show_source: false
+    handler: python
+    options:
+       members:
+          - solver_model
+       show_root_heading: true
+       show_signature: false
+       show_source: false
 
 ## Output
 
