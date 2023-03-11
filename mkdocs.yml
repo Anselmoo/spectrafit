@@ -67,6 +67,10 @@ plugins:
       nav_file: SUMMARY.md
   - minify:
       minify_html: true
+  - mkdocs-jupyter:
+      ignore_h1_titles: true
+      include_source: false
+      execute: true
 
 # Customization
 extra:

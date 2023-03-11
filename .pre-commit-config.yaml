@@ -65,15 +65,9 @@ repos:
     rev: "v3.0.0-alpha.6"
     hooks:
       - id: prettier
-        exclude: docs/examples/example9_1.md
+        exclude: docs/plugins/jupyter-interface.md
   - repo: https://github.com/asottile/pyupgrade
     rev: v3.3.1
     hooks:
       - id: pyupgrade
         args: [--py38-plus]
-  - repo: https://github.com/mwouts/jupytext
-    rev: v1.14.0
-    hooks:
-      - id: jupytext
-        args: [--from, ipynb, --to, md, --pipe, black]
-        additional_dependencies: [black==23.1.0]

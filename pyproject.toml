@@ -101,6 +101,7 @@ exclude = ["docs/", "tools/"]
   mkdocs-minify-plugin = "^0.6.2"
   mkdocs-material = "^9.1.2"
   jupytext = "^1.14.5"
+  mkdocs-jupyter = {git = "https://github.com/danielfrg/mkdocs-jupyter.git"}
 
 
 [build-system]
