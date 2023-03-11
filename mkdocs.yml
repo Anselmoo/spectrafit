@@ -100,7 +100,10 @@ markdown_extensions:
   - pymdownx.emoji:
       emoji_index: !!python/name:materialx.emoji.twemoji
       emoji_generator: !!python/name:materialx.emoji.to_svg
-  - pymdownx.highlight
+  - pymdownx.highlight:
+      use_pygments: true
+      pygments_lang_class: true
+  - pymdownx.magiclink
   - pymdownx.inlinehilite
   - pymdownx.keys
   - pymdownx.magiclink:
@@ -183,5 +186,7 @@ nav:
       - Code of Conduct: code_of_conduct.md
       - Security: security.md
   - Releases:
-      - Changelog: changelog.md
+      - Changelog:
+          - v1.x.x: changelog.md
+          - v0.x.x: changelogs/v0.x.x.md
       - Contributors: contributors.md
