@@ -153,12 +153,12 @@ nav:
           - Automatic Fitting: examples/example7.md
           - Working with Athena Data: examples/example8.md
       - Working in Jupyter Notebooks:
-          - Default Plot: examples/example9_1.md
-          - Dark Theme: examples/example9_2.md
-          - Export Results: examples/example9_3.md
-          - RIXS Map Visualization: examples/example9_4.md
-          - Using Converters as Module: examples/example9_5.md
-          - RIXS Global-Fitting in Jupyter: examples/example9_6.md
+          - Default Plot: examples/example9_1.ipynb
+          - Dark Theme: examples/example9_2.ipynb
+          - Export Results: examples/example9_3.ipynb
+          - RIXS Map Visualization: examples/example9_4.ipynb
+          - Using Converters as Module: examples/example9_5.ipynb
+          - RIXS Global-Fitting in Jupyter: examples/example9_6.ipynb
   - Documentation:
       - Models: doc/models.md
       - Expression: doc/expression.md
