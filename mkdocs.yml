@@ -69,8 +69,9 @@ plugins:
       minify_html: true
   - mkdocs-jupyter:
       ignore_h1_titles: true
-      include_source: false
+      include_source: true
       execute: true
+      kernel_name: python3
 
 # Customization
 extra:
