@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "SpectraFit"
-version = "1.0.0a3"
+version = "0.16.5"
 description = "Fast fitting of 2D- and 3D-Spectra with established routines"
 readme = "README.md"
 authors = ["Anselm Hahn <anselm.hahn@gmail.com>"]
@@ -184,7 +184,7 @@ ignore = ["E203", "W503", "W605"]
 script_launch_mode = "subprocess"
   [tool.pytest.ini_options]
   minversion = "7.0"
-  addopts = "--cov=./spectrafit/ --cov-report=xml -ra -q  -s -vv --diff-symbols --plots"
+  addopts = "--cov=./spectrafit/ --cov-report=xml --diff-symbols --plots -vv"
   testpaths = ["spectrafit"]
 
 [tool.pydocstyle]

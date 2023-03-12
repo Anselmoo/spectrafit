@@ -256,16 +256,16 @@ class LogAPI(BaseModel):
     sigma: SigmaAPI = SigmaAPI()
 
 
-class CGaussAPI(BaseModel):
-    """Definition of the CGauss of the models distributions."""
+class CGaussianAPI(BaseModel):
+    """Definition of the cumulative Gaussian of the models distributions."""
 
     amplitude: AmplitudeAPI = AmplitudeAPI()
     center: CenterAPI = CenterAPI()
     fwhmg: FwhmgAPI = FwhmgAPI()
 
 
-class CLorentzAPI(BaseModel):
-    """Definition of the CLorentz of the models distributions."""
+class CLorentzianAPI(BaseModel):
+    """Definition of the cumulative Lorentzian of the models distributions."""
 
     amplitude: AmplitudeAPI = AmplitudeAPI()
     center: CenterAPI = CenterAPI()
@@ -273,7 +273,7 @@ class CLorentzAPI(BaseModel):
 
 
 class CVoigtAPI(BaseModel):
-    """Definition of the CVoigt of the models distributions."""
+    """Definition of the cumulative Voigt of the models distributions."""
 
     center: CenterAPI = CenterAPI()
     fwhmv: FwhmvAPI = FwhmvAPI()
@@ -295,8 +295,8 @@ class DistributionModelAPI(BaseModel):
     heaviside: HeavisideAPI = HeavisideAPI()
     atan: AtanAPI = AtanAPI()
     log: LogAPI = LogAPI()
-    cgauss: CGaussAPI = CGaussAPI()
-    clorentz: CLorentzAPI = CLorentzAPI()
+    cgaussian: CGaussianAPI = CGaussianAPI()
+    clorentzian: CLorentzianAPI = CLorentzianAPI()
     cvoigt: CVoigtAPI = CVoigtAPI()
 
 

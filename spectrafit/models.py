@@ -46,8 +46,8 @@ class DistributionModels:
         `sigma` parameter.
     """
 
+    @staticmethod
     def gaussian(
-        self,
         x: NDArray[np.float64],
         amplitude: float = 1.0,
         center: float = 0.0,
@@ -77,8 +77,8 @@ class DistributionModels:
             -((1.0 * x - center) ** 2) / (2 * sigma**2)
         )
 
+    @staticmethod
     def lorentzian(
-        self,
         x: NDArray[np.float64],
         amplitude: float = 1.0,
         center: float = 0.0,
@@ -109,8 +109,8 @@ class DistributionModels:
             pi * sigma
         )
 
+    @staticmethod
     def voigt(
-        self,
         x: NDArray[np.float64],
         center: float = 0.0,
         fwhmv: float = 1.0,
@@ -142,8 +142,8 @@ class DistributionModels:
         z = (x - center + 1j * gamma) / (sigma * Constants.sq2)
         return np.array(wofz(z).real / (sigma * Constants.sq2pi))
 
+    @staticmethod
     def pseudovoigt(
-        self,
         x: NDArray[np.float64],
         amplitude: float = 1.0,
         center: float = 0.0,
@@ -186,13 +186,18 @@ class DistributionModels:
             + 0.11116 * (fwhml / f) ** 3
         )
         return np.array(
-            n * self.lorentzian(x=x, amplitude=amplitude, center=center, fwhml=fwhml)
+            n
+            * DistributionModels.lorentzian(
+                x=x, amplitude=amplitude, center=center, fwhml=fwhml
+            )
             + (1 - n)
-            * self.gaussian(x=x, amplitude=amplitude, center=center, fwhmg=fwhmg)
+            * DistributionModels.gaussian(
+                x=x, amplitude=amplitude, center=center, fwhmg=fwhmg
+            )
         )
 
+    @staticmethod
     def exponential(
-        self,
         x: NDArray[np.float64],
         amplitude: float = 1.0,
         decay: float = 1.0,
@@ -213,8 +218,8 @@ class DistributionModels:
         """
         return np.array(amplitude * np.exp(-x / decay) + intercept)
 
+    @staticmethod
     def power(
-        self,
         x: NDArray[np.float64],
         amplitude: float = 1.0,
         exponent: float = 1.0,
@@ -235,8 +240,8 @@ class DistributionModels:
         """
         return np.array(amplitude * np.power(x, exponent) + intercept)
 
+    @staticmethod
     def linear(
-        self,
         x: NDArray[np.float64],
         slope: float = 1.0,
         intercept: float = 0.0,
@@ -254,8 +259,8 @@ class DistributionModels:
         """
         return np.array(slope * x + intercept)
 
+    @staticmethod
     def constant(
-        self,
         x: NDArray[np.float64],
         amplitude: float = 1.0,
     ) -> NDArray[np.float64]:
@@ -288,8 +293,8 @@ class DistributionModels:
             sigma = 1.0e-13
         return np.subtract(x, center) / sigma
 
+    @staticmethod
     def erf(
-        self,
         x: NDArray[np.float64],
         amplitude: float = 1.0,
         center: float = 0.0,
@@ -311,10 +316,12 @@ class DistributionModels:
         Returns:
             NDArray[np.float64]: Error function of `x` given.
         """
-        return np.array(amplitude * 0.5 * (1 + erf(self._norm(x, center, sigma))))
+        return np.array(
+            amplitude * 0.5 * (1 + erf(DistributionModels._norm(x, center, sigma)))
+        )
 
+    @staticmethod
     def heaviside(
-        self,
         x: NDArray[np.float64],
         amplitude: float = 1.0,
         center: float = 0.0,
@@ -342,10 +349,12 @@ class DistributionModels:
         Returns:
             NDArray[np.float64]: Heaviside step function of `x` given.
         """
-        return np.array(amplitude * 0.5 * (1 + np.sign(self._norm(x, center, sigma))))
+        return np.array(
+            amplitude * 0.5 * (1 + np.sign(DistributionModels._norm(x, center, sigma)))
+        )
 
+    @staticmethod
     def atan(
-        self,
         x: NDArray[np.float64],
         amplitude: float = 1.0,
         center: float = 0.0,
@@ -370,11 +379,13 @@ class DistributionModels:
             NDArray[np.float64]: Arctan step function of `x` given.
         """
         return np.array(
-            amplitude * 0.5 * (1 + np.arctan(self._norm(x, center, sigma)) / pi)
+            amplitude
+            * 0.5
+            * (1 + np.arctan(DistributionModels._norm(x, center, sigma)) / pi)
         )
 
+    @staticmethod
     def log(
-        self,
         x: NDArray[np.float64],
         amplitude: float = 1.0,
         center: float = 0.0,
@@ -399,11 +410,13 @@ class DistributionModels:
             NDArray[np.float64]: Logarithmic step function of `x` given.
         """
         return np.array(
-            amplitude * 0.5 * (1 + np.log(self._norm(x, center, sigma)) / pi)
+            amplitude
+            * 0.5
+            * (1 + np.log(DistributionModels._norm(x, center, sigma)) / pi)
         )
 
+    @staticmethod
     def cgaussian(
-        self,
         x: NDArray[np.float64],
         amplitude: float = 1.0,
         center: float = 0.0,
@@ -432,8 +445,8 @@ class DistributionModels:
             amplitude * 0.5 * (1 + erf((x - center) / (sigma * np.sqrt(2.0))))
         )
 
+    @staticmethod
     def clorentzian(
-        self,
         x: NDArray[np.float64],
         amplitude: float = 1.0,
         center: float = 0.0,
@@ -460,8 +473,8 @@ class DistributionModels:
         sigma = fwhml * Constants.fwhml2sig
         return np.array(amplitude * (np.arctan((x - center) / sigma) / pi) + 0.5)
 
+    @staticmethod
     def cvoigt(
-        self,
         x: NDArray[np.float64],
         amplitude: float = 1.0,
         center: float = 0.0,

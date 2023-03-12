@@ -79,6 +79,9 @@ extra:
       link: https://github.com/Anselmoo
     - icon: fontawesome/brands/python
       link: https://pypi.org/project/spectrafit/
+  version:
+    provider: mike
+    version: latest
 
 # Extensions
 markdown_extensions:
