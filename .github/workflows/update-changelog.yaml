@@ -11,7 +11,9 @@ permissions:
   packages: write
 
 jobs:
-  update:
+  Update-Changelog:
+    name: Update Changelog
+    id: update-changelog
     runs-on: ubuntu-latest
 
     permissions:
@@ -42,3 +44,31 @@ jobs:
           commit_message: Update CHANGELOG
           file_pattern: CHANGELOG.md
           create_branch: true
+  Release-Documentation:
+    needs: Update-Changelog
+    name: Build Documentation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+          virtualenvs-path: .venv
+          installer-parallel: true
+      - name: Install library
+        run: poetry install --no-interaction --with docs --all-extras
+      - name: Set git config
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+      - name: Build documentation
+        run: poetry run mkdocs build --clean
+      - name: Deploy documentation develops
+        run: |
+          poetry run mike deploy --push --update-aliases ${{ github.event.release.tag_name }}
+          poetry run mike set-default --push latest
