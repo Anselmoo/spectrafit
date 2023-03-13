@@ -109,7 +109,7 @@ class GeneralSolverModelsAPI(BaseModel):
     optimizer: Dict[str, Any] = SolverModelsAPI().optimizer
 
 
-class ColumnNamesAPI(BaseModel, frozen=True):
+class ColumnNamesAPI(BaseModel, allow_mutation=False):
     """Definition of the column names of the exported model."""
 
     energy: str = "energy"

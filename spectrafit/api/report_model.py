@@ -23,7 +23,7 @@ from spectrafit.api.tools_model import DataPreProcessingAPI
 from statsmodels import __version__ as statsmodels_version
 
 
-class CreditsAPI(BaseModel, frozen=True):
+class CreditsAPI(BaseModel, allow_mutation=False):
     """Credits API model."""
 
     dtale: str = f"dtale v{dtale_version}"
