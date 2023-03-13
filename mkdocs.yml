@@ -81,7 +81,6 @@ extra:
       link: https://pypi.org/project/spectrafit/
   version:
     provider: mike
-    version: latest
 
 # Extensions
 markdown_extensions:
