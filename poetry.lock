@@ -2889,7 +2889,7 @@ test = ["pytest", "pytest-cov"]
 type = "git"
 url = "https://github.com/danielfrg/mkdocs-jupyter.git"
 reference = "HEAD"
-resolved_reference = "b29385e0b8ac62313920604e42bc55e6e249156b"
+resolved_reference = "e85f4c2fc62000077b4bdd86ab02b60749076f7d"
 
 [[package]]
 name = "mkdocs-literate-nav"
