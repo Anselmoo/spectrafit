@@ -50,6 +50,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v4
         with:
           python-version: "3.10"
@@ -66,9 +68,7 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-      - name: Build documentation
-        run: poetry run mkdocs build --clean
       - name: Deploy documentation develops
         run: |
-          poetry run mike deploy --push --update-aliases ${{ github.event.release.tag_name }}
+          poetry run mike deploy --push --update-aliases ${{ github.event.release.tag_name }} --message "Release ${{ github.event.release.tag_name }}"
           poetry run mike set-default --push latest
