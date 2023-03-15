@@ -13,7 +13,6 @@ permissions:
 jobs:
   Update-Changelog:
     name: Update Changelog
-    id: update-changelog
     runs-on: ubuntu-latest
 
     permissions:
