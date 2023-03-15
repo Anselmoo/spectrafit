@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "SpectraFit"
-version = "1.0.0a4"
+version = "1.0.0a5"
 description = "Fast fitting of 2D- and 3D-Spectra with established routines"
 readme = "README.md"
 authors = ["Anselm Hahn <anselm.hahn@gmail.com>"]

@@ -35,14 +35,28 @@ jobs:
           release-notes: ${{ github.event.release.body }}
           latest-version: ${{ github.event.release.tag_name }}
           compare-url-target-revision: ${{ github.event.release.target_commitish }}
-
+      - name: Create new branch
+        run: |
+          git checkout -b release/${{ github.event.release.tag_name }}
       - name: Commit updated CHANGELOG
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          branch: ${{ github.event.release.target_commitish }}
-          commit_message: Update CHANGELOG
+          commit_message: Update CHANGELOG for ${{ github.event.release.tag_name }}
           file_pattern: CHANGELOG.md
           create_branch: true
+          branch: release/${{ github.event.release.tag_name }}
+      - name: Create PR
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: Update CHANGELOG for ${{ github.event.release.tag_name }}
+          title: Update CHANGELOG for ${{ github.event.release.tag_name }}
+          body: |
+            ci: :memo: Update CHANGELOG for ${{ github.event.release.tag_name }}
+          branch: release/${{ github.event.release.tag_name }}
+          base: ${{ github.event.release.target_commitish }}
+          draft: true
+          delete-branch: true
   Release-Documentation:
     needs: Update-Changelog
     name: Build Documentation
