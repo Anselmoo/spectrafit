@@ -4,7 +4,7 @@ name: "Update Changelog"
 on:
   release:
     types:
-      - created
+      - published
 
 permissions:
   contents: read
@@ -58,10 +58,24 @@ jobs:
       - name: Commit updated CHANGELOG
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          # Push updated CHANGELOG to release target branch.
-          branch: ${{ github.event.release.target_commitish }}
+          # Push updated CHANGELOG to new changelog branch.
+          branch: changelog/${{ github.event.release.tag_name }}
           commit_message: Update CHANGELOG
           file_pattern: CHANGELOG.md
+          create_branch: true
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: Update CHANGELOG
+          title: Update CHANGELOG
+          body: |
+            Update CHANGELOG for ${{ github.event.release.tag_name }}
+          branch: changelog/${{ github.event.release.tag_name }}
+          base: ${{ github.event.release.target_commitish }}
+          labels: |
+            changelog
+
   Release-Documentation:
     needs: Update-Changelog
     name: Build Documentation
