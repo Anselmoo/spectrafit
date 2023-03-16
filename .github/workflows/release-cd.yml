@@ -73,7 +73,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
 
   Release-Documentation:
-    needs: PyPi-Package-Release
+    # needs: PyPi-Package-Release
     name: Build Documentation
     runs-on: ubuntu-latest
     steps:
