@@ -53,7 +53,7 @@ jobs:
           # `v2.0.1...HEAD` with `v2.0.1...2.x`.
           # WARNING: When you select `main` when creating a new release, the value `refs/heads/main`
           # is passed to the Action which will generate an invalid compare URL.
-          # compare-url-target-revision: ${{ github.event.release.target_commitish }}
+          compare-url-target-revision: ${{ github.event.release.target_commitish }}
 
       - name: Commit updated CHANGELOG
         uses: stefanzweifel/git-auto-commit-action@v4
