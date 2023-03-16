@@ -6,7 +6,7 @@ on:
       - published
 
 jobs:
-  update:
+  Changelog-Update:
     runs-on: ubuntu-latest
 
     steps:
@@ -28,3 +28,31 @@ jobs:
           commit_message: Update CHANGELOG
           file_pattern: CHANGELOG.md
           create_branch: true
+  Release-Documentation:
+    name: Build Documentation
+    needs: Changelog-Update
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+          virtualenvs-path: .venv
+          installer-parallel: true
+      - name: Install library
+        run: poetry install --no-interaction --with docs --all-extras
+      - name: Set git config
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+      - name: Deploy documentation develops
+        run: |
+          poetry run mike deploy --push --rebase --update-aliases ${{ github.event.release.tag_name }} latest --message "Release ${{ github.event.release.tag_name }}"
+          poetry run mike set-default --push --rebase latest
