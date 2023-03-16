@@ -4,7 +4,7 @@ name: "Update Changelog"
 on:
   release:
     types:
-      - published
+      - released
 
 permissions:
   contents: read
@@ -17,7 +17,7 @@ jobs:
 
     permissions:
       # Give the default GITHUB_TOKEN write permission to commit and push the
-      # updated CHANGELOG back to the repository.
+      # updaetd CHANGELOG back to the repository.
       # https://github.blog/changelog/2023-02-02-github-actions-updating-the-default-github_token-permissions-to-read-only/
       contents: write
 
@@ -25,34 +25,69 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
+          # Fetch entire history of repository to ensure relase date can be
+          # extracted from commit of the given tag.
           fetch-depth: 0
+          # Checkout target branch of this release. Ensures that the CHANGELOG
+          # is not out of date.
           ref: ${{ github.event.release.target_commitish }}
+
+      - name: Extract release date from git tag
+        id: release_date
+        run: |
+          echo "date=$(git log -1 --date=short --format=%ad '${{ github.event.release.tag_name }}')" >> $GITHUB_OUTPUT;
 
       - name: Update Changelog
         uses: stefanzweifel/changelog-updater-action@v1
-        id: "changelog-updater"
         with:
+          # Pass extracted release date, release notes and version to the Action.
           release-date: ${{ steps.release_date.outputs.date }}
           release-notes: ${{ github.event.release.body }}
           latest-version: ${{ github.event.release.tag_name }}
-          compare-url-target-revision: ${{ github.event.release.target_commitish }}
-      - name: Create new branch
-        run: |
-          git checkout -b release/${{ github.event.release.tag_name }}
+
+          # Optional
+          # If your project keeps seperate branches for major releases, and you want to point the compare URL
+          # in the "Unreleased"-heading to the corresponding major release branch (eg. `2.x`), then enable the option
+          # below.
+          # `compare-url-target-revision` will change how the compare URL is composed and will replace
+          # `v2.0.1...HEAD` with `v2.0.1...2.x`.
+          # WARNING: When you select `main` when creating a new release, the value `refs/heads/main`
+          # is passed to the Action which will generate an invalid compare URL.
+          # compare-url-target-revision: ${{ github.event.release.target_commitish }}
+
       - name: Commit updated CHANGELOG
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: Update CHANGELOG for ${{ github.event.release.tag_name }}
+          # Push updated CHANGELOG to release target branch.
+          branch: ${{ github.event.release.target_commitish }}
+          commit_message: Update CHANGELOG
           file_pattern: CHANGELOG.md
-          # create_branch: true
-          branch: release/${{ github.event.release.tag_name }}
-      - name: Create PR
-        uses: peter-evans/create-pull-request@v3
+  Release-Documentation:
+    needs: Update-Changelog
+    name: Build Documentation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: Update CHANGELOG for ${{ github.event.release.tag_name }}
-          title: Update CHANGELOG for ${{ github.event.release.tag_name }}
-          body: |
-            ci: :memo: Update CHANGELOG for ${{ github.event.release.tag_name }}
-          branch: release/${{ github.event.release.tag_name }}
-          base: ${{ github.event.release.target_commitish }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+          virtualenvs-path: .venv
+          installer-parallel: true
+      - name: Install library
+        run: poetry install --no-interaction --with docs --all-extras
+      - name: Set git config
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+      - name: Deploy documentation develops
+        run: |
+          poetry run mike deploy --push --rebase --update-aliases ${{ github.event.release.tag_name }} latest --message "Release ${{ github.event.release.tag_name }}"  --force
+          poetry run mike set-default --push --rebase latest --force
