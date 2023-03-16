@@ -1,4 +1,3 @@
-# .github/workflows/update-changelog.yaml
 name: "Update Changelog"
 
 on:
@@ -6,71 +5,26 @@ on:
     types:
       - published
 
-permissions:
-  contents: read
-  packages: write
-
 jobs:
-  Update-Changelog:
-    name: Update Changelog
+  update:
     runs-on: ubuntu-latest
-
-    permissions:
-      # Give the default GITHUB_TOKEN write permission to commit and push the
-      # updaetd CHANGELOG back to the repository.
-      # https://github.blog/changelog/2023-02-02-github-actions-updating-the-default-github_token-permissions-to-read-only/
-      contents: write
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
         with:
-          fetch-depth: 0
-          ref: ${{ github.event.release.target_commitish }}
+          ref: main
 
-      - name: Create new release branch
-        run: |
-          git checkout -b release/${{ github.event.release.tag_name }}
-      - name: Update CHANGELOG
+      - name: Update Changelog
         uses: stefanzweifel/changelog-updater-action@v1
-        id: "changelog-updater"
         with:
-          # Pass extracted release date, release notes and version to the Action.
-          release-date: ${{ steps.release_date.outputs.date }}
           release-notes: ${{ github.event.release.body }}
-          latest-version: ${{ github.event.release.tag_name }}
-          compare-url-target-revision: ${{ github.event.release.target_commitish }}
+          latest-version: ${{ github.event.release.name }}
 
-      - name: "release_compare_url"
-        # https://github.com/org/repo/compare/v1.0.0...v1.1.0
-        run: "echo ${{ steps.changelog-updater.outputs.release_compare_url }}"
-
-      - name: "release_url_fragment"
-        # #v100---2021-02-01
-        run: "echo ${{ steps.changelog-updater.outputs.release_url_fragment }}"
-
-      - name: "unreleased_compare_url"
-        # https://github.com/org/repo/compare/v1.0.0...HEAD
-        run: "echo ${{ steps.changelog-updater.outputs.unreleased_compare_url }}"
-      - name: Commit updated CHANGELOG via Github Actions
+      - name: Commit updated CHANGELOG
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: "Update CHANGELOG for ${{ github.event.release.tag_name }}"
+          branch: release/${{ github.event.release.name }}
+          commit_message: Update CHANGELOG
           file_pattern: CHANGELOG.md
-          branch: release/${{ github.event.release.tag_name }}
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v3
-        with:
-          title: "Update CHANGELOG for ${{ github.event.release.tag_name }}"
-          body: |
-            This PR was created by the Update Changelog workflow.
-          branch: release/${{ github.event.release.tag_name }}
-          base: ${{ github.event.release.target_commitish }}
-          labels: |
-            changelog
-            release
-          reviewers: |
-            Anselmoo
-          assignees: |
-            Anselmoo
-          token: ${{ secrets.GITHUB_TOKEN }}
+          create_branch: true
