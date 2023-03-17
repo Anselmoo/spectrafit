@@ -913,14 +913,14 @@ files = [
 
 [[package]]
 name = "dash"
-version = "2.9.0"
+version = "2.9.1"
 description = "A Python framework for building reactive web-apps. Developed by Plotly."
 category = "main"
 optional = false
 python-versions = ">=3.6"
 files = [
-    {file = "dash-2.9.0-py3-none-any.whl", hash = "sha256:f57507643d2e7f150a8067f3bbcabedaf5b33029b6a9a9915787e1526e74e460"},
-    {file = "dash-2.9.0.tar.gz", hash = "sha256:d729fc6751e8e537dee700ced82255419789b8fe44226906be742ebe951e5906"},
+    {file = "dash-2.9.1-py3-none-any.whl", hash = "sha256:714c9ee2a972b0157b4d3f7dc111b3d77d49916d7e851c0c8318d0030706b2e9"},
+    {file = "dash-2.9.1.tar.gz", hash = "sha256:92838be734ffb4b42a09bbc1b721a5a47b019606a02a76f8e1f0f578dead9786"},
 ]
 
 [package.dependencies]
@@ -2867,29 +2867,25 @@ mkdocs = ">=1.1"
 
 [[package]]
 name = "mkdocs-jupyter"
-version = "0.23.0"
+version = "0.23.1"
 description = "Use Jupyter in mkdocs websites"
 category = "dev"
 optional = false
 python-versions = ">=3.7"
-files = []
-develop = false
+files = [
+    {file = "mkdocs_jupyter-0.23.1-py3-none-any.whl", hash = "sha256:0f1f707219af66abb1ead03500fbcb7f7196c6c06d963300ba40b9e8ec8088e8"},
+    {file = "mkdocs_jupyter-0.23.1.tar.gz", hash = "sha256:b2745c1e003ef9ec80d43ac8cc00b4de41810a1160bb133eca5329275106ead6"},
+]
 
 [package.dependencies]
 jupytext = ">1.13.8,<2"
-mkdocs = ">=1.4.2,<2"
+mkdocs = ">=1.4.0,<2"
 mkdocs-material = ">9.0.0"
 nbconvert = ">=7.2.9,<8"
 pygments = ">2.12.0"
 
 [package.extras]
 test = ["pytest", "pytest-cov"]
-
-[package.source]
-type = "git"
-url = "https://github.com/danielfrg/mkdocs-jupyter.git"
-reference = "HEAD"
-resolved_reference = "67e0d0ce6b70140858ca7957b631177821ec6642"
 
 [[package]]
 name = "mkdocs-literate-nav"
@@ -5938,4 +5934,4 @@ jupyter-dash = ["dash-bootstrap-components", "dash-bootstrap-templates", "ipywid
 [metadata]
 lock-version = "2.0"
   python-versions = ">=3.8,<3.11"
-content-hash = "a1a640977a9815b20fce18728d7ea88f08523ec1ee1d66c97f19a673d8b8d0d1"
+content-hash = "badb0c6d9b53204cf8378f54fe794095f095b6182ca4d5dfc96d731cfee2214c"
