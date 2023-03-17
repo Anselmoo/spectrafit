@@ -28,12 +28,10 @@ docker:
   - .dockerignore
   - .devcontainer/Dockerfile
 release:
-  - "spectrafit/__init__.py"
-  - "pyproject.toml"
+  - all: ["spectrafit/__init__.py", "pyproject.toml"]
 vendor:
   - vendor/**
 maintenance:
-  - pyproject.toml
   - .gitignore
   - .github/dependabot.yml
   - .github/release-drafter.yml
@@ -45,6 +43,7 @@ maintenance:
   - .pylintrc
   - .sonarcloud.properties
   - .sourcery.yaml
+  - all: ["!spectrafit/__init__.py", "pyproject.toml"]
 license:
   - LICENSE
 security:
