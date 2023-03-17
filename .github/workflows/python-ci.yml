@@ -110,7 +110,7 @@ jobs:
         run: poetry run mkdocs build --clean
       - name: Deploy documentation develops
         if: contains(github.ref, 'refs/heads/main')
-        run: poetry run mike deploy --push --update-aliases develop
+        run: poetry run mike deploy --push --rebase --update-aliases develop
   devcontainer:
     name: Devcontainer
     needs: build

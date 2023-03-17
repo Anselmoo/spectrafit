@@ -163,7 +163,7 @@ the `SpectraFitNotebook` class.
     handler: python
     options:
       members:
-        - solver_model
+        - __init__
       show_root_heading: true
       show_signature: false
       show_source: false

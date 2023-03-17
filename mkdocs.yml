@@ -63,14 +63,15 @@ plugins:
   - mkdocstrings
   - autorefs
   - section-index
-  - mkdocs-jupyter:
-      ignore_h1_titles: true
-      include_source: false
-      execute: true
   - literate-nav:
       nav_file: SUMMARY.md
   - minify:
       minify_html: true
+  - mkdocs-jupyter:
+      ignore_h1_titles: true
+      include_source: true
+      execute: true
+      kernel_name: python3
 
 # Customization
 extra:
@@ -81,6 +82,7 @@ extra:
       link: https://pypi.org/project/spectrafit/
   version:
     provider: mike
+    default: latest
 
 # Extensions
 markdown_extensions:
