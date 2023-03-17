@@ -8,26 +8,28 @@ on:
 jobs:
   Changelog-Update:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-
       - name: Update Changelog
         uses: stefanzweifel/changelog-updater-action@v1
         with:
           release-notes: ${{ github.event.release.body }}
           latest-version: ${{ github.event.release.name }}
-
-      - name: Commit updated CHANGELOG
-        uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          branch: release/${{ github.event.release.name }}
-          commit_message: Update CHANGELOG
-          file_pattern: CHANGELOG.md
-          create_branch: true
+      - name: Set git config
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+      - name: Create release branch
+        run: |
+          git checkout -b release/${{ github.event.release.name }}
+          git add CHANGELOG.md
+          git commit -m "Update CHANGELOG for ${{ github.event.release.name }}"
+          git push --set-upstream origin release/${{ github.event.release.name }}
+      - name: Change back to main branch
+        run: git checkout main
   Release-Documentation:
     name: Build Documentation
     needs: Changelog-Update
