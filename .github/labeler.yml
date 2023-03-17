@@ -28,7 +28,8 @@ docker:
   - .dockerignore
   - .devcontainer/Dockerfile
 release:
-  - all: ["spectrafit/__init__.py", "pyproject.toml"]
+  - "spectrafit/__init__.py"
+  - "pyproject.toml"
 vendor:
   - vendor/**
 maintenance:
