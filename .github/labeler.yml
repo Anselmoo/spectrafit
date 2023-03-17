@@ -1,21 +1,26 @@
+codeowners:
+  - .github/CODEOWNERS
 codespaces:
   - .devcontainer/**
 dependencies:
   - poetry.lock
+  - github/dependabot.yml
 documentation:
   - docs/**
-  - .github/ISSUE_TEMPLATE/**
-  - .github/pull_request_template.md
   - Examples/**
   - mkdocs.yml
   - README.md
+  - INSTALLATION.md
+forms:
+  - .github/ISSUE_TEMPLATE/**
+  - .github/pull_request_template.md
 github-actions:
   - .github/workflows/**
 pre-commit:
   - .pre-commit-config.yaml
   - .pre-commit-hooks.yaml
 python:
-  - spectrafit/**
+  - all: ["spectrafit/**/*.py", "!spectrafit/**/test_*.py"]
 testing:
   - all: ["spectrafit/**/test_*.py"]
 docker:
@@ -26,28 +31,24 @@ release:
   - all: ["spectrafit/__init__.py", "pyproject.toml"]
 vendor:
   - vendor/**
-forms:
-  - .github/ISSUE_TEMPLATE/**
-  - .github/pull_request_template.md
 maintenance:
   - pyproject.toml
-  - poetry.lock
   - .gitignore
   - .github/dependabot.yml
   - .github/release-drafter.yml
   - .github/labeler.yml
   - .github/workflows/label.yml
   - .sonarcloud.properties
-  - LICENSE
-  - CHANGELOG.md
-  - CODE_OF_CONDUCT.md
-  - "SECURITY.md"
   - .pre-commit-config.yaml
   - .prettierignore
+  - .pylintrc
   - .sonarcloud.properties
   - .sourcery.yaml
+license:
+  - LICENSE
 security:
   - SECURITY.md
-  - poetry.lock
+code-of-conduct:
+  - CODE_OF_CONDUCT.md
 changelog:
   - CONTRIBUTING.md

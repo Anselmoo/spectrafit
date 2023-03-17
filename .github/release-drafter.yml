@@ -15,7 +15,7 @@ categories:
     label: "milestone"
   - title: "🚀 New"
     label: "enhancement"
-  - title: "💻 New"
+  - title: "💻 Codesspaces"
     label: "codespaces"
   - title: "🐛 Bug Fixes"
     label: "bug"
@@ -37,6 +37,8 @@ categories:
     label: "changelog"
   - title: "🧾 Forms"
     label: "forms"
+  - title: "🐳 Docker"
+    label: "docker"
 
 version-resolver:
   major:
@@ -45,14 +47,17 @@ version-resolver:
   minor:
     labels:
       - "enhancement"
+      - "feature"
+      - "codeowners"
   patch:
     labels:
       - "codespaces"
-      - "bug"
+      - "docker"
       - "maintenance"
-      - "github-actions"
       - "documentation"
       - "dependencies"
+      - "forms"
+      - "github-actions"
       - "security"
       - "testing"
       - "good first issue"
@@ -62,6 +67,7 @@ exclude-labels:
   - "duplicate"
   - "invalid"
   - "wontfix"
+  - "question"
 
 exclude-contributors:
   - dependabot[bot]
