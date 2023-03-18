@@ -18,18 +18,13 @@ jobs:
         with:
           release-notes: ${{ github.event.release.body }}
           latest-version: ${{ github.event.release.name }}
-      - name: Set git config
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-      - name: Create release branch
-        run: |
-          git checkout -b release/${{ github.event.release.name }}
-          git add CHANGELOG.md
-          git commit -m "Update CHANGELOG for ${{ github.event.release.name }}"
-          git push --set-upstream origin release/${{ github.event.release.name }}
-      - name: Change back to main branch
-        run: git checkout main
+      - name: Commit updated CHANGELOG
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          branch: release/${{ github.event.release.tag_name }}
+          commit_message: Update CHANGELOG
+          file_pattern: CHANGELOG.md
+          create_branch: true
   Release-Documentation:
     name: Build Documentation
     needs: Changelog-Update
