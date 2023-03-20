@@ -603,3 +603,20 @@ class TestSpectraFitNotebook:
         sp.display_original_df()
         sp.display_preprocessed_df()
         sp.display_fit_df()
+
+    def test_confidence_interval_false_expot(
+        self,
+        class_spectrafit_fit: SpectraFitNotebook,
+        initial_model: List[Dict[str, Dict[str, Dict[str, Any]]]],
+    ) -> None:
+        """Test the confidence interval function."""
+        sp = class_spectrafit_fit
+        sp.solver_model(
+            initial_model=initial_model,
+            show_plot=False,
+            show_df=False,
+            show_metric=False,
+            show_peaks=False,
+            conf_interval=False,
+        )
+        sp.generate_report
