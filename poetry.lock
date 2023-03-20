@@ -2867,14 +2867,14 @@ mkdocs = ">=1.1"
 
 [[package]]
 name = "mkdocs-jupyter"
-version = "0.23.1"
+version = "0.24.0"
 description = "Use Jupyter in mkdocs websites"
 category = "dev"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "mkdocs_jupyter-0.23.1-py3-none-any.whl", hash = "sha256:0f1f707219af66abb1ead03500fbcb7f7196c6c06d963300ba40b9e8ec8088e8"},
-    {file = "mkdocs_jupyter-0.23.1.tar.gz", hash = "sha256:b2745c1e003ef9ec80d43ac8cc00b4de41810a1160bb133eca5329275106ead6"},
+    {file = "mkdocs_jupyter-0.24.0-py3-none-any.whl", hash = "sha256:b7ab317d79796c43ac7f15ba8c2bc725b9361011a64300e2b4bb5ba2a73353fa"},
+    {file = "mkdocs_jupyter-0.24.0.tar.gz", hash = "sha256:fc2ec9a608609f91080d1fa8183b2ea7e9d2e913dd0e2005979a2c3540fa5cba"},
 ]
 
 [package.dependencies]
@@ -5933,4 +5933,4 @@ jupyter-dash = ["dash-bootstrap-components", "dash-bootstrap-templates", "ipywid
 [metadata]
 lock-version = "2.0"
   python-versions = ">=3.8,<3.11"
-content-hash = "f6645d316015b48cfe4334b18e7dc5c891b183d3b87753f43e5cd2f77a7bc560"
+content-hash = "f577ca4683d5fa565b6138d6f04e21a6ca9a082e3b60a995f6fce1f794b952e8"
