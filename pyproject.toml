@@ -101,7 +101,7 @@ exclude = ["docs/", "tools/"]
   mkdocs-minify-plugin = "^0.6.2"
   mkdocs-material = "^9.1.2"
   jupytext = "^1.14.5"
-  mkdocs-jupyter = "^0.24.0"
+  mkdocs-jupyter = "^0.23.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
