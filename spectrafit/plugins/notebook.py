@@ -569,12 +569,17 @@ class SolverResults:
         return self.args_out["linear_correlation"]
 
     @property
-    def settings_conf_interval(self) -> Dict[str, Any]:
+    def settings_conf_interval(self) -> Union[bool, Dict[str, Any]]:
         """Confidence interval settings.
 
         Returns:
-            Dict[str, Any]: Confidence interval settings.
+            Union[bool, Dict[str, Any]]: Confidence interval settings.
         """
+        if isinstance(self.args_out["conf_interval"], dict):
+            self.args_out["conf_interval"] = {
+                key: value if value is not None else {}
+                for key, value in self.args_out["conf_interval"].items()
+            }
         return self.args_out["conf_interval"]
 
     @property
@@ -582,8 +587,11 @@ class SolverResults:
         """Get the confidence interval.
 
         Returns:
-            Dict[Any, Any]: Confidence interval as dictionary.
+            Dict[Any, Any]: Confidence interval as dictionary with or without the
+                    confidence interval results.
         """
+        if self.args_out["conf_interval"] is False:
+            return {}
         return self.args_out["confidence_interval"]
 
     @property

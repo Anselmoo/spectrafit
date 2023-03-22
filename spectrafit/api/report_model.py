@@ -47,7 +47,7 @@ class FitMethodAPI(BaseModel):
         default=False,
         description="Fitting in the global fashion",
     )
-    confidence_interval: Dict[str, Any] = Field(
+    confidence_interval: Union[bool, Dict[str, Any]] = Field(
         ...,
         description="Settings for the confidence interval calculation",
     )

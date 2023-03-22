@@ -571,6 +571,26 @@ class TestSpectraFitNotebook:
 
             mock_show.assert_called_once()
 
+    def test_conv_no(
+        self,
+        class_spectrafit_fit: SpectraFitNotebook,
+        initial_model: List[Dict[str, Dict[str, Dict[str, Any]]]],
+    ) -> None:
+        """Test conf interval via bool for false."""
+        sp = class_spectrafit_fit
+
+        with mock.patch(__plotly_io_show__) as mock_show:
+            sp.solver_model(
+                initial_model=initial_model,
+                show_plot=False,
+                show_df=True,
+                show_metric=True,
+                show_peaks=True,
+                conf_interval=False,
+            )
+
+            mock_show.assert_called_once()
+
     def test_display_current_df(
         self,
         class_spectrafit_fit: SpectraFitNotebook,
@@ -583,3 +603,20 @@ class TestSpectraFitNotebook:
         sp.display_original_df()
         sp.display_preprocessed_df()
         sp.display_fit_df()
+
+    def test_confidence_interval_false_expot(
+        self,
+        class_spectrafit_fit: SpectraFitNotebook,
+        initial_model: List[Dict[str, Dict[str, Dict[str, Any]]]],
+    ) -> None:
+        """Test the confidence interval function."""
+        sp = class_spectrafit_fit
+        sp.solver_model(
+            initial_model=initial_model,
+            show_plot=False,
+            show_df=False,
+            show_metric=False,
+            show_peaks=False,
+            conf_interval=False,
+        )
+        sp.generate_report
