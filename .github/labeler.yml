@@ -51,4 +51,4 @@ security:
 code-of-conduct:
   - CODE_OF_CONDUCT.md
 changelog:
-  - CONTRIBUTING.md
+  - CHANGELOG.md
