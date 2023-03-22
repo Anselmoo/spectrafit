@@ -55,7 +55,9 @@ jobs:
           virtualenvs-path: .venv
           installer-parallel: true
       - name: Install library
-        run: poetry install --no-interaction --with dev --all-extras
+        run: |
+          poetry config installer.modern-installation false
+          poetry install --no-interaction --with dev --all-extras
       - name: Test SpectraFit
         run: poetry run pytest
       - name: Codecov
