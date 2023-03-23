@@ -39,6 +39,8 @@ categories:
     label: "forms"
   - title: "🐳 Docker"
     label: "docker"
+  - title: "📦 Vendor"
+    label: "vendor"
 
 version-resolver:
   major:
@@ -61,6 +63,8 @@ version-resolver:
       - "security"
       - "testing"
       - "good first issue"
+      - "changelog"
+      - "vendor"
 
 exclude-labels:
   - "skip-changelog"
