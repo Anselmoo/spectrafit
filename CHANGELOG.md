@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file.
 
+## v0.16.7 🌈 - 2023-03-23
+
+### 🧭 What's Changed
+
+- Update CHANGELOG (#708) @Anselmoo
+
+#### 🧰 Maintenance
+
+- feat: :zap: Add support for `3.11` (#715) @Anselmoo
+- fix: 📃 Update labeler.yml (#709) @Anselmoo
+
+#### :octocat: Github Actions
+
+- feat: :zap: Add support for `3.11` (#715) @Anselmoo
+- build(deps): Bump pypa/gh-action-pypi-publish from 1.8.1 to 1.8.3 (#710) @dependabot
+
+#### 🔗 Dependency Updates
+
+- feat: :zap: Add support for `3.11` (#715) @Anselmoo
+- build(deps): Bump pydantic from 1.10.6 to 1.10.7 (#711) @dependabot
+
+### 📦 Full Changelog
+
+**Full Changelog**: https://github.com/Anselmoo/spectrafit/compare/v0.16.6...v0.16.7
+
+### ⚙️ Who Contributes
+
+@Anselmoo
+
 ## v0.16.6 🌈 - 2023-03-22
 
 ### 🧭 What's Changed
