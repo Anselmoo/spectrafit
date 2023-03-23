@@ -57,7 +57,7 @@ jobs:
       - name: Install library
         run: |
           poetry config installer.modern-installation false
-          poetry install --no-interaction --with dev --E all
+          poetry install --no-interaction --with dev -E all
       - name: Test SpectraFit
         run: poetry run pytest
       - name: Codecov
