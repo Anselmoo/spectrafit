@@ -7,6 +7,8 @@ on:
 
 jobs:
   Changelog-Update:
+    if: ${{ contains(github.event.release.prerelease, false) }}
+    name: Update Changelog
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -26,13 +28,15 @@ jobs:
           file_pattern: CHANGELOG.md
           create_branch: true
   Release-Documentation:
-    name: Build Documentation
+    if: ${{ contains(github.event.release.prerelease, false) }}
+    name: Build Documentation from new release branch 'release/${{ github.event.release.tag_name }}'
     needs: Changelog-Update
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
+          ref: release/${{ github.event.release.tag_name }}
       - uses: actions/setup-python@v4
         with:
           python-version: "3.10"
