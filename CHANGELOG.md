@@ -10,17 +10,17 @@ All notable changes to this project will be documented in this file.
 
 #### 🧰 Maintenance
 
-- feat: :zap:  Add support for `3.11` (#715) @Anselmoo
+- feat: :zap: Add support for `3.11` (#715) @Anselmoo
 - fix: 📃 Update labeler.yml (#709) @Anselmoo
 
 #### :octocat: Github Actions
 
-- feat: :zap:  Add support for `3.11` (#715) @Anselmoo
+- feat: :zap: Add support for `3.11` (#715) @Anselmoo
 - build(deps): Bump pypa/gh-action-pypi-publish from 1.8.1 to 1.8.3 (#710) @dependabot
 
 #### 🔗 Dependency Updates
 
-- feat: :zap:  Add support for `3.11` (#715) @Anselmoo
+- feat: :zap: Add support for `3.11` (#715) @Anselmoo
 - build(deps): Bump pydantic from 1.10.6 to 1.10.7 (#711) @dependabot
 
 ### 📦 Full Changelog
