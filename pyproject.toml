@@ -44,7 +44,7 @@ exclude = ["docs/", "tools/"]
   [tool.poetry.dependencies]
   python = ">=3.8,<3.12"
   lmfit = "^1.1.0"
-  pandas = "^1.5.0"
+  pandas = ">=1.5,<3.0"
   numpy = "^1.23.4"
   emcee = "^3.1.2"
   tabulate = "^0.9.0"
