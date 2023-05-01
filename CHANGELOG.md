@@ -2,6 +2,86 @@
 
 All notable changes to this project will be documented in this file.
 
+## v0.17.0 🌈 - 2023-05-01
+
+### 🧭 What's Changed
+
+#### 🚀 New
+
+- feat: ⚡ Improve meta-data handling in report (#759) @Anselmoo
+- chore: :zap: Update shell interface (#757) @Anselmoo
+
+#### 🧰 Maintenance
+
+- feat: ⚡ Improve meta-data handling in report (#759) @Anselmoo
+- chore: :zap: Update shell interface (#757) @Anselmoo
+- [pre-commit.ci] pre-commit autoupdate (#752) @pre-commit-ci
+- [pre-commit.ci] pre-commit autoupdate (#746) @pre-commit-ci
+- build(deps-dev): Bump mkdocstrings from 0.20.0 to 0.21.1 (#739) @dependabot
+- build(deps): Bump pandas from 1.5.3 to 2.0.0 (#735) @dependabot
+- [pre-commit.ci] pre-commit autoupdate (#733) @pre-commit-ci
+- docs: :memo: Improve RIXS map example (#731) @Anselmoo
+- build(deps-dev): ⬆️ Bump black from 23.1.0 to 23.3.0 (#725) @dependabot
+- [pre-commit.ci] pre-commit autoupdate (#720) @pre-commit-ci
+- chore: :arrow_up: Vendor Packages (#717) @Anselmoo
+
+#### :octocat: Github Actions
+
+- feat: ⚡ Improve meta-data handling in report (#759) @Anselmoo
+- build(deps): Bump docker/metadata-action from 4.3.0 to 4.4.0 (#749) @dependabot
+- build(deps): Bump pypa/gh-action-pypi-publish from 1.8.4 to 1.8.5 (#734) @dependabot
+- build(deps): Bump pypa/gh-action-pypi-publish from 1.8.3 to 1.8.4 (#732) @dependabot
+
+#### 🗂 Documentation
+
+- chore: :zap: Update shell interface (#757) @Anselmoo
+- docs: :memo: Improve RIXS map example (#731) @Anselmoo
+
+#### 🔗 Dependency Updates
+
+- chore: :zap: Update shell interface (#757) @Anselmoo
+- build(deps): Bump pandas from 2.0.0 to 2.0.1 (#755) @dependabot
+- build(deps-dev): Bump pylint from 2.17.1 to 2.17.3 (#754) @dependabot
+- build(deps-dev): Bump mkdocs-material from 9.1.6 to 9.1.8 (#753) @dependabot
+- build(deps): Bump numpy from 1.24.2 to 1.24.3 (#750) @dependabot
+- build(deps-dev): Bump pytest from 7.3.0 to 7.3.1 (#748) @dependabot
+- build(deps-dev): Bump dash from 2.9.2 to 2.9.3 (#747) @dependabot
+- build(deps-dev): Bump pytest from 7.2.2 to 7.3.0 (#743) @dependabot
+- build(deps-dev): Bump mkdocs-material from 9.1.5 to 9.1.6 (#744) @dependabot
+- build(deps): Bump lmfit from 1.1.0 to 1.2.0 (#745) @dependabot
+- build(deps): Bump plotly from 5.14.0 to 5.14.1 (#740) @dependabot
+- build(deps-dev): Bump mypy from 1.1.1 to 1.2.0 (#741) @dependabot
+- build(deps-dev): Bump mkdocstrings from 0.21.1 to 0.21.2 (#742) @dependabot
+- build(deps-dev): Bump mkdocstrings from 0.20.0 to 0.21.1 (#739) @dependabot
+- build(deps): Bump pandas from 1.5.3 to 2.0.0 (#735) @dependabot
+- docs: :memo: Improve RIXS map example (#731) @Anselmoo
+- build(deps-dev): ⬆️ Bump black from 23.1.0 to 23.3.0 (#725) @dependabot
+- build(deps): Bump ipywidgets from 8.0.5 to 8.0.6 (#727) @dependabot
+- build(deps-dev): Bump dash from 2.9.1 to 2.9.2 (#729) @dependabot
+- build(deps-dev): Bump types-tabulate from 0.9.0.1 to 0.9.0.2 (#724) @dependabot
+- build(deps-dev): Bump types-toml from 0.10.8.5 to 0.10.8.6 (#726) @dependabot
+- build(deps-dev): Bump types-pyyaml from 6.0.12.8 to 6.0.12.9 (#723) @dependabot
+- build(deps-dev): Bump types-mock from 5.0.0.5 to 5.0.0.6 (#722) @dependabot
+- build(deps): Bump itables from 1.5.1 to 1.5.2 (#721) @dependabot
+- build(deps-dev): Bump pre-commit from 3.2.0 to 3.2.1 (#719) @dependabot
+- build(deps-dev): Bump mkdocs-material from 9.1.3 to 9.1.4 (#718) @dependabot
+
+#### 📝 Changelog
+
+- Update CHANGELOG (#716) @Anselmoo
+
+#### 📦 Vendor
+
+- chore: :arrow_up: Vendor Packages (#717) @Anselmoo
+
+### 📦 Full Changelog
+
+**Full Changelog**: https://github.com/Anselmoo/spectrafit/compare/v0.16.7...v0.17.0
+
+### ⚙️ Who Contributes
+
+@Anselmoo
+
 ## v0.16.7 🌈 - 2023-03-23
 
 ### 🧭 What's Changed
