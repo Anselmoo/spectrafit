@@ -21,7 +21,7 @@ All notable changes to this project will be documented in this file.
 - build(deps): Bump pandas from 1.5.3 to 2.0.0 (#735) @dependabot
 - [pre-commit.ci] pre-commit autoupdate (#733) @pre-commit-ci
 - docs: :memo: Improve RIXS map example (#731) @Anselmoo
-- build(deps-dev): ⬆️  Bump black from 23.1.0 to 23.3.0 (#725) @dependabot
+- build(deps-dev): ⬆️ Bump black from 23.1.0 to 23.3.0 (#725) @dependabot
 - [pre-commit.ci] pre-commit autoupdate (#720) @pre-commit-ci
 - chore: :arrow_up: Vendor Packages (#717) @Anselmoo
 
@@ -55,7 +55,7 @@ All notable changes to this project will be documented in this file.
 - build(deps-dev): Bump mkdocstrings from 0.20.0 to 0.21.1 (#739) @dependabot
 - build(deps): Bump pandas from 1.5.3 to 2.0.0 (#735) @dependabot
 - docs: :memo: Improve RIXS map example (#731) @Anselmoo
-- build(deps-dev): ⬆️  Bump black from 23.1.0 to 23.3.0 (#725) @dependabot
+- build(deps-dev): ⬆️ Bump black from 23.1.0 to 23.3.0 (#725) @dependabot
 - build(deps): Bump ipywidgets from 8.0.5 to 8.0.6 (#727) @dependabot
 - build(deps-dev): Bump dash from 2.9.1 to 2.9.2 (#729) @dependabot
 - build(deps-dev): Bump types-tabulate from 0.9.0.1 to 0.9.0.2 (#724) @dependabot
