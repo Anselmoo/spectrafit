@@ -11,7 +11,6 @@
     "shift": 0.2,
     "smooth": 4,
     "verbose": 1,
-    "version": false,
     "noplot": false
   },
   "fitting": {
@@ -26,10 +25,14 @@
         "spectrum"
       ]
     },
-
     "parameters": {
-      "minimizer": { "nan_policy": "propagate", "calc_covar": true },
-      "report": { "min_correl": 0.0 },
+      "minimizer": {
+        "nan_policy": "propagate",
+        "calc_covar": true
+      },
+      "report": {
+        "min_correl": 0.0
+      },
       "conf_interval": {
         "p_names": null,
         "sigmas": null,

@@ -11,7 +11,6 @@
     "shift": 0.2,
     "smooth": false,
     "verbose": 1,
-    "version": false,
     "noplot": true,
     "global_": 1
   },

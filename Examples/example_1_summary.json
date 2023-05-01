@@ -12,7 +12,6 @@
   "decimal": ".",
   "header": null,
   "noplot": false,
-  "version": false,
   "verbose": 1,
   "description": {
     "project_name": "Example1",

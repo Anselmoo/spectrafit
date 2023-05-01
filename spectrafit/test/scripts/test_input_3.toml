@@ -1,5 +1,5 @@
 [settings]
-column = [ "Energy", "Intensity"]
+column = ["Energy", "Intensity"]
 header = 0
 decimal = "."
 energy_start = 0
@@ -10,7 +10,6 @@ separator = ","
 shift = 0.2
 smooth = 4
 verbose = 2
-version = false
 noplot = true
 
 [fitting.description]
@@ -21,7 +20,7 @@ keywords = [
   "fitting",
   "curve-fitting",
   "peak-fitting",
-  "spectrum"
+  "spectrum",
 ]
 
 [fitting.parameters.minimizer]

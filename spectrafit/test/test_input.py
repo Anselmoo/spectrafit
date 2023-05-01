@@ -27,6 +27,7 @@ class TestCommandLineRunner:
             "_",
             "-i",
             "spectrafit/test/scripts/test_input_1.json",
+            "--version",
         )
 
         assert ret.success

@@ -12,8 +12,7 @@
     "shift": 0,
     "smooth": 0,
     "autopeak": true,
-    "verbose": 1,
-    "version": false
+    "verbose": 1
   },
   "fitting": {
     "description": {

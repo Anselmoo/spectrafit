@@ -3,6 +3,7 @@
 
 from datetime import datetime
 from getpass import getuser
+from hashlib import sha256
 from socket import gethostname
 from typing import Any
 from typing import List
@@ -44,7 +45,7 @@ class DescriptionAPI(BaseModel):
         description="References for the project",
     )
     version: str = __version__
-    host_info: str = f"{getuser()}@{gethostname()}"
+    host_info: str = sha256(f"{getuser()}@{gethostname()}".encode()).hexdigest()
     timestamp: str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     id_: str = Field(
         default=str(uuid4()), alias="id", description="Unique ID of the project"

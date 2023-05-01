@@ -1,5 +1,5 @@
 [settings]
-column = [ 0, 1 ]
+column = [0, 1]
 decimal = "."
 energy_start = 0
 energy_stop = 8
@@ -10,7 +10,6 @@ separator = "\t"
 shift = 0
 smooth = 0
 verbose = 1
-version = false
 
 [fitting.description]
 project_name = "Template"
@@ -20,7 +19,7 @@ keywords = [
   "fitting",
   "curve-fitting",
   "peak-fitting",
-  "spectrum"
+  "spectrum",
 ]
 
 [fitting.parameters.minimizer]

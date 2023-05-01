@@ -1040,7 +1040,6 @@ class TestAutoPeakDetection:
                 x=np.arange(2, dtype=float), data=np.arange(2, dtype=float), args=args
             )
             auto.initialize_peak_detection()
-            _, _ = auto.__autodetect__()
 
         assert "no_implimented" in str(excinfo.value)
         assert excinfo.type is ValidationError

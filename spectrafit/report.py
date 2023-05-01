@@ -446,9 +446,9 @@ class PrintingStatus:
         """Print the welcome message."""
         tprint("SpectraFit", font="3-d")
 
-    def version(self) -> None:
+    def version(self) -> str:
         """Print current version of the SpectraFit."""
-        print(f"Currently used version is: {__version__}")
+        return f"Currently used version is: {__version__}"
 
     def start(self) -> None:
         """Print the start of the fitting process."""
