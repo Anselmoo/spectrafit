@@ -32,7 +32,10 @@ def get_args() -> Dict[str, Any]:
              additional information beyond the command line arguments.
     """
     parser = argparse.ArgumentParser(
-        description="Fast Fitting Program for ascii txt files."
+        description="Fast Fitting Program for ascii txt files.",
+        usage="spectrafit [options] infile",
+        epilog="For more information, visit https://anselmoo.github.io/spectrafit/",
+        prog="spectrafit",
     )
     parser.add_argument("infile", type=str, help="Filename of the spectra data")
     parser.add_argument(
@@ -165,8 +168,8 @@ def get_args() -> Dict[str, Any]:
         "-v",
         "--version",
         help="Display the current version of `SpectraFit`.",
-        action="store_true",
-        default=False,
+        action="version",
+        version=__status__.version(),
     )
     parser.add_argument(
         "-vb",
@@ -195,10 +198,6 @@ def command_line_runner(args: Optional[Dict[str, Any]] = None) -> None:
     while True:
         if not args:
             args = extracted_from_command_line_runner()
-        if args["version"]:
-            __status__.version()
-            return
-
         __status__.start()
 
         df_result, args = fitting_routine(args=args)
