@@ -1,7 +1,7 @@
 """Test of CMD and Tool Model."""
-import os
-
+from getpass import getuser
 from hashlib import sha256
+from socket import gethostname
 
 from spectrafit.api.cmd_model import CMDModelAPI
 from spectrafit.api.cmd_model import DescriptionAPI
@@ -77,5 +77,5 @@ def test_sha256() -> None:
     """Test for sha256 of CMD Model."""
     assert (
         DescriptionAPI().host_info
-        == sha256(f"{os.getlogin()}@{os.uname()[1]}".encode()).hexdigest()
+        == sha256(f"{getuser()}@{gethostname()}".encode()).hexdigest()
     )
