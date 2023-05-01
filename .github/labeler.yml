@@ -23,7 +23,7 @@ python:
   - any:
       [
         "./spectrafit/**/*.py",
-        "./spectrafit/*/*.py",
+        "./spectrafit/*.py",
         "!./spectrafit/**/test_*.py",
       ]
 testing:
