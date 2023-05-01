@@ -52,7 +52,7 @@ With the command `spectrafit-file-converter` input and also output files can be 
         "global_": 0,
         "autopeak": false,
         "noplot": false,
-        "version": false,
+
         "verbose": 0,
         "description": {
           "project_name": "Template",
@@ -253,8 +253,7 @@ With the command `spectrafit-file-converter` input and also output files can be 
         },
         "timestamp": "2022-06-26 12:35:11",
         "ID": "e5c7fc20-bd57-4578-abbf-7736cef3be9b",
-        "host_info": "host_info",
-        "host_info": "host_info",
+        "host_info": "e74490816920d147adc2315b45c4c6ce05e99ae9e09e34d2a263e2e9da861ffd",
         "used_version": "0.9.0",
         "data_statistic": {
           "0": [
@@ -1471,8 +1470,8 @@ With the command `spectrafit-file-converter` input and also output files can be 
       verbose = 0
       timestamp = "2022-06-26 12:35:11"
       ID = "e5c7fc20-bd57-4578-abbf-7736cef3be9b"
-      host_info = "host_info"
-      host_info = "host_info"
+      host_info = "e74490816920d147adc2315b45c4c6ce05e99ae9e09e34d2a263e2e9da861ffd"
+      host_info = "e74490816920d147adc2315b45c4c6ce05e99ae9e09e34d2a263e2e9da861ffd"
       used_version = "0.9.0"
 
       [description]

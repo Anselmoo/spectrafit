@@ -52,7 +52,7 @@
 <span class=nt>&quot;shift&quot;</span><span class=p>:</span><span class=w> </span><span class=mi>0</span><span class=p>,</span>
 <span class=nt>&quot;smooth&quot;</span><span class=p>:</span><span class=w> </span><span class=mi>0</span><span class=p>,</span>
 <span class=nt>&quot;verbose&quot;</span><span class=p>:</span><span class=w> </span><span class=mi>1</span><span class=p>,</span>
-<span class=nt>&quot;version&quot;</span><span class=p>:</span><span class=w> </span><span class=kc>false</span><span class=p>,</span>
+
 <span class=nt>&quot;noplot&quot;</span><span class=p>:</span><span class=w> </span><span class=kc>false</span>
 <span class=p>}</span>
 </code></pre></div> <p>If the settings are pre-defined in the input file, the corresponding command line arguments will be automatically replaced with them. If they are not defined, the command line arguments or their default values will be use. This allows to run faster <code>SpectraFit</code> and also be consistent in the fitting procedure in case of larger studies. For the detail mechanism of overwriting the settings, please see the API documentation of <a href=../../api/spectrafit_api/#spectrafit.spectrafit.extracted_from_command_line_runner>Command Line Module</a>.</p> <div class="admonition warning"> <p class=admonition-title>Datatype of columns for <code>pandas.read_csv</code></p> <p>According to the documentation of <a href=https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_csv.html><code>pandas.read_csv</code></a>, the datatype of can be both: <code>int</code> or <code>str</code>. The <code>in</code> is the default. In case of using the header the <code>str</code> is the mandatory.</p> </div> <h3 id=define-project-details>Define project details<a class=headerlink href=#define-project-details title="Permanent link">&para;</a></h3> <p>Another advanced feature of <code>SpectraFit</code> is to define the fit as project, which can become very useful in case of versioning the fitting project. For using <code>SpectraFit</code> as a project, the project details have to be defined as attributes. The attributes are <code>project name</code>, <code>project details</code>, <code>keywords</code>, as shown in the snippet below:</p> <div class="language-json highlight"><pre><span></span><code><span class=nt>&quot;fitting&quot;</span><span class=p>:</span><span class=w> </span><span class=p>{</span>
@@ -173,7 +173,7 @@
 <span class=w>    </span><span class=nt>&quot;shift&quot;</span><span class=p>:</span><span class=w> </span><span class=mf>0.2</span><span class=p>,</span>
 <span class=w>    </span><span class=nt>&quot;smooth&quot;</span><span class=p>:</span><span class=w> </span><span class=kc>false</span><span class=p>,</span>
 <span class=w>    </span><span class=nt>&quot;verbose&quot;</span><span class=p>:</span><span class=w> </span><span class=mi>1</span><span class=p>,</span>
-<span class=w>    </span><span class=nt>&quot;version&quot;</span><span class=p>:</span><span class=w> </span><span class=kc>false</span><span class=p>,</span>
+
 <span class=w>    </span><span class=nt>&quot;noplot&quot;</span><span class=p>:</span><span class=w> </span><span class=kc>false</span><span class=p>,</span>
 <span class=w>    </span><span class=nt>&quot;global&quot;</span><span class=p>:</span><span class=w> </span><span class=mi>1</span><span class=p>,</span>
 <span class=w>    </span><span class=nt>&quot;autopeak&quot;</span><span class=p>:</span><span class=w> </span><span class=kc>false</span>
@@ -206,8 +206,7 @@
 <span class=w>    </span><span class=nt>&quot;separator&quot;</span><span class=p>:</span><span class=w> </span><span class=s2>&quot;\t&quot;</span><span class=p>,</span>
 <span class=w>    </span><span class=nt>&quot;shift&quot;</span><span class=p>:</span><span class=w> </span><span class=mi>0</span><span class=p>,</span>
 <span class=w>    </span><span class=nt>&quot;smooth&quot;</span><span class=p>:</span><span class=w> </span><span class=mi>0</span><span class=p>,</span>
-<span class=w>    </span><span class=nt>&quot;verbose&quot;</span><span class=p>:</span><span class=w> </span><span class=mi>1</span><span class=p>,</span>
-<span class=w>    </span><span class=nt>&quot;version&quot;</span><span class=p>:</span><span class=w> </span><span class=kc>false</span>
+<span class=w>    </span><span class=nt>&quot;verbose&quot;</span><span class=p>:</span><span class=w> </span><span class=mi>1</span>
 <span class=w>  </span><span class=p>},</span>
 <span class=w>  </span><span class=nt>&quot;fitting&quot;</span><span class=p>:</span><span class=w> </span><span class=p>{</span>
 <span class=w>    </span><span class=nt>&quot;description&quot;</span><span class=p>:</span><span class=w> </span><span class=p>{</span>

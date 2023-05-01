@@ -60,8 +60,7 @@ also printed in the terminal output:
         "separator": "\t",
         "shift": 0,
         "smooth": 0,
-        "verbose": 1,
-        "version": false
+        "verbose": 1
     },
     "fitting": {
         "description": {

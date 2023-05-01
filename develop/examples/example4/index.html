@@ -623,8 +623,7 @@
 <span class=w>    </span><span class=nt>&quot;separator&quot;</span><span class=p>:</span><span class=w> </span><span class=s2>&quot;\t&quot;</span><span class=p>,</span>
 <span class=w>    </span><span class=nt>&quot;shift&quot;</span><span class=p>:</span><span class=w> </span><span class=mi>0</span><span class=p>,</span>
 <span class=w>    </span><span class=nt>&quot;smooth&quot;</span><span class=p>:</span><span class=w> </span><span class=mi>0</span><span class=p>,</span>
-<span class=w>    </span><span class=nt>&quot;verbose&quot;</span><span class=p>:</span><span class=w> </span><span class=mi>1</span><span class=p>,</span>
-<span class=w>    </span><span class=nt>&quot;version&quot;</span><span class=p>:</span><span class=w> </span><span class=kc>false</span>
+<span class=w>    </span><span class=nt>&quot;verbose&quot;</span><span class=p>:</span><span class=w> </span><span class=mi>1</span>
 <span class=w>  </span><span class=p>},</span>
 </code></pre></div> <p>and actually</p> <div class="language-json highlight"><pre><span></span><code><span class=p>{</span>
 <span class=w>  </span><span class=nt>&quot;settings&quot;</span><span class=p>:</span><span class=w> </span><span class=p>{</span>
@@ -640,7 +639,7 @@
 <span class=w>    </span><span class=nt>&quot;shift&quot;</span><span class=p>:</span><span class=w> </span><span class=mf>0.2</span><span class=p>,</span>
 <span class=w>    </span><span class=nt>&quot;smooth&quot;</span><span class=p>:</span><span class=w> </span><span class=mi>4</span><span class=p>,</span>
 <span class=w>    </span><span class=nt>&quot;verbose&quot;</span><span class=p>:</span><span class=w> </span><span class=mi>2</span><span class=p>,</span>
-<span class=w>    </span><span class=nt>&quot;version&quot;</span><span class=p>:</span><span class=w> </span><span class=kc>false</span><span class=p>,</span>
+
 <span class=w>    </span><span class=nt>&quot;noplot&quot;</span><span class=p>:</span><span class=w> </span><span class=kc>true</span>
 <span class=w>  </span><span class=p>},</span>
 </code></pre></div> <p>have to be performed.</p> <ol> <li><strong>Column</strong>: <code>int</code> (index of the column) &rarr; <code>str</code> (name of the column)</li> <li><strong>header</strong>: <code>null</code> (no header at all) &rarr; <code>0</code> (header start at row-number 0)</li> <li><strong>separator</strong>: <code>\t</code> (columns are separated by tab character) &rarr; <code>,</code> (columns are separated by comma character)</li> </ol> <div class="language-text highlight"><pre><span></span><code>spectrafit _ -i example_3.json

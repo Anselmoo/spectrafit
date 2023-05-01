@@ -31,8 +31,7 @@ demonstrated.
     "separator": "\\s+",
     "shift": 0,
     "smooth": 0,
-    "verbose": 0,
-    "version": false
+    "verbose": 0
   },
 ```
 
@@ -56,8 +55,7 @@ demonstrated.
         "separator": "\\s+",
         "shift": 0,
         "smooth": 0,
-        "verbose": 0,
-        "version": false
+        "verbose": 0
       },
       "fitting": {
         "description": {

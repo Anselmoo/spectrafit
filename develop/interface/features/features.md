@@ -204,7 +204,7 @@ different types of output files will be generated
              "decimal": ".",
              "header": null,
              "noplot": true,
-             "version": false,
+
              "verbose": 1,
 
              ```
@@ -231,8 +231,7 @@ different types of output files will be generated
              {
              "timestamp": "2021-08-22 12:33:26",
              "ID": "89b1a4ef-320a-4ac0-80da-e8d946b00e13",
-             "host_info": "host_info",
-             "host_info": "host_info",
+             "host_info": "e74490816920d147adc2315b45c4c6ce05e99ae9e09e34d2a263e2e9da861ffd",
              "used_version": "0.3.0",
              }
              ```
@@ -331,7 +330,7 @@ different types of output files will be generated
       "decimal": ".",
       "header": null,
       "noplot": true,
-      "version": false,
+
       "verbose": 1,
       "description": {
         "project_name": "Template",
@@ -456,7 +455,7 @@ different types of output files will be generated
       "timestamp": "2021-08-19 21:08:57",
       "ID": "ce43d306-43e4-4350-9f09-fd1b13064f39",
       "host_info": "username",
-      "host_info": "host_info",
+      "host_info": "e74490816920d147adc2315b45c4c6ce05e99ae9e09e34d2a263e2e9da861ffd",
       "used_version": "0.2.0",
       "data_statistic": {
         "0": {

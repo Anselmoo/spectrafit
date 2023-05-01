@@ -133,7 +133,7 @@ Define the settings in the input file as shown below:
 "shift": 0,
 "smooth": 0,
 "verbose": 1,
-"version": false,
+
 "noplot": false
 }
 ```
@@ -331,7 +331,7 @@ same way like the local fitting model; via Input file
     "shift": 0.2,
     "smooth": false,
     "verbose": 1,
-    "version": false,
+
     "noplot": false,
     "global": 1,
     "autopeak": false
@@ -431,8 +431,7 @@ types.
         "separator": "\t",
         "shift": 0,
         "smooth": 0,
-        "verbose": 1,
-        "version": false
+        "verbose": 1
       },
       "fitting": {
         "description": {
