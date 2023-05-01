@@ -10,7 +10,6 @@
     "shift": 0.2,
     "smooth": false,
     "verbose": 1,
-    "version": false,
     "noplot": false,
     "global": 0
   },
@@ -26,11 +25,18 @@
         "spectrum"
       ]
     },
-
     "parameters": {
-      "minimizer": { "nan_policy": "propagate", "calc_covar": false },
-      "optimizer": { "max_nfev": 1000, "method": "leastsq" },
-      "report": { "min_correl": 0.0 }
+      "minimizer": {
+        "nan_policy": "propagate",
+        "calc_covar": false
+      },
+      "optimizer": {
+        "max_nfev": 1000,
+        "method": "leastsq"
+      },
+      "report": {
+        "min_correl": 0.0
+      }
     },
     "peaks": {
       "1": {

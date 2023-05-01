@@ -12,7 +12,6 @@
     "shift": 0.2,
     "smooth": 4,
     "verbose": 1,
-    "version": false,
     "noplot": true
   },
   "fitting": {
@@ -27,10 +26,15 @@
         "spectrum"
       ]
     },
-
     "parameters": {
-      "minimizer": { "nan_policy": "propagate", "calc_covar": true },
-      "optimizer": { "max_nfev": 1, "method": "leastsq" }
+      "minimizer": {
+        "nan_policy": "propagate",
+        "calc_covar": true
+      },
+      "optimizer": {
+        "max_nfev": 1,
+        "method": "leastsq"
+      }
     },
     "peaks": {
       "1": {

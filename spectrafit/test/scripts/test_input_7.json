@@ -11,8 +11,7 @@
     "separator": "\t",
     "shift": 0,
     "smooth": 0,
-    "verbose": 2,
-    "version": false
+    "verbose": 2
   },
   "fitting": {
     "description": {

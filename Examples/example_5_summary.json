@@ -12,7 +12,6 @@
   "decimal": ".",
   "header": 0,
   "noplot": false,
-  "version": false,
   "verbose": 1,
   "description": {
     "project_name": "Template",

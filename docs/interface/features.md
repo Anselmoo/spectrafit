@@ -204,7 +204,7 @@ different types of output files will be generated
              "decimal": ".",
              "header": null,
              "noplot": true,
-             "version": false,
+
              "verbose": 1,
 
              ```
@@ -331,7 +331,7 @@ different types of output files will be generated
       "decimal": ".",
       "header": null,
       "noplot": true,
-      "version": false,
+
       "verbose": 1,
       "description": {
         "project_name": "Template",

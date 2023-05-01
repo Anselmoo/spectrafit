@@ -30,8 +30,7 @@ In the following example the in example the section block looks like:
       "width": [0.002, 12],
       "wlen": 100
     },
-    "verbose": 1,
-    "version": false
+    "verbose": 1
   }
 }
 ```

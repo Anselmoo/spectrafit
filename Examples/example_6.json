@@ -10,7 +10,6 @@
     "shift": 0.2,
     "smooth": false,
     "verbose": 1,
-    "version": false,
     "noplot": false,
     "global": 1
   },

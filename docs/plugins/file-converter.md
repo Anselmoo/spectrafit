@@ -52,7 +52,7 @@ With the command `spectrafit-file-converter` input and also output files can be 
         "global_": 0,
         "autopeak": false,
         "noplot": false,
-        "version": false,
+
         "verbose": 0,
         "description": {
           "project_name": "Template",

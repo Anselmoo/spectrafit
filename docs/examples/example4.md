@@ -638,8 +638,7 @@ following changes between previous
     "separator": "\t",
     "shift": 0,
     "smooth": 0,
-    "verbose": 1,
-    "version": false
+    "verbose": 1
   },
 ```
 
@@ -660,7 +659,7 @@ and actually
     "shift": 0.2,
     "smooth": 4,
     "verbose": 2,
-    "version": false,
+
     "noplot": true
   },
 ```
