@@ -20,14 +20,9 @@ pre-commit:
   - .pre-commit-config.yaml
   - .pre-commit-hooks.yaml
 python:
-  - any:
-      [
-        "./spectrafit/**/*.py",
-        "./spectrafit/*.py",
-        "!./spectrafit/**/test_*.py",
-      ]
+  - any: ["spectrafit/**/*.py", "spectrafit/*.py", "!spectrafit/**/test_*.py"]
 testing:
-  - "./spectrafit/**/test_*.py"
+  - "spectrafit/**/test_*.py"
 docker:
   - Dockerfile
   - .dockerignore

@@ -6,6 +6,7 @@ from getpass import getuser
 from hashlib import sha256
 from socket import gethostname
 from typing import Any
+from typing import Dict
 from typing import List
 from typing import Optional
 from typing import Union
@@ -44,6 +45,10 @@ class DescriptionAPI(BaseModel):
         alias="refs",
         description="References for the project",
     )
+    metadata: Optional[Union[Dict[Any, Any], List[Any]]] = Field(
+        default=None, description="Metadata for the project"
+    )
+    license: str = "BSD-3-Clause"
     version: str = __version__
     host_info: str = sha256(f"{getuser()}@{gethostname()}".encode()).hexdigest()
     timestamp: str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")

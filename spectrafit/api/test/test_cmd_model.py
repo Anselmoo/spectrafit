@@ -1,13 +1,19 @@
 """Test of CMD and Tool Model."""
+
+
 from getpass import getuser
 from hashlib import sha256
 from socket import gethostname
+from typing import Any
 
+import pytest
+
+from spectrafit import __version__
 from spectrafit.api.cmd_model import CMDModelAPI
 from spectrafit.api.cmd_model import DescriptionAPI
 
 
-def test_default() -> None:
+def test_default_cmd() -> None:
     """Test for default settings of CMD Model."""
     result = CMDModelAPI(infile="").dict()
     assert result["infile"] == ""
@@ -24,7 +30,7 @@ def test_default() -> None:
     assert result["autopeak"] is False
 
 
-def test_overwrite() -> None:
+def test_overwrite_cmd() -> None:
     """Test for overwriting settings of CMD Model."""
     result = CMDModelAPI(
         infile="",
@@ -79,3 +85,23 @@ def test_sha256() -> None:
         DescriptionAPI().host_info
         == sha256(f"{getuser()}@{gethostname()}".encode()).hexdigest()
     )
+
+
+def test_default_description() -> None:
+    """Test for default settings of Description Model."""
+    result = DescriptionAPI().dict()
+    assert result["project_name"] == "FittingProject"
+    assert result["project_details"] == "Fitting Project via SpectraFit v0.17.0"
+    assert result["keywords"] == ["spectra"]
+    assert result["authors"] == ["authors"]
+    assert result["references"] == ["https://github.com/Anselmoo/spectrafit"]
+    assert result["metadata"] is None
+    assert result["license"] == "BSD-3-Clause"
+    assert result["version"] == __version__
+
+
+@pytest.mark.parametrize("metadata", [{"test": "test"}, ["test"]])
+def test_overwrite_description(metadata: Any) -> None:
+    """Test for overwriting settings of Description Model."""
+    result = DescriptionAPI(metadata=metadata).dict()
+    assert result["metadata"] == metadata
