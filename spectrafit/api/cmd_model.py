@@ -26,7 +26,7 @@ class DescriptionAPI(BaseModel):
 
     project_name: str = Field(
         default="FittingProject",
-        alias="projectNames",
+        alias="projectName",
         description="Name of the project",
     )
     project_details: str = Field(
