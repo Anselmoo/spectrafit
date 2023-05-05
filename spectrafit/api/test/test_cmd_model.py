@@ -91,7 +91,7 @@ def test_default_description() -> None:
     """Test for default settings of Description Model."""
     result = DescriptionAPI().dict()
     assert result["project_name"] == "FittingProject"
-    assert result["project_details"] == "Fitting Project via SpectraFit v0.17.0"
+    assert result["project_details"] == f"Fitting Project via SpectraFit v{__version__}"
     assert result["keywords"] == ["spectra"]
     assert result["authors"] == ["authors"]
     assert result["references"] == ["https://github.com/Anselmoo/spectrafit"]
