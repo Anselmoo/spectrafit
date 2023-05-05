@@ -20,7 +20,9 @@ categories:
   - title: "🐛 Bug Fixes"
     label: "bug"
   - title: "🧰 Maintenance"
-    label: "maintenance"
+    label: ["maintenance", "codeowners"]
+  - title: "🐍 Python"
+    label: "python"
   - title: ":octocat: Github Actions"
     label: "github-actions"
   - title: "🗂 Documentation"
