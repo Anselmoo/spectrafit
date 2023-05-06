@@ -39,6 +39,7 @@ from spectrafit.api.report_model import ReportAPI
 from spectrafit.api.report_model import SolverAPI
 from spectrafit.api.tools_model import ColumnNamesAPI
 from spectrafit.api.tools_model import DataPreProcessingAPI
+from spectrafit.api.tools_model import SolverModelsAPI
 from spectrafit.models import SolverModels
 from spectrafit.tools import PostProcessing
 from spectrafit.tools import PreProcessing
@@ -628,6 +629,7 @@ class ExportReport(SolverResults):
         description: DescriptionAPI,
         initial_model: List[Dict[str, Dict[str, Dict[str, Any]]]],
         pre_processing: DataPreProcessingAPI,
+        settings_solver_models: SolverModelsAPI,
         fname: FnameAPI,
         args_out: Dict[str, Any],
         df_org: pd.DataFrame,
@@ -641,6 +643,7 @@ class ExportReport(SolverResults):
             initial_model (List[Dict[str, Dict[str, Dict[str, Any]]]]): Initial model
                  for the fit.
             pre_processing (DataPreProcessingAPI): Data pre-processing settings.
+            settings_solver_models (SolverModelsAPI): Solver models settings.
             fname (FnameAPI): Filename of the fit project including the path, prefix,
                  and suffix.
             args_out (Dict[str, Any]): Dictionary of SpectraFit settings and results.
@@ -654,6 +657,7 @@ class ExportReport(SolverResults):
         self.description = description
         self.initial_model = initial_model
         self.pre_processing = pre_processing
+        self.settings_solver_models = settings_solver_models
         self.fname = fname
 
         self.df_org = df_org.to_dict(orient="list")
@@ -675,6 +679,9 @@ class ExportReport(SolverResults):
                 global_fitting=self.settings_global_fitting,
                 confidence_interval=self.settings_conf_interval,
                 configurations=self.settings_configurations,
+                settings_solver_models=self.settings_solver_models.dict(
+                    exclude_none=True
+                ),
             ),
         )
 
@@ -877,7 +884,7 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
         self.export_args_df = FnameAPI(fname=fname, folder=folder, suffix="csv")
         self.export_args_out = FnameAPI(fname=fname, folder=folder, suffix="lock")
 
-        self.args_solver: Dict[str, Any] = {}
+        self.settings_solver_models: SolverModelsAPI = SolverModelsAPI()
         self.pre_statistic: Dict[str, Any] = {}
 
     @property
@@ -1007,6 +1014,7 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
                 description=self.args_desc,
                 initial_model=self.initial_model,
                 pre_processing=self.args_pre,
+                settings_solver_models=self.settings_solver_models,
                 fname=self.export_args_out,
                 args_out=self.args,
                 df_org=self.df_org,
@@ -1026,6 +1034,7 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
         conf_interval: Union[bool, Dict[str, Any]] = False,
         bar_criteria: Optional[Union[str, List[str]]] = None,
         line_criteria: Optional[Union[str, List[str]]] = None,
+        solver_settings: Optional[Dict[str, Any]] = None,
     ) -> None:
         """Solves the fit problem based on the proposed model.
 
@@ -1049,6 +1058,9 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
             line_criteria (Optional[Union[str, List[str]]], optional): Criteria for
                 the line plot. It is recommended to use attributes from
                 `regression metric` module. Defaults to None.
+            solver_settings (Optional[Dict[str, Any]], optional): Settings for
+                the solver models, which is split into settings for `minimizer` and
+                `optimizer`.  Defaults to None.
 
         !!! info: "About criteria"
 
@@ -1066,6 +1078,9 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
         elif isinstance(conf_interval, dict):
             conf_interval = ConfIntervalAPI(**conf_interval).dict(exclude_none=True)
 
+        if solver_settings is not None and isinstance(solver_settings, dict):
+            self.settings_solver_models = SolverModelsAPI(**solver_settings)
+
         self.df_fit, self.args = PostProcessing(
             self.df,
             {
@@ -1079,6 +1094,7 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
                     "column": list(self.df.columns),
                     "autopeak": self.autopeak,
                     **list2dict(peak_list=self.initial_model),
+                    **self.settings_solver_models.dict(),
                 },
             )(),
         )()

@@ -19,6 +19,7 @@ from spectrafit.api.report_model import InputAPI
 from spectrafit.api.report_model import OutputAPI
 from spectrafit.api.report_model import SolverAPI
 from spectrafit.api.tools_model import DataPreProcessingAPI
+from spectrafit.api.tools_model import SolverModelsAPI
 from spectrafit.plugins.notebook import DataFrameDisplay
 from spectrafit.plugins.notebook import DataFramePlot
 from spectrafit.plugins.notebook import ExportReport
@@ -135,6 +136,7 @@ def export_report_fixture(
         "description": DescriptionAPI(),
         "initial_model": initial_model,
         "pre_processing": DataPreProcessingAPI(),
+        "settings_solver_models": SolverModelsAPI(),
         "fname": FnameAPI(fname="test", suffix="out"),
         "args_out": args_out,
         "df_org": dataframe,
@@ -512,6 +514,24 @@ class TestSpectraFitNotebook:
                 show_plot=True,
                 show_df=True,
                 show_metric=False,
+            )
+            mock_show.assert_called_once()
+
+    def test_fit_new_solver(
+        self,
+        class_spectrafit_fit: SpectraFitNotebook,
+        initial_model: List[Dict[str, Dict[str, Dict[str, Any]]]],
+    ) -> None:
+        """Test the fit function."""
+        sp = class_spectrafit_fit
+
+        with mock.patch(__plotly_io_show__) as mock_show:
+            sp.solver_model(
+                initial_model=initial_model,
+                show_plot=True,
+                show_df=True,
+                show_metric=False,
+                solver_settings=dict(optimizer={"max_nfev": 100}),
             )
             mock_show.assert_called_once()
 
