@@ -226,7 +226,13 @@ class DataFramePlot:
         else:
             fig.update_yaxes(title_text=yaxis_title, row=1, col=1)
         fig.update_yaxes(title_text=yaxis_title, row=2, col=1)
-        fig.show()
+        fig.show(
+            config={
+                "toImageButtonOptions": dict(
+                    format="png", filename="plot_of_2_dataframes", scale=4
+                )
+            }
+        )
 
     def plot_dataframe(self, args_plot: PlotAPI, df: pd.DataFrame) -> None:
         """Plot the dataframe according to the PlotAPI arguments.
@@ -248,7 +254,13 @@ class DataFramePlot:
                 name=args_plot.yaxis_title.name, unit=args_plot.yaxis_title.unit
             )
         )
-        fig.show()
+        fig.show(
+            config={
+                "toImageButtonOptions": dict(
+                    format="png", filename="plot_dataframe", scale=4
+                )
+            }
+        )
 
     def plot_global_fit(self, args_plot: PlotAPI, df: pd.DataFrame) -> None:
         """Plot the global dataframe according to the PlotAPI arguments.
@@ -323,7 +335,13 @@ class DataFramePlot:
             ),
             secondary_y=True,
         )
-        fig.show()
+        fig.show(
+            config={
+                "toImageButtonOptions": dict(
+                    format="png", filename="plot_metric", scale=4
+                )
+            }
+        )
 
     def update_layout_axes(
         self, fig: Figure, args_plot: PlotAPI, height: int
