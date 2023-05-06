@@ -54,6 +54,10 @@ class FitMethodAPI(BaseModel):
     configurations: Dict[str, Any] = Field(
         ..., description="Settings for the fitting configuration"
     )
+    settings_solver_models: Dict[str, Any] = Field(
+        ...,
+        description="Settings for the solver models including minimizer and optimizer",
+    )
 
 
 class InputAPI(BaseModel):
