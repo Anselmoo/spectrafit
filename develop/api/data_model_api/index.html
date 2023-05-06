@@ -964,7 +964,11 @@
 <span class=normal>53</span>
 <span class=normal>54</span>
 <span class=normal>55</span>
-<span class=normal>56</span></pre></div></td><td class=code><div><pre><span></span><code><span class=k>class</span> <span class=nc>FitMethodAPI</span><span class=p>(</span><span class=n>BaseModel</span><span class=p>):</span>
+<span class=normal>56</span>
+<span class=normal>57</span>
+<span class=normal>58</span>
+<span class=normal>59</span>
+<span class=normal>60</span></pre></div></td><td class=code><div><pre><span></span><code><span class=k>class</span> <span class=nc>FitMethodAPI</span><span class=p>(</span><span class=n>BaseModel</span><span class=p>):</span>
 <span class=w>    </span><span class=sd>&quot;&quot;&quot;Fit method API model.&quot;&quot;&quot;</span>
 
     <span class=n>global_fitting</span><span class=p>:</span> <span class=n>Union</span><span class=p>[</span><span class=nb>bool</span><span class=p>,</span> <span class=nb>int</span><span class=p>]</span> <span class=o>=</span> <span class=n>Field</span><span class=p>(</span>
@@ -978,18 +982,22 @@
     <span class=n>configurations</span><span class=p>:</span> <span class=n>Dict</span><span class=p>[</span><span class=nb>str</span><span class=p>,</span> <span class=n>Any</span><span class=p>]</span> <span class=o>=</span> <span class=n>Field</span><span class=p>(</span>
         <span class=o>...</span><span class=p>,</span> <span class=n>description</span><span class=o>=</span><span class=s2>&quot;Settings for the fitting configuration&quot;</span>
     <span class=p>)</span>
-</code></pre></div></td></tr></table></div> </details> <div class="doc doc-children"> </div> </div> </div> <div class="doc doc-object doc-class"> <h2 id=spectrafit.api.report_model.InputAPI class="doc doc-heading"> <code>InputAPI</code> <a href=#spectrafit.api.report_model.InputAPI class=headerlink title="Permanent link">&para;</a></h2> <div class="doc doc-contents "> <p class="doc doc-class-bases"> Bases: <code><span title=pydantic.BaseModel>BaseModel</span></code></p> <p>Input API for the report endpoint.</p> <details class=quote> <summary>Source code in <code>spectrafit/api/report_model.py</code></summary> <div class=highlight><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal>59</span>
-<span class=normal>60</span>
-<span class=normal>61</span>
-<span class=normal>62</span>
-<span class=normal>63</span>
+    <span class=n>settings_solver_models</span><span class=p>:</span> <span class=n>Dict</span><span class=p>[</span><span class=nb>str</span><span class=p>,</span> <span class=n>Any</span><span class=p>]</span> <span class=o>=</span> <span class=n>Field</span><span class=p>(</span>
+        <span class=o>...</span><span class=p>,</span>
+        <span class=n>description</span><span class=o>=</span><span class=s2>&quot;Settings for the solver models including minimizer and optimizer&quot;</span><span class=p>,</span>
+    <span class=p>)</span>
+</code></pre></div></td></tr></table></div> </details> <div class="doc doc-children"> </div> </div> </div> <div class="doc doc-object doc-class"> <h2 id=spectrafit.api.report_model.InputAPI class="doc doc-heading"> <code>InputAPI</code> <a href=#spectrafit.api.report_model.InputAPI class=headerlink title="Permanent link">&para;</a></h2> <div class="doc doc-contents "> <p class="doc doc-class-bases"> Bases: <code><span title=pydantic.BaseModel>BaseModel</span></code></p> <p>Input API for the report endpoint.</p> <details class=quote> <summary>Source code in <code>spectrafit/api/report_model.py</code></summary> <div class=highlight><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal>63</span>
 <span class=normal>64</span>
 <span class=normal>65</span>
 <span class=normal>66</span>
 <span class=normal>67</span>
 <span class=normal>68</span>
 <span class=normal>69</span>
-<span class=normal>70</span></pre></div></td><td class=code><div><pre><span></span><code><span class=k>class</span> <span class=nc>InputAPI</span><span class=p>(</span><span class=n>BaseModel</span><span class=p>):</span>
+<span class=normal>70</span>
+<span class=normal>71</span>
+<span class=normal>72</span>
+<span class=normal>73</span>
+<span class=normal>74</span></pre></div></td><td class=code><div><pre><span></span><code><span class=k>class</span> <span class=nc>InputAPI</span><span class=p>(</span><span class=n>BaseModel</span><span class=p>):</span>
 <span class=w>    </span><span class=sd>&quot;&quot;&quot;Input API for the report endpoint.&quot;&quot;&quot;</span>
 
     <span class=n>description</span><span class=p>:</span> <span class=n>DescriptionAPI</span> <span class=o>=</span> <span class=n>DescriptionAPI</span><span class=p>()</span>
@@ -1001,11 +1009,7 @@
         <span class=o>...</span><span class=p>,</span> <span class=n>description</span><span class=o>=</span><span class=s2>&quot;Fitting method with optional including of confidence interval&quot;</span>
     <span class=p>)</span>
     <span class=n>pre_processing</span><span class=p>:</span> <span class=n>DataPreProcessingAPI</span> <span class=o>=</span> <span class=n>Field</span><span class=p>(</span><span class=o>...</span><span class=p>,</span> <span class=n>description</span><span class=o>=</span><span class=s2>&quot;Data pre-processing&quot;</span><span class=p>)</span>
-</code></pre></div></td></tr></table></div> </details> <div class="doc doc-children"> </div> </div> </div> <div class="doc doc-object doc-class"> <h2 id=spectrafit.api.report_model.OutputAPI class="doc doc-heading"> <code>OutputAPI</code> <a href=#spectrafit.api.report_model.OutputAPI class=headerlink title="Permanent link">&para;</a></h2> <div class="doc doc-contents "> <p class="doc doc-class-bases"> Bases: <code><span title=pydantic.BaseModel>BaseModel</span></code></p> <p>Output API for the report endpoint.</p> <details class=quote> <summary>Source code in <code>spectrafit/api/report_model.py</code></summary> <div class=highlight><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal>106</span>
-<span class=normal>107</span>
-<span class=normal>108</span>
-<span class=normal>109</span>
-<span class=normal>110</span>
+</code></pre></div></td></tr></table></div> </details> <div class="doc doc-children"> </div> </div> </div> <div class="doc doc-object doc-class"> <h2 id=spectrafit.api.report_model.OutputAPI class="doc doc-heading"> <code>OutputAPI</code> <a href=#spectrafit.api.report_model.OutputAPI class=headerlink title="Permanent link">&para;</a></h2> <div class="doc doc-contents "> <p class="doc doc-class-bases"> Bases: <code><span title=pydantic.BaseModel>BaseModel</span></code></p> <p>Output API for the report endpoint.</p> <details class=quote> <summary>Source code in <code>spectrafit/api/report_model.py</code></summary> <div class=highlight><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal>110</span>
 <span class=normal>111</span>
 <span class=normal>112</span>
 <span class=normal>113</span>
@@ -1020,7 +1024,11 @@
 <span class=normal>122</span>
 <span class=normal>123</span>
 <span class=normal>124</span>
-<span class=normal>125</span></pre></div></td><td class=code><div><pre><span></span><code><span class=k>class</span> <span class=nc>OutputAPI</span><span class=p>(</span><span class=n>BaseModel</span><span class=p>):</span>
+<span class=normal>125</span>
+<span class=normal>126</span>
+<span class=normal>127</span>
+<span class=normal>128</span>
+<span class=normal>129</span></pre></div></td><td class=code><div><pre><span></span><code><span class=k>class</span> <span class=nc>OutputAPI</span><span class=p>(</span><span class=n>BaseModel</span><span class=p>):</span>
 <span class=w>    </span><span class=sd>&quot;&quot;&quot;Output API for the report endpoint.&quot;&quot;&quot;</span>
 
     <span class=n>df_org</span><span class=p>:</span> <span class=n>Dict</span><span class=p>[</span><span class=n>Hashable</span><span class=p>,</span> <span class=n>Any</span><span class=p>]</span> <span class=o>=</span> <span class=n>Field</span><span class=p>(</span>
@@ -1040,18 +1048,14 @@
 <span class=w>        </span><span class=sd>&quot;&quot;&quot;Config for the OutputAPI of arbitary types.&quot;&quot;&quot;</span>
 
         <span class=n>arbitrary_types_allowed</span> <span class=o>=</span> <span class=kc>True</span>
-</code></pre></div></td></tr></table></div> </details> <div class="doc doc-children"> <div class="doc doc-object doc-class"> <h3 id=spectrafit.api.report_model.OutputAPI.Config class="doc doc-heading"> <code>Config</code> <a href=#spectrafit.api.report_model.OutputAPI.Config class=headerlink title="Permanent link">&para;</a></h3> <div class="doc doc-contents "> <p>Config for the OutputAPI of arbitary types.</p> <details class=quote> <summary>Source code in <code>spectrafit/api/report_model.py</code></summary> <div class=highlight><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal>122</span>
-<span class=normal>123</span>
-<span class=normal>124</span>
-<span class=normal>125</span></pre></div></td><td class=code><div><pre><span></span><code><span class=k>class</span> <span class=nc>Config</span><span class=p>:</span>
+</code></pre></div></td></tr></table></div> </details> <div class="doc doc-children"> <div class="doc doc-object doc-class"> <h3 id=spectrafit.api.report_model.OutputAPI.Config class="doc doc-heading"> <code>Config</code> <a href=#spectrafit.api.report_model.OutputAPI.Config class=headerlink title="Permanent link">&para;</a></h3> <div class="doc doc-contents "> <p>Config for the OutputAPI of arbitary types.</p> <details class=quote> <summary>Source code in <code>spectrafit/api/report_model.py</code></summary> <div class=highlight><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal>126</span>
+<span class=normal>127</span>
+<span class=normal>128</span>
+<span class=normal>129</span></pre></div></td><td class=code><div><pre><span></span><code><span class=k>class</span> <span class=nc>Config</span><span class=p>:</span>
 <span class=w>    </span><span class=sd>&quot;&quot;&quot;Config for the OutputAPI of arbitary types.&quot;&quot;&quot;</span>
 
     <span class=n>arbitrary_types_allowed</span> <span class=o>=</span> <span class=kc>True</span>
-</code></pre></div></td></tr></table></div> </details> <div class="doc doc-children"> </div> </div> </div> </div> </div> </div> <div class="doc doc-object doc-class"> <h2 id=spectrafit.api.report_model.ReportAPI class="doc doc-heading"> <code>ReportAPI</code> <a href=#spectrafit.api.report_model.ReportAPI class=headerlink title="Permanent link">&para;</a></h2> <div class="doc doc-contents "> <p class="doc doc-class-bases"> Bases: <code><span title=pydantic.BaseModel>BaseModel</span></code></p> <p>Definition of the report model.</p> <details class=quote> <summary>Source code in <code>spectrafit/api/report_model.py</code></summary> <div class=highlight><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal>128</span>
-<span class=normal>129</span>
-<span class=normal>130</span>
-<span class=normal>131</span>
-<span class=normal>132</span>
+</code></pre></div></td></tr></table></div> </details> <div class="doc doc-children"> </div> </div> </div> </div> </div> </div> <div class="doc doc-object doc-class"> <h2 id=spectrafit.api.report_model.ReportAPI class="doc doc-heading"> <code>ReportAPI</code> <a href=#spectrafit.api.report_model.ReportAPI class=headerlink title="Permanent link">&para;</a></h2> <div class="doc doc-contents "> <p class="doc doc-class-bases"> Bases: <code><span title=pydantic.BaseModel>BaseModel</span></code></p> <p>Definition of the report model.</p> <details class=quote> <summary>Source code in <code>spectrafit/api/report_model.py</code></summary> <div class=highlight><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal>132</span>
 <span class=normal>133</span>
 <span class=normal>134</span>
 <span class=normal>135</span>
@@ -1061,7 +1065,11 @@
 <span class=normal>139</span>
 <span class=normal>140</span>
 <span class=normal>141</span>
-<span class=normal>142</span></pre></div></td><td class=code><div><pre><span></span><code><span class=k>class</span> <span class=nc>ReportAPI</span><span class=p>(</span><span class=n>BaseModel</span><span class=p>):</span>
+<span class=normal>142</span>
+<span class=normal>143</span>
+<span class=normal>144</span>
+<span class=normal>145</span>
+<span class=normal>146</span></pre></div></td><td class=code><div><pre><span></span><code><span class=k>class</span> <span class=nc>ReportAPI</span><span class=p>(</span><span class=n>BaseModel</span><span class=p>):</span>
 <span class=w>    </span><span class=sd>&quot;&quot;&quot;Definition of the report model.&quot;&quot;&quot;</span>
 
     <span class=nb>input</span><span class=p>:</span> <span class=n>InputAPI</span> <span class=o>=</span> <span class=n>Field</span><span class=p>(</span>
@@ -1076,11 +1084,7 @@
         <span class=o>...</span><span class=p>,</span>
         <span class=n>description</span><span class=o>=</span><span class=s2>&quot;Output data for the report.&quot;</span><span class=p>,</span>
     <span class=p>)</span>
-</code></pre></div></td></tr></table></div> </details> <div class="doc doc-children"> </div> </div> </div> <div class="doc doc-object doc-class"> <h2 id=spectrafit.api.report_model.SolverAPI class="doc doc-heading"> <code>SolverAPI</code> <a href=#spectrafit.api.report_model.SolverAPI class=headerlink title="Permanent link">&para;</a></h2> <div class="doc doc-contents "> <p class="doc doc-class-bases"> Bases: <code><span title=pydantic.BaseModel>BaseModel</span></code></p> <p>Solver API for the report endpoint.</p> <details class=quote> <summary>Source code in <code>spectrafit/api/report_model.py</code></summary> <div class=highlight><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal> 73</span>
-<span class=normal> 74</span>
-<span class=normal> 75</span>
-<span class=normal> 76</span>
-<span class=normal> 77</span>
+</code></pre></div></td></tr></table></div> </details> <div class="doc doc-children"> </div> </div> </div> <div class="doc doc-object doc-class"> <h2 id=spectrafit.api.report_model.SolverAPI class="doc doc-heading"> <code>SolverAPI</code> <a href=#spectrafit.api.report_model.SolverAPI class=headerlink title="Permanent link">&para;</a></h2> <div class="doc doc-contents "> <p class="doc doc-class-bases"> Bases: <code><span title=pydantic.BaseModel>BaseModel</span></code></p> <p>Solver API for the report endpoint.</p> <details class=quote> <summary>Source code in <code>spectrafit/api/report_model.py</code></summary> <div class=highlight><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal> 77</span>
 <span class=normal> 78</span>
 <span class=normal> 79</span>
 <span class=normal> 80</span>
@@ -1106,7 +1110,11 @@
 <span class=normal>100</span>
 <span class=normal>101</span>
 <span class=normal>102</span>
-<span class=normal>103</span></pre></div></td><td class=code><div><pre><span></span><code><span class=k>class</span> <span class=nc>SolverAPI</span><span class=p>(</span><span class=n>BaseModel</span><span class=p>):</span>
+<span class=normal>103</span>
+<span class=normal>104</span>
+<span class=normal>105</span>
+<span class=normal>106</span>
+<span class=normal>107</span></pre></div></td><td class=code><div><pre><span></span><code><span class=k>class</span> <span class=nc>SolverAPI</span><span class=p>(</span><span class=n>BaseModel</span><span class=p>):</span>
 <span class=w>    </span><span class=sd>&quot;&quot;&quot;Solver API for the report endpoint.&quot;&quot;&quot;</span>
 
     <span class=n>goodness_of_fit</span><span class=p>:</span> <span class=n>Dict</span><span class=p>[</span><span class=nb>str</span><span class=p>,</span> <span class=nb>float</span><span class=p>]</span> <span class=o>=</span> <span class=n>Field</span><span class=p>(</span><span class=o>...</span><span class=p>,</span> <span class=n>description</span><span class=o>=</span><span class=s2>&quot;Goodness of fit&quot;</span><span class=p>)</span>
