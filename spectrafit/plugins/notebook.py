@@ -49,7 +49,7 @@ from spectrafit.utilities.transformer import list2dict
 class DataFrameDisplay:
     """Class for displaying a dataframe in different ways."""
 
-    def df_display(self, df: pd.DataFrame, mode: Optional[str] = None) -> None:
+    def df_display(self, df: pd.DataFrame, mode: Optional[str] = None) -> Optional[Any]:
         """Call the DataframeDisplay class.
 
         !!! info "About `df_display`"
@@ -76,6 +76,10 @@ class DataFrameDisplay:
 
         Raises:
             ValueError: Raises ValueError if mode of displaying is not supported.
+
+        Returns:
+            Optional[Any]: Returns the dtale object for plotting in the Jupyter
+                 notebook, if mode is `dtale`.
         """
         if mode == "regular":
             self.regular_display(df=df)
@@ -84,12 +88,13 @@ class DataFrameDisplay:
         elif mode == "interactive":
             self.interactive_display(df=df)
         elif mode == "dtale":
-            self.dtale_display(df=df)
+            return self.dtale_display(df=df)
         elif mode is not None:
             raise ValueError(
                 f"Invalid mode: {mode}. "
                 "Valid modes are: regular, interactive, dtale, markdown."
             )
+        return None
 
     @staticmethod
     def regular_display(df: pd.DataFrame) -> None:
@@ -110,13 +115,16 @@ class DataFrameDisplay:
         itables_show(df)
 
     @staticmethod
-    def dtale_display(df: pd.DataFrame) -> None:
+    def dtale_display(df: pd.DataFrame) -> Any:
         """Display the dataframe in a dtale way.
 
         Args:
             df (pd.DataFrame): Dataframe to display.
+
+        Returns:
+            Any: Returns the dtale object for plotting in the Jupyter notebook.
         """
-        dtale_show(df)
+        return dtale_show(df)
 
     @staticmethod
     def markdown_display(df: pd.DataFrame) -> None:
