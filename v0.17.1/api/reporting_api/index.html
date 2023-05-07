@@ -1,0 +1,1222 @@
+<!doctype html><html lang=en class=no-js> <head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="Technical documentation for SpectraFit, a Python package for fitting"><meta name=author content="Anselm Hahn"><link href=https://Anselmoo.github.io/spectrafit/v0.17.1/api/reporting_api/ rel=canonical><link href=../modelling_api/ rel=prev><link href=../tools_api/ rel=next><link rel=icon href=../../images/logo.svg><meta name=generator content="mkdocs-1.4.3, mkdocs-material-9.1.9"><title>Reporting - SpectraFit</title><link rel=stylesheet href=../../assets/stylesheets/main.85bb2934.min.css><link rel=stylesheet href=../../assets/stylesheets/palette.a6bdf11c.min.css><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link rel=stylesheet href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback"><style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style><link rel=stylesheet href=../../assets/_mkdocstrings.css><script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script></head> <body dir=ltr data-md-color-scheme=default data-md-color-primary=indigo data-md-color-accent=indigo> <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script> <input class=md-toggle data-md-toggle=drawer type=checkbox id=__drawer autocomplete=off> <input class=md-toggle data-md-toggle=search type=checkbox id=__search autocomplete=off> <label class=md-overlay for=__drawer></label> <div data-md-component=skip> <a href=#spectrafit.report class=md-skip> Skip to content </a> </div> <div data-md-component=announce> </div> <div data-md-color-scheme=default data-md-component=outdated hidden> </div> <header class="md-header md-header--shadow md-header--lifted" data-md-component=header> <nav class="md-header__inner md-grid" aria-label=Header> <a href=../.. title=SpectraFit class="md-header__button md-logo" aria-label=SpectraFit data-md-component=logo> <img src=../../images/logo.svg alt=logo> </a> <label class="md-header__button md-icon" for=__drawer> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg> </label> <div class=md-header__title data-md-component=header-title> <div class=md-header__ellipsis> <div class=md-header__topic> <span class=md-ellipsis> SpectraFit </span> </div> <div class=md-header__topic data-md-component=header-topic> <span class=md-ellipsis> Reporting </span> </div> </div> </div> <form class=md-header__option data-md-component=palette> <input class=md-option data-md-color-media data-md-color-scheme=default data-md-color-primary=indigo data-md-color-accent=indigo aria-label="Switch to dark mode" type=radio name=__palette id=__palette_1> <label class="md-header__button md-icon" title="Switch to dark mode" for=__palette_2 hidden> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6zm0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4zM7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg> </label> <input class=md-option data-md-color-media data-md-color-scheme=slate data-md-color-primary=deep-purple data-md-color-accent=deep-purple aria-label="Switch to light mode" type=radio name=__palette id=__palette_2> <label class="md-header__button md-icon" title="Switch to light mode" for=__palette_1 hidden> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3Z"/></svg> </label> </form> <label class="md-header__button md-icon" for=__search> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg> </label> <div class=md-search data-md-component=search role=dialog> <label class=md-search__overlay for=__search></label> <div class=md-search__inner role=search> <form class=md-search__form name=search> <input type=text class=md-search__input name=query aria-label=Search placeholder=Search autocapitalize=off autocorrect=off autocomplete=off spellcheck=false data-md-component=search-query required> <label class="md-search__icon md-icon" for=__search> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg> </label> <nav class=md-search__options aria-label=Search> <a href=javascript:void(0) class="md-search__icon md-icon" title=Share aria-label=Share data-clipboard data-clipboard-text data-md-component=search-share tabindex=-1> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7 0-.24-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91 1.61 0 2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08Z"/></svg> </a> <button type=reset class="md-search__icon md-icon" title=Clear aria-label=Clear tabindex=-1> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg> </button> </nav> <div class=md-search__suggest data-md-component=search-suggest></div> </form> <div class=md-search__output> <div class=md-search__scrollwrap data-md-scrollfix> <div class=md-search-result data-md-component=search-result> <div class=md-search-result__meta> Initializing search </div> <ol class=md-search-result__list role=presentation></ol> </div> </div> </div> </div> </div> <div class=md-header__source> <a href=https://github.com/Anselmoo/spectrafit title="Go to repository" class=md-source data-md-component=source> <div class="md-source__icon md-icon"> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2Z"/></svg> </div> <div class=md-source__repository> Anselmoo/SpectraFit </div> </a> </div> </nav> <nav class=md-tabs aria-label=Tabs data-md-component=tabs> <div class=md-grid> <ul class=md-tabs__list> <li class=md-tabs__item> <a href=../.. class=md-tabs__link> Home </a> </li> <li class=md-tabs__item> <a href=../../interface/installation/ class=md-tabs__link> Getting started </a> </li> <li class=md-tabs__item> <a href=../../examples/example1/ class=md-tabs__link> Examples </a> </li> <li class=md-tabs__item> <a href=../../doc/models/ class=md-tabs__link> Documentation </a> </li> <li class=md-tabs__item> <a href=../../plugins/file-converter/ class=md-tabs__link> Plugins </a> </li> <li class=md-tabs__item> <a href=../spectrafit_api/ class="md-tabs__link md-tabs__link--active"> API </a> </li> <li class=md-tabs__item> <a href=../../contact/ class=md-tabs__link> Support </a> </li> <li class=md-tabs__item> <a href=../../changelog/ class=md-tabs__link> Releases </a> </li> </ul> </div> </nav> </header> <div class=md-container data-md-component=container> <main class=md-main data-md-component=main> <div class="md-main__inner md-grid"> <div class="md-sidebar md-sidebar--primary" data-md-component=sidebar data-md-type=navigation> <div class=md-sidebar__scrollwrap> <div class=md-sidebar__inner> <nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label=Navigation data-md-level=0> <label class=md-nav__title for=__drawer> <a href=../.. title=SpectraFit class="md-nav__button md-logo" aria-label=SpectraFit data-md-component=logo> <img src=../../images/logo.svg alt=logo> </a> SpectraFit </label> <div class=md-nav__source> <a href=https://github.com/Anselmoo/spectrafit title="Go to repository" class=md-source data-md-component=source> <div class="md-source__icon md-icon"> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2Z"/></svg> </div> <div class=md-source__repository> Anselmoo/SpectraFit </div> </a> </div> <ul class=md-nav__list data-md-scrollfix> <li class=md-nav__item> <a href=../.. class=md-nav__link> Home </a> </li> <li class="md-nav__item md-nav__item--nested"> <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type=checkbox id=__nav_2> <label class=md-nav__link for=__nav_2 id=__nav_2_label tabindex=0> Getting started <span class="md-nav__icon md-icon"></span> </label> <nav class=md-nav data-md-level=1 aria-labelledby=__nav_2_label aria-expanded=false> <label class=md-nav__title for=__nav_2> <span class="md-nav__icon md-icon"></span> Getting started </label> <ul class=md-nav__list data-md-scrollfix> <li class=md-nav__item> <a href=../../interface/installation/ class=md-nav__link> Installation </a> </li> <li class=md-nav__item> <a href=../../interface/usage/ class=md-nav__link> Usage </a> </li> <li class=md-nav__item> <a href=../../interface/features/ class=md-nav__link> Features </a> </li> </ul> </nav> </li> <li class="md-nav__item md-nav__item--nested"> <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type=checkbox id=__nav_3> <label class=md-nav__link for=__nav_3 id=__nav_3_label tabindex=0> Examples <span class="md-nav__icon md-icon"></span> </label> <nav class=md-nav data-md-level=1 aria-labelledby=__nav_3_label aria-expanded=false> <label class=md-nav__title for=__nav_3> <span class="md-nav__icon md-icon"></span> Examples </label> <ul class=md-nav__list data-md-scrollfix> <li class="md-nav__item md-nav__item--section md-nav__item--nested"> <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type=checkbox id=__nav_3_1> <label class=md-nav__link for=__nav_3_1 id=__nav_3_1_label tabindex=0> Working via CMD <span class="md-nav__icon md-icon"></span> </label> <nav class=md-nav data-md-level=2 aria-labelledby=__nav_3_1_label aria-expanded=false> <label class=md-nav__title for=__nav_3_1> <span class="md-nav__icon md-icon"></span> Working via CMD </label> <ul class=md-nav__list data-md-scrollfix> <li class=md-nav__item> <a href=../../examples/example1/ class=md-nav__link> Fitting of a Single Feature via Command-Line </a> </li> <li class=md-nav__item> <a href=../../examples/example2/ class=md-nav__link> JSON, TOML, YAML Inputs </a> </li> <li class=md-nav__item> <a href=../../examples/example3/ class=md-nav__link> Multi Peak Fitting </a> </li> <li class=md-nav__item> <a href=../../examples/example4/ class=md-nav__link> Working with Real Life Data </a> </li> <li class=md-nav__item> <a href=../../examples/example5/ class=md-nav__link> Working with Expressions </a> </li> <li class=md-nav__item> <a href=../../examples/example6/ class=md-nav__link> Global Fitting </a> </li> <li class=md-nav__item> <a href=../../examples/example7/ class=md-nav__link> Automatic Fitting </a> </li> <li class=md-nav__item> <a href=../../examples/example8/ class=md-nav__link> Working with Athena Data </a> </li> </ul> </nav> </li> <li class="md-nav__item md-nav__item--section md-nav__item--nested"> <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type=checkbox id=__nav_3_2> <label class=md-nav__link for=__nav_3_2 id=__nav_3_2_label tabindex=0> Working in Jupyter Notebooks <span class="md-nav__icon md-icon"></span> </label> <nav class=md-nav data-md-level=2 aria-labelledby=__nav_3_2_label aria-expanded=false> <label class=md-nav__title for=__nav_3_2> <span class="md-nav__icon md-icon"></span> Working in Jupyter Notebooks </label> <ul class=md-nav__list data-md-scrollfix> <li class=md-nav__item> <a href=../../examples/example9_1/ class=md-nav__link> Default Plot </a> </li> <li class=md-nav__item> <a href=../../examples/example9_2/ class=md-nav__link> Dark Theme </a> </li> <li class=md-nav__item> <a href=../../examples/example9_3/ class=md-nav__link> Export Results </a> </li> <li class=md-nav__item> <a href=../../examples/example9_4/ class=md-nav__link> RIXS Map Visualization </a> </li> <li class=md-nav__item> <a href=../../examples/example9_5/ class=md-nav__link> Using Converters as Module </a> </li> <li class=md-nav__item> <a href=../../examples/example9_6/ class=md-nav__link> RIXS Global-Fitting in Jupyter </a> </li> </ul> </nav> </li> </ul> </nav> </li> <li class="md-nav__item md-nav__item--nested"> <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type=checkbox id=__nav_4> <label class=md-nav__link for=__nav_4 id=__nav_4_label tabindex=0> Documentation <span class="md-nav__icon md-icon"></span> </label> <nav class=md-nav data-md-level=1 aria-labelledby=__nav_4_label aria-expanded=false> <label class=md-nav__title for=__nav_4> <span class="md-nav__icon md-icon"></span> Documentation </label> <ul class=md-nav__list data-md-scrollfix> <li class=md-nav__item> <a href=../../doc/models/ class=md-nav__link> Models </a> </li> <li class=md-nav__item> <a href=../../doc/expression/ class=md-nav__link> Expression </a> </li> <li class=md-nav__item> <a href=../../doc/solver/ class=md-nav__link> Solvers </a> </li> <li class=md-nav__item> <a href=../../doc/fitting/ class=md-nav__link> Fitting </a> </li> <li class=md-nav__item> <a href=../../doc/statistics/ class=md-nav__link> Statistics </a> </li> </ul> </nav> </li> <li class="md-nav__item md-nav__item--nested"> <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type=checkbox id=__nav_5> <label class=md-nav__link for=__nav_5 id=__nav_5_label tabindex=0> Plugins <span class="md-nav__icon md-icon"></span> </label> <nav class=md-nav data-md-level=1 aria-labelledby=__nav_5_label aria-expanded=false> <label class=md-nav__title for=__nav_5> <span class="md-nav__icon md-icon"></span> Plugins </label> <ul class=md-nav__list data-md-scrollfix> <li class=md-nav__item> <a href=../../plugins/file-converter/ class=md-nav__link> File-Format-Conversion </a> </li> <li class=md-nav__item> <a href=../../plugins/data-converter/ class=md-nav__link> Data-Format-Conversion </a> </li> <li class=md-nav__item> <a href=../../plugins/jupyter-interface/ class=md-nav__link> Jupyter-Notebook-Integration </a> </li> <li class=md-nav__item> <a href=../../plugins/rixs-visualization/ class=md-nav__link> RIXS-Visualization </a> </li> <li class=md-nav__item> <a href=../../plugins/rixs-converter/ class=md-nav__link> RIXS-Converter </a> </li> <li class=md-nav__item> <a href=../../plugins/pkl-converter_visualization/ class=md-nav__link> PKL-Converter and Visualizer </a> </li> </ul> </nav> </li> <li class="md-nav__item md-nav__item--active md-nav__item--nested"> <input class="md-nav__toggle md-toggle " type=checkbox id=__nav_6 checked> <label class=md-nav__link for=__nav_6 id=__nav_6_label tabindex=0> API <span class="md-nav__icon md-icon"></span> </label> <nav class=md-nav data-md-level=1 aria-labelledby=__nav_6_label aria-expanded=true> <label class=md-nav__title for=__nav_6> <span class="md-nav__icon md-icon"></span> API </label> <ul class=md-nav__list data-md-scrollfix> <li class=md-nav__item> <a href=../spectrafit_api/ class=md-nav__link> SpectraFit </a> </li> <li class=md-nav__item> <a href=../plotting_api/ class=md-nav__link> Plotting </a> </li> <li class=md-nav__item> <a href=../notebook_api/ class=md-nav__link> Jupyter-Notebook </a> </li> <li class=md-nav__item> <a href=../modelling_api/ class=md-nav__link> Modelling </a> </li> <li class="md-nav__item md-nav__item--active"> <input class="md-nav__toggle md-toggle" type=checkbox id=__toc> <label class="md-nav__link md-nav__link--active" for=__toc> Reporting <span class="md-nav__icon md-icon"></span> </label> <a href=./ class="md-nav__link md-nav__link--active"> Reporting </a> <nav class="md-nav md-nav--secondary" aria-label="Table of contents"> <label class=md-nav__title for=__toc> <span class="md-nav__icon md-icon"></span> Table of contents </label> <ul class=md-nav__list data-md-component=toc data-md-scrollfix> <li class=md-nav__item> <a href=#spectrafit.report class=md-nav__link> spectrafit.report </a> </li> <li class=md-nav__item> <a href=#spectrafit.report.PrintingResults class=md-nav__link> PrintingResults </a> <nav class=md-nav aria-label=PrintingResults> <ul class=md-nav__list> <li class=md-nav__item> <a href=#spectrafit.report.PrintingResults.__call__ class=md-nav__link> __call__() </a> </li> <li class=md-nav__item> <a href=#spectrafit.report.PrintingResults.__init__ class=md-nav__link> __init__() </a> </li> <li class=md-nav__item> <a href=#spectrafit.report.PrintingResults.print_confidence_interval class=md-nav__link> print_confidence_interval() </a> </li> <li class=md-nav__item> <a href=#spectrafit.report.PrintingResults.print_confidence_interval_verbose class=md-nav__link> print_confidence_interval_verbose() </a> </li> <li class=md-nav__item> <a href=#spectrafit.report.PrintingResults.print_fit_results class=md-nav__link> print_fit_results() </a> </li> <li class=md-nav__item> <a href=#spectrafit.report.PrintingResults.print_fit_results_verbose class=md-nav__link> print_fit_results_verbose() </a> </li> <li class=md-nav__item> <a href=#spectrafit.report.PrintingResults.print_input_parameters_verbose class=md-nav__link> print_input_parameters_verbose() </a> </li> <li class=md-nav__item> <a href=#spectrafit.report.PrintingResults.print_linear_correlation class=md-nav__link> print_linear_correlation() </a> </li> <li class=md-nav__item> <a href=#spectrafit.report.PrintingResults.print_linear_correlation_verbose class=md-nav__link> print_linear_correlation_verbose() </a> </li> <li class=md-nav__item> <a href=#spectrafit.report.PrintingResults.print_regression_metrics class=md-nav__link> print_regression_metrics() </a> </li> <li class=md-nav__item> <a href=#spectrafit.report.PrintingResults.print_regression_metrics_verbose class=md-nav__link> print_regression_metrics_verbose() </a> </li> <li class=md-nav__item> <a href=#spectrafit.report.PrintingResults.print_statistic class=md-nav__link> print_statistic() </a> </li> <li class=md-nav__item> <a href=#spectrafit.report.PrintingResults.print_statistic_verbose class=md-nav__link> print_statistic_verbose() </a> </li> <li class=md-nav__item> <a href=#spectrafit.report.PrintingResults.print_tabulate class=md-nav__link> print_tabulate() </a> </li> <li class=md-nav__item> <a href=#spectrafit.report.PrintingResults.printing_regular_mode class=md-nav__link> printing_regular_mode() </a> </li> <li class=md-nav__item> <a href=#spectrafit.report.PrintingResults.printing_verbose_mode class=md-nav__link> printing_verbose_mode() </a> </li> </ul> </nav> </li> <li class=md-nav__item> <a href=#spectrafit.report.PrintingStatus class=md-nav__link> PrintingStatus </a> <nav class=md-nav aria-label=PrintingStatus> <ul class=md-nav__list> <li class=md-nav__item> <a href=#spectrafit.report.PrintingStatus.credits class=md-nav__link> credits() </a> </li> <li class=md-nav__item> <a href=#spectrafit.report.PrintingStatus.end class=md-nav__link> end() </a> </li> <li class=md-nav__item> <a href=#spectrafit.report.PrintingStatus.start class=md-nav__link> start() </a> </li> <li class=md-nav__item> <a href=#spectrafit.report.PrintingStatus.thanks class=md-nav__link> thanks() </a> </li> <li class=md-nav__item> <a href=#spectrafit.report.PrintingStatus.version class=md-nav__link> version() </a> </li> <li class=md-nav__item> <a href=#spectrafit.report.PrintingStatus.welcome class=md-nav__link> welcome() </a> </li> <li class=md-nav__item> <a href=#spectrafit.report.PrintingStatus.yes_no class=md-nav__link> yes_no() </a> </li> </ul> </nav> </li> <li class=md-nav__item> <a href=#spectrafit.report.RegressionMetrics class=md-nav__link> RegressionMetrics </a> <nav class=md-nav aria-label=RegressionMetrics> <ul class=md-nav__list> <li class=md-nav__item> <a href=#spectrafit.report.RegressionMetrics.__call__ class=md-nav__link> __call__() </a> </li> <li class=md-nav__item> <a href=#spectrafit.report.RegressionMetrics.__init__ class=md-nav__link> __init__() </a> </li> <li class=md-nav__item> <a href=#spectrafit.report.RegressionMetrics.initialize class=md-nav__link> initialize() </a> </li> </ul> </nav> </li> <li class=md-nav__item> <a href=#spectrafit.report.fit_report_as_dict class=md-nav__link> fit_report_as_dict() </a> </li> <li class=md-nav__item> <a href=#spectrafit.report.get_init_value class=md-nav__link> get_init_value() </a> </li> </ul> </nav> </li> <li class=md-nav__item> <a href=../tools_api/ class=md-nav__link> Tools </a> </li> <li class=md-nav__item> <a href=../data_model_api/ class=md-nav__link> Data Model </a> </li> <li class=md-nav__item> <a href=../converter_api/ class=md-nav__link> Converters and Visualizer </a> </li> </ul> </nav> </li> <li class="md-nav__item md-nav__item--nested"> <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type=checkbox id=__nav_7> <label class=md-nav__link for=__nav_7 id=__nav_7_label tabindex=0> Support <span class="md-nav__icon md-icon"></span> </label> <nav class=md-nav data-md-level=1 aria-labelledby=__nav_7_label aria-expanded=false> <label class=md-nav__title for=__nav_7> <span class="md-nav__icon md-icon"></span> Support </label> <ul class=md-nav__list data-md-scrollfix> <li class=md-nav__item> <a href=../../contact/ class=md-nav__link> Contact </a> </li> <li class=md-nav__item> <a href=../../license/ class=md-nav__link> License </a> </li> <li class=md-nav__item> <a href=../../contributing/ class=md-nav__link> Contributing </a> </li> <li class=md-nav__item> <a href=../../code_of_conduct/ class=md-nav__link> Code of Conduct </a> </li> <li class=md-nav__item> <a href=../../security/ class=md-nav__link> Security </a> </li> </ul> </nav> </li> <li class="md-nav__item md-nav__item--nested"> <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type=checkbox id=__nav_8> <label class=md-nav__link for=__nav_8 id=__nav_8_label tabindex=0> Releases <span class="md-nav__icon md-icon"></span> </label> <nav class=md-nav data-md-level=1 aria-labelledby=__nav_8_label aria-expanded=false> <label class=md-nav__title for=__nav_8> <span class="md-nav__icon md-icon"></span> Releases </label> <ul class=md-nav__list data-md-scrollfix> <li class="md-nav__item md-nav__item--section md-nav__item--nested"> <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type=checkbox id=__nav_8_1> <label class=md-nav__link for=__nav_8_1 id=__nav_8_1_label tabindex=0> Changelog <span class="md-nav__icon md-icon"></span> </label> <nav class=md-nav data-md-level=2 aria-labelledby=__nav_8_1_label aria-expanded=false> <label class=md-nav__title for=__nav_8_1> <span class="md-nav__icon md-icon"></span> Changelog </label> <ul class=md-nav__list data-md-scrollfix> <li class=md-nav__item> <a href=../../changelog/ class=md-nav__link> v1.x.x </a> </li> <li class=md-nav__item> <a href=../../changelogs/v0.x.x/ class=md-nav__link> v0.x.x </a> </li> </ul> </nav> </li> <li class=md-nav__item> <a href=../../contributors/ class=md-nav__link> Contributors </a> </li> </ul> </nav> </li> </ul> </nav> </div> </div> </div> <div class=md-content data-md-component=content> <article class="md-content__inner md-typeset"> <h1>Reporting</h1> <div class="doc doc-object doc-module"> <a id=spectrafit.report></a> <div class="doc doc-contents first"> <p>Fit-Results as Report.</p> <div class="doc doc-children"> <div class="doc doc-object doc-class"> <h2 id=spectrafit.report.PrintingResults class="doc doc-heading"> <code>PrintingResults</code> <a href=#spectrafit.report.PrintingResults class=headerlink title="Permanent link">&para;</a></h2> <div class="doc doc-contents "> <p>Print the results of the fitting process.</p> <details class=quote> <summary>Source code in <code>spectrafit/report.py</code></summary> <div class=highlight><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal>311</span>
+<span class=normal>312</span>
+<span class=normal>313</span>
+<span class=normal>314</span>
+<span class=normal>315</span>
+<span class=normal>316</span>
+<span class=normal>317</span>
+<span class=normal>318</span>
+<span class=normal>319</span>
+<span class=normal>320</span>
+<span class=normal>321</span>
+<span class=normal>322</span>
+<span class=normal>323</span>
+<span class=normal>324</span>
+<span class=normal>325</span>
+<span class=normal>326</span>
+<span class=normal>327</span>
+<span class=normal>328</span>
+<span class=normal>329</span>
+<span class=normal>330</span>
+<span class=normal>331</span>
+<span class=normal>332</span>
+<span class=normal>333</span>
+<span class=normal>334</span>
+<span class=normal>335</span>
+<span class=normal>336</span>
+<span class=normal>337</span>
+<span class=normal>338</span>
+<span class=normal>339</span>
+<span class=normal>340</span>
+<span class=normal>341</span>
+<span class=normal>342</span>
+<span class=normal>343</span>
+<span class=normal>344</span>
+<span class=normal>345</span>
+<span class=normal>346</span>
+<span class=normal>347</span>
+<span class=normal>348</span>
+<span class=normal>349</span>
+<span class=normal>350</span>
+<span class=normal>351</span>
+<span class=normal>352</span>
+<span class=normal>353</span>
+<span class=normal>354</span>
+<span class=normal>355</span>
+<span class=normal>356</span>
+<span class=normal>357</span>
+<span class=normal>358</span>
+<span class=normal>359</span>
+<span class=normal>360</span>
+<span class=normal>361</span>
+<span class=normal>362</span>
+<span class=normal>363</span>
+<span class=normal>364</span>
+<span class=normal>365</span>
+<span class=normal>366</span>
+<span class=normal>367</span>
+<span class=normal>368</span>
+<span class=normal>369</span>
+<span class=normal>370</span>
+<span class=normal>371</span>
+<span class=normal>372</span>
+<span class=normal>373</span>
+<span class=normal>374</span>
+<span class=normal>375</span>
+<span class=normal>376</span>
+<span class=normal>377</span>
+<span class=normal>378</span>
+<span class=normal>379</span>
+<span class=normal>380</span>
+<span class=normal>381</span>
+<span class=normal>382</span>
+<span class=normal>383</span>
+<span class=normal>384</span>
+<span class=normal>385</span>
+<span class=normal>386</span>
+<span class=normal>387</span>
+<span class=normal>388</span>
+<span class=normal>389</span>
+<span class=normal>390</span>
+<span class=normal>391</span>
+<span class=normal>392</span>
+<span class=normal>393</span>
+<span class=normal>394</span>
+<span class=normal>395</span>
+<span class=normal>396</span>
+<span class=normal>397</span>
+<span class=normal>398</span>
+<span class=normal>399</span>
+<span class=normal>400</span>
+<span class=normal>401</span>
+<span class=normal>402</span>
+<span class=normal>403</span>
+<span class=normal>404</span>
+<span class=normal>405</span>
+<span class=normal>406</span>
+<span class=normal>407</span>
+<span class=normal>408</span>
+<span class=normal>409</span>
+<span class=normal>410</span>
+<span class=normal>411</span>
+<span class=normal>412</span>
+<span class=normal>413</span>
+<span class=normal>414</span>
+<span class=normal>415</span>
+<span class=normal>416</span>
+<span class=normal>417</span>
+<span class=normal>418</span>
+<span class=normal>419</span>
+<span class=normal>420</span>
+<span class=normal>421</span>
+<span class=normal>422</span>
+<span class=normal>423</span>
+<span class=normal>424</span>
+<span class=normal>425</span>
+<span class=normal>426</span>
+<span class=normal>427</span>
+<span class=normal>428</span>
+<span class=normal>429</span>
+<span class=normal>430</span>
+<span class=normal>431</span>
+<span class=normal>432</span>
+<span class=normal>433</span>
+<span class=normal>434</span>
+<span class=normal>435</span>
+<span class=normal>436</span>
+<span class=normal>437</span>
+<span class=normal>438</span>
+<span class=normal>439</span></pre></div></td><td class=code><div><pre><span></span><code><span class=k>class</span> <span class=nc>PrintingResults</span><span class=p>:</span>
+<span class=w>    </span><span class=sd>&quot;&quot;&quot;Print the results of the fitting process.&quot;&quot;&quot;</span>
+
+    <span class=k>def</span> <span class=fm>__init__</span><span class=p>(</span>
+        <span class=bp>self</span><span class=p>,</span>
+        <span class=n>args</span><span class=p>:</span> <span class=n>Dict</span><span class=p>[</span><span class=nb>str</span><span class=p>,</span> <span class=n>Any</span><span class=p>],</span>
+        <span class=n>result</span><span class=p>:</span> <span class=n>Any</span><span class=p>,</span>
+        <span class=n>minimizer</span><span class=p>:</span> <span class=n>Minimizer</span><span class=p>,</span>
+    <span class=p>)</span> <span class=o>-&gt;</span> <span class=kc>None</span><span class=p>:</span>
+<span class=w>        </span><span class=sd>&quot;&quot;&quot;Initialize the PrintingResults class.</span>
+
+<span class=sd>        Args:</span>
+<span class=sd>            args (Dict[str,Any]): The input file arguments as a dictionary with</span>
+<span class=sd>                 additional information beyond the command line arguments.</span>
+<span class=sd>            result (Any): The lmfit `results` as a kind of result based class.</span>
+<span class=sd>            minimizer (Minimizer): The lmfit `Minimizer`-class as a general minimizer</span>
+<span class=sd>                 for curve fitting and optimization.</span>
+<span class=sd>        &quot;&quot;&quot;</span>
+        <span class=bp>self</span><span class=o>.</span><span class=n>args</span> <span class=o>=</span> <span class=n>args</span>
+        <span class=bp>self</span><span class=o>.</span><span class=n>result</span> <span class=o>=</span> <span class=n>result</span>
+        <span class=bp>self</span><span class=o>.</span><span class=n>minimizer</span> <span class=o>=</span> <span class=n>minimizer</span>
+        <span class=bp>self</span><span class=o>.</span><span class=n>correlation</span> <span class=o>=</span> <span class=n>pd</span><span class=o>.</span><span class=n>DataFrame</span><span class=o>.</span><span class=n>from_dict</span><span class=p>(</span><span class=n>args</span><span class=p>[</span><span class=s2>&quot;linear_correlation&quot;</span><span class=p>])</span>
+
+    <span class=k>def</span> <span class=fm>__call__</span><span class=p>(</span><span class=bp>self</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=kc>None</span><span class=p>:</span>
+<span class=w>        </span><span class=sd>&quot;&quot;&quot;Print the results of the fitting process.&quot;&quot;&quot;</span>
+        <span class=k>if</span> <span class=bp>self</span><span class=o>.</span><span class=n>args</span><span class=p>[</span><span class=s2>&quot;verbose&quot;</span><span class=p>]</span> <span class=o>==</span> <span class=mi>1</span><span class=p>:</span>
+            <span class=bp>self</span><span class=o>.</span><span class=n>printing_regular_mode</span><span class=p>()</span>
+        <span class=k>elif</span> <span class=bp>self</span><span class=o>.</span><span class=n>args</span><span class=p>[</span><span class=s2>&quot;verbose&quot;</span><span class=p>]</span> <span class=o>==</span> <span class=mi>2</span><span class=p>:</span>
+            <span class=bp>self</span><span class=o>.</span><span class=n>printing_verbose_mode</span><span class=p>()</span>
+
+    <span class=nd>@staticmethod</span>
+    <span class=k>def</span> <span class=nf>print_tabulate</span><span class=p>(</span><span class=n>args</span><span class=p>:</span> <span class=n>Dict</span><span class=p>[</span><span class=nb>str</span><span class=p>,</span> <span class=n>Any</span><span class=p>])</span> <span class=o>-&gt;</span> <span class=kc>None</span><span class=p>:</span>
+<span class=w>        </span><span class=sd>&quot;&quot;&quot;Print the results of the fitting process.</span>
+
+<span class=sd>        Args:</span>
+<span class=sd>            args (Dict[str, Any]): The args to be printed as a dictionary.</span>
+<span class=sd>        &quot;&quot;&quot;</span>
+        <span class=nb>print</span><span class=p>(</span>
+            <span class=n>tabulate</span><span class=p>(</span>
+                <span class=n>pd</span><span class=o>.</span><span class=n>DataFrame</span><span class=p>(</span><span class=o>**</span><span class=n>args</span><span class=p>)</span><span class=o>.</span><span class=n>T</span><span class=p>,</span>
+                <span class=n>headers</span><span class=o>=</span><span class=s2>&quot;keys&quot;</span><span class=p>,</span>
+                <span class=n>tablefmt</span><span class=o>=</span><span class=s2>&quot;fancy_grid&quot;</span> <span class=k>if</span> <span class=n>sys</span><span class=o>.</span><span class=n>platform</span> <span class=o>!=</span> <span class=s2>&quot;win32&quot;</span> <span class=k>else</span> <span class=s2>&quot;grid&quot;</span><span class=p>,</span>
+                <span class=n>floatfmt</span><span class=o>=</span><span class=s2>&quot;.3f&quot;</span><span class=p>,</span>
+            <span class=p>)</span>
+        <span class=p>)</span>
+
+    <span class=k>def</span> <span class=nf>printing_regular_mode</span><span class=p>(</span><span class=bp>self</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=kc>None</span><span class=p>:</span>
+<span class=w>        </span><span class=sd>&quot;&quot;&quot;Print the fitting results in the regular mode.&quot;&quot;&quot;</span>
+        <span class=bp>self</span><span class=o>.</span><span class=n>print_statistic</span><span class=p>()</span>
+        <span class=bp>self</span><span class=o>.</span><span class=n>print_fit_results</span><span class=p>()</span>
+        <span class=bp>self</span><span class=o>.</span><span class=n>print_confidence_interval</span><span class=p>()</span>
+        <span class=bp>self</span><span class=o>.</span><span class=n>print_linear_correlation</span><span class=p>()</span>
+        <span class=bp>self</span><span class=o>.</span><span class=n>print_regression_metrics</span><span class=p>()</span>
+
+    <span class=k>def</span> <span class=nf>print_statistic</span><span class=p>(</span><span class=bp>self</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=kc>None</span><span class=p>:</span>
+<span class=w>        </span><span class=sd>&quot;&quot;&quot;Print the statistic.&quot;&quot;&quot;</span>
+        <span class=nb>print</span><span class=p>(</span><span class=s2>&quot;</span><span class=se>\n</span><span class=s2>Statistic:</span><span class=se>\n</span><span class=s2>&quot;</span><span class=p>)</span>
+        <span class=bp>self</span><span class=o>.</span><span class=n>print_tabulate</span><span class=p>(</span><span class=n>args</span><span class=o>=</span><span class=bp>self</span><span class=o>.</span><span class=n>args</span><span class=p>[</span><span class=s2>&quot;data_statistic&quot;</span><span class=p>])</span>
+
+    <span class=k>def</span> <span class=nf>print_fit_results</span><span class=p>(</span><span class=bp>self</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=kc>None</span><span class=p>:</span>
+<span class=w>        </span><span class=sd>&quot;&quot;&quot;Print the fit results.&quot;&quot;&quot;</span>
+        <span class=nb>print</span><span class=p>(</span><span class=s2>&quot;</span><span class=se>\n</span><span class=s2>Fit Results and Insights:</span><span class=se>\n</span><span class=s2>&quot;</span><span class=p>)</span>
+        <span class=nb>print</span><span class=p>(</span>
+            <span class=n>report_fit</span><span class=p>(</span><span class=bp>self</span><span class=o>.</span><span class=n>result</span><span class=p>,</span> <span class=n>modelpars</span><span class=o>=</span><span class=bp>self</span><span class=o>.</span><span class=n>result</span><span class=o>.</span><span class=n>params</span><span class=p>,</span> <span class=o>**</span><span class=bp>self</span><span class=o>.</span><span class=n>args</span><span class=p>[</span><span class=s2>&quot;report&quot;</span><span class=p>])</span>
+        <span class=p>)</span>
+
+    <span class=k>def</span> <span class=nf>print_confidence_interval</span><span class=p>(</span><span class=bp>self</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=kc>None</span><span class=p>:</span>
+<span class=w>        </span><span class=sd>&quot;&quot;&quot;Print the confidence interval.&quot;&quot;&quot;</span>
+        <span class=nb>print</span><span class=p>(</span><span class=s2>&quot;</span><span class=se>\n</span><span class=s2>Confidence Interval:</span><span class=se>\n</span><span class=s2>&quot;</span><span class=p>)</span>
+        <span class=k>if</span> <span class=bp>self</span><span class=o>.</span><span class=n>args</span><span class=p>[</span><span class=s2>&quot;conf_interval&quot;</span><span class=p>]:</span>
+            <span class=k>try</span><span class=p>:</span>
+                <span class=n>report_ci</span><span class=p>(</span>
+                    <span class=n>conf_interval</span><span class=p>(</span>
+                        <span class=bp>self</span><span class=o>.</span><span class=n>minimizer</span><span class=p>,</span> <span class=bp>self</span><span class=o>.</span><span class=n>result</span><span class=p>,</span> <span class=o>**</span><span class=bp>self</span><span class=o>.</span><span class=n>args</span><span class=p>[</span><span class=s2>&quot;conf_interval&quot;</span><span class=p>]</span>
+                    <span class=p>)</span>
+                <span class=p>)</span>
+            <span class=k>except</span> <span class=p>(</span><span class=n>MinimizerException</span><span class=p>,</span> <span class=ne>ValueError</span><span class=p>,</span> <span class=ne>KeyError</span><span class=p>,</span> <span class=ne>TypeError</span><span class=p>)</span> <span class=k>as</span> <span class=n>exc</span><span class=p>:</span>
+                <span class=nb>print</span><span class=p>(</span><span class=sa>f</span><span class=s2>&quot;Error: </span><span class=si>{</span><span class=n>exc</span><span class=si>}</span><span class=s2> -&gt; No confidence interval could be calculated!&quot;</span><span class=p>)</span>
+                <span class=bp>self</span><span class=o>.</span><span class=n>args</span><span class=p>[</span><span class=s2>&quot;confidence_interval&quot;</span><span class=p>]</span> <span class=o>=</span> <span class=p>{}</span>
+
+    <span class=k>def</span> <span class=nf>print_linear_correlation</span><span class=p>(</span><span class=bp>self</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=kc>None</span><span class=p>:</span>
+<span class=w>        </span><span class=sd>&quot;&quot;&quot;Print the linear correlation.&quot;&quot;&quot;</span>
+        <span class=nb>print</span><span class=p>(</span><span class=s2>&quot;</span><span class=se>\n</span><span class=s2>Overall Linear-Correlation:</span><span class=se>\n</span><span class=s2>&quot;</span><span class=p>)</span>
+        <span class=bp>self</span><span class=o>.</span><span class=n>print_tabulate</span><span class=p>(</span><span class=n>args</span><span class=o>=</span><span class=bp>self</span><span class=o>.</span><span class=n>args</span><span class=p>[</span><span class=s2>&quot;linear_correlation&quot;</span><span class=p>])</span>
+
+    <span class=k>def</span> <span class=nf>print_regression_metrics</span><span class=p>(</span><span class=bp>self</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=kc>None</span><span class=p>:</span>
+<span class=w>        </span><span class=sd>&quot;&quot;&quot;Print the regression metrics.&quot;&quot;&quot;</span>
+        <span class=nb>print</span><span class=p>(</span><span class=s2>&quot;</span><span class=se>\n</span><span class=s2>Regression Metrics:</span><span class=se>\n</span><span class=s2>&quot;</span><span class=p>)</span>
+        <span class=bp>self</span><span class=o>.</span><span class=n>print_tabulate</span><span class=p>(</span><span class=n>args</span><span class=o>=</span><span class=bp>self</span><span class=o>.</span><span class=n>args</span><span class=p>[</span><span class=s2>&quot;regression_metrics&quot;</span><span class=p>])</span>
+
+    <span class=k>def</span> <span class=nf>printing_verbose_mode</span><span class=p>(</span><span class=bp>self</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=kc>None</span><span class=p>:</span>
+<span class=w>        </span><span class=sd>&quot;&quot;&quot;Print all results in verbose mode.&quot;&quot;&quot;</span>
+        <span class=bp>self</span><span class=o>.</span><span class=n>print_statistic_verbose</span><span class=p>()</span>
+        <span class=bp>self</span><span class=o>.</span><span class=n>print_input_parameters_verbose</span><span class=p>()</span>
+        <span class=bp>self</span><span class=o>.</span><span class=n>print_fit_results_verbose</span><span class=p>()</span>
+        <span class=bp>self</span><span class=o>.</span><span class=n>print_confidence_interval_verbose</span><span class=p>()</span>
+        <span class=bp>self</span><span class=o>.</span><span class=n>print_linear_correlation_verbose</span><span class=p>()</span>
+        <span class=bp>self</span><span class=o>.</span><span class=n>print_regression_metrics_verbose</span><span class=p>()</span>
+
+    <span class=k>def</span> <span class=nf>print_statistic_verbose</span><span class=p>(</span><span class=bp>self</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=kc>None</span><span class=p>:</span>
+<span class=w>        </span><span class=sd>&quot;&quot;&quot;Print the data statistic in verbose mode.&quot;&quot;&quot;</span>
+        <span class=nb>print</span><span class=p>(</span><span class=s2>&quot;</span><span class=se>\n</span><span class=s2>Statistic:</span><span class=se>\n</span><span class=s2>&quot;</span><span class=p>)</span>
+        <span class=n>pp</span><span class=o>.</span><span class=n>pprint</span><span class=p>(</span><span class=bp>self</span><span class=o>.</span><span class=n>args</span><span class=p>[</span><span class=s2>&quot;data_statistic&quot;</span><span class=p>])</span>
+
+    <span class=k>def</span> <span class=nf>print_input_parameters_verbose</span><span class=p>(</span><span class=bp>self</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=kc>None</span><span class=p>:</span>
+<span class=w>        </span><span class=sd>&quot;&quot;&quot;Print input parameters in verbose mode.&quot;&quot;&quot;</span>
+        <span class=nb>print</span><span class=p>(</span><span class=s2>&quot;Input Parameter:</span><span class=se>\n</span><span class=s2>&quot;</span><span class=p>)</span>
+        <span class=n>pp</span><span class=o>.</span><span class=n>pprint</span><span class=p>(</span><span class=bp>self</span><span class=o>.</span><span class=n>args</span><span class=p>)</span>
+
+    <span class=k>def</span> <span class=nf>print_fit_results_verbose</span><span class=p>(</span><span class=bp>self</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=kc>None</span><span class=p>:</span>
+<span class=w>        </span><span class=sd>&quot;&quot;&quot;Print fit results in verbose mode.&quot;&quot;&quot;</span>
+        <span class=nb>print</span><span class=p>(</span><span class=s2>&quot;</span><span class=se>\n</span><span class=s2>Fit Results and Insights:</span><span class=se>\n</span><span class=s2>&quot;</span><span class=p>)</span>
+        <span class=n>pp</span><span class=o>.</span><span class=n>pprint</span><span class=p>(</span><span class=bp>self</span><span class=o>.</span><span class=n>args</span><span class=p>[</span><span class=s2>&quot;fit_insights&quot;</span><span class=p>])</span>
+
+    <span class=k>def</span> <span class=nf>print_confidence_interval_verbose</span><span class=p>(</span><span class=bp>self</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=kc>None</span><span class=p>:</span>
+<span class=w>        </span><span class=sd>&quot;&quot;&quot;Print confidence interval in verbose mode.&quot;&quot;&quot;</span>
+        <span class=k>if</span> <span class=bp>self</span><span class=o>.</span><span class=n>args</span><span class=p>[</span><span class=s2>&quot;conf_interval&quot;</span><span class=p>]:</span>
+            <span class=nb>print</span><span class=p>(</span><span class=s2>&quot;</span><span class=se>\n</span><span class=s2>Confidence Interval:</span><span class=se>\n</span><span class=s2>&quot;</span><span class=p>)</span>
+            <span class=n>pp</span><span class=o>.</span><span class=n>pprint</span><span class=p>(</span><span class=bp>self</span><span class=o>.</span><span class=n>args</span><span class=p>[</span><span class=s2>&quot;confidence_interval&quot;</span><span class=p>])</span>
+
+    <span class=k>def</span> <span class=nf>print_linear_correlation_verbose</span><span class=p>(</span><span class=bp>self</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=kc>None</span><span class=p>:</span>
+<span class=w>        </span><span class=sd>&quot;&quot;&quot;Print overall linear-correlation in verbose mode.&quot;&quot;&quot;</span>
+        <span class=nb>print</span><span class=p>(</span><span class=s2>&quot;</span><span class=se>\n</span><span class=s2>Overall Linear-Correlation:</span><span class=se>\n</span><span class=s2>&quot;</span><span class=p>)</span>
+        <span class=n>pp</span><span class=o>.</span><span class=n>pprint</span><span class=p>(</span><span class=bp>self</span><span class=o>.</span><span class=n>args</span><span class=p>[</span><span class=s2>&quot;linear_correlation&quot;</span><span class=p>])</span>
+
+    <span class=k>def</span> <span class=nf>print_regression_metrics_verbose</span><span class=p>(</span><span class=bp>self</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=kc>None</span><span class=p>:</span>
+<span class=w>        </span><span class=sd>&quot;&quot;&quot;Print regression metrics in verbose mode.&quot;&quot;&quot;</span>
+        <span class=nb>print</span><span class=p>(</span><span class=s2>&quot;</span><span class=se>\n</span><span class=s2>Regression Metrics:</span><span class=se>\n</span><span class=s2>&quot;</span><span class=p>)</span>
+        <span class=n>pp</span><span class=o>.</span><span class=n>pprint</span><span class=p>(</span><span class=bp>self</span><span class=o>.</span><span class=n>args</span><span class=p>[</span><span class=s2>&quot;regression_metrics&quot;</span><span class=p>])</span>
+</code></pre></div></td></tr></table></div> </details> <div class="doc doc-children"> <div class="doc doc-object doc-function"> <h3 id=spectrafit.report.PrintingResults.__call__ class="doc doc-heading"> <code class="highlight language-python"><span class=fm>__call__</span><span class=p>()</span></code> <a href=#spectrafit.report.PrintingResults.__call__ class=headerlink title="Permanent link">&para;</a></h3> <div class="doc doc-contents "> <p>Print the results of the fitting process.</p> <details class=quote> <summary>Source code in <code>spectrafit/report.py</code></summary> <div class=highlight><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal>334</span>
+<span class=normal>335</span>
+<span class=normal>336</span>
+<span class=normal>337</span>
+<span class=normal>338</span>
+<span class=normal>339</span></pre></div></td><td class=code><div><pre><span></span><code><span class=k>def</span> <span class=fm>__call__</span><span class=p>(</span><span class=bp>self</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=kc>None</span><span class=p>:</span>
+<span class=w>    </span><span class=sd>&quot;&quot;&quot;Print the results of the fitting process.&quot;&quot;&quot;</span>
+    <span class=k>if</span> <span class=bp>self</span><span class=o>.</span><span class=n>args</span><span class=p>[</span><span class=s2>&quot;verbose&quot;</span><span class=p>]</span> <span class=o>==</span> <span class=mi>1</span><span class=p>:</span>
+        <span class=bp>self</span><span class=o>.</span><span class=n>printing_regular_mode</span><span class=p>()</span>
+    <span class=k>elif</span> <span class=bp>self</span><span class=o>.</span><span class=n>args</span><span class=p>[</span><span class=s2>&quot;verbose&quot;</span><span class=p>]</span> <span class=o>==</span> <span class=mi>2</span><span class=p>:</span>
+        <span class=bp>self</span><span class=o>.</span><span class=n>printing_verbose_mode</span><span class=p>()</span>
+</code></pre></div></td></tr></table></div> </details> </div> </div> <div class="doc doc-object doc-function"> <h3 id=spectrafit.report.PrintingResults.__init__ class="doc doc-heading"> <code class="highlight language-python"><span class=fm>__init__</span><span class=p>(</span><span class=n>args</span><span class=p>,</span> <span class=n>result</span><span class=p>,</span> <span class=n>minimizer</span><span class=p>)</span></code> <a href=#spectrafit.report.PrintingResults.__init__ class=headerlink title="Permanent link">&para;</a></h3> <div class="doc doc-contents "> <p>Initialize the PrintingResults class.</p> <p><strong>Parameters:</strong></p> <table> <thead> <tr> <th>Name</th> <th>Type</th> <th>Description</th> <th>Default</th> </tr> </thead> <tbody> <tr> <td><code>args</code></td> <td> <code><span title=typing.Dict>Dict</span>[str, <span title=typing.Any>Any</span>]</code> </td> <td><p>The input file arguments as a dictionary with additional information beyond the command line arguments.</p></td> <td> <em>required</em> </td> </tr> <tr> <td><code>result</code></td> <td> <code><span title=typing.Any>Any</span></code> </td> <td><p>The lmfit <code>results</code> as a kind of result based class.</p></td> <td> <em>required</em> </td> </tr> <tr> <td><code>minimizer</code></td> <td> <code><span title=lmfit.Minimizer>Minimizer</span></code> </td> <td><p>The lmfit <code>Minimizer</code>-class as a general minimizer for curve fitting and optimization.</p></td> <td> <em>required</em> </td> </tr> </tbody> </table> <details class=quote> <summary>Source code in <code>spectrafit/report.py</code></summary> <div class=highlight><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal>314</span>
+<span class=normal>315</span>
+<span class=normal>316</span>
+<span class=normal>317</span>
+<span class=normal>318</span>
+<span class=normal>319</span>
+<span class=normal>320</span>
+<span class=normal>321</span>
+<span class=normal>322</span>
+<span class=normal>323</span>
+<span class=normal>324</span>
+<span class=normal>325</span>
+<span class=normal>326</span>
+<span class=normal>327</span>
+<span class=normal>328</span>
+<span class=normal>329</span>
+<span class=normal>330</span>
+<span class=normal>331</span>
+<span class=normal>332</span></pre></div></td><td class=code><div><pre><span></span><code><span class=k>def</span> <span class=fm>__init__</span><span class=p>(</span>
+    <span class=bp>self</span><span class=p>,</span>
+    <span class=n>args</span><span class=p>:</span> <span class=n>Dict</span><span class=p>[</span><span class=nb>str</span><span class=p>,</span> <span class=n>Any</span><span class=p>],</span>
+    <span class=n>result</span><span class=p>:</span> <span class=n>Any</span><span class=p>,</span>
+    <span class=n>minimizer</span><span class=p>:</span> <span class=n>Minimizer</span><span class=p>,</span>
+<span class=p>)</span> <span class=o>-&gt;</span> <span class=kc>None</span><span class=p>:</span>
+<span class=w>    </span><span class=sd>&quot;&quot;&quot;Initialize the PrintingResults class.</span>
+
+<span class=sd>    Args:</span>
+<span class=sd>        args (Dict[str,Any]): The input file arguments as a dictionary with</span>
+<span class=sd>             additional information beyond the command line arguments.</span>
+<span class=sd>        result (Any): The lmfit `results` as a kind of result based class.</span>
+<span class=sd>        minimizer (Minimizer): The lmfit `Minimizer`-class as a general minimizer</span>
+<span class=sd>             for curve fitting and optimization.</span>
+<span class=sd>    &quot;&quot;&quot;</span>
+    <span class=bp>self</span><span class=o>.</span><span class=n>args</span> <span class=o>=</span> <span class=n>args</span>
+    <span class=bp>self</span><span class=o>.</span><span class=n>result</span> <span class=o>=</span> <span class=n>result</span>
+    <span class=bp>self</span><span class=o>.</span><span class=n>minimizer</span> <span class=o>=</span> <span class=n>minimizer</span>
+    <span class=bp>self</span><span class=o>.</span><span class=n>correlation</span> <span class=o>=</span> <span class=n>pd</span><span class=o>.</span><span class=n>DataFrame</span><span class=o>.</span><span class=n>from_dict</span><span class=p>(</span><span class=n>args</span><span class=p>[</span><span class=s2>&quot;linear_correlation&quot;</span><span class=p>])</span>
+</code></pre></div></td></tr></table></div> </details> </div> </div> <div class="doc doc-object doc-function"> <h3 id=spectrafit.report.PrintingResults.print_confidence_interval class="doc doc-heading"> <code class="highlight language-python"><span class=n>print_confidence_interval</span><span class=p>()</span></code> <a href=#spectrafit.report.PrintingResults.print_confidence_interval class=headerlink title="Permanent link">&para;</a></h3> <div class="doc doc-contents "> <p>Print the confidence interval.</p> <details class=quote> <summary>Source code in <code>spectrafit/report.py</code></summary> <div class=highlight><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal>377</span>
+<span class=normal>378</span>
+<span class=normal>379</span>
+<span class=normal>380</span>
+<span class=normal>381</span>
+<span class=normal>382</span>
+<span class=normal>383</span>
+<span class=normal>384</span>
+<span class=normal>385</span>
+<span class=normal>386</span>
+<span class=normal>387</span>
+<span class=normal>388</span>
+<span class=normal>389</span></pre></div></td><td class=code><div><pre><span></span><code><span class=k>def</span> <span class=nf>print_confidence_interval</span><span class=p>(</span><span class=bp>self</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=kc>None</span><span class=p>:</span>
+<span class=w>    </span><span class=sd>&quot;&quot;&quot;Print the confidence interval.&quot;&quot;&quot;</span>
+    <span class=nb>print</span><span class=p>(</span><span class=s2>&quot;</span><span class=se>\n</span><span class=s2>Confidence Interval:</span><span class=se>\n</span><span class=s2>&quot;</span><span class=p>)</span>
+    <span class=k>if</span> <span class=bp>self</span><span class=o>.</span><span class=n>args</span><span class=p>[</span><span class=s2>&quot;conf_interval&quot;</span><span class=p>]:</span>
+        <span class=k>try</span><span class=p>:</span>
+            <span class=n>report_ci</span><span class=p>(</span>
+                <span class=n>conf_interval</span><span class=p>(</span>
+                    <span class=bp>self</span><span class=o>.</span><span class=n>minimizer</span><span class=p>,</span> <span class=bp>self</span><span class=o>.</span><span class=n>result</span><span class=p>,</span> <span class=o>**</span><span class=bp>self</span><span class=o>.</span><span class=n>args</span><span class=p>[</span><span class=s2>&quot;conf_interval&quot;</span><span class=p>]</span>
+                <span class=p>)</span>
+            <span class=p>)</span>
+        <span class=k>except</span> <span class=p>(</span><span class=n>MinimizerException</span><span class=p>,</span> <span class=ne>ValueError</span><span class=p>,</span> <span class=ne>KeyError</span><span class=p>,</span> <span class=ne>TypeError</span><span class=p>)</span> <span class=k>as</span> <span class=n>exc</span><span class=p>:</span>
+            <span class=nb>print</span><span class=p>(</span><span class=sa>f</span><span class=s2>&quot;Error: </span><span class=si>{</span><span class=n>exc</span><span class=si>}</span><span class=s2> -&gt; No confidence interval could be calculated!&quot;</span><span class=p>)</span>
+            <span class=bp>self</span><span class=o>.</span><span class=n>args</span><span class=p>[</span><span class=s2>&quot;confidence_interval&quot;</span><span class=p>]</span> <span class=o>=</span> <span class=p>{}</span>
+</code></pre></div></td></tr></table></div> </details> </div> </div> <div class="doc doc-object doc-function"> <h3 id=spectrafit.report.PrintingResults.print_confidence_interval_verbose class="doc doc-heading"> <code class="highlight language-python"><span class=n>print_confidence_interval_verbose</span><span class=p>()</span></code> <a href=#spectrafit.report.PrintingResults.print_confidence_interval_verbose class=headerlink title="Permanent link">&para;</a></h3> <div class="doc doc-contents "> <p>Print confidence interval in verbose mode.</p> <details class=quote> <summary>Source code in <code>spectrafit/report.py</code></summary> <div class=highlight><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal>425</span>
+<span class=normal>426</span>
+<span class=normal>427</span>
+<span class=normal>428</span>
+<span class=normal>429</span></pre></div></td><td class=code><div><pre><span></span><code><span class=k>def</span> <span class=nf>print_confidence_interval_verbose</span><span class=p>(</span><span class=bp>self</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=kc>None</span><span class=p>:</span>
+<span class=w>    </span><span class=sd>&quot;&quot;&quot;Print confidence interval in verbose mode.&quot;&quot;&quot;</span>
+    <span class=k>if</span> <span class=bp>self</span><span class=o>.</span><span class=n>args</span><span class=p>[</span><span class=s2>&quot;conf_interval&quot;</span><span class=p>]:</span>
+        <span class=nb>print</span><span class=p>(</span><span class=s2>&quot;</span><span class=se>\n</span><span class=s2>Confidence Interval:</span><span class=se>\n</span><span class=s2>&quot;</span><span class=p>)</span>
+        <span class=n>pp</span><span class=o>.</span><span class=n>pprint</span><span class=p>(</span><span class=bp>self</span><span class=o>.</span><span class=n>args</span><span class=p>[</span><span class=s2>&quot;confidence_interval&quot;</span><span class=p>])</span>
+</code></pre></div></td></tr></table></div> </details> </div> </div> <div class="doc doc-object doc-function"> <h3 id=spectrafit.report.PrintingResults.print_fit_results class="doc doc-heading"> <code class="highlight language-python"><span class=n>print_fit_results</span><span class=p>()</span></code> <a href=#spectrafit.report.PrintingResults.print_fit_results class=headerlink title="Permanent link">&para;</a></h3> <div class="doc doc-contents "> <p>Print the fit results.</p> <details class=quote> <summary>Source code in <code>spectrafit/report.py</code></summary> <div class=highlight><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal>370</span>
+<span class=normal>371</span>
+<span class=normal>372</span>
+<span class=normal>373</span>
+<span class=normal>374</span>
+<span class=normal>375</span></pre></div></td><td class=code><div><pre><span></span><code><span class=k>def</span> <span class=nf>print_fit_results</span><span class=p>(</span><span class=bp>self</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=kc>None</span><span class=p>:</span>
+<span class=w>    </span><span class=sd>&quot;&quot;&quot;Print the fit results.&quot;&quot;&quot;</span>
+    <span class=nb>print</span><span class=p>(</span><span class=s2>&quot;</span><span class=se>\n</span><span class=s2>Fit Results and Insights:</span><span class=se>\n</span><span class=s2>&quot;</span><span class=p>)</span>
+    <span class=nb>print</span><span class=p>(</span>
+        <span class=n>report_fit</span><span class=p>(</span><span class=bp>self</span><span class=o>.</span><span class=n>result</span><span class=p>,</span> <span class=n>modelpars</span><span class=o>=</span><span class=bp>self</span><span class=o>.</span><span class=n>result</span><span class=o>.</span><span class=n>params</span><span class=p>,</span> <span class=o>**</span><span class=bp>self</span><span class=o>.</span><span class=n>args</span><span class=p>[</span><span class=s2>&quot;report&quot;</span><span class=p>])</span>
+    <span class=p>)</span>
+</code></pre></div></td></tr></table></div> </details> </div> </div> <div class="doc doc-object doc-function"> <h3 id=spectrafit.report.PrintingResults.print_fit_results_verbose class="doc doc-heading"> <code class="highlight language-python"><span class=n>print_fit_results_verbose</span><span class=p>()</span></code> <a href=#spectrafit.report.PrintingResults.print_fit_results_verbose class=headerlink title="Permanent link">&para;</a></h3> <div class="doc doc-contents "> <p>Print fit results in verbose mode.</p> <details class=quote> <summary>Source code in <code>spectrafit/report.py</code></summary> <div class=highlight><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal>420</span>
+<span class=normal>421</span>
+<span class=normal>422</span>
+<span class=normal>423</span></pre></div></td><td class=code><div><pre><span></span><code><span class=k>def</span> <span class=nf>print_fit_results_verbose</span><span class=p>(</span><span class=bp>self</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=kc>None</span><span class=p>:</span>
+<span class=w>    </span><span class=sd>&quot;&quot;&quot;Print fit results in verbose mode.&quot;&quot;&quot;</span>
+    <span class=nb>print</span><span class=p>(</span><span class=s2>&quot;</span><span class=se>\n</span><span class=s2>Fit Results and Insights:</span><span class=se>\n</span><span class=s2>&quot;</span><span class=p>)</span>
+    <span class=n>pp</span><span class=o>.</span><span class=n>pprint</span><span class=p>(</span><span class=bp>self</span><span class=o>.</span><span class=n>args</span><span class=p>[</span><span class=s2>&quot;fit_insights&quot;</span><span class=p>])</span>
+</code></pre></div></td></tr></table></div> </details> </div> </div> <div class="doc doc-object doc-function"> <h3 id=spectrafit.report.PrintingResults.print_input_parameters_verbose class="doc doc-heading"> <code class="highlight language-python"><span class=n>print_input_parameters_verbose</span><span class=p>()</span></code> <a href=#spectrafit.report.PrintingResults.print_input_parameters_verbose class=headerlink title="Permanent link">&para;</a></h3> <div class="doc doc-contents "> <p>Print input parameters in verbose mode.</p> <details class=quote> <summary>Source code in <code>spectrafit/report.py</code></summary> <div class=highlight><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal>415</span>
+<span class=normal>416</span>
+<span class=normal>417</span>
+<span class=normal>418</span></pre></div></td><td class=code><div><pre><span></span><code><span class=k>def</span> <span class=nf>print_input_parameters_verbose</span><span class=p>(</span><span class=bp>self</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=kc>None</span><span class=p>:</span>
+<span class=w>    </span><span class=sd>&quot;&quot;&quot;Print input parameters in verbose mode.&quot;&quot;&quot;</span>
+    <span class=nb>print</span><span class=p>(</span><span class=s2>&quot;Input Parameter:</span><span class=se>\n</span><span class=s2>&quot;</span><span class=p>)</span>
+    <span class=n>pp</span><span class=o>.</span><span class=n>pprint</span><span class=p>(</span><span class=bp>self</span><span class=o>.</span><span class=n>args</span><span class=p>)</span>
+</code></pre></div></td></tr></table></div> </details> </div> </div> <div class="doc doc-object doc-function"> <h3 id=spectrafit.report.PrintingResults.print_linear_correlation class="doc doc-heading"> <code class="highlight language-python"><span class=n>print_linear_correlation</span><span class=p>()</span></code> <a href=#spectrafit.report.PrintingResults.print_linear_correlation class=headerlink title="Permanent link">&para;</a></h3> <div class="doc doc-contents "> <p>Print the linear correlation.</p> <details class=quote> <summary>Source code in <code>spectrafit/report.py</code></summary> <div class=highlight><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal>391</span>
+<span class=normal>392</span>
+<span class=normal>393</span>
+<span class=normal>394</span></pre></div></td><td class=code><div><pre><span></span><code><span class=k>def</span> <span class=nf>print_linear_correlation</span><span class=p>(</span><span class=bp>self</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=kc>None</span><span class=p>:</span>
+<span class=w>    </span><span class=sd>&quot;&quot;&quot;Print the linear correlation.&quot;&quot;&quot;</span>
+    <span class=nb>print</span><span class=p>(</span><span class=s2>&quot;</span><span class=se>\n</span><span class=s2>Overall Linear-Correlation:</span><span class=se>\n</span><span class=s2>&quot;</span><span class=p>)</span>
+    <span class=bp>self</span><span class=o>.</span><span class=n>print_tabulate</span><span class=p>(</span><span class=n>args</span><span class=o>=</span><span class=bp>self</span><span class=o>.</span><span class=n>args</span><span class=p>[</span><span class=s2>&quot;linear_correlation&quot;</span><span class=p>])</span>
+</code></pre></div></td></tr></table></div> </details> </div> </div> <div class="doc doc-object doc-function"> <h3 id=spectrafit.report.PrintingResults.print_linear_correlation_verbose class="doc doc-heading"> <code class="highlight language-python"><span class=n>print_linear_correlation_verbose</span><span class=p>()</span></code> <a href=#spectrafit.report.PrintingResults.print_linear_correlation_verbose class=headerlink title="Permanent link">&para;</a></h3> <div class="doc doc-contents "> <p>Print overall linear-correlation in verbose mode.</p> <details class=quote> <summary>Source code in <code>spectrafit/report.py</code></summary> <div class=highlight><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal>431</span>
+<span class=normal>432</span>
+<span class=normal>433</span>
+<span class=normal>434</span></pre></div></td><td class=code><div><pre><span></span><code><span class=k>def</span> <span class=nf>print_linear_correlation_verbose</span><span class=p>(</span><span class=bp>self</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=kc>None</span><span class=p>:</span>
+<span class=w>    </span><span class=sd>&quot;&quot;&quot;Print overall linear-correlation in verbose mode.&quot;&quot;&quot;</span>
+    <span class=nb>print</span><span class=p>(</span><span class=s2>&quot;</span><span class=se>\n</span><span class=s2>Overall Linear-Correlation:</span><span class=se>\n</span><span class=s2>&quot;</span><span class=p>)</span>
+    <span class=n>pp</span><span class=o>.</span><span class=n>pprint</span><span class=p>(</span><span class=bp>self</span><span class=o>.</span><span class=n>args</span><span class=p>[</span><span class=s2>&quot;linear_correlation&quot;</span><span class=p>])</span>
+</code></pre></div></td></tr></table></div> </details> </div> </div> <div class="doc doc-object doc-function"> <h3 id=spectrafit.report.PrintingResults.print_regression_metrics class="doc doc-heading"> <code class="highlight language-python"><span class=n>print_regression_metrics</span><span class=p>()</span></code> <a href=#spectrafit.report.PrintingResults.print_regression_metrics class=headerlink title="Permanent link">&para;</a></h3> <div class="doc doc-contents "> <p>Print the regression metrics.</p> <details class=quote> <summary>Source code in <code>spectrafit/report.py</code></summary> <div class=highlight><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal>396</span>
+<span class=normal>397</span>
+<span class=normal>398</span>
+<span class=normal>399</span></pre></div></td><td class=code><div><pre><span></span><code><span class=k>def</span> <span class=nf>print_regression_metrics</span><span class=p>(</span><span class=bp>self</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=kc>None</span><span class=p>:</span>
+<span class=w>    </span><span class=sd>&quot;&quot;&quot;Print the regression metrics.&quot;&quot;&quot;</span>
+    <span class=nb>print</span><span class=p>(</span><span class=s2>&quot;</span><span class=se>\n</span><span class=s2>Regression Metrics:</span><span class=se>\n</span><span class=s2>&quot;</span><span class=p>)</span>
+    <span class=bp>self</span><span class=o>.</span><span class=n>print_tabulate</span><span class=p>(</span><span class=n>args</span><span class=o>=</span><span class=bp>self</span><span class=o>.</span><span class=n>args</span><span class=p>[</span><span class=s2>&quot;regression_metrics&quot;</span><span class=p>])</span>
+</code></pre></div></td></tr></table></div> </details> </div> </div> <div class="doc doc-object doc-function"> <h3 id=spectrafit.report.PrintingResults.print_regression_metrics_verbose class="doc doc-heading"> <code class="highlight language-python"><span class=n>print_regression_metrics_verbose</span><span class=p>()</span></code> <a href=#spectrafit.report.PrintingResults.print_regression_metrics_verbose class=headerlink title="Permanent link">&para;</a></h3> <div class="doc doc-contents "> <p>Print regression metrics in verbose mode.</p> <details class=quote> <summary>Source code in <code>spectrafit/report.py</code></summary> <div class=highlight><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal>436</span>
+<span class=normal>437</span>
+<span class=normal>438</span>
+<span class=normal>439</span></pre></div></td><td class=code><div><pre><span></span><code><span class=k>def</span> <span class=nf>print_regression_metrics_verbose</span><span class=p>(</span><span class=bp>self</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=kc>None</span><span class=p>:</span>
+<span class=w>    </span><span class=sd>&quot;&quot;&quot;Print regression metrics in verbose mode.&quot;&quot;&quot;</span>
+    <span class=nb>print</span><span class=p>(</span><span class=s2>&quot;</span><span class=se>\n</span><span class=s2>Regression Metrics:</span><span class=se>\n</span><span class=s2>&quot;</span><span class=p>)</span>
+    <span class=n>pp</span><span class=o>.</span><span class=n>pprint</span><span class=p>(</span><span class=bp>self</span><span class=o>.</span><span class=n>args</span><span class=p>[</span><span class=s2>&quot;regression_metrics&quot;</span><span class=p>])</span>
+</code></pre></div></td></tr></table></div> </details> </div> </div> <div class="doc doc-object doc-function"> <h3 id=spectrafit.report.PrintingResults.print_statistic class="doc doc-heading"> <code class="highlight language-python"><span class=n>print_statistic</span><span class=p>()</span></code> <a href=#spectrafit.report.PrintingResults.print_statistic class=headerlink title="Permanent link">&para;</a></h3> <div class="doc doc-contents "> <p>Print the statistic.</p> <details class=quote> <summary>Source code in <code>spectrafit/report.py</code></summary> <div class=highlight><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal>365</span>
+<span class=normal>366</span>
+<span class=normal>367</span>
+<span class=normal>368</span></pre></div></td><td class=code><div><pre><span></span><code><span class=k>def</span> <span class=nf>print_statistic</span><span class=p>(</span><span class=bp>self</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=kc>None</span><span class=p>:</span>
+<span class=w>    </span><span class=sd>&quot;&quot;&quot;Print the statistic.&quot;&quot;&quot;</span>
+    <span class=nb>print</span><span class=p>(</span><span class=s2>&quot;</span><span class=se>\n</span><span class=s2>Statistic:</span><span class=se>\n</span><span class=s2>&quot;</span><span class=p>)</span>
+    <span class=bp>self</span><span class=o>.</span><span class=n>print_tabulate</span><span class=p>(</span><span class=n>args</span><span class=o>=</span><span class=bp>self</span><span class=o>.</span><span class=n>args</span><span class=p>[</span><span class=s2>&quot;data_statistic&quot;</span><span class=p>])</span>
+</code></pre></div></td></tr></table></div> </details> </div> </div> <div class="doc doc-object doc-function"> <h3 id=spectrafit.report.PrintingResults.print_statistic_verbose class="doc doc-heading"> <code class="highlight language-python"><span class=n>print_statistic_verbose</span><span class=p>()</span></code> <a href=#spectrafit.report.PrintingResults.print_statistic_verbose class=headerlink title="Permanent link">&para;</a></h3> <div class="doc doc-contents "> <p>Print the data statistic in verbose mode.</p> <details class=quote> <summary>Source code in <code>spectrafit/report.py</code></summary> <div class=highlight><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal>410</span>
+<span class=normal>411</span>
+<span class=normal>412</span>
+<span class=normal>413</span></pre></div></td><td class=code><div><pre><span></span><code><span class=k>def</span> <span class=nf>print_statistic_verbose</span><span class=p>(</span><span class=bp>self</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=kc>None</span><span class=p>:</span>
+<span class=w>    </span><span class=sd>&quot;&quot;&quot;Print the data statistic in verbose mode.&quot;&quot;&quot;</span>
+    <span class=nb>print</span><span class=p>(</span><span class=s2>&quot;</span><span class=se>\n</span><span class=s2>Statistic:</span><span class=se>\n</span><span class=s2>&quot;</span><span class=p>)</span>
+    <span class=n>pp</span><span class=o>.</span><span class=n>pprint</span><span class=p>(</span><span class=bp>self</span><span class=o>.</span><span class=n>args</span><span class=p>[</span><span class=s2>&quot;data_statistic&quot;</span><span class=p>])</span>
+</code></pre></div></td></tr></table></div> </details> </div> </div> <div class="doc doc-object doc-function"> <h3 id=spectrafit.report.PrintingResults.print_tabulate class="doc doc-heading"> <code class="highlight language-python"><span class=n>print_tabulate</span><span class=p>(</span><span class=n>args</span><span class=p>)</span></code> <span class="doc doc-labels"> <small class="doc doc-label doc-label-staticmethod"><code>staticmethod</code></small> </span> <a href=#spectrafit.report.PrintingResults.print_tabulate class=headerlink title="Permanent link">&para;</a></h3> <div class="doc doc-contents "> <p>Print the results of the fitting process.</p> <p><strong>Parameters:</strong></p> <table> <thead> <tr> <th>Name</th> <th>Type</th> <th>Description</th> <th>Default</th> </tr> </thead> <tbody> <tr> <td><code>args</code></td> <td> <code><span title=typing.Dict>Dict</span>[str, <span title=typing.Any>Any</span>]</code> </td> <td><p>The args to be printed as a dictionary.</p></td> <td> <em>required</em> </td> </tr> </tbody> </table> <details class=quote> <summary>Source code in <code>spectrafit/report.py</code></summary> <div class=highlight><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal>341</span>
+<span class=normal>342</span>
+<span class=normal>343</span>
+<span class=normal>344</span>
+<span class=normal>345</span>
+<span class=normal>346</span>
+<span class=normal>347</span>
+<span class=normal>348</span>
+<span class=normal>349</span>
+<span class=normal>350</span>
+<span class=normal>351</span>
+<span class=normal>352</span>
+<span class=normal>353</span>
+<span class=normal>354</span>
+<span class=normal>355</span></pre></div></td><td class=code><div><pre><span></span><code><span class=nd>@staticmethod</span>
+<span class=k>def</span> <span class=nf>print_tabulate</span><span class=p>(</span><span class=n>args</span><span class=p>:</span> <span class=n>Dict</span><span class=p>[</span><span class=nb>str</span><span class=p>,</span> <span class=n>Any</span><span class=p>])</span> <span class=o>-&gt;</span> <span class=kc>None</span><span class=p>:</span>
+<span class=w>    </span><span class=sd>&quot;&quot;&quot;Print the results of the fitting process.</span>
+
+<span class=sd>    Args:</span>
+<span class=sd>        args (Dict[str, Any]): The args to be printed as a dictionary.</span>
+<span class=sd>    &quot;&quot;&quot;</span>
+    <span class=nb>print</span><span class=p>(</span>
+        <span class=n>tabulate</span><span class=p>(</span>
+            <span class=n>pd</span><span class=o>.</span><span class=n>DataFrame</span><span class=p>(</span><span class=o>**</span><span class=n>args</span><span class=p>)</span><span class=o>.</span><span class=n>T</span><span class=p>,</span>
+            <span class=n>headers</span><span class=o>=</span><span class=s2>&quot;keys&quot;</span><span class=p>,</span>
+            <span class=n>tablefmt</span><span class=o>=</span><span class=s2>&quot;fancy_grid&quot;</span> <span class=k>if</span> <span class=n>sys</span><span class=o>.</span><span class=n>platform</span> <span class=o>!=</span> <span class=s2>&quot;win32&quot;</span> <span class=k>else</span> <span class=s2>&quot;grid&quot;</span><span class=p>,</span>
+            <span class=n>floatfmt</span><span class=o>=</span><span class=s2>&quot;.3f&quot;</span><span class=p>,</span>
+        <span class=p>)</span>
+    <span class=p>)</span>
+</code></pre></div></td></tr></table></div> </details> </div> </div> <div class="doc doc-object doc-function"> <h3 id=spectrafit.report.PrintingResults.printing_regular_mode class="doc doc-heading"> <code class="highlight language-python"><span class=n>printing_regular_mode</span><span class=p>()</span></code> <a href=#spectrafit.report.PrintingResults.printing_regular_mode class=headerlink title="Permanent link">&para;</a></h3> <div class="doc doc-contents "> <p>Print the fitting results in the regular mode.</p> <details class=quote> <summary>Source code in <code>spectrafit/report.py</code></summary> <div class=highlight><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal>357</span>
+<span class=normal>358</span>
+<span class=normal>359</span>
+<span class=normal>360</span>
+<span class=normal>361</span>
+<span class=normal>362</span>
+<span class=normal>363</span></pre></div></td><td class=code><div><pre><span></span><code><span class=k>def</span> <span class=nf>printing_regular_mode</span><span class=p>(</span><span class=bp>self</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=kc>None</span><span class=p>:</span>
+<span class=w>    </span><span class=sd>&quot;&quot;&quot;Print the fitting results in the regular mode.&quot;&quot;&quot;</span>
+    <span class=bp>self</span><span class=o>.</span><span class=n>print_statistic</span><span class=p>()</span>
+    <span class=bp>self</span><span class=o>.</span><span class=n>print_fit_results</span><span class=p>()</span>
+    <span class=bp>self</span><span class=o>.</span><span class=n>print_confidence_interval</span><span class=p>()</span>
+    <span class=bp>self</span><span class=o>.</span><span class=n>print_linear_correlation</span><span class=p>()</span>
+    <span class=bp>self</span><span class=o>.</span><span class=n>print_regression_metrics</span><span class=p>()</span>
+</code></pre></div></td></tr></table></div> </details> </div> </div> <div class="doc doc-object doc-function"> <h3 id=spectrafit.report.PrintingResults.printing_verbose_mode class="doc doc-heading"> <code class="highlight language-python"><span class=n>printing_verbose_mode</span><span class=p>()</span></code> <a href=#spectrafit.report.PrintingResults.printing_verbose_mode class=headerlink title="Permanent link">&para;</a></h3> <div class="doc doc-contents "> <p>Print all results in verbose mode.</p> <details class=quote> <summary>Source code in <code>spectrafit/report.py</code></summary> <div class=highlight><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal>401</span>
+<span class=normal>402</span>
+<span class=normal>403</span>
+<span class=normal>404</span>
+<span class=normal>405</span>
+<span class=normal>406</span>
+<span class=normal>407</span>
+<span class=normal>408</span></pre></div></td><td class=code><div><pre><span></span><code><span class=k>def</span> <span class=nf>printing_verbose_mode</span><span class=p>(</span><span class=bp>self</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=kc>None</span><span class=p>:</span>
+<span class=w>    </span><span class=sd>&quot;&quot;&quot;Print all results in verbose mode.&quot;&quot;&quot;</span>
+    <span class=bp>self</span><span class=o>.</span><span class=n>print_statistic_verbose</span><span class=p>()</span>
+    <span class=bp>self</span><span class=o>.</span><span class=n>print_input_parameters_verbose</span><span class=p>()</span>
+    <span class=bp>self</span><span class=o>.</span><span class=n>print_fit_results_verbose</span><span class=p>()</span>
+    <span class=bp>self</span><span class=o>.</span><span class=n>print_confidence_interval_verbose</span><span class=p>()</span>
+    <span class=bp>self</span><span class=o>.</span><span class=n>print_linear_correlation_verbose</span><span class=p>()</span>
+    <span class=bp>self</span><span class=o>.</span><span class=n>print_regression_metrics_verbose</span><span class=p>()</span>
+</code></pre></div></td></tr></table></div> </details> </div> </div> </div> </div> </div> <div class="doc doc-object doc-class"> <h2 id=spectrafit.report.PrintingStatus class="doc doc-heading"> <code>PrintingStatus</code> <a href=#spectrafit.report.PrintingStatus class=headerlink title="Permanent link">&para;</a></h2> <div class="doc doc-contents "> <p>Print the status of the fitting process.</p> <details class=quote> <summary>Source code in <code>spectrafit/report.py</code></summary> <div class=highlight><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal>442</span>
+<span class=normal>443</span>
+<span class=normal>444</span>
+<span class=normal>445</span>
+<span class=normal>446</span>
+<span class=normal>447</span>
+<span class=normal>448</span>
+<span class=normal>449</span>
+<span class=normal>450</span>
+<span class=normal>451</span>
+<span class=normal>452</span>
+<span class=normal>453</span>
+<span class=normal>454</span>
+<span class=normal>455</span>
+<span class=normal>456</span>
+<span class=normal>457</span>
+<span class=normal>458</span>
+<span class=normal>459</span>
+<span class=normal>460</span>
+<span class=normal>461</span>
+<span class=normal>462</span>
+<span class=normal>463</span>
+<span class=normal>464</span>
+<span class=normal>465</span>
+<span class=normal>466</span>
+<span class=normal>467</span>
+<span class=normal>468</span>
+<span class=normal>469</span>
+<span class=normal>470</span>
+<span class=normal>471</span>
+<span class=normal>472</span>
+<span class=normal>473</span>
+<span class=normal>474</span>
+<span class=normal>475</span>
+<span class=normal>476</span>
+<span class=normal>477</span>
+<span class=normal>478</span>
+<span class=normal>479</span>
+<span class=normal>480</span>
+<span class=normal>481</span>
+<span class=normal>482</span>
+<span class=normal>483</span>
+<span class=normal>484</span>
+<span class=normal>485</span>
+<span class=normal>486</span></pre></div></td><td class=code><div><pre><span></span><code><span class=k>class</span> <span class=nc>PrintingStatus</span><span class=p>:</span>
+<span class=w>    </span><span class=sd>&quot;&quot;&quot;Print the status of the fitting process.&quot;&quot;&quot;</span>
+
+    <span class=k>def</span> <span class=nf>welcome</span><span class=p>(</span><span class=bp>self</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=kc>None</span><span class=p>:</span>
+<span class=w>        </span><span class=sd>&quot;&quot;&quot;Print the welcome message.&quot;&quot;&quot;</span>
+        <span class=n>tprint</span><span class=p>(</span><span class=s2>&quot;SpectraFit&quot;</span><span class=p>,</span> <span class=n>font</span><span class=o>=</span><span class=s2>&quot;3-d&quot;</span><span class=p>)</span>
+
+    <span class=k>def</span> <span class=nf>version</span><span class=p>(</span><span class=bp>self</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=nb>str</span><span class=p>:</span>
+<span class=w>        </span><span class=sd>&quot;&quot;&quot;Print current version of the SpectraFit.&quot;&quot;&quot;</span>
+        <span class=k>return</span> <span class=sa>f</span><span class=s2>&quot;Currently used version is: </span><span class=si>{</span><span class=n>__version__</span><span class=si>}</span><span class=s2>&quot;</span>
+
+    <span class=k>def</span> <span class=nf>start</span><span class=p>(</span><span class=bp>self</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=kc>None</span><span class=p>:</span>
+<span class=w>        </span><span class=sd>&quot;&quot;&quot;Print the start of the fitting process.&quot;&quot;&quot;</span>
+        <span class=nb>print</span><span class=p>(</span><span class=s2>&quot;</span><span class=se>\n</span><span class=s2>Start of the fitting process:</span><span class=se>\n</span><span class=s2>&quot;</span><span class=p>)</span>
+
+    <span class=k>def</span> <span class=nf>end</span><span class=p>(</span><span class=bp>self</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=kc>None</span><span class=p>:</span>
+<span class=w>        </span><span class=sd>&quot;&quot;&quot;Print the end of the fitting process.&quot;&quot;&quot;</span>
+        <span class=nb>print</span><span class=p>(</span><span class=s2>&quot;</span><span class=se>\n</span><span class=s2>End of the fitting process:</span><span class=se>\n</span><span class=s2>&quot;</span><span class=p>)</span>
+
+    <span class=k>def</span> <span class=nf>thanks</span><span class=p>(</span><span class=bp>self</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=kc>None</span><span class=p>:</span>
+<span class=w>        </span><span class=sd>&quot;&quot;&quot;Print the end of the fitting process.&quot;&quot;&quot;</span>
+        <span class=nb>print</span><span class=p>(</span><span class=s2>&quot;</span><span class=se>\n</span><span class=s2>Thanks for using SpectraFit!&quot;</span><span class=p>)</span>
+
+    <span class=k>def</span> <span class=nf>yes_no</span><span class=p>(</span><span class=bp>self</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=kc>None</span><span class=p>:</span>
+<span class=w>        </span><span class=sd>&quot;&quot;&quot;Print the end of the fitting process.&quot;&quot;&quot;</span>
+        <span class=nb>print</span><span class=p>(</span><span class=s2>&quot;</span><span class=se>\n</span><span class=s2>Do you want to continue? (y/n)&quot;</span><span class=p>)</span>
+
+    <span class=k>def</span> <span class=nf>credits</span><span class=p>(</span><span class=bp>self</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=kc>None</span><span class=p>:</span>
+<span class=w>        </span><span class=sd>&quot;&quot;&quot;Print the credits of the fitting process.&quot;&quot;&quot;</span>
+        <span class=n>tprint</span><span class=p>(</span><span class=s2>&quot;</span><span class=se>\n</span><span class=s2>Credits:</span><span class=se>\n</span><span class=s2>&quot;</span><span class=p>,</span> <span class=n>font</span><span class=o>=</span><span class=s2>&quot;3-d&quot;</span><span class=p>)</span>
+        <span class=nb>print</span><span class=p>(</span>
+            <span class=s2>&quot;The fitting process is based on the following software:&quot;</span>
+            <span class=s2>&quot;</span><span class=se>\n\t</span><span class=s2>- lmfit (https://lmfit.github.io/lmfit-py/index.html)&quot;</span>
+            <span class=s2>&quot;</span><span class=se>\n\t</span><span class=s2>- statsmodel (https://www.statsmodels.org/stable/)&quot;</span>
+            <span class=s2>&quot;</span><span class=se>\n\t</span><span class=s2>- scipy (https://docs.scipy.org/doc/scipy/reference/index.html)&quot;</span>
+            <span class=s2>&quot;</span><span class=se>\n\t</span><span class=s2>- scikit-learn (https://scikit-learn.org/stable/)&quot;</span>
+            <span class=s2>&quot;</span><span class=se>\n\t</span><span class=s2>- numpy (https://docs.scipy.org/doc/numpy/reference/index.html)&quot;</span>
+            <span class=s2>&quot;</span><span class=se>\n\t</span><span class=s2>- pandas (https://pandas.pydata.org/pandas-docs/stable/index.html)&quot;</span>
+            <span class=s2>&quot;</span><span class=se>\n\t</span><span class=s2>- matplotlib (https://matplotlib.org/index.html)&quot;</span>
+            <span class=s2>&quot;</span><span class=se>\n\t</span><span class=s2>- seaborn (https://seaborn.pydata.org/index.html)&quot;</span>
+            <span class=s2>&quot;</span><span class=se>\n\t</span><span class=s2>- tabulate (https://github.com/astanin/python-tabulate))&quot;</span>
+            <span class=s2>&quot;</span><span class=se>\n\t</span><span class=s2>- argparse (https://docs.python.org/3/library/argparse.html)&quot;</span>
+            <span class=s2>&quot;</span><span class=se>\n\t</span><span class=s2>- anymany more &quot;</span>
+            <span class=s2>&quot;(https://github.com/Anselmoo/spectrafit/network/dependencies)&quot;</span>
+        <span class=p>)</span>
+</code></pre></div></td></tr></table></div> </details> <div class="doc doc-children"> <div class="doc doc-object doc-function"> <h3 id=spectrafit.report.PrintingStatus.credits class="doc doc-heading"> <code class="highlight language-python"><span class=n>credits</span><span class=p>()</span></code> <a href=#spectrafit.report.PrintingStatus.credits class=headerlink title="Permanent link">&para;</a></h3> <div class="doc doc-contents "> <p>Print the credits of the fitting process.</p> <details class=quote> <summary>Source code in <code>spectrafit/report.py</code></summary> <div class=highlight><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal>469</span>
+<span class=normal>470</span>
+<span class=normal>471</span>
+<span class=normal>472</span>
+<span class=normal>473</span>
+<span class=normal>474</span>
+<span class=normal>475</span>
+<span class=normal>476</span>
+<span class=normal>477</span>
+<span class=normal>478</span>
+<span class=normal>479</span>
+<span class=normal>480</span>
+<span class=normal>481</span>
+<span class=normal>482</span>
+<span class=normal>483</span>
+<span class=normal>484</span>
+<span class=normal>485</span>
+<span class=normal>486</span></pre></div></td><td class=code><div><pre><span></span><code><span class=k>def</span> <span class=nf>credits</span><span class=p>(</span><span class=bp>self</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=kc>None</span><span class=p>:</span>
+<span class=w>    </span><span class=sd>&quot;&quot;&quot;Print the credits of the fitting process.&quot;&quot;&quot;</span>
+    <span class=n>tprint</span><span class=p>(</span><span class=s2>&quot;</span><span class=se>\n</span><span class=s2>Credits:</span><span class=se>\n</span><span class=s2>&quot;</span><span class=p>,</span> <span class=n>font</span><span class=o>=</span><span class=s2>&quot;3-d&quot;</span><span class=p>)</span>
+    <span class=nb>print</span><span class=p>(</span>
+        <span class=s2>&quot;The fitting process is based on the following software:&quot;</span>
+        <span class=s2>&quot;</span><span class=se>\n\t</span><span class=s2>- lmfit (https://lmfit.github.io/lmfit-py/index.html)&quot;</span>
+        <span class=s2>&quot;</span><span class=se>\n\t</span><span class=s2>- statsmodel (https://www.statsmodels.org/stable/)&quot;</span>
+        <span class=s2>&quot;</span><span class=se>\n\t</span><span class=s2>- scipy (https://docs.scipy.org/doc/scipy/reference/index.html)&quot;</span>
+        <span class=s2>&quot;</span><span class=se>\n\t</span><span class=s2>- scikit-learn (https://scikit-learn.org/stable/)&quot;</span>
+        <span class=s2>&quot;</span><span class=se>\n\t</span><span class=s2>- numpy (https://docs.scipy.org/doc/numpy/reference/index.html)&quot;</span>
+        <span class=s2>&quot;</span><span class=se>\n\t</span><span class=s2>- pandas (https://pandas.pydata.org/pandas-docs/stable/index.html)&quot;</span>
+        <span class=s2>&quot;</span><span class=se>\n\t</span><span class=s2>- matplotlib (https://matplotlib.org/index.html)&quot;</span>
+        <span class=s2>&quot;</span><span class=se>\n\t</span><span class=s2>- seaborn (https://seaborn.pydata.org/index.html)&quot;</span>
+        <span class=s2>&quot;</span><span class=se>\n\t</span><span class=s2>- tabulate (https://github.com/astanin/python-tabulate))&quot;</span>
+        <span class=s2>&quot;</span><span class=se>\n\t</span><span class=s2>- argparse (https://docs.python.org/3/library/argparse.html)&quot;</span>
+        <span class=s2>&quot;</span><span class=se>\n\t</span><span class=s2>- anymany more &quot;</span>
+        <span class=s2>&quot;(https://github.com/Anselmoo/spectrafit/network/dependencies)&quot;</span>
+    <span class=p>)</span>
+</code></pre></div></td></tr></table></div> </details> </div> </div> <div class="doc doc-object doc-function"> <h3 id=spectrafit.report.PrintingStatus.end class="doc doc-heading"> <code class="highlight language-python"><span class=n>end</span><span class=p>()</span></code> <a href=#spectrafit.report.PrintingStatus.end class=headerlink title="Permanent link">&para;</a></h3> <div class="doc doc-contents "> <p>Print the end of the fitting process.</p> <details class=quote> <summary>Source code in <code>spectrafit/report.py</code></summary> <div class=highlight><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal>457</span>
+<span class=normal>458</span>
+<span class=normal>459</span></pre></div></td><td class=code><div><pre><span></span><code><span class=k>def</span> <span class=nf>end</span><span class=p>(</span><span class=bp>self</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=kc>None</span><span class=p>:</span>
+<span class=w>    </span><span class=sd>&quot;&quot;&quot;Print the end of the fitting process.&quot;&quot;&quot;</span>
+    <span class=nb>print</span><span class=p>(</span><span class=s2>&quot;</span><span class=se>\n</span><span class=s2>End of the fitting process:</span><span class=se>\n</span><span class=s2>&quot;</span><span class=p>)</span>
+</code></pre></div></td></tr></table></div> </details> </div> </div> <div class="doc doc-object doc-function"> <h3 id=spectrafit.report.PrintingStatus.start class="doc doc-heading"> <code class="highlight language-python"><span class=n>start</span><span class=p>()</span></code> <a href=#spectrafit.report.PrintingStatus.start class=headerlink title="Permanent link">&para;</a></h3> <div class="doc doc-contents "> <p>Print the start of the fitting process.</p> <details class=quote> <summary>Source code in <code>spectrafit/report.py</code></summary> <div class=highlight><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal>453</span>
+<span class=normal>454</span>
+<span class=normal>455</span></pre></div></td><td class=code><div><pre><span></span><code><span class=k>def</span> <span class=nf>start</span><span class=p>(</span><span class=bp>self</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=kc>None</span><span class=p>:</span>
+<span class=w>    </span><span class=sd>&quot;&quot;&quot;Print the start of the fitting process.&quot;&quot;&quot;</span>
+    <span class=nb>print</span><span class=p>(</span><span class=s2>&quot;</span><span class=se>\n</span><span class=s2>Start of the fitting process:</span><span class=se>\n</span><span class=s2>&quot;</span><span class=p>)</span>
+</code></pre></div></td></tr></table></div> </details> </div> </div> <div class="doc doc-object doc-function"> <h3 id=spectrafit.report.PrintingStatus.thanks class="doc doc-heading"> <code class="highlight language-python"><span class=n>thanks</span><span class=p>()</span></code> <a href=#spectrafit.report.PrintingStatus.thanks class=headerlink title="Permanent link">&para;</a></h3> <div class="doc doc-contents "> <p>Print the end of the fitting process.</p> <details class=quote> <summary>Source code in <code>spectrafit/report.py</code></summary> <div class=highlight><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal>461</span>
+<span class=normal>462</span>
+<span class=normal>463</span></pre></div></td><td class=code><div><pre><span></span><code><span class=k>def</span> <span class=nf>thanks</span><span class=p>(</span><span class=bp>self</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=kc>None</span><span class=p>:</span>
+<span class=w>    </span><span class=sd>&quot;&quot;&quot;Print the end of the fitting process.&quot;&quot;&quot;</span>
+    <span class=nb>print</span><span class=p>(</span><span class=s2>&quot;</span><span class=se>\n</span><span class=s2>Thanks for using SpectraFit!&quot;</span><span class=p>)</span>
+</code></pre></div></td></tr></table></div> </details> </div> </div> <div class="doc doc-object doc-function"> <h3 id=spectrafit.report.PrintingStatus.version class="doc doc-heading"> <code class="highlight language-python"><span class=n>version</span><span class=p>()</span></code> <a href=#spectrafit.report.PrintingStatus.version class=headerlink title="Permanent link">&para;</a></h3> <div class="doc doc-contents "> <p>Print current version of the SpectraFit.</p> <details class=quote> <summary>Source code in <code>spectrafit/report.py</code></summary> <div class=highlight><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal>449</span>
+<span class=normal>450</span>
+<span class=normal>451</span></pre></div></td><td class=code><div><pre><span></span><code><span class=k>def</span> <span class=nf>version</span><span class=p>(</span><span class=bp>self</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=nb>str</span><span class=p>:</span>
+<span class=w>    </span><span class=sd>&quot;&quot;&quot;Print current version of the SpectraFit.&quot;&quot;&quot;</span>
+    <span class=k>return</span> <span class=sa>f</span><span class=s2>&quot;Currently used version is: </span><span class=si>{</span><span class=n>__version__</span><span class=si>}</span><span class=s2>&quot;</span>
+</code></pre></div></td></tr></table></div> </details> </div> </div> <div class="doc doc-object doc-function"> <h3 id=spectrafit.report.PrintingStatus.welcome class="doc doc-heading"> <code class="highlight language-python"><span class=n>welcome</span><span class=p>()</span></code> <a href=#spectrafit.report.PrintingStatus.welcome class=headerlink title="Permanent link">&para;</a></h3> <div class="doc doc-contents "> <p>Print the welcome message.</p> <details class=quote> <summary>Source code in <code>spectrafit/report.py</code></summary> <div class=highlight><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal>445</span>
+<span class=normal>446</span>
+<span class=normal>447</span></pre></div></td><td class=code><div><pre><span></span><code><span class=k>def</span> <span class=nf>welcome</span><span class=p>(</span><span class=bp>self</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=kc>None</span><span class=p>:</span>
+<span class=w>    </span><span class=sd>&quot;&quot;&quot;Print the welcome message.&quot;&quot;&quot;</span>
+    <span class=n>tprint</span><span class=p>(</span><span class=s2>&quot;SpectraFit&quot;</span><span class=p>,</span> <span class=n>font</span><span class=o>=</span><span class=s2>&quot;3-d&quot;</span><span class=p>)</span>
+</code></pre></div></td></tr></table></div> </details> </div> </div> <div class="doc doc-object doc-function"> <h3 id=spectrafit.report.PrintingStatus.yes_no class="doc doc-heading"> <code class="highlight language-python"><span class=n>yes_no</span><span class=p>()</span></code> <a href=#spectrafit.report.PrintingStatus.yes_no class=headerlink title="Permanent link">&para;</a></h3> <div class="doc doc-contents "> <p>Print the end of the fitting process.</p> <details class=quote> <summary>Source code in <code>spectrafit/report.py</code></summary> <div class=highlight><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal>465</span>
+<span class=normal>466</span>
+<span class=normal>467</span></pre></div></td><td class=code><div><pre><span></span><code><span class=k>def</span> <span class=nf>yes_no</span><span class=p>(</span><span class=bp>self</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=kc>None</span><span class=p>:</span>
+<span class=w>    </span><span class=sd>&quot;&quot;&quot;Print the end of the fitting process.&quot;&quot;&quot;</span>
+    <span class=nb>print</span><span class=p>(</span><span class=s2>&quot;</span><span class=se>\n</span><span class=s2>Do you want to continue? (y/n)&quot;</span><span class=p>)</span>
+</code></pre></div></td></tr></table></div> </details> </div> </div> </div> </div> </div> <div class="doc doc-object doc-class"> <h2 id=spectrafit.report.RegressionMetrics class="doc doc-heading"> <code>RegressionMetrics</code> <a href=#spectrafit.report.RegressionMetrics class=headerlink title="Permanent link">&para;</a></h2> <div class="doc doc-contents "> <p>Calculate the regression metrics of the Fit(s) for the post analysis.</p> <div class="admonition note"> <p class=admonition-title>Regression Metrics for post analysis of the Fit(s)</p> <p><code>SpectraFit</code> provides the following regression metrics for post analysis of the regular and global fit(s) based on the metric functions of <code>sklearn.metrics</code>:</p> <div class="language-text highlight"><pre><span></span><code>- `explained_variance_score`: Explained variance score.
+- `r2_score`: the coefficient of determination
+- `max_error`: Maximum error.
+- `mean_absolute_error`: the mean absolute error
+- `mean_squared_error`: the mean squared error
+- `mean_squared_log_error`: the mean squared log error
+- `median_absolute_error`: the median absolute error
+- `mean_absolute_percentage_error`: the mean absolute percentage error
+- `mean_poisson_deviance`: the mean Poisson deviance
+- `mean_gamma_deviance`: the mean Gamma deviance
+- `mean_tweedie_deviance`: the mean Tweedie deviance
+- `mean_pinball_loss`: the mean Pinball loss
+- `d2_tweedie_score`: the D2 Tweedie score
+- `d2_pinball_score`: the D2 Pinball score
+- `d2_absolute_error_score`: the D2 absolute error score
+</code></pre></div> <p>The regression fit metrics can be used to evaluate the quality of the fit by comparing the fit to the actual intensity.</p> </div> <div class="admonition warning"> <p class=admonition-title>D2 Tweedie and D2 Pinball scores</p> <p><code>d2_pinball_score</code> and <code>d2_absolute_error_score</code> are only available for <code>sklearn</code> versions &gt;= 1.1.2 and will be later implemented if the <strong>End of support (2023-06-27)</strong> is reached for the <code>Python3.7</code>.</p> </div> <details class=quote> <summary>Source code in <code>spectrafit/report.py</code></summary> <div class=highlight><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal> 43</span>
+<span class=normal> 44</span>
+<span class=normal> 45</span>
+<span class=normal> 46</span>
+<span class=normal> 47</span>
+<span class=normal> 48</span>
+<span class=normal> 49</span>
+<span class=normal> 50</span>
+<span class=normal> 51</span>
+<span class=normal> 52</span>
+<span class=normal> 53</span>
+<span class=normal> 54</span>
+<span class=normal> 55</span>
+<span class=normal> 56</span>
+<span class=normal> 57</span>
+<span class=normal> 58</span>
+<span class=normal> 59</span>
+<span class=normal> 60</span>
+<span class=normal> 61</span>
+<span class=normal> 62</span>
+<span class=normal> 63</span>
+<span class=normal> 64</span>
+<span class=normal> 65</span>
+<span class=normal> 66</span>
+<span class=normal> 67</span>
+<span class=normal> 68</span>
+<span class=normal> 69</span>
+<span class=normal> 70</span>
+<span class=normal> 71</span>
+<span class=normal> 72</span>
+<span class=normal> 73</span>
+<span class=normal> 74</span>
+<span class=normal> 75</span>
+<span class=normal> 76</span>
+<span class=normal> 77</span>
+<span class=normal> 78</span>
+<span class=normal> 79</span>
+<span class=normal> 80</span>
+<span class=normal> 81</span>
+<span class=normal> 82</span>
+<span class=normal> 83</span>
+<span class=normal> 84</span>
+<span class=normal> 85</span>
+<span class=normal> 86</span>
+<span class=normal> 87</span>
+<span class=normal> 88</span>
+<span class=normal> 89</span>
+<span class=normal> 90</span>
+<span class=normal> 91</span>
+<span class=normal> 92</span>
+<span class=normal> 93</span>
+<span class=normal> 94</span>
+<span class=normal> 95</span>
+<span class=normal> 96</span>
+<span class=normal> 97</span>
+<span class=normal> 98</span>
+<span class=normal> 99</span>
+<span class=normal>100</span>
+<span class=normal>101</span>
+<span class=normal>102</span>
+<span class=normal>103</span>
+<span class=normal>104</span>
+<span class=normal>105</span>
+<span class=normal>106</span>
+<span class=normal>107</span>
+<span class=normal>108</span>
+<span class=normal>109</span>
+<span class=normal>110</span>
+<span class=normal>111</span>
+<span class=normal>112</span>
+<span class=normal>113</span>
+<span class=normal>114</span>
+<span class=normal>115</span>
+<span class=normal>116</span>
+<span class=normal>117</span>
+<span class=normal>118</span>
+<span class=normal>119</span>
+<span class=normal>120</span>
+<span class=normal>121</span>
+<span class=normal>122</span>
+<span class=normal>123</span>
+<span class=normal>124</span>
+<span class=normal>125</span>
+<span class=normal>126</span>
+<span class=normal>127</span>
+<span class=normal>128</span>
+<span class=normal>129</span>
+<span class=normal>130</span>
+<span class=normal>131</span>
+<span class=normal>132</span>
+<span class=normal>133</span>
+<span class=normal>134</span>
+<span class=normal>135</span>
+<span class=normal>136</span>
+<span class=normal>137</span>
+<span class=normal>138</span>
+<span class=normal>139</span>
+<span class=normal>140</span>
+<span class=normal>141</span>
+<span class=normal>142</span>
+<span class=normal>143</span>
+<span class=normal>144</span>
+<span class=normal>145</span>
+<span class=normal>146</span>
+<span class=normal>147</span>
+<span class=normal>148</span>
+<span class=normal>149</span>
+<span class=normal>150</span>
+<span class=normal>151</span>
+<span class=normal>152</span>
+<span class=normal>153</span>
+<span class=normal>154</span>
+<span class=normal>155</span>
+<span class=normal>156</span>
+<span class=normal>157</span>
+<span class=normal>158</span>
+<span class=normal>159</span></pre></div></td><td class=code><div><pre><span></span><code><span class=k>class</span> <span class=nc>RegressionMetrics</span><span class=p>:</span>
+<span class=w>    </span><span class=sd>&quot;&quot;&quot;Calculate the regression metrics of the Fit(s) for the post analysis.</span>
+
+<span class=sd>    !!! note  &quot;Regression Metrics for post analysis of the Fit(s)&quot;</span>
+
+<span class=sd>        `SpectraFit` provides the following regression metrics for</span>
+<span class=sd>        post analysis of the regular and global fit(s) based on the</span>
+<span class=sd>        metric functions of `sklearn.metrics`:</span>
+
+<span class=sd>            - `explained_variance_score`: Explained variance score.</span>
+<span class=sd>            - `r2_score`: the coefficient of determination</span>
+<span class=sd>            - `max_error`: Maximum error.</span>
+<span class=sd>            - `mean_absolute_error`: the mean absolute error</span>
+<span class=sd>            - `mean_squared_error`: the mean squared error</span>
+<span class=sd>            - `mean_squared_log_error`: the mean squared log error</span>
+<span class=sd>            - `median_absolute_error`: the median absolute error</span>
+<span class=sd>            - `mean_absolute_percentage_error`: the mean absolute percentage error</span>
+<span class=sd>            - `mean_poisson_deviance`: the mean Poisson deviance</span>
+<span class=sd>            - `mean_gamma_deviance`: the mean Gamma deviance</span>
+<span class=sd>            - `mean_tweedie_deviance`: the mean Tweedie deviance</span>
+<span class=sd>            - `mean_pinball_loss`: the mean Pinball loss</span>
+<span class=sd>            - `d2_tweedie_score`: the D2 Tweedie score</span>
+<span class=sd>            - `d2_pinball_score`: the D2 Pinball score</span>
+<span class=sd>            - `d2_absolute_error_score`: the D2 absolute error score</span>
+
+<span class=sd>        The regression fit metrics can be used to evaluate the quality of the</span>
+<span class=sd>        fit by comparing the fit to the actual intensity.</span>
+
+<span class=sd>    !!! warning &quot;D2 Tweedie and D2 Pinball scores&quot;</span>
+
+<span class=sd>         `d2_pinball_score` and `d2_absolute_error_score` are only available for</span>
+<span class=sd>         `sklearn` versions &gt;= 1.1.2 and will be later implemented if the</span>
+<span class=sd>         __End of support (2023-06-27)__ is reached for the `Python3.7`.</span>
+<span class=sd>    &quot;&quot;&quot;</span>
+
+    <span class=k>def</span> <span class=fm>__init__</span><span class=p>(</span>
+        <span class=bp>self</span><span class=p>,</span> <span class=n>df</span><span class=p>:</span> <span class=n>pd</span><span class=o>.</span><span class=n>DataFrame</span><span class=p>,</span> <span class=n>name_true</span><span class=p>:</span> <span class=nb>str</span> <span class=o>=</span> <span class=s2>&quot;intensity&quot;</span><span class=p>,</span> <span class=n>name_pred</span><span class=p>:</span> <span class=nb>str</span> <span class=o>=</span> <span class=s2>&quot;fit&quot;</span>
+    <span class=p>)</span> <span class=o>-&gt;</span> <span class=kc>None</span><span class=p>:</span>
+<span class=w>        </span><span class=sd>&quot;&quot;&quot;Initialize the regression metrics of the Fit(s) for the post analysis.</span>
+
+<span class=sd>        Args:</span>
+<span class=sd>            df (pd.DataFrame): DataFrame containing the input data (`x` and `data`),</span>
+<span class=sd>                 as well as the best fit and the corresponding residuum. Hence, it will</span>
+<span class=sd>                 be extended by the single contribution of the model.</span>
+<span class=sd>            name_true (str, optional): Name of the data. Defaults to &quot;intensity&quot;.</span>
+<span class=sd>            name_pred (str, optional): Name of the fit data. Defaults to &quot;fit&quot;.</span>
+<span class=sd>        &quot;&quot;&quot;</span>
+        <span class=bp>self</span><span class=o>.</span><span class=n>y_true</span><span class=p>,</span> <span class=bp>self</span><span class=o>.</span><span class=n>y_pred</span> <span class=o>=</span> <span class=bp>self</span><span class=o>.</span><span class=n>initialize</span><span class=p>(</span>
+            <span class=n>df</span><span class=o>=</span><span class=n>df</span><span class=p>,</span> <span class=n>name_true</span><span class=o>=</span><span class=n>name_true</span><span class=p>,</span> <span class=n>name_pred</span><span class=o>=</span><span class=n>name_pred</span>
+        <span class=p>)</span>
+
+    <span class=k>def</span> <span class=nf>initialize</span><span class=p>(</span>
+        <span class=bp>self</span><span class=p>,</span> <span class=n>df</span><span class=p>:</span> <span class=n>pd</span><span class=o>.</span><span class=n>DataFrame</span><span class=p>,</span> <span class=n>name_true</span><span class=p>:</span> <span class=nb>str</span> <span class=o>=</span> <span class=s2>&quot;intensity&quot;</span><span class=p>,</span> <span class=n>name_pred</span><span class=p>:</span> <span class=nb>str</span> <span class=o>=</span> <span class=s2>&quot;fit&quot;</span>
+    <span class=p>)</span> <span class=o>-&gt;</span> <span class=n>Tuple</span><span class=p>[</span><span class=n>NDArray</span><span class=p>[</span><span class=n>np</span><span class=o>.</span><span class=n>float64</span><span class=p>],</span> <span class=n>NDArray</span><span class=p>[</span><span class=n>np</span><span class=o>.</span><span class=n>float64</span><span class=p>]]:</span>
+<span class=w>        </span><span class=sd>&quot;&quot;&quot;Initialize the regression metrics of the Fit(s) for the post analysis.</span>
+
+<span class=sd>        For this reason, the dataframe is split into two numpy array for true</span>
+<span class=sd>        (`intensity`) and predicted (`fit`) intensities. In terms of global fit,</span>
+<span class=sd>        the numpy array according to the order in the original dataframe.</span>
+
+<span class=sd>        Args:</span>
+<span class=sd>            df (pd.DataFrame): DataFrame containing the input data (`x` and `data`),</span>
+<span class=sd>                 as well as the best fit and the corresponding residuum. Hence, it will</span>
+<span class=sd>                 be extended by the single contribution of the model.</span>
+<span class=sd>            name_true (str, optional): Name of the data. Defaults to &quot;intensity&quot;.</span>
+<span class=sd>            name_pred (str, optional): Name of the fit data. Defaults to &quot;fit&quot;.</span>
+
+<span class=sd>        Raises:</span>
+<span class=sd>            ValueError: In terms of global fit contains an unequal number of intial data</span>
+<span class=sd>                and fit data.</span>
+
+<span class=sd>        Returns:</span>
+<span class=sd>            Tuple[NDArray[np.float64], NDArray[np.float64]]: Tuple of true and predicted</span>
+<span class=sd>                (fit) intensities.</span>
+<span class=sd>        &quot;&quot;&quot;</span>
+        <span class=n>true</span> <span class=o>=</span> <span class=n>df</span><span class=p>[</span>
+            <span class=p>[</span><span class=n>col_name</span> <span class=k>for</span> <span class=n>col_name</span> <span class=ow>in</span> <span class=n>df</span><span class=o>.</span><span class=n>columns</span> <span class=k>if</span> <span class=n>name_true</span> <span class=ow>in</span> <span class=n>col_name</span><span class=p>]</span>
+        <span class=p>]</span><span class=o>.</span><span class=n>to_numpy</span><span class=p>()</span>
+
+        <span class=n>pred</span> <span class=o>=</span> <span class=n>df</span><span class=p>[</span>
+            <span class=p>[</span><span class=n>col_name</span> <span class=k>for</span> <span class=n>col_name</span> <span class=ow>in</span> <span class=n>df</span><span class=o>.</span><span class=n>columns</span> <span class=k>if</span> <span class=n>name_pred</span> <span class=ow>in</span> <span class=n>col_name</span><span class=p>]</span>
+        <span class=p>]</span><span class=o>.</span><span class=n>to_numpy</span><span class=p>()</span>
+
+        <span class=k>if</span> <span class=n>pred</span><span class=o>.</span><span class=n>shape</span> <span class=o>!=</span> <span class=n>true</span><span class=o>.</span><span class=n>shape</span><span class=p>:</span>
+            <span class=k>raise</span> <span class=ne>ValueError</span><span class=p>(</span><span class=s2>&quot;The shape of the real and fit data-values are not equal!&quot;</span><span class=p>)</span>
+
+        <span class=k>return</span> <span class=p>(</span>
+            <span class=p>(</span><span class=n>true</span><span class=p>,</span> <span class=n>pred</span><span class=p>)</span> <span class=k>if</span> <span class=n>true</span><span class=o>.</span><span class=n>shape</span><span class=p>[</span><span class=mi>1</span><span class=p>]</span> <span class=o>&gt;</span> <span class=mi>1</span> <span class=k>else</span> <span class=p>(</span><span class=n>np</span><span class=o>.</span><span class=n>array</span><span class=p>([</span><span class=n>true</span><span class=p>]),</span> <span class=n>np</span><span class=o>.</span><span class=n>array</span><span class=p>([</span><span class=n>pred</span><span class=p>]))</span>
+        <span class=p>)</span>
+
+    <span class=k>def</span> <span class=fm>__call__</span><span class=p>(</span><span class=bp>self</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=n>Dict</span><span class=p>[</span><span class=n>Hashable</span><span class=p>,</span> <span class=n>Any</span><span class=p>]:</span>
+<span class=w>        </span><span class=sd>&quot;&quot;&quot;Calculate the regression metrics of the Fit(s) for the post analysis.</span>
+
+<span class=sd>        Returns:</span>
+<span class=sd>            Dict[Hashable, Any]: Dictionary containing the regression metrics.</span>
+<span class=sd>        &quot;&quot;&quot;</span>
+        <span class=n>metrics_fnc</span> <span class=o>=</span> <span class=p>(</span>
+            <span class=n>explained_variance_score</span><span class=p>,</span>
+            <span class=n>r2_score</span><span class=p>,</span>
+            <span class=n>max_error</span><span class=p>,</span>
+            <span class=n>mean_absolute_error</span><span class=p>,</span>
+            <span class=n>mean_squared_error</span><span class=p>,</span>
+            <span class=n>mean_squared_log_error</span><span class=p>,</span>
+            <span class=n>median_absolute_error</span><span class=p>,</span>
+            <span class=n>mean_absolute_percentage_error</span><span class=p>,</span>
+            <span class=n>mean_poisson_deviance</span><span class=p>,</span>
+        <span class=p>)</span>
+        <span class=n>metric_dict</span><span class=p>:</span> <span class=n>Dict</span><span class=p>[</span><span class=n>Hashable</span><span class=p>,</span> <span class=n>Any</span><span class=p>]</span> <span class=o>=</span> <span class=p>{}</span>
+        <span class=k>for</span> <span class=n>fnc</span> <span class=ow>in</span> <span class=n>metrics_fnc</span><span class=p>:</span>
+            <span class=n>metric_dict</span><span class=p>[</span><span class=n>fnc</span><span class=o>.</span><span class=vm>__name__</span><span class=p>]</span> <span class=o>=</span> <span class=p>[]</span>
+            <span class=k>for</span> <span class=n>y_true</span><span class=p>,</span> <span class=n>y_pred</span> <span class=ow>in</span> <span class=nb>zip</span><span class=p>(</span><span class=bp>self</span><span class=o>.</span><span class=n>y_true</span><span class=o>.</span><span class=n>T</span><span class=p>,</span> <span class=bp>self</span><span class=o>.</span><span class=n>y_pred</span><span class=o>.</span><span class=n>T</span><span class=p>):</span>
+                <span class=k>try</span><span class=p>:</span>
+                    <span class=n>metric_dict</span><span class=p>[</span><span class=n>fnc</span><span class=o>.</span><span class=vm>__name__</span><span class=p>]</span><span class=o>.</span><span class=n>append</span><span class=p>(</span><span class=n>fnc</span><span class=p>(</span><span class=n>y_true</span><span class=p>,</span> <span class=n>y_pred</span><span class=p>))</span>
+                <span class=k>except</span> <span class=ne>ValueError</span> <span class=k>as</span> <span class=n>err</span><span class=p>:</span>
+                    <span class=nb>print</span><span class=p>(</span><span class=sa>f</span><span class=s2>&quot;## Warning: </span><span class=si>{</span><span class=n>err</span><span class=si>}</span><span class=s2> for </span><span class=si>{</span><span class=n>fnc</span><span class=o>.</span><span class=vm>__name__</span><span class=si>}</span><span class=s2>!&quot;</span><span class=p>)</span>
+                    <span class=n>metric_dict</span><span class=p>[</span><span class=n>fnc</span><span class=o>.</span><span class=vm>__name__</span><span class=p>]</span><span class=o>.</span><span class=n>append</span><span class=p>(</span><span class=n>np</span><span class=o>.</span><span class=n>nan</span><span class=p>)</span>
+        <span class=k>return</span> <span class=n>pd</span><span class=o>.</span><span class=n>DataFrame</span><span class=p>(</span><span class=n>metric_dict</span><span class=p>)</span><span class=o>.</span><span class=n>T</span><span class=o>.</span><span class=n>to_dict</span><span class=p>(</span><span class=n>orient</span><span class=o>=</span><span class=s2>&quot;split&quot;</span><span class=p>)</span>
+</code></pre></div></td></tr></table></div> </details> <div class="doc doc-children"> <div class="doc doc-object doc-function"> <h3 id=spectrafit.report.RegressionMetrics.__call__ class="doc doc-heading"> <code class="highlight language-python"><span class=fm>__call__</span><span class=p>()</span></code> <a href=#spectrafit.report.RegressionMetrics.__call__ class=headerlink title="Permanent link">&para;</a></h3> <div class="doc doc-contents "> <p>Calculate the regression metrics of the Fit(s) for the post analysis.</p> <p><strong>Returns:</strong></p> <table> <thead> <tr> <th>Type</th> <th>Description</th> </tr> </thead> <tbody> <tr> <td> <code><span title=typing.Dict>Dict</span>[<span title=typing.Hashable>Hashable</span>, <span title=typing.Any>Any</span>]</code> </td> <td><p>Dict[Hashable, Any]: Dictionary containing the regression metrics.</p></td> </tr> </tbody> </table> <details class=quote> <summary>Source code in <code>spectrafit/report.py</code></summary> <div class=highlight><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal>133</span>
+<span class=normal>134</span>
+<span class=normal>135</span>
+<span class=normal>136</span>
+<span class=normal>137</span>
+<span class=normal>138</span>
+<span class=normal>139</span>
+<span class=normal>140</span>
+<span class=normal>141</span>
+<span class=normal>142</span>
+<span class=normal>143</span>
+<span class=normal>144</span>
+<span class=normal>145</span>
+<span class=normal>146</span>
+<span class=normal>147</span>
+<span class=normal>148</span>
+<span class=normal>149</span>
+<span class=normal>150</span>
+<span class=normal>151</span>
+<span class=normal>152</span>
+<span class=normal>153</span>
+<span class=normal>154</span>
+<span class=normal>155</span>
+<span class=normal>156</span>
+<span class=normal>157</span>
+<span class=normal>158</span>
+<span class=normal>159</span></pre></div></td><td class=code><div><pre><span></span><code><span class=k>def</span> <span class=fm>__call__</span><span class=p>(</span><span class=bp>self</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=n>Dict</span><span class=p>[</span><span class=n>Hashable</span><span class=p>,</span> <span class=n>Any</span><span class=p>]:</span>
+<span class=w>    </span><span class=sd>&quot;&quot;&quot;Calculate the regression metrics of the Fit(s) for the post analysis.</span>
+
+<span class=sd>    Returns:</span>
+<span class=sd>        Dict[Hashable, Any]: Dictionary containing the regression metrics.</span>
+<span class=sd>    &quot;&quot;&quot;</span>
+    <span class=n>metrics_fnc</span> <span class=o>=</span> <span class=p>(</span>
+        <span class=n>explained_variance_score</span><span class=p>,</span>
+        <span class=n>r2_score</span><span class=p>,</span>
+        <span class=n>max_error</span><span class=p>,</span>
+        <span class=n>mean_absolute_error</span><span class=p>,</span>
+        <span class=n>mean_squared_error</span><span class=p>,</span>
+        <span class=n>mean_squared_log_error</span><span class=p>,</span>
+        <span class=n>median_absolute_error</span><span class=p>,</span>
+        <span class=n>mean_absolute_percentage_error</span><span class=p>,</span>
+        <span class=n>mean_poisson_deviance</span><span class=p>,</span>
+    <span class=p>)</span>
+    <span class=n>metric_dict</span><span class=p>:</span> <span class=n>Dict</span><span class=p>[</span><span class=n>Hashable</span><span class=p>,</span> <span class=n>Any</span><span class=p>]</span> <span class=o>=</span> <span class=p>{}</span>
+    <span class=k>for</span> <span class=n>fnc</span> <span class=ow>in</span> <span class=n>metrics_fnc</span><span class=p>:</span>
+        <span class=n>metric_dict</span><span class=p>[</span><span class=n>fnc</span><span class=o>.</span><span class=vm>__name__</span><span class=p>]</span> <span class=o>=</span> <span class=p>[]</span>
+        <span class=k>for</span> <span class=n>y_true</span><span class=p>,</span> <span class=n>y_pred</span> <span class=ow>in</span> <span class=nb>zip</span><span class=p>(</span><span class=bp>self</span><span class=o>.</span><span class=n>y_true</span><span class=o>.</span><span class=n>T</span><span class=p>,</span> <span class=bp>self</span><span class=o>.</span><span class=n>y_pred</span><span class=o>.</span><span class=n>T</span><span class=p>):</span>
+            <span class=k>try</span><span class=p>:</span>
+                <span class=n>metric_dict</span><span class=p>[</span><span class=n>fnc</span><span class=o>.</span><span class=vm>__name__</span><span class=p>]</span><span class=o>.</span><span class=n>append</span><span class=p>(</span><span class=n>fnc</span><span class=p>(</span><span class=n>y_true</span><span class=p>,</span> <span class=n>y_pred</span><span class=p>))</span>
+            <span class=k>except</span> <span class=ne>ValueError</span> <span class=k>as</span> <span class=n>err</span><span class=p>:</span>
+                <span class=nb>print</span><span class=p>(</span><span class=sa>f</span><span class=s2>&quot;## Warning: </span><span class=si>{</span><span class=n>err</span><span class=si>}</span><span class=s2> for </span><span class=si>{</span><span class=n>fnc</span><span class=o>.</span><span class=vm>__name__</span><span class=si>}</span><span class=s2>!&quot;</span><span class=p>)</span>
+                <span class=n>metric_dict</span><span class=p>[</span><span class=n>fnc</span><span class=o>.</span><span class=vm>__name__</span><span class=p>]</span><span class=o>.</span><span class=n>append</span><span class=p>(</span><span class=n>np</span><span class=o>.</span><span class=n>nan</span><span class=p>)</span>
+    <span class=k>return</span> <span class=n>pd</span><span class=o>.</span><span class=n>DataFrame</span><span class=p>(</span><span class=n>metric_dict</span><span class=p>)</span><span class=o>.</span><span class=n>T</span><span class=o>.</span><span class=n>to_dict</span><span class=p>(</span><span class=n>orient</span><span class=o>=</span><span class=s2>&quot;split&quot;</span><span class=p>)</span>
+</code></pre></div></td></tr></table></div> </details> </div> </div> <div class="doc doc-object doc-function"> <h3 id=spectrafit.report.RegressionMetrics.__init__ class="doc doc-heading"> <code class="highlight language-python"><span class=fm>__init__</span><span class=p>(</span><span class=n>df</span><span class=p>,</span> <span class=n>name_true</span><span class=o>=</span><span class=s1>&#39;intensity&#39;</span><span class=p>,</span> <span class=n>name_pred</span><span class=o>=</span><span class=s1>&#39;fit&#39;</span><span class=p>)</span></code> <a href=#spectrafit.report.RegressionMetrics.__init__ class=headerlink title="Permanent link">&para;</a></h3> <div class="doc doc-contents "> <p>Initialize the regression metrics of the Fit(s) for the post analysis.</p> <p><strong>Parameters:</strong></p> <table> <thead> <tr> <th>Name</th> <th>Type</th> <th>Description</th> <th>Default</th> </tr> </thead> <tbody> <tr> <td><code>df</code></td> <td> <code><span title=pandas>pd</span>.<span title=pandas.DataFrame>DataFrame</span></code> </td> <td><p>DataFrame containing the input data (<code>x</code> and <code>data</code>), as well as the best fit and the corresponding residuum. Hence, it will be extended by the single contribution of the model.</p></td> <td> <em>required</em> </td> </tr> <tr> <td><code>name_true</code></td> <td> <code>str</code> </td> <td><p>Name of the data. Defaults to "intensity".</p></td> <td> <code>&#39;intensity&#39;</code> </td> </tr> <tr> <td><code>name_pred</code></td> <td> <code>str</code> </td> <td><p>Name of the fit data. Defaults to "fit".</p></td> <td> <code>&#39;fit&#39;</code> </td> </tr> </tbody> </table> <details class=quote> <summary>Source code in <code>spectrafit/report.py</code></summary> <div class=highlight><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal>78</span>
+<span class=normal>79</span>
+<span class=normal>80</span>
+<span class=normal>81</span>
+<span class=normal>82</span>
+<span class=normal>83</span>
+<span class=normal>84</span>
+<span class=normal>85</span>
+<span class=normal>86</span>
+<span class=normal>87</span>
+<span class=normal>88</span>
+<span class=normal>89</span>
+<span class=normal>90</span>
+<span class=normal>91</span>
+<span class=normal>92</span></pre></div></td><td class=code><div><pre><span></span><code><span class=k>def</span> <span class=fm>__init__</span><span class=p>(</span>
+    <span class=bp>self</span><span class=p>,</span> <span class=n>df</span><span class=p>:</span> <span class=n>pd</span><span class=o>.</span><span class=n>DataFrame</span><span class=p>,</span> <span class=n>name_true</span><span class=p>:</span> <span class=nb>str</span> <span class=o>=</span> <span class=s2>&quot;intensity&quot;</span><span class=p>,</span> <span class=n>name_pred</span><span class=p>:</span> <span class=nb>str</span> <span class=o>=</span> <span class=s2>&quot;fit&quot;</span>
+<span class=p>)</span> <span class=o>-&gt;</span> <span class=kc>None</span><span class=p>:</span>
+<span class=w>    </span><span class=sd>&quot;&quot;&quot;Initialize the regression metrics of the Fit(s) for the post analysis.</span>
+
+<span class=sd>    Args:</span>
+<span class=sd>        df (pd.DataFrame): DataFrame containing the input data (`x` and `data`),</span>
+<span class=sd>             as well as the best fit and the corresponding residuum. Hence, it will</span>
+<span class=sd>             be extended by the single contribution of the model.</span>
+<span class=sd>        name_true (str, optional): Name of the data. Defaults to &quot;intensity&quot;.</span>
+<span class=sd>        name_pred (str, optional): Name of the fit data. Defaults to &quot;fit&quot;.</span>
+<span class=sd>    &quot;&quot;&quot;</span>
+    <span class=bp>self</span><span class=o>.</span><span class=n>y_true</span><span class=p>,</span> <span class=bp>self</span><span class=o>.</span><span class=n>y_pred</span> <span class=o>=</span> <span class=bp>self</span><span class=o>.</span><span class=n>initialize</span><span class=p>(</span>
+        <span class=n>df</span><span class=o>=</span><span class=n>df</span><span class=p>,</span> <span class=n>name_true</span><span class=o>=</span><span class=n>name_true</span><span class=p>,</span> <span class=n>name_pred</span><span class=o>=</span><span class=n>name_pred</span>
+    <span class=p>)</span>
+</code></pre></div></td></tr></table></div> </details> </div> </div> <div class="doc doc-object doc-function"> <h3 id=spectrafit.report.RegressionMetrics.initialize class="doc doc-heading"> <code class="highlight language-python"><span class=n>initialize</span><span class=p>(</span><span class=n>df</span><span class=p>,</span> <span class=n>name_true</span><span class=o>=</span><span class=s1>&#39;intensity&#39;</span><span class=p>,</span> <span class=n>name_pred</span><span class=o>=</span><span class=s1>&#39;fit&#39;</span><span class=p>)</span></code> <a href=#spectrafit.report.RegressionMetrics.initialize class=headerlink title="Permanent link">&para;</a></h3> <div class="doc doc-contents "> <p>Initialize the regression metrics of the Fit(s) for the post analysis.</p> <p>For this reason, the dataframe is split into two numpy array for true (<code>intensity</code>) and predicted (<code>fit</code>) intensities. In terms of global fit, the numpy array according to the order in the original dataframe.</p> <p><strong>Parameters:</strong></p> <table> <thead> <tr> <th>Name</th> <th>Type</th> <th>Description</th> <th>Default</th> </tr> </thead> <tbody> <tr> <td><code>df</code></td> <td> <code><span title=pandas>pd</span>.<span title=pandas.DataFrame>DataFrame</span></code> </td> <td><p>DataFrame containing the input data (<code>x</code> and <code>data</code>), as well as the best fit and the corresponding residuum. Hence, it will be extended by the single contribution of the model.</p></td> <td> <em>required</em> </td> </tr> <tr> <td><code>name_true</code></td> <td> <code>str</code> </td> <td><p>Name of the data. Defaults to "intensity".</p></td> <td> <code>&#39;intensity&#39;</code> </td> </tr> <tr> <td><code>name_pred</code></td> <td> <code>str</code> </td> <td><p>Name of the fit data. Defaults to "fit".</p></td> <td> <code>&#39;fit&#39;</code> </td> </tr> </tbody> </table> <p><strong>Raises:</strong></p> <table> <thead> <tr> <th>Type</th> <th>Description</th> </tr> </thead> <tbody> <tr> <td> <code>ValueError</code> </td> <td><p>In terms of global fit contains an unequal number of intial data and fit data.</p></td> </tr> </tbody> </table> <p><strong>Returns:</strong></p> <table> <thead> <tr> <th>Type</th> <th>Description</th> </tr> </thead> <tbody> <tr> <td> <code><span title=typing.Tuple>Tuple</span>[<span title=numpy.typing.NDArray>NDArray</span>[<span title=numpy>np</span>.<span title=numpy.float64>float64</span>], <span title=numpy.typing.NDArray>NDArray</span>[<span title=numpy>np</span>.<span title=numpy.float64>float64</span>]]</code> </td> <td><p>Tuple[NDArray[np.float64], NDArray[np.float64]]: Tuple of true and predicted (fit) intensities.</p></td> </tr> </tbody> </table> <details class=quote> <summary>Source code in <code>spectrafit/report.py</code></summary> <div class=highlight><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal> 94</span>
+<span class=normal> 95</span>
+<span class=normal> 96</span>
+<span class=normal> 97</span>
+<span class=normal> 98</span>
+<span class=normal> 99</span>
+<span class=normal>100</span>
+<span class=normal>101</span>
+<span class=normal>102</span>
+<span class=normal>103</span>
+<span class=normal>104</span>
+<span class=normal>105</span>
+<span class=normal>106</span>
+<span class=normal>107</span>
+<span class=normal>108</span>
+<span class=normal>109</span>
+<span class=normal>110</span>
+<span class=normal>111</span>
+<span class=normal>112</span>
+<span class=normal>113</span>
+<span class=normal>114</span>
+<span class=normal>115</span>
+<span class=normal>116</span>
+<span class=normal>117</span>
+<span class=normal>118</span>
+<span class=normal>119</span>
+<span class=normal>120</span>
+<span class=normal>121</span>
+<span class=normal>122</span>
+<span class=normal>123</span>
+<span class=normal>124</span>
+<span class=normal>125</span>
+<span class=normal>126</span>
+<span class=normal>127</span>
+<span class=normal>128</span>
+<span class=normal>129</span>
+<span class=normal>130</span>
+<span class=normal>131</span></pre></div></td><td class=code><div><pre><span></span><code><span class=k>def</span> <span class=nf>initialize</span><span class=p>(</span>
+    <span class=bp>self</span><span class=p>,</span> <span class=n>df</span><span class=p>:</span> <span class=n>pd</span><span class=o>.</span><span class=n>DataFrame</span><span class=p>,</span> <span class=n>name_true</span><span class=p>:</span> <span class=nb>str</span> <span class=o>=</span> <span class=s2>&quot;intensity&quot;</span><span class=p>,</span> <span class=n>name_pred</span><span class=p>:</span> <span class=nb>str</span> <span class=o>=</span> <span class=s2>&quot;fit&quot;</span>
+<span class=p>)</span> <span class=o>-&gt;</span> <span class=n>Tuple</span><span class=p>[</span><span class=n>NDArray</span><span class=p>[</span><span class=n>np</span><span class=o>.</span><span class=n>float64</span><span class=p>],</span> <span class=n>NDArray</span><span class=p>[</span><span class=n>np</span><span class=o>.</span><span class=n>float64</span><span class=p>]]:</span>
+<span class=w>    </span><span class=sd>&quot;&quot;&quot;Initialize the regression metrics of the Fit(s) for the post analysis.</span>
+
+<span class=sd>    For this reason, the dataframe is split into two numpy array for true</span>
+<span class=sd>    (`intensity`) and predicted (`fit`) intensities. In terms of global fit,</span>
+<span class=sd>    the numpy array according to the order in the original dataframe.</span>
+
+<span class=sd>    Args:</span>
+<span class=sd>        df (pd.DataFrame): DataFrame containing the input data (`x` and `data`),</span>
+<span class=sd>             as well as the best fit and the corresponding residuum. Hence, it will</span>
+<span class=sd>             be extended by the single contribution of the model.</span>
+<span class=sd>        name_true (str, optional): Name of the data. Defaults to &quot;intensity&quot;.</span>
+<span class=sd>        name_pred (str, optional): Name of the fit data. Defaults to &quot;fit&quot;.</span>
+
+<span class=sd>    Raises:</span>
+<span class=sd>        ValueError: In terms of global fit contains an unequal number of intial data</span>
+<span class=sd>            and fit data.</span>
+
+<span class=sd>    Returns:</span>
+<span class=sd>        Tuple[NDArray[np.float64], NDArray[np.float64]]: Tuple of true and predicted</span>
+<span class=sd>            (fit) intensities.</span>
+<span class=sd>    &quot;&quot;&quot;</span>
+    <span class=n>true</span> <span class=o>=</span> <span class=n>df</span><span class=p>[</span>
+        <span class=p>[</span><span class=n>col_name</span> <span class=k>for</span> <span class=n>col_name</span> <span class=ow>in</span> <span class=n>df</span><span class=o>.</span><span class=n>columns</span> <span class=k>if</span> <span class=n>name_true</span> <span class=ow>in</span> <span class=n>col_name</span><span class=p>]</span>
+    <span class=p>]</span><span class=o>.</span><span class=n>to_numpy</span><span class=p>()</span>
+
+    <span class=n>pred</span> <span class=o>=</span> <span class=n>df</span><span class=p>[</span>
+        <span class=p>[</span><span class=n>col_name</span> <span class=k>for</span> <span class=n>col_name</span> <span class=ow>in</span> <span class=n>df</span><span class=o>.</span><span class=n>columns</span> <span class=k>if</span> <span class=n>name_pred</span> <span class=ow>in</span> <span class=n>col_name</span><span class=p>]</span>
+    <span class=p>]</span><span class=o>.</span><span class=n>to_numpy</span><span class=p>()</span>
+
+    <span class=k>if</span> <span class=n>pred</span><span class=o>.</span><span class=n>shape</span> <span class=o>!=</span> <span class=n>true</span><span class=o>.</span><span class=n>shape</span><span class=p>:</span>
+        <span class=k>raise</span> <span class=ne>ValueError</span><span class=p>(</span><span class=s2>&quot;The shape of the real and fit data-values are not equal!&quot;</span><span class=p>)</span>
+
+    <span class=k>return</span> <span class=p>(</span>
+        <span class=p>(</span><span class=n>true</span><span class=p>,</span> <span class=n>pred</span><span class=p>)</span> <span class=k>if</span> <span class=n>true</span><span class=o>.</span><span class=n>shape</span><span class=p>[</span><span class=mi>1</span><span class=p>]</span> <span class=o>&gt;</span> <span class=mi>1</span> <span class=k>else</span> <span class=p>(</span><span class=n>np</span><span class=o>.</span><span class=n>array</span><span class=p>([</span><span class=n>true</span><span class=p>]),</span> <span class=n>np</span><span class=o>.</span><span class=n>array</span><span class=p>([</span><span class=n>pred</span><span class=p>]))</span>
+    <span class=p>)</span>
+</code></pre></div></td></tr></table></div> </details> </div> </div> </div> </div> </div> <div class="doc doc-object doc-function"> <h2 id=spectrafit.report.fit_report_as_dict class="doc doc-heading"> <code class="highlight language-python"><span class=n>fit_report_as_dict</span><span class=p>(</span><span class=n>inpars</span><span class=p>,</span> <span class=n>modelpars</span><span class=o>=</span><span class=kc>None</span><span class=p>)</span></code> <a href=#spectrafit.report.fit_report_as_dict class=headerlink title="Permanent link">&para;</a></h2> <div class="doc doc-contents "> <p>Generate the best fit report as dictionary.</p> <div class="admonition info"> <p class=admonition-title>About <code>fit_report_as_dict</code></p> <p>The report contains the best-fit values for the parameters and their uncertainties and correlations. The report is generated as dictionary and consits of the following three main criteria:</p> <div class="language-text highlight"><pre><span></span><code>1. Fit Statistics
+2. Fit variables
+3. Fit correlations
+</code></pre></div> </div> <p><strong>Parameters:</strong></p> <table> <thead> <tr> <th>Name</th> <th>Type</th> <th>Description</th> <th>Default</th> </tr> </thead> <tbody> <tr> <td><code>inpars</code></td> <td> <code><span title=lmfit.minimizer.minimize>minimize</span></code> </td> <td><p>Input Parameters from a fit or the Minimizer results returned from a fit.</p></td> <td> <em>required</em> </td> </tr> <tr> <td><code>modelpars</code></td> <td> <code><span title=typing.Dict>Dict</span>[str, <span title=typing.Any>Any</span>]</code> </td> <td><p>Known Model Parameters. Defaults to None.</p></td> <td> <code>None</code> </td> </tr> </tbody> </table> <p><strong>Returns:</strong></p> <table> <thead> <tr> <th>Type</th> <th>Description</th> </tr> </thead> <tbody> <tr> <td> <code><span title=typing.Dict>Dict</span>[str, <span title=typing.Dict>Dict</span>[<span title=typing.Any>Any</span>, <span title=typing.Any>Any</span>]]</code> </td> <td><p>Dict[str, Dict[Any, Any]]: The report as a dictionary.</p></td> </tr> </tbody> </table> <details class=quote> <summary>Source code in <code>spectrafit/report.py</code></summary> <div class=highlight><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal>162</span>
+<span class=normal>163</span>
+<span class=normal>164</span>
+<span class=normal>165</span>
+<span class=normal>166</span>
+<span class=normal>167</span>
+<span class=normal>168</span>
+<span class=normal>169</span>
+<span class=normal>170</span>
+<span class=normal>171</span>
+<span class=normal>172</span>
+<span class=normal>173</span>
+<span class=normal>174</span>
+<span class=normal>175</span>
+<span class=normal>176</span>
+<span class=normal>177</span>
+<span class=normal>178</span>
+<span class=normal>179</span>
+<span class=normal>180</span>
+<span class=normal>181</span>
+<span class=normal>182</span>
+<span class=normal>183</span>
+<span class=normal>184</span>
+<span class=normal>185</span>
+<span class=normal>186</span>
+<span class=normal>187</span>
+<span class=normal>188</span>
+<span class=normal>189</span>
+<span class=normal>190</span>
+<span class=normal>191</span>
+<span class=normal>192</span>
+<span class=normal>193</span>
+<span class=normal>194</span>
+<span class=normal>195</span>
+<span class=normal>196</span>
+<span class=normal>197</span>
+<span class=normal>198</span>
+<span class=normal>199</span>
+<span class=normal>200</span>
+<span class=normal>201</span>
+<span class=normal>202</span>
+<span class=normal>203</span>
+<span class=normal>204</span>
+<span class=normal>205</span>
+<span class=normal>206</span>
+<span class=normal>207</span>
+<span class=normal>208</span>
+<span class=normal>209</span>
+<span class=normal>210</span>
+<span class=normal>211</span>
+<span class=normal>212</span>
+<span class=normal>213</span>
+<span class=normal>214</span>
+<span class=normal>215</span>
+<span class=normal>216</span>
+<span class=normal>217</span>
+<span class=normal>218</span>
+<span class=normal>219</span>
+<span class=normal>220</span>
+<span class=normal>221</span>
+<span class=normal>222</span>
+<span class=normal>223</span>
+<span class=normal>224</span>
+<span class=normal>225</span>
+<span class=normal>226</span>
+<span class=normal>227</span>
+<span class=normal>228</span>
+<span class=normal>229</span>
+<span class=normal>230</span>
+<span class=normal>231</span>
+<span class=normal>232</span>
+<span class=normal>233</span>
+<span class=normal>234</span>
+<span class=normal>235</span>
+<span class=normal>236</span>
+<span class=normal>237</span>
+<span class=normal>238</span>
+<span class=normal>239</span>
+<span class=normal>240</span>
+<span class=normal>241</span></pre></div></td><td class=code><div><pre><span></span><code><span class=k>def</span> <span class=nf>fit_report_as_dict</span><span class=p>(</span>
+    <span class=n>inpars</span><span class=p>:</span> <span class=n>minimize</span><span class=p>,</span> <span class=n>modelpars</span><span class=p>:</span> <span class=n>Optional</span><span class=p>[</span><span class=n>Dict</span><span class=p>[</span><span class=nb>str</span><span class=p>,</span> <span class=n>Any</span><span class=p>]]</span> <span class=o>=</span> <span class=kc>None</span>
+<span class=p>)</span> <span class=o>-&gt;</span> <span class=n>Dict</span><span class=p>[</span><span class=nb>str</span><span class=p>,</span> <span class=n>Dict</span><span class=p>[</span><span class=n>Any</span><span class=p>,</span> <span class=n>Any</span><span class=p>]]:</span>
+<span class=w>    </span><span class=sd>&quot;&quot;&quot;Generate the best fit report as dictionary.</span>
+
+<span class=sd>    !!! info &quot;About `fit_report_as_dict`&quot;</span>
+
+<span class=sd>        The report contains the best-fit values for the parameters and their</span>
+<span class=sd>        uncertainties and correlations. The report is generated as dictionary and</span>
+<span class=sd>        consits of the following three main criteria:</span>
+
+<span class=sd>            1. Fit Statistics</span>
+<span class=sd>            2. Fit variables</span>
+<span class=sd>            3. Fit correlations</span>
+
+<span class=sd>    Args:</span>
+<span class=sd>        inpars (minimize): Input Parameters from a fit or the  Minimizer results</span>
+<span class=sd>             returned from a fit.</span>
+<span class=sd>        modelpars (Dict[str,  Any], optional): Known Model Parameters.</span>
+<span class=sd>            Defaults to None.</span>
+
+<span class=sd>    Returns:</span>
+<span class=sd>         Dict[str, Dict[Any, Any]]: The report as a dictionary.</span>
+<span class=sd>    &quot;&quot;&quot;</span>
+    <span class=n>result</span> <span class=o>=</span> <span class=n>inpars</span>
+    <span class=n>params</span> <span class=o>=</span> <span class=n>inpars</span><span class=o>.</span><span class=n>params</span>
+
+    <span class=n>parnames</span><span class=p>:</span> <span class=n>List</span><span class=p>[</span><span class=nb>str</span><span class=p>]</span> <span class=o>=</span> <span class=nb>list</span><span class=p>(</span><span class=n>params</span><span class=o>.</span><span class=n>keys</span><span class=p>())</span>
+
+    <span class=n>buffer</span><span class=p>:</span> <span class=n>Dict</span><span class=p>[</span><span class=nb>str</span><span class=p>,</span> <span class=n>Dict</span><span class=p>[</span><span class=n>Any</span><span class=p>,</span> <span class=n>Any</span><span class=p>]]</span> <span class=o>=</span> <span class=p>{</span>
+        <span class=s2>&quot;configurations&quot;</span><span class=p>:</span> <span class=p>{},</span>
+        <span class=s2>&quot;statistics&quot;</span><span class=p>:</span> <span class=p>{},</span>
+        <span class=s2>&quot;variables&quot;</span><span class=p>:</span> <span class=p>{},</span>
+        <span class=s2>&quot;errorbars&quot;</span><span class=p>:</span> <span class=p>{},</span>
+        <span class=s2>&quot;correlations&quot;</span><span class=p>:</span> <span class=p>{},</span>
+        <span class=s2>&quot;covariance_matrix&quot;</span><span class=p>:</span> <span class=p>{},</span>
+    <span class=p>}</span>
+
+    <span class=n>result</span><span class=p>,</span> <span class=n>buffer</span><span class=p>,</span> <span class=n>params</span> <span class=o>=</span> <span class=n>_extracted_gof_from_results</span><span class=p>(</span>
+        <span class=n>result</span><span class=o>=</span><span class=n>result</span><span class=p>,</span> <span class=n>buffer</span><span class=o>=</span><span class=n>buffer</span><span class=p>,</span> <span class=n>params</span><span class=o>=</span><span class=n>params</span>
+    <span class=p>)</span>
+    <span class=k>for</span> <span class=n>name</span> <span class=ow>in</span> <span class=n>parnames</span><span class=p>:</span>
+        <span class=n>par</span> <span class=o>=</span> <span class=n>params</span><span class=p>[</span><span class=n>name</span><span class=p>]</span>
+        <span class=n>buffer</span><span class=p>[</span><span class=s2>&quot;variables&quot;</span><span class=p>][</span><span class=n>name</span><span class=p>]</span> <span class=o>=</span> <span class=p>{</span><span class=s2>&quot;init_value&quot;</span><span class=p>:</span> <span class=n>get_init_value</span><span class=p>(</span><span class=n>param</span><span class=o>=</span><span class=n>par</span><span class=p>)}</span>
+
+        <span class=k>if</span> <span class=n>modelpars</span> <span class=ow>is</span> <span class=ow>not</span> <span class=kc>None</span> <span class=ow>and</span> <span class=n>name</span> <span class=ow>in</span> <span class=n>modelpars</span><span class=p>:</span>
+            <span class=n>buffer</span><span class=p>[</span><span class=s2>&quot;variables&quot;</span><span class=p>][</span><span class=n>name</span><span class=p>][</span><span class=s2>&quot;model_value&quot;</span><span class=p>]</span> <span class=o>=</span> <span class=n>modelpars</span><span class=p>[</span><span class=n>name</span><span class=p>]</span><span class=o>.</span><span class=n>value</span>
+        <span class=k>try</span><span class=p>:</span>
+            <span class=n>buffer</span><span class=p>[</span><span class=s2>&quot;variables&quot;</span><span class=p>][</span><span class=n>name</span><span class=p>][</span><span class=s2>&quot;best_value&quot;</span><span class=p>]</span> <span class=o>=</span> <span class=n>par</span><span class=o>.</span><span class=n>value</span>
+        <span class=k>except</span> <span class=p>(</span><span class=ne>TypeError</span><span class=p>,</span> <span class=ne>ValueError</span><span class=p>):</span>  <span class=c1># pragma: no cover</span>
+            <span class=n>buffer</span><span class=p>[</span><span class=s2>&quot;variables&quot;</span><span class=p>][</span><span class=n>name</span><span class=p>][</span><span class=s2>&quot;init_value&quot;</span><span class=p>]</span> <span class=o>=</span> <span class=s2>&quot;NonNumericValue&quot;</span>
+        <span class=k>if</span> <span class=n>par</span><span class=o>.</span><span class=n>stderr</span> <span class=ow>is</span> <span class=ow>not</span> <span class=kc>None</span><span class=p>:</span>
+            <span class=n>buffer</span><span class=p>[</span><span class=s2>&quot;variables&quot;</span><span class=p>][</span><span class=n>name</span><span class=p>][</span><span class=s2>&quot;error_relative&quot;</span><span class=p>]</span> <span class=o>=</span> <span class=n>par</span><span class=o>.</span><span class=n>stderr</span>
+            <span class=k>try</span><span class=p>:</span>
+                <span class=n>buffer</span><span class=p>[</span><span class=s2>&quot;variables&quot;</span><span class=p>][</span><span class=n>name</span><span class=p>][</span><span class=s2>&quot;error_absolute&quot;</span><span class=p>]</span> <span class=o>=</span> <span class=p>(</span>
+                    <span class=nb>abs</span><span class=p>(</span><span class=n>par</span><span class=o>.</span><span class=n>stderr</span> <span class=o>/</span> <span class=n>par</span><span class=o>.</span><span class=n>value</span><span class=p>)</span> <span class=o>*</span> <span class=mi>100</span>
+                <span class=p>)</span>
+            <span class=k>except</span> <span class=ne>ZeroDivisionError</span><span class=p>:</span>  <span class=c1># pragma: no cover</span>
+                <span class=n>buffer</span><span class=p>[</span><span class=s2>&quot;variables&quot;</span><span class=p>][</span><span class=n>name</span><span class=p>][</span><span class=s2>&quot;error_absolute&quot;</span><span class=p>]</span> <span class=o>=</span> <span class=n>np</span><span class=o>.</span><span class=n>inf</span>
+
+    <span class=k>for</span> <span class=n>i</span><span class=p>,</span> <span class=n>name_1</span> <span class=ow>in</span> <span class=nb>enumerate</span><span class=p>(</span><span class=n>parnames</span><span class=p>):</span>
+        <span class=n>par</span> <span class=o>=</span> <span class=n>params</span><span class=p>[</span><span class=n>name_1</span><span class=p>]</span>
+        <span class=n>buffer</span><span class=p>[</span><span class=s2>&quot;correlations&quot;</span><span class=p>][</span><span class=n>name_1</span><span class=p>]</span> <span class=o>=</span> <span class=p>{}</span>
+        <span class=k>if</span> <span class=ow>not</span> <span class=n>par</span><span class=o>.</span><span class=n>vary</span><span class=p>:</span>
+            <span class=k>continue</span>
+        <span class=k>if</span> <span class=nb>hasattr</span><span class=p>(</span><span class=n>par</span><span class=p>,</span> <span class=s2>&quot;correl&quot;</span><span class=p>)</span> <span class=ow>and</span> <span class=n>par</span><span class=o>.</span><span class=n>correl</span> <span class=ow>is</span> <span class=ow>not</span> <span class=kc>None</span><span class=p>:</span>
+            <span class=k>for</span> <span class=n>name_2</span> <span class=ow>in</span> <span class=n>parnames</span><span class=p>[</span><span class=n>i</span> <span class=o>+</span> <span class=mi>1</span> <span class=p>:]:</span>
+                <span class=k>if</span> <span class=p>(</span>
+                    <span class=n>name_1</span> <span class=o>!=</span> <span class=n>name_2</span>
+                    <span class=ow>and</span> <span class=n>name_2</span> <span class=ow>in</span> <span class=n>par</span><span class=o>.</span><span class=n>correl</span>
+                    <span class=ow>and</span> <span class=nb>abs</span><span class=p>(</span><span class=n>par</span><span class=o>.</span><span class=n>correl</span><span class=p>[</span><span class=n>name_2</span><span class=p>])</span> <span class=o>&lt;=</span> <span class=mf>1.0</span>
+                <span class=p>):</span>
+                    <span class=n>buffer</span><span class=p>[</span><span class=s2>&quot;correlations&quot;</span><span class=p>][</span><span class=n>name_1</span><span class=p>][</span><span class=n>name_2</span><span class=p>]</span> <span class=o>=</span> <span class=n>par</span><span class=o>.</span><span class=n>correl</span><span class=p>[</span><span class=n>name_2</span><span class=p>]</span>
+
+    <span class=k>if</span> <span class=n>result</span><span class=o>.</span><span class=n>covar</span> <span class=ow>is</span> <span class=ow>not</span> <span class=kc>None</span> <span class=ow>and</span> <span class=n>result</span><span class=o>.</span><span class=n>covar</span><span class=o>.</span><span class=n>shape</span><span class=p>[</span><span class=mi>0</span><span class=p>]</span> <span class=o>==</span> <span class=nb>len</span><span class=p>(</span><span class=n>parnames</span><span class=p>):</span>
+        <span class=k>for</span> <span class=n>i</span><span class=p>,</span> <span class=n>name_1</span> <span class=ow>in</span> <span class=nb>enumerate</span><span class=p>(</span><span class=n>parnames</span><span class=p>):</span>
+            <span class=n>buffer</span><span class=p>[</span><span class=s2>&quot;covariance_matrix&quot;</span><span class=p>][</span><span class=n>name_1</span><span class=p>]</span> <span class=o>=</span> <span class=p>{</span>
+                <span class=n>name_2</span><span class=p>:</span> <span class=n>result</span><span class=o>.</span><span class=n>covar</span><span class=p>[</span><span class=n>i</span><span class=p>,</span> <span class=n>j</span><span class=p>]</span> <span class=k>for</span> <span class=n>j</span><span class=p>,</span> <span class=n>name_2</span> <span class=ow>in</span> <span class=nb>enumerate</span><span class=p>(</span><span class=n>parnames</span><span class=p>)</span>
+            <span class=p>}</span>
+    <span class=k>return</span> <span class=n>buffer</span>
+</code></pre></div></td></tr></table></div> </details> </div> </div> <div class="doc doc-object doc-function"> <h2 id=spectrafit.report.get_init_value class="doc doc-heading"> <code class="highlight language-python"><span class=n>get_init_value</span><span class=p>(</span><span class=n>param</span><span class=p>,</span> <span class=n>modelpars</span><span class=o>=</span><span class=kc>None</span><span class=p>)</span></code> <a href=#spectrafit.report.get_init_value class=headerlink title="Permanent link">&para;</a></h2> <div class="doc doc-contents "> <p>Get the initial value of a parameter.</p> <p><strong>Parameters:</strong></p> <table> <thead> <tr> <th>Name</th> <th>Type</th> <th>Description</th> <th>Default</th> </tr> </thead> <tbody> <tr> <td><code>param</code></td> <td> <code><span title=lmfit.Parameter>Parameter</span></code> </td> <td><p>The Parameter to extract the initial value from.</p></td> <td> <em>required</em> </td> </tr> <tr> <td><code>modelpars</code></td> <td> <code><span title=lmfit.Parameter>Parameter</span></code> </td> <td><p>Known Model Parameters. Defaults to None.</p></td> <td> <code>None</code> </td> </tr> </tbody> </table> <p><strong>Returns:</strong></p> <table> <thead> <tr> <th>Type</th> <th>Description</th> </tr> </thead> <tbody> <tr> <td> <code><span title=typing.Union>Union</span>[float, str]</code> </td> <td><p>Union[float, str]: The initial value.</p></td> </tr> </tbody> </table> <details class=quote> <summary>Source code in <code>spectrafit/report.py</code></summary> <div class=highlight><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal>244</span>
+<span class=normal>245</span>
+<span class=normal>246</span>
+<span class=normal>247</span>
+<span class=normal>248</span>
+<span class=normal>249</span>
+<span class=normal>250</span>
+<span class=normal>251</span>
+<span class=normal>252</span>
+<span class=normal>253</span>
+<span class=normal>254</span>
+<span class=normal>255</span>
+<span class=normal>256</span>
+<span class=normal>257</span>
+<span class=normal>258</span>
+<span class=normal>259</span>
+<span class=normal>260</span>
+<span class=normal>261</span>
+<span class=normal>262</span></pre></div></td><td class=code><div><pre><span></span><code><span class=k>def</span> <span class=nf>get_init_value</span><span class=p>(</span>
+    <span class=n>param</span><span class=p>:</span> <span class=n>Parameter</span><span class=p>,</span> <span class=n>modelpars</span><span class=p>:</span> <span class=n>Optional</span><span class=p>[</span><span class=n>Parameter</span><span class=p>]</span> <span class=o>=</span> <span class=kc>None</span>
+<span class=p>)</span> <span class=o>-&gt;</span> <span class=n>Union</span><span class=p>[</span><span class=nb>float</span><span class=p>,</span> <span class=nb>str</span><span class=p>]:</span>
+<span class=w>    </span><span class=sd>&quot;&quot;&quot;Get the initial value of a parameter.</span>
+
+<span class=sd>    Args:</span>
+<span class=sd>        param (Parameter): The Parameter to extract the initial value from.</span>
+<span class=sd>        modelpars (Parameter, optional): Known Model Parameters. Defaults to None.</span>
+
+<span class=sd>    Returns:</span>
+<span class=sd>        Union[float, str]: The initial value.</span>
+<span class=sd>    &quot;&quot;&quot;</span>
+    <span class=k>if</span> <span class=n>param</span><span class=o>.</span><span class=n>init_value</span> <span class=ow>is</span> <span class=ow>not</span> <span class=kc>None</span><span class=p>:</span>
+        <span class=k>return</span> <span class=n>param</span><span class=o>.</span><span class=n>init_value</span>
+    <span class=k>if</span> <span class=n>param</span><span class=o>.</span><span class=n>expr</span> <span class=ow>is</span> <span class=ow>not</span> <span class=kc>None</span><span class=p>:</span>
+        <span class=k>return</span> <span class=sa>f</span><span class=s2>&quot;As expressed value: </span><span class=si>{</span><span class=n>param</span><span class=o>.</span><span class=n>expr</span><span class=si>}</span><span class=s2>&quot;</span>
+    <span class=k>if</span> <span class=n>modelpars</span> <span class=ow>is</span> <span class=ow>not</span> <span class=kc>None</span> <span class=ow>and</span> <span class=n>param</span><span class=o>.</span><span class=n>name</span> <span class=ow>in</span> <span class=n>modelpars</span><span class=p>:</span>
+        <span class=k>return</span> <span class=n>modelpars</span><span class=p>[</span><span class=n>param</span><span class=o>.</span><span class=n>name</span><span class=p>]</span><span class=o>.</span><span class=n>value</span>
+    <span class=k>return</span> <span class=sa>f</span><span class=s2>&quot;As fixed value: </span><span class=si>{</span><span class=n>param</span><span class=o>.</span><span class=n>value</span><span class=si>}</span><span class=s2>&quot;</span>
+</code></pre></div></td></tr></table></div> </details> </div> </div> </div> </div> </div> </article> </div> <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var tab,labels=set.querySelector(".tabbed-labels");for(tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script> </div> <button type=button class="md-top md-icon" data-md-component=top hidden> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg> Back to top </button> </main> <footer class=md-footer> <div class="md-footer-meta md-typeset"> <div class="md-footer-meta__inner md-grid"> <div class=md-copyright> <div class=md-copyright__highlight> Copyright &copy; 2021 - 2023 Anselm Hahn </div> Made with <a href=https://squidfunk.github.io/mkdocs-material/ target=_blank rel=noopener> Material for MkDocs </a> </div> <div class=md-social> <a href=https://github.com/Anselmoo target=_blank rel=noopener title=github.com class=md-social__link> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 496 512"><!-- Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg> </a> <a href=https://pypi.org/project/spectrafit/ target=_blank rel=noopener title=pypi.org class=md-social__link> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 448 512"><!-- Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.8 200.5c-7.7-30.9-22.3-54.2-53.4-54.2h-40.1v47.4c0 36.8-31.2 67.8-66.8 67.8H172.7c-29.2 0-53.4 25-53.4 54.3v101.8c0 29 25.2 46 53.4 54.3 33.8 9.9 66.3 11.7 106.8 0 26.9-7.8 53.4-23.5 53.4-54.3v-40.7H226.2v-13.6h160.2c31.1 0 42.6-21.7 53.4-54.2 11.2-33.5 10.7-65.7 0-108.6zM286.2 404c11.1 0 20.1 9.1 20.1 20.3 0 11.3-9 20.4-20.1 20.4-11 0-20.1-9.2-20.1-20.4.1-11.3 9.1-20.3 20.1-20.3zM167.8 248.1h106.8c29.7 0 53.4-24.5 53.4-54.3V91.9c0-29-24.4-50.7-53.4-55.6-35.8-5.9-74.7-5.6-106.8.1-45.2 8-53.4 24.7-53.4 55.6v40.7h106.9v13.6h-147c-31.1 0-58.3 18.7-66.8 54.2-9.8 40.7-10.2 66.1 0 108.6 7.6 31.6 25.7 54.2 56.8 54.2H101v-48.8c0-35.3 30.5-66.4 66.8-66.4zm-6.7-142.6c-11.1 0-20.1-9.1-20.1-20.3.1-11.3 9-20.4 20.1-20.4 11 0 20.1 9.2 20.1 20.4s-9 20.3-20.1 20.3z"/></svg> </a> </div> </div> </div> </footer> </div> <div class=md-dialog data-md-component=dialog> <div class="md-dialog__inner md-typeset"></div> </div> <script id=__config type=application/json>{"base": "../..", "features": ["navigation.expand", "content.code.annotate", "content.tabs.link", "header.autohide", "navigation.expand", "navigation.indexes", "navigation.instant", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "search.highlight", "search.share", "search.suggest", "toc.integrate"], "search": "../../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"default": "latest", "provider": "mike"}}</script> <script src=../../assets/javascripts/bundle.fac441b0.min.js></script> <script src=../../javascripts/config.js></script> <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script> <script src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script> </body> </html>
