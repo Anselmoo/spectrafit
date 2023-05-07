@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file.
 
+## v0.17.2 🌈 - 2023-05-07
+
+### 🧭 What's Changed
+
+#### 🧰 Maintenance
+
+- fix: :bug: Allow return of `dtale` dataframe (#779) @Anselmoo
+
+#### 🔗 Dependency Updates
+
+- fix: :bug: Allow return of `dtale` dataframe (#779) @Anselmoo
+
+#### 📝 Changelog
+
+- [doc]: 📝 Update CHANGELOG (#777) @Anselmoo
+
+### 📦 Full Changelog
+
+**Full Changelog**: https://github.com/Anselmoo/spectrafit/compare/v0.17.1...v0.17.2
+
+### ⚙️ Who Contributes
+
+@Anselmoo
+
 ## v0.17.1 🌈 - 2023-05-07
 
 ### 🧭 What's Changed
