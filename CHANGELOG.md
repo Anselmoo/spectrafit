@@ -2,6 +2,54 @@
 
 All notable changes to this project will be documented in this file.
 
+## v0.17.1 🌈 - 2023-05-07
+
+### 🧭 What's Changed
+
+#### 🧰 Maintenance
+
+- feat: :wrench: Increase the image resolution (#776) @Anselmoo
+- fix: :bug: Allow using solver settings in notebook module (#774) @Anselmoo
+- ci: :construction_worker: Update the `release drafter` and `labeler` (#772) @Anselmoo
+- [pre-commit.ci] pre-commit autoupdate (#761) @pre-commit-ci
+
+#### 🐍 Python
+
+- feat: :wrench: Increase the image resolution (#776) @Anselmoo
+- fix: :bug: Allow using solver settings in notebook module (#774) @Anselmoo
+- ci: :construction_worker: Update the `release drafter` and `labeler` (#772) @Anselmoo
+- fix: :pencil2: Change from`projectNames` to `projectName` (#770) @Anselmoo
+
+#### :octocat: Github Actions
+
+- build(deps): Bump pypa/gh-action-pypi-publish from 1.8.5 to 1.8.6 (#764) @dependabot
+
+#### 🔗 Dependency Updates
+
+- ci: :construction_worker: Update the `release drafter` and `labeler` (#772) @Anselmoo
+- build(deps-dev): Bump pre-commit from 3.3.0 to 3.3.1 (#765) @dependabot
+- build(deps-dev): Bump mkdocs-material from 9.1.8 to 9.1.9 (#766) @dependabot
+- build(deps): Bump lmfit from 1.2.0 to 1.2.1 (#767) @dependabot
+- build(deps-dev): Bump pre-commit from 3.2.2 to 3.3.0 (#763) @dependabot
+- build(deps): Bump flask from 2.3.1 to 2.3.2 (#762) @dependabot
+
+#### 🔬 Testing & Coverage
+
+- fix: :bug: Allow using solver settings in notebook module (#774) @Anselmoo
+- ci: :construction_worker: Update the `release drafter` and `labeler` (#772) @Anselmoo
+
+#### 📝 Changelog
+
+- Update CHANGELOG (#760) @Anselmoo
+
+### 📦 Full Changelog
+
+**Full Changelog**: https://github.com/Anselmoo/spectrafit/compare/v0.17.0...v0.17.1
+
+### ⚙️ Who Contributes
+
+@Anselmoo
+
 ## v0.17.0 🌈 - 2023-05-01
 
 ### 🧭 What's Changed
