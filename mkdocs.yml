@@ -63,6 +63,7 @@ plugins:
   - mkdocstrings
   - autorefs
   - section-index
+  - table-reader
   - literate-nav:
       nav_file: SUMMARY.md
   - minify:
@@ -100,6 +101,7 @@ markdown_extensions:
   - pymdownx.betterem:
       smart_enable: all
   - pymdownx.caret
+  - pymdownx.critic
   - pymdownx.details
   - pymdownx.emoji:
       emoji_index: !!python/name:materialx.emoji.twemoji
@@ -107,6 +109,9 @@ markdown_extensions:
   - pymdownx.highlight:
       use_pygments: true
       pygments_lang_class: true
+      auto_title: true
+      linenums: true
+      linenums_style: pymdownx-inline
   - pymdownx.magiclink
   - pymdownx.inlinehilite
   - pymdownx.keys
