@@ -103,6 +103,7 @@ exclude = ["docs/", "tools/"]
   mkdocs-material = "^9.1.2"
   jupytext = "^1.14.5"
   mkdocs-jupyter = "^0.24.0"
+  mkdocs-table-reader-plugin = "^2.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
