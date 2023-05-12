@@ -112,7 +112,16 @@ about [Correlation][17].
 
 ??? example "Overall Correlation Analysis"
 
-    {{ read_csv("../../Examples/example_7_correlation.csv)}}
+    |               | energy | intensity | residual |   fit | pseudovoigt_1 | pseudovoigt_2 | constant_3 | gaussian_4 |
+    | :------------ | -----: | --------: | -------: | ----: | ------------: | ------------: | ---------: | ---------: |
+    | energy        |   1.00 |     -0.31 |     0.12 | -0.23 |         -0.21 |         -0.25 |        nan |      -0.10 |
+    | intensity     |  -0.31 |      1.00 |     0.05 |  0.90 |          0.88 |          0.85 |        nan |       0.61 |
+    | residual      |   0.12 |      0.05 |     1.00 |  0.47 |          0.47 |          0.39 |        nan |       0.39 |
+    | fit           |  -0.23 |      0.90 |     0.47 |  1.00 |          0.98 |          0.92 |        nan |       0.71 |
+    | pseudovoigt_1 |  -0.21 |      0.88 |     0.47 |  0.98 |          1.00 |          0.85 |        nan |       0.65 |
+    | pseudovoigt_2 |  -0.25 |      0.85 |     0.39 |  0.92 |          0.85 |          1.00 |        nan |       0.56 |
+    | constant_3    |    nan |       nan |      nan |   nan |           nan |           nan |        nan |        nan |
+    | gaussian_4    |  -0.10 |      0.61 |     0.39 |  0.71 |          0.65 |          0.56 |        nan |       1.00 |
 
 ### Confidence Intervals
 
