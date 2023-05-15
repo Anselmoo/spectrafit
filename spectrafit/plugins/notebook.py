@@ -643,7 +643,7 @@ class SolverResults:
                 self.get_regression_metrics["data"],
             )
         }
-        metric = {**gof, **reg}
+        metric = gof | reg
         return pd.DataFrame(metric)
 
 
