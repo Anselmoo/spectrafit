@@ -279,7 +279,7 @@ class DataFramePlot:
         """
         for i in range(
             1,
-            sum(1 for _col in df.columns if _col.startswith(ColumnNamesAPI().fit)) + 1,
+            sum(bool(_col.startswith(ColumnNamesAPI().fit)) for _col in df.columns) + 1,
         ):
             _col = [col for col in df.columns if col.endswith(str(i))]
             _col.append(ColumnNamesAPI().energy)
