@@ -4004,17 +4004,17 @@ rich = ">=8.0.0"
 
 [[package]]
 name = "pytest-console-scripts"
-version = "1.3.1"
+version = "1.4.0"
 description = "Pytest plugin for testing console scripts"
 category = "dev"
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=3.7"
 files = [
-    {file = "pytest-console-scripts-1.3.1.tar.gz", hash = "sha256:5c6c3daae9cf9fbed0e655072128938600193dc002a5cf1b187248644ba02857"},
-    {file = "pytest_console_scripts-1.3.1-py3-none-any.whl", hash = "sha256:21063b2e32df96da51412116e654babb1447a415929158d81d445667de9ea946"},
+    {file = "pytest-console-scripts-1.4.0.tar.gz", hash = "sha256:6335679ef013fa20402dfd5b07219877d874bd3f0a198b84b23f17897ccbe50a"},
 ]
 
 [package.dependencies]
+importlib_metadata = {version = ">=3.6", markers = "python_version < \"3.10\""}
 pytest = ">=4.0.0"
 
 [[package]]
