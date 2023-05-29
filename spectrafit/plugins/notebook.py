@@ -978,6 +978,13 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
             self.export_df(df=self.df_metric, args=self.export_args_df)
 
     @property
+    def export_df_peaks(self) -> None:
+        """Export the dataframe."""
+        if self.df_peaks.empty is False:
+            self.export_args_df.prefix = "peaks"
+            self.export_df(df=self.df_peaks, args=self.export_args_df)
+
+    @property
     def plot_original_df(self) -> None:
         """Plot the original spectra."""
         self.plot_dataframe(args_plot=self.args_plot, df=self.df_org)

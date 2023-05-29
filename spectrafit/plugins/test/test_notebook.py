@@ -396,6 +396,8 @@ class TestSpectraFitNotebook:
         class_spectrafit["sp"].export_df_org
         class_spectrafit["sp"].export_df_pre
         class_spectrafit["sp"].export_df_metric
+        class_spectrafit["sp"].export_df_peaks
+
         assert ExportResults.fname2path(
             folder=class_spectrafit["tmpdir"], fname="test", prefix="act", suffix="csv"
         ).exists()
@@ -407,6 +409,12 @@ class TestSpectraFitNotebook:
         ).exists()
         assert ExportResults.fname2path(
             folder=class_spectrafit["tmpdir"], fname="test", prefix="pre", suffix="csv"
+        ).exists()
+        assert ExportResults.fname2path(
+            folder=class_spectrafit["tmpdir"],
+            fname="test",
+            prefix="metric",
+            suffix="csv",
         ).exists()
         assert ExportResults.fname2path(
             folder=class_spectrafit["tmpdir"],
