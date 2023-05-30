@@ -292,11 +292,11 @@ following metrics are not implemented yet:
 
 ## Metric Plots
 
-In case of using the [Jupyter Notebook][24] interface of the `SpectraFit`
+In the case of using the [Jupyter Notebook][24] interface of the `SpectraFit`
 package, the metrics will be plotted automatically. It uses the
 
-1. [Goodness of Fit Metrics](#Standard-Statistics)
-2. [Regression Metrics](#regression-metrics)
+1. [Goodness of Fit Metrics][1]
+2. [Regression-Metrics][7]
 
 to plot the results for each run and can be also exported as `.csv`. The idea
 is to use multiple runs and metrics together to get a better overview of the

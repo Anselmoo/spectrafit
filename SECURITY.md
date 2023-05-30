@@ -5,22 +5,23 @@
 Use this section to tell people about which versions of your project are
 currently being supported with security updates.
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 0.15.x  | :white_check_mark: |
-| 0.14.x  | :x:                |
-| 0.13.x  | :x:                |
-| 0.12.x  | :x:                |
-| 0.11.x  | :x:                |
-| 0.10.x  | :x:                |
-| 0.9.x   | :x:                |
-| 0.8.x   | :x:                |
-| 0.7.x   | :x:                |
-| 0.6.x   | :x:                |
-| 0.5.x   | :x:                |
-| 0.4.x   | :x:                |
-| 0.3.x   | :x:                |
-| 0.1.x   | :x:                |
+| Version | Supported |
+| ------- | --------- |
+| 0.17.x  | :x:       |
+| 0.16.x  | :x:       |
+| 0.14.x  | :x:       |
+| 0.13.x  | :x:       |
+| 0.12.x  | :x:       |
+| 0.11.x  | :x:       |
+| 0.10.x  | :x:       |
+| 0.9.x   | :x:       |
+| 0.8.x   | :x:       |
+| 0.7.x   | :x:       |
+| 0.6.x   | :x:       |
+| 0.5.x   | :x:       |
+| 0.4.x   | :x:       |
+| 0.3.x   | :x:       |
+| 0.1.x   | :x:       |
 
 > Security are currently performed via [GitHub's CodeQL][1]. See also the
 > [workflows][2]

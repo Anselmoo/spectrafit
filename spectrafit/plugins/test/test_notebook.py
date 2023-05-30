@@ -164,6 +164,24 @@ def class_spectrafit_fixture(
     sp.initial_model = initial_model
     sp.df_pre = _df
     sp.df_metric = _df
+
+    def mulit_index() -> pd.DataFrame:
+        """Generate a pandas dataframe with multiindex."""
+        s1 = pd.Series([1, 2, 3], name="s1")
+        arrays = [
+            ["bar", "bar", "baz", "baz", "foo", "foo", "qux", "qux"],
+            ["one", "two", "one", "two", "one", "two", "one", "two"],
+        ]
+        tuples = list(zip(*arrays))
+        index = pd.MultiIndex.from_tuples(tuples, names=["first", "second"])
+        df = pd.DataFrame(
+            {"A": [1, 2, 3, 4, 5, 6, 7, 8], "B": [10, 20, 30, 40, 50, 60, 70, 80]},
+            index=index,
+        )
+        return pd.concat([s1, df], axis=1)
+
+    sp.df_peaks = mulit_index()
+
     return {"sp": sp, "tmpdir": tmp_path}
 
 
@@ -396,6 +414,8 @@ class TestSpectraFitNotebook:
         class_spectrafit["sp"].export_df_org
         class_spectrafit["sp"].export_df_pre
         class_spectrafit["sp"].export_df_metric
+        class_spectrafit["sp"].export_df_peaks
+
         assert ExportResults.fname2path(
             folder=class_spectrafit["tmpdir"], fname="test", prefix="act", suffix="csv"
         ).exists()
@@ -412,6 +432,12 @@ class TestSpectraFitNotebook:
             folder=class_spectrafit["tmpdir"],
             fname="test",
             prefix="metric",
+            suffix="csv",
+        ).exists()
+        assert ExportResults.fname2path(
+            folder=class_spectrafit["tmpdir"],
+            fname="test",
+            prefix="peaks",
             suffix="csv",
         ).exists()
 

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "SpectraFit"
-version = "0.17.2"
+version = "0.18.0"
 description = "Fast fitting of 2D- and 3D-Spectra with established routines"
 readme = "README.md"
 authors = ["Anselm Hahn <anselm.hahn@gmail.com>"]
@@ -71,7 +71,6 @@ exclude = ["docs/", "tools/"]
   dash-bootstrap-templates = { version = "^1.0.7", optional = true }
 
   [tool.poetry.group.dev.dependencies]
-  pylama = "^8.4.1"
   pylint = "^2.16.1"
   mypy = "^1.1.1"
   black = { extras = ["jupyter"], version = ">=22.8,<24.0" }
@@ -91,6 +90,8 @@ exclude = ["docs/", "tools/"]
   types-mock = ">=4.0.15,<6.0.0"
   nptyping = { extras = ["complete"], version = "^2.4.1" }
   dash = { extras = ["testing"], version = "^2.7.1" }
+  bandit = "^1.7.5"
+  prospector = {extras = ["bandit", "black", "isort", "pylint"], version = "^1.10.2"}
 
   [tool.poetry.group.docs.dependencies]
   mkdocstrings = { extras = ["python"], version = ">=0.19,<0.23" }
