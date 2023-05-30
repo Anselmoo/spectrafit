@@ -57,7 +57,7 @@ class PreProcessing:
         """
         df_copy: pd.DataFrame = self.df.copy()
         self.args["data_statistic"] = df_copy.describe(
-            percentiles=np.arange(0.1, 1.0, 0.1)
+            percentiles=np.arange(0.1, 1.0, 0.1).tolist()
         ).to_dict(orient="split")
         try:
             if isinstance(self.args["energy_start"], (int, float)) or isinstance(
@@ -93,7 +93,7 @@ class PreProcessing:
         energy_start: Union[int, float] = args["energy_start"]
         energy_stop: Union[int, float] = args["energy_stop"]
 
-        df_copy: pd.DataFrame = df.copy()
+        df_copy = df.copy()
         if isinstance(energy_start, (int, float)) and isinstance(
             energy_stop, (int, float)
         ):
@@ -395,7 +395,7 @@ class PostProcessing:
     def export_desprective_statistic2args(self) -> None:
         """Export the descriptive statistic of the spectra, fit, and contributions."""
         self.args["descriptive_statistic"] = self.df.describe(
-            percentiles=np.arange(0.1, 1, 0.1)
+            percentiles=np.arange(0.1, 1, 0.1).tolist()
         ).to_dict(orient="split")
 
 

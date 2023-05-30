@@ -22,7 +22,7 @@ def list2dict(
     """
     peaks_dict: Dict[str, Dict[str, Dict[str, Any]]] = {"peaks": {}}
     for i, peak in enumerate(peak_list, start=1):
-        if list(peak.keys())[0] in DistributionModelAPI().__dict__.keys():
+        if list(peak)[0] in DistributionModelAPI().__dict__:
             peaks_dict["peaks"][f"{i}"] = peak
     return peaks_dict
 
