@@ -15,10 +15,10 @@ All notable changes to this project will be documented in this file.
 - feat: :rocket: Extend the export functionalty (#806) @Anselmoo
 - build(deps-dev): Bump mkdocstrings from 0.21.2 to 0.22.0 (#805) @dependabot
 - build(deps-dev): Bump pytest-cov from 3.0.0 to 4.1.0 (#802) @dependabot
-- ci: ➕  Update .pre-commit-config.yaml (#795) @Anselmoo
+- ci: ➕ Update .pre-commit-config.yaml (#795) @Anselmoo
 - build(deps): Bump jupyterlab from 3.6.3 to 4.0.0 (#792) @dependabot
 - per: ♻️ Apply refactors (#791) @Anselmoo
-- docs: 🔧  Add more functionality to docs (#785) @Anselmoo
+- docs: 🔧 Add more functionality to docs (#785) @Anselmoo
 - [pre-commit.ci] pre-commit autoupdate (#781) @pre-commit-ci
 
 #### 🐍 Python
@@ -29,7 +29,7 @@ All notable changes to this project will be documented in this file.
 
 - feat: :rocket: Extend the export functionalty (#806) @Anselmoo
 - docs: :rewind: Apply back `Overall Correlation Analysis` (#786) @Anselmoo
-- docs: 🔧  Add more functionality to docs (#785) @Anselmoo
+- docs: 🔧 Add more functionality to docs (#785) @Anselmoo
 
 #### 🔗 Dependency Updates
 
@@ -50,7 +50,7 @@ All notable changes to this project will be documented in this file.
 - per: ♻️ Apply refactors (#791) @Anselmoo
 - build(deps-dev): Bump pytest-xdist from 3.2.1 to 3.3.0 (#787) @dependabot
 - build(deps-dev): Bump mkdocs-material from 9.1.11 to 9.1.12 (#788) @dependabot
-- docs: 🔧  Add more functionality to docs (#785) @Anselmoo
+- docs: 🔧 Add more functionality to docs (#785) @Anselmoo
 - build(deps-dev): ⬆️ Bump mkdocs-material from 9.1.9 to 9.1.11 (#782) @dependabot
 
 #### 🔬 Testing & Coverage
