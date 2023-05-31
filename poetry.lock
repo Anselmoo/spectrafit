@@ -885,14 +885,14 @@ files = [
 
 [[package]]
 name = "dash"
-version = "2.9.3"
+version = "2.10.1"
 description = "A Python framework for building reactive web-apps. Developed by Plotly."
 category = "main"
 optional = false
 python-versions = ">=3.6"
 files = [
-    {file = "dash-2.9.3-py3-none-any.whl", hash = "sha256:a749ae1ea9de3fe7b785353a818ec9b629d39c6b7e02462954203bd1e296fd0e"},
-    {file = "dash-2.9.3.tar.gz", hash = "sha256:47392f8d6455dc989a697407eb5941f3bad80604df985ab1ac9d4244568ffb34"},
+    {file = "dash-2.10.1-py3-none-any.whl", hash = "sha256:17ae100dbb0531d31a75b5982ce79e60dc1eae6efb653fb3128f158c3d827415"},
+    {file = "dash-2.10.1.tar.gz", hash = "sha256:8933d6feed3a6ae67e6b70be1fe00f11ad594ce646faebfb4c38a0c4ddca8296"},
 ]
 
 [package.dependencies]
@@ -901,7 +901,7 @@ dash-core-components = "2.0.0"
 dash-html-components = "2.0.0"
 dash-table = "5.0.0"
 dash-testing-stub = {version = ">=0.0.2", optional = true, markers = "extra == \"testing\""}
-Flask = ">=1.0.4"
+Flask = ">=1.0.4,<=2.2.3"
 lxml = {version = ">=4.6.2", optional = true, markers = "extra == \"testing\""}
 multiprocess = {version = ">=0.70.12", optional = true, markers = "extra == \"testing\""}
 percy = {version = ">=2.0.2", optional = true, markers = "extra == \"testing\""}
@@ -911,6 +911,7 @@ pytest = {version = ">=6.0.2", optional = true, markers = "extra == \"testing\""
 requests = {version = ">=2.21.0", extras = ["security"], optional = true, markers = "extra == \"testing\""}
 selenium = {version = ">=3.141.0,<=4.2.0", optional = true, markers = "extra == \"testing\""}
 waitress = {version = ">=1.4.4", optional = true, markers = "extra == \"testing\""}
+Werkzeug = "<=2.2.3"
 
 [package.extras]
 celery = ["celery[redis] (>=5.1.2)", "importlib-metadata (<5)", "redis (>=3.5.3)"]
@@ -1322,14 +1323,14 @@ flake8 = "*"
 
 [[package]]
 name = "flask"
-version = "2.2.5"
+version = "2.2.3"
 description = "A simple framework for building complex web applications."
 category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "Flask-2.2.5-py3-none-any.whl", hash = "sha256:58107ed83443e86067e41eff4631b058178191a355886f8e479e347fa1285fdf"},
-    {file = "Flask-2.2.5.tar.gz", hash = "sha256:edee9b0a7ff26621bd5a8c10ff484ae28737a2410d99b0bb9a6850c7fb977aa0"},
+    {file = "Flask-2.2.3-py3-none-any.whl", hash = "sha256:c0bec9477df1cb867e5a67c9e1ab758de9cb4a3e52dd70681f59fa40a62b3f2d"},
+    {file = "Flask-2.2.3.tar.gz", hash = "sha256:7eb373984bf1c770023fce9db164ed0c3353cd0b53f130f4693da0ca756a2e6d"},
 ]
 
 [package.dependencies]
