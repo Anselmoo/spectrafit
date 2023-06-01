@@ -2,6 +2,77 @@
 
 All notable changes to this project will be documented in this file.
 
+## v0.18.0 🌈 - 2023-05-30
+
+### 🧭 What's Changed
+
+#### 🚀 New
+
+- feat: :rocket: Extend the export functionalty (#806) @Anselmoo
+
+#### 🧰 Maintenance
+
+- feat: :rocket: Extend the export functionalty (#806) @Anselmoo
+- build(deps-dev): Bump mkdocstrings from 0.21.2 to 0.22.0 (#805) @dependabot
+- build(deps-dev): Bump pytest-cov from 3.0.0 to 4.1.0 (#802) @dependabot
+- ci: ➕ Update .pre-commit-config.yaml (#795) @Anselmoo
+- build(deps): Bump jupyterlab from 3.6.3 to 4.0.0 (#792) @dependabot
+- per: ♻️ Apply refactors (#791) @Anselmoo
+- docs: 🔧 Add more functionality to docs (#785) @Anselmoo
+- [pre-commit.ci] pre-commit autoupdate (#781) @pre-commit-ci
+
+#### 🐍 Python
+
+- per: ♻️ Apply refactors (#791) @Anselmoo
+
+#### 🗂 Documentation
+
+- feat: :rocket: Extend the export functionalty (#806) @Anselmoo
+- docs: :rewind: Apply back `Overall Correlation Analysis` (#786) @Anselmoo
+- docs: 🔧 Add more functionality to docs (#785) @Anselmoo
+
+#### 🔗 Dependency Updates
+
+- feat: :rocket: Extend the export functionalty (#806) @Anselmoo
+- build(deps-dev): Bump mkdocs-material from 9.1.14 to 9.1.15 (#807) @dependabot
+- build(deps): Bump pandas from 2.0.1 to 2.0.2 (#808) @dependabot
+- build(deps-dev): Bump mkdocstrings from 0.21.2 to 0.22.0 (#805) @dependabot
+- build(deps-dev): Bump types-pyyaml from 6.0.12.9 to 6.0.12.10 (#799) @dependabot
+- build(deps-dev): Bump pytest-cov from 3.0.0 to 4.1.0 (#802) @dependabot
+- build(deps): Bump pydantic from 1.10.7 to 1.10.8 (#801) @dependabot
+- build(deps): Bump requests from 2.30.0 to 2.31.0 (#800) @dependabot
+- build(deps-dev): Bump pytest-console-scripts from 1.3.1 to 1.4.0 (#798) @dependabot
+- build(deps-dev): Bump pytest-xdist from 3.3.0 to 3.3.1 (#796) @dependabot
+- build(deps-dev): Bump mkdocs-material from 9.1.13 to 9.1.14 (#797) @dependabot
+- build(deps-dev): Bump pre-commit from 3.3.1 to 3.3.2 (#794) @dependabot
+- build(deps-dev): Bump mkdocs-material from 9.1.12 to 9.1.13 (#793) @dependabot
+- build(deps): Bump jupyterlab from 3.6.3 to 4.0.0 (#792) @dependabot
+- per: ♻️ Apply refactors (#791) @Anselmoo
+- build(deps-dev): Bump pytest-xdist from 3.2.1 to 3.3.0 (#787) @dependabot
+- build(deps-dev): Bump mkdocs-material from 9.1.11 to 9.1.12 (#788) @dependabot
+- docs: 🔧 Add more functionality to docs (#785) @Anselmoo
+- build(deps-dev): ⬆️ Bump mkdocs-material from 9.1.9 to 9.1.11 (#782) @dependabot
+
+#### 🔬 Testing & Coverage
+
+- feat: :rocket: Extend the export functionalty (#806) @Anselmoo
+
+#### 🔒 Security
+
+- feat: :rocket: Extend the export functionalty (#806) @Anselmoo
+
+#### 📝 Changelog
+
+- Update CHANGELOG (#780) @Anselmoo
+
+### 📦 Full Changelog
+
+**Full Changelog**: https://github.com/Anselmoo/spectrafit/compare/v0.17.2...v0.17.3
+
+### ⚙️ Who Contributes
+
+@Anselmoo
+
 ## v0.17.2 🌈 - 2023-05-07
 
 ### 🧭 What's Changed
