@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file.
 
+## v0.18.1 🌈 - 2023-06-02
+
+### 🧭 What's Changed
+
+#### 🧰 Maintenance
+
+- chore: :bookmark: Update to `0.18.1` (#814) @Anselmoo
+
+#### 🔗 Dependency Updates
+
+- chore: :bookmark: Update to `0.18.1` (#814) @Anselmoo
+- build(deps-dev): Bump pytest-console-scripts from 1.4.0 to 1.4.1 (#813) @dependabot
+- build(deps-dev): Bump dash from 2.9.3 to 2.10.2 (#812) @dependabot
+- build(deps): Bump flask from 2.2.3 to 2.2.5 (#809) @dependabot
+
+#### 📝 Changelog
+
+- chore: :bookmark: Update to `0.18.1` (#814) @Anselmoo
+- Update CHANGELOG (#810) @Anselmoo
+
+### 📦 Full Changelog
+
+**Full Changelog**: https://github.com/Anselmoo/spectrafit/compare/v0.18.0...v0.18.1
+
+### ⚙️ Who Contributes
+
+@Anselmoo
+
 ## v0.18.0 🌈 - 2023-05-30
 
 ### 🧭 What's Changed
