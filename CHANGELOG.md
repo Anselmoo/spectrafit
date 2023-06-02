@@ -67,7 +67,7 @@ All notable changes to this project will be documented in this file.
 
 ### 📦 Full Changelog
 
-**Full Changelog**: https://github.com/Anselmoo/spectrafit/compare/v0.17.2...v0.17.3
+**Full Changelog**: https://github.com/Anselmoo/spectrafit/compare/v0.17.2...v0.18.0
 
 ### ⚙️ Who Contributes
 
