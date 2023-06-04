@@ -2,3 +2,7 @@ coverage:
   precision: 2
   round: up
   range: "90...100"
+  status:
+    patch:
+      default:
+        target: 100%
