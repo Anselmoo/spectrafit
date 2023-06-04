@@ -11,16 +11,11 @@
 
 # SpectraFit
 
-`SpectraFit` is a tool for quick data fitting based on the regular
-expression of distribution and linear functions via command line or
-[Jupyter Notebook](https://jupyter.org). Furthermore, it can be also used as
-a module in existing python code. A previous version of `SpectraFit` was used
-for the following publication:
-
-- [Measurement of the Ligand Field Spectra of Ferrous and Ferric Iron Chlorides Using 2p3d RIXS](https://pubs.acs.org/doi/abs/10.1021/acs.inorgchem.7b00940)
-
-Now, it is completely rewritten and is more flexible. It is supporting all
-common ASCII-data formats and it runs on `Linux`, `Windows`, and `MacOS`.
+`SpectraFit` is a Python tool for quick data fitting based on the regular
+expression of distribution and linear functions via the command line (CMD) or
+[Jupyter Notebook](https://jupyter.org) It is designed to be easy to use and
+supports all common ASCII data formats. SpectraFit runs on **Linux**,
+**Windows**, and **MacOS**.
 
 ## Scope
 
@@ -31,6 +26,13 @@ common ASCII-data formats and it runs on `Linux`, `Windows`, and `MacOS`.
 - Saving all results in a _SQL-like-format_ (`CSV`) for publications
 - Saving all results in a _NoSQL-like-format_ (`JSON`) for project management
 - Having an API interface for Graph-databases
+
+`SpectraFit` is a tool designed for researchers and scientists who require
+immediate data fitting to a model. It proves to be especially beneficial for
+individuals working with vast datasets or who need to conduct numerous fits
+within a limited time frame. `SpectraFit's` adaptability to various platforms
+and data formats makes it a versatile tool that caters to a broad spectrum of
+scientific applications.
 
 ## Installation
 
