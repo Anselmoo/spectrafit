@@ -191,7 +191,7 @@ script_launch_mode = "subprocess"
   testpaths = ["spectrafit"]
 
 [tool.pydocstyle]
-match = '**/*.py'
+match = '.*\.py'
 convention = "google"
 
 
