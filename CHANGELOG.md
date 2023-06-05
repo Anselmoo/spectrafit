@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file.
 
+## v0.18.2 🌈 - 2023-06-05
+
+### 🧭 What's Changed
+
+- ci: ::arrow_up: Update sonar-scanner.properties (#816) @Anselmoo
+
+#### 🧰 Maintenance
+
+- fix: :memo: Re-Write misleading formulation (#815) @Anselmoo
+
+#### 🗂 Documentation
+
+- docs: :memo: Update README.md (#817) @Anselmoo
+- fix: :memo: Re-Write misleading formulation (#815) @Anselmoo
+
+#### 🔗 Dependency Updates
+
+- docs: :memo: Update README.md (#817) @Anselmoo
+- build(deps-dev): Bump jupytext from 1.14.5 to 1.14.6 (#818) @dependabot
+- fix: :memo: Re-Write misleading formulation (#815) @Anselmoo
+
+### 📦 Full Changelog
+
+**Full Changelog**: https://github.com/Anselmoo/spectrafit/compare/v0.18.1...v0.18.2
+
+### ⚙️ Who Contributes
+
+@Anselmoo
+
 ## v0.18.0 🌈 - 2023-05-30
 
 ### 🧭 What's Changed
