@@ -45,6 +45,14 @@ pip install spectrafit
 
 pip install spectrafit[jupyter]
 
+# with support for the dashboard in the Jupyter Notebook
+
+pip install spectrafit[jupyter-dash]
+
+# with support to visualize pkl-files as graph
+
+pip install spectrafit[graph]
+
 # with all upcomming features
 
 pip install spectrafit[all]
