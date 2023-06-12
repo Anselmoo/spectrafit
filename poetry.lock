@@ -2830,13 +2830,13 @@ mkdocs = ">=1.0.3"
 
 [[package]]
 name = "mkdocs-table-reader-plugin"
-version = "2.0"
+version = "2.0.1"
 description = "MkDocs plugin to directly insert tables from files into markdown."
 optional = false
 python-versions = ">=3.6"
 files = [
-    {file = "mkdocs-table-reader-plugin-2.0.tar.gz", hash = "sha256:cb2f5ca1b666e4a7452d196810558ba815f597de01822686c2208d57cb21f9d2"},
-    {file = "mkdocs_table_reader_plugin-2.0-py3-none-any.whl", hash = "sha256:c3d3b063a19e5a619f6062cb5963bd3d04c1f4e4f5d4ff75d9e33f3e79a1d535"},
+    {file = "mkdocs-table-reader-plugin-2.0.1.tar.gz", hash = "sha256:bfeb246a76c273c7745833be747e20b067abc3dafd720f658521ddf23b53cbf7"},
+    {file = "mkdocs_table_reader_plugin-2.0.1-py3-none-any.whl", hash = "sha256:e1701a5df1fd64a6ea331b3ec5fae74de618086db89bfb03eb1d67517d435059"},
 ]
 
 [package.dependencies]
