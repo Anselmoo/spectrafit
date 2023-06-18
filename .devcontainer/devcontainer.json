@@ -2,54 +2,38 @@
 // README at: https://github.com/devcontainers/templates/tree/main/src/python
 {
   "name": "Python 3",
-  "image": "mcr.microsoft.com/devcontainers/python:3.9",
+  // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+  "image": "mcr.microsoft.com/devcontainers/python:0-3.10",
   "features": {
-    "ghcr.io/devcontainers/features/docker-from-docker:1": {},
-    "ghcr.io/devcontainers/features/docker-in-docker:2": {},
     "ghcr.io/devcontainers/features/git:1": {},
-    "ghcr.io/devcontainers/features/git-lfs:1": {},
-    "ghcr.io/devcontainers/features/github-cli:1": {},
-    "ghcr.io/devcontainers-contrib/features/aws-cdk:1": {},
-    "ghcr.io/devcontainers-contrib/features/bandit:1": {},
-    "ghcr.io/devcontainers-contrib/features/black:1": {},
-    "ghcr.io/devcontainers-contrib/features/flake8:1": {},
-    "ghcr.io/devcontainers-contrib/features/isort:1": {},
-    "ghcr.io/devcontainers-contrib/features/mypy:1": {},
-    "ghcr.io/devcontainers-contrib/features/poetry:1": {},
-    "ghcr.io/devcontainers-contrib/features/pre-commit:1": {},
-    "ghcr.io/devcontainers-contrib/features/pylint:1": {},
-    "ghcr.io/devcontainers-contrib/features/yamllint:1": {}
+    "ghcr.io/devcontainers-contrib/features/poetry:2": {},
+    "ghcr.io/devcontainers-contrib/features/pre-commit:2": {},
+    "ghcr.io/devcontainers-contrib/features/prettier:1": {}
   },
-  // Add the IDs of extensions you want installed when the container is created.
-  // Use 'forwardPorts' to make a list of ports inside the container available locally.
-  // "forwardPorts": [],
-  // Use 'postCreateCommand' to run commands after the container is created.
+
   // Features to add to the dev container. More info: https://containers.dev/features.
   // "features": {},
+
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
   // "forwardPorts": [],
+
   // Use 'postCreateCommand' to run commands after the container is created.
   "postCreateCommand": "bash .devcontainer/setup.sh",
   "customizations": {
     "vscode": {
       "extensions": [
-        "njpwerner.autodocstring",
         "ms-python.black-formatter",
-        "vivaxy.vscode-conventional-commits",
-        "ms-python.flake8",
-        "GitHub.copilot",
-        "GitHub.copilot-labs",
-        "GitHub.vscode-pull-request-github",
+        "njpwerner.autodocstring",
         "ms-python.isort",
-        "ms-toolsai.jupyter",
         "ms-python.vscode-pylance",
-        "ms-python.python",
-        "sourcery.sourcery"
+        "ms-python.python"
       ]
     }
   }
+
   // Configure tool-specific properties.
   // "customizations": {},
+
   // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
   // "remoteUser": "root"
 }
