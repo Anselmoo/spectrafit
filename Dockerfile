@@ -1,5 +1,6 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
+# Reference File: https://github.com/jupyter/docker-stacks/blob/main/scipy-notebook/Dockerfile
 ARG OWNER=jupyter
 ARG BASE_CONTAINER=$OWNER/minimal-notebook
 FROM $BASE_CONTAINER
@@ -27,7 +28,7 @@ RUN apt-get update --yes && \
 USER ${NB_UID}
 
 # Install Python 3 packages
-RUN mamba install --quiet --yes \
+RUN mamba install --yes \
     'altair' \
     'beautifulsoup4' \
     'bokeh' \
