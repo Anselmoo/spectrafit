@@ -11,16 +11,9 @@ jobs:
     name: Pre-commit
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          ref: ${{ github.head_ref }}
-          fetch-depth: 0
+      - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
-        with:
-          python-version: 3.x
-      - name: Pre-commit
-        uses: pre-commit/action@v3.0.0
+      - uses: pre-commit/action@v3.0.0
   build:
     name: Python ${{ matrix.python-version }} - ${{ matrix.os }} - ${{ matrix.arch }} - ${{ github.event_name }}
     needs: pre-commit
