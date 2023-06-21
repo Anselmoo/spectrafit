@@ -1210,7 +1210,10 @@ class TestModel:
             ("cgaussian", {"amplitude": 1.0, "center": 5.0, "fwhmg": 1.0}),
             ("clorentzian", {"amplitude": 1.0, "center": 5.0, "fwhml": 1.0}),
             ("cvoigt", {"amplitude": 1.0, "center": 5.0, "fwhmv": 1.0}),
-            ("polynom2",{"coefficient0": 1.0, "coefficient1": 1.0, "coefficient2": 1.0})
+            (
+                "polynom2",
+                {"coefficient0": 1.0, "coefficient1": 1.0, "coefficient2": 1.0},
+            ),
         ],
     )
     def test_distrubtion_models(
