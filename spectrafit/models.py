@@ -536,7 +536,12 @@ class DistributionModels:
         Returns:
             NDArray[np.float64]: Third order polynomial function of `x`
         """
-        return np.array(coefficient0 + coefficient1 * x + coefficient2 * x**2 + coefficient3*x**3)
+        return np.array(
+            coefficient0
+            + coefficient1 * x
+            + coefficient2 * x**2
+            + coefficient3 * x**3
+        )
 
 
 @dataclass(frozen=True)
