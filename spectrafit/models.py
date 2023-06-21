@@ -509,7 +509,7 @@ class DistributionModels:
 
     @staticmethod
     def polynom2(
-        x:  NDArray[np.float64],
+        x: NDArray[np.float64],
         coefficient0: float = 1.0,
         coefficient1: float = 1.0,
         coefficient2: float = 1.0,
@@ -532,7 +532,8 @@ class DistributionModels:
         Returns:
             NDArray[np.float64]: Second order polynomial function of `x`
         """
-        return np.array(coefficient0 + coefficient1*x + coefficient2*x**2)
+        return np.array(coefficient0 + coefficient1 * x + coefficient2 * x**2)
+
 
 @dataclass(frozen=True)
 class ReferenceKeys:
