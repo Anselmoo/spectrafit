@@ -522,9 +522,12 @@ class DistributionModels:
 
         Args:
             x (NDArray[np.float64]): `x`-values of the data
-            coefficient0 (float, optional): Zeroth coefficient of the polynomial function. Defaults to 1.0.
-            coefficient1 (float, optional): First coefficient of the polynomial function. Defaults to 1.0.
-            coefficient2 (float, optional): Second coefficient of the polynomial function. Defaults to 1.0.
+            coefficient0 (float, optional): Zeroth coefficient of the 
+                 polynomial function. Defaults to 1.0.
+            coefficient1 (float, optional): First coefficient of the 
+                 polynomial function. Defaults to 1.0.
+            coefficient2 (float, optional): Second coefficient of the 
+                 polynomial function. Defaults to 1.0.
 
         Returns:
             NDArray[np.float64]: Second order polynomial function of `x`
