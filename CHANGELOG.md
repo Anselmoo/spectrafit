@@ -2,6 +2,49 @@
 
 All notable changes to this project will be documented in this file.
 
+## v0.19.0 🌈 - 2023-06-21
+
+### 🧭 What's Changed
+
+#### 🚀 New
+
+- feat: :sparkles: added 2. and 3. order polynomial model (#847) @josephzsombor
+
+#### 🧰 Maintenance
+
+- feat: :sparkles: added 2. and 3. order polynomial model (#847) @josephzsombor
+- [pre-commit.ci] pre-commit autoupdate (#843) @pre-commit-ci
+- build: :bookmark: Minor dependency updates (#845) @Anselmoo
+
+#### 🐍 Python
+
+- feat: :sparkles: added 2. and 3. order polynomial model (#847) @josephzsombor
+
+#### :octocat: Github Actions
+
+- feat: :sparkles: added 2. and 3. order polynomial model (#847) @josephzsombor
+
+#### 🔗 Dependency Updates
+
+- feat: :sparkles: added 2. and 3. order polynomial model (#847) @josephzsombor
+- build: :bookmark: Minor dependency updates (#845) @Anselmoo
+
+#### 🔬 Testing & Coverage
+
+- feat: :sparkles: added 2. and 3. order polynomial model (#847) @josephzsombor
+
+#### 📝 Changelog
+
+- Update CHANGELOG (#844) @Anselmoo
+
+### 📦 Full Changelog
+
+**Full Changelog**: https://github.com/Anselmoo/spectrafit/compare/v0.18.3...v0.19.0
+
+### ⚙️ Who Contributes
+
+@Anselmoo and @josephzsombor
+
 ## v0.18.3 🌈 - 2023-06-18
 
 ### 🧭 What's Changed
