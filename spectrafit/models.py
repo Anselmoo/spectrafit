@@ -507,6 +507,69 @@ class DistributionModels:
             * np.exp(-(((x - center) / gamma) ** 2))
         )
 
+    @staticmethod
+    def polynom2(
+        x: NDArray[np.float64],
+        coefficient0: float = 1.0,
+        coefficient1: float = 1.0,
+        coefficient2: float = 1.0,
+    ) -> NDArray[np.float64]:
+        """Return a 1-dimensional second order polynomial function.
+
+        $$
+        f(x) = coefficient0 + coefficient1*x + coefficient2*x**2
+        $$
+
+        Args:
+            x (NDArray[np.float64]): `x`-values of the data
+            coefficient0 (float, optional): Zeroth coefficient of the
+                 polynomial function. Defaults to 1.0.
+            coefficient1 (float, optional): First coefficient of the
+                 polynomial function. Defaults to 1.0.
+            coefficient2 (float, optional): Second coefficient of the
+                 polynomial function. Defaults to 1.0.
+
+        Returns:
+            NDArray[np.float64]: Third order polynomial function of `x`
+        """
+        return np.array(coefficient0 + coefficient1 * x + coefficient2 * x**2)
+
+    @staticmethod
+    def polynom3(
+        x: NDArray[np.float64],
+        coefficient0: float = 1.0,
+        coefficient1: float = 1.0,
+        coefficient2: float = 1.0,
+        coefficient3: float = 1.0,
+    ) -> NDArray[np.float64]:
+        """Return a 1-dimensional third order polynomial function.
+
+        $$
+        f(x) = coefficient0 + coefficient1*x + coefficient2*x**2
+             + coefficient3*x**3
+        $$
+
+        Args:
+            x (NDArray[np.float64]): `x`-values of the data
+            coefficient0 (float, optional): Zeroth coefficient of the
+                 polynomial function. Defaults to 1.0.
+            coefficient1 (float, optional): First coefficient of the
+                 polynomial function. Defaults to 1.0.
+            coefficient2 (float, optional): Second coefficient of the
+                 polynomial function. Defaults to 1.0.
+            coefficient3 (float, optional): Third coefficient of the
+                 polynomial function. Defaults to 1.0.
+
+        Returns:
+            NDArray[np.float64]: Third order polynomial function of `x`
+        """
+        return np.array(
+            coefficient0
+            + coefficient1 * x
+            + coefficient2 * x**2
+            + coefficient3 * x**3
+        )
+
 
 @dataclass(frozen=True)
 class ReferenceKeys:
