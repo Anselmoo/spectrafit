@@ -2,29 +2,127 @@
 
 All notable changes to this project will be documented in this file.
 
-## v0.18.1 🌈 - 2023-06-02
+## v0.19.0 🌈 - 2023-06-21
 
 ### 🧭 What's Changed
 
+#### 🚀 New
+
+- feat: :sparkles: added 2. and 3. order polynomial model (#847) @josephzsombor
+
 #### 🧰 Maintenance
 
-- chore: :bookmark: Update to `0.18.1` (#814) @Anselmoo
+- feat: :sparkles: added 2. and 3. order polynomial model (#847) @josephzsombor
+- [pre-commit.ci] pre-commit autoupdate (#843) @pre-commit-ci
+- build: :bookmark: Minor dependency updates (#845) @Anselmoo
+
+#### 🐍 Python
+
+- feat: :sparkles: added 2. and 3. order polynomial model (#847) @josephzsombor
+
+#### :octocat: Github Actions
+
+- feat: :sparkles: added 2. and 3. order polynomial model (#847) @josephzsombor
 
 #### 🔗 Dependency Updates
 
-- chore: :bookmark: Update to `0.18.1` (#814) @Anselmoo
-- build(deps-dev): Bump pytest-console-scripts from 1.4.0 to 1.4.1 (#813) @dependabot
-- build(deps-dev): Bump dash from 2.9.3 to 2.10.2 (#812) @dependabot
-- build(deps): Bump flask from 2.2.3 to 2.2.5 (#809) @dependabot
+- feat: :sparkles: added 2. and 3. order polynomial model (#847) @josephzsombor
+- build: :bookmark: Minor dependency updates (#845) @Anselmoo
+
+#### 🔬 Testing & Coverage
+
+- feat: :sparkles: added 2. and 3. order polynomial model (#847) @josephzsombor
 
 #### 📝 Changelog
 
-- chore: :bookmark: Update to `0.18.1` (#814) @Anselmoo
-- Update CHANGELOG (#810) @Anselmoo
+- Update CHANGELOG (#844) @Anselmoo
 
 ### 📦 Full Changelog
 
-**Full Changelog**: https://github.com/Anselmoo/spectrafit/compare/v0.18.0...v0.18.1
+**Full Changelog**: https://github.com/Anselmoo/spectrafit/compare/v0.18.3...v0.19.0
+
+### ⚙️ Who Contributes
+
+@Anselmoo and @josephzsombor
+
+## v0.18.3 🌈 - 2023-06-18
+
+### 🧭 What's Changed
+
+#### 💻 Codesspaces
+
+- 0.18.3-release (#842) @Anselmoo
+- perf: :arrow_up: Update `devcontainer.json` (#841) @Anselmoo
+
+#### 🧰 Maintenance
+
+- 0.18.3-release (#842) @Anselmoo
+- build(deps): Bump art from 5.9 to 6.0 (#833) @dependabot
+- [pre-commit.ci] pre-commit autoupdate (#828) @pre-commit-ci
+
+#### :octocat: Github Actions
+
+- ci: :zap: Create codeql.yml (#839) @Anselmoo
+- build(deps): Bump docker/build-push-action from 4.1.0 to 4.1.1 (#830) @dependabot
+- build(deps): Bump docker/metadata-action from 4.5.0 to 4.6.0 (#829) @dependabot
+- build(deps): Bump docker/build-push-action from 4.0.0 to 4.1.0 (#824) @dependabot
+- build(deps): Bump docker/metadata-action from 4.4.0 to 4.5.0 (#820) @dependabot
+
+#### 🔗 Dependency Updates
+
+- 0.18.3-release (#842) @Anselmoo
+- build(deps-dev): Bump mkdocs-material from 9.1.15 to 9.1.16 (#835) @dependabot
+- build(deps-dev): Bump pytest-mock from 3.10.0 to 3.11.1 (#834) @dependabot
+- build(deps-dev): Bump pre-commit from 3.3.2 to 3.3.3 (#831) @dependabot
+- build(deps): Bump art from 5.9 to 6.0 (#833) @dependabot
+- build(deps-dev): Bump blacken-docs from 1.13.0 to 1.14.0 (#832) @dependabot
+- build(deps-dev): Bump pytest from 7.3.1 to 7.3.2 (#826) @dependabot
+- build(deps-dev): Bump mkdocs-table-reader-plugin from 2.0 to 2.0.1 (#825) @dependabot
+- build(deps): Bump itables from 1.5.2 to 1.5.3 (#827) @dependabot
+- build(deps): Bump jupyterlab from 4.0.1 to 4.0.2 (#823) @dependabot
+- build(deps): Bump pydantic from 1.10.8 to 1.10.9 (#821) @dependabot
+- build(deps): Bump plotly from 5.14.1 to 5.15.0 (#822) @dependabot
+
+#### 📝 Changelog
+
+- Update CHANGELOG (#819) @Anselmoo
+
+#### 🐳 Docker
+
+- 0.18.3-release (#842) @Anselmoo
+
+### 📦 Full Changelog
+
+**Full Changelog**: https://github.com/Anselmoo/spectrafit/compare/v0.18.2...v0.18.3
+
+### ⚙️ Who Contributes
+
+@Anselmoo
+
+## v0.18.2 🌈 - 2023-06-05
+
+### 🧭 What's Changed
+
+- ci: ::arrow_up: Update sonar-scanner.properties (#816) @Anselmoo
+
+#### 🧰 Maintenance
+
+- fix: :memo: Re-Write misleading formulation (#815) @Anselmoo
+
+#### 🗂 Documentation
+
+- docs: :memo: Update README.md (#817) @Anselmoo
+- fix: :memo: Re-Write misleading formulation (#815) @Anselmoo
+
+#### 🔗 Dependency Updates
+
+- docs: :memo: Update README.md (#817) @Anselmoo
+- build(deps-dev): Bump jupytext from 1.14.5 to 1.14.6 (#818) @dependabot
+- fix: :memo: Re-Write misleading formulation (#815) @Anselmoo
+
+### 📦 Full Changelog
+
+**Full Changelog**: https://github.com/Anselmoo/spectrafit/compare/v0.18.1...v0.18.2
 
 ### ⚙️ Who Contributes
 
