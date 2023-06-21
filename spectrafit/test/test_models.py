@@ -1214,6 +1214,11 @@ class TestModel:
                 "polynom2",
                 {"coefficient0": 1.0, "coefficient1": 1.0, "coefficient2": 1.0},
             ),
+            (
+                "polynom3",
+                {"coefficient0": 1.0, "coefficient1": 1.0, "coefficient2": 1.0, 
+                     "coefficient3": 1.0},
+            ),
         ],
     )
     def test_distrubtion_models(
