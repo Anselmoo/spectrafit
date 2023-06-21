@@ -1216,8 +1216,12 @@ class TestModel:
             ),
             (
                 "polynom3",
-                {"coefficient0": 1.0, "coefficient1": 1.0, "coefficient2": 1.0, 
-                     "coefficient3": 1.0},
+                {
+                    "coefficient0": 1.0,
+                    "coefficient1": 1.0,
+                    "coefficient2": 1.0,
+                    "coefficient3": 1.0,
+                },
             ),
         ],
     )
