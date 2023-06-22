@@ -517,7 +517,7 @@ class DistributionModels:
         """Return a 1-dimensional second order polynomial function.
 
         $$
-        f(x) = coefficient0 + coefficient1*x + coefficient2*x**2
+        f(x) = c_2 x^2 + c_1 x + c_0
         $$
 
         Args:
@@ -545,8 +545,7 @@ class DistributionModels:
         """Return a 1-dimensional third order polynomial function.
 
         $$
-        f(x) = coefficient0 + coefficient1*x + coefficient2*x**2
-             + coefficient3*x**3
+        f(x) = c_3 x^3 + c_2 x^2 + c_1 x + c_0
         $$
 
         Args:
