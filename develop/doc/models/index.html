@@ -463,84 +463,84 @@
 <span class=linenos data-linenos="506 "></span>        <span class=o>*</span> <span class=p>(</span><span class=mi>1</span> <span class=o>+</span> <span class=n>erf</span><span class=p>((</span><span class=n>x</span> <span class=o>-</span> <span class=n>center</span><span class=p>)</span> <span class=o>/</span> <span class=p>(</span><span class=n>sigma</span> <span class=o>*</span> <span class=n>np</span><span class=o>.</span><span class=n>sqrt</span><span class=p>(</span><span class=mf>2.0</span><span class=p>))))</span>
 <span class=linenos data-linenos="507 "></span>        <span class=o>*</span> <span class=n>np</span><span class=o>.</span><span class=n>exp</span><span class=p>(</span><span class=o>-</span><span class=p>(((</span><span class=n>x</span> <span class=o>-</span> <span class=n>center</span><span class=p>)</span> <span class=o>/</span> <span class=n>gamma</span><span class=p>)</span> <span class=o>**</span> <span class=mi>2</span><span class=p>))</span>
 <span class=linenos data-linenos="508 "></span>    <span class=p>)</span>
-</code></pre></div> </details> </div> </div><h2 id=important-constants-for-the-models>Important constants for the models<a class=headerlink href=#important-constants-for-the-models title="Permanent link">&para;</a></h2> <p>For calculating the models a few math constants are needed, which are implemented in the <code>constants</code> module.</p> <div class="doc doc-object doc-class"> <a id=spectrafit.models.Constants></a> <div class="doc doc-contents first"> <p>Mathematical constants for the curve models.</p> <div class="admonition info"> <p class=admonition-title>Constants</p> <ol> <li> <p>Natural logarithm of 2</p> <div class=arithmatex>\[ ln2 = \log{2} \]</div> </li> <li> <p>Square root of 2 times pi</p> <div class=arithmatex>\[ sq2pi = \sqrt{2 \pi} \]</div> </li> <li> <p>Square root of pi</p> <div class=arithmatex>\[ sqpi = \sqrt{ \pi} \]</div> </li> <li> <p>Square root of 2</p> <div class=arithmatex>\[ sq2 = \sqrt{2} \]</div> </li> <li> <p>Full width at half maximum to sigma for Gaussian</p> <div class=arithmatex>\[ fwhmg2sig = \frac{1}{ 2 \sqrt{2\log{2}}} \]</div> </li> <li> <p>Full width at half maximum to sigma for Lorentzian</p> <div class=arithmatex>\[ fwhml2sig = \frac{1}{2} \]</div> </li> <li> <p>Full width at half maximum to sigma for Voigt according to the article by Olivero and Longbothum<sup id=spectrafit.models.Constants--fnref:1><a class=footnote-ref href=#spectrafit.models.Constants--fn:1>1</a></sup>, check also <a href=https://xpslibrary.com/voigt-peak-shape/ >XPSLibary website</a>.</p> <p>$$ fwhm_{\text{Voigt}} \approx 0.5346 \cdot fwhm_{\text{Gaussian}} + \sqrt{ 0.2166 fwhm_{\text{Lorentzian}}^2 + fwhm_{\text{Gaussian}}^2 }</p> <p>$$</p> <p>In case of equal FWHM for Gaussian and Lorentzian, the Voigt FWHM can be defined as:</p> <div class=arithmatex>\[ fwhm_{\text{Voigt}} \approx 1.0692 + 2 \sqrt{0.2166 + 2 \ln{2}} \cdot \sigma \]</div> <div class=arithmatex>\[ fwhmv2sig = \frac{1}{fwhm_{\text{Voigt}}} \]</div> </li> </ol> </div> <div class=footnote> <hr> <ol> <li id=spectrafit.models.Constants--fn:1> <p>J.J. Olivero, R.L. Longbothum, <em>Empirical fits to the Voigt line width: A brief review</em>, <strong>Journal of Quantitative Spectroscopy and Radiative Transfer</strong>, Volume 17, Issue 2, 1977, Pages 233-236, ISSN 0022-4073, <a href=https://doi.org/10.1016/0022-4073(77)90161-3>https://doi.org/10.1016/0022-4073(77)90161-3</a>.&#160;<a class=footnote-backref href=#spectrafit.models.Constants--fnref:1 title="Jump back to footnote 1 in the text">&#8617;</a></p> </li> </ol> </div> <details class=quote> <summary>Source code in <code>spectrafit/models.py</code></summary> <div class=highlight><span class=filename>Python</span><pre><span></span><code><span class=linenos data-linenos="625 "></span><span class=nd>@dataclass</span><span class=p>(</span><span class=n>frozen</span><span class=o>=</span><span class=kc>True</span><span class=p>)</span>
-<span class=linenos data-linenos="626 "></span><span class=k>class</span> <span class=nc>Constants</span><span class=p>:</span>
-<span class=linenos data-linenos="627 "></span><span class=w>    </span><span class=sa>r</span><span class=sd>&quot;&quot;&quot;Mathematical constants for the curve models.</span>
-<span class=linenos data-linenos="628 "></span>
-<span class=linenos data-linenos="629 "></span><span class=sd>    !!! info &quot;Constants&quot;</span>
-<span class=linenos data-linenos="630 "></span>
-<span class=linenos data-linenos="631 "></span><span class=sd>        1. Natural logarithm of 2</span>
-<span class=linenos data-linenos="632 "></span>
-<span class=linenos data-linenos="633 "></span><span class=sd>            $$</span>
-<span class=linenos data-linenos="634 "></span><span class=sd>            ln2 = \log{2}</span>
-<span class=linenos data-linenos="635 "></span><span class=sd>            $$</span>
-<span class=linenos data-linenos="636 "></span>
-<span class=linenos data-linenos="637 "></span><span class=sd>        2. Square root of 2 times pi</span>
-<span class=linenos data-linenos="638 "></span>
-<span class=linenos data-linenos="639 "></span><span class=sd>            $$</span>
-<span class=linenos data-linenos="640 "></span><span class=sd>            sq2pi = \sqrt{2 \pi}</span>
-<span class=linenos data-linenos="641 "></span><span class=sd>            $$</span>
-<span class=linenos data-linenos="642 "></span>
-<span class=linenos data-linenos="643 "></span><span class=sd>        3. Square root of pi</span>
-<span class=linenos data-linenos="644 "></span>
-<span class=linenos data-linenos="645 "></span><span class=sd>            $$</span>
-<span class=linenos data-linenos="646 "></span><span class=sd>            sqpi = \sqrt{ \pi}</span>
-<span class=linenos data-linenos="647 "></span><span class=sd>            $$</span>
-<span class=linenos data-linenos="648 "></span>
-<span class=linenos data-linenos="649 "></span><span class=sd>        4. Square root of 2</span>
-<span class=linenos data-linenos="650 "></span>
-<span class=linenos data-linenos="651 "></span><span class=sd>            $$</span>
-<span class=linenos data-linenos="652 "></span><span class=sd>            sq2 = \sqrt{2}</span>
-<span class=linenos data-linenos="653 "></span><span class=sd>            $$</span>
-<span class=linenos data-linenos="654 "></span>
-<span class=linenos data-linenos="655 "></span><span class=sd>        5. Full width at half maximum to sigma for Gaussian</span>
-<span class=linenos data-linenos="656 "></span>
-<span class=linenos data-linenos="657 "></span><span class=sd>            $$</span>
-<span class=linenos data-linenos="658 "></span><span class=sd>            fwhmg2sig = \frac{1}{ 2 \sqrt{2\log{2}}}</span>
-<span class=linenos data-linenos="659 "></span><span class=sd>            $$</span>
-<span class=linenos data-linenos="660 "></span>
-<span class=linenos data-linenos="661 "></span><span class=sd>        6. Full width at half maximum to sigma for Lorentzian</span>
-<span class=linenos data-linenos="662 "></span>
-<span class=linenos data-linenos="663 "></span><span class=sd>            $$</span>
-<span class=linenos data-linenos="664 "></span><span class=sd>            fwhml2sig = \frac{1}{2}</span>
-<span class=linenos data-linenos="665 "></span><span class=sd>            $$</span>
-<span class=linenos data-linenos="666 "></span>
-<span class=linenos data-linenos="667 "></span><span class=sd>        7. Full width at half maximum to sigma for Voigt according to the article by</span>
-<span class=linenos data-linenos="668 "></span><span class=sd>            Olivero and Longbothum[^1], check also</span>
-<span class=linenos data-linenos="669 "></span><span class=sd>            [XPSLibary website](https://xpslibrary.com/voigt-peak-shape/).</span>
-<span class=linenos data-linenos="670 "></span>
-<span class=linenos data-linenos="671 "></span><span class=sd>            $$</span>
-<span class=linenos data-linenos="672 "></span><span class=sd>            fwhm_{\text{Voigt}} \approx 0.5346 \cdot fwhm_{\text{Gaussian}} +</span>
-<span class=linenos data-linenos="673 "></span><span class=sd>              \sqrt{ 0.2166 fwhm_{\text{Lorentzian}}^2  + fwhm_{\text{Gaussian}}^2 }</span>
-<span class=linenos data-linenos="674 "></span>
-<span class=linenos data-linenos="675 "></span><span class=sd>            $$</span>
-<span class=linenos data-linenos="676 "></span>
-<span class=linenos data-linenos="677 "></span><span class=sd>            In case of equal FWHM for Gaussian and Lorentzian, the Voigt FWHM can be</span>
-<span class=linenos data-linenos="678 "></span><span class=sd>            defined as:</span>
-<span class=linenos data-linenos="679 "></span>
-<span class=linenos data-linenos="680 "></span><span class=sd>            $$</span>
-<span class=linenos data-linenos="681 "></span><span class=sd>            fwhm_{\text{Voigt}} \approx 1.0692 + 2 \sqrt{0.2166 + 2 \ln{2}} \cdot \sigma</span>
-<span class=linenos data-linenos="682 "></span><span class=sd>            $$</span>
-<span class=linenos data-linenos="683 "></span>
-<span class=linenos data-linenos="684 "></span><span class=sd>            $$</span>
-<span class=linenos data-linenos="685 "></span><span class=sd>            fwhmv2sig = \frac{1}{fwhm_{\text{Voigt}}}</span>
-<span class=linenos data-linenos="686 "></span><span class=sd>            $$</span>
-<span class=linenos data-linenos="687 "></span>
-<span class=linenos data-linenos="688 "></span><span class=sd>        [^1]:</span>
-<span class=linenos data-linenos="689 "></span><span class=sd>            J.J. Olivero, R.L. Longbothum,</span>
-<span class=linenos data-linenos="690 "></span><span class=sd>            _Empirical fits to the Voigt line width: A brief review_,</span>
-<span class=linenos data-linenos="691 "></span><span class=sd>            **Journal of Quantitative Spectroscopy and Radiative Transfer**,</span>
-<span class=linenos data-linenos="692 "></span><span class=sd>            Volume 17, Issue 2, 1977, Pages 233-236, ISSN 0022-4073,</span>
-<span class=linenos data-linenos="693 "></span><span class=sd>            https://doi.org/10.1016/0022-4073(77)90161-3.</span>
-<span class=linenos data-linenos="694 "></span><span class=sd>    &quot;&quot;&quot;</span>
-<span class=linenos data-linenos="695 "></span>
-<span class=linenos data-linenos="696 "></span>    <span class=n>ln2</span> <span class=o>=</span> <span class=n>log</span><span class=p>(</span><span class=mf>2.0</span><span class=p>)</span>
-<span class=linenos data-linenos="697 "></span>    <span class=n>sq2pi</span> <span class=o>=</span> <span class=n>sqrt</span><span class=p>(</span><span class=mf>2.0</span> <span class=o>*</span> <span class=n>pi</span><span class=p>)</span>
-<span class=linenos data-linenos="698 "></span>    <span class=n>sqpi</span> <span class=o>=</span> <span class=n>sqrt</span><span class=p>(</span><span class=n>pi</span><span class=p>)</span>
-<span class=linenos data-linenos="699 "></span>    <span class=n>sq2</span> <span class=o>=</span> <span class=n>sqrt</span><span class=p>(</span><span class=mf>2.0</span><span class=p>)</span>
-<span class=linenos data-linenos="700 "></span>    <span class=n>fwhmg2sig</span> <span class=o>=</span> <span class=mi>1</span> <span class=o>/</span> <span class=p>(</span><span class=mf>2.0</span> <span class=o>*</span> <span class=n>sqrt</span><span class=p>(</span><span class=mf>2.0</span> <span class=o>*</span> <span class=n>log</span><span class=p>(</span><span class=mf>2.0</span><span class=p>)))</span>
-<span class=linenos data-linenos="701 "></span>    <span class=n>fwhml2sig</span> <span class=o>=</span> <span class=mi>1</span> <span class=o>/</span> <span class=mf>2.0</span>
-<span class=linenos data-linenos="702 "></span>    <span class=n>fwhmv2sig</span> <span class=o>=</span> <span class=mi>1</span> <span class=o>/</span> <span class=p>(</span><span class=mi>2</span> <span class=o>*</span> <span class=mf>0.5346</span> <span class=o>+</span> <span class=mi>2</span> <span class=o>*</span> <span class=n>sqrt</span><span class=p>(</span><span class=mf>0.2166</span> <span class=o>+</span> <span class=n>log</span><span class=p>(</span><span class=mi>2</span><span class=p>)</span> <span class=o>*</span> <span class=mi>2</span><span class=p>))</span>
+</code></pre></div> </details> </div> </div><h2 id=important-constants-for-the-models>Important constants for the models<a class=headerlink href=#important-constants-for-the-models title="Permanent link">&para;</a></h2> <p>For calculating the models a few math constants are needed, which are implemented in the <code>constants</code> module.</p> <div class="doc doc-object doc-class"> <a id=spectrafit.models.Constants></a> <div class="doc doc-contents first"> <p>Mathematical constants for the curve models.</p> <div class="admonition info"> <p class=admonition-title>Constants</p> <ol> <li> <p>Natural logarithm of 2</p> <div class=arithmatex>\[ ln2 = \log{2} \]</div> </li> <li> <p>Square root of 2 times pi</p> <div class=arithmatex>\[ sq2pi = \sqrt{2 \pi} \]</div> </li> <li> <p>Square root of pi</p> <div class=arithmatex>\[ sqpi = \sqrt{ \pi} \]</div> </li> <li> <p>Square root of 2</p> <div class=arithmatex>\[ sq2 = \sqrt{2} \]</div> </li> <li> <p>Full width at half maximum to sigma for Gaussian</p> <div class=arithmatex>\[ fwhmg2sig = \frac{1}{ 2 \sqrt{2\log{2}}} \]</div> </li> <li> <p>Full width at half maximum to sigma for Lorentzian</p> <div class=arithmatex>\[ fwhml2sig = \frac{1}{2} \]</div> </li> <li> <p>Full width at half maximum to sigma for Voigt according to the article by Olivero and Longbothum<sup id=spectrafit.models.Constants--fnref:1><a class=footnote-ref href=#spectrafit.models.Constants--fn:1>1</a></sup>, check also <a href=https://xpslibrary.com/voigt-peak-shape/ >XPSLibary website</a>.</p> <p>$$ fwhm_{\text{Voigt}} \approx 0.5346 \cdot fwhm_{\text{Gaussian}} + \sqrt{ 0.2166 fwhm_{\text{Lorentzian}}^2 + fwhm_{\text{Gaussian}}^2 }</p> <p>$$</p> <p>In case of equal FWHM for Gaussian and Lorentzian, the Voigt FWHM can be defined as:</p> <div class=arithmatex>\[ fwhm_{\text{Voigt}} \approx 1.0692 + 2 \sqrt{0.2166 + 2 \ln{2}} \cdot \sigma \]</div> <div class=arithmatex>\[ fwhmv2sig = \frac{1}{fwhm_{\text{Voigt}}} \]</div> </li> </ol> </div> <div class=footnote> <hr> <ol> <li id=spectrafit.models.Constants--fn:1> <p>J.J. Olivero, R.L. Longbothum, <em>Empirical fits to the Voigt line width: A brief review</em>, <strong>Journal of Quantitative Spectroscopy and Radiative Transfer</strong>, Volume 17, Issue 2, 1977, Pages 233-236, ISSN 0022-4073, <a href=https://doi.org/10.1016/0022-4073(77)90161-3>https://doi.org/10.1016/0022-4073(77)90161-3</a>.&#160;<a class=footnote-backref href=#spectrafit.models.Constants--fnref:1 title="Jump back to footnote 1 in the text">&#8617;</a></p> </li> </ol> </div> <details class=quote> <summary>Source code in <code>spectrafit/models.py</code></summary> <div class=highlight><span class=filename>Python</span><pre><span></span><code><span class=linenos data-linenos="624 "></span><span class=nd>@dataclass</span><span class=p>(</span><span class=n>frozen</span><span class=o>=</span><span class=kc>True</span><span class=p>)</span>
+<span class=linenos data-linenos="625 "></span><span class=k>class</span> <span class=nc>Constants</span><span class=p>:</span>
+<span class=linenos data-linenos="626 "></span><span class=w>    </span><span class=sa>r</span><span class=sd>&quot;&quot;&quot;Mathematical constants for the curve models.</span>
+<span class=linenos data-linenos="627 "></span>
+<span class=linenos data-linenos="628 "></span><span class=sd>    !!! info &quot;Constants&quot;</span>
+<span class=linenos data-linenos="629 "></span>
+<span class=linenos data-linenos="630 "></span><span class=sd>        1. Natural logarithm of 2</span>
+<span class=linenos data-linenos="631 "></span>
+<span class=linenos data-linenos="632 "></span><span class=sd>            $$</span>
+<span class=linenos data-linenos="633 "></span><span class=sd>            ln2 = \log{2}</span>
+<span class=linenos data-linenos="634 "></span><span class=sd>            $$</span>
+<span class=linenos data-linenos="635 "></span>
+<span class=linenos data-linenos="636 "></span><span class=sd>        2. Square root of 2 times pi</span>
+<span class=linenos data-linenos="637 "></span>
+<span class=linenos data-linenos="638 "></span><span class=sd>            $$</span>
+<span class=linenos data-linenos="639 "></span><span class=sd>            sq2pi = \sqrt{2 \pi}</span>
+<span class=linenos data-linenos="640 "></span><span class=sd>            $$</span>
+<span class=linenos data-linenos="641 "></span>
+<span class=linenos data-linenos="642 "></span><span class=sd>        3. Square root of pi</span>
+<span class=linenos data-linenos="643 "></span>
+<span class=linenos data-linenos="644 "></span><span class=sd>            $$</span>
+<span class=linenos data-linenos="645 "></span><span class=sd>            sqpi = \sqrt{ \pi}</span>
+<span class=linenos data-linenos="646 "></span><span class=sd>            $$</span>
+<span class=linenos data-linenos="647 "></span>
+<span class=linenos data-linenos="648 "></span><span class=sd>        4. Square root of 2</span>
+<span class=linenos data-linenos="649 "></span>
+<span class=linenos data-linenos="650 "></span><span class=sd>            $$</span>
+<span class=linenos data-linenos="651 "></span><span class=sd>            sq2 = \sqrt{2}</span>
+<span class=linenos data-linenos="652 "></span><span class=sd>            $$</span>
+<span class=linenos data-linenos="653 "></span>
+<span class=linenos data-linenos="654 "></span><span class=sd>        5. Full width at half maximum to sigma for Gaussian</span>
+<span class=linenos data-linenos="655 "></span>
+<span class=linenos data-linenos="656 "></span><span class=sd>            $$</span>
+<span class=linenos data-linenos="657 "></span><span class=sd>            fwhmg2sig = \frac{1}{ 2 \sqrt{2\log{2}}}</span>
+<span class=linenos data-linenos="658 "></span><span class=sd>            $$</span>
+<span class=linenos data-linenos="659 "></span>
+<span class=linenos data-linenos="660 "></span><span class=sd>        6. Full width at half maximum to sigma for Lorentzian</span>
+<span class=linenos data-linenos="661 "></span>
+<span class=linenos data-linenos="662 "></span><span class=sd>            $$</span>
+<span class=linenos data-linenos="663 "></span><span class=sd>            fwhml2sig = \frac{1}{2}</span>
+<span class=linenos data-linenos="664 "></span><span class=sd>            $$</span>
+<span class=linenos data-linenos="665 "></span>
+<span class=linenos data-linenos="666 "></span><span class=sd>        7. Full width at half maximum to sigma for Voigt according to the article by</span>
+<span class=linenos data-linenos="667 "></span><span class=sd>            Olivero and Longbothum[^1], check also</span>
+<span class=linenos data-linenos="668 "></span><span class=sd>            [XPSLibary website](https://xpslibrary.com/voigt-peak-shape/).</span>
+<span class=linenos data-linenos="669 "></span>
+<span class=linenos data-linenos="670 "></span><span class=sd>            $$</span>
+<span class=linenos data-linenos="671 "></span><span class=sd>            fwhm_{\text{Voigt}} \approx 0.5346 \cdot fwhm_{\text{Gaussian}} +</span>
+<span class=linenos data-linenos="672 "></span><span class=sd>              \sqrt{ 0.2166 fwhm_{\text{Lorentzian}}^2  + fwhm_{\text{Gaussian}}^2 }</span>
+<span class=linenos data-linenos="673 "></span>
+<span class=linenos data-linenos="674 "></span><span class=sd>            $$</span>
+<span class=linenos data-linenos="675 "></span>
+<span class=linenos data-linenos="676 "></span><span class=sd>            In case of equal FWHM for Gaussian and Lorentzian, the Voigt FWHM can be</span>
+<span class=linenos data-linenos="677 "></span><span class=sd>            defined as:</span>
+<span class=linenos data-linenos="678 "></span>
+<span class=linenos data-linenos="679 "></span><span class=sd>            $$</span>
+<span class=linenos data-linenos="680 "></span><span class=sd>            fwhm_{\text{Voigt}} \approx 1.0692 + 2 \sqrt{0.2166 + 2 \ln{2}} \cdot \sigma</span>
+<span class=linenos data-linenos="681 "></span><span class=sd>            $$</span>
+<span class=linenos data-linenos="682 "></span>
+<span class=linenos data-linenos="683 "></span><span class=sd>            $$</span>
+<span class=linenos data-linenos="684 "></span><span class=sd>            fwhmv2sig = \frac{1}{fwhm_{\text{Voigt}}}</span>
+<span class=linenos data-linenos="685 "></span><span class=sd>            $$</span>
+<span class=linenos data-linenos="686 "></span>
+<span class=linenos data-linenos="687 "></span><span class=sd>        [^1]:</span>
+<span class=linenos data-linenos="688 "></span><span class=sd>            J.J. Olivero, R.L. Longbothum,</span>
+<span class=linenos data-linenos="689 "></span><span class=sd>            _Empirical fits to the Voigt line width: A brief review_,</span>
+<span class=linenos data-linenos="690 "></span><span class=sd>            **Journal of Quantitative Spectroscopy and Radiative Transfer**,</span>
+<span class=linenos data-linenos="691 "></span><span class=sd>            Volume 17, Issue 2, 1977, Pages 233-236, ISSN 0022-4073,</span>
+<span class=linenos data-linenos="692 "></span><span class=sd>            https://doi.org/10.1016/0022-4073(77)90161-3.</span>
+<span class=linenos data-linenos="693 "></span><span class=sd>    &quot;&quot;&quot;</span>
+<span class=linenos data-linenos="694 "></span>
+<span class=linenos data-linenos="695 "></span>    <span class=n>ln2</span> <span class=o>=</span> <span class=n>log</span><span class=p>(</span><span class=mf>2.0</span><span class=p>)</span>
+<span class=linenos data-linenos="696 "></span>    <span class=n>sq2pi</span> <span class=o>=</span> <span class=n>sqrt</span><span class=p>(</span><span class=mf>2.0</span> <span class=o>*</span> <span class=n>pi</span><span class=p>)</span>
+<span class=linenos data-linenos="697 "></span>    <span class=n>sqpi</span> <span class=o>=</span> <span class=n>sqrt</span><span class=p>(</span><span class=n>pi</span><span class=p>)</span>
+<span class=linenos data-linenos="698 "></span>    <span class=n>sq2</span> <span class=o>=</span> <span class=n>sqrt</span><span class=p>(</span><span class=mf>2.0</span><span class=p>)</span>
+<span class=linenos data-linenos="699 "></span>    <span class=n>fwhmg2sig</span> <span class=o>=</span> <span class=mi>1</span> <span class=o>/</span> <span class=p>(</span><span class=mf>2.0</span> <span class=o>*</span> <span class=n>sqrt</span><span class=p>(</span><span class=mf>2.0</span> <span class=o>*</span> <span class=n>log</span><span class=p>(</span><span class=mf>2.0</span><span class=p>)))</span>
+<span class=linenos data-linenos="700 "></span>    <span class=n>fwhml2sig</span> <span class=o>=</span> <span class=mi>1</span> <span class=o>/</span> <span class=mf>2.0</span>
+<span class=linenos data-linenos="701 "></span>    <span class=n>fwhmv2sig</span> <span class=o>=</span> <span class=mi>1</span> <span class=o>/</span> <span class=p>(</span><span class=mi>2</span> <span class=o>*</span> <span class=mf>0.5346</span> <span class=o>+</span> <span class=mi>2</span> <span class=o>*</span> <span class=n>sqrt</span><span class=p>(</span><span class=mf>0.2166</span> <span class=o>+</span> <span class=n>log</span><span class=p>(</span><span class=mi>2</span><span class=p>)</span> <span class=o>*</span> <span class=mi>2</span><span class=p>))</span>
 </code></pre></div> </details> <div class="doc doc-children"> </div> </div> </div><h2 id=visualization-of-the-models-as-a-function-of-the-parameters>Visualization of the models as a function of the parameters<a class=headerlink href=#visualization-of-the-models-as-a-function-of-the-parameters title="Permanent link">&para;</a></h2> <div class="admonition info"> <p class=admonition-title>About Peaks' Components</p> <p>Comparing components of the peaks in a table is important because it allows for a quick and easy comparison of the different parameters that describe each peak. This can be useful for identifying trends or patterns in the data, as well as for identifying outliers or anomalies.</p> <p>Additionally, having this information in a table format can make it easier to visualize and interpret the data, as well as to communicate the results to others. This can be also seen in <a href=https://github.com/Anselmoo/spectrafit/blob/main/docs/examples/example9_3.ipynb>example9_3.ipny</a></p> <div class="language-python highlight"><span class=filename>Python</span><pre><span></span><code><span class=linenos data-linenos="1 "></span><span class=kn>from</span> <span class=nn>spectrafit.plugins</span> <span class=kn>import</span> <span class=n>notebook</span> <span class=k>as</span> <span class=n>nb</span>
 <span class=linenos data-linenos="2 "></span>
 <span class=linenos data-linenos="3 "></span><span class=o>...</span>
