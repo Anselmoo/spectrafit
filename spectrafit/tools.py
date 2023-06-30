@@ -488,7 +488,7 @@ class SaveResult:
             index_label="attributes",
         )
         pd.DataFrame.from_dict(self.args["fit_insights"]["variables"]).to_csv(
-            Path(f"{self.args['outfile']}_errors.csv"),
+            Path(f"{self.args['outfile']}_components.csv"),
             index=True,
             index_label="attributes",
         )
