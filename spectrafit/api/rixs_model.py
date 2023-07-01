@@ -8,6 +8,7 @@ import numpy as np
 
 from numpy.typing import NDArray
 from pydantic import BaseModel
+from pydantic import ConfigDict
 from pydantic import Field
 
 
@@ -79,11 +80,7 @@ class RIXSModelAPI(BaseModel):
         ..., description="Emission energy values."
     )
     rixs_map: NDArray[np.float64] = Field(..., description="RIXS map values.")
-
-    class Config:
-        """Configurations for the RIXSModelAPI class."""
-
-        arbitrary_types_allowed = True
+    model_config = ConfigDict(arbitrary_types_allowed=True)
 
 
 class RIXSPlotAPI(BaseModel):
@@ -110,8 +107,4 @@ class RIXSPlotAPI(BaseModel):
     z_axis: ZAxisAPI = ZAxisAPI()
     main_title: MainTitleAPI = MainTitleAPI()
     size_ratio: SizeRatioAPI = SizeRatioAPI()
-
-    class Config:
-        """Configurations for the RIXSPlotAPI class."""
-
-        arbitrary_types_allowed = True
+    model_config = ConfigDict(arbitrary_types_allowed=True)

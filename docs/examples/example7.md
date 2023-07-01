@@ -22,7 +22,7 @@ In the following example the in example the section block looks like:
     "shift": 0,
     "smooth": 0,
     "autopeak": {
-      "model_type": "gaussian",
+      "modeltype": "gaussian",
       "height": [0.0, 16],
       "threshold": [0.0, 16],
       "distance": 2,

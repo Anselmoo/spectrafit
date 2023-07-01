@@ -8,7 +8,7 @@ from typing import Optional
 from typing import Union
 
 from pydantic import BaseModel
-from pydantic import Extra
+from pydantic import ConfigDict
 from pydantic import Field
 
 
@@ -23,7 +23,7 @@ class AutopeakAPI(BaseModel):
     )
     """
 
-    model_type: Optional[str] = None
+    modeltype: Optional[str] = None
     height: Optional[List[float]] = None
     threshold: Optional[List[float]] = None
     distance: Optional[int] = None
@@ -32,12 +32,7 @@ class AutopeakAPI(BaseModel):
     wlen: Optional[int] = None
     rel_height: Optional[float] = None
     plateau_size: Optional[float] = None
-
-    class Config:
-        """Activate the Validation Error Raise."""
-
-        extra = Extra.forbid
-        validate_assignment = True
+    model_config = ConfigDict(extra="forbid", validate_assignment=True)
 
 
 class DataPreProcessingAPI(BaseModel):
@@ -69,7 +64,7 @@ class DataPreProcessingAPI(BaseModel):
         description="Shift the energy axis; default to 0.",
     )
     column: List[Union[int, str]] = Field(
-        min_items=1,
+        min_length=1,
         default=[0, 1],
         dtypes=[int, str],
         description="Column of the data.",
@@ -109,7 +104,7 @@ class GeneralSolverModelsAPI(BaseModel):
     optimizer: Dict[str, Any] = SolverModelsAPI().optimizer
 
 
-class ColumnNamesAPI(BaseModel, allow_mutation=False):
+class ColumnNamesAPI(BaseModel):
     """Definition of the column names of the exported model."""
 
     energy: str = "energy"

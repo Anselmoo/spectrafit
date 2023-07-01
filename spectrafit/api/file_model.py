@@ -8,7 +8,7 @@ from typing import Union
 
 from pydantic import BaseModel
 from pydantic import Field
-from pydantic import validator
+from pydantic.functional_validators import field_validator
 
 
 class DataFileAPI(BaseModel):
@@ -43,7 +43,8 @@ class DataFileAPI(BaseModel):
         description="File suffixes to use.",
     )
 
-    @validator("delimiter")
+    @field_validator("delimiter")
+    @classmethod
     @classmethod
     def check_delimiter(cls, v: str) -> Optional[str]:
         """Check if the delimiter is valid."""
@@ -51,7 +52,8 @@ class DataFileAPI(BaseModel):
             return v
         raise ValueError(f" {v} is not a valid delimiter.")
 
-    @validator("comment")
+    @field_validator("comment")
+    @classmethod
     @classmethod
     def check_comment(cls, v: str) -> Optional[str]:
         """Check if the comment marker is valid."""

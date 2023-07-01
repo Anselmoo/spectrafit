@@ -14,6 +14,7 @@ from numpy import __version__ as numpy_version
 from pandas import __version__ as pandas_version
 from plotly import __version__ as plotly_version
 from pydantic import BaseModel
+from pydantic import ConfigDict
 from pydantic import Field
 from pydantic import __version__ as pydantic_version
 from scipy import __version__ as scipy_version
@@ -23,7 +24,7 @@ from spectrafit.api.tools_model import DataPreProcessingAPI
 from statsmodels import __version__ as statsmodels_version
 
 
-class CreditsAPI(BaseModel, allow_mutation=False):
+class CreditsAPI(BaseModel):
     """Credits API model."""
 
     dtale: str = f"dtale v{dtale_version}"
@@ -122,11 +123,7 @@ class OutputAPI(BaseModel):
         default={},
         description="DataFrame of the pre-processed data via 'records' orient",
     )
-
-    class Config:
-        """Config for the OutputAPI of arbitary types."""
-
-        arbitrary_types_allowed = True
+    model_config = ConfigDict(arbitrary_types_allowed=True)
 
 
 class ReportAPI(BaseModel):

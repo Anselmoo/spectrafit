@@ -378,7 +378,7 @@ follows:
 
 ```json
   "autopeak": {
-   "model_type": "gaussian",
+   "modeltype": "gaussian",
    "height": [0.0, 10],
    "threshold": [0.0, 10],
    "distance": 2,

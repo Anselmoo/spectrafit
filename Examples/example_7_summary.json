@@ -13,7 +13,7 @@
   "header": 0,
   "global_": 0,
   "autopeak": {
-    "model_type": "gaussian",
+    "modeltype": "gaussian",
     "height": [0.0, 16],
     "threshold": [0.0, 16],
     "distance": 2,
