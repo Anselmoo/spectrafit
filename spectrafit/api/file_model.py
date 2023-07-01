@@ -45,7 +45,6 @@ class DataFileAPI(BaseModel):
 
     @field_validator("delimiter")
     @classmethod
-    @classmethod
     def check_delimiter(cls, v: str) -> Optional[str]:
         """Check if the delimiter is valid."""
         if v in {" ", "\t", ",", ";", "|", r"\s+"}:
@@ -53,7 +52,6 @@ class DataFileAPI(BaseModel):
         raise ValueError(f" {v} is not a valid delimiter.")
 
     @field_validator("comment")
-    @classmethod
     @classmethod
     def check_comment(cls, v: str) -> Optional[str]:
         """Check if the comment marker is valid."""
