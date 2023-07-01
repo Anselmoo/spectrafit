@@ -43,7 +43,7 @@ def test_overwrite_cmd() -> None:
         column=["col_1", "col_2"],
         separator="s+",
         autopeak={
-            "model_type": "ga",
+            "modeltype": "ga",
             "height": [1],
             "threshold": [0.1],
             "distance": 10,
@@ -63,7 +63,7 @@ def test_overwrite_cmd() -> None:
     assert result["column"] == ["col_1", "col_2"]
     assert result["separator"] == "s+"
     assert result["decimal"] == "."
-    assert result["autopeak"]["model_type"] == "ga"
+    assert result["autopeak"]["modeltype"] == "ga"
     assert result["autopeak"]["height"] == [1]
     assert result["autopeak"]["threshold"] == [0.1]
     assert result["autopeak"]["distance"] == 10

@@ -4,7 +4,7 @@ from typing import List
 from pydantic import BaseModel
 
 
-class DraculaColor(BaseModel, allow_mutation=False):
+class DraculaColor(BaseModel):
     """Dracula color schema for SpectraFit.
 
     !!! info "Dracula Color"
@@ -43,7 +43,7 @@ class DraculaColor(BaseModel, allow_mutation=False):
     font: str = "#f8f8f2"
 
 
-class DraculaFont(BaseModel, allow_mutation=False):
+class DraculaFont(BaseModel):
     """Dracula font schema for SpectraFit.
 
     !!! info "Dracula Font"

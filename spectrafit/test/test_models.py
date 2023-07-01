@@ -1070,7 +1070,7 @@ class TestAutoPeakDetection:
             "global_": 0,
             "column": ["Energy", "Noisy_Intensity"],
             "autopeak": {
-                "model_type": "voigt",
+                "modeltype": "voigt",
                 "height": (0.0, 10),
                 "threshold": (0.0, 10),
                 "distance": 2,
@@ -1093,7 +1093,7 @@ class TestAutoPeakDetection:
             "global_": 0,
             "column": ["Energy", "Noisy_Intensity"],
             "autopeak": {
-                "model_type": "pseudovoigt",
+                "modeltype": "pseudovoigt",
                 "height": (0.0, 10),
                 "threshold": (0.0, 10),
                 "distance": 2,
@@ -1116,7 +1116,7 @@ class TestAutoPeakDetection:
             "global_": 0,
             "column": ["Energy", "Noisy_Intensity"],
             "autopeak": {
-                "model_type": "lorentzian",
+                "modeltype": "lorentzian",
                 "height": (0.0, 10),
                 "threshold": (0.0, 10),
                 "distance": 2,
@@ -1161,7 +1161,7 @@ class TestAutoPeakDetection:
             "global_": 0,
             "column": ["Energy", "Noisy_Intensity"],
             "autopeak": {
-                "model_type": "nomodel",
+                "modeltype": "nomodel",
                 "height": (0.0, 10),
                 "threshold": (0.0, 10),
                 "distance": 2,

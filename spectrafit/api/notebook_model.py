@@ -12,7 +12,7 @@ from _plotly_utils.colors.carto import Teal_r
 from _plotly_utils.colors.qualitative import Plotly as PlotlyColors
 from pydantic import BaseModel
 from pydantic import Field
-from pydantic import validator
+from pydantic.functional_validators import field_validator
 
 
 class XAxisAPI(BaseModel):
@@ -129,7 +129,7 @@ class ColorAPI(BaseModel):
     ticks: str = Field(default="black", description="Color of the ticks.")
     font: str = Field(default="black", description="Font color of the plot.")
 
-    @validator(
+    @field_validator(
         "paper",
         "layout",
         "grid",

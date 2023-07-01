@@ -1,13 +1,12 @@
 """Reference model for the API of the Jupyter Notebook interface."""
 
 
+from typing import Any
 from typing import Optional
 from typing import Tuple
 
-import numpy as np
-
-from numpy.typing import NDArray
 from pydantic import BaseModel
+from pydantic import ConfigDict
 from pydantic import Field
 
 
@@ -72,46 +71,40 @@ class SizeRatioAPI(BaseModel):
 class RIXSModelAPI(BaseModel):
     """Definition of the RIXS model."""
 
-    incident_energy: NDArray[np.float64] = Field(
+    incident_energy: Any = Field(
         ..., description="Incident energy values."
-    )
-    emission_energy: NDArray[np.float64] = Field(
+    )  # Should be NDArray[np.float64] but that's not supported for 3.8
+    emission_energy: Any = Field(
         ..., description="Emission energy values."
-    )
-    rixs_map: NDArray[np.float64] = Field(..., description="RIXS map values.")
-
-    class Config:
-        """Configurations for the RIXSModelAPI class."""
-
-        arbitrary_types_allowed = True
+    )  # Should be NDArray[np.float64] but that's not supported for 3.8
+    rixs_map: Any = Field(
+        ..., description="RIXS map values."
+    )  # Should be NDArray[np.float64] but that's not supported for 3.8
+    model_config = ConfigDict(arbitrary_types_allowed=True)
 
 
 class RIXSPlotAPI(BaseModel):
     """Definition of the plotly figure."""
 
-    incident_energy: NDArray[np.float64] = Field(
+    incident_energy: Any = Field(
         ..., description="Incident energy values."
-    )
-    emission_energy: NDArray[np.float64] = Field(
+    )  # Should be NDArray[np.float64] but that's not supported for 3.8
+    emission_energy: Any = Field(
         ..., description="Emission energy values."
-    )
-    emission_intensity: NDArray[np.float64] = Field(
+    )  # Should be NDArray[np.float64] but that's not supported for 3.8
+    emission_intensity: Any = Field(
         ..., description="Emission intensity values (RIXS), which has to be a 2D array."
-    )
-    energy_loss: Optional[NDArray[np.float64]] = Field(
+    )  # Should be NDArray[np.float64] but that's not supported for 3.8
+    energy_loss: Optional[Any] = Field(
         default=None, description="Energy loss values."
-    )
-    energy_loss_intensity: Optional[NDArray[np.float64]] = Field(
+    )  # Should be NDArray[np.float64] but that's not supported for 3.8
+    energy_loss_intensity: Optional[Any] = Field(
         default=None,
         description="Energy loss intensity values (XES), which has to be a 2D array.",
-    )
+    )  # Should be NDArray[np.float64] but that's not supported for 3.8
     x_axis: XAxisAPI = XAxisAPI()
     y_axis: YAxisAPI = YAxisAPI()
     z_axis: ZAxisAPI = ZAxisAPI()
     main_title: MainTitleAPI = MainTitleAPI()
     size_ratio: SizeRatioAPI = SizeRatioAPI()
-
-    class Config:
-        """Configurations for the RIXSPlotAPI class."""
-
-        arbitrary_types_allowed = True
+    model_config = ConfigDict(arbitrary_types_allowed=True)

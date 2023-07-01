@@ -1066,9 +1066,9 @@ class ModelParameters(AutoPeakDetection):
         positions, properties = self.__autodetect__()
         if (
             not isinstance(self.args["autopeak"], bool)
-            and "model_type" in self.args["autopeak"]
+            and "modeltype" in self.args["autopeak"]
         ):
-            _model = self.args["autopeak"]["model_type"].lower()
+            _model = self.args["autopeak"]["modeltype"].lower()
             ReferenceKeys().automodel_check(model=_model)
             models = _model
         else:
