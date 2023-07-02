@@ -38,7 +38,7 @@ jobs:
           body: |
             This Pull Request was automatically created by the Changelog Updater Action.
             It updates the CHANGELOG.md with the release notes from the latest release.
-          branch: release/${{ github.event.release.tag_name }}
+          branch: main
 
   Release-Documentation:
     if: ${{ contains(github.event.release.prerelease, false) }}
