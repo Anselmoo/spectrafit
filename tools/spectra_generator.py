@@ -34,4 +34,5 @@ def double_peak(fname: str) -> None:
 
 
 if __name__ == "__main__":
+    """Start Generator."""
     double_peak("double_peak.csv")
