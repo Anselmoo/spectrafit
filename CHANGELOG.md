@@ -2,6 +2,66 @@
 
 All notable changes to this project will be documented in this file.
 
+## v0.20.0 🌈 - 2023-07-02
+
+### 🧭 What's Changed
+
+#### 🚀 New
+
+- build: :arrow_up: Updating to `pydantic v2.0.0` (#863) @Anselmoo
+
+#### 🧰 Maintenance
+
+- fix: 🏗️ Fix building docs and changelog  (#867) @Anselmoo
+- build: :bookmark: v0.20.0 (#866) @Anselmoo
+- build: :arrow_up: Updating to `pydantic v2.0.0` (#863) @Anselmoo
+
+#### 🐍 Python
+
+- build: :arrow_up: Updating to `pydantic v2.0.0` (#863) @Anselmoo
+- chore: :speech_balloon: Change from `errors` to `components` (#860) @Anselmoo
+
+#### :octocat: Github Actions
+
+- fix: 🏗️ Fix building docs and changelog  (#867) @Anselmoo
+- ci: :building_construction: Update Doc-Release (#865) @Anselmoo
+- ci: :heavy_minus_sign: Remove duplicated CI-check (#864) @Anselmoo
+- build(deps): Bump pypa/gh-action-pypi-publish from 1.8.6 to 1.8.7 (#856) @dependabot
+
+#### 🗂 Documentation
+
+- build: :arrow_up: Updating to `pydantic v2.0.0` (#863) @Anselmoo
+
+#### 🔗 Dependency Updates
+
+- fix: 🏗️ Fix building docs and changelog  (#867) @Anselmoo
+- build: :bookmark: v0.20.0 (#866) @Anselmoo
+- build: :arrow_up: Updating to `pydantic v2.0.0` (#863) @Anselmoo
+- build(deps-dev): Bump dash from 2.11.0 to 2.11.1 (#859) @dependabot
+- build(deps): Bump pandas from 2.0.2 to 2.0.3 (#858) @dependabot
+- build(deps): Bump numpy from 1.24.3 to 1.24.4 (#857) @dependabot
+- build(deps-dev): Bump mypy from 1.4.0 to 1.4.1 (#852) @dependabot
+- build(deps-dev): Bump pytest from 7.3.2 to 7.4.0 (#853) @dependabot
+- build(deps-dev): Bump mkdocs-material from 9.1.16 to 9.1.17 (#851) @dependabot
+- build(deps-dev): Bump dash from 2.10.2 to 2.11.0 (#854) @dependabot
+
+#### 🔬 Testing & Coverage
+
+- build: :arrow_up: Updating to `pydantic v2.0.0` (#863) @Anselmoo
+
+#### 📝 Changelog
+
+- fix: ✍️  Add missing CHANGELOG of `0.18.1` (#850) @Anselmoo
+- Update CHANGELOG (#849) @Anselmoo
+
+### 📦 Full Changelog
+
+**Full Changelog**: https://github.com/Anselmoo/spectrafit/compare/v0.19.0...v0.20.0
+
+### ⚙️ Who Contributes
+
+@Anselmoo
+
 ## v0.19.0 🌈 - 2023-06-21
 
 ### 🧭 What's Changed
