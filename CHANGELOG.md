@@ -12,7 +12,7 @@ All notable changes to this project will be documented in this file.
 
 #### 🧰 Maintenance
 
-- fix: 🏗️ Fix building docs and changelog  (#867) @Anselmoo
+- fix: 🏗️ Fix building docs and changelog (#867) @Anselmoo
 - build: :bookmark: v0.20.0 (#866) @Anselmoo
 - build: :arrow_up: Updating to `pydantic v2.0.0` (#863) @Anselmoo
 
@@ -23,7 +23,7 @@ All notable changes to this project will be documented in this file.
 
 #### :octocat: Github Actions
 
-- fix: 🏗️ Fix building docs and changelog  (#867) @Anselmoo
+- fix: 🏗️ Fix building docs and changelog (#867) @Anselmoo
 - ci: :building_construction: Update Doc-Release (#865) @Anselmoo
 - ci: :heavy_minus_sign: Remove duplicated CI-check (#864) @Anselmoo
 - build(deps): Bump pypa/gh-action-pypi-publish from 1.8.6 to 1.8.7 (#856) @dependabot
@@ -34,7 +34,7 @@ All notable changes to this project will be documented in this file.
 
 #### 🔗 Dependency Updates
 
-- fix: 🏗️ Fix building docs and changelog  (#867) @Anselmoo
+- fix: 🏗️ Fix building docs and changelog (#867) @Anselmoo
 - build: :bookmark: v0.20.0 (#866) @Anselmoo
 - build: :arrow_up: Updating to `pydantic v2.0.0` (#863) @Anselmoo
 - build(deps-dev): Bump dash from 2.11.0 to 2.11.1 (#859) @dependabot
@@ -51,7 +51,7 @@ All notable changes to this project will be documented in this file.
 
 #### 📝 Changelog
 
-- fix: ✍️  Add missing CHANGELOG of `0.18.1` (#850) @Anselmoo
+- fix: ✍️ Add missing CHANGELOG of `0.18.1` (#850) @Anselmoo
 - Update CHANGELOG (#849) @Anselmoo
 
 ### 📦 Full Changelog
