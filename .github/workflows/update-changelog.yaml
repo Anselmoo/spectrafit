@@ -38,6 +38,7 @@ jobs:
           body: |
             This Pull Request was automatically created by the Changelog Updater Action.
             It updates the CHANGELOG.md with the release notes from the latest release.
+          branch: release/${{ github.event.release.tag_name }}
 
   Release-Documentation:
     if: ${{ contains(github.event.release.prerelease, false) }}
@@ -67,7 +68,7 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
       - name: Fetch tags
-        run: git fetch --tags --prune --unshallow
+        run: git fetch --tags --prune
       - name: Get previous tag
         id: prev_tag
         run: echo "::set-output name=prev_tag::$(git rev-list --tags --skip=1 --max-count=1)"
