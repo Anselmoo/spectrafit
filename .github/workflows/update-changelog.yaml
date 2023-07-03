@@ -29,7 +29,7 @@ jobs:
           file_pattern: CHANGELOG.md
           create_branch: true
       - name: Open Pull Request
-        uses: actions/github-script@v4
+        uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
