@@ -25,11 +25,11 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           branch: release/${{ github.event.release.tag_name }}
-          commit_message: Update CHANGELOG
+          commit_message: "docs: :card_index_dividers: Update CHANGELOG for release/${{ github.event.release.tag_name }}"
           file_pattern: CHANGELOG.md
           create_branch: true
       - name: Open Pull Request
-        uses: actions/github-script@v4
+        uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
