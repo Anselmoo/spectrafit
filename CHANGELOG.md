@@ -2,6 +2,56 @@
 
 All notable changes to this project will be documented in this file.
 
+## v0.20.1 🌈 - 2023-07-11
+
+### 🧭 What's Changed
+
+#### 🧰 Maintenance
+
+- fix: 🐛 URL export as str (#886) @Anselmoo
+- build(deps-dev): Bump bump-pydantic from 0.1.0 to 0.3.0 (#884) @dependabot
+- [pre-commit.ci] pre-commit autoupdate (#883) @pre-commit-ci
+- [pre-commit.ci] pre-commit autoupdate (#874) @pre-commit-ci
+
+#### :octocat: Github Actions
+
+- build(deps): Bump actions/github-script from 4 to 6 (#873) @dependabot
+- fix: :green_heart: Change workflow to github-script (#872) @Anselmoo
+
+#### 🔗 Dependency Updates
+
+- fix: 🐛 URL export as str (#886) @Anselmoo
+- build(deps-dev): Bump bump-pydantic from 0.1.0 to 0.3.0 (#884) @dependabot
+- build(deps-dev): Bump blacken-docs from 1.14.0 to 1.15.0 (#882) @dependabot
+- build(deps): Bump pydantic from 2.0 to 2.0.2 (#879) @dependabot
+- build(deps): Bump ipywidgets from 8.0.6 to 8.0.7 (#876) @dependabot
+- build(deps-dev): Bump mkdocs-jupyter from 0.24.1 to 0.24.2 (#878) @dependabot
+- build(deps-dev): Bump mkdocs-material from 9.1.17 to 9.1.18 (#875) @dependabot
+
+#### 🔬 Testing & Coverage
+
+- fix: 🐛 URL export as str (#886) @Anselmoo
+
+#### 🔒 Security
+
+- docs: :memo: Update SECURITY.md (#880) @Anselmoo
+
+#### 📝 Changelog
+
+- Update CHANGELOG (#871) @Anselmoo
+
+#### 📦 Vendor
+
+- docs: :arrow_up: Update vendor dependencies (#881) @Anselmoo
+
+### 📦 Full Changelog
+
+**Full Changelog**: https://github.com/Anselmoo/spectrafit/compare/v0.20.0...v0.20.1
+
+### ⚙️ Who Contributes
+
+@Anselmoo
+
 ## v0.20.0 🌈 - 2023-07-02
 
 ### 🧭 What's Changed
