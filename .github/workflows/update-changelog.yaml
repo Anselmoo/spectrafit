@@ -22,14 +22,12 @@ jobs:
           release-notes: ${{ github.event.release.body }}
           latest-version: ${{ github.event.release.name }}
       - name: Commit updated CHANGELOG
-        # uses: stefanzweifel/git-auto-commit-action@v4
-        # with:
-        #   branch: release/${{ github.event.release.tag_name }}
-        #   commit_message: "docs: :card_index_dividers: Update CHANGELOG for release/${{ github.event.release.tag_name }}"
-        #   file_pattern: CHANGELOG.md
-        #   create_branch: true
-        # Generate pseudo text file
-        run: echo "This is a pseudo text file" > pseudo.md
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          branch: release/${{ github.event.release.tag_name }}
+          commit_message: "docs: :card_index_dividers: Update CHANGELOG for release/${{ github.event.release.tag_name }}"
+          file_pattern: CHANGELOG.md
+          create_branch: true
       - name: Open Pull Request for updated CHANGELOG
         uses: peter-evans/create-pull-request@v3
         with:
