@@ -42,7 +42,7 @@ jobs:
   Release-Documentation:
     # if: ${{ contains(github.event.release.prerelease, false) }}
     name: Build Documentation from new release branch 'release/${{ github.event.release.tag_name }}'
-    needs: Changelog-Update
+    # needs: Changelog-Update
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
