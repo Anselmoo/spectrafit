@@ -8,7 +8,7 @@ on:
 
 jobs:
   Changelog-Update:
-    # if: ${{ contains(github.event.release.prerelease, false) }}
+    if: ${{ contains(github.event.release.prerelease, false) }}
     name: Update Changelog
     runs-on: ubuntu-latest
     steps:
@@ -40,7 +40,7 @@ jobs:
           base: main
           draft: false
   Release-Documentation:
-    # if: ${{ contains(github.event.release.prerelease, false) }}
+    if: ${{ contains(github.event.release.prerelease, false) }}
     name: Build Documentation from new release branch 'release/${{ github.event.release.tag_name }}'
     needs: Changelog-Update
     runs-on: ubuntu-latest
