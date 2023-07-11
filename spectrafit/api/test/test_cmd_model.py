@@ -105,3 +105,24 @@ def test_overwrite_description(metadata: Any) -> None:
     """Test for overwriting settings of Description Model."""
     result = DescriptionAPI(metadata=metadata).dict()
     assert result["metadata"] == metadata
+
+
+@pytest.mark.parametrize(
+    "refs",
+    [
+        ["https://dummy.com/"],
+        ["https://dummy.com/", "https://dummy.io/"],
+        ["http://dummy.com/", "http://dummy.io/"],
+    ],
+)
+def test_overwrite_references(refs: Any) -> None:
+    """Test for overwriting settings of Description Model."""
+    result = DescriptionAPI(refs=refs).dict()
+    assert result["references"] == refs
+
+
+def test_illegal_references() -> None:
+    """Test for illegal references of Description Model."""
+    with pytest.raises(ValueError) as exc:
+        DescriptionAPI(refs=["dummy.com"])
+    assert "dummy.com" in str(exc.value)

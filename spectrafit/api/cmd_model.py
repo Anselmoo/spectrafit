@@ -15,6 +15,7 @@ from uuid import uuid4
 from pydantic import BaseModel
 from pydantic import Field
 from pydantic import HttpUrl
+from pydantic.functional_validators import field_validator
 from spectrafit import __version__
 from spectrafit.api.tools_model import AutopeakAPI
 from spectrafit.api.tools_model import DataPreProcessingAPI
@@ -40,7 +41,7 @@ class DescriptionAPI(BaseModel):
     authors: List[str] = Field(
         default=["authors"], description="Authors of the project"
     )
-    references: List[HttpUrl] = Field(
+    references: List[str] = Field(
         default=["https://github.com/Anselmoo/spectrafit"],
         alias="refs",
         description="References for the project",
@@ -55,6 +56,12 @@ class DescriptionAPI(BaseModel):
     id_: str = Field(
         default=str(uuid4()), alias="id", description="Unique ID of the project"
     )
+
+    @field_validator("references")
+    @classmethod
+    def check_references(cls, v: List[str]) -> Optional[List[str]]:
+        """Check if the list of references have valid URLs."""
+        return [str(HttpUrl(url)) for url in v]
 
 
 class CMDModelAPI(BaseModel):
