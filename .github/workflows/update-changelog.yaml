@@ -28,29 +28,17 @@ jobs:
           commit_message: "docs: :card_index_dividers: Update CHANGELOG for release/${{ github.event.release.tag_name }}"
           file_pattern: CHANGELOG.md
           create_branch: true
-      - name: Open Pull Request
-        uses: actions/github-script@v6
+      - name: Open Pull Request for updated CHANGELOG
+        uses: peter-evans/create-pull-request@v3
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const title = `Merge release/${{ github.event.release.tag_name }} into main`;
-            const body = `This PR merges release/${{ github.event.release.tag_name }} into main with auto-merge enabled. This PR updates the CHANGELOG.md file.`;
-            const head = `release/${{ github.event.release.tag_name }}`;
-            const base = 'main';
-            const auto_merge = true;
-            const draft = false;
-            const pr = await github.pulls.create({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              title,
-              body,
-              head,
-              base,
-              auto_merge,
-              draft
-            });
-            console.log(`Pull Request ${pr.data.number} created.`);
-
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "docs: :card_index_dividers: Update CHANGELOG for release/${{ github.event.release.tag_name }}"
+          title: "docs: :card_index_dividers: Update CHANGELOG for release/${{ github.event.release.tag_name }}"
+          body: "This Pull Request was automatically created to update the CHANGELOG for release/${{ github.event.release.tag_name }}."
+          branch: release/${{ github.event.release.tag_name }}
+          branch-suffix: timestamp
+          base: main
+          draft: false
   Release-Documentation:
     if: ${{ contains(github.event.release.prerelease, false) }}
     name: Build Documentation from new release branch 'release/${{ github.event.release.tag_name }}'
