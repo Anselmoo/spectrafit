@@ -162,6 +162,18 @@ class SigmaAPI(BaseModel):
     expr: Optional[str] = Field(default=None, description=__description__)
 
 
+class CoefficientAPI(BaseModel):
+    """Definition of the Coefficient of the models distributions."""
+
+    max: Optional[float] = Field(default=None, description="Maximum coefficient.")
+    min: Optional[int] = Field(default=None, description="Minimum coefficient.")
+    vary: bool = Field(default=True, description="Vary the coefficient.")
+    value: Optional[float] = Field(
+        default=None, description="Initial coefficient value."
+    )
+    expr: Optional[str] = Field(default=None, description=__description__)
+
+
 class PseudovoigtAPI(BaseModel):
     """Definition of the Pseudovoigt of the models distributions."""
 
@@ -280,6 +292,23 @@ class CVoigtAPI(BaseModel):
     gamma: GammaAPI = GammaAPI()
 
 
+class Polynomia2lAPI(BaseModel):
+    """Definition of the second order polynomial of the models distributions."""
+
+    coefficient0: CoefficientAPI = CoefficientAPI()
+    coefficient1: CoefficientAPI = CoefficientAPI()
+    coefficient2: CoefficientAPI = CoefficientAPI()
+
+
+class Polynomia3lAPI(BaseModel):
+    """Definition of the third order polynomial of the models distributions."""
+
+    coefficient0: CoefficientAPI = CoefficientAPI()
+    coefficient1: CoefficientAPI = CoefficientAPI()
+    coefficient2: CoefficientAPI = CoefficientAPI()
+    coefficient3: CoefficientAPI = CoefficientAPI()
+
+
 class DistributionModelAPI(BaseModel):
     """Definition of the models distributions."""
 
@@ -298,6 +327,8 @@ class DistributionModelAPI(BaseModel):
     cgaussian: CGaussianAPI = CGaussianAPI()
     clorentzian: CLorentzianAPI = CLorentzianAPI()
     cvoigt: CVoigtAPI = CVoigtAPI()
+    polynom2: Polynomia2lAPI = Polynomia2lAPI()
+    polynom3: Polynomia2lAPI = Polynomia2lAPI()
 
 
 class ConfIntervalAPI(BaseModel):

@@ -23,6 +23,8 @@ from spectrafit.api.models_model import DistributionModelAPI
         "cgaussian",
         "clorentzian",
         "cvoigt",
+        "polynom2",
+        "polynom3",
     ],
 )
 def test_distribution_model(distribution_model: str) -> None:
