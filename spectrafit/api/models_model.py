@@ -293,7 +293,7 @@ class CVoigtAPI(BaseModel):
 
 
 class Polynomia2lAPI(BaseModel):
-    """Definition of the models distributions."""
+    """Definition of the second order polynomial of the models distributions."""
 
     coefficient0: CoefficientAPI = CoefficientAPI()
     coefficient1: CoefficientAPI = CoefficientAPI()
@@ -301,7 +301,7 @@ class Polynomia2lAPI(BaseModel):
 
 
 class Polynomia3lAPI(BaseModel):
-    """Definition of the models distributions."""
+    """Definition of the third order polynomial of the models distributions."""
 
     coefficient0: CoefficientAPI = CoefficientAPI()
     coefficient1: CoefficientAPI = CoefficientAPI()
