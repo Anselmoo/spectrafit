@@ -4,6 +4,7 @@ import math
 from math import log
 from math import pi
 from math import sqrt
+from typing import Any
 from typing import Dict
 
 import numpy as np
@@ -1189,6 +1190,16 @@ class TestModel:
         """Create x data."""
         return np.linspace(0, 10, 100, dtype=float)
 
+    @pytest.fixture
+    def df_data(self) -> pd.DataFrame:
+        """Create x,y data."""
+        return pd.DataFrame(
+            {
+                "Energy": np.linspace(0, 10, 100, dtype=float),
+                "Intensity": np.linspace(0, 10, 100, dtype=float),
+            }
+        )
+
     @pytest.mark.parametrize(
         "model, params",
         [
@@ -1232,3 +1243,59 @@ class TestModel:
         y_data = getattr(DistributionModels(), model)(x_data, **params)
         assert isinstance(y_data, np.ndarray)
         assert len(y_data) == 100
+
+    @pytest.mark.parametrize(
+        "model, params",
+        [
+            ("gaussian", {"amplitude": {}, "center": {}, "fwhmg": {}}),
+            ("lorentzian", {"amplitude": {}, "center": {}, "fwhml": {}}),
+            ("voigt", {"center": {}, "fwhmv": {}, "gamma": {}}),
+            (
+                "pseudovoigt",
+                {"amplitude": {}, "center": {}, "fwhmg": {}, "fwhml": {}},
+            ),
+            ("exponential", {"amplitude": {}, "decay": {}, "intercept": {}}),
+            ("power", {"amplitude": {}, "exponent": {}, "intercept": {}}),
+            ("linear", {"slope": {}, "intercept": {}}),
+            ("constant", {"amplitude": {}}),
+            ("erf", {"amplitude": {}, "center": {}, "sigma": {}}),
+            ("heaviside", {"amplitude": {}, "center": {}, "sigma": {}}),
+            ("atan", {"amplitude": {}, "center": {}, "sigma": {}}),
+            ("log", {"amplitude": {}, "center": {}, "sigma": {}}),
+            ("cgaussian", {"amplitude": {}, "center": {}, "fwhmg": {}}),
+            ("clorentzian", {"amplitude": {}, "center": {}, "fwhml": {}}),
+            ("cvoigt", {"amplitude": {}, "center": {}, "fwhmv": {}}),
+            (
+                "polynom2",
+                {"coefficient0": {}, "coefficient1": {}, "coefficient2": {}},
+            ),
+            (
+                "polynom3",
+                {
+                    "coefficient0": {},
+                    "coefficient1": {},
+                    "coefficient2": {},
+                    "coefficient3": {},
+                },
+            ),
+        ],
+    )
+    def test_model_exitst(
+        self, df_data: pd.DataFrame, model: str, params: Dict[str, Dict[Any, Any]]
+    ) -> None:
+        """Test if the model exists."""
+        args = {
+            "global_": 0,
+            "autopeak": False,
+            "column": ["Energy", "Intensity"],
+            "minimizer": {"nan_policy": "propagate", "calc_covar": False},
+            "optimizer": {"max_nfev": 10, "method": "leastsq"},
+            "peaks": {"1": {model: params}},
+        }
+        mp = SolverModels(df=df_data, args=args)()
+
+        assert type(mp.__str__()) == str
+        assert type(mp) == tuple
+        assert len(mp) == 2
+        for name in mp[0].params.keys():
+            assert model in name
