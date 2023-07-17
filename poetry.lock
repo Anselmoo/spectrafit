@@ -2289,13 +2289,13 @@ dev = ["Sphinx (>=5.1.1)", "black (==23.3.0)", "build (>=0.10.0)", "coverage (>=
 
 [[package]]
 name = "lmfit"
-version = "1.2.1"
+version = "1.2.2"
 description = "Least-Squares Minimization with Bounds and Constraints"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "lmfit-1.2.1-py3-none-any.whl", hash = "sha256:26d7ea65c056500dbe2da6fd58b2301a722c59c4549b22ab533165cd8e364233"},
-    {file = "lmfit-1.2.1.tar.gz", hash = "sha256:00cef5bd145bf81b73630b78926af24b24f1805421e6211ca585588aa7cc415b"},
+    {file = "lmfit-1.2.2-py3-none-any.whl", hash = "sha256:3101bb16236179cc2e332202d621109271269dcb8edaa8983eecbffdaf57eb0c"},
+    {file = "lmfit-1.2.2.tar.gz", hash = "sha256:044a052a11a61da0576274504c17eb7e2803b41128e25821e96632207f23c88c"},
 ]
 
 [package.dependencies]
