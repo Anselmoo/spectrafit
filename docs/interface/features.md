@@ -514,7 +514,7 @@ different types of output files will be generated
           "degree_of_freedom": 565
         },
         "statistics": {
-          "chi-square": 2.149830777028136,
+          "chi_square": 2.149830777028136,
           "reduced_chi_square": 0.0038050102248285596,
           "akaike_information": -3202.8454593711404,
           "bayesian_information": -3150.551352173043

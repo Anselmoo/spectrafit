@@ -295,7 +295,7 @@
       "degree_of_freedom": 276
     },
     "statistics": {
-      "chi-square": 0.21949771692848624,
+      "chi_square": 0.21949771692848624,
       "reduced_chi_square": 0.0007952815830742255,
       "akaike_information": -2118.058776724251,
       "bayesian_information": -2029.1679973325022

@@ -285,7 +285,7 @@ def _extracted_gof_from_results(
         buffer["configurations"]["variable_numbers"] = result.nvarys
         buffer["configurations"]["degree_of_freedom"] = result.nfree
 
-        buffer["statistics"]["chi-square"] = result.chisqr
+        buffer["statistics"]["chi_square"] = result.chisqr
         buffer["statistics"]["reduced_chi_square"] = result.redchi
         buffer["statistics"]["akaike_information"] = result.aic
         buffer["statistics"]["bayesian_information"] = result.bic

@@ -404,7 +404,7 @@ accidental overwriting of the input file. The `.lock`-suffix can be replaced.
         ]
 
         [solver.goodness_of_fit]
-        chi-square = 4.164347734430647
+        chi_square = 4.164347734430647
         reduced_chi_square = 0.006998903755345625
         akaike_information = -3015.9962916417835
         bayesian_information = -2945.354740295038
