@@ -469,18 +469,17 @@ files = [
 
 [[package]]
 name = "bump-pydantic"
-version = "0.4.0"
+version = "0.6.0"
 description = "Convert Pydantic from V1 to V2 ♻"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "bump_pydantic-0.4.0-py3-none-any.whl", hash = "sha256:2b98a4b5542eb400a591646815ed92c1bafbe79938412c5f73ee749ddce92e55"},
-    {file = "bump_pydantic-0.4.0.tar.gz", hash = "sha256:1f45ec83b511b87ccb8868630a45a693fa70263a854f182dc5f6cd2ffac1d771"},
+    {file = "bump_pydantic-0.6.0-py3-none-any.whl", hash = "sha256:a430f171eb39ce355e277c7aded67ac427cadd42c5c025ad5519cfff25a73abc"},
+    {file = "bump_pydantic-0.6.0.tar.gz", hash = "sha256:33149329dd81b2868c84be835b072b3ee0199cb4d564736585ca73fb108dc4bd"},
 ]
 
 [package.dependencies]
 libcst = "*"
-mypy = "*"
 rich = "*"
 typer = ">=0.7.0"
 typing-extensions = "*"
@@ -5845,4 +5844,4 @@ jupyter-dash = ["dash-bootstrap-components", "dash-bootstrap-templates", "ipywid
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8,<3.12"
-content-hash = "6d71158df72bc28db1043a7f97c7d35c3949534e1c8848a9ce36cd577a3688db"
+content-hash = "307a85c0223ffcd09394f8f59f9cba5ee2e479cae6ce8f93834da88db5addf81"
