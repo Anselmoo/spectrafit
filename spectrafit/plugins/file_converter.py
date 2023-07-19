@@ -14,9 +14,6 @@ from spectrafit.plugins.converter import Converter
 from spectrafit.tools import read_input_file
 
 
-choices = {"json", "yaml", "yml", "toml", "lock"}
-
-
 class FileConverter(Converter):
     """Convert the input and output file to the preferred file format.
 
@@ -27,7 +24,12 @@ class FileConverter(Converter):
         -[x] JSON
         -[x] YAML (YML)
         -[x] TOML (LOCK for the lock file)
+
+    Attributes:
+        choices (Set[str]): The choices for the file format.
     """
+
+    choices = {"json", "yaml", "yml", "toml", "lock"}
 
     def get_args(self) -> Dict[str, Any]:
         """Get the arguments from the command line.
@@ -37,7 +39,8 @@ class FileConverter(Converter):
                 additional information beyond the command line arguments.
         """
         parser = argparse.ArgumentParser(
-            description="Converter for 'SpectraFit' input and output files."
+            description="Converter for 'SpectraFit' input and output files.",
+            usage="%(prog)s [options] infile",
         )
         parser.add_argument(
             "infile",
@@ -49,7 +52,7 @@ class FileConverter(Converter):
             "--file-format",
             help="File format for the conversion.",
             type=str,
-            choices=choices,
+            choices=self.choices,
         )
         parser.add_argument(
             "-e",
@@ -57,7 +60,7 @@ class FileConverter(Converter):
             help="File format for the export.",
             type=str,
             default="json",
-            choices=choices,
+            choices=self.choices,
         )
         return vars(parser.parse_args())
 
@@ -75,7 +78,7 @@ class FileConverter(Converter):
         Returns:
             MutableMapping[str, Any] : The converted file as a dictionary.
         """
-        if file_format not in choices:
+        if file_format not in FileConverter.choices:
             raise ValueError(f"The input file format '{file_format}' is not supported.")
 
         return read_input_file(infile)
@@ -99,7 +102,7 @@ class FileConverter(Converter):
                 "Please use a different output file suffix."
             )
 
-        if export_format not in choices:
+        if export_format not in self.choices:
             raise ValueError(
                 f"The output file format '{export_format}' is not supported."
             )
