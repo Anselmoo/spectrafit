@@ -45,14 +45,14 @@ class PPTXElements:
                 presentation.
             font_size (Pt): The font size of the textbox. Defaults to Pt(16).
         """
-        txBox = self.slide.shapes.add_textbox(
+        tx_box = self.slide.shapes.add_textbox(
             left=position.left,
             top=position.top,
             width=position.width,
             height=position.height,
         )
 
-        tf = txBox.text_frame
+        tf = tx_box.text_frame
         tf.text = text
         tf.size = font_size
 
@@ -117,35 +117,9 @@ class PPTXElements:
         df = df.round(2)
         if transpose:
             df = df.transpose()
-        shape = df.shape
-
-        _table = self.slide.shapes.add_table(
-            rows=shape[0] + 1,
-            cols=shape[1] + (not index_hidden),
-            left=position_table.left,
-            top=position_table.top,
-            width=position_table.width,
-            height=position_table.height,
+        self.extract_table(
+            df=df, position_table=position_table, index_hidden=index_hidden
         )
-
-        if index_hidden:
-            for i, col in enumerate(df.columns):
-                _table.table.cell(0, i).text = str(col)
-
-            for i, row in enumerate(df.itertuples(index=False)):
-                for j, value in enumerate(row):
-                    _table.table.cell(i + 1, j).text = str(value)
-
-        else:
-            _table.table.cell(0, 0).text = ""
-
-            for i, col in enumerate(df.columns, start=1):
-                _table.table.cell(0, i).text = col
-
-            for i, row in enumerate(df.itertuples()):
-                _table.table.cell(i + 1, 0).text = str(row[0])
-                for j, value in enumerate(row[1:], start=1):
-                    _table.table.cell(i + 1, j).text = str(value)
 
         self.create_textbox(
             text=text,
@@ -157,6 +131,42 @@ class PPTXElements:
             ),
             font_size=font_size,
         )
+
+    def extract_table(
+        self,
+        df: pd.DataFrame,
+        position_table: PPTXPositionAPI,
+        index_hidden: bool,
+    ) -> None:
+        """Create a table from the input file.
+
+        Args:
+            df (pd.DataFrame): The data of the table(s) in the powerpoint presentation.
+            position_table (PPTXPositionAPI): The position of the table in the
+                powerpoint presentation.
+            index_hidden (bool): Hide the index of the table in the powerpoint
+                presentation.
+        """
+        rows, cols = df.shape
+        table = self.slide.shapes.add_table(
+            rows=rows + 1,
+            cols=cols + (not index_hidden),
+            left=position_table.left,
+            top=position_table.top,
+            width=position_table.width,
+            height=position_table.height,
+        )
+        if index_hidden:
+            table.table.cell(0, 0).text = ""
+            for i, col in enumerate(df.columns):
+                table.table.cell(0, i).text = str(col)
+                for j, value in enumerate(df[col]):
+                    table.table.cell(j + 1, i).text = str(value)
+        else:
+            for i, col in enumerate(df.columns):
+                table.table.cell(0, i).text = col
+                for j, value in enumerate(df[col]):
+                    table.table.cell(j + 1, i).text = str(value)
 
     def create_credit(
         self,
@@ -250,10 +260,7 @@ class PPTXLayout(PPTXElements):
             text=self.structure.header.text, position=self.structure.header.position
         )
 
-        # self.create_figure(fname=self.fname,
-        # position=self.structure().header.position)
-
-    def lef_element(self) -> None:
+    def lefr_element(self) -> None:
         """Create the left element of the powerpoint presentation."""
         self.create_subtitle(
             text=self.structure.sub_title_1.text,
@@ -317,7 +324,7 @@ class PPTXLayout(PPTXElements):
     def __call__(self) -> None:
         """Create the powerpoint presentation."""
         self.top_element()
-        self.lef_element()
+        self.lefr_element()
         self.right_element()
         self.save()
 

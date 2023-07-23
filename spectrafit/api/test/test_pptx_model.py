@@ -1,4 +1,6 @@
 """Test the pptx_model module."""
+import pytest
+
 from spectrafit.api.pptx_model import DescriptionAPI
 from spectrafit.api.pptx_model import GoodnessOfFitAPI
 from spectrafit.api.pptx_model import InputAPI
@@ -9,23 +11,29 @@ from spectrafit.api.pptx_model import RegressionMetricsAPI
 from spectrafit.api.pptx_model import SolverAPI
 
 
+@pytest.fixture
+def project_name() -> str:
+    """Return a project name."""
+    return "Test Project"
+
+
 def test_method() -> None:
     """Test the Method class."""
     method = MethodAPI(global_fitting=True)
     assert method.global_fitting is True
 
 
-def test_description() -> None:
+def test_description(project_name: str) -> None:
     """Test the Description class."""
-    description = DescriptionAPI(project_name="Test Project", version="1.0")
-    assert description.project_name == "Test Project"
+    description = DescriptionAPI(project_name=project_name, version="1.0")
+    assert description.project_name == project_name
     assert description.version == "1.0"
 
 
-def test_input() -> None:
+def test_input(project_name: str) -> None:
     """Test the Input class."""
     method = MethodAPI(global_fitting=True)
-    description = DescriptionAPI(project_name="Test Project", version="1.0")
+    description = DescriptionAPI(project_name=project_name, version="1.0")
     input_data = InputAPI(method=method, description=description)
     assert input_data.method == method
     assert input_data.description == description
@@ -82,10 +90,10 @@ def test_solver() -> None:
     assert solver.regression_metrics == regression_metrics
 
 
-def test_pptx_data() -> None:
+def test_pptx_data(project_name: str) -> None:
     """Test the PPTXData class."""
     method = MethodAPI(global_fitting=True)
-    description = DescriptionAPI(project_name="Test Project", version="1.0")
+    description = DescriptionAPI(project_name=project_name, version="1.0")
     input_data = InputAPI(method=method, description=description)
     output_data = OutputAPI(df_fit={"x": [1, 2, 3], "y": [4, 5, 6]})
     goodness_of_fit = GoodnessOfFitAPI(

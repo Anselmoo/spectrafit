@@ -176,7 +176,7 @@ class PPTXTableAPI(BaseModel):
     description: PPTXDescriptionAPI
 
 
-class PPTXSubTitle_1_API(BaseModel):
+class PPTXSubTitleLeftAPI(BaseModel):
     """SubTitle_1 class for PPTXData input.
 
     !!! info "About the subtitle 1"
@@ -194,7 +194,7 @@ class PPTXSubTitle_1_API(BaseModel):
     figure: PPTXFigureAPI
 
 
-class PPTXSubTitle_2_API(BaseModel):
+class PPTXSubTitleRightAPI(BaseModel):
     """SubTitle_2 class for PPTXData input.
 
     !!! info "About the subtitle 2"
@@ -221,8 +221,8 @@ class PPTXStructureAPI(BaseModel):
     """Structure class for PPTXData input."""
 
     header: PPTXHeaderAPI
-    sub_title_1: PPTXSubTitle_1_API
-    sub_title_2: PPTXSubTitle_2_API
+    sub_title_1: PPTXSubTitleLeftAPI
+    sub_title_2: PPTXSubTitleRightAPI
 
 
 class Field169APIHDR(BaseModel):
@@ -367,7 +367,7 @@ class PPTXLayoutAPI:
                     ),
                     text=self.title,
                 ),
-                sub_title_1=PPTXSubTitle_1_API(
+                sub_title_1=PPTXSubTitleLeftAPI(
                     position=PPTXPositionAPI(
                         left=Pt(0),
                         top=Pt(self.pptx_formats[self._format][1]["height"] // 5),
@@ -407,7 +407,7 @@ class PPTXLayoutAPI:
                         fname=self.tmp_fname,
                     ),
                 ),
-                sub_title_2=PPTXSubTitle_2_API(
+                sub_title_2=PPTXSubTitleRightAPI(
                     position=PPTXPositionAPI(
                         left=Pt(self.pptx_formats[self._format][1]["width"] // 2),
                         top=Pt(self.pptx_formats[self._format][1]["height"] // 5),
