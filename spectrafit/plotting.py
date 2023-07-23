@@ -1,6 +1,7 @@
 """Plotting of the fit results."""
 from typing import Any
 from typing import Dict
+from typing import Optional
 
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -17,26 +18,29 @@ color = sns.color_palette("Paired")
 class PlotSpectra:
     """Plotting of the fit results."""
 
-    def __init__(self, df: pd.DataFrame, args: Dict[str, Any]) -> None:
+    def __init__(self, df: pd.DataFrame, args: Optional[Dict[str, Any]] = None) -> None:
         """Initialize the PlotSpectra class.
 
         Args:
             df (pd.DataFrame): DataFrame containing the input data (`x` and `data`),
                  as well as the best fit and the corresponding residuum. Hence, it will
                  be extended by the single contribution of the model.
-            args (Dict[str, Any]): The input file arguments as a dictionary with
-                 additional information beyond the command line arguments.
+            args (Dict[str, Any], optional): The input file arguments as a dictionary
+                 with additional information beyond the command line arguments. Only
+                 needed for global fitting. Defaults to None.
         """
         self.df = df
         self.args = args
 
     def __call__(self) -> None:
         """Plot the data and the fit."""
-        if not self.args["noplot"]:
-            if self.args["global_"]:
-                self.plot_global_spectra()
-            else:
-                self.plot_local_spectra()
+        if self.args is not None:
+            if not self.args["noplot"]:
+                if self.args["global_"]:
+                    self.plot_global_spectra()
+                else:
+                    self.plot_local_spectra()
+            plt.show()
 
     def plot_global_spectra(self) -> None:
         """Plot spectra for global fitting.
@@ -48,7 +52,7 @@ class PlotSpectra:
             row of the grid plot contains the residuals of each single fit, the
             second row the best fit of the model with single peak contributions.
         """
-        n_spec = len(list(self.args["data_statistic"])) - 1
+        n_spec = len(list(self.args["data_statistic"])) - 1 if self.args else 1
         _, axs = plt.subplots(
             nrows=2,
             ncols=n_spec,
@@ -99,7 +103,6 @@ class PlotSpectra:
                 )
 
         plt.tight_layout()
-        plt.show()
 
     def plot_local_spectra(self) -> None:
         """Plot spectra for local fitting.
@@ -167,4 +170,3 @@ class PlotSpectra:
         _ = MultiCursor(
             fig.canvas, (ax1, ax2), color=color[4], ls="--", lw=1, horizOn=True
         )
-        plt.show()

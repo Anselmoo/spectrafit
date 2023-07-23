@@ -21,7 +21,7 @@ With the command `spectrafit-file-converter` input and also output files can be 
                            File format for the export.
 ```
 
-=== "File Change from `json` to `lock`"
+=== "File Change from JSON to LOCK"
 
     !!! info
 

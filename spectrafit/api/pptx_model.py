@@ -1,0 +1,553 @@
+"""PPTXModel class for SpectraFit API."""
+import tempfile
+
+from pathlib import Path
+from typing import Dict
+from typing import List
+from typing import Tuple
+from typing import Type
+from typing import Union
+
+import pandas as pd
+
+from matplotlib import pyplot as plt
+from pptx.util import Pt
+from pydantic import BaseModel
+from pydantic import ConfigDict
+from pydantic import Field
+from spectrafit import __version__
+from spectrafit.plotting import PlotSpectra
+
+
+class MethodAPI(BaseModel):
+    """Method class to check if global fitting is enabled."""
+
+    global_fitting: bool
+
+
+class DescriptionAPI(BaseModel):
+    """Description class for PPTXData input."""
+
+    project_name: str
+    version: str
+
+
+class InputAPI(BaseModel):
+    """Input class for PPTXData input."""
+
+    method: MethodAPI
+    description: DescriptionAPI
+
+
+class OutputAPI(BaseModel):
+    """Dataframe class for PPTXData output."""
+
+    df_fit: Dict[str, List[float]]
+
+
+class GoodnessOfFitAPI(BaseModel):
+    """GoodnessOfFit class."""
+
+    chi_square: float
+    reduced_chi_square: float
+    akaike_information: float
+    bayesian_information: float
+
+
+class RegressionMetricsAPI(BaseModel):
+    """RegressionMetrics class."""
+
+    index: List[str]
+    columns: List[int]
+    data: List[List[float]]
+
+
+class SolverAPI(BaseModel):
+    """Solver class for getting the metrics of the fit for PPTXData output."""
+
+    goodness_of_fit: GoodnessOfFitAPI
+    regression_metrics: RegressionMetricsAPI
+    variables: Dict[str, Dict[str, float]]
+
+
+class PPTXDataAPI(BaseModel):
+    """PPTXData class for SpectraFit API."""
+
+    output: OutputAPI
+    input: InputAPI
+    solver: SolverAPI
+
+    class Config:
+        """Config class to allow to pass also not pydantic class members."""
+
+        extra = "ignore"
+
+
+class PPTXRatioAPI(BaseModel, arbitrary_types_allowed=True):
+    """Ratio class for PPTXData input.
+
+    !!! info "About the ratio"
+
+        The ratio of the powerpoint presentation. This includes the width and height
+        of the powerpoint presentation. The ratio is either `16:9` or `4:3`. The
+        default ratio is `16:9` and the default width and height are `1920` and
+        `1080` respectively. The width and height are in pixels.
+
+    """
+
+    model_config = ConfigDict(validate_assignment=True, arbitrary_types_allowed=True)
+    width: Pt
+    height: Pt
+
+
+class PPTXPositionAPI(BaseModel):
+    """Position class for PPTXData input.
+
+    !!! info "About the position"
+
+        The position of the elements in the powerpoint presentation. This includes
+        the top, left, width and height of the elements for figure, table and
+        textbox. All the values are in pixels.
+    """
+
+    model_config = ConfigDict(validate_assignment=True, arbitrary_types_allowed=True)
+    left: Pt
+    top: Pt
+    width: Pt
+    height: Pt
+
+
+class PPTXHeaderAPI(BaseModel):
+    """Header class for PPTXData input."""
+
+    position: PPTXPositionAPI
+    text: str
+
+
+class PPTXDescriptionAPI(BaseModel):
+    """Description class for PPTXData input.
+
+    !!! info "About the description"
+
+        The description of the elements in the powerpoint presentation. This
+        includes the text of the description for figure, table and textbox.
+    """
+
+    model_config = ConfigDict(validate_assignment=True, arbitrary_types_allowed=True)
+    position: PPTXPositionAPI
+    text: str
+    font_size: Pt = Field(default_factory=lambda: Pt(12))
+
+
+class PPTXFigureAPI(BaseModel):
+    """Figure class for PPTXData input.
+
+    !!! info "About the figure"
+
+        The figure of the elements in the powerpoint presentation, which is connected
+        to the `PPTXDescriptionAPI` to provide both the figure and the description at
+        the same time. This includes the position of the figure and the description
+        of the figure. The figure can be either a `png` or `jpg` file and the
+        description is a `str`.
+    """
+
+    position: PPTXPositionAPI
+    description: PPTXDescriptionAPI
+    fname: Path
+
+
+class PPTXTableAPI(BaseModel):
+    """Table class for PPTXData input.
+
+    !!! info "About the table"
+
+        The table of the elements in the powerpoint presentation, which is connected
+        to the `PPTXDescriptionAPI` to provide both the table and the description at
+        the same time. This includes the position of the table and the description
+        of the table. The table is a `pandas.DataFrame` and the description is a
+        `str`.
+    """
+
+    model_config = ConfigDict(validate_assignment=True, arbitrary_types_allowed=True)
+    df: pd.DataFrame
+    transpose: bool
+    index_hidden: bool
+    position: PPTXPositionAPI
+    description: PPTXDescriptionAPI
+
+
+class PPTXSubTitle_1_API(BaseModel):
+    """SubTitle_1 class for PPTXData input.
+
+    !!! info "About the subtitle 1"
+
+        The subtitle 1 of the elements in the powerpoint presentation defines the
+        first column of the powerpoint presentation with the elements of the subtitle,
+        the figure and the description of the figure. This includes the position of
+        the subtitle, the text of the subtitle, the figure and the description of the
+        figure.
+    """
+
+    index: int = 1
+    position: PPTXPositionAPI
+    text: str
+    figure: PPTXFigureAPI
+
+
+class PPTXSubTitle_2_API(BaseModel):
+    """SubTitle_2 class for PPTXData input.
+
+    !!! info "About the subtitle 2"
+
+        The subtitle 2 of the elements in the powerpoint presentation defines the
+        second column of the powerpoint presentation with the elements of the subtitle,
+        the tables and their descriptions. The tables are divided into three tables for
+        `goodness_of_fit`, `regression_metrics` and `variables`. This includes the
+        position of the subtitle, the text of the subtitle, the tables and their
+        descriptions. Finally, the credit of the figure is also included in the
+        subtitle 2.
+    """
+
+    index: int = 2
+    position: PPTXPositionAPI
+    text: str
+    table_1: PPTXTableAPI
+    table_2: PPTXTableAPI
+    table_3: PPTXTableAPI
+    credit: PPTXFigureAPI
+
+
+class PPTXStructureAPI(BaseModel):
+    """Structure class for PPTXData input."""
+
+    header: PPTXHeaderAPI
+    sub_title_1: PPTXSubTitle_1_API
+    sub_title_2: PPTXSubTitle_2_API
+
+
+class Field169APIHDR(BaseModel):
+    """Field169APIHDR class for PPTXData input.
+
+    !!! info "About the field `16:9 High Definition Resolution (HDR)`"
+
+        The field `16:9` of the elements in the powerpoint presentation defines the
+        structure of the powerpoint presentation with the elements of the header,
+        subtitle 1 and subtitle 2 for the ratio of `16:9` with pixel width and height
+        of __1920__ and __1080__ respectively.
+    """
+
+    ratio: PPTXRatioAPI
+    structure: PPTXStructureAPI
+
+
+class Field169API(BaseModel):
+    """Field169 class for PPTXData input.
+
+    !!! info "About the field `16:9`"
+
+        The field `16:9` of the elements in the powerpoint presentation defines the
+        structure of the powerpoint presentation with the elements of the header,
+        subtitle 1 and subtitle 2 for the ratio of `16:9` with pixel width and height
+        of __1280__ and __720__ respectively.
+    """
+
+    ratio: PPTXRatioAPI
+    structure: PPTXStructureAPI
+
+
+class Field43API(BaseModel):
+    """Field43 class for PPTXData input.
+
+    !!! info "About the field `4:3`"
+
+        The field `4:3` of the elements in the powerpoint presentation defines the
+        structure of the powerpoint presentation with the elements of the header,
+        subtitle 1 and subtitle 2 for the ratio of `4:3` with pixel width and height
+        of __960__ and __720__ respectively.
+    """
+
+    ratio: PPTXRatioAPI
+    structure: PPTXStructureAPI
+
+
+class PPTXBasicTitleAPI(BaseModel):
+    """PPTXBasicTitle class for PPTXData input.
+
+    !!! info "About the basic title"
+
+        The basic title of the elements in the powerpoint presentation defines the
+        structure of the powerpoint presentation with the elements of the header,
+        subtitle 1 and subtitle 2 for the ratio of `16:9` and `4:3`.
+    """
+
+    sub_title_1: str = "Plot: Fitted and Experimental Spectra"
+    sub_title_2: str = "Tables: Metrics and Variables"
+    figure_description: str = (
+        "Figure 1: Fitted and Experimental Spectra with the Residuals"
+    )
+    table_1_description: str = "Table 1: Goodness of Fit"
+    table_2_description: str = "Table 2: Regression Metrics"
+    table_3_description: str = "Table 3: Variables"
+
+    credit_logo: Path = Path("spectrafit/plugins/img/SpectraFit.png")
+    credit_description: str = f"SpectraFit: v{__version__}"
+
+
+class PPTXLayoutAPI:
+    """PPTXLayout class for PPTXData input.
+
+    Attributes:
+        pptx_formats (Dict[str, List[Union[Field169API, Field169APIHDR, Field43API]]]):
+            The formats of the powerpoint presentation. This includes the ratio of
+            `16:9` and `4:3` with pixel width and height of __1280__ and __720__
+            respectively for `16:9` and __960__ and __720__ respectively for `4:3`.
+    """
+
+    pptx_formats: Dict[
+        str, Tuple[Type[Union[Field169API, Field169APIHDR, Field43API]], Dict[str, int]]
+    ] = {
+        "16:9": (Field169API, {"width": 1280, "height": 720}),
+        "16:9HDR": (Field169APIHDR, {"width": 1920, "height": 1080}),
+        "4:3": (Field43API, {"width": 960, "height": 720}),
+    }
+
+    def __init__(self, format: str, data: PPTXDataAPI) -> None:
+        """Initialize the PPTXLayout class.
+
+        Args:
+            format (str): The format of the powerpoint presentation.
+            data (PPTXDataAPI): The data of the powerpoint presentation.
+        """
+        self._format = format
+        self.tmp_fname = self.tmp_plot(pd.DataFrame(data.output.df_fit))
+        self.title = data.input.description.project_name
+        self.df_gof = pd.DataFrame({k: [v] for k, v in data.solver.goodness_of_fit})
+        self.df_regression = pd.DataFrame(**data.solver.regression_metrics.dict())
+        self.df_variables = pd.DataFrame.from_dict(
+            data.solver.variables, orient="index", columns=None
+        )
+
+    def tmp_plot(self, df_fit: pd.DataFrame) -> Path:
+        """Create a temporary plot.
+
+        Args:
+            df_fit (pd.DataFrame): The DataFrame containing the fit results.
+
+        Returns:
+            Path: The path to the temporary plot.
+        """
+        with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
+            PlotSpectra(
+                df=df_fit,
+                args={},
+            ).plot_local_spectra()
+            tmp_fname = Path(tmp.name)
+            plt.savefig(tmp_fname, dpi=300, bbox_inches="tight")
+            return tmp_fname
+
+    def get_pptx_layout(self) -> Union[Field169API, Field169APIHDR, Field43API]:
+        """Get the powerpoint presentation layout.
+
+        Returns:
+            Union[Field169API, Field169APIHDR, Field43API]: The powerpoint presentation
+                layout.
+        """
+        return self.pptx_formats[self._format][0](
+            ratio=PPTXRatioAPI(
+                width=Pt(self.pptx_formats[self._format][1]["width"]),
+                height=Pt(self.pptx_formats[self._format][1]["height"]),
+            ),
+            structure=PPTXStructureAPI(
+                header=PPTXHeaderAPI(
+                    position=PPTXPositionAPI(
+                        left=Pt(0),
+                        top=Pt(0),
+                        width=Pt(self.pptx_formats[self._format][1]["width"]),
+                        height=Pt(self.pptx_formats[self._format][1]["height"] // 5),
+                    ),
+                    text=self.title,
+                ),
+                sub_title_1=PPTXSubTitle_1_API(
+                    position=PPTXPositionAPI(
+                        left=Pt(0),
+                        top=Pt(self.pptx_formats[self._format][1]["height"] // 5),
+                        width=Pt(self.pptx_formats[self._format][1]["width"] // 2),
+                        height=Pt(self.pptx_formats[self._format][1]["height"] // 10),
+                    ),
+                    text=PPTXBasicTitleAPI().sub_title_1,
+                    figure=PPTXFigureAPI(
+                        position=PPTXPositionAPI(
+                            left=Pt(0),
+                            top=Pt(
+                                self.pptx_formats[self._format][1]["height"] // 5
+                                + self.pptx_formats[self._format][1]["height"] // 10
+                            ),
+                            width=Pt(self.pptx_formats[self._format][1]["width"] // 2),
+                            height=Pt(
+                                3 * self.pptx_formats[self._format][1]["height"] // 5
+                            ),
+                        ),
+                        description=PPTXDescriptionAPI(
+                            position=PPTXPositionAPI(
+                                left=Pt(0),
+                                top=Pt(
+                                    self.pptx_formats[self._format][1]["height"] // 5
+                                    + self.pptx_formats[self._format][1]["height"] // 10
+                                    + 3
+                                    * self.pptx_formats[self._format][1]["height"]
+                                    // 5
+                                ),
+                                width=Pt(
+                                    self.pptx_formats[self._format][1]["width"] // 2
+                                ),
+                                height=Pt(18),
+                            ),
+                            text=PPTXBasicTitleAPI().figure_description,
+                        ),
+                        fname=self.tmp_fname,
+                    ),
+                ),
+                sub_title_2=PPTXSubTitle_2_API(
+                    position=PPTXPositionAPI(
+                        left=Pt(self.pptx_formats[self._format][1]["width"] // 2),
+                        top=Pt(self.pptx_formats[self._format][1]["height"] // 5),
+                        width=Pt(self.pptx_formats[self._format][1]["width"] // 2),
+                        height=Pt(self.pptx_formats[self._format][1]["height"] // 10),
+                    ),
+                    text=PPTXBasicTitleAPI().sub_title_2,
+                    table_1=PPTXTableAPI(
+                        position=PPTXPositionAPI(
+                            left=Pt(self.pptx_formats[self._format][1]["width"] // 2),
+                            top=Pt(
+                                self.pptx_formats[self._format][1]["height"] // 5
+                                + self.pptx_formats[self._format][1]["height"] // 10
+                                + 20
+                            ),
+                            width=Pt(self.pptx_formats[self._format][1]["width"] // 2),
+                            height=Pt(
+                                self.pptx_formats[self._format][1]["height"] // 6
+                            ),
+                        ),
+                        description=PPTXDescriptionAPI(
+                            position=PPTXPositionAPI(
+                                left=Pt(
+                                    self.pptx_formats[self._format][1]["width"] // 2
+                                ),
+                                top=Pt(
+                                    self.pptx_formats[self._format][1]["height"] // 5
+                                    + self.pptx_formats[self._format][1]["height"] // 10
+                                ),
+                                width=Pt(
+                                    self.pptx_formats[self._format][1]["width"] // 2
+                                ),
+                                height=Pt(18),
+                            ),
+                            text=PPTXBasicTitleAPI().table_1_description,
+                        ),
+                        df=self.df_gof,
+                        transpose=False,
+                        index_hidden=True,
+                    ),
+                    table_2=PPTXTableAPI(
+                        position=PPTXPositionAPI(
+                            left=Pt(self.pptx_formats[self._format][1]["width"] // 2),
+                            top=Pt(
+                                self.pptx_formats[self._format][1]["height"] // 5
+                                + self.pptx_formats[self._format][1]["height"] // 10
+                                + 20
+                                + self.pptx_formats[self._format][1]["height"] // 6
+                                + 20
+                            ),
+                            width=Pt(self.pptx_formats[self._format][1]["width"] // 2),
+                            height=Pt(
+                                self.pptx_formats[self._format][1]["height"] // 6
+                            ),
+                        ),
+                        description=PPTXDescriptionAPI(
+                            position=PPTXPositionAPI(
+                                left=Pt(
+                                    self.pptx_formats[self._format][1]["width"] // 2
+                                ),
+                                top=Pt(
+                                    self.pptx_formats[self._format][1]["height"] // 5
+                                    + self.pptx_formats[self._format][1]["height"] // 10
+                                    + 20
+                                    + self.pptx_formats[self._format][1]["height"] // 6
+                                ),
+                                width=Pt(
+                                    self.pptx_formats[self._format][1]["width"] // 2
+                                ),
+                                height=Pt(18),
+                            ),
+                            text=PPTXBasicTitleAPI().table_2_description,
+                        ),
+                        df=self.df_regression,
+                        transpose=True,
+                        index_hidden=True,
+                    ),
+                    table_3=PPTXTableAPI(
+                        position=PPTXPositionAPI(
+                            left=Pt(self.pptx_formats[self._format][1]["width"] // 2),
+                            top=Pt(
+                                self.pptx_formats[self._format][1]["height"] // 5
+                                + self.pptx_formats[self._format][1]["height"] // 10
+                                + 20
+                                + self.pptx_formats[self._format][1]["height"] // 6
+                                + 20
+                                + self.pptx_formats[self._format][1]["height"] // 6
+                                + 20
+                            ),
+                            width=Pt(self.pptx_formats[self._format][1]["width"] // 2),
+                            height=Pt(
+                                self.pptx_formats[self._format][1]["height"] // 6
+                            ),
+                        ),
+                        description=PPTXDescriptionAPI(
+                            position=PPTXPositionAPI(
+                                left=Pt(
+                                    self.pptx_formats[self._format][1]["width"] // 2
+                                ),
+                                top=Pt(
+                                    self.pptx_formats[self._format][1]["height"] // 5
+                                    + self.pptx_formats[self._format][1]["height"] // 10
+                                    + 20
+                                    + self.pptx_formats[self._format][1]["height"] // 6
+                                    + 20
+                                    + self.pptx_formats[self._format][1]["height"] // 6
+                                ),
+                                width=Pt(
+                                    self.pptx_formats[self._format][1]["width"] // 2
+                                ),
+                                height=Pt(18),
+                            ),
+                            text=PPTXBasicTitleAPI().table_3_description,
+                        ),
+                        df=self.df_variables,
+                        transpose=True,
+                        index_hidden=False,
+                    ),
+                    credit=PPTXFigureAPI(
+                        position=PPTXPositionAPI(
+                            left=Pt(self.pptx_formats[self._format][1]["width"] - 80),
+                            top=Pt(self.pptx_formats[self._format][1]["height"] - 80),
+                            width=Pt(80),
+                            height=Pt(80),
+                        ),
+                        description=PPTXDescriptionAPI(
+                            position=PPTXPositionAPI(
+                                left=Pt(
+                                    self.pptx_formats[self._format][1]["width"] - 240
+                                ),
+                                top=Pt(
+                                    self.pptx_formats[self._format][1]["height"] - 80
+                                ),
+                                width=Pt(160),
+                                height=Pt(18),
+                            ),
+                            text=PPTXBasicTitleAPI().credit_description,
+                        ),
+                        fname=PPTXBasicTitleAPI().credit_logo,
+                    ),
+                ),
+            ),
+        )

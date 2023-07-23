@@ -37,6 +37,7 @@ classifiers = [
 include = [
   { path = "spectrafit/test/", format = "sdist" },
   { path = "examples/", format = "sdist" },
+  { path = "spectrafit/plugins/img/SpectraFit.png", format = "sdist" },
 ]
 exclude = ["docs/", "tools/"]
 
@@ -126,6 +127,7 @@ spectrafit-pkl-converter = "spectrafit.plugins.pkl_converter:command_line_runner
 spectrafit-rixs-converter = "spectrafit.plugins.rixs_converter:command_line_runner"
 spectrafit-rixs-visualizer = "spectrafit.plugins.rixs_visualizer:command_line_runner"
 spectrafit-jupyter = "spectrafit.app.app:jupyter"
+spectrafit-pptx = "spectrafit.plugins.pptx_converter:command_line_runner"
 
 
 [tool.poetry.extras]
