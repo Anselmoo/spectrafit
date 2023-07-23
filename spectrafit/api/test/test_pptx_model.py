@@ -1,22 +1,4 @@
 """Test the pptx_model module."""
-# from pathlib import Path
-
-# import pandas as pd
-# import pytest
-
-# from spectrafit.api.pptx_model import PPTXDescriptionAPI
-# from spectrafit.api.pptx_model import PPTXFigureAPI
-# from spectrafit.api.pptx_model import PPTXHeaderAPI
-# from spectrafit.api.pptx_model import PPTXLayoutAPI
-# from spectrafit.api.pptx_model import PPTXPositionAPI
-# from spectrafit.api.pptx_model import PPTXRatioAPI
-# from spectrafit.api.pptx_model import PPTXStructureAPI
-# from spectrafit.api.pptx_model import PPTXSubTitle_1_API
-# from spectrafit.api.pptx_model import PPTXSubTitle_2_API
-# from spectrafit.api.pptx_model import PPTXTableAPI
-# from spectrafit.api.pptx_model import Field43API
-# from spectrafit.api.pptx_model import Field169API
-# from pptx.util import Pt
 from spectrafit.api.pptx_model import DescriptionAPI
 from spectrafit.api.pptx_model import GoodnessOfFitAPI
 from spectrafit.api.pptx_model import InputAPI

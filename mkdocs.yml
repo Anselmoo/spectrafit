@@ -44,8 +44,8 @@ theme:
         icon: material/toggle-switch-off-outline
         name: Switch to dark mode
     - scheme: slate
-      primary: deep purple
-      accent: deep purple
+      primary: indigo
+      accent: indigo
       toggle:
         icon: material/toggle-switch
         name: Switch to light mode
@@ -173,12 +173,13 @@ nav:
       - Fitting: doc/fitting.md
       - Statistics: doc/statistics.md
   - Plugins:
-      - File-Format-Conversion: plugins/file-converter.md
-      - Data-Format-Conversion: plugins/data-converter.md
+      - File-Format-Conversion: plugins/file_converter.md
+      - Data-Format-Conversion: plugins/data_converter.md
       - Jupyter-Notebook-Integration: plugins/jupyter-interface.md
-      - RIXS-Visualization: plugins/rixs-visualization.md
-      - RIXS-Converter: plugins/rixs-converter.md
-      - PKL-Converter and Visualizer: plugins/pkl-converter_visualization.md
+      - RIXS-Visualization: plugins/rixs_visualization.md
+      - RIXS-Converter: plugins/rixs_converter.md
+      - PKL-Converter and Visualizer: plugins/pkl_converter_visualization.md
+      - PPTX-Converter: plugins/pptx_converter.md
   - API:
       - SpectraFit: api/spectrafit_api.md
       - Plotting: api/plotting_api.md

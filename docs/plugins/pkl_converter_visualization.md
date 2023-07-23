@@ -184,6 +184,5 @@ structure of the JSON file:
 
     ![_](images/pkl_visualizer.png)
 
-[1]: http
 [1]: https://docs.python.org/3/library/pickle.html
 [2]: https://pythonexamples.org/python-list-of-dictionaries/

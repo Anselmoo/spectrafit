@@ -2511,4 +2511,4 @@ For more information, please check the [Jupyter Notebook Interface][24] section.
 [21]: https://plotly.com/python/
 [22]: https://github.com/man-group/dtale
 [23]: https://mwouts.github.io/itables/quick_start.html
-[24]: ../../plugins/jupyter-spectrafit-interface
+[24]: ../../plugins/jupyter_interface

@@ -16,7 +16,7 @@ repos:
       - id: check-merge-conflict
       - id: check-case-conflict
       - id: check-added-large-files
-        args: ["--maxkb=1000"]
+        args: ["--maxkb=1050"]
         exclude: \.ipynb
   - repo: https://github.com/psf/black.git
     rev: 23.7.0
@@ -66,7 +66,7 @@ repos:
     rev: "v3.0.0"
     hooks:
       - id: prettier
-        exclude: docs/plugins/jupyter-interface.md
+        exclude: docs/plugins/jupyter_interface.md
   - repo: https://github.com/asottile/pyupgrade
     rev: v3.9.0
     hooks:

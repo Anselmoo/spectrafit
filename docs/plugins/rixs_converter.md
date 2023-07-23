@@ -1,9 +1,11 @@
-The `spectrafit-rixs-converter` allows to convert `SpectraFit` pkl files to a
-`json`, `toml`, `npy`, or `npz` file. The `npy` or `npz` files are the prefered
-format, since they are the most compact and fast to load. The `json` and `toml`
-files are also supported, but they are not as compact as the `npy` or `npz`
-files. The `json` and `toml` files are also slower to load, since they are not
-binary files.
+!!! abstract "About RIXS Converter"
+
+    The `spectrafit-rixs-converter` allows to convert `SpectraFit` pkl files to a
+    `json`, `toml`, `npy`, or `npz` file. The `npy` or `npz` files are the prefered
+    format, since they are the most compact and fast to load. The `json` and `toml`
+    files are also supported, but they are not as compact as the `npy` or `npz`
+    files. The `json` and `toml` files are also slower to load, since they are not
+    binary files.
 
 The `spectrafit-rixs-converter` command line tool can be used like this:
 
