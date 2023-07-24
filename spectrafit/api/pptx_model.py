@@ -438,24 +438,21 @@ class PPTXLayoutAPI:
         Returns:
             PPTXTableAPI: The table 1 of the powerpoint presentation.
         """
+        _basic_block = (
+            self.pptx_formats[self._format][1]["height"] // 5
+            + self.pptx_formats[self._format][1]["height"] // 10
+        )
         return PPTXTableAPI(
             position=PPTXPositionAPI(
                 left=Pt(self.pptx_formats[self._format][1]["width"] // 2),
-                top=Pt(
-                    self.pptx_formats[self._format][1]["height"] // 5
-                    + self.pptx_formats[self._format][1]["height"] // 10
-                    + 20
-                ),
+                top=Pt(_basic_block + 20),
                 width=Pt(self.pptx_formats[self._format][1]["width"] // 2),
                 height=Pt(self.pptx_formats[self._format][1]["height"] // 6),
             ),
             description=PPTXDescriptionAPI(
                 position=PPTXPositionAPI(
                     left=Pt(self.pptx_formats[self._format][1]["width"] // 2),
-                    top=Pt(
-                        self.pptx_formats[self._format][1]["height"] // 5
-                        + self.pptx_formats[self._format][1]["height"] // 10
-                    ),
+                    top=Pt(_basic_block),
                     width=Pt(self.pptx_formats[self._format][1]["width"] // 2),
                     height=Pt(18),
                 ),
@@ -472,27 +469,22 @@ class PPTXLayoutAPI:
         Returns:
             PPTXTableAPI: The table 2 of the powerpoint presentation.
         """
+        _basic_block = (
+            self.pptx_formats[self._format][1]["height"] // 5
+            + self.pptx_formats[self._format][1]["height"] // 10
+            + self.pptx_formats[self._format][1]["height"] // 6
+        )
         return PPTXTableAPI(
             position=PPTXPositionAPI(
                 left=Pt(self.pptx_formats[self._format][1]["width"] // 2),
-                top=Pt(
-                    self.pptx_formats[self._format][1]["height"] // 5
-                    + self.pptx_formats[self._format][1]["height"] // 10
-                    + self.pptx_formats[self._format][1]["height"] // 6
-                    + 40
-                ),
+                top=Pt(_basic_block + 40),
                 width=Pt(self.pptx_formats[self._format][1]["width"] // 2),
                 height=Pt(self.pptx_formats[self._format][1]["height"] // 6),
             ),
             description=PPTXDescriptionAPI(
                 position=PPTXPositionAPI(
                     left=Pt(self.pptx_formats[self._format][1]["width"] // 2),
-                    top=Pt(
-                        self.pptx_formats[self._format][1]["height"] // 5
-                        + self.pptx_formats[self._format][1]["height"] // 10
-                        + self.pptx_formats[self._format][1]["height"] // 6
-                        + 20
-                    ),
+                    top=Pt(_basic_block + 20),
                     width=Pt(self.pptx_formats[self._format][1]["width"] // 2),
                     height=Pt(18),
                 ),
@@ -509,27 +501,22 @@ class PPTXLayoutAPI:
         Returns:
             PPTXTableAPI: The table 3 of the powerpoint presentation.
         """
+        _basic_block = (
+            self.pptx_formats[self._format][1]["height"] // 5
+            + self.pptx_formats[self._format][1]["height"] // 10
+            + self.pptx_formats[self._format][1]["height"] // 3
+        )
         return PPTXTableAPI(
             position=PPTXPositionAPI(
                 left=Pt(self.pptx_formats[self._format][1]["width"] // 2),
-                top=Pt(
-                    self.pptx_formats[self._format][1]["height"] // 5
-                    + self.pptx_formats[self._format][1]["height"] // 10
-                    + self.pptx_formats[self._format][1]["height"] // 3
-                    + 60
-                ),
+                top=Pt(_basic_block + 60),
                 width=Pt(self.pptx_formats[self._format][1]["width"] // 2),
                 height=Pt(self.pptx_formats[self._format][1]["height"] // 6),
             ),
             description=PPTXDescriptionAPI(
                 position=PPTXPositionAPI(
                     left=Pt(self.pptx_formats[self._format][1]["width"] // 2),
-                    top=Pt(
-                        self.pptx_formats[self._format][1]["height"] // 5
-                        + self.pptx_formats[self._format][1]["height"] // 10
-                        + self.pptx_formats[self._format][1]["height"] // 3
-                        + 40
-                    ),
+                    top=Pt(_basic_block + 40),
                     width=Pt(self.pptx_formats[self._format][1]["width"] // 2),
                     height=Pt(18),
                 ),
