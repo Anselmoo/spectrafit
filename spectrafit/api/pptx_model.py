@@ -400,9 +400,8 @@ class PPTXLayoutAPI:
                     position=PPTXPositionAPI(
                         left=Pt(0),
                         top=Pt(
-                            self.pptx_formats[self._format][1]["height"] // 5
-                            + self.pptx_formats[self._format][1]["height"] // 10
-                            + 3 * self.pptx_formats[self._format][1]["height"] // 5
+                            self.pptx_formats[self._format][1]["height"] // 10
+                            + 4 * self.pptx_formats[self._format][1]["height"] // 5
                         ),
                         width=Pt(self.pptx_formats[self._format][1]["width"] // 2),
                         height=Pt(18),
@@ -479,9 +478,8 @@ class PPTXLayoutAPI:
                 top=Pt(
                     self.pptx_formats[self._format][1]["height"] // 5
                     + self.pptx_formats[self._format][1]["height"] // 10
-                    + 20
                     + self.pptx_formats[self._format][1]["height"] // 6
-                    + 20
+                    + 40
                 ),
                 width=Pt(self.pptx_formats[self._format][1]["width"] // 2),
                 height=Pt(self.pptx_formats[self._format][1]["height"] // 6),
@@ -492,8 +490,8 @@ class PPTXLayoutAPI:
                     top=Pt(
                         self.pptx_formats[self._format][1]["height"] // 5
                         + self.pptx_formats[self._format][1]["height"] // 10
-                        + 20
                         + self.pptx_formats[self._format][1]["height"] // 6
+                        + 20
                     ),
                     width=Pt(self.pptx_formats[self._format][1]["width"] // 2),
                     height=Pt(18),
@@ -517,11 +515,8 @@ class PPTXLayoutAPI:
                 top=Pt(
                     self.pptx_formats[self._format][1]["height"] // 5
                     + self.pptx_formats[self._format][1]["height"] // 10
-                    + 20
-                    + self.pptx_formats[self._format][1]["height"] // 6
-                    + 20
-                    + self.pptx_formats[self._format][1]["height"] // 6
-                    + 20
+                    + self.pptx_formats[self._format][1]["height"] // 3
+                    + 60
                 ),
                 width=Pt(self.pptx_formats[self._format][1]["width"] // 2),
                 height=Pt(self.pptx_formats[self._format][1]["height"] // 6),
@@ -532,10 +527,8 @@ class PPTXLayoutAPI:
                     top=Pt(
                         self.pptx_formats[self._format][1]["height"] // 5
                         + self.pptx_formats[self._format][1]["height"] // 10
-                        + 20
-                        + self.pptx_formats[self._format][1]["height"] // 6
-                        + 20
-                        + self.pptx_formats[self._format][1]["height"] // 6
+                        + self.pptx_formats[self._format][1]["height"] // 3
+                        + 40
                     ),
                     width=Pt(self.pptx_formats[self._format][1]["width"] // 2),
                     height=Pt(18),
