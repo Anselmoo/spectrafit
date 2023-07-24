@@ -345,6 +345,233 @@ class PPTXLayoutAPI:
             plt.savefig(tmp_fname, dpi=300, bbox_inches="tight")
             return tmp_fname
 
+    def create_ratio(self) -> PPTXRatioAPI:
+        """Create the ratio of the powerpoint presentation.
+
+        Returns:
+            PPTXRatioAPI: The ratio of the powerpoint presentation.
+        """
+        return PPTXRatioAPI(
+            width=Pt(self.pptx_formats[self._format][1]["width"]),
+            height=Pt(self.pptx_formats[self._format][1]["height"]),
+        )
+
+    def create_header(self) -> PPTXHeaderAPI:
+        """Create the header of the powerpoint presentation.
+
+        Returns:
+            PPTXHeaderAPI: The header of the powerpoint presentation.
+        """
+        return PPTXHeaderAPI(
+            position=PPTXPositionAPI(
+                left=Pt(0),
+                top=Pt(0),
+                width=Pt(self.pptx_formats[self._format][1]["width"]),
+                height=Pt(self.pptx_formats[self._format][1]["height"] // 5),
+            ),
+            text=self.title,
+        )
+
+    def create_sub_title_1(self) -> PPTXSubTitleLeftAPI:
+        """Create the subtitle 1 of the powerpoint presentation.
+
+        Returns:
+            PPTXSubTitleLeftAPI: The subtitle 1 of the powerpoint presentation.
+        """
+        return PPTXSubTitleLeftAPI(
+            position=PPTXPositionAPI(
+                left=Pt(0),
+                top=Pt(self.pptx_formats[self._format][1]["height"] // 5),
+                width=Pt(self.pptx_formats[self._format][1]["width"] // 2),
+                height=Pt(self.pptx_formats[self._format][1]["height"] // 10),
+            ),
+            text=PPTXBasicTitleAPI().sub_title_1,
+            figure=PPTXFigureAPI(
+                position=PPTXPositionAPI(
+                    left=Pt(0),
+                    top=Pt(
+                        self.pptx_formats[self._format][1]["height"] // 5
+                        + self.pptx_formats[self._format][1]["height"] // 10
+                    ),
+                    width=Pt(self.pptx_formats[self._format][1]["width"] // 2),
+                    height=Pt(3 * self.pptx_formats[self._format][1]["height"] // 5),
+                ),
+                description=PPTXDescriptionAPI(
+                    position=PPTXPositionAPI(
+                        left=Pt(0),
+                        top=Pt(
+                            self.pptx_formats[self._format][1]["height"] // 5
+                            + self.pptx_formats[self._format][1]["height"] // 10
+                            + 3 * self.pptx_formats[self._format][1]["height"] // 5
+                        ),
+                        width=Pt(self.pptx_formats[self._format][1]["width"] // 2),
+                        height=Pt(18),
+                    ),
+                    text=PPTXBasicTitleAPI().figure_description,
+                ),
+                fname=self.tmp_fname,
+            ),
+        )
+
+    def create_sub_title_2(self) -> PPTXSubTitleRightAPI:
+        """Create the subtitle 2 of the powerpoint presentation.
+
+        Returns:
+            PPTXSubTitleRightAPI: The subtitle 2 of the powerpoint presentation.
+        """
+        return PPTXSubTitleRightAPI(
+            position=PPTXPositionAPI(
+                left=Pt(self.pptx_formats[self._format][1]["width"] // 2),
+                top=Pt(self.pptx_formats[self._format][1]["height"] // 5),
+                width=Pt(self.pptx_formats[self._format][1]["width"] // 2),
+                height=Pt(self.pptx_formats[self._format][1]["height"] // 10),
+            ),
+            text=PPTXBasicTitleAPI().sub_title_2,
+            table_1=self.create_table_1(),
+            table_2=self.create_table_2(),
+            table_3=self.create_table_3(),
+            credit=self.create_credit(),
+        )
+
+    def create_table_1(self) -> PPTXTableAPI:
+        """Create the table 1 of the powerpoint presentation.
+
+        Returns:
+            PPTXTableAPI: The table 1 of the powerpoint presentation.
+        """
+        return PPTXTableAPI(
+            position=PPTXPositionAPI(
+                left=Pt(self.pptx_formats[self._format][1]["width"] // 2),
+                top=Pt(
+                    self.pptx_formats[self._format][1]["height"] // 5
+                    + self.pptx_formats[self._format][1]["height"] // 10
+                    + 20
+                ),
+                width=Pt(self.pptx_formats[self._format][1]["width"] // 2),
+                height=Pt(self.pptx_formats[self._format][1]["height"] // 6),
+            ),
+            description=PPTXDescriptionAPI(
+                position=PPTXPositionAPI(
+                    left=Pt(self.pptx_formats[self._format][1]["width"] // 2),
+                    top=Pt(
+                        self.pptx_formats[self._format][1]["height"] // 5
+                        + self.pptx_formats[self._format][1]["height"] // 10
+                    ),
+                    width=Pt(self.pptx_formats[self._format][1]["width"] // 2),
+                    height=Pt(18),
+                ),
+                text=PPTXBasicTitleAPI().table_1_description,
+            ),
+            df=self.df_gof,
+            transpose=False,
+            index_hidden=True,
+        )
+
+    def create_table_2(self) -> PPTXTableAPI:
+        """Create the table 2 of the powerpoint presentation.
+
+        Returns:
+            PPTXTableAPI: The table 2 of the powerpoint presentation.
+        """
+        return PPTXTableAPI(
+            position=PPTXPositionAPI(
+                left=Pt(self.pptx_formats[self._format][1]["width"] // 2),
+                top=Pt(
+                    self.pptx_formats[self._format][1]["height"] // 5
+                    + self.pptx_formats[self._format][1]["height"] // 10
+                    + 20
+                    + self.pptx_formats[self._format][1]["height"] // 6
+                    + 20
+                ),
+                width=Pt(self.pptx_formats[self._format][1]["width"] // 2),
+                height=Pt(self.pptx_formats[self._format][1]["height"] // 6),
+            ),
+            description=PPTXDescriptionAPI(
+                position=PPTXPositionAPI(
+                    left=Pt(self.pptx_formats[self._format][1]["width"] // 2),
+                    top=Pt(
+                        self.pptx_formats[self._format][1]["height"] // 5
+                        + self.pptx_formats[self._format][1]["height"] // 10
+                        + 20
+                        + self.pptx_formats[self._format][1]["height"] // 6
+                    ),
+                    width=Pt(self.pptx_formats[self._format][1]["width"] // 2),
+                    height=Pt(18),
+                ),
+                text=PPTXBasicTitleAPI().table_2_description,
+            ),
+            df=self.df_regression,
+            transpose=True,
+            index_hidden=True,
+        )
+
+    def create_table_3(self) -> PPTXTableAPI:
+        """Create the table 3 of the powerpoint presentation.
+
+        Returns:
+            PPTXTableAPI: The table 3 of the powerpoint presentation.
+        """
+        return PPTXTableAPI(
+            position=PPTXPositionAPI(
+                left=Pt(self.pptx_formats[self._format][1]["width"] // 2),
+                top=Pt(
+                    self.pptx_formats[self._format][1]["height"] // 5
+                    + self.pptx_formats[self._format][1]["height"] // 10
+                    + 20
+                    + self.pptx_formats[self._format][1]["height"] // 6
+                    + 20
+                    + self.pptx_formats[self._format][1]["height"] // 6
+                    + 20
+                ),
+                width=Pt(self.pptx_formats[self._format][1]["width"] // 2),
+                height=Pt(self.pptx_formats[self._format][1]["height"] // 6),
+            ),
+            description=PPTXDescriptionAPI(
+                position=PPTXPositionAPI(
+                    left=Pt(self.pptx_formats[self._format][1]["width"] // 2),
+                    top=Pt(
+                        self.pptx_formats[self._format][1]["height"] // 5
+                        + self.pptx_formats[self._format][1]["height"] // 10
+                        + 20
+                        + self.pptx_formats[self._format][1]["height"] // 6
+                        + 20
+                        + self.pptx_formats[self._format][1]["height"] // 6
+                    ),
+                    width=Pt(self.pptx_formats[self._format][1]["width"] // 2),
+                    height=Pt(18),
+                ),
+                text=PPTXBasicTitleAPI().table_3_description,
+            ),
+            df=self.df_variables,
+            transpose=True,
+            index_hidden=False,
+        )
+
+    def create_credit(self) -> PPTXFigureAPI:
+        """Create the credit of the powerpoint presentation.
+
+        Returns:
+            PPTXFigureAPI: The credit of the powerpoint presentation.
+        """
+        return PPTXFigureAPI(
+            position=PPTXPositionAPI(
+                left=Pt(self.pptx_formats[self._format][1]["width"] - 80),
+                top=Pt(self.pptx_formats[self._format][1]["height"] - 80),
+                width=Pt(80),
+                height=Pt(80),
+            ),
+            description=PPTXDescriptionAPI(
+                position=PPTXPositionAPI(
+                    left=Pt(self.pptx_formats[self._format][1]["width"] - 240),
+                    top=Pt(self.pptx_formats[self._format][1]["height"] - 80),
+                    width=Pt(160),
+                    height=Pt(18),
+                ),
+                text=PPTXBasicTitleAPI().credit_description,
+            ),
+            fname=PPTXBasicTitleAPI().credit_logo,
+        )
+
     def get_pptx_layout(self) -> Union[Field169API, Field169APIHDR, Field43API]:
         """Get the powerpoint presentation layout.
 
@@ -353,201 +580,10 @@ class PPTXLayoutAPI:
                 layout.
         """
         return self.pptx_formats[self._format][0](
-            ratio=PPTXRatioAPI(
-                width=Pt(self.pptx_formats[self._format][1]["width"]),
-                height=Pt(self.pptx_formats[self._format][1]["height"]),
-            ),
+            ratio=self.create_ratio(),
             structure=PPTXStructureAPI(
-                header=PPTXHeaderAPI(
-                    position=PPTXPositionAPI(
-                        left=Pt(0),
-                        top=Pt(0),
-                        width=Pt(self.pptx_formats[self._format][1]["width"]),
-                        height=Pt(self.pptx_formats[self._format][1]["height"] // 5),
-                    ),
-                    text=self.title,
-                ),
-                sub_title_1=PPTXSubTitleLeftAPI(
-                    position=PPTXPositionAPI(
-                        left=Pt(0),
-                        top=Pt(self.pptx_formats[self._format][1]["height"] // 5),
-                        width=Pt(self.pptx_formats[self._format][1]["width"] // 2),
-                        height=Pt(self.pptx_formats[self._format][1]["height"] // 10),
-                    ),
-                    text=PPTXBasicTitleAPI().sub_title_1,
-                    figure=PPTXFigureAPI(
-                        position=PPTXPositionAPI(
-                            left=Pt(0),
-                            top=Pt(
-                                self.pptx_formats[self._format][1]["height"] // 5
-                                + self.pptx_formats[self._format][1]["height"] // 10
-                            ),
-                            width=Pt(self.pptx_formats[self._format][1]["width"] // 2),
-                            height=Pt(
-                                3 * self.pptx_formats[self._format][1]["height"] // 5
-                            ),
-                        ),
-                        description=PPTXDescriptionAPI(
-                            position=PPTXPositionAPI(
-                                left=Pt(0),
-                                top=Pt(
-                                    self.pptx_formats[self._format][1]["height"] // 5
-                                    + self.pptx_formats[self._format][1]["height"] // 10
-                                    + 3
-                                    * self.pptx_formats[self._format][1]["height"]
-                                    // 5
-                                ),
-                                width=Pt(
-                                    self.pptx_formats[self._format][1]["width"] // 2
-                                ),
-                                height=Pt(18),
-                            ),
-                            text=PPTXBasicTitleAPI().figure_description,
-                        ),
-                        fname=self.tmp_fname,
-                    ),
-                ),
-                sub_title_2=PPTXSubTitleRightAPI(
-                    position=PPTXPositionAPI(
-                        left=Pt(self.pptx_formats[self._format][1]["width"] // 2),
-                        top=Pt(self.pptx_formats[self._format][1]["height"] // 5),
-                        width=Pt(self.pptx_formats[self._format][1]["width"] // 2),
-                        height=Pt(self.pptx_formats[self._format][1]["height"] // 10),
-                    ),
-                    text=PPTXBasicTitleAPI().sub_title_2,
-                    table_1=PPTXTableAPI(
-                        position=PPTXPositionAPI(
-                            left=Pt(self.pptx_formats[self._format][1]["width"] // 2),
-                            top=Pt(
-                                self.pptx_formats[self._format][1]["height"] // 5
-                                + self.pptx_formats[self._format][1]["height"] // 10
-                                + 20
-                            ),
-                            width=Pt(self.pptx_formats[self._format][1]["width"] // 2),
-                            height=Pt(
-                                self.pptx_formats[self._format][1]["height"] // 6
-                            ),
-                        ),
-                        description=PPTXDescriptionAPI(
-                            position=PPTXPositionAPI(
-                                left=Pt(
-                                    self.pptx_formats[self._format][1]["width"] // 2
-                                ),
-                                top=Pt(
-                                    self.pptx_formats[self._format][1]["height"] // 5
-                                    + self.pptx_formats[self._format][1]["height"] // 10
-                                ),
-                                width=Pt(
-                                    self.pptx_formats[self._format][1]["width"] // 2
-                                ),
-                                height=Pt(18),
-                            ),
-                            text=PPTXBasicTitleAPI().table_1_description,
-                        ),
-                        df=self.df_gof,
-                        transpose=False,
-                        index_hidden=True,
-                    ),
-                    table_2=PPTXTableAPI(
-                        position=PPTXPositionAPI(
-                            left=Pt(self.pptx_formats[self._format][1]["width"] // 2),
-                            top=Pt(
-                                self.pptx_formats[self._format][1]["height"] // 5
-                                + self.pptx_formats[self._format][1]["height"] // 10
-                                + 20
-                                + self.pptx_formats[self._format][1]["height"] // 6
-                                + 20
-                            ),
-                            width=Pt(self.pptx_formats[self._format][1]["width"] // 2),
-                            height=Pt(
-                                self.pptx_formats[self._format][1]["height"] // 6
-                            ),
-                        ),
-                        description=PPTXDescriptionAPI(
-                            position=PPTXPositionAPI(
-                                left=Pt(
-                                    self.pptx_formats[self._format][1]["width"] // 2
-                                ),
-                                top=Pt(
-                                    self.pptx_formats[self._format][1]["height"] // 5
-                                    + self.pptx_formats[self._format][1]["height"] // 10
-                                    + 20
-                                    + self.pptx_formats[self._format][1]["height"] // 6
-                                ),
-                                width=Pt(
-                                    self.pptx_formats[self._format][1]["width"] // 2
-                                ),
-                                height=Pt(18),
-                            ),
-                            text=PPTXBasicTitleAPI().table_2_description,
-                        ),
-                        df=self.df_regression,
-                        transpose=True,
-                        index_hidden=True,
-                    ),
-                    table_3=PPTXTableAPI(
-                        position=PPTXPositionAPI(
-                            left=Pt(self.pptx_formats[self._format][1]["width"] // 2),
-                            top=Pt(
-                                self.pptx_formats[self._format][1]["height"] // 5
-                                + self.pptx_formats[self._format][1]["height"] // 10
-                                + 20
-                                + self.pptx_formats[self._format][1]["height"] // 6
-                                + 20
-                                + self.pptx_formats[self._format][1]["height"] // 6
-                                + 20
-                            ),
-                            width=Pt(self.pptx_formats[self._format][1]["width"] // 2),
-                            height=Pt(
-                                self.pptx_formats[self._format][1]["height"] // 6
-                            ),
-                        ),
-                        description=PPTXDescriptionAPI(
-                            position=PPTXPositionAPI(
-                                left=Pt(
-                                    self.pptx_formats[self._format][1]["width"] // 2
-                                ),
-                                top=Pt(
-                                    self.pptx_formats[self._format][1]["height"] // 5
-                                    + self.pptx_formats[self._format][1]["height"] // 10
-                                    + 20
-                                    + self.pptx_formats[self._format][1]["height"] // 6
-                                    + 20
-                                    + self.pptx_formats[self._format][1]["height"] // 6
-                                ),
-                                width=Pt(
-                                    self.pptx_formats[self._format][1]["width"] // 2
-                                ),
-                                height=Pt(18),
-                            ),
-                            text=PPTXBasicTitleAPI().table_3_description,
-                        ),
-                        df=self.df_variables,
-                        transpose=True,
-                        index_hidden=False,
-                    ),
-                    credit=PPTXFigureAPI(
-                        position=PPTXPositionAPI(
-                            left=Pt(self.pptx_formats[self._format][1]["width"] - 80),
-                            top=Pt(self.pptx_formats[self._format][1]["height"] - 80),
-                            width=Pt(80),
-                            height=Pt(80),
-                        ),
-                        description=PPTXDescriptionAPI(
-                            position=PPTXPositionAPI(
-                                left=Pt(
-                                    self.pptx_formats[self._format][1]["width"] - 240
-                                ),
-                                top=Pt(
-                                    self.pptx_formats[self._format][1]["height"] - 80
-                                ),
-                                width=Pt(160),
-                                height=Pt(18),
-                            ),
-                            text=PPTXBasicTitleAPI().credit_description,
-                        ),
-                        fname=PPTXBasicTitleAPI().credit_logo,
-                    ),
-                ),
+                header=self.create_header(),
+                sub_title_1=self.create_sub_title_1(),
+                sub_title_2=self.create_sub_title_2(),
             ),
         )
