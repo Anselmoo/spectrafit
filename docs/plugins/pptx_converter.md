@@ -21,8 +21,8 @@
 The `spectrafit-pptx-converter` command line tool can be used like this:
 
 ```shell
-    ➜ spectrafit-pptx -h
-    usage: spectrafit-pptx [options] infile
+    ➜ spectrafit-pptx-converter -h
+    usage: spectrafit-pptx-converter [options] infile
 
     Converter for 'SpectraFit' from *.lock output to a PowerPoint presentation.
 

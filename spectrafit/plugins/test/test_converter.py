@@ -26,6 +26,7 @@ from spectrafit.plugins.file_converter import FileConverter
 from spectrafit.plugins.pkl_converter import ExportData
 from spectrafit.plugins.pkl_converter import PklConverter
 from spectrafit.plugins.pkl_visualizer import PklVisualizer
+from spectrafit.plugins.pptx_converter import PPTXConverter
 from spectrafit.plugins.rixs_converter import RIXSConverter
 
 
@@ -990,3 +991,117 @@ class TestRixsConverter:
             tmp_list_dict_rixs[0].parent
             / f"{tmp_list_dict_rixs[0].stem}.{export_format}"
         ).exists()
+
+
+toml_file = """
+[input.description]
+project_name = "FittingProject"
+project_details = "Fitting Project via SpectraFit v0.21.0"
+version = "0.21.0"
+
+[input.method]
+global_fitting = false
+
+[solver.goodness_of_fit]
+chi_square = 1.9560826024192879
+reduced_chi_square = 0.003304193585167716
+akaike_information = -3471.677579644884
+bayesian_information = -3387.790737420624
+
+[solver.regression_metrics]
+index = [
+    "explained_variance_score","r2_score","max_error","mean_absolute_error",
+    "mean_squared_error","mean_squared_log_error","median_absolute_error",
+    "mean_absolute_percentage_error","mean_poisson_deviance",
+]
+columns = [0]
+data = [[0.8930863375679992],[0.7962864332341648],[0.14950470750282835],
+    [0.04751405253308302],[0.0032014445211444973],[0.002794639369994852],
+    [0.045333509552746225],[0.6665269992517762],[0.24019696600046683]]
+
+[solver.variables.gaussian_amplitude_1]
+init_value = 0.3
+model_value = 0.05316047862491946
+best_value = 0.05316047862491946
+
+[solver.variables.gaussian_center_1]
+init_value = 2
+model_value = 1.6591127700194552
+best_value = 1.6591127700194552
+
+[solver.variables.gaussian_fwhmg_1]
+init_value = 0.1
+model_value = 0.29999262582163666
+best_value = 0.29999262582163666
+[output.df_fit]
+energy = [1.6,1.7,1.8,1.9,2.0,2.1,2.2,2.3]
+intensity = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8]
+residual = [-0.1,-0.2,-0.3,-0.4,-0.5,-0.6,-0.7,-0.8]
+fit = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8]
+gaussian_1 = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8]
+"""
+
+
+class TestPPTXConverter:
+    """Test the pptx converter."""
+
+    @pytest.fixture
+    def tmp_toml_data(self, tmp_path: Path) -> Path:
+        """Create temporary toml file.
+
+        Args:
+            tmp_path (Path): Temporary path.
+
+        Returns:
+            Path: Path to temporary file.
+        """
+        fname = tmp_path / "tmp_file.lock"
+        with open(fname, "w") as f:
+            f.write(toml_file)
+        return fname
+
+    @pytest.mark.parametrize("file_format", ["16:9", "4:3", "16:9HDR"])
+    def test_cmd_pkl_converter(
+        self, script_runner: Any, tmp_toml_data: Path, file_format: str
+    ) -> None:
+        """Test the data converter plugin.
+
+        Args:
+            script_runner (Any): Script runner.
+            tmp_toml_data (Path): Path to temporary file.
+            file_format (str): File format.
+        """
+        ret = script_runner.run(
+            "spectrafit-pptx-converter",
+            str(tmp_toml_data),
+            "--file-format",
+            file_format,
+        )
+        assert ret.success
+        assert ret.stderr == ""
+        assert ret.stdout == ""
+        assert Path(
+            f"{tmp_toml_data.stem}_{file_format.replace(':', '_')}.pptx"
+        ).exists()
+
+    def test_raise_file_format(self, tmp_toml_data: Path) -> None:
+        """Test raise error for wrong file format.
+
+        Args:
+            tmp_toml_data (Path): Path to temporary file.
+        """
+        converter = PPTXConverter()
+        with pytest.raises(ValueError) as excinfo:
+            converter.convert(tmp_toml_data, file_format="wrong")
+        assert "File format" in str(excinfo.value)
+
+    def test_raise_no_lockfile(self, tmp_toml_data: Path) -> None:
+        """Test raise error for no lockfile.
+
+        Args:
+            tmp_toml_data (Path): Path to temporary file.
+        """
+        converter = PPTXConverter()
+        with pytest.raises(ValueError) as excinfo:
+            converter.convert(tmp_toml_data.parent / "tmp_file.json", file_format="4:3")
+        assert "File format" in str(excinfo.value)

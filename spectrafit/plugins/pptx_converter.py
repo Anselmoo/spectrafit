@@ -263,58 +263,64 @@ class PPTXLayout(PPTXElements):
     def lefr_element(self) -> None:
         """Create the left element of the powerpoint presentation."""
         self.create_subtitle(
-            text=self.structure.sub_title_1.text,
-            position=self.structure.sub_title_1.position,
-            index=self.structure.sub_title_1.index,
+            text=self.structure.sub_title_left.text,
+            position=self.structure.sub_title_left.position,
+            index=self.structure.sub_title_left.index,
         )
         self.create_figure(
-            fname=self.structure.sub_title_1.figure.fname,
-            position_figure=self.structure.sub_title_1.figure.position,
-            text=self.structure.sub_title_1.figure.description.text,
-            position_textbox=self.structure.sub_title_1.figure.description.position,
-            font_size=self.structure.sub_title_1.figure.description.font_size,
+            fname=self.structure.sub_title_left.figure.fname,
+            position_figure=self.structure.sub_title_left.figure.position,
+            text=self.structure.sub_title_left.figure.description.text,
+            position_textbox=self.structure.sub_title_left.figure.description.position,
+            font_size=self.structure.sub_title_left.figure.description.font_size,
         )
 
     def right_element(self) -> None:
         """Create the right element of the powerpoint presentation."""
         self.create_subtitle(
-            text=self.structure.sub_title_2.text,
-            position=self.structure.sub_title_2.position,
-            index=self.structure.sub_title_2.index,
+            text=self.structure.sub_title_right.text,
+            position=self.structure.sub_title_right.position,
+            index=self.structure.sub_title_right.index,
         )
         self.create_table(
-            df=self.structure.sub_title_2.table_1.df,
-            position_table=self.structure.sub_title_2.table_1.position,
-            transpose=self.structure.sub_title_2.table_1.transpose,
-            index_hidden=self.structure.sub_title_2.table_1.index_hidden,
-            text=self.structure.sub_title_2.table_1.description.text,
-            position_textbox=self.structure.sub_title_2.table_1.description.position,
-            font_size=self.structure.sub_title_2.table_1.description.font_size,
+            df=self.structure.sub_title_right.table_1.df,
+            position_table=self.structure.sub_title_right.table_1.position,
+            transpose=self.structure.sub_title_right.table_1.transpose,
+            index_hidden=self.structure.sub_title_right.table_1.index_hidden,
+            text=self.structure.sub_title_right.table_1.description.text,
+            position_textbox=(
+                self.structure.sub_title_right.table_1.description.position
+            ),
+            font_size=self.structure.sub_title_right.table_1.description.font_size,
         )
         self.create_table(
-            df=self.structure.sub_title_2.table_2.df,
-            position_table=self.structure.sub_title_2.table_2.position,
-            transpose=self.structure.sub_title_2.table_2.transpose,
-            index_hidden=self.structure.sub_title_2.table_2.index_hidden,
-            text=self.structure.sub_title_2.table_2.description.text,
-            position_textbox=self.structure.sub_title_2.table_2.description.position,
-            font_size=self.structure.sub_title_2.table_2.description.font_size,
+            df=self.structure.sub_title_right.table_2.df,
+            position_table=self.structure.sub_title_right.table_2.position,
+            transpose=self.structure.sub_title_right.table_2.transpose,
+            index_hidden=self.structure.sub_title_right.table_2.index_hidden,
+            text=self.structure.sub_title_right.table_2.description.text,
+            position_textbox=(
+                self.structure.sub_title_right.table_2.description.position
+            ),
+            font_size=self.structure.sub_title_right.table_2.description.font_size,
         )
         self.create_table(
-            df=self.structure.sub_title_2.table_3.df,
-            position_table=self.structure.sub_title_2.table_3.position,
-            transpose=self.structure.sub_title_2.table_3.transpose,
-            index_hidden=self.structure.sub_title_2.table_3.index_hidden,
-            text=self.structure.sub_title_2.table_3.description.text,
-            position_textbox=self.structure.sub_title_2.table_3.description.position,
-            font_size=self.structure.sub_title_2.table_3.description.font_size,
+            df=self.structure.sub_title_right.table_3.df,
+            position_table=self.structure.sub_title_right.table_3.position,
+            transpose=self.structure.sub_title_right.table_3.transpose,
+            index_hidden=self.structure.sub_title_right.table_3.index_hidden,
+            text=self.structure.sub_title_right.table_3.description.text,
+            position_textbox=(
+                self.structure.sub_title_right.table_3.description.position
+            ),
+            font_size=self.structure.sub_title_right.table_3.description.font_size,
         )
         self.create_credit(
-            fname=self.structure.sub_title_2.credit.fname,
-            text=self.structure.sub_title_2.credit.description.text,
-            position_logo=self.structure.sub_title_2.credit.position,
-            position_text=self.structure.sub_title_2.credit.description.position,
-            font_size=self.structure.sub_title_2.credit.description.font_size,
+            fname=self.structure.sub_title_right.credit.fname,
+            text=self.structure.sub_title_right.credit.description.text,
+            position_logo=self.structure.sub_title_right.credit.position,
+            position_text=self.structure.sub_title_right.credit.description.position,
+            font_size=self.structure.sub_title_right.credit.description.font_size,
         )
 
     def save(self) -> None:
@@ -382,10 +388,15 @@ class PPTXConverter(Converter):
             MutableMapping[str, Any]: The converted file as a dictionary.
         """
         if file_format not in PPTXConverter.pixel_size:
-            raise ValueError(f"File format '{file_format}' is not supported.")
+            raise ValueError(
+                f"File format '{file_format}' is not supported."
+                f"it must be one of {PPTXConverter.pixel_size}"
+            )
 
         if infile.suffix != ".lock":
-            raise ValueError(f"File format '{infile.suffix}' is not supported.")
+            raise ValueError(
+                f"File format '{infile.suffix}' is not supported." f"it must be '.lock'"
+            )
 
         with open(infile, "rb") as f:
             data = PPTXDataAPI(**tomli.load(f))

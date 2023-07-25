@@ -179,9 +179,9 @@ class PPTXTableAPI(BaseModel):
 class PPTXSubTitleLeftAPI(BaseModel):
     """SubTitle_1 class for PPTXData input.
 
-    !!! info "About the subtitle 1"
+    !!! info "About the left subtitle"
 
-        The subtitle 1 of the elements in the powerpoint presentation defines the
+        The left subtitle of the elements in the powerpoint presentation defines the
         first column of the powerpoint presentation with the elements of the subtitle,
         the figure and the description of the figure. This includes the position of
         the subtitle, the text of the subtitle, the figure and the description of the
@@ -197,15 +197,15 @@ class PPTXSubTitleLeftAPI(BaseModel):
 class PPTXSubTitleRightAPI(BaseModel):
     """SubTitle_2 class for PPTXData input.
 
-    !!! info "About the subtitle 2"
+    !!! info "About the right subtitle"
 
-        The subtitle 2 of the elements in the powerpoint presentation defines the
+        The right subtitle of the elements in the powerpoint presentation defines the
         second column of the powerpoint presentation with the elements of the subtitle,
         the tables and their descriptions. The tables are divided into three tables for
         `goodness_of_fit`, `regression_metrics` and `variables`. This includes the
         position of the subtitle, the text of the subtitle, the tables and their
         descriptions. Finally, the credit of the figure is also included in the
-        subtitle 2.
+        right subtitle.
     """
 
     index: int = 2
@@ -221,19 +221,19 @@ class PPTXStructureAPI(BaseModel):
     """Structure class for PPTXData input."""
 
     header: PPTXHeaderAPI
-    sub_title_1: PPTXSubTitleLeftAPI
-    sub_title_2: PPTXSubTitleRightAPI
+    sub_title_left: PPTXSubTitleLeftAPI
+    sub_title_right: PPTXSubTitleRightAPI
 
 
-class Field169APIHDR(BaseModel):
-    """Field169APIHDR class for PPTXData input.
+class Field169HDRAPI(BaseModel):
+    """Field169HDRAPI class for PPTXData input.
 
     !!! info "About the field `16:9 High Definition Resolution (HDR)`"
 
         The field `16:9` of the elements in the powerpoint presentation defines the
         structure of the powerpoint presentation with the elements of the header,
-        subtitle 1 and subtitle 2 for the ratio of `16:9` with pixel width and height
-        of __1920__ and __1080__ respectively.
+        left subtitle and right subtitle for the ratio of `16:9` with pixel width
+        and height of __1920__ and __1080__ respectively.
     """
 
     ratio: PPTXRatioAPI
@@ -247,8 +247,8 @@ class Field169API(BaseModel):
 
         The field `16:9` of the elements in the powerpoint presentation defines the
         structure of the powerpoint presentation with the elements of the header,
-        subtitle 1 and subtitle 2 for the ratio of `16:9` with pixel width and height
-        of __1280__ and __720__ respectively.
+        left subtitle and right subtitle for the ratio of `16:9` with pixel width
+        and height of __1280__ and __720__ respectively.
     """
 
     ratio: PPTXRatioAPI
@@ -262,8 +262,8 @@ class Field43API(BaseModel):
 
         The field `4:3` of the elements in the powerpoint presentation defines the
         structure of the powerpoint presentation with the elements of the header,
-        subtitle 1 and subtitle 2 for the ratio of `4:3` with pixel width and height
-        of __960__ and __720__ respectively.
+        left subtitle and right subtitle for the ratio of `4:3` with pixel width
+        and height of __960__ and __720__ respectively.
     """
 
     ratio: PPTXRatioAPI
@@ -277,11 +277,11 @@ class PPTXBasicTitleAPI(BaseModel):
 
         The basic title of the elements in the powerpoint presentation defines the
         structure of the powerpoint presentation with the elements of the header,
-        subtitle 1 and subtitle 2 for the ratio of `16:9` and `4:3`.
+        left subtitle and right subtitle for the ratio of `16:9` and `4:3`.
     """
 
-    sub_title_1: str = "Plot: Fitted and Experimental Spectra"
-    sub_title_2: str = "Tables: Metrics and Variables"
+    sub_title_left: str = "Plot: Fitted and Experimental Spectra"
+    sub_title_right: str = "Tables: Metrics and Variables"
     figure_description: str = (
         "Figure 1: Fitted and Experimental Spectra with the Residuals"
     )
@@ -297,17 +297,17 @@ class PPTXLayoutAPI:
     """PPTXLayout class for PPTXData input.
 
     Attributes:
-        pptx_formats (Dict[str, List[Union[Field169API, Field169APIHDR, Field43API]]]):
+        pptx_formats (Dict[str, List[Union[Field169API, Field169HDRAPI, Field43API]]]):
             The formats of the powerpoint presentation. This includes the ratio of
             `16:9` and `4:3` with pixel width and height of __1280__ and __720__
             respectively for `16:9` and __960__ and __720__ respectively for `4:3`.
     """
 
     pptx_formats: Dict[
-        str, Tuple[Type[Union[Field169API, Field169APIHDR, Field43API]], Dict[str, int]]
+        str, Tuple[Type[Union[Field169API, Field169HDRAPI, Field43API]], Dict[str, int]]
     ] = {
         "16:9": (Field169API, {"width": 1280, "height": 720}),
-        "16:9HDR": (Field169APIHDR, {"width": 1920, "height": 1080}),
+        "16:9HDR": (Field169HDRAPI, {"width": 1920, "height": 1080}),
         "4:3": (Field43API, {"width": 960, "height": 720}),
     }
 
@@ -372,11 +372,11 @@ class PPTXLayoutAPI:
             text=self.title,
         )
 
-    def create_sub_title_1(self) -> PPTXSubTitleLeftAPI:
-        """Create the subtitle 1 of the powerpoint presentation.
+    def create_sub_title_left(self) -> PPTXSubTitleLeftAPI:
+        """Create the left subtitle of the powerpoint presentation.
 
         Returns:
-            PPTXSubTitleLeftAPI: The subtitle 1 of the powerpoint presentation.
+            PPTXSubTitleLeftAPI: The left subtitle of the powerpoint presentation.
         """
         return PPTXSubTitleLeftAPI(
             position=PPTXPositionAPI(
@@ -385,7 +385,7 @@ class PPTXLayoutAPI:
                 width=Pt(self.pptx_formats[self._format][1]["width"] // 2),
                 height=Pt(self.pptx_formats[self._format][1]["height"] // 10),
             ),
-            text=PPTXBasicTitleAPI().sub_title_1,
+            text=PPTXBasicTitleAPI().sub_title_left,
             figure=PPTXFigureAPI(
                 position=PPTXPositionAPI(
                     left=Pt(0),
@@ -412,11 +412,11 @@ class PPTXLayoutAPI:
             ),
         )
 
-    def create_sub_title_2(self) -> PPTXSubTitleRightAPI:
-        """Create the subtitle 2 of the powerpoint presentation.
+    def create_sub_title_right(self) -> PPTXSubTitleRightAPI:
+        """Create the right subtitle of the powerpoint presentation.
 
         Returns:
-            PPTXSubTitleRightAPI: The subtitle 2 of the powerpoint presentation.
+            PPTXSubTitleRightAPI: The right subtitle of the powerpoint presentation.
         """
         return PPTXSubTitleRightAPI(
             position=PPTXPositionAPI(
@@ -425,7 +425,7 @@ class PPTXLayoutAPI:
                 width=Pt(self.pptx_formats[self._format][1]["width"] // 2),
                 height=Pt(self.pptx_formats[self._format][1]["height"] // 10),
             ),
-            text=PPTXBasicTitleAPI().sub_title_2,
+            text=PPTXBasicTitleAPI().sub_title_right,
             table_1=self.create_table_1(),
             table_2=self.create_table_2(),
             table_3=self.create_table_3(),
@@ -552,18 +552,18 @@ class PPTXLayoutAPI:
             fname=PPTXBasicTitleAPI().credit_logo,
         )
 
-    def get_pptx_layout(self) -> Union[Field169API, Field169APIHDR, Field43API]:
+    def get_pptx_layout(self) -> Union[Field169API, Field169HDRAPI, Field43API]:
         """Get the powerpoint presentation layout.
 
         Returns:
-            Union[Field169API, Field169APIHDR, Field43API]: The powerpoint presentation
+            Union[Field169API, Field169HDRAPI, Field43API]: The powerpoint presentation
                 layout.
         """
         return self.pptx_formats[self._format][0](
             ratio=self.create_ratio(),
             structure=PPTXStructureAPI(
                 header=self.create_header(),
-                sub_title_1=self.create_sub_title_1(),
-                sub_title_2=self.create_sub_title_2(),
+                sub_title_left=self.create_sub_title_left(),
+                sub_title_right=self.create_sub_title_right(),
             ),
         )
