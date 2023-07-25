@@ -1,4 +1,5 @@
 """PPTXModel class for SpectraFit API."""
+import re
 import tempfile
 
 from pathlib import Path
@@ -15,6 +16,7 @@ from pptx.util import Pt
 from pydantic import BaseModel
 from pydantic import ConfigDict
 from pydantic import Field
+from pydantic import field_validator
 from spectrafit import __version__
 from spectrafit.plotting import PlotSpectra
 
@@ -48,10 +50,10 @@ class OutputAPI(BaseModel):
 class GoodnessOfFitAPI(BaseModel):
     """GoodnessOfFit class."""
 
-    chi_square: float
-    reduced_chi_square: float
-    akaike_information: float
-    bayesian_information: float
+    chi2: float = Field(..., alias="chi_square")
+    r_chi2: float = Field(..., alias="reduced_chi_square")
+    akaike: float = Field(..., alias="akaike_information")
+    bayesian: float = Field(..., alias="bayesian_information")
 
 
 class RegressionMetricsAPI(BaseModel):
@@ -61,6 +63,28 @@ class RegressionMetricsAPI(BaseModel):
     columns: List[int]
     data: List[List[float]]
 
+    @field_validator("index")
+    @classmethod
+    def short_metrics(cls, v: List[str]) -> List[str]:
+        """Shorten the metrics names.
+
+        Args:
+            v (List[str]): The metrics names.
+
+        Returns:
+            List[str]: The shortened metrics names.
+        """
+        pattern = r"(?<!\d)[a-zA-Z0-9]{2,}(?!\d)"
+        abbreviations: Dict[str, str] = {}
+        for metric in v:
+            abbreviation = "".join(re.findall(pattern, metric)).lower()[:2]
+            while abbreviation in abbreviations.values() or len(abbreviation) < 2:
+                abbreviation = "".join(re.findall(pattern, metric)).lower()[
+                    : len(abbreviation) + 1
+                ]
+            abbreviations[metric] = abbreviation
+        return list(abbreviations.values())
+
 
 class SolverAPI(BaseModel):
     """Solver class for getting the metrics of the fit for PPTXData output."""
@@ -68,6 +92,29 @@ class SolverAPI(BaseModel):
     goodness_of_fit: GoodnessOfFitAPI
     regression_metrics: RegressionMetricsAPI
     variables: Dict[str, Dict[str, float]]
+
+    @field_validator("variables")
+    @classmethod
+    def short_variables(
+        cls, v: Dict[str, Dict[str, float]]
+    ) -> Dict[str, Dict[str, float]]:
+        """Shorten the variables names.
+
+        Args:
+            v (Dict[str, Dict[str, float]]): The variables names.
+
+        Returns:
+            Dict[str, Dict[str, float]]: The shortened variables names.
+        """
+        new_dict = {}
+        for key, value in v.items():
+            new_key = "".join([part[:2] for part in key.split("_")])
+            new_value = {}
+            for sub_key, sub_value in value.items():
+                new_sub_key = sub_key.replace("_value", "")
+                new_value[new_sub_key] = sub_value
+            new_dict[new_key] = new_value
+        return new_dict
 
 
 class PPTXDataAPI(BaseModel):
@@ -136,7 +183,7 @@ class PPTXDescriptionAPI(BaseModel):
     model_config = ConfigDict(validate_assignment=True, arbitrary_types_allowed=True)
     position: PPTXPositionAPI
     text: str
-    font_size: Pt = Field(default_factory=lambda: Pt(12))
+    font_size: Pt = Field(default_factory=lambda: Pt(8))
 
 
 class PPTXFigureAPI(BaseModel):
@@ -535,17 +582,17 @@ class PPTXLayoutAPI:
         """
         return PPTXFigureAPI(
             position=PPTXPositionAPI(
-                left=Pt(self.pptx_formats[self._format][1]["width"] - 80),
-                top=Pt(self.pptx_formats[self._format][1]["height"] - 80),
-                width=Pt(80),
-                height=Pt(80),
+                left=Pt(self.pptx_formats[self._format][1]["width"] - 40),
+                top=Pt(self.pptx_formats[self._format][1]["height"] - 40),
+                width=Pt(40),
+                height=Pt(40),
             ),
             description=PPTXDescriptionAPI(
                 position=PPTXPositionAPI(
-                    left=Pt(self.pptx_formats[self._format][1]["width"] - 240),
-                    top=Pt(self.pptx_formats[self._format][1]["height"] - 80),
-                    width=Pt(160),
-                    height=Pt(18),
+                    left=Pt(self.pptx_formats[self._format][1]["width"] - 200),
+                    top=Pt(self.pptx_formats[self._format][1]["height"] - 40),
+                    width=Pt(200),
+                    height=Pt(14),
                 ),
                 text=PPTXBasicTitleAPI().credit_description,
             ),

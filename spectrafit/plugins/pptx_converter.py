@@ -156,14 +156,16 @@ class PPTXElements:
             width=position_table.width,
             height=position_table.height,
         )
+        table.table.cell(0, 0).text = ""
         if index_hidden:
-            table.table.cell(0, 0).text = ""
             for i, col in enumerate(df.columns):
                 table.table.cell(0, i).text = str(col)
                 for j, value in enumerate(df[col]):
                     table.table.cell(j + 1, i).text = str(value)
         else:
-            for i, col in enumerate(df.columns):
+            for i, index in enumerate(df.index, start=1):
+                table.table.cell(i, 0).text = str(index)
+            for i, col in enumerate(df.columns, start=1):
                 table.table.cell(0, i).text = col
                 for j, value in enumerate(df[col]):
                     table.table.cell(j + 1, i).text = str(value)
