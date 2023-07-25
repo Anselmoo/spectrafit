@@ -391,13 +391,13 @@ class PPTXConverter(Converter):
         """
         if file_format not in PPTXConverter.pixel_size:
             raise ValueError(
-                f"File format '{file_format}' is not supported."
+                f"File format '{file_format}' is not supported;"
                 f"it must be one of {PPTXConverter.pixel_size}"
             )
 
         if infile.suffix != ".lock":
             raise ValueError(
-                f"File format '{infile.suffix}' is not supported." f"it must be '.lock'"
+                f"File format '{infile.suffix}' is not supported; it must be '.lock'"
             )
 
         with open(infile, "rb") as f:
