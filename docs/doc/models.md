@@ -101,6 +101,14 @@ Here is a list of implemented models of `spectrafit`:
 
 ::: spectrafit.models.DistributionModels.polynom3
 
+::: spectrafit.models.DistributionModels.pearson1
+
+::: spectrafit.models.DistributionModels.pearson2
+
+::: spectrafit.models.DistributionModels.pearson3
+
+::: spectrafit.models.DistributionModels.pearson4
+
 ## Important constants for the models
 
 For calculating the models a few math constants are needed, which are

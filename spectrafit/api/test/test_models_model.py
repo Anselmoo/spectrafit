@@ -25,6 +25,10 @@ from spectrafit.api.models_model import DistributionModelAPI
         "cvoigt",
         "polynom2",
         "polynom3",
+        "pearson1",
+        "pearson2",
+        "pearson3",
+        "pearson4",
     ],
 )
 def test_distribution_model(distribution_model: str) -> None:

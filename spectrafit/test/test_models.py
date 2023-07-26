@@ -1234,6 +1234,35 @@ class TestModel:
                     "coefficient3": 1.0,
                 },
             ),
+            (
+                "pearson1",
+                {"amplitude": 1.0, "center": 5.0, "sigma": 1.0, "exponent": 1.0},
+            ),
+            (
+                "pearson2",
+                {"amplitude": -1.0, "center": 2.5, "sigma": 1.2, "exponent": -1.0},
+            ),
+            (
+                "pearson3",
+                {
+                    "amplitude": 1.0,
+                    "center": 5.0,
+                    "sigma": 1.0,
+                    "exponent": 1.0,
+                    "skewness": 1.0,
+                },
+            ),
+            (
+                "pearson4",
+                {
+                    "amplitude": 1.0,
+                    "center": 5.0,
+                    "sigma": -1.0,
+                    "exponent": 1.0,
+                    "skewness": -1.0,
+                    "kurtosis": 1.0,
+                },
+            ),
         ],
     )
     def test_distrubtion_models(
@@ -1276,6 +1305,35 @@ class TestModel:
                     "coefficient1": {},
                     "coefficient2": {},
                     "coefficient3": {},
+                },
+            ),
+            (
+                "pearson1",
+                {"amplitude": {}, "center": {}, "sigma": {}, "exponent": {}},
+            ),
+            (
+                "pearson2",
+                {"amplitude": {}, "center": {}, "sigma": {}, "exponent": {}},
+            ),
+            (
+                "pearson3",
+                {
+                    "amplitude": {},
+                    "center": {},
+                    "sigma": {},
+                    "exponent": {},
+                    "skewness": {},
+                },
+            ),
+            (
+                "pearson4",
+                {
+                    "amplitude": {},
+                    "center": {},
+                    "sigma": {},
+                    "exponent": {},
+                    "skewness": {},
+                    "kurtosis": {},
                 },
             ),
         ],

@@ -292,7 +292,7 @@ class CVoigtAPI(BaseModel):
     gamma: GammaAPI = GammaAPI()
 
 
-class Polynomia2lAPI(BaseModel):
+class Polynomia2API(BaseModel):
     """Definition of the second order polynomial of the models distributions."""
 
     coefficient0: CoefficientAPI = CoefficientAPI()
@@ -300,13 +300,72 @@ class Polynomia2lAPI(BaseModel):
     coefficient2: CoefficientAPI = CoefficientAPI()
 
 
-class Polynomia3lAPI(BaseModel):
+class Polynomia3API(BaseModel):
     """Definition of the third order polynomial of the models distributions."""
 
     coefficient0: CoefficientAPI = CoefficientAPI()
     coefficient1: CoefficientAPI = CoefficientAPI()
     coefficient2: CoefficientAPI = CoefficientAPI()
     coefficient3: CoefficientAPI = CoefficientAPI()
+
+
+class SkewnessAPI(BaseModel):
+    """Definition of the skewness of the models distributions."""
+
+    max: Optional[float] = Field(default=None, description="Maximum skewness.")
+    min: Optional[int] = Field(default=None, description="Minimum skewness.")
+    vary: bool = Field(default=True, description="Vary the skewness.")
+    value: Optional[float] = Field(default=None, description="Initial skewness value.")
+    expr: Optional[str] = Field(default=None, description=__description__)
+
+
+class KurtosisAPI(BaseModel):
+    """Definition of the kurtosis of the models distributions."""
+
+    max: Optional[float] = Field(default=None, description="Maximum kurtosis.")
+    min: Optional[int] = Field(default=None, description="Minimum kurtosis.")
+    vary: bool = Field(default=True, description="Vary the kurtosis.")
+    value: Optional[float] = Field(default=None, description="Initial kurtosis value.")
+    expr: Optional[str] = Field(default=None, description=__description__)
+
+
+class Pearson1API(BaseModel):
+    """Definition of the pearson type I of the models distributions."""
+
+    amplitude: AmplitudeAPI = AmplitudeAPI()
+    center: CenterAPI = CenterAPI()
+    sigma: SigmaAPI = SigmaAPI()
+    exponent: ExponentAPI = ExponentAPI()
+
+
+class Pearson2API(BaseModel):
+    """Definition of the pearson type II of the models distributions."""
+
+    amplitude: AmplitudeAPI = AmplitudeAPI()
+    center: CenterAPI = CenterAPI()
+    sigma: SigmaAPI = SigmaAPI()
+    exponent: ExponentAPI = ExponentAPI()
+
+
+class Pearson3API(BaseModel):
+    """Definition of the pearson type III of the models distributions."""
+
+    amplitude: AmplitudeAPI = AmplitudeAPI()
+    center: CenterAPI = CenterAPI()
+    sigma: SigmaAPI = SigmaAPI()
+    exponent: ExponentAPI = ExponentAPI()
+    skewness: SkewnessAPI = SkewnessAPI()
+
+
+class Pearson4API(BaseModel):
+    """Definition of the pearson type IV of the models distributions."""
+
+    amplitude: AmplitudeAPI = AmplitudeAPI()
+    center: CenterAPI = CenterAPI()
+    sigma: SigmaAPI = SigmaAPI()
+    exponent: ExponentAPI = ExponentAPI()
+    skewness: SkewnessAPI = SkewnessAPI()
+    kurtosis: KurtosisAPI = KurtosisAPI()
 
 
 class DistributionModelAPI(BaseModel):
@@ -327,8 +386,12 @@ class DistributionModelAPI(BaseModel):
     cgaussian: CGaussianAPI = CGaussianAPI()
     clorentzian: CLorentzianAPI = CLorentzianAPI()
     cvoigt: CVoigtAPI = CVoigtAPI()
-    polynom2: Polynomia2lAPI = Polynomia2lAPI()
-    polynom3: Polynomia2lAPI = Polynomia2lAPI()
+    polynom2: Polynomia2API = Polynomia2API()
+    polynom3: Polynomia3API = Polynomia3API()
+    pearson1: Pearson1API = Pearson1API()
+    pearson2: Pearson2API = Pearson2API()
+    pearson3: Pearson3API = Pearson3API()
+    pearson4: Pearson4API = Pearson4API()
 
 
 class ConfIntervalAPI(BaseModel):
