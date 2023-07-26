@@ -2,6 +2,83 @@
 
 All notable changes to this project will be documented in this file.
 
+## v0.21.0 🌈 - 2023-07-26
+
+### 🧭 What's Changed
+
+#### 🚀 New
+
+- feat: :sparkles: Add `pearson` functions from type I to IV (#911) @Anselmoo
+- feat: 🚀  Add PPTX Converter (#904) @Anselmoo
+
+#### 🧰 Maintenance
+
+- feat: :sparkles: Add `pearson` functions from type I to IV (#911) @Anselmoo
+- feat: 🚀  Add PPTX Converter (#904) @Anselmoo
+- build(deps-dev): Bump bump-pydantic from 0.3.0 to 0.4.0 (#900) @dependabot
+- [pre-commit.ci] pre-commit autoupdate (#896) @pre-commit-ci
+
+#### 🐍 Python
+
+- feat: 🚀  Add PPTX Converter (#904) @Anselmoo
+- fix: :bug: Add polynomial-functions to  `ModelsAPI` (#899) @Anselmoo
+
+#### :octocat: Github Actions
+
+- feat: 🚀  Add PPTX Converter (#904) @Anselmoo
+- build(deps): Bump pypa/gh-action-pypi-publish from 1.8.7 to 1.8.8 (#890) @dependabot
+- build(deps): Bump peter-evans/create-pull-request from 3 to 5 (#889) @dependabot
+- fix: :construction_worker: try new pr-auto (#887) @Anselmoo
+
+#### 🗂 Documentation
+
+- feat: :sparkles: Add `pearson` functions from type I to IV (#911) @Anselmoo
+- feat: 🚀  Add PPTX Converter (#904) @Anselmoo
+
+#### 🔗 Dependency Updates
+
+- feat: :sparkles: Add `pearson` functions from type I to IV (#911) @Anselmoo
+- build(deps-dev): Bump bump-pydantic from 0.6.0 to 0.6.1 (#909) @dependabot
+- feat: 🚀  Add PPTX Converter (#904) @Anselmoo
+- build(deps): Bump pyyaml from 6.0 to 6.0.1 (#901) @dependabot
+- build(deps-dev): Bump bump-pydantic from 0.3.0 to 0.4.0 (#900) @dependabot
+- build(deps): Bump dash-bootstrap-components from 1.4.1 to 1.4.2 (#894) @dependabot
+- build(deps): Bump lmfit from 1.2.1 to 1.2.2 (#893) @dependabot
+- build(deps): Bump pydantic from 2.0.2 to 2.0.3 (#895) @dependabot
+- build(deps): Bump jupyterlab from 4.0.2 to 4.0.3 (#891) @dependabot
+
+#### 🔬 Testing & Coverage
+
+- feat: :sparkles: Add `pearson` functions from type I to IV (#911) @Anselmoo
+- feat: 🚀  Add PPTX Converter (#904) @Anselmoo
+- fix: :bug: Add polynomial-functions to  `ModelsAPI` (#899) @Anselmoo
+
+#### 🔒 Security
+
+- feat: 🚀  Add PPTX Converter (#904) @Anselmoo
+
+#### 📝 Changelog
+
+- docs: :card_index_dividers: Update CHANGELOG for release/v0.20.1 (#888) @Anselmoo
+
+#### 🐳 Docker
+
+- feat: 🚀  Add PPTX Converter (#904) @Anselmoo
+
+#### 📦 Vendor
+
+- feat: :sparkles: Add `pearson` functions from type I to IV (#911) @Anselmoo
+- feat: 🚀  Add PPTX Converter (#904) @Anselmoo
+- Updated submodule vendor/docker-stacks (#892) @Anselmoo
+
+### 📦 Full Changelog
+
+**Full Changelog**: https://github.com/Anselmoo/spectrafit/compare/v0.20.1...v0.21.0
+
+### ⚙️ Who Contributes
+
+@Anselmoo
+
 ## v0.20.1 🌈 - 2023-07-11
 
 ### 🧭 What's Changed
