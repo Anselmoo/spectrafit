@@ -71,9 +71,11 @@ def test_goodness_of_fit() -> None:
 def test_regression_metrics() -> None:
     """Test the RegressionMetrics class."""
     regression_metrics = RegressionMetricsAPI(
-        index=["x", "y"], columns=[1, 2], data=[[1.0, 2.0], [3.0, 4.0]]
+        index=["r2_score", "mean_squared_error"],
+        columns=[1, 2],
+        data=[[1.0, 2.0], [3.0, 4.0]],
     )
-    assert regression_metrics.index == ["x", "y"]
+    assert regression_metrics.index == ["r2", "me"]
     assert regression_metrics.columns == [1, 2]
     assert regression_metrics.data == [[1.0, 2.0], [3.0, 4.0]]
 
@@ -87,7 +89,9 @@ def test_solver() -> None:
         bayesian_information=3.0,
     )
     regression_metrics = RegressionMetricsAPI(
-        index=["x", "y"], columns=[1, 2], data=[[1.0, 2.0], [3.0, 4.0]]
+        index=["r2_score", "mean_squared_error"],
+        columns=[1, 2],
+        data=[[1.0, 2.0], [3.0, 4.0]],
     )
     variables = {"x": {"init_value": 1.0, "model_value": 0.1, "best_fit_value": 0.2}}
     solver = SolverAPI(
@@ -118,7 +122,9 @@ def pptx_data(project_name: str) -> Tuple[PPTXDataAPI, OutputAPI, InputAPI, Solv
         bayesian_information=3.0,
     )
     regression_metrics = RegressionMetricsAPI(
-        index=["x", "y"], columns=[1, 2], data=[[1.0, 2.0], [3.0, 4.0]]
+        index=["r2_score", "mean_squared_error"],
+        columns=[1, 2],
+        data=[[1.0, 2.0], [3.0, 4.0]],
     )
     variables = {"x": {"init_value": 1.0, "model_value": 0.1, "best_fit_value": 0.2}}
     solver = SolverAPI(
