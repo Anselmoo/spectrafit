@@ -49,6 +49,15 @@ RIXS cuts.
 
 ::: spectrafit.plugins.rixs_visualizer
 
+### PPTX Converter for PowerPoint files
+
+!!! warning "About the PPTX Converter"
+
+    The `PPTXConverter` class is a work in progress and is subject to change.
+    Especially, the layout of the PowerPoint file is not yet finalized.
+
+::: spectrafit.plugins.pptx_converter
+
 [1]: https://docs.python.org/3/tutorial/datastructures.html#dictionaries
 [2]: https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html
 [3]: https://docs.python.org/3/library/abc.html#abc.ABC
