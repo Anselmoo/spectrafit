@@ -569,6 +569,169 @@ class DistributionModels:
             + coefficient3 * x**3
         )
 
+    @staticmethod
+    def pearson1(
+        x: NDArray[np.float64],
+        amplitude: float = 1.0,
+        center: float = 0.0,
+        sigma: float = 1.0,
+        exponent: float = 1.0,
+    ) -> NDArray[np.float64]:
+        r"""Return a 1-dimensional Pearson type I distribution.
+
+        $$
+        f(x) = \frac{A}{\sigma \sqrt{2 \pi}} \left[1 + \frac{(x - c)^2}{\sigma^2}
+        \right]^{-\frac{1}{\nu}}
+        $$
+
+        Args:
+            x (NDArray[np.float64]): `x`-values of the data.
+            amplitude (float, optional): Amplitude of the Pearson type I function.
+                    Defaults to 1.0.
+            center (float, optional): Center of the Pearson type I function.
+                 Defaults to 0.0.
+            sigma (float, optional): Sigma of the Pearson type I function.
+                 Defaults to 1.0.
+            exponent (float, optional): Exponent of the Pearson type I function.
+                 Defaults to 1.0.
+
+        Returns:
+            NDArray[np.float64]: Pearson type I function of `x` given.
+        """
+        return np.array(
+            amplitude
+            / (sigma * np.sqrt(2 * np.pi))
+            * np.power(1 + ((x - center) / sigma) ** 2, -1 / exponent)
+        )
+
+    @staticmethod
+    def pearson2(
+        x: NDArray[np.float64],
+        amplitude: float = 1.0,
+        center: float = 0.0,
+        sigma: float = 1.0,
+        exponent: float = 1.0,
+    ) -> NDArray[np.float64]:
+        r"""Return a 1-dimensional Pearson type II distribution.
+
+        $$
+        f(x) = \frac{A}{\sigma \sqrt{2 \pi}} \left[1 + \frac{(x - c)^2}{2 \sigma^2}
+        \right]^{-\nu}
+        $$
+
+        Args:
+            x (NDArray[np.float64]): `x`-values of the data.
+            amplitude (float, optional): Amplitude of the Pearson type II function.
+                    Defaults to 1.0.
+            center (float, optional): Center of the Pearson type II function.
+                 Defaults to 0.0.
+            sigma (float, optional): Sigma of the Pearson type II function.
+                 Defaults to 1.0.
+            exponent (float, optional): Exponent of the Pearson type II function.
+                 Defaults to 1.0.
+
+        Returns:
+            NDArray[np.float64]: Pearson type II function of `x` given.
+        """
+        return np.array(
+            amplitude
+            / (sigma * np.sqrt(2 * pi))
+            * np.power(1 + ((x - center) / (2 * sigma)) ** 2, -exponent)
+        )
+
+    @staticmethod
+    def pearson3(
+        x: NDArray[np.float64],
+        amplitude: float = 1.0,
+        center: float = 0.0,
+        sigma: float = 1.0,
+        exponent: float = 1.0,
+        skewness: float = 0.0,
+    ) -> NDArray[np.float64]:
+        r"""Return a 1-dimensional Pearson type III distribution.
+
+        $$
+        f(x) = \frac{A}{\sigma \sqrt{2 \pi}} \left[1 + \frac{(x - c)^2}{2 \sigma^2}
+        \right]^{-\nu} \left[1 + \frac{\gamma}{\nu}
+        \frac{x - c}{\sigma} \right]^{-\nu - 1}
+        $$
+
+        Args:
+            x (NDArray[np.float64]): `x`-values of the data.
+            amplitude (float, optional): Amplitude of the Pearson type III function.
+                    Defaults to 1.0.
+            center (float, optional): Center of the Pearson type III function.
+                 Defaults to 0.0.
+            sigma (float, optional): Sigma of the Pearson type III function.
+                 Defaults to 1.0.
+            exponent (float, optional): Exponent of the Pearson type III function.
+                 Defaults to 1.0.
+            skewness (float, optional): Skewness of the Pearson type III function.
+                 Defaults to 0.0.
+
+        Returns:
+            NDArray[np.float64]: Pearson type III function of `x` given.
+        """
+        return np.array(
+            amplitude
+            / (sigma * np.sqrt(2 * pi))
+            * np.power(1 + ((x - center) / (2 * sigma)) ** 2, -exponent)
+            * np.power(
+                1 + (skewness / exponent) * ((x - center) / sigma), -exponent - 1
+            )
+        )
+
+    @staticmethod
+    def pearson4(
+        x: NDArray[np.float64],
+        amplitude: float = 1.0,
+        center: float = 0.0,
+        sigma: float = 1.0,
+        exponent: float = 1.0,
+        skewness: float = 0.0,
+        kurtosis: float = 0.0,
+    ) -> NDArray[np.float64]:
+        r"""Return a 1-dimensional Pearson type IV distribution.
+
+        $$
+        f(x) = \frac{A}{\sigma \sqrt{2 \pi}} \left[1 + \frac{(x - c)^2}{2 \sigma^2}
+        \right]^{-\nu} \left[1 + \frac{\gamma}{\nu}
+        \frac{x - c}{\sigma} \right]^{-\nu - 1}
+        \left[1 + \frac{\delta}{\nu}
+        \left(\frac{x - c}{\sigma}\right)^2 \right]^{-\nu - 1/2}
+        $$
+
+        Args:
+            x (NDArray[np.float64]): `x`-values of the data.
+            amplitude (float, optional): Amplitude of the Pearson type IV function.
+                    Defaults to 1.0.
+            center (float, optional): Center of the Pearson type IV function.
+                 Defaults to 0.0.
+            sigma (float, optional): Sigma of the Pearson type IV function.
+                 Defaults to 1.0.
+            exponent (float, optional): Exponent of the Pearson type IV function.
+                 Defaults to 1.0.
+            skewness (float, optional): Skewness of the Pearson type IV function.
+                 Defaults to 0.0.
+            kurtosis (float, optional): Kurtosis of the Pearson type IV function.
+                 Defaults to 0.0.
+
+        Returns:
+            NDArray[np.float64]: Pearson type IV function of `x` given.
+        """
+        return np.array(
+            amplitude
+            / (sigma * np.sqrt(2 * pi))
+            * np.power(1 + ((x - center) / (2 * sigma)) ** 2, -exponent)
+            * np.power(
+                1 + (skewness / exponent) * ((x - center) / sigma), -exponent - 1
+            )
+            * np.power(
+                1 + (kurtosis / exponent) * ((x - center) / sigma) ** 2,
+                -exponent - 1 / 2,
+            )
+        )
+
 
 @dataclass(frozen=True)
 class ReferenceKeys:
