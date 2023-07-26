@@ -9,23 +9,23 @@ All notable changes to this project will be documented in this file.
 #### 🚀 New
 
 - feat: :sparkles: Add `pearson` functions from type I to IV (#911) @Anselmoo
-- feat: 🚀  Add PPTX Converter (#904) @Anselmoo
+- feat: 🚀 Add PPTX Converter (#904) @Anselmoo
 
 #### 🧰 Maintenance
 
 - feat: :sparkles: Add `pearson` functions from type I to IV (#911) @Anselmoo
-- feat: 🚀  Add PPTX Converter (#904) @Anselmoo
+- feat: 🚀 Add PPTX Converter (#904) @Anselmoo
 - build(deps-dev): Bump bump-pydantic from 0.3.0 to 0.4.0 (#900) @dependabot
 - [pre-commit.ci] pre-commit autoupdate (#896) @pre-commit-ci
 
 #### 🐍 Python
 
-- feat: 🚀  Add PPTX Converter (#904) @Anselmoo
-- fix: :bug: Add polynomial-functions to  `ModelsAPI` (#899) @Anselmoo
+- feat: 🚀 Add PPTX Converter (#904) @Anselmoo
+- fix: :bug: Add polynomial-functions to `ModelsAPI` (#899) @Anselmoo
 
 #### :octocat: Github Actions
 
-- feat: 🚀  Add PPTX Converter (#904) @Anselmoo
+- feat: 🚀 Add PPTX Converter (#904) @Anselmoo
 - build(deps): Bump pypa/gh-action-pypi-publish from 1.8.7 to 1.8.8 (#890) @dependabot
 - build(deps): Bump peter-evans/create-pull-request from 3 to 5 (#889) @dependabot
 - fix: :construction_worker: try new pr-auto (#887) @Anselmoo
@@ -33,13 +33,13 @@ All notable changes to this project will be documented in this file.
 #### 🗂 Documentation
 
 - feat: :sparkles: Add `pearson` functions from type I to IV (#911) @Anselmoo
-- feat: 🚀  Add PPTX Converter (#904) @Anselmoo
+- feat: 🚀 Add PPTX Converter (#904) @Anselmoo
 
 #### 🔗 Dependency Updates
 
 - feat: :sparkles: Add `pearson` functions from type I to IV (#911) @Anselmoo
 - build(deps-dev): Bump bump-pydantic from 0.6.0 to 0.6.1 (#909) @dependabot
-- feat: 🚀  Add PPTX Converter (#904) @Anselmoo
+- feat: 🚀 Add PPTX Converter (#904) @Anselmoo
 - build(deps): Bump pyyaml from 6.0 to 6.0.1 (#901) @dependabot
 - build(deps-dev): Bump bump-pydantic from 0.3.0 to 0.4.0 (#900) @dependabot
 - build(deps): Bump dash-bootstrap-components from 1.4.1 to 1.4.2 (#894) @dependabot
@@ -50,12 +50,12 @@ All notable changes to this project will be documented in this file.
 #### 🔬 Testing & Coverage
 
 - feat: :sparkles: Add `pearson` functions from type I to IV (#911) @Anselmoo
-- feat: 🚀  Add PPTX Converter (#904) @Anselmoo
-- fix: :bug: Add polynomial-functions to  `ModelsAPI` (#899) @Anselmoo
+- feat: 🚀 Add PPTX Converter (#904) @Anselmoo
+- fix: :bug: Add polynomial-functions to `ModelsAPI` (#899) @Anselmoo
 
 #### 🔒 Security
 
-- feat: 🚀  Add PPTX Converter (#904) @Anselmoo
+- feat: 🚀 Add PPTX Converter (#904) @Anselmoo
 
 #### 📝 Changelog
 
@@ -63,12 +63,12 @@ All notable changes to this project will be documented in this file.
 
 #### 🐳 Docker
 
-- feat: 🚀  Add PPTX Converter (#904) @Anselmoo
+- feat: 🚀 Add PPTX Converter (#904) @Anselmoo
 
 #### 📦 Vendor
 
 - feat: :sparkles: Add `pearson` functions from type I to IV (#911) @Anselmoo
-- feat: 🚀  Add PPTX Converter (#904) @Anselmoo
+- feat: 🚀 Add PPTX Converter (#904) @Anselmoo
 - Updated submodule vendor/docker-stacks (#892) @Anselmoo
 
 ### 📦 Full Changelog
