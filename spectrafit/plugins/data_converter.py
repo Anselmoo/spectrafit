@@ -97,7 +97,8 @@ class DataConverter(Converter):
                 additional information beyond the command line arguments.
         """
         parser = argparse.ArgumentParser(
-            description="Converter for 'SpectraFit' from data files to CSV files."
+            description="Converter for 'SpectraFit' from data files to CSV files.",
+            usage="%(prog)s [options] infile",
         )
         parser.add_argument(
             "infile",

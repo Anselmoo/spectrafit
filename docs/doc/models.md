@@ -97,6 +97,10 @@ Here is a list of implemented models of `spectrafit`:
 
 ::: spectrafit.models.DistributionModels.cvoigt
 
+::: spectrafit.models.DistributionModels.polynom2
+
+::: spectrafit.models.DistributionModels.polynom3
+
 ## Important constants for the models
 
 For calculating the models a few math constants are needed, which are

@@ -18,8 +18,6 @@ from spectrafit.tools import pure_fname
 
 
 pkl_gz = "pkl.gz"
-choices_fformat = {"latin1", "utf-8", "utf-16", "utf-32"}
-choices_export = {"npy", "npz", "pkl", pkl_gz}
 
 
 class ExportData:
@@ -125,7 +123,14 @@ class PklConverter(Converter):
         -[x] pkl.gz
         -[x] ...
 
+
+    Attributes:
+        choices_fformat (Set[str]): The choices for the file format.
+        choices_export (Set[str]): The choices for the export format.
     """
+
+    choices_fformat = {"latin1", "utf-8", "utf-16", "utf-32"}
+    choices_export = {"npy", "npz", "pkl", pkl_gz}
 
     def get_args(self) -> Dict[str, Any]:
         """Get the arguments from the command line.
@@ -135,7 +140,8 @@ class PklConverter(Converter):
                 additional information beyond the command line arguments.
         """
         parser = argparse.ArgumentParser(
-            description="Converter for 'SpectraFit' from pkl files to CSV files."
+            description="Converter for 'SpectraFit' from pkl files to CSV files.",
+            usage="%(prog)s [options] infile",
         )
         parser.add_argument(
             "infile",
@@ -149,7 +155,7 @@ class PklConverter(Converter):
             " Default is 'latin1'.",
             type=str,
             default="latin1",
-            choices=choices_fformat,
+            choices=self.choices_fformat,
         )
         parser.add_argument(
             "-e",
@@ -157,7 +163,7 @@ class PklConverter(Converter):
             help="File format for export of the output file. Default is 'pkl'.",
             type=str,
             default="pkl",
-            choices=choices_export,
+            choices=self.choices_export,
         )
         return vars(parser.parse_args())
 
@@ -224,7 +230,7 @@ class PklConverter(Converter):
         Raises:
             ValueError: If the export format is not supported.
         """
-        if export_format.lower() not in choices_export:
+        if export_format.lower() not in self.choices_export:
             raise ValueError(f"Unsupported file format '{export_format}'.")
 
         fname = pure_fname(fname)

@@ -21,7 +21,7 @@ With the command `spectrafit-file-converter` input and also output files can be 
                            File format for the export.
 ```
 
-=== "File Change from `json` to `lock`"
+=== "File Change from JSON to LOCK"
 
     !!! info
 
@@ -303,7 +303,7 @@ With the command `spectrafit-file-converter` input and also output files can be 
             "degree_of_freedom": 243
           },
           "statistics": {
-            "chi-square": 0.19287134070118112,
+            "chi_square": 0.19287134070118112,
             "reduced_chi_square": 0.0007937092209925148,
             "akaike_information": -1883.2058200035844,
             "bayesian_information": -1797.1118522019785
@@ -4670,7 +4670,7 @@ With the command `spectrafit-file-converter` input and also output files can be 
       degree_of_freedom = 243
 
       [fit_insights.statistics]
-      chi-square = 0.19287134070118112
+      chi_square = 0.19287134070118112
       reduced_chi_square = 0.0007937092209925148
       akaike_information = -1883.2058200035844
       bayesian_information = -1797.1118522019785

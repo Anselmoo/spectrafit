@@ -34,7 +34,8 @@ class RIXSConverter(Converter):
         """
         parser = argparse.ArgumentParser(
             description="Converter for 'SpectraFit' from pkl files to a JSON, TOML, "
-            "or numpy file for RIXS-Visualizer."
+            "or numpy file for RIXS-Visualizer.",
+            usage="%(prog)s [options] infile",
         )
         parser.add_argument(
             "infile",
