@@ -47,6 +47,6 @@ The following export formats are supported:
 
     ![_](images/pptx_visualizer.png)
 
-[1]: ../plugins/jupyter_interface
+[1]: ../../plugins/jupyter_interface
 [2]: https://lmfit.github.io/lmfit-py/fitting.html#goodness-of-fit-statistics
 [3]: https://scikit-learn.org/stable/modules/model_evaluation.html#common-cases-predefined-values
