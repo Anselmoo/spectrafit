@@ -2,7 +2,7 @@
 
     The `spectrafit-pptx-converter` command line tool allows to convert
     parts of the Spectrafit's `*.lock`-files into a PowerPoint presentation.
-    The `*.lock`-files are created by the `Spectrafit`-[Notebook-Plugin][1]
+    The `*.lock`-files are created by the [Spectrafit-Notebook-Plugin][1]
     and contain the following information:
 
     - [x] A fitting plot of the data with the fit results and the residuals.

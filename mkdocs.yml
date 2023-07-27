@@ -23,7 +23,6 @@ theme:
     - navigation.expand
     - content.code.annotate
     - content.tabs.link
-    - content.action.edit
     - content.action.view
     - content.action.copy
     - header.autohide
@@ -178,7 +177,7 @@ nav:
   - Plugins:
       - File-Format-Conversion: plugins/file_converter.md
       - Data-Format-Conversion: plugins/data_converter.md
-      - Jupyter-Notebook-Integration: plugins/jupyter-interface.md
+      - Jupyter-Notebook-Integration: plugins/jupyter_interface.md
       - RIXS-Visualization: plugins/rixs_visualization.md
       - RIXS-Converter: plugins/rixs_converter.md
       - PKL-Converter and Visualizer: plugins/pkl_converter_visualization.md
