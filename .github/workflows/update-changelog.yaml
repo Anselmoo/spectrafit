@@ -28,11 +28,7 @@ jobs:
           commit_message: "docs: :card_index_dividers: Update CHANGELOG for release/${{ github.event.release.tag_name }}"
           file_pattern: CHANGELOG.md
           create_branch: true
-      - name: Checkout new branch
-        uses: actions/checkout@v3
-        with:
-          ref: release/${{ github.event.release.tag_name }}
-      - name: Open Pull Request from release/${{ github.event.release.tag_name }} to main
+      - name: Open Pull Request for updated CHANGELOG
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
