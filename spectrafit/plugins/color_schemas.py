@@ -5,6 +5,9 @@ from spectrafit.api.notebook_model import ColorAPI
 from spectrafit.api.notebook_model import FontAPI
 
 
+__fira_code__ = "Fira Code"
+
+
 class DraculaColor(ColorAPI):
     """Dracula color theme for SpectraFit.
 
@@ -60,7 +63,7 @@ class DraculaFont(FontAPI):
         See also: https://github.com/tonsky/FiraCode
     """
 
-    family: str = "Fira Code"
+    family: str = __fira_code__
     size: int = 12
     color: str = "#f8f8f2"
 
@@ -147,7 +150,7 @@ class DevOpsDarkFont(FontAPI):
     Please check, https://github.com/primer/github-vscode-theme
     """
 
-    family: str = "Fira Code"
+    family: str = __fira_code__
     size: int = 12
     color: str = "#c9d1d9"
 
@@ -180,6 +183,6 @@ class DevOpsLightFont(FontAPI):
     Please check, https://github.com/primer/github-vscode-theme
     """
 
-    family: str = "Fira Code"
+    family: str = __fira_code__
     size: int = 12
     color: str = "#000000"
