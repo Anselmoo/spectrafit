@@ -36,8 +36,8 @@ jobs:
           title: "docs: :card_index_dividers: Update CHANGELOG for release/${{ github.event.release.tag_name }}"
           body: "This Pull Request was automatically created to update the CHANGELOG for release/${{ github.event.release.tag_name }}."
           draft: false
-          base: main
-          branch: release/${{ github.event.release.tag_name }}
+          branch: main
+          base: release/${{ github.event.release.tag_name }}
   Release-Documentation:
     if: ${{ contains(github.event.release.prerelease, false) }}
     name: Build Documentation from new release branch 'release/${{ github.event.release.tag_name }}'
