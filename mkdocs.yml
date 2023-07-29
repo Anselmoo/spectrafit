@@ -163,11 +163,12 @@ nav:
           - Working with Athena Data: examples/example8.md
       - Working in Jupyter Notebooks:
           - Default Plot: examples/example9_1.ipynb
-          - Dark Theme: examples/example9_2.ipynb
+          - Themes: examples/example9_2.ipynb
           - Export Results: examples/example9_3.ipynb
           - RIXS Map Visualization: examples/example9_4.ipynb
           - Using Converters as Module: examples/example9_5.ipynb
           - RIXS Global-Fitting in Jupyter: examples/example9_6.ipynb
+          - LFS Rendering: examples/example_lfs.ipynb
   - Documentation:
       - Models: doc/models.md
       - Expression: doc/expression.md
