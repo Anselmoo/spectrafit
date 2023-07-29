@@ -2,6 +2,52 @@
 
 All notable changes to this project will be documented in this file.
 
+## v0.22.0 🌈 - 2023-07-29
+
+### :compass: What's Changed
+
+#### :rocket: New
+
+- feat: 👷 Add arm64 support (#921) @Anselmoo
+- feat: :wrench: Add more font and color themes (#920) @Anselmoo
+
+#### :toolbox: Maintenance
+
+- ci: 🖌️ Update style (#924) @Anselmoo
+- build: :bookmark: v0.22.0 (#922) @Anselmoo
+
+#### :octocat: Github Actions
+
+- feat: 👷 Add arm64 support (#921) @Anselmoo
+- ci: :construction_worker: Update `create-pull-request` (#916) @Anselmoo
+
+#### :card_index_dividers: Documentation
+
+- ci: 🖌️ Update style (#924) @Anselmoo
+- feat: 👷 Add arm64 support (#921) @Anselmoo
+- feat: :wrench: Add more font and color themes (#920) @Anselmoo
+
+#### :link: Dependency Updates
+
+- build: :bookmark: v0.22.0 (#922) @Anselmoo
+- build(deps-dev): :arrow_up: Bump mkdocs-material from 9.1.20 to 9.1.21 (#917) @dependabot
+
+#### :microscope: Testing & Coverage
+
+- feat: :wrench: Add more font and color themes (#920) @Anselmoo
+
+#### :memo: Changelog
+
+- ci: 🖌️ Update style (#924) @Anselmoo
+
+### :package: Full Changelog
+
+**Full Changelog**: https://github.com/Anselmoo/spectrafit/compare/v0.21.1...v0.22.0
+
+### :gear: Who Contributes
+
+@Anselmoo
+
 ## v0.21.1 🌈 - 2023-07-26
 
 ### 🧭 What's Changed
