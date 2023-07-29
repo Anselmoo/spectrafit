@@ -20,7 +20,7 @@ pre-commit:
   - .pre-commit-config.yaml
   - .pre-commit-hooks.yaml
 python:
-  - "*.py"
+  - "spectrafit/**/*.py"
 testing:
   - "spectrafit/**/test_*.py"
 docker:
