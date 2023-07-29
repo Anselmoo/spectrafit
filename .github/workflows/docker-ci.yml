@@ -13,7 +13,7 @@ env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: ghcr.io
   # github.repository as <account>/<repo>
-  IMAGE_NAME: ${{ github.repository }}
+  IMAGE_NAME: ${{ github.repository | lower }}
 
 jobs:
   Docker:
@@ -67,11 +67,12 @@ jobs:
         run: |
           echo "::set-output name=tag::$(echo ${{ matrix.platform }} | sed 's/\//-/g')-$(date +%s)"
           echo "::set-output name=label::$(echo ${{ matrix.platform }} | sed 's/\//-/g')"
+
       - name: Build and push Docker image
         uses: docker/build-push-action@2eb1c1961a95fc15694676618e422e8ba1d63825
         with:
           context: .
           push: true
-          tags: ${{ env.IMAGE_NAME }}:${{ steps.label-tag.outputs.tag }}
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.label-tag.outputs.tag }}
           labels: ${{ steps.label-tag.outputs.label }},platform=${{ matrix.platform }}
           platforms: ${{ matrix.platform }}
