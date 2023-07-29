@@ -1,1 +1,1 @@
-docs/examples/images/Figure_9_2_*.png filter=lfs diff=lfs merge=lfs -text
+docs/examples/images/Figure_9_2_*.png !text !filter !merge !diff

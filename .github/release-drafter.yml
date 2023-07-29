@@ -1,47 +1,47 @@
 name-template: "v$RESOLVED_VERSION 🌈"
 tag-template: "v$RESOLVED_VERSION"
 template: |
-  # 🧭 What's Changed
+  # :compass: What's Changed
   $CHANGES
 
-  # 📦 Full Changelog
+  # :package: Full Changelog
   **Full Changelog**: https://github.com/$OWNER/$REPOSITORY/compare/$PREVIOUS_TAG...v$RESOLVED_VERSION
 
-  # ⚙️ Who Contributes
+  # :gear: Who Contributes
   $CONTRIBUTORS
 
 categories:
-  - title: "🏆 Milestone"
+  - title: ":trophy: Milestone"
     label: "milestone"
-  - title: "🚀 New"
+  - title: ":rocket: New"
     label: "enhancement"
-  - title: "💻 Codesspaces"
+  - title: ":computer: Codesspaces"
     label: "codespaces"
-  - title: "🐛 Bug Fixes"
+  - title: ":bug: Bug Fixes"
     label: "bug"
-  - title: "🧰 Maintenance"
+  - title: ":toolbox: Maintenance"
     label: ["maintenance", "codeowners"]
-  - title: "🐍 Python"
+  - title: ":snake: Python"
     label: "python"
   - title: ":octocat: Github Actions"
     label: "github-actions"
-  - title: "🗂 Documentation"
+  - title: ":card_index_dividers: Documentation"
     label: "documentation"
-  - title: "🔗 Dependency Updates"
+  - title: ":link: Dependency Updates"
     label: "dependencies"
-  - title: "🔬 Testing & Coverage"
+  - title: ":microscope: Testing & Coverage"
     label: "testing"
-  - title: "👋 Welcome"
+  - title: ":wave: Welcome"
     label: "good first issue"
-  - title: "🔒 Security"
+  - title: ":lock: Security"
     label: "security"
-  - title: "📝 Changelog"
+  - title: ":memo: Changelog"
     label: "changelog"
-  - title: "🧾 Forms"
+  - title: ":receipt: Forms"
     label: "forms"
-  - title: "🐳 Docker"
+  - title: ":whale: Docker"
     label: "docker"
-  - title: "📦 Vendor"
+  - title: ":package: Vendor"
     label: "vendor"
 
 version-resolver:
