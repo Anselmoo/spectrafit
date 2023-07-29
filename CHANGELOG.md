@@ -2,6 +2,41 @@
 
 All notable changes to this project will be documented in this file.
 
+## v0.21.1 🌈 - 2023-07-26
+
+### 🧭 What's Changed
+
+#### 🧰 Maintenance
+
+- docs: ✏️ Update docs (#915) @Anselmoo
+- build(deps-dev): Bump mkdocs-minify-plugin from 0.6.4 to 0.7.0 (#913) @dependabot
+
+#### :octocat: Github Actions
+
+- docs: ✏️ Update docs (#915) @Anselmoo
+
+#### 🗂 Documentation
+
+- docs: ✏️ Update docs (#915) @Anselmoo
+- doc: :memo: Add edit buttons to homepage (#914) @Anselmoo
+
+#### 🔗 Dependency Updates
+
+- docs: ✏️ Update docs (#915) @Anselmoo
+- build(deps-dev): Bump mkdocs-minify-plugin from 0.6.4 to 0.7.0 (#913) @dependabot
+
+#### 📝 Changelog
+
+- docs: :card_index_dividers: Update CHANGELOG for release/v0.21.0 (#912) @Anselmoo
+
+### 📦 Full Changelog
+
+**Full Changelog**: https://github.com/Anselmoo/spectrafit/compare/v0.21.0...v0.21.1
+
+### ⚙️ Who Contributes
+
+@Anselmoo
+
 ## v0.21.0 🌈 - 2023-07-26
 
 ### 🧭 What's Changed
