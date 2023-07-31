@@ -2,6 +2,45 @@
 
 All notable changes to this project will be documented in this file.
 
+## v0.22.1 🌈 - 2023-07-31
+
+### :compass: What's Changed
+
+#### :toolbox: Maintenance
+
+- build: ✨  Introducing ARM64 support (#932) @Anselmoo
+
+#### :snake: Python
+
+- build: ✨  Introducing ARM64 support (#932) @Anselmoo
+
+#### :octocat: Github Actions
+
+- build: ✨  Introducing ARM64 support (#932) @Anselmoo
+- ci: :toolbox: Update docker build (#929) @Anselmoo
+- Cleanup (#927) @Anselmoo
+- ci: :test_tube: Testing of Multi-Dockerimages (#926) @Anselmoo
+
+#### :card_index_dividers: Documentation
+
+- [ImgBot] Optimize images (#925) @imgbot
+
+#### :link: Dependency Updates
+
+- build: ✨  Introducing ARM64 support (#932) @Anselmoo
+
+#### :memo: Changelog
+
+- docs: :memo: Update changelog manually (#928) @Anselmoo
+
+### :package: Full Changelog
+
+**Full Changelog**: https://github.com/Anselmoo/spectrafit/compare/v0.22.0...v0.22.1
+
+### :gear: Who Contributes
+
+@Anselmoo
+
 ## v0.22.0 🌈 - 2023-07-29
 
 ### :compass: What's Changed
