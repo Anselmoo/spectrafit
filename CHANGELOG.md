@@ -8,15 +8,15 @@ All notable changes to this project will be documented in this file.
 
 #### :toolbox: Maintenance
 
-- build: ✨  Introducing ARM64 support (#932) @Anselmoo
+- build: ✨ Introducing ARM64 support (#932) @Anselmoo
 
 #### :snake: Python
 
-- build: ✨  Introducing ARM64 support (#932) @Anselmoo
+- build: ✨ Introducing ARM64 support (#932) @Anselmoo
 
 #### :octocat: Github Actions
 
-- build: ✨  Introducing ARM64 support (#932) @Anselmoo
+- build: ✨ Introducing ARM64 support (#932) @Anselmoo
 - ci: :toolbox: Update docker build (#929) @Anselmoo
 - Cleanup (#927) @Anselmoo
 - ci: :test_tube: Testing of Multi-Dockerimages (#926) @Anselmoo
@@ -27,7 +27,7 @@ All notable changes to this project will be documented in this file.
 
 #### :link: Dependency Updates
 
-- build: ✨  Introducing ARM64 support (#932) @Anselmoo
+- build: ✨ Introducing ARM64 support (#932) @Anselmoo
 
 #### :memo: Changelog
 
