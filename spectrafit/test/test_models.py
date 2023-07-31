@@ -257,7 +257,7 @@ class TestModelParametersSolver:
         """Test of str-return."""
         mp = ModelParameters(df=self.df, args=self.args)
         mp.define_parameters()
-        assert type(mp.__str__()) == str
+        assert isinstance(mp.__str__(), str)
 
     def test_param_return(self) -> None:
         """Test of str-return."""
@@ -280,20 +280,20 @@ class TestModelParametersSolver:
     def test_solver_local(self) -> None:
         """Test of SolverModels for local fitting."""
         mp = SolverModels(df=self.df, args=self.args)()
-        assert type(mp.__str__()) == str
-        assert type(mp) == tuple
+        assert isinstance(mp.__str__(), str)
+        assert isinstance(mp, tuple)
 
     def test_solver_global_1(self) -> None:
         """Test of SolverModels for global fitting."""
         mp = SolverModels(df=self.df_global, args=self.args_global_1)()
-        assert type(mp.__str__()) == str
-        assert type(mp) == tuple
+        assert isinstance(mp.__str__(), str)
+        assert isinstance(mp, tuple)
 
     def test_solver_global_2(self) -> None:
         """Test of SolverModels for global fitting."""
         mp = SolverModels(df=self.df_global, args=self.args_global_2)()
-        assert type(mp.__str__()) == str
-        assert type(mp) == tuple
+        assert isinstance(mp.__str__(), str)
+        assert isinstance(mp, tuple)
 
     def test_all_model_local(self) -> None:
         """Test of the AllModel class for local fitting."""
@@ -584,8 +584,8 @@ class TestModelParametersSolver:
             },
         }
         mp = SolverModels(df=df, args=args)()
-        assert type(mp.__str__()) == str
-        assert type(mp) == tuple
+        assert isinstance(mp.__str__(), str)
+        assert isinstance(mp, tuple)
 
     def test_all_model_global(self) -> None:
         """Test of the AllModel class for global fitting."""
@@ -877,8 +877,8 @@ class TestModelParametersSolver:
         }
 
         mp = SolverModels(df=df, args=args)()
-        assert type(mp.__str__()) == str
-        assert type(mp) == tuple
+        assert isinstance(mp.__str__(), str)
+        assert isinstance(mp, tuple)
 
     def test_all_model_global_fail(self) -> None:
         """Test of the AllModel class for global fitting."""
@@ -979,8 +979,8 @@ class TestAutoPeakDetection:
         auto.initialize_peak_detection()
         peaks, properties = auto.__autodetect__()
 
-        assert type(peaks) == np.ndarray
-        assert type(properties) == dict
+        assert isinstance(peaks, np.ndarray)
+        assert isinstance(properties, dict)
 
     def test_autopeakdetection_hmean(self) -> None:
         """Test of auto default detection only positive values."""
@@ -992,9 +992,9 @@ class TestAutoPeakDetection:
         auto.initialize_peak_detection()
         peaks, properties = auto.__autodetect__()
 
-        assert type(peaks) == np.ndarray
+        assert isinstance(peaks, np.ndarray)
+        assert isinstance(properties, dict)
         assert len(peaks) == 21
-        assert type(properties) == dict
 
     def test_autopeakdetection_userdef(self) -> None:
         """Test of auto default detection with user definitions."""
@@ -1017,9 +1017,9 @@ class TestAutoPeakDetection:
         auto.initialize_peak_detection()
         peaks, properties = auto.__autodetect__()
 
-        assert type(peaks) == np.ndarray
+        assert isinstance(peaks, np.ndarray)
         assert len(peaks) == 174
-        assert type(properties) == dict
+        assert isinstance(properties, dict)
         assert len(properties.keys()) == 13
 
     def test_wlen(self) -> None:
@@ -1352,8 +1352,8 @@ class TestModel:
         }
         mp = SolverModels(df=df_data, args=args)()
 
-        assert type(mp.__str__()) == str
-        assert type(mp) == tuple
+        assert isinstance(mp.__str__(), str)
+        assert isinstance(mp, tuple)
         assert len(mp) == 2
         for name in mp[0].params.keys():
             assert model in name
