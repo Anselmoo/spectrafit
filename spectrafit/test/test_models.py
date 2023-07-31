@@ -6,11 +6,13 @@ from math import pi
 from math import sqrt
 from typing import Any
 from typing import Dict
+from typing import Tuple
 
 import numpy as np
 import pandas as pd
 import pytest
 
+from lmfit import Minimizer
 from lmfit import Parameters
 from numpy.typing import NDArray
 from pydantic import ValidationError
@@ -20,6 +22,12 @@ from spectrafit.models import DistributionModels
 from spectrafit.models import ModelParameters
 from spectrafit.models import SolverModels
 from spectrafit.models import calculated_model
+
+
+def assert_solver_models(mp: Tuple[Minimizer, Any]) -> None:
+    """Assert SolverModels."""
+    assert isinstance(mp.__str__(), str)
+    assert isinstance(mp, tuple)
 
 
 class TestConstants:
@@ -280,20 +288,17 @@ class TestModelParametersSolver:
     def test_solver_local(self) -> None:
         """Test of SolverModels for local fitting."""
         mp = SolverModels(df=self.df, args=self.args)()
-        assert isinstance(mp.__str__(), str)
-        assert isinstance(mp, tuple)
+        assert_solver_models(mp)
 
     def test_solver_global_1(self) -> None:
         """Test of SolverModels for global fitting."""
         mp = SolverModels(df=self.df_global, args=self.args_global_1)()
-        assert isinstance(mp.__str__(), str)
-        assert isinstance(mp, tuple)
+        assert_solver_models(mp)
 
     def test_solver_global_2(self) -> None:
         """Test of SolverModels for global fitting."""
         mp = SolverModels(df=self.df_global, args=self.args_global_2)()
-        assert isinstance(mp.__str__(), str)
-        assert isinstance(mp, tuple)
+        assert_solver_models(mp)
 
     def test_all_model_local(self) -> None:
         """Test of the AllModel class for local fitting."""
@@ -584,8 +589,7 @@ class TestModelParametersSolver:
             },
         }
         mp = SolverModels(df=df, args=args)()
-        assert isinstance(mp.__str__(), str)
-        assert isinstance(mp, tuple)
+        assert_solver_models(mp)
 
     def test_all_model_global(self) -> None:
         """Test of the AllModel class for global fitting."""
@@ -877,8 +881,7 @@ class TestModelParametersSolver:
         }
 
         mp = SolverModels(df=df, args=args)()
-        assert isinstance(mp.__str__(), str)
-        assert isinstance(mp, tuple)
+        assert_solver_models(mp)
 
     def test_all_model_global_fail(self) -> None:
         """Test of the AllModel class for global fitting."""
@@ -914,6 +917,14 @@ class TestModelParametersSolver:
 
 class TestAutoPeakDetection:
     """Testing of the Auto Peak Detection Class."""
+
+    @staticmethod
+    def assert_isinstance(
+        peaks: NDArray[np.float64], properties: Dict[str, Any]
+    ) -> None:
+        """Assert if the peaks and properties are of the correct type."""
+        assert isinstance(peaks, np.ndarray)
+        assert isinstance(properties, dict)
 
     def test_key_not_available(self) -> None:
         """Test if the key is not available."""
@@ -979,8 +990,7 @@ class TestAutoPeakDetection:
         auto.initialize_peak_detection()
         peaks, properties = auto.__autodetect__()
 
-        assert isinstance(peaks, np.ndarray)
-        assert isinstance(properties, dict)
+        self.assert_isinstance(peaks, properties)
 
     def test_autopeakdetection_hmean(self) -> None:
         """Test of auto default detection only positive values."""
@@ -992,9 +1002,8 @@ class TestAutoPeakDetection:
         auto.initialize_peak_detection()
         peaks, properties = auto.__autodetect__()
 
-        assert isinstance(peaks, np.ndarray)
-        assert isinstance(properties, dict)
         assert len(peaks) == 21
+        self.assert_isinstance(peaks, properties)
 
     def test_autopeakdetection_userdef(self) -> None:
         """Test of auto default detection with user definitions."""
@@ -1017,10 +1026,9 @@ class TestAutoPeakDetection:
         auto.initialize_peak_detection()
         peaks, properties = auto.__autodetect__()
 
-        assert isinstance(peaks, np.ndarray)
         assert len(peaks) == 174
-        assert isinstance(properties, dict)
         assert len(properties.keys()) == 13
+        self.assert_isinstance(peaks, properties)
 
     def test_wlen(self) -> None:
         """Test numerical return of wlen."""
@@ -1352,8 +1360,7 @@ class TestModel:
         }
         mp = SolverModels(df=df_data, args=args)()
 
-        assert isinstance(mp.__str__(), str)
-        assert isinstance(mp, tuple)
+        assert_solver_models(mp)
         assert len(mp) == 2
         for name in mp[0].params.keys():
             assert model in name
