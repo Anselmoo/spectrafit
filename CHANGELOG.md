@@ -2,6 +2,42 @@
 
 All notable changes to this project will be documented in this file.
 
+## v0.22.2 🌈 - 2023-07-31
+
+### :compass: What's Changed
+
+#### :toolbox: Maintenance
+
+- docs: :card_index_dividers: Update CHANGELOG for release/v0.22.1 (#933) @Anselmoo
+
+#### :snake: Python
+
+- docs: :card_index_dividers: Update CHANGELOG for release/v0.22.1 (#933) @Anselmoo
+
+#### :octocat: Github Actions
+
+- docs: :card_index_dividers: Update CHANGELOG for release/v0.22.1 (#933) @Anselmoo
+
+#### :link: Dependency Updates
+
+- docs: :card_index_dividers: Update CHANGELOG for release/v0.22.1 (#933) @Anselmoo
+
+#### :microscope: Testing & Coverage
+
+- docs: :card_index_dividers: Update CHANGELOG for release/v0.22.1 (#933) @Anselmoo
+
+#### :memo: Changelog
+
+- docs: :card_index_dividers: Update CHANGELOG for release/v0.22.1 (#933) @Anselmoo
+
+### :package: Full Changelog
+
+**Full Changelog**: https://github.com/Anselmoo/spectrafit/compare/v0.22.1...v0.22.2
+
+### :gear: Who Contributes
+
+@Anselmoo
+
 ## v0.22.1 🌈 - 2023-07-31
 
 ### :compass: What's Changed
