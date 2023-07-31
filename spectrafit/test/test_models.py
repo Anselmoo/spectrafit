@@ -300,21 +300,14 @@ class TestModelParametersSolver:
         mp = SolverModels(df=self.df_global, args=self.args_global_2)()
         assert_solver_models(mp)
 
-    def test_all_model_local(self) -> None:
-        """Test of the AllModel class for local fitting."""
-        df = pd.DataFrame(
-            {
-                "Energy": np.arange(100).astype(np.float64),
-                "Intensity_1": np.random.rand(100),
-                "Intensity_2": np.random.rand(100),
-                "Intensity_3": np.random.rand(100),
-                "Intensity_4": np.random.rand(100),
-            }
-        )
-        args = {
-            "autopeak": False,
-            "global_": 0,
-            "column": ["Energy", "Intensity_1"],
+    @pytest.fixture
+    def args_setting(self) -> Dict[str, Any]:
+        """Fixture for args.
+
+        Returns:
+            Dict[str, Any]: Add args for testing.
+        """
+        return {
             "minimizer": {"nan_policy": "propagate", "calc_covar": False},
             "optimizer": {"max_nfev": 10, "method": "leastsq"},
             "peaks": {
@@ -588,10 +581,28 @@ class TestModelParametersSolver:
                 },
             },
         }
+
+    def test_all_model_local(self, args_setting: Dict[str, Any]) -> None:
+        """Test of the AllModel class for local fitting."""
+        df = pd.DataFrame(
+            {
+                "Energy": np.arange(100).astype(np.float64),
+                "Intensity_1": np.random.rand(100),
+                "Intensity_2": np.random.rand(100),
+                "Intensity_3": np.random.rand(100),
+                "Intensity_4": np.random.rand(100),
+            }
+        )
+        args = {
+            "autopeak": False,
+            "global_": 0,
+            "column": ["Energy", "Intensity_1"],
+            **args_setting,
+        }
         mp = SolverModels(df=df, args=args)()
         assert_solver_models(mp)
 
-    def test_all_model_global(self) -> None:
+    def test_all_model_global(self, args_setting: Dict[str, Any]) -> None:
         """Test of the AllModel class for global fitting."""
         df = pd.DataFrame(
             {
@@ -606,278 +617,7 @@ class TestModelParametersSolver:
             "autopeak": False,
             "global_": 1,
             "column": ["Energy"],
-            "minimizer": {"nan_policy": "propagate", "calc_covar": False},
-            "optimizer": {"max_nfev": 10, "method": "leastsq"},
-            "peaks": {
-                "1": {
-                    "pseudovoigt": {
-                        "amplitude": {
-                            "max": 200,
-                            "min": 0,
-                            "vary": True,
-                            "value": 1,
-                        },
-                        "center": {
-                            "max": 200,
-                            "min": -200,
-                            "vary": True,
-                            "value": 0,
-                        },
-                        "fwhmg": {
-                            "max": 2.5,
-                            "min": 0.00002,
-                            "vary": True,
-                            "value": 1.0,
-                        },
-                        "fwhml": {
-                            "max": 2.5,
-                            "min": 0.0001,
-                            "vary": True,
-                            "value": 0.01,
-                        },
-                    }
-                },
-                "2": {
-                    "gaussian": {
-                        "amplitude": {
-                            "max": 200,
-                            "min": 0,
-                            "vary": True,
-                            "value": 1,
-                        },
-                        "center": {
-                            "max": 200,
-                            "min": -200,
-                            "vary": True,
-                            "value": 0,
-                        },
-                        "fwhmg": {
-                            "max": 2.5,
-                            "min": 0.00002,
-                            "vary": True,
-                            "value": 1.0,
-                        },
-                    }
-                },
-                "3": {
-                    "lorentzian": {
-                        "amplitude": {
-                            "max": 200,
-                            "min": 0,
-                            "vary": True,
-                            "value": 1,
-                        },
-                        "center": {
-                            "max": 200,
-                            "min": -200,
-                            "vary": True,
-                            "value": 0,
-                        },
-                        "fwhml": {
-                            "max": 2.5,
-                            "min": 0.00002,
-                            "vary": True,
-                            "value": 1.0,
-                        },
-                    }
-                },
-                "4": {
-                    "exponential": {
-                        "amplitude": {
-                            "max": 200,
-                            "min": 0,
-                            "vary": True,
-                            "value": 1,
-                        },
-                        "decay": {
-                            "max": 200,
-                            "min": -200,
-                            "vary": True,
-                            "value": 0,
-                        },
-                        "intercept": {
-                            "max": 2.5,
-                            "min": 0.00002,
-                            "vary": True,
-                            "value": 1.0,
-                        },
-                    }
-                },
-                "5": {
-                    "power": {
-                        "amplitude": {
-                            "max": 200,
-                            "min": 0,
-                            "vary": True,
-                            "value": 1,
-                        },
-                        "exponent": {
-                            "max": 200,
-                            "min": -200,
-                            "vary": True,
-                            "value": 0,
-                        },
-                        "intercept": {
-                            "max": 2.5,
-                            "min": 0.00002,
-                            "vary": True,
-                            "value": 1.0,
-                        },
-                    }
-                },
-                "6": {
-                    "linear": {
-                        "slope": {
-                            "max": 200,
-                            "min": 0,
-                            "vary": True,
-                            "value": 1,
-                        },
-                        "intercept": {
-                            "max": 200,
-                            "min": 0,
-                            "vary": True,
-                            "value": 1,
-                        },
-                    }
-                },
-                "7": {
-                    "constant": {
-                        "amplitude": {
-                            "max": 200,
-                            "min": 0,
-                            "vary": True,
-                            "value": 1,
-                        },
-                    }
-                },
-                "8": {
-                    "erf": {
-                        "amplitude": {
-                            "max": 200,
-                            "min": 0,
-                            "vary": True,
-                            "value": 1,
-                        },
-                        "center": {
-                            "max": 200,
-                            "min": -200,
-                            "vary": True,
-                            "value": 0,
-                        },
-                        "sigma": {
-                            "max": 2.5,
-                            "min": 0.00002,
-                            "vary": True,
-                            "value": 1.0,
-                        },
-                    }
-                },
-                "9": {
-                    "atan": {
-                        "amplitude": {
-                            "max": 200,
-                            "min": 0,
-                            "vary": True,
-                            "value": 1,
-                        },
-                        "center": {
-                            "max": 200,
-                            "min": -200,
-                            "vary": True,
-                            "value": 0,
-                        },
-                        "sigma": {
-                            "max": 2.5,
-                            "min": 0.00002,
-                            "vary": True,
-                            "value": 1.0,
-                        },
-                    }
-                },
-                "10": {
-                    "log": {
-                        "amplitude": {
-                            "max": 200,
-                            "min": 0,
-                            "vary": True,
-                            "value": 1,
-                        },
-                        "center": {
-                            "max": 200,
-                            "min": -200,
-                            "vary": True,
-                            "value": 0,
-                        },
-                        "sigma": {
-                            "max": 2.5,
-                            "min": 0.00002,
-                            "vary": True,
-                            "value": 1.0,
-                        },
-                    }
-                },
-                "11": {
-                    "heaviside": {
-                        "amplitude": {
-                            "max": 200,
-                            "min": 0,
-                            "vary": True,
-                            "value": 1,
-                        },
-                        "center": {
-                            "max": 200,
-                            "min": -200,
-                            "vary": True,
-                            "value": 0,
-                        },
-                        "sigma": {
-                            "max": 2.5,
-                            "min": 0.00002,
-                            "vary": True,
-                            "value": 1.0,
-                        },
-                    }
-                },
-                "12": {
-                    "voigt": {
-                        "center": {
-                            "max": 200,
-                            "min": -200,
-                            "vary": True,
-                            "value": 0,
-                        },
-                        "fwhmv": {
-                            "max": 2.5,
-                            "min": 0.00002,
-                            "vary": True,
-                            "value": 1.0,
-                        },
-                        "gamma": {
-                            "max": 2.5,
-                            "min": 0.00002,
-                            "vary": True,
-                            "value": 1.0,
-                        },
-                    }
-                },
-                "13": {
-                    "voigt": {
-                        "center": {
-                            "max": 200,
-                            "min": -200,
-                            "vary": True,
-                            "value": 0,
-                        },
-                        "fwhmv": {
-                            "max": 2.5,
-                            "min": 0.00002,
-                            "vary": True,
-                            "value": 1.0,
-                        },
-                    }
-                },
-            },
+            **args_setting,
         }
 
         mp = SolverModels(df=df, args=args)()
