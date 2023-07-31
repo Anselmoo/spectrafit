@@ -28,16 +28,16 @@ jobs:
           commit_message: "docs: :card_index_dividers: Update CHANGELOG for release/${{ github.event.release.tag_name }}"
           file_pattern: CHANGELOG.md
           create_branch: true
-      - name: Open Pull Request for updated CHANGELOG
-        uses: peter-evans/create-pull-request@v5
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "docs: :card_index_dividers: Update CHANGELOG for release/${{ github.event.release.tag_name }}"
-          title: "docs: :card_index_dividers: Update CHANGELOG for release/${{ github.event.release.tag_name }}"
-          body: "This Pull Request was automatically created to update the CHANGELOG for release/${{ github.event.release.tag_name }}."
-          draft: false
-          branch: main
-          base: release/${{ github.event.release.tag_name }}
+      # - name: Open Pull Request for updated CHANGELOG
+      #   uses: peter-evans/create-pull-request@v5
+      #   with:
+      #     token: ${{ secrets.GITHUB_TOKEN }}
+      #     commit-message: "docs: :card_index_dividers: Update CHANGELOG for release/${{ github.event.release.tag_name }}"
+      #     title: "docs: :card_index_dividers: Update CHANGELOG for release/${{ github.event.release.tag_name }}"
+      #     body: "This Pull Request was automatically created to update the CHANGELOG for release/${{ github.event.release.tag_name }}."
+      #     draft: false
+      #     branch: main
+      #     base: release/${{ github.event.release.tag_name }}
   Release-Documentation:
     if: ${{ contains(github.event.release.prerelease, false) }}
     name: Build Documentation from new release branch 'release/${{ github.event.release.tag_name }}'
