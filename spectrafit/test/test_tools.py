@@ -329,8 +329,8 @@ class TestPostProcessing:
         df, args = PostProcessing(
             df=random_dataframe_global, args=args_0, minimizer=minimizer, result=result
         )()
-        assert type(df) == pd.DataFrame
-        assert type(args) == dict
+        assert isinstance(df, pd.DataFrame)
+        assert isinstance(args, dict)
 
     def test_post_processing_global(
         self, random_dataframe_global: pd.DataFrame, args_1: Dict[str, Any]
@@ -341,8 +341,8 @@ class TestPostProcessing:
         df, args = PostProcessing(
             df=random_dataframe_global, args=args_1, minimizer=minimizer, result=result
         )()
-        assert type(df) == pd.DataFrame
-        assert type(args) == dict
+        assert isinstance(df, pd.DataFrame)
+        assert isinstance(args, dict)
 
     def test_insight_report_empty_conv(
         self,
@@ -380,7 +380,7 @@ class TestPickle:
         with open(args["outfile"], "rb") as f:
             df = unicode_check(f)
 
-        assert type(df) == pd.DataFrame
+        assert isinstance(df, pd.DataFrame)
 
     def test_pkl2any(self, random_dataframe: pd.DataFrame, tmp_path: Path) -> None:
         """Testing pkl2any."""
@@ -395,7 +395,7 @@ class TestPickle:
         # read test file as pickle file
         df = pkl2any(args["outfile"])
 
-        assert type(df) == pd.DataFrame
+        assert isinstance(df, pd.DataFrame)
 
     def test_pkl2any_gz(self, random_dataframe: pd.DataFrame, tmp_path: Path) -> None:
         """Testing pkl2any."""
@@ -410,7 +410,7 @@ class TestPickle:
         # read test file as pickle file
         df = pkl2any(args["outfile"])
 
-        assert type(df) == pd.DataFrame
+        assert isinstance(df, pd.DataFrame)
 
     def test_pkl2any_fail(self, tmp_path: Path) -> None:
         """Testing pkl2any."""
