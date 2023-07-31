@@ -45,6 +45,7 @@ jobs:
             name: x86_64
           - platform: linux/arm64
             name: arm64
+      max-parallel: 2
     if: github.repository == 'Anselmoo/spectrafit'
     runs-on: ubuntu-latest
     steps:
