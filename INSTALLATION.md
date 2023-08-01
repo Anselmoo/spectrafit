@@ -212,7 +212,7 @@ available plugins are:
         docker run -it -p 8888:8888 -v $HOME:/home/user/work ghcr.io/anselmoo/spectrafit-amd64:latest
         ```
 
-        see also: https://github.com/Anselmoo/spectrafit/pkgs/container/spectrafit-amd64
+        see also: [spectrafit-amd64](https://github.com/Anselmoo/spectrafit/pkgs/container/spectrafit-amd64)
 
     === "arm64"
 
@@ -243,7 +243,9 @@ available plugins are:
         docker run -it -p 8888:8888 -v $HOME:/home/user/work ghcr.io/anselmoo/spectrafit-arm64:latest
         ```
 
-        see also: https://github.com/Anselmoo/spectrafit/pkgs/container/spectrafit-arm64
+        see also: [spectrafit-arm64](https://github.com/Anselmoo/spectrafit/pkgs/container/spectrafit-arm64)
+
+https://github.com/joypixels/emoji-toolkit#joypixels-version-2
 
 [1]: https://github.com/pypa/pipx
 [2]: https://conda.io/docs/
