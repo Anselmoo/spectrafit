@@ -179,17 +179,17 @@ Open the `Jupyter Notebook` and run the following code:
 spectrafit-jupyter
 ```
 
-or via Docker Image:
+or via Docker Image for `<cpu>` with `amd64` and `arm64`:
 
 ```terminal
-docker pull ghcr.io/anselmoo/spectrafit:latest
-docker run -it -p 8888:8888 spectrafit:latest
+docker pull ghcr.io/anselmoo/spectrafit-<cpu>:latest
+docker run -it -p 8888:8888 spectrafit-<cpu>:latest
 ```
 
 or just:
 
 ```terminal
-docker run -p 8888:8888 ghcr.io/anselmoo/spectrafit:latest
+docker run -p 8888:8888 ghcr.io/anselmoo/spectrafit-<cpu>:latest
 ```
 
 Next define your initial model and the reference data:
