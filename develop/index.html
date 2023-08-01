@@ -92,9 +92,9 @@
 <span class=linenos data-linenos="61 "></span>                        the terminal &#39;0&#39;. The default option is set to 1 for
 <span class=linenos data-linenos="62 "></span>                        table `printout`.
 </code></pre></div> <h3 id=jupyter-notebook>Jupyter Notebook<a class=headerlink href=#jupyter-notebook title="Permanent link">&para;</a></h3> <p>Open the <code>Jupyter Notebook</code> and run the following code:</p> <div class="language-text highlight"><span class=filename>Text Only</span><pre><span></span><code><span class=linenos data-linenos="1 "></span>spectrafit-jupyter
-</code></pre></div> <p>or via Docker Image:</p> <div class="language-text highlight"><span class=filename>Text Only</span><pre><span></span><code><span class=linenos data-linenos="1 "></span>docker pull ghcr.io/anselmoo/spectrafit:latest
-<span class=linenos data-linenos="2 "></span>docker run -it -p 8888:8888 spectrafit:latest
-</code></pre></div> <p>or just:</p> <div class="language-text highlight"><span class=filename>Text Only</span><pre><span></span><code><span class=linenos data-linenos="1 "></span>docker run -p 8888:8888 ghcr.io/anselmoo/spectrafit:latest
+</code></pre></div> <p>or via Docker Image for <code>&lt;cpu&gt;</code> with <code>amd64</code> and <code>arm64</code>:</p> <div class="language-text highlight"><span class=filename>Text Only</span><pre><span></span><code><span class=linenos data-linenos="1 "></span>docker pull ghcr.io/anselmoo/spectrafit-&lt;cpu&gt;:latest
+<span class=linenos data-linenos="2 "></span>docker run -it -p 8888:8888 spectrafit-&lt;cpu&gt;:latest
+</code></pre></div> <p>or just:</p> <div class="language-text highlight"><span class=filename>Text Only</span><pre><span></span><code><span class=linenos data-linenos="1 "></span>docker run -p 8888:8888 ghcr.io/anselmoo/spectrafit-&lt;cpu&gt;:latest
 </code></pre></div> <p>Next define your initial model and the reference data:</p> <div class="language-python highlight"><span class=filename>Python</span><pre><span></span><code><span class=linenos data-linenos=" 1 "></span><span class=kn>from</span> <span class=nn>spectrafit.plugins.notebook</span> <span class=kn>import</span> <span class=n>SpectraFitNotebook</span>
 <span class=linenos data-linenos=" 2 "></span><span class=kn>import</span> <span class=nn>pandas</span> <span class=k>as</span> <span class=nn>pd</span>
 <span class=linenos data-linenos=" 3 "></span>
