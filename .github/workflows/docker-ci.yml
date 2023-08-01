@@ -86,6 +86,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           platforms: ${{ matrix.docker-platform.platform }}
+          outputs: type=image,name=target,annotation-index.org.opencontainers.image.description={{ steps.meta.outputs.description }}
 
       # Sign the resulting Docker image digest except on PRs.
       # This will only write to the public Rekor transparency log when the Docker
