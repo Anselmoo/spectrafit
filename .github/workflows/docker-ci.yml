@@ -6,14 +6,14 @@ name: Docker - Build and push image
 # documentation.
 
 on:
-  schedule:
-    - cron: "40 0 * * *"
+  # schedule:
+  #   - cron: "40 0 * * *"
   push:
-    branches: ["main"]
+    # branches: ["main"]
     # Publish semver tags as releases.
     tags: ["v*.*.*"]
-  pull_request:
-    branches: ["main"]
+  # pull_request:
+  #   branches: ["main"]
 
 env:
   # Use docker.io for Docker Hub if empty
@@ -86,8 +86,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           platforms: ${{ matrix.docker-platform.platform }}
-          outputs: type=image,name=target,annotation-index.org.opencontainers.image.description={{ steps.meta.outputs.description }}
-
+          outputs: type=image,name=target,annotation-index.org.opencontainers.image.description=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.description'] }}
       # Sign the resulting Docker image digest except on PRs.
       # This will only write to the public Rekor transparency log when the Docker
       # repository is public to avoid leaking data.  If you would like to publish
