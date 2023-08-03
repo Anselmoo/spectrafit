@@ -23,14 +23,14 @@ env:
 
 jobs:
   build:
-    strategy:
-      matrix:
-        docker-platform:
-          - platform: linux/amd64
-            name: amd64
-          - platform: linux/arm64
-            name: arm64
-      max-parallel: 1
+    # strategy:
+    #   matrix:
+    #     docker-platform:
+    #       - platform: linux/amd64
+    #         name: amd64
+    #       - platform: linux/arm64
+    #         name: arm64
+    #   max-parallel: 1
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -71,11 +71,11 @@ jobs:
         id: meta
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-${{ matrix.docker-platform.name }}
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
-      - name: Build and push Docker image - ${{ matrix.docker-platform.name }}
+      - name: Build and push Docker image
         id: build-and-push
         uses: docker/build-push-action@2eb1c1961a95fc15694676618e422e8ba1d63825
         with:
@@ -85,15 +85,15 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          platforms: ${{ matrix.docker-platform.platform }}
-          outputs: type=image,name=target,annotation-index.org.opencontainers.image.description=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.description'] }}
+          platforms: linux/amd64,linux/arm64
+          # outputs: type=image,name=target,annotation-index.org.opencontainers.image.description=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.description'] }}
 
       # Sign the resulting Docker image digest except on PRs.
       # This will only write to the public Rekor transparency log when the Docker
       # repository is public to avoid leaking data.  If you would like to publish
       # transparency data even for private images, pass --force to cosign below.
       # https://github.com/sigstore/cosign
-      - name: Sign the published Docker image - AMD64
+      - name: Sign the published Docker image
         if: ${{ github.event_name != 'pull_request' }}
         env:
           # https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#using-an-intermediate-environment-variable
