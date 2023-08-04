@@ -21,6 +21,6 @@ jobs:
       - name: Build the Docker image for AMD64
         run: |
           docker build . --file Dockerfile --tag spectrafit:$(date +%s)
-      # - name: Build the Docker image for ARM64
-      #   run: |
-      #     docker build . --file Dockerfile --tag spectrafit-arm64:$(date +%s) --platform linux/arm64
+      - name: Build the Docker image for ARM64
+        run: |
+          docker build . --file Dockerfile --tag spectrafit-arm64:$(date +%s) --platform linux/arm64

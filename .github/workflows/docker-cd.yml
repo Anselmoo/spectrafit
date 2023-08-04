@@ -1,4 +1,4 @@
-name: Publish Docker image on ghcr.io
+name: CD - Docker
 
 # This workflow uses actions that are not certified by GitHub.
 # They are provided by a third-party and are governed by
@@ -23,6 +23,14 @@ env:
 
 jobs:
   build:
+    # strategy:
+    #   matrix:
+    #     docker-platform:
+    #       - platform: linux/amd64
+    #         name: amd64
+    #       - platform: linux/arm64
+    #         name: arm64
+    #   max-parallel: 1
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -78,7 +86,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           platforms: linux/amd64,linux/arm64
-          outputs: type=image,name=target,annotation-index.org.opencontainers.image.description=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.description'] }}
+          # outputs: type=image,name=target,annotation-index.org.opencontainers.image.description=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.description'] }}
 
       # Sign the resulting Docker image digest except on PRs.
       # This will only write to the public Rekor transparency log when the Docker
