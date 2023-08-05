@@ -12,7 +12,6 @@ from typing import Tuple
 
 import numpy as np
 import pandas as pd
-import pkg_resources
 import pytest
 import toml
 import tomli
@@ -23,6 +22,7 @@ from matplotlib import pyplot
 from nptyping import Float
 from nptyping import NDArray
 from nptyping import Shape
+from spectrafit.api.pptx_model import PPTXBasicTitleAPI
 from spectrafit.plugins.data_converter import DataConverter
 from spectrafit.plugins.file_converter import FileConverter
 from spectrafit.plugins.pkl_converter import ExportData
@@ -1074,10 +1074,7 @@ class TestPPTXConverter:
 
         """
         source_path = Path("spectrafit/plugins/img/SpectraFit.png")
-        destination_path = (
-            Path(pkg_resources.get_distribution("spectrafit").location)
-            / "spectrafit/plugins/img/SpectraFit.png"
-        )
+        destination_path = PPTXBasicTitleAPI().credit_logo
         destination_path.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy(source_path, destination_path)
 
