@@ -10,6 +10,7 @@ from typing import Type
 from typing import Union
 
 import pandas as pd
+import pkg_resources
 
 from matplotlib import pyplot as plt
 from pptx.util import Pt
@@ -336,7 +337,10 @@ class PPTXBasicTitleAPI(BaseModel):
     table_2_description: str = "Table 2: Regression Metrics"
     table_3_description: str = "Table 3: Variables"
 
-    credit_logo: Path = Path("spectrafit/plugins/img/SpectraFit.png")
+    credit_logo: Path = (
+        Path(pkg_resources.get_distribution("spectrafit").location)
+        / "spectrafit/plugins/img/SpectraFit.png"
+    )
     credit_description: str = f"SpectraFit: v{__version__}"
 
 

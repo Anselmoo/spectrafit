@@ -100,6 +100,7 @@ prospector = { extras = [
   "pylint",
 ], version = "^1.10.2" }
 bump-pydantic = "^0.6.0"
+types-setuptools = "^68.0.0.3"
 
 [tool.poetry.group.docs.dependencies]
 mkdocstrings = { extras = ["python"], version = ">=0.19,<0.23" }

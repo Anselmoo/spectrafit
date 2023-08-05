@@ -737,7 +737,7 @@ class DistributionModels:
 class ReferenceKeys:
     """Reference keys for model fitting and peak detection."""
 
-    __models__ = list(DistributionModelAPI.schema()["properties"].keys())
+    __models__ = list(DistributionModelAPI.model_json_schema()["properties"].keys())
 
     __automodels__ = [
         "gaussian",
@@ -1507,8 +1507,8 @@ class SolverModels(ModelParameters):
                  additional information beyond the command line arguments.
         """
         super().__init__(df=df, args=args)
-        self.args_solver = SolverModelsAPI(**args).dict()
-        self.args_global = GlobalFittingAPI(**args).dict()
+        self.args_solver = SolverModelsAPI(**args).model_dump()
+        self.args_global = GlobalFittingAPI(**args).model_dump()
         self.params = self.return_params
 
     def __call__(self) -> Tuple[Minimizer, Any]:

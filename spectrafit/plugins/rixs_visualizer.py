@@ -652,7 +652,7 @@ class RIXSVisualizer:
 
     def __call__(self) -> None:  # pragma: no cover
         """Run the RIXS Visualizer."""
-        app = RIXSApp(**self.load_data(self.get_args()["infile"]).dict())
+        app = RIXSApp(**self.load_data(self.get_args()["infile"]).model_dump())
         app.app_run()
 
 

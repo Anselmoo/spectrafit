@@ -15,7 +15,7 @@ from spectrafit.api.cmd_model import DescriptionAPI
 
 def test_default_cmd() -> None:
     """Test for default settings of CMD Model."""
-    result = CMDModelAPI(infile="").dict()
+    result = CMDModelAPI(infile="").model_dump()
     assert result["infile"] == ""
     assert result["outfile"] == "spectrafit_results"
     assert result["input"] == "fitting_input.toml"
@@ -51,7 +51,7 @@ def test_overwrite_cmd() -> None:
             "width": [1],
             "wlen": 1,
         },
-    ).dict()
+    ).model_dump()
     assert result["infile"] == ""
     assert result["outfile"] == "test"
     assert result["input"] == "fitting_input.toml"
@@ -89,7 +89,7 @@ def test_sha256() -> None:
 
 def test_default_description() -> None:
     """Test for default settings of Description Model."""
-    result = DescriptionAPI().dict()
+    result = DescriptionAPI().model_dump()
     assert result["project_name"] == "FittingProject"
     assert result["project_details"] == f"Fitting Project via SpectraFit v{__version__}"
     assert result["keywords"] == ["spectra"]
@@ -103,7 +103,7 @@ def test_default_description() -> None:
 @pytest.mark.parametrize("metadata", [{"test": "test"}, ["test"]])
 def test_overwrite_description(metadata: Any) -> None:
     """Test for overwriting settings of Description Model."""
-    result = DescriptionAPI(metadata=metadata).dict()
+    result = DescriptionAPI(metadata=metadata).model_dump()
     assert result["metadata"] == metadata
 
 
@@ -117,7 +117,7 @@ def test_overwrite_description(metadata: Any) -> None:
 )
 def test_overwrite_references(refs: Any) -> None:
     """Test for overwriting settings of Description Model."""
-    result = DescriptionAPI(refs=refs).dict()
+    result = DescriptionAPI(refs=refs).model_dump()
     assert result["references"] == refs
 
 

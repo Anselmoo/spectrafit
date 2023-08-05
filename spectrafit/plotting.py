@@ -88,7 +88,7 @@ class PlotSpectra:
             peaks = [
                 peak
                 for peak in self.df.columns
-                if not peak.startswith(tuple(ColumnNamesAPI().dict().values()))
+                if not peak.startswith(tuple(ColumnNamesAPI().model_dump().values()))
                 and peak.endswith(f"_{i+1}")
             ]
             color_peaks = sns.color_palette("rocket", len(peaks))
@@ -154,7 +154,7 @@ class PlotSpectra:
         peaks = [
             peak
             for peak in self.df.columns
-            if peak not in list(ColumnNamesAPI().dict().values())
+            if peak not in list(ColumnNamesAPI().model_dump().values())
         ]
         color_peaks = sns.color_palette("rocket", len(peaks))
         for i, peak in enumerate(peaks):

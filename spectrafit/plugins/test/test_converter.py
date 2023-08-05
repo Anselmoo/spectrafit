@@ -3,6 +3,7 @@
 import gzip
 import json
 import pickle
+import shutil
 
 from pathlib import Path
 from typing import Any
@@ -11,6 +12,7 @@ from typing import Tuple
 
 import numpy as np
 import pandas as pd
+import pkg_resources
 import pytest
 import toml
 import tomli
@@ -680,7 +682,6 @@ class TestPklConverter:
             "--export-format",
             export_format,
         )
-
         assert ret.success
         assert ret.stdout == ""
         assert ret.stderr == ""
@@ -899,7 +900,7 @@ class TestRixsConverter:
         fname, keys = tmp_list_dict_rixs
         converter = RIXSConverter()
         data = converter.convert(fname, file_format="latin1")
-        rixs_map = converter.create_rixs(data, *keys, mode=mode).dict()
+        rixs_map = converter.create_rixs(data, *keys, mode=mode).model_dump()
 
         assert isinstance(rixs_map["rixs_map"], np.ndarray)
         if mode == "mean":
@@ -1070,13 +1071,25 @@ class TestPPTXConverter:
             script_runner (Any): Script runner.
             tmp_toml_data (Path): Path to temporary file.
             file_format (str): File format.
+
         """
-        ret = script_runner.run(
-            "spectrafit-pptx-converter",
-            str(tmp_toml_data),
-            "--file-format",
-            file_format,
+        source_path = Path("spectrafit/plugins/img/SpectraFit.png")
+        destination_path = (
+            Path(pkg_resources.get_distribution("spectrafit").location)
+            / "spectrafit/plugins/img/SpectraFit.png"
         )
+        destination_path.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy(source_path, destination_path)
+
+        ret = script_runner.run(
+            [
+                "spectrafit-pptx-converter",
+                str(tmp_toml_data),
+                "--file-format",
+                file_format,
+            ]
+        )
+        destination_path.unlink()
         assert ret.success
         assert ret.stderr == ""
         assert ret.stdout == ""
