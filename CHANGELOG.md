@@ -2,6 +2,57 @@
 
 All notable changes to this project will be documented in this file.
 
+## v0.22.4 🌈 - 2023-08-05
+
+### :compass: What's Changed
+
+#### :computer: Codesspaces
+
+- build: :pushpin: Update dependencies (#946) @Anselmoo
+
+#### :toolbox: Maintenance
+
+- fix: :bug: Correct path to logo (#947) @Anselmoo
+- build(deps-dev): ⬆️ Bump mkdocs-autorefs from 0.4.1 to 0.5.0 (#943) @dependabot
+
+#### :snake: Python
+
+- fix: :bug: Correct path to logo (#947) @Anselmoo
+
+#### :octocat: Github Actions
+
+- build(deps): ⬆️ Bump docker/metadata-action from 3.3.0 to 4.6.0 (#944) @dependabot
+- build: :pushpin: Update dependencies (#946) @Anselmoo
+- build(deps): ⬆️ Bump docker/build-push-action from 2.10.0 to 4.1.1 (#942) @dependabot
+- build(deps): ⬆️ Bump docker/metadata-action from 3.3.0 to 4.6.0 (#940) @dependabot
+- fix: :pencil:  Add outputs (#939) @Anselmoo
+- feat: :construction_worker: Using `docker-ci` as workflow for publishing (#938) @Anselmoo
+
+#### :card_index_dividers: Documentation
+
+- build: :pushpin: Update dependencies (#946) @Anselmoo
+
+#### :link: Dependency Updates
+
+- fix: :bug: Correct path to logo (#947) @Anselmoo
+- build(deps-dev): ⬆️ Bump mkdocs-autorefs from 0.4.1 to 0.5.0 (#943) @dependabot
+
+#### :microscope: Testing & Coverage
+
+- fix: :bug: Correct path to logo (#947) @Anselmoo
+
+#### :whale: Docker
+
+- build: :pushpin: Update dependencies (#946) @Anselmoo
+
+### :package: Full Changelog
+
+**Full Changelog**: https://github.com/Anselmoo/spectrafit/compare/v0.22.3...v0.22.4
+
+### :gear: Who Contributes
+
+@Anselmoo
+
 ## v0.22.2 🌈 - 2023-07-31
 
 ### :compass: What's Changed
