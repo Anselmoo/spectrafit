@@ -1107,7 +1107,9 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
         self.initial_model = initial_model
 
         if isinstance(conf_interval, bool):
-            conf_interval = ConfIntervalAPI().dict() if conf_interval is True else False
+            conf_interval = (
+                ConfIntervalAPI().model_dump() if conf_interval is True else False
+            )
         elif isinstance(conf_interval, dict):
             conf_interval = ConfIntervalAPI(**conf_interval).dict(exclude_none=True)
 
