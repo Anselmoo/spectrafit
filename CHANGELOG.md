@@ -2,6 +2,39 @@
 
 All notable changes to this project will be documented in this file.
 
+## v0.22.3 🌈 - 2023-08-01
+
+### :compass: What's Changed
+
+#### :toolbox: Maintenance
+
+- build: :construction_worker: Update release of docker image (#937) @Anselmoo
+
+#### :snake: Python
+
+- build: :construction_worker: Update release of docker image (#937) @Anselmoo
+
+#### :octocat: Github Actions
+
+- build: :construction_worker: Update release of docker image (#937) @Anselmoo
+- ci: 👷 Change to a different registry (#935) @Anselmoo
+
+#### :card_index_dividers: Documentation
+
+- build: :construction_worker: Update release of docker image (#937) @Anselmoo
+
+#### :link: Dependency Updates
+
+- build: :construction_worker: Update release of docker image (#937) @Anselmoo
+
+### :package: Full Changelog
+
+**Full Changelog**: https://github.com/Anselmoo/spectrafit/compare/v0.22.2...v0.22.3
+
+### :gear: Who Contributes
+
+@Anselmoo
+
 ## v0.22.2 🌈 - 2023-07-31
 
 ### :compass: What's Changed
