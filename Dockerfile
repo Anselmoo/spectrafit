@@ -1,12 +1,17 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
 # Reference File: https://github.com/jupyter/docker-stacks/blob/main/scipy-notebook/Dockerfile
+# This Dockerfile is modified from the original version to include the SpectraFit package.
 ARG OWNER=jupyter
 ARG BASE_CONTAINER=$OWNER/minimal-notebook
 FROM $BASE_CONTAINER
 
-LABEL maintainer="Jupyter Project <jupyter@googlegroups.com>"
+LABEL maintainer="Anselm Hahn <anselm.hahn@gmail.com>"
 LABEL project="SpectraFit"
+LABEL description="📊📈🔬 SpectraFit is a command-line and Jupyter-notebook tool for quick data-fitting based on the regular expression of distribution functions."
+LABEL license = "BSD-3-Clause"
+LABEL url = "https://github.com/Anselmoo/spectrafit"
+LABEL vendor = "https://github.com/jupyter/docker-stacks/blob/main/scipy-notebook/Dockerfile"
 
 # Fix: https://github.com/hadolint/hadolint/wiki/DL4006
 # Fix: https://github.com/koalaman/shellcheck/wiki/SC3014

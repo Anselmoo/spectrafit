@@ -8,7 +8,8 @@
     "ghcr.io/devcontainers/features/git:1": {},
     "ghcr.io/devcontainers-contrib/features/poetry:2": {},
     "ghcr.io/devcontainers-contrib/features/pre-commit:2": {},
-    "ghcr.io/devcontainers-contrib/features/prettier:1": {}
+    "ghcr.io/devcontainers-contrib/features/prettier:1": {},
+    "ghcr.io/devcontainers/features/docker-in-docker": {}
   },
 
   // Features to add to the dev container. More info: https://containers.dev/features.

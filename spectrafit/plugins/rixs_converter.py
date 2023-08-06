@@ -220,7 +220,7 @@ class RIXSConverter(Converter):
                 emission_energy=args["emission_energy"],
                 rixs_map=args["rixs_map"],
                 mode=args["mode"],
-            ).dict(),
+            ).model_dump(),
             fname=args["infile"],
             export_format=args["export_format"],
         )

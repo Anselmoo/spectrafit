@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "SpectraFit"
-version = "0.22.3"
+version = "0.22.4"
 description = "Fast fitting of 2D- and 3D-Spectra with established routines"
 readme = "README.md"
 authors = ["Anselm Hahn <anselm.hahn@gmail.com>"]
@@ -100,6 +100,7 @@ prospector = { extras = [
   "pylint",
 ], version = "^1.10.2" }
 bump-pydantic = "^0.6.0"
+types-setuptools = "^68.0.0.3"
 
 [tool.poetry.group.docs.dependencies]
 mkdocstrings = { extras = ["python"], version = ">=0.19,<0.23" }
@@ -107,7 +108,7 @@ mathjax = "^0.1.2"
 mkdocs-literate-nav = ">=0.4.1,<0.7.0"
 mkdocs-section-index = "^0.3.4"
 mike = "^1.1.2"
-mkdocs-autorefs = "^0.4.1"
+mkdocs-autorefs = ">=0.4.1,<0.6.0"
 mkdocs-minify-plugin = ">=0.6.2,<0.8.0"
 mkdocs-material = "^9.1.2"
 jupytext = "^1.14.5"
