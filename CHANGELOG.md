@@ -25,7 +25,7 @@ All notable changes to this project will be documented in this file.
 - build: :pushpin: Update dependencies (#946) @Anselmoo
 - build(deps): ⬆️ Bump docker/build-push-action from 2.10.0 to 4.1.1 (#942) @dependabot
 - build(deps): ⬆️ Bump docker/metadata-action from 3.3.0 to 4.6.0 (#940) @dependabot
-- fix: :pencil:  Add outputs (#939) @Anselmoo
+- fix: :pencil: Add outputs (#939) @Anselmoo
 - feat: :construction_worker: Using `docker-ci` as workflow for publishing (#938) @Anselmoo
 
 #### :card_index_dividers: Documentation
