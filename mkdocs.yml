@@ -20,12 +20,14 @@ theme:
   search_index_only: true
   language: en
   features:
-    - navigation.expand
+    - header.autohide
     - content.code.annotate
     - content.tabs.link
     - content.action.view
     - content.action.copy
-    - header.autohide
+    - content.code.copy
+    - content.code.annotations
+    - navigation.expand
     - navigation.expand
     - navigation.indexes
     - navigation.instant
@@ -38,6 +40,7 @@ theme:
     - search.share
     - search.suggest
     - toc.integrate
+    - toc.follow
   palette:
     - scheme: default
       primary: indigo
@@ -89,40 +92,63 @@ extra:
 
 # Extensions
 markdown_extensions:
-  - admonition
-  - abbr
-  - attr_list
-  - def_list
-  - footnotes
-  - meta
-  - md_in_html
+  - admonition:
+  - abbr:
+  - attr_list:
+  - def_list:
+  - footnotes:
+  - meta:
+  - md_in_html:
   - toc:
       permalink: true
   - pymdownx.arithmatex:
       generic: true
+      block_tag: 'pre'
   - pymdownx.betterem:
       smart_enable: all
-  - pymdownx.caret
-  - pymdownx.critic
-  - pymdownx.details
+  - pymdownx.caret:
+  - pymdownx.critic:
+  - pymdownx.details:
   - pymdownx.emoji:
       emoji_index: !!python/name:materialx.emoji.twemoji
       emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.escapeall:
+      hardbreak: True
+      nbsp: True
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.progressbar:
   - pymdownx.highlight:
       use_pygments: true
       pygments_lang_class: true
       auto_title: true
       linenums: true
       linenums_style: pymdownx-inline
-  - pymdownx.magiclink
-  - pymdownx.inlinehilite
-  - pymdownx.keys
+      anchor_linenums: true
+      guess_lang: true
+      extend_pygments_lang:
+        - name: pycon3
+          lang: pycon
+          options:
+            python3: true
+  - pymdownx.inlinehilite:
+      custom_inline:
+        - name: math
+          class: arithmatex
+          format: !!python/object/apply:pymdownx.arithmatex.arithmatex_inline_format {kwds: {mode: generic}}
+  - pymdownx.keys:
   - pymdownx.magiclink:
+      hide_protocol: true
+      repo_url_shortener: true
+      social_url_shortener: true
       repo_url_shorthand: true
+      social_url_shorthand: true
+      normalize_issue_symbols: true
+      provider: github
       user: Anselmoo
       repo: spectrafit
-  - pymdownx.mark
-  - pymdownx.smartsymbols
+  - pymdownx.mark:
+  - pymdownx.smartsymbols:
   - pymdownx.superfences:
       custom_fences:
         - name: mermaid
@@ -137,10 +163,21 @@ markdown_extensions:
       alternate_style: true
   - pymdownx.tasklist:
       custom_checkbox: true
-  - pymdownx.tilde
+  - pymdownx.tilde:
+  - pymdownx.blocks.admonition:
+  - pymdownx.blocks.details:
+  - pymdownx.blocks.html:
+  - pymdownx.blocks.definition:
+  - pymdownx.blocks.tab:
+      alternate_style: True
+      combine_header_slug: True
+      slugify: !!python/object/apply:pymdownx.slugs.slugify {kwds: {case: lower}}
+
+extra_css:
+  - assets/css/custom.css
 
 extra_javascript:
-  - javascripts/config.js
+  - assets/javascripts/config.js
   - https://polyfill.io/v3/polyfill.min.js?features=es6
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
 
