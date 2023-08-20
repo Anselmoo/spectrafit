@@ -224,7 +224,7 @@ supported by Python.
     1 /3 of the amplitude of the peak `1`. In general, this expression mode
     is very useful in cases of fitting relative dependencies like the
     _L-edge X-ray Absorption Spectra_ (**L-XAS**), where are relative
-    dependencie between the **L_3** and **L_2** edge has to be defined.
+    dependencie between the **L**~3~ and **L**~2~ edge has to be defined.
 
     ```json
     "peaks": {
