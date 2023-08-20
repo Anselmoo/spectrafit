@@ -50,11 +50,11 @@ With the command `spectrafit-data-converter` data files can be converted to
         5323.8502       0.25314870E-01
         5333.8506       0.18438437E-01
         5343.8501       0.12077480E-01
-     ```
+    ```
 
-      will be converted to:
+    will be converted to:
 
-      ```csv
+    ```csv
       energy,JZP-4-merged
       5263.8492,0.12737417
       5273.8501,0.10231758
@@ -65,7 +65,7 @@ With the command `spectrafit-data-converter` data files can be converted to
       5323.8502,0.02531487
       5333.8506,0.01843844
       5343.8501,0.01207748
-      ```
+    ```
 
 [1]: https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html
 [2]: https://bruceravel.github.io/demeter/documents/Athena/other/plugin.html
