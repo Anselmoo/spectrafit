@@ -221,10 +221,10 @@ supported by Python.
 !!! info "About the importance of expressions"
 
     Using the `expr` attribute, the amplitude of the peak `2` can be defined
-    1 /3 of the amplitude of the peak `1`. In general, this expression mode
+    1/3 of the amplitude of the peak `1`. In general, this expression mode
     is very useful in cases of fitting relative dependencies like the
     _L-edge X-ray Absorption Spectra_ (**L-XAS**), where are relative
-    dependencie between the **L**~3~ and **L**~2~ edge has to be defined.
+    dependencie between the _**L**~3~_ and _**L**~2~_ edge has to be defined.
 
     ```json
     "peaks": {
