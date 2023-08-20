@@ -1,4 +1,4 @@
-### Some code has been taken from the https://github.com/lmfit/lmfit-py library for `report.py` whose license is below.
+### Some code lines from the https://github.com/lmfit/lmfit-py library are used in a modified version for `report.py` whose license is below.
 
 ```markdown
 BSD-3
@@ -103,7 +103,7 @@ to indicate the copyright and license terms:
     # Distributed under the terms of the Modified BSD License.
 ```
 
-### The `custom.css` is partially taken from the https://github.com/facelessuser/pymdown-extensions for generating the icon-shortcuts whose license is below.
+### The `custom.css` from the https://github.com/facelessuser/pymdown-extensions are partially used for generating the icon-shortcuts whose license is below.
 
 ```markdown
 # License
