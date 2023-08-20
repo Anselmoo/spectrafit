@@ -103,7 +103,7 @@ markdown_extensions:
       permalink: true
   - pymdownx.arithmatex:
       generic: true
-      block_tag: 'pre'
+      block_tag: "pre"
   - pymdownx.betterem:
       smart_enable: all
   - pymdownx.caret:
@@ -135,7 +135,10 @@ markdown_extensions:
       custom_inline:
         - name: math
           class: arithmatex
-          format: !!python/object/apply:pymdownx.arithmatex.arithmatex_inline_format {kwds: {mode: generic}}
+          format:
+            !!python/object/apply:pymdownx.arithmatex.arithmatex_inline_format {
+              kwds: { mode: generic },
+            }
   - pymdownx.keys:
   - pymdownx.magiclink:
       hide_protocol: true
@@ -171,7 +174,8 @@ markdown_extensions:
   - pymdownx.blocks.tab:
       alternate_style: True
       combine_header_slug: True
-      slugify: !!python/object/apply:pymdownx.slugs.slugify {kwds: {case: lower}}
+      slugify:
+        !!python/object/apply:pymdownx.slugs.slugify { kwds: { case: lower } }
 
 extra_css:
   - assets/css/custom.css

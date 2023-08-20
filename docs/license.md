@@ -111,9 +111,7 @@ to indicate the copyright and license terms:
     # Distributed under the terms of the Modified BSD License.
 ```
 
-
 ### The `custom.css` is partially taken from the [Pymdown-Extensions](https://github.com/facelessuser/pymdown-extensions/tree/main) for generating the icon-shortcuts whose license is below.
-
 
 ```
 # License
