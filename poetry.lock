@@ -1676,13 +1676,13 @@ requirements-deprecated-finder = ["pip-api", "pipreqs"]
 
 [[package]]
 name = "itables"
-version = "1.5.3"
+version = "1.5.4"
 description = "Interactive Tables in Jupyter"
 optional = true
 python-versions = "*"
 files = [
-    {file = "itables-1.5.3-py3-none-any.whl", hash = "sha256:c5ad077adbde978cb83a9e515f3936031068f93c7d70852a40e09301fe58bdbe"},
-    {file = "itables-1.5.3.tar.gz", hash = "sha256:9ee199913683f0517bddabf0a9b1c4ea1464fffb84ed0ca87c4e3520b623a479"},
+    {file = "itables-1.5.4-py3-none-any.whl", hash = "sha256:ae6c36bd85688436fcf9ebb6dd6601091d0980d4845ffe13ed8d691cb11171be"},
+    {file = "itables-1.5.4.tar.gz", hash = "sha256:68b15240038dc6c7b136780f6889b61cead7325b472638226ba4b4fc34c9614c"},
 ]
 
 [package.dependencies]
