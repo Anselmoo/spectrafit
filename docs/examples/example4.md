@@ -671,7 +671,7 @@ have to be performed.
 3. **separator**: `\t` (columns are separated by tab character) --> `,` (columns
    are separated by comma character)
 
-```terminal
+```bash
 spectrafit _ -i example_3.json
 ```
 
