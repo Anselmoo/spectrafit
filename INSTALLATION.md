@@ -5,13 +5,13 @@ repository. It is important that poetry is installed first, because the
 
 ## via GitHub
 
-```terminal
+```bash
 pip install git+https://github.com/Anselmoo/SpectraFit.git
 ```
 
 ## via PyPi
 
-```terminal
+```bash
 pip install spectrafit
 ```
 
@@ -19,19 +19,19 @@ pip install spectrafit
 
 For the `jupyter` support, the following command can be used:
 
-```terminal
+```bash
 pip install spectrafit[jupyter-dash]
 ```
 
 For the graph visualization, the following command can be used:
 
-```terminal
+```bash
 pip install spectrafit[graph]
 ```
 
 For all extensions, the following command can be used:
 
-```terminal
+```bash
 pip install spectrafit[all]
 ```
 
@@ -45,7 +45,7 @@ To keep the system environment clean, the installation is done via the:
 
     _Installation_:
 
-    ```terminal
+    ```bash
     # install pipx for macOS
     brew install pipx
     # install pipx for Linux or Windows
@@ -68,7 +68,7 @@ To keep the system environment clean, the installation is done via the:
 
     _Example_:
 
-    ```terminal
+    ```bash
     conda install -c conda-forge spectrafit
 
     spectrafit --help
@@ -76,7 +76,7 @@ To keep the system environment clean, the installation is done via the:
 
     For include the `jupyter` support, the following command can be used:
 
-    ```terminal
+    ```bash
 
     conda install -c conda-forge spectrafit-jupyter
 
@@ -86,7 +86,7 @@ To keep the system environment clean, the installation is done via the:
 
     For include the `graph` support, the following command can be used:
 
-    ```terminal
+    ```bash
 
     conda install -c conda-forge spectrafit-graph
 
@@ -95,7 +95,7 @@ To keep the system environment clean, the installation is done via the:
     ```
     For include the `all` support, the following command can be used:
 
-    ```terminal
+    ```bash
 
     conda install -c conda-forge spectrafit-all
 
@@ -108,7 +108,7 @@ To keep the system environment clean, the installation is done via the:
     be found [here][7]. In general, the following command can be useful for
     working with conda:
 
-    ```terminal
+    ```bash
     conda config --add channels conda-forge
     conda config --set channel_priority strict
     ```
@@ -120,36 +120,36 @@ To keep the system environment clean, the installation is done via the:
     `SpectraFit` repo has to be unpacked. Next, `poetry` has to be installed
     via `pip`:
 
-    ```terminal
+    ```bash
     pip install poetry
     ```
 
     or via `conda`:
 
-    ```terminal
+    ```bash
     conda install -c conda-forge poetry
     ```
     _Installation_:
 
-    ```terminal
+    ```bash
     poetry install -E jupyter
     ```
     _Usage_:
 
-    ```terminal
+    ```bash
     poetry run spectrafit --help
     ```
 
     or using the `poetry shell`:
 
-    ```terminal
+    ```bash
     poetry shell
     spectrafit --help
     ```
 
 _Result_:
 
-```terminal
+```bash
 
     usage: spectrafit [-h] [-o OUTFILE] [-i INPUT] [-ov] [-e0 ENERGY_START]
                     [-e1 ENERGY_STOP] [-s SMOOTH] [-sh SHIFT] [-c COLUMN COLUMN]
@@ -183,14 +183,14 @@ available plugins are:
     > The Docker-Image can be installed for both **amd64** aka **x86_64** or
     > **arm64** and used via:
 
-    ```terminal
+    ```bash
     docker pull ghcr.io/anselmoo/spectrafit:latest
     docker run -it -p 8888:8888 spectrafit:latest
     ```
 
     or just via:
 
-    ```terminal
+    ```bash
     docker run -it -p 8888:8888 ghcr.io/anselmoo/spectrafit:latest
     ```
 
@@ -200,13 +200,13 @@ available plugins are:
     To include the _home directory_ of the host system, the following command can
     be used:
 
-    ```terminal
+    ```bash
     docker run -it -p 8888:8888 -v $HOME:/home/user/work spectrafit:latest
     ```
 
     or via:
 
-    ```terminal
+    ```bash
     docker run -it -p 8888:8888 -v $HOME:/home/user/work ghcr.io/anselmoo/spectrafit:latest
     ```
 

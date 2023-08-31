@@ -13,14 +13,14 @@ All required settings are defined in the input-file in the section `settings`.
     If the data source, named `infile` is defined in the input-file, any
     filename can be used, like the undersocore **\_**.
 
-    ```terminal
+    ```bash
     spectrafit _ -i example_2.json
     ```
 
 In this particular example, some of the pre-defined peaks are _fixed_. This is
 also printed in the terminal output:
 
-```terminal
+```bash
 [[Variables]]
     pseudovoigt_amplitude_1:  0.31188533 (init = 1), model_value = 0.3118853
     pseudovoigt_center_1:     0.01664784 (init = 0), model_value = 0.01664784
