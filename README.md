@@ -38,7 +38,7 @@ scientific applications.
 
 via pip:
 
-```terminal
+```bash
 pip install spectrafit
 
 # with support for Jupyter Notebook
@@ -64,7 +64,7 @@ pip install spectrafit --upgrade
 
 via conda, see also [conda-forge](https://github.com/conda-forge/spectrafit-feedstock):
 
-```terminal
+```bash
 conda install -c conda-forge spectrafit
 
 # with support for Jupyter Notebook
@@ -102,11 +102,11 @@ In case of `SpectraFit`, we have further extend the package by:
 4. [Matplotlib](https://matplotlib.org/) in combination with
    [Seaborn](https://seaborn.pydata.org/)
 
-```terminal
+```bash
 spectrafit data_file.txt -i input_file.json
 ```
 
-```terminal
+```bash
 usage: spectrafit [-h] [-o OUTFILE] [-i INPUT] [-ov] [-e0 ENERGY_START]
                   [-e1 ENERGY_STOP] [-s SMOOTH] [-sh SHIFT] [-c COLUMN COLUMN]
                   [-sep {       ,,,;,:,|, ,s+}] [-dec {.,,}] [-hd HEADER]
@@ -175,20 +175,20 @@ optional arguments:
 
 Open the `Jupyter Notebook` and run the following code:
 
-```terminal
+```bash
 spectrafit-jupyter
 ```
 
 or via Docker Image for `<cpu>` with `amd64` and `arm64`:
 
-```terminal
+```bash
 docker pull ghcr.io/anselmoo/spectrafit-<cpu>:latest
 docker run -it -p 8888:8888 spectrafit-<cpu>:latest
 ```
 
 or just:
 
-```terminal
+```bash
 docker run -p 8888:8888 ghcr.io/anselmoo/spectrafit-<cpu>:latest
 ```
 
