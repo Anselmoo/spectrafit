@@ -18,7 +18,7 @@ jobs:
       contents: write
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Update Changelog
@@ -44,7 +44,7 @@ jobs:
   #     # https://github.blog/changelog/2023-02-02-github-actions-updating-the-default-github_token-permissions-to-read-only/
   #     contents: write
   #   steps:
-  #     - uses: actions/checkout@v3
+  #     - uses: actions/checkout@v4
   #       with:
   #         fetch-depth: 0
   #     - name: Open Pull Request for updated CHANGELOG
@@ -63,7 +63,7 @@ jobs:
     needs: Changelog-Update
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           ref: release/${{ github.event.release.tag_name }}
