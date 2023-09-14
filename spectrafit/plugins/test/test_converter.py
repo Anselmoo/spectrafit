@@ -1062,7 +1062,7 @@ class TestPPTXConverter:
         return fname
 
     @pytest.mark.parametrize("file_format", ["16:9", "4:3", "16:9HDR"])
-    def test_cmd_pkl_converter(
+    def test_pptx_converter(
         self, script_runner: Any, tmp_toml_data: Path, file_format: str
     ) -> None:
         """Test the data converter plugin.
@@ -1074,7 +1074,7 @@ class TestPPTXConverter:
 
         """
         source_path = Path("spectrafit/plugins/img/SpectraFit.png")
-        destination_path = PPTXBasicTitleAPI().credit_logo
+        destination_path: Path = PPTXBasicTitleAPI().credit_logo
         destination_path.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy(source_path, destination_path)
 
