@@ -92,21 +92,19 @@ jobs:
       - name: Get latest tag
         id: latest_tag
         run: echo "::set-output name=latest_tag::$(git rev-list --tags --max-count=1)"
-      - name: Check if release is minor
-        id: is_minor
+      - name: Determine previous release
+        id: previous_release
+        run: echo "::set-output name=previous_tag::$(git describe --tags --abbrev=0)"
+      - name: Determine current release
+        id: current_release
+        run: echo "::set-output name=current_tag::${GITHUB_REF#refs/tags/}"
+      - name: Check if minor release
+        id: is_minor_release
         run: |
-          current_tag=${{ github.event.release.tag_name }}
-          prev_tag=${{ steps.prev_tag.outputs.prev_tag }}
-          latest_tag=$(git describe --tags --abbrev=0 ${{ steps.latest_tag.outputs.latest_tag }})
-          if [[ $current_tag =~ ^${latest_tag%.*}\.[0-9]+$ && $prev_tag =~ ^${latest_tag%.*}\.[0-9]+$ ]]; then
-            echo "::set-output name=is_minor::true"
-          else
-            echo "::set-output name=is_minor::false"
+          if [[ "${{ steps.current_release.outputs.current_tag }}" =~ $(echo "${{ steps.previous_release.outputs.previous_tag }}" | sed -E 's/^v([0-9]+)\.([0-9]+)\.([0-9]+)$/'"v\1.\2"'/') ]] || [[ "${{ steps.current_release.outputs.current_tag }}" =~ $(echo "${{ steps.previous_release.outputs.previous_tag }}" | sed -E 's/^v([0-9]+)\.([0-9]+)\.([12]|[1-9][0-9]*)$/'"v\1.\2.\3"'/') ]]; then
+          poetry run mike delete --version ${{ steps.previous_release.outputs.previous_tag }}
           fi
-      - name: Delete previous documentation
-        if: steps.is_minor.outputs.is_minor == 'true'
-        run: poetry run mike delete --version ${{ steps.prev_tag.outputs.prev_tag }}
       - name: Deploy documentation develops
         run: |
           poetry run mike deploy --push --rebase --update-aliases ${{ github.event.release.tag_name }} latest --message "Release ${{ github.event.release.tag_name }}"
-          poetry run mike set-default --push --rebase latest
+          poetry run mike set-default --push --rebase lates
