@@ -1,4 +1,4 @@
-name: Greet first-time contributors
+name: CI - Greet first-time contributors
 
 on: [pull_request, issues]
 
