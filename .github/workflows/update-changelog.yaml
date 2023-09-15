@@ -1,4 +1,4 @@
-name: "Update Changelog"
+name: CI - Update Changelog
 
 on:
   release:
