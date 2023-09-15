@@ -98,7 +98,7 @@ jobs:
           current_tag=${{ github.event.release.tag_name }}
           prev_tag=${{ steps.prev_tag.outputs.prev_tag }}
           latest_tag=$(git describe --tags --abbrev=0 ${{ steps.latest_tag.outputs.latest_tag }})
-          if [[ $current_tag =~ ^${latest_tag%.*}\.[0-9]+$ && $prev_tag =~ ^${latest_tag%.*}\.[0-9]+\.[0-9]+$ ]]; then
+          if [[ $current_tag =~ ^${latest_tag%.*}\.[0-9]+$ && $prev_tag =~ ^${latest_tag%.*}\.[0-9]+$ ]]; then
             echo "::set-output name=is_minor::true"
           else
             echo "::set-output name=is_minor::false"
