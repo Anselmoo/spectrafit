@@ -216,8 +216,6 @@ available plugins are:
 
     _coming soon_
 
-https://github.com/joypixels/emoji-toolkit#joypixels-version-2
-
 [1]: https://github.com/pypa/pipx
 [2]: https://conda.io/docs/
 [3]: https://anaconda.org/conda-forge/spectrafit
