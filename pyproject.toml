@@ -101,7 +101,7 @@ prospector = { extras = [
   "isort",
   "pylint",
 ], version = "^1.10.2" }
-bump-pydantic = ">=0.6,<0.8"
+bump-pydantic = "^0.7"
 types-setuptools = "^68.0.0.3"
 
 [tool.poetry.group.docs.dependencies]
