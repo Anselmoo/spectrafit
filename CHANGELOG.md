@@ -2,6 +2,136 @@
 
 All notable changes to this project will be documented in this file.
 
+## v0.22.6 🌈 - 2023-09-22
+
+### :compass: What's Changed
+
+#### :toolbox: Maintenance
+
+- build(deps-dev): Bump mkdocs-material from 9.3.1 to 9.4.0 (#1019) @dependabot
+- build(deps-dev): ⬆️ Bump bump-pydantic from 0.6.1 to 0.7.0 (#1014) @dependabot
+- [pre-commit.ci] pre-commit autoupdate (#1013) @pre-commit-ci
+
+#### :snake: Python
+
+- build(deps-dev): Bump mkdocs-material from 9.3.1 to 9.4.0 (#1019) @dependabot
+
+#### :octocat: Github Actions
+
+- ci: ♻️ Update linting CI files (#1010) @Anselmoo
+
+#### :card_index_dividers: Documentation
+
+- revert: :lipstick: Switch back to previous definitions (#1020) @Anselmoo
+- build(deps-dev): Bump mkdocs-material from 9.3.1 to 9.4.0 (#1019) @dependabot
+- build(deps-dev): ⬆️ Bump bump-pydantic from 0.6.1 to 0.7.0 (#1014) @dependabot
+
+#### :link: Dependency Updates
+
+- build(deps-dev): Bump mkdocs-material from 9.3.1 to 9.4.0 (#1019) @dependabot
+- build(deps-dev): ⬆️ Bump bump-pydantic from 0.6.1 to 0.7.0 (#1014) @dependabot
+
+#### :lock: Security
+
+- build(deps-dev): Bump mkdocs-material from 9.3.1 to 9.4.0 (#1019) @dependabot
+
+#### :memo: Changelog
+
+- build(deps-dev): Bump mkdocs-material from 9.3.1 to 9.4.0 (#1019) @dependabot
+
+### :package: Full Changelog
+
+**Full Changelog**:
+https://github.com/Anselmoo/spectrafit/compare/v0.22.5...v0.22.6
+
+### :gear: Who Contributes
+
+@Anselmoo
+
+## :compass: What's Changed
+
+### :toolbox: Maintenance
+
+- build: ⬆️ `v0.22.5` (#1008) @Anselmoo
+- ci: ⬆️ pre-commit autoupdate (#990) @pre-commit-ci
+- docs: :dizzy: Update color schema (#986) @Anselmoo
+- build(deps-dev): ⬆️ Bump mkdocs-material from 9.1.21 to 9.2.1 (#974)
+  @dependabot
+- [pre-commit.ci] pre-commit autoupdate (#973) @pre-commit-ci
+- build: :arrow_up: Upgrade dependencies (#968) @Anselmoo
+- [pre-commit.ci] pre-commit autoupdate (#960) @pre-commit-ci
+- [pre-commit.ci] ⬆️ pre-commit autoupdate (#951) @pre-commit-ci
+
+#### :snake: Python
+
+- build: ⬆️ `v0.22.5` (#1008) @Anselmoo
+- build: ⬆️ Update dependencies & tests (#1005) @Anselmoo
+
+#### :octocat: Github Actions
+
+- build: ⬆️ `v0.22.5` (#1008) @Anselmoo
+- build: ⬆️ Bump codecov/codecov-action from 3 to 4 (#1006) @dependabot
+- build: ⬆️ Update dependencies & tests (#1005) @Anselmoo
+- docs: :dizzy: Update color schema (#986) @Anselmoo
+- build(deps): Bump actions/checkout from 3 to 4 (#991) @dependabot
+- build(deps): Bump docker/setup-buildx-action from
+  7703e82fbced3d0c9eec08dff4429c023a5fd9a9 to
+  885d1462b80bc1c1c7f0b00334ad271f09369c55 (#980) @dependabot
+- ci: :fire: Remove outdated CI (#977) @Anselmoo
+- build(deps): Bump pypa/gh-action-pypi-publish from 1.8.8 to 1.8.10 (#956)
+  @dependabot
+- build(deps): Bump docker/setup-buildx-action from
+  79abd3f86f79a9d68a23c75a09a9a85889262adf to
+  7703e82fbced3d0c9eec08dff4429c023a5fd9a9 (#952) @dependabot
+
+#### :card_index_dividers: Documentation
+
+- docs: :dizzy: Update color schema (#986) @Anselmoo
+- docs: :memo: Split licenses into License and Third Party (#971) @Anselmoo
+- Update usage.md (#970) @Anselmoo
+- docs: :white_check_mark: Update `mkdocs` workflow (#969) @Anselmoo
+- doc: :memo: Update LICENSE (#948) @Anselmoo
+
+#### :link: Dependency Updates
+
+- build: ⬆️ `v0.22.5` (#1008) @Anselmoo
+- build: ⬆️ Update dependencies & tests (#1005) @Anselmoo
+- docs: :dizzy: Update color schema (#986) @Anselmoo
+- bump mkdocs-material from 9.2.3 to 9.2.5 (#978) @dependabot
+- build(deps): Bump pydantic from 2.2.1 to 2.3.0 (#976) @dependabot
+- build(deps-dev): Bump mkdocs-material from 9.2.1 to 9.2.3 (#975) @dependabot
+- build(deps-dev): ⬆️ Bump mkdocs-material from 9.1.21 to 9.2.1 (#974)
+  @dependabot
+- build(deps): Bump itables from 1.5.3 to 1.5.4 (#972) @dependabot
+- build: :arrow_up: Upgrade dependencies (#968) @Anselmoo
+- build(deps): Bump pydantic from 2.1.1 to 2.2.0 (#967) @dependabot
+- build(deps-dev): Bump dash from 2.11.1 to 2.12.1 (#963) @dependabot
+- build(deps-dev): Bump mypy from 1.5.0 to 1.5.1 (#962) @dependabot
+- build(deps): Bump jupyterlab from 4.0.4 to 4.0.5 (#958) @dependabot
+- build(deps-dev): Bump mypy from 1.4.1 to 1.5.0 (#955) @dependabot
+- build(deps): Bump tqdm from 4.66.0 to 4.66.1 (#957) @dependabot
+- build(deps): ⬆️ Bump tqdm from 4.65.0 to 4.66.0 (#954) @dependabot
+
+### :microscope: Testing & Coverage
+
+- build: ⬆️ Update dependencies & tests (#1005) @Anselmoo
+
+### :memo: Changelog
+
+- docs: :card_index_dividers: Update CHANGELOG for release/v0.22.4 (#950)
+  @Anselmoo
+- docs: :card_index_dividers: Update CHANGELOG for release/v0.22.3 (#949)
+  @Anselmoo
+
+### :package: Full Changelog
+
+**Full Changelog**:
+https://github.com/Anselmoo/spectrafit/compare/v0.22.4...v0.22.5
+
+### :gear: Who Contributes
+
+@Anselmoo
+
 ## v0.22.4 🌈 - 2023-08-05
 
 ### :compass: What's Changed
