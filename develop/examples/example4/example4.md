@@ -679,6 +679,8 @@ spectrafit _ -i example_3.json
 
 > Elastic-line of a pseudo 2p3d-RIXS spectra.
 
-[1]: https://numpy.org/doc/stable/reference/random/generated/numpy.random.random.html
-[2]: https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_csv.html
+[1]:
+  https://numpy.org/doc/stable/reference/random/generated/numpy.random.random.html
+[2]:
+  https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_csv.html
 [3]: ../../examples/example3/
