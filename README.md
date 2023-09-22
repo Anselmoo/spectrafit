@@ -62,7 +62,8 @@ pip install spectrafit[all]
 pip install spectrafit --upgrade
 ```
 
-via conda, see also [conda-forge](https://github.com/conda-forge/spectrafit-feedstock):
+via conda, see also
+[conda-forge](https://github.com/conda-forge/spectrafit-feedstock):
 
 ```bash
 conda install -c conda-forge spectrafit

@@ -1,4 +1,5 @@
-With the command `spectrafit-file-converter` input and also output files can be converted. The supported file formats are:
+With the command `spectrafit-file-converter` input and also output files can be
+converted. The supported file formats are:
 
 1. `.json`
 2. `.yaml` or `.yml`

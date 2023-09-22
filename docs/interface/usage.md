@@ -623,11 +623,14 @@ spectrafit-jupyter
 [1]: https://en.wikipedia.org/wiki/Voigt_profile#Pseudo-Voigt_approximation
 [2]: https://en.wikipedia.org/wiki/Power_law
 [3]: https://en.wikipedia.org/wiki/Inverse_trigonometric_functions
-[4]: ../../api/spectrafit_api/#spectrafit.spectrafit.extracted_from_command_line_runner
-[5]: https://lmfit.github.io/lmfit-py/fitting.html?highlight=minimizer#module-lmfit.minimizer
+[4]:
+  ../../api/spectrafit_api/#spectrafit.spectrafit.extracted_from_command_line_runner
+[5]:
+  https://lmfit.github.io/lmfit-py/fitting.html?highlight=minimizer#module-lmfit.minimizer
 [6]: ../../api/spectrafit_api/#spectrafit.spectrafit.fitting_routine
 [7]: /spectrafit/interface/usage/#standard-usage
-[8]: https://lmfit.github.io/lmfit-py/fitting.html?highlight=minimizer#module-lmfit.minimizer
+[8]:
+  https://lmfit.github.io/lmfit-py/fitting.html?highlight=minimizer#module-lmfit.minimizer
 [9]: https://lmfit.github.io/lmfit-py/constraints.html
 [10]: ../../doc/expression
 [11]: ../../examples/example6
@@ -635,8 +638,10 @@ spectrafit-jupyter
 [13]: https://en.wikipedia.org/wiki/Cauchy_distribution
 [14]: https://en.wikipedia.org/wiki/Voigt_profile
 [15]: https://en.wikipedia.org/wiki/Voigt_profile#Pseudo-Voigt_approximation
-[16]: https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.find_peaks.html
-[17]: https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_csv.html
+[16]:
+  https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.find_peaks.html
+[17]:
+  https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_csv.html
 [18]: https://jupyter.org
 [19]: ../interface/installation
 [20]: ../../examples/example9
