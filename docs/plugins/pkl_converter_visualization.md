@@ -55,8 +55,8 @@ The following export files are possible:
 - [x] `pkl`: Pickle file as `pkl` file and _compressed_ `pkl.gz` file.
 - [x] `npy`: Numpy array as `npy` file and _compressed_ `npz` file.
 
-In case of using other file formats, the `spectrafit-pkl-converter` supports
-the following file formats:
+In case of using other file formats, the `spectrafit-pkl-converter` supports the
+following file formats:
 
 - [x] `utf-8`: UTF-8 encoded file.
 - [x] `utf-16`: UTF-16 encoded file.
@@ -64,8 +64,8 @@ the following file formats:
 - [x] `latin1`: Latin-1 encoded file.
 
 All keys up to the first key-value pair of a `numpy.ndarray` or `list` are
-merged into a single string, which is used as a new filename. A list will
-be converted to a `numpy.ndarray` with the shape `(len(list),)`.
+merged into a single string, which is used as a new filename. A list will be
+converted to a `numpy.ndarray` with the shape `(len(list),)`.
 
 ```mermaid
 
@@ -106,8 +106,8 @@ dict_4 --> dict_4.pkl
 
 ## PKL Visualizer
 
-The `spectrafit-pkl-visualizer` should be used for the visualization of the
-pkl files. It creates a graph of the pkl file and exports it as a graph file.
+The `spectrafit-pkl-visualizer` should be used for the visualization of the pkl
+files. It creates a graph of the pkl file and exports it as a graph file.
 
 The `spectrafit-pkl-visualizer` command line tool can be used like this:
 
@@ -130,8 +130,8 @@ The `spectrafit-pkl-visualizer` command line tool can be used like this:
 
 Furthermore the `spectrafit-pkl-visualizer` allows export the structure of the
 pkl file as a JSON file. The information about the attributes and their
-structure is stored in the JSON file. The following example shows the
-structure of the JSON file:
+structure is stored in the JSON file. The following example shows the structure
+of the JSON file:
 
 ??? example "Example of the JSON file"
 

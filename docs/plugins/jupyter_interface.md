@@ -103,12 +103,12 @@ to display the results and the `Dictionary` is used to export the results.
 
 ## Input Parameter Model
 
-For the easiere usage of the `SpectraFit` the intial model is _now_ defined as
-a `List` of `Dict` objects. While every `Dict` object represents:
+For the easiere usage of the `SpectraFit` the intial model is _now_ defined as a
+`List` of `Dict` objects. While every `Dict` object represents:
 
 1. The name of the model like `Gaussian` or `Lorentzian` or so on.
-2. The parameters of the model with their initial values and bounds as a
-   `Dict` object.
+2. The parameters of the model with their initial values and bounds as a `Dict`
+   object.
 
 !!! example "Example of an Initial-Parameter-Model"
 
@@ -142,10 +142,11 @@ a `List` of `Dict` objects. While every `Dict` object represents:
 ## The SpectraFitNotebook Class
 
 For running the `SpectraFit` in the Jupyter Notebook-Interface, the
-`SpectraFitNotebook` class is used. It is a **new** module, which is
-part of the `SpectraFit` plugins. All important settings are defined in the
-`__init__` method of the class.
+`SpectraFitNotebook` class is used. It is a **new** module, which is part of the
+`SpectraFit` plugins. All important settings are defined in the `__init__`
+method of the class.
 
+<!-- prettier-ignore -->
 ::: spectrafit.plugins.notebook.SpectraFitNotebook
     handler: python
     options:
@@ -159,6 +160,7 @@ The _initial parameter model_ of the section
 [Input Parameter Model](#input-parameter-model) is used in the function call of
 the `SpectraFitNotebook` class.
 
+<!-- prettier-ignore -->
 ::: spectrafit.plugins.notebook.SpectraFitNotebook
     handler: python
     options:

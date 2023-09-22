@@ -95,5 +95,6 @@ This template is adapted from [opengovernment][3].
 [9]: https://github.com/Anselmoo/spectrafit/pulls
 [10]: https://github.com/Anselmoo/spectrafit/milestones
 [11]: https://github.com/Anselmoo/spectrafit/issues
-[12]: https://docs.github.com/en/issues/tracking-your-work-with-issues/linking-a-pull-request-to-an-issue
+[12]:
+  https://docs.github.com/en/issues/tracking-your-work-with-issues/linking-a-pull-request-to-an-issue
 [13]: https://github.com/Anselmoo/spectrafit/projects/1

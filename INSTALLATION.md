@@ -220,7 +220,8 @@ available plugins are:
 [2]: https://conda.io/docs/
 [3]: https://anaconda.org/conda-forge/spectrafit
 [4]: https://github.com/Anselmoo/spectrafit/pkgs/container/spectrafit
-[5]: https://github.com/jupyter/docker-stacks/blob/main/scipy-notebook/Dockerfile
+[5]:
+  https://github.com/jupyter/docker-stacks/blob/main/scipy-notebook/Dockerfile
 [6]: ../../plugins/jupyter-spectrafit-interface
 [7]: https://github.com/conda-forge/spectrafit-feedstock
 [8]: https://python-poetry.org/docs/

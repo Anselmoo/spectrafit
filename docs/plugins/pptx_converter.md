@@ -37,9 +37,12 @@ The `spectrafit-pptx-converter` command line tool can be used like this:
 
 The following export formats are supported:
 
-- [x] `16:9`: PowerPoint presentation with the format `16:9` (**width:** 1280px, **height:** 720px).
-- [x] `16:9HDR`: PowerPoint presentation with the format `16:9HDR` (**width:** 1920px, **height:** 1080px).
-- [x] `4:3`: PowerPoint presentation with the format `4:3` (**width:** 960px, **height:** 720px).
+- [x] `16:9`: PowerPoint presentation with the format `16:9` (**width:** 1280px,
+      **height:** 720px).
+- [x] `16:9HDR`: PowerPoint presentation with the format `16:9HDR` (**width:**
+      1920px, **height:** 1080px).
+- [x] `4:3`: PowerPoint presentation with the format `4:3` (**width:** 960px,
+      **height:** 720px).
 
 !!! info "Example of the PPTX Converter"
 
@@ -49,4 +52,5 @@ The following export formats are supported:
 
 [1]: ../../plugins/jupyter_interface
 [2]: https://lmfit.github.io/lmfit-py/fitting.html#goodness-of-fit-statistics
-[3]: https://scikit-learn.org/stable/modules/model_evaluation.html#common-cases-predefined-values
+[3]:
+  https://scikit-learn.org/stable/modules/model_evaluation.html#common-cases-predefined-values

@@ -67,5 +67,6 @@ With the command `spectrafit-data-converter` data files can be converted to
       5343.8501,0.01207748
     ```
 
-[1]: https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html
+[1]:
+  https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html
 [2]: https://bruceravel.github.io/demeter/documents/Athena/other/plugin.html

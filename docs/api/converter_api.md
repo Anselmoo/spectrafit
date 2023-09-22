@@ -43,9 +43,8 @@
 
 ::: spectrafit.plugins.rixs_converter
 
-On top of the `RIXSConverter` class, the `RIXSVisualizer` class is
-available to visualize the RIXS data and provide a method to take
-RIXS cuts.
+On top of the `RIXSConverter` class, the `RIXSVisualizer` class is available to
+visualize the RIXS data and provide a method to take RIXS cuts.
 
 ::: spectrafit.plugins.rixs_visualizer
 
@@ -59,7 +58,8 @@ RIXS cuts.
 ::: spectrafit.plugins.pptx_converter
 
 [1]: https://docs.python.org/3/tutorial/datastructures.html#dictionaries
-[2]: https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html
+[2]:
+  https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html
 [3]: https://docs.python.org/3/library/abc.html#abc.ABC
 [4]: https://docs.python.org/3/library/abc.html#abc.abstractmethod
 [5]: https://pydantic-docs.helpmanual.io/
