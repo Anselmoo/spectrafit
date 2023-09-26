@@ -33,30 +33,39 @@ jobs:
           commit_message: "docs: :card_index_dividers: Update CHANGELOG for release/${{ github.event.release.tag_name }}"
           file_pattern: CHANGELOG.md
           create_branch: true
-  # Changelog-Pull-Request:
-  #   if: ${{ contains(github.event.release.prerelease, false) }}
-  #   name: Open Pull Request for updated CHANGELOG
-  #   needs: Changelog-Update
-  #   runs-on: ubuntu-latest
-  #   permissions:
-  #     # Give the default GITHUB_TOKEN write permission to commit and push the
-  #     # updated CHANGELOG back to the repository.
-  #     # https://github.blog/changelog/2023-02-02-github-actions-updating-the-default-github_token-permissions-to-read-only/
-  #     contents: write
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #       with:
-  #         fetch-depth: 0
-  #     - name: Open Pull Request for updated CHANGELOG
-  #       uses: peter-evans/create-pull-request@v5
-  #       with:
-  #         token: ${{ secrets.GITHUB_TOKEN }}
-  #         commit-message: "docs: :card_index_dividers: Update CHANGELOG for release/${{ github.event.release.tag_name }}"
-  #         title: "docs: :card_index_dividers: Update CHANGELOG for release/${{ github.event.release.tag_name }}"
-  #         body: "This Pull Request was automatically created to update the CHANGELOG for release/${{ github.event.release.tag_name }}."
-  #         draft: false
-  #         base: release/${{ github.event.release.tag_name }}
-  #         branch: main
+
+  Changelog-Pull-Request:
+    if: ${{ contains(github.event.release.prerelease, false) }}
+    name: Create Pull Request for an Automatic Changelog Update
+    needs: Changelog-Update
+    runs-on: ubuntu-latest
+    permissions:
+      # Give the default GITHUB_TOKEN write permission to commit and push the
+      # updated CHANGELOG back to the repository.
+      # https://github.blog/changelog/2023-02-02-github-actions-updating-the-default-github_token-permissions-to-read-only/
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Create Pull Request
+        uses: actions/checkout@v4
+        with:
+
+          ref: release/${{ github.event.release.tag_name }}
+          fetch-depth: 0
+      - name: Create PR via gh
+        run: >-
+          gh pr create --title "docs: :card_index_dividers: Changlog update for ${{ github.event.release.tag_name }}"
+          --body "This is an auto-generated pull request to merge release/${{ github.event.release.tag_name }} with [Changelog](CHANGELOG.md) updates to main."
+          --base main
+          --head release/${{ github.event.release.tag_name }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.auto_changelog }}
+      - name: Set Auto PR
+        run: |
+          gh pr merge release/${{ github.event.release.tag_name }} --auto --rebase
+        env:
+          GITHUB_TOKEN: ${{ secrets.auto_changelog }}
+
   Release-Documentation:
     if: ${{ contains(github.event.release.prerelease, false) }}
     name: Build Documentation from new release branch 'release/${{ github.event.release.tag_name }}'
