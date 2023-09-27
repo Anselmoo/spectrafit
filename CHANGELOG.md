@@ -2,6 +2,45 @@
 
 All notable changes to this project will be documented in this file.
 
+## v0.22.7 🌈 - 2023-09-27
+
+### :compass: What's Changed
+
+#### :toolbox: Maintenance
+
+- ci: 👷 Add `gh` workflow for auto-release (#1029) @Anselmoo
+- ci: ⬆️  pre-commit autoupdate (#1024) @pre-commit-ci
+
+#### :snake: Python
+
+- ci: 👷 Add `gh` workflow for auto-release (#1029) @Anselmoo
+
+#### :octocat: Github Actions
+
+- ci: 👷 Add `gh` workflow for auto-release (#1029) @Anselmoo
+- fix: :construction_worker: Update release and changelog cd (#1025) @Anselmoo
+- docs: 📝 `Release/v0.22.6` (#1021) @Anselmoo
+
+#### :card_index_dividers: Documentation
+
+- style: :lipstick: Update the color scheme (#1022) @Anselmoo
+
+#### :link: Dependency Updates
+
+- ci: 👷 Add `gh` workflow for auto-release (#1029) @Anselmoo
+
+#### :memo: Changelog
+
+- docs: 📝 `Release/v0.22.6` (#1021) @Anselmoo
+
+### :package: Full Changelog
+
+**Full Changelog**: https://github.com/Anselmoo/spectrafit/compare/v0.22.6...v0.22.7
+
+### :gear: Who Contributes
+
+@Anselmoo
+
 ## v0.22.6 🌈 - 2023-09-22
 
 ### :compass: What's Changed
@@ -55,7 +94,7 @@ https://github.com/Anselmoo/spectrafit/compare/v0.22.5...v0.22.6
 - build: ⬆️ `v0.22.5` (#1008) @Anselmoo
 - ci: ⬆️ pre-commit autoupdate (#990) @pre-commit-ci
 - docs: :dizzy: Update color schema (#986) @Anselmoo
-- build(deps-dev): ⬆️ Bump mkdocs-material from 9.1.21 to 9.2.1 (#974)
+- build(deps-dev): ⬆️ Bump mkdocs-material from 9.1.21 to 9.2.1 (#974)   
   @dependabot
 - [pre-commit.ci] pre-commit autoupdate (#973) @pre-commit-ci
 - build: :arrow_up: Upgrade dependencies (#968) @Anselmoo
@@ -74,14 +113,14 @@ https://github.com/Anselmoo/spectrafit/compare/v0.22.5...v0.22.6
 - build: ⬆️ Update dependencies & tests (#1005) @Anselmoo
 - docs: :dizzy: Update color schema (#986) @Anselmoo
 - build(deps): Bump actions/checkout from 3 to 4 (#991) @dependabot
-- build(deps): Bump docker/setup-buildx-action from
-  7703e82fbced3d0c9eec08dff4429c023a5fd9a9 to
+- build(deps): Bump docker/setup-buildx-action from   
+  7703e82fbced3d0c9eec08dff4429c023a5fd9a9 to   
   885d1462b80bc1c1c7f0b00334ad271f09369c55 (#980) @dependabot
 - ci: :fire: Remove outdated CI (#977) @Anselmoo
-- build(deps): Bump pypa/gh-action-pypi-publish from 1.8.8 to 1.8.10 (#956)
+- build(deps): Bump pypa/gh-action-pypi-publish from 1.8.8 to 1.8.10 (#956)   
   @dependabot
-- build(deps): Bump docker/setup-buildx-action from
-  79abd3f86f79a9d68a23c75a09a9a85889262adf to
+- build(deps): Bump docker/setup-buildx-action from   
+  79abd3f86f79a9d68a23c75a09a9a85889262adf to   
   7703e82fbced3d0c9eec08dff4429c023a5fd9a9 (#952) @dependabot
 
 #### :card_index_dividers: Documentation
@@ -100,7 +139,7 @@ https://github.com/Anselmoo/spectrafit/compare/v0.22.5...v0.22.6
 - bump mkdocs-material from 9.2.3 to 9.2.5 (#978) @dependabot
 - build(deps): Bump pydantic from 2.2.1 to 2.3.0 (#976) @dependabot
 - build(deps-dev): Bump mkdocs-material from 9.2.1 to 9.2.3 (#975) @dependabot
-- build(deps-dev): ⬆️ Bump mkdocs-material from 9.1.21 to 9.2.1 (#974)
+- build(deps-dev): ⬆️ Bump mkdocs-material from 9.1.21 to 9.2.1 (#974)   
   @dependabot
 - build(deps): Bump itables from 1.5.3 to 1.5.4 (#972) @dependabot
 - build: :arrow_up: Upgrade dependencies (#968) @Anselmoo
@@ -118,9 +157,9 @@ https://github.com/Anselmoo/spectrafit/compare/v0.22.5...v0.22.6
 
 ### :memo: Changelog
 
-- docs: :card_index_dividers: Update CHANGELOG for release/v0.22.4 (#950)
+- docs: :card_index_dividers: Update CHANGELOG for release/v0.22.4 (#950)   
   @Anselmoo
-- docs: :card_index_dividers: Update CHANGELOG for release/v0.22.3 (#949)
+- docs: :card_index_dividers: Update CHANGELOG for release/v0.22.3 (#949)   
   @Anselmoo
 
 ### :package: Full Changelog
@@ -143,7 +182,7 @@ https://github.com/Anselmoo/spectrafit/compare/v0.22.4...v0.22.5
 #### :toolbox: Maintenance
 
 - fix: :bug: Correct path to logo (#947) @Anselmoo
-- build(deps-dev): ⬆️ Bump mkdocs-autorefs from 0.4.1 to 0.5.0 (#943)
+- build(deps-dev): ⬆️ Bump mkdocs-autorefs from 0.4.1 to 0.5.0 (#943)   
   @dependabot
 
 #### :snake: Python
@@ -152,15 +191,15 @@ https://github.com/Anselmoo/spectrafit/compare/v0.22.4...v0.22.5
 
 #### :octocat: Github Actions
 
-- build(deps): ⬆️ Bump docker/metadata-action from 3.3.0 to 4.6.0 (#944)
+- build(deps): ⬆️ Bump docker/metadata-action from 3.3.0 to 4.6.0 (#944)   
   @dependabot
 - build: :pushpin: Update dependencies (#946) @Anselmoo
-- build(deps): ⬆️ Bump docker/build-push-action from 2.10.0 to 4.1.1 (#942)
+- build(deps): ⬆️ Bump docker/build-push-action from 2.10.0 to 4.1.1 (#942)   
   @dependabot
-- build(deps): ⬆️ Bump docker/metadata-action from 3.3.0 to 4.6.0 (#940)
+- build(deps): ⬆️ Bump docker/metadata-action from 3.3.0 to 4.6.0 (#940)   
   @dependabot
 - fix: :pencil: Add outputs (#939) @Anselmoo
-- feat: :construction_worker: Using `docker-ci` as workflow for publishing
+- feat: :construction_worker: Using `docker-ci` as workflow for publishing   
   (#938) @Anselmoo
 
 #### :card_index_dividers: Documentation
@@ -170,7 +209,7 @@ https://github.com/Anselmoo/spectrafit/compare/v0.22.4...v0.22.5
 #### :link: Dependency Updates
 
 - fix: :bug: Correct path to logo (#947) @Anselmoo
-- build(deps-dev): ⬆️ Bump mkdocs-autorefs from 0.4.1 to 0.5.0 (#943)
+- build(deps-dev): ⬆️ Bump mkdocs-autorefs from 0.4.1 to 0.5.0 (#943)   
   @dependabot
 
 #### :microscope: Testing & Coverage
@@ -226,32 +265,32 @@ https://github.com/Anselmoo/spectrafit/compare/v0.22.2...v0.22.3
 
 #### :toolbox: Maintenance
 
-- docs: :card_index_dividers: Update CHANGELOG for release/v0.22.1 (#933)
+- docs: :card_index_dividers: Update CHANGELOG for release/v0.22.1 (#933)   
   @Anselmoo
 
 #### :snake: Python
 
-- docs: :card_index_dividers: Update CHANGELOG for release/v0.22.1 (#933)
+- docs: :card_index_dividers: Update CHANGELOG for release/v0.22.1 (#933)   
   @Anselmoo
 
 #### :octocat: Github Actions
 
-- docs: :card_index_dividers: Update CHANGELOG for release/v0.22.1 (#933)
+- docs: :card_index_dividers: Update CHANGELOG for release/v0.22.1 (#933)   
   @Anselmoo
 
 #### :link: Dependency Updates
 
-- docs: :card_index_dividers: Update CHANGELOG for release/v0.22.1 (#933)
+- docs: :card_index_dividers: Update CHANGELOG for release/v0.22.1 (#933)   
   @Anselmoo
 
 #### :microscope: Testing & Coverage
 
-- docs: :card_index_dividers: Update CHANGELOG for release/v0.22.1 (#933)
+- docs: :card_index_dividers: Update CHANGELOG for release/v0.22.1 (#933)   
   @Anselmoo
 
 #### :memo: Changelog
 
-- docs: :card_index_dividers: Update CHANGELOG for release/v0.22.1 (#933)
+- docs: :card_index_dividers: Update CHANGELOG for release/v0.22.1 (#933)   
   @Anselmoo
 
 ### :package: Full Changelog
@@ -331,7 +370,7 @@ https://github.com/Anselmoo/spectrafit/compare/v0.22.0...v0.22.1
 #### :link: Dependency Updates
 
 - build: :bookmark: v0.22.0 (#922) @Anselmoo
-- build(deps-dev): :arrow_up: Bump mkdocs-material from 9.1.20 to 9.1.21 (#917)
+- build(deps-dev): :arrow_up: Bump mkdocs-material from 9.1.20 to 9.1.21 (#917)   
   @dependabot
 
 #### :microscope: Testing & Coverage
@@ -358,7 +397,7 @@ https://github.com/Anselmoo/spectrafit/compare/v0.21.1...v0.22.0
 #### 🧰 Maintenance
 
 - docs: ✏️ Update docs (#915) @Anselmoo
-- build(deps-dev): Bump mkdocs-minify-plugin from 0.6.4 to 0.7.0 (#913)
+- build(deps-dev): Bump mkdocs-minify-plugin from 0.6.4 to 0.7.0 (#913)   
   @dependabot
 
 #### :octocat: Github Actions
@@ -373,12 +412,12 @@ https://github.com/Anselmoo/spectrafit/compare/v0.21.1...v0.22.0
 #### 🔗 Dependency Updates
 
 - docs: ✏️ Update docs (#915) @Anselmoo
-- build(deps-dev): Bump mkdocs-minify-plugin from 0.6.4 to 0.7.0 (#913)
+- build(deps-dev): Bump mkdocs-minify-plugin from 0.6.4 to 0.7.0 (#913)   
   @dependabot
 
 #### 📝 Changelog
 
-- docs: :card_index_dividers: Update CHANGELOG for release/v0.21.0 (#912)
+- docs: :card_index_dividers: Update CHANGELOG for release/v0.21.0 (#912)   
   @Anselmoo
 
 ### 📦 Full Changelog
@@ -414,9 +453,9 @@ https://github.com/Anselmoo/spectrafit/compare/v0.21.0...v0.21.1
 #### :octocat: Github Actions
 
 - feat: 🚀 Add PPTX Converter (#904) @Anselmoo
-- build(deps): Bump pypa/gh-action-pypi-publish from 1.8.7 to 1.8.8 (#890)
+- build(deps): Bump pypa/gh-action-pypi-publish from 1.8.7 to 1.8.8 (#890)   
   @dependabot
-- build(deps): Bump peter-evans/create-pull-request from 3 to 5 (#889)
+- build(deps): Bump peter-evans/create-pull-request from 3 to 5 (#889)   
   @dependabot
 - fix: :construction_worker: try new pr-auto (#887) @Anselmoo
 
@@ -432,7 +471,7 @@ https://github.com/Anselmoo/spectrafit/compare/v0.21.0...v0.21.1
 - feat: 🚀 Add PPTX Converter (#904) @Anselmoo
 - build(deps): Bump pyyaml from 6.0 to 6.0.1 (#901) @dependabot
 - build(deps-dev): Bump bump-pydantic from 0.3.0 to 0.4.0 (#900) @dependabot
-- build(deps): Bump dash-bootstrap-components from 1.4.1 to 1.4.2 (#894)
+- build(deps): Bump dash-bootstrap-components from 1.4.1 to 1.4.2 (#894)   
   @dependabot
 - build(deps): Bump lmfit from 1.2.1 to 1.2.2 (#893) @dependabot
 - build(deps): Bump pydantic from 2.0.2 to 2.0.3 (#895) @dependabot
@@ -450,7 +489,7 @@ https://github.com/Anselmoo/spectrafit/compare/v0.21.0...v0.21.1
 
 #### 📝 Changelog
 
-- docs: :card_index_dividers: Update CHANGELOG for release/v0.20.1 (#888)
+- docs: :card_index_dividers: Update CHANGELOG for release/v0.20.1 (#888)   
   @Anselmoo
 
 #### 🐳 Docker
@@ -550,7 +589,7 @@ https://github.com/Anselmoo/spectrafit/compare/v0.20.0...v0.20.1
 - fix: 🏗️ Fix building docs and changelog (#867) @Anselmoo
 - ci: :building_construction: Update Doc-Release (#865) @Anselmoo
 - ci: :heavy_minus_sign: Remove duplicated CI-check (#864) @Anselmoo
-- build(deps): Bump pypa/gh-action-pypi-publish from 1.8.6 to 1.8.7 (#856)
+- build(deps): Bump pypa/gh-action-pypi-publish from 1.8.6 to 1.8.7 (#856)   
   @dependabot
 
 #### 🗂 Documentation
@@ -650,13 +689,13 @@ https://github.com/Anselmoo/spectrafit/compare/v0.18.3...v0.19.0
 #### :octocat: Github Actions
 
 - ci: :zap: Create codeql.yml (#839) @Anselmoo
-- build(deps): Bump docker/build-push-action from 4.1.0 to 4.1.1 (#830)
+- build(deps): Bump docker/build-push-action from 4.1.0 to 4.1.1 (#830)   
   @dependabot
-- build(deps): Bump docker/metadata-action from 4.5.0 to 4.6.0 (#829)
+- build(deps): Bump docker/metadata-action from 4.5.0 to 4.6.0 (#829)   
   @dependabot
-- build(deps): Bump docker/build-push-action from 4.0.0 to 4.1.0 (#824)
+- build(deps): Bump docker/build-push-action from 4.0.0 to 4.1.0 (#824)   
   @dependabot
-- build(deps): Bump docker/metadata-action from 4.4.0 to 4.5.0 (#820)
+- build(deps): Bump docker/metadata-action from 4.4.0 to 4.5.0 (#820)   
   @dependabot
 
 #### 🔗 Dependency Updates
@@ -668,7 +707,7 @@ https://github.com/Anselmoo/spectrafit/compare/v0.18.3...v0.19.0
 - build(deps): Bump art from 5.9 to 6.0 (#833) @dependabot
 - build(deps-dev): Bump blacken-docs from 1.13.0 to 1.14.0 (#832) @dependabot
 - build(deps-dev): Bump pytest from 7.3.1 to 7.3.2 (#826) @dependabot
-- build(deps-dev): Bump mkdocs-table-reader-plugin from 2.0 to 2.0.1 (#825)
+- build(deps-dev): Bump mkdocs-table-reader-plugin from 2.0 to 2.0.1 (#825)   
   @dependabot
 - build(deps): Bump itables from 1.5.2 to 1.5.3 (#827) @dependabot
 - build(deps): Bump jupyterlab from 4.0.1 to 4.0.2 (#823) @dependabot
@@ -733,7 +772,7 @@ https://github.com/Anselmoo/spectrafit/compare/v0.18.1...v0.18.2
 #### 🔗 Dependency Updates
 
 - chore: :bookmark: Update to `0.18.1` (#814) @Anselmoo
-- build(deps-dev): Bump pytest-console-scripts from 1.4.0 to 1.4.1 (#813)
+- build(deps-dev): Bump pytest-console-scripts from 1.4.0 to 1.4.1 (#813)   
   @dependabot
 - build(deps-dev): Bump dash from 2.9.3 to 2.10.2 (#812) @dependabot
 - build(deps): Bump flask from 2.2.3 to 2.2.5 (#809) @dependabot
@@ -787,12 +826,12 @@ https://github.com/Anselmoo/spectrafit/compare/v0.18.0...v0.18.1
 - build(deps-dev): Bump mkdocs-material from 9.1.14 to 9.1.15 (#807) @dependabot
 - build(deps): Bump pandas from 2.0.1 to 2.0.2 (#808) @dependabot
 - build(deps-dev): Bump mkdocstrings from 0.21.2 to 0.22.0 (#805) @dependabot
-- build(deps-dev): Bump types-pyyaml from 6.0.12.9 to 6.0.12.10 (#799)
+- build(deps-dev): Bump types-pyyaml from 6.0.12.9 to 6.0.12.10 (#799)   
   @dependabot
 - build(deps-dev): Bump pytest-cov from 3.0.0 to 4.1.0 (#802) @dependabot
 - build(deps): Bump pydantic from 1.10.7 to 1.10.8 (#801) @dependabot
 - build(deps): Bump requests from 2.30.0 to 2.31.0 (#800) @dependabot
-- build(deps-dev): Bump pytest-console-scripts from 1.3.1 to 1.4.0 (#798)
+- build(deps-dev): Bump pytest-console-scripts from 1.3.1 to 1.4.0 (#798)   
   @dependabot
 - build(deps-dev): Bump pytest-xdist from 3.3.0 to 3.3.1 (#796) @dependabot
 - build(deps-dev): Bump mkdocs-material from 9.1.13 to 9.1.14 (#797) @dependabot
@@ -803,7 +842,7 @@ https://github.com/Anselmoo/spectrafit/compare/v0.18.0...v0.18.1
 - build(deps-dev): Bump pytest-xdist from 3.2.1 to 3.3.0 (#787) @dependabot
 - build(deps-dev): Bump mkdocs-material from 9.1.11 to 9.1.12 (#788) @dependabot
 - docs: 🔧 Add more functionality to docs (#785) @Anselmoo
-- build(deps-dev): ⬆️ Bump mkdocs-material from 9.1.9 to 9.1.11 (#782)
+- build(deps-dev): ⬆️ Bump mkdocs-material from 9.1.9 to 9.1.11 (#782)   
   @dependabot
 
 #### 🔬 Testing & Coverage
@@ -860,7 +899,7 @@ https://github.com/Anselmoo/spectrafit/compare/v0.17.1...v0.17.2
 
 - feat: :wrench: Increase the image resolution (#776) @Anselmoo
 - fix: :bug: Allow using solver settings in notebook module (#774) @Anselmoo
-- ci: :construction_worker: Update the `release drafter` and `labeler` (#772)
+- ci: :construction_worker: Update the `release drafter` and `labeler` (#772)   
   @Anselmoo
 - [pre-commit.ci] pre-commit autoupdate (#761) @pre-commit-ci
 
@@ -868,18 +907,18 @@ https://github.com/Anselmoo/spectrafit/compare/v0.17.1...v0.17.2
 
 - feat: :wrench: Increase the image resolution (#776) @Anselmoo
 - fix: :bug: Allow using solver settings in notebook module (#774) @Anselmoo
-- ci: :construction_worker: Update the `release drafter` and `labeler` (#772)
+- ci: :construction_worker: Update the `release drafter` and `labeler` (#772)   
   @Anselmoo
 - fix: :pencil2: Change from`projectNames` to `projectName` (#770) @Anselmoo
 
 #### :octocat: Github Actions
 
-- build(deps): Bump pypa/gh-action-pypi-publish from 1.8.5 to 1.8.6 (#764)
+- build(deps): Bump pypa/gh-action-pypi-publish from 1.8.5 to 1.8.6 (#764)   
   @dependabot
 
 #### 🔗 Dependency Updates
 
-- ci: :construction_worker: Update the `release drafter` and `labeler` (#772)
+- ci: :construction_worker: Update the `release drafter` and `labeler` (#772)   
   @Anselmoo
 - build(deps-dev): Bump pre-commit from 3.3.0 to 3.3.1 (#765) @dependabot
 - build(deps-dev): Bump mkdocs-material from 9.1.8 to 9.1.9 (#766) @dependabot
@@ -890,7 +929,7 @@ https://github.com/Anselmoo/spectrafit/compare/v0.17.1...v0.17.2
 #### 🔬 Testing & Coverage
 
 - fix: :bug: Allow using solver settings in notebook module (#774) @Anselmoo
-- ci: :construction_worker: Update the `release drafter` and `labeler` (#772)
+- ci: :construction_worker: Update the `release drafter` and `labeler` (#772)   
   @Anselmoo
 
 #### 📝 Changelog
@@ -932,11 +971,11 @@ https://github.com/Anselmoo/spectrafit/compare/v0.17.0...v0.17.1
 #### :octocat: Github Actions
 
 - feat: ⚡ Improve meta-data handling in report (#759) @Anselmoo
-- build(deps): Bump docker/metadata-action from 4.3.0 to 4.4.0 (#749)
+- build(deps): Bump docker/metadata-action from 4.3.0 to 4.4.0 (#749)   
   @dependabot
-- build(deps): Bump pypa/gh-action-pypi-publish from 1.8.4 to 1.8.5 (#734)
+- build(deps): Bump pypa/gh-action-pypi-publish from 1.8.4 to 1.8.5 (#734)   
   @dependabot
-- build(deps): Bump pypa/gh-action-pypi-publish from 1.8.3 to 1.8.4 (#732)
+- build(deps): Bump pypa/gh-action-pypi-publish from 1.8.3 to 1.8.4 (#732)   
   @dependabot
 
 #### 🗂 Documentation
@@ -965,10 +1004,10 @@ https://github.com/Anselmoo/spectrafit/compare/v0.17.0...v0.17.1
 - build(deps-dev): ⬆️ Bump black from 23.1.0 to 23.3.0 (#725) @dependabot
 - build(deps): Bump ipywidgets from 8.0.5 to 8.0.6 (#727) @dependabot
 - build(deps-dev): Bump dash from 2.9.1 to 2.9.2 (#729) @dependabot
-- build(deps-dev): Bump types-tabulate from 0.9.0.1 to 0.9.0.2 (#724)
+- build(deps-dev): Bump types-tabulate from 0.9.0.1 to 0.9.0.2 (#724)   
   @dependabot
 - build(deps-dev): Bump types-toml from 0.10.8.5 to 0.10.8.6 (#726) @dependabot
-- build(deps-dev): Bump types-pyyaml from 6.0.12.8 to 6.0.12.9 (#723)
+- build(deps-dev): Bump types-pyyaml from 6.0.12.8 to 6.0.12.9 (#723)   
   @dependabot
 - build(deps-dev): Bump types-mock from 5.0.0.5 to 5.0.0.6 (#722) @dependabot
 - build(deps): Bump itables from 1.5.1 to 1.5.2 (#721) @dependabot
@@ -1006,7 +1045,7 @@ https://github.com/Anselmoo/spectrafit/compare/v0.16.7...v0.17.0
 #### :octocat: Github Actions
 
 - feat: :zap: Add support for `3.11` (#715) @Anselmoo
-- build(deps): Bump pypa/gh-action-pypi-publish from 1.8.1 to 1.8.3 (#710)
+- build(deps): Bump pypa/gh-action-pypi-publish from 1.8.1 to 1.8.3 (#710)   
   @dependabot
 
 #### 🔗 Dependency Updates
@@ -1030,7 +1069,7 @@ https://github.com/Anselmoo/spectrafit/compare/v0.16.6...v0.16.7
 #### 🧰 Maintenance
 
 - fix: :bug: Support of `bool` and `{}` for confidence (#705) @Anselmoo
-- fix: :construction_worker: Change from `release_name` to `release_tag` (#701)
+- fix: :construction_worker: Change from `release_name` to `release_tag` (#701)   
   @Anselmoo
 - fix: :green_heart: Fix changelogger (#699) @Anselmoo
 - build: :bookmark: Start with beta release (#697) @Anselmoo
@@ -1045,13 +1084,13 @@ https://github.com/Anselmoo/spectrafit/compare/v0.16.6...v0.16.7
 #### :octocat: Github Actions
 
 - build(deps): Bump ipywidgets from 8.0.4 to 8.0.5 (#707) @dependabot
-- fix: :construction_worker: Change from `release_name` to `release_tag` (#701)
+- fix: :construction_worker: Change from `release_name` to `release_tag` (#701)   
   @Anselmoo
 - fix: :green_heart: Fix changelogger (#699) @Anselmoo
 - feat: :construction_worker: Add latest `mkdocs-jupyter` (#666) @Anselmoo
 - build(deps): Bump actions/checkout from 2 to 3 (#691) @dependabot
 - ci: 📖 Update update-changelog.yaml (#689) @Anselmoo
-- build(deps): Bump pypa/gh-action-pypi-publish from 1.7.1 to 1.8.1 (#690)
+- build(deps): Bump pypa/gh-action-pypi-publish from 1.7.1 to 1.8.1 (#690)   
   @dependabot
 - fix: :bug: Update settings for creating branch (#688) @Anselmoo
 - fix: :green_heart: Build of `auto-changelog` (#686) @Anselmoo
@@ -1065,7 +1104,7 @@ https://github.com/Anselmoo/spectrafit/compare/v0.16.6...v0.16.7
 - ci: ⏮️ removed `--force` (#672) @Anselmoo
 - ci: 🔒 update-changelog.yaml (#671) @Anselmoo
 - fix: :memo: Update deploy name (#667) @Anselmoo
-- build(deps): Bump pypa/gh-action-pypi-publish from 1.6.4 to 1.7.1 (#668)
+- build(deps): Bump pypa/gh-action-pypi-publish from 1.6.4 to 1.7.1 (#668)   
   @dependabot
 
 #### 🗂 Documentation
