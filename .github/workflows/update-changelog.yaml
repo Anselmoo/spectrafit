@@ -49,7 +49,6 @@ jobs:
       - name: Create Pull Request
         uses: actions/checkout@v4
         with:
-
           ref: release/${{ github.event.release.tag_name }}
           fetch-depth: 0
       - name: Create PR via gh
@@ -114,4 +113,4 @@ jobs:
       - name: Deploy documentation develops
         run: |
           poetry run mike deploy --push --rebase --update-aliases ${{ github.event.release.tag_name }} latest --message "Release ${{ github.event.release.tag_name }}"
-          poetry run mike set-default --push --rebase lates
+          poetry run mike set-default --push --rebase latest
