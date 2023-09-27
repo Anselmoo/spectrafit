@@ -108,7 +108,7 @@ jobs:
           previous_version=$(echo $previous_tag | cut -d '.' -f 1,2)
           current_version=$(echo $current_tag | cut -d '.' -f 1,2)
           if [[ "$previous_version" == "$current_version" ]]; then
-            poetry run mike delete ${{ steps.previous_release.outputs.previous_tag }}
+            poetry run mike delete ${{ steps.previous_release.outputs.previous_tag }} --push
           fi
       - name: Deploy documentation develops
         run: |
