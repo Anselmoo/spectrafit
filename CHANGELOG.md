@@ -2,6 +2,44 @@
 
 All notable changes to this project will be documented in this file.
 
+## v0.22.8 🌈 - 2023-09-27
+
+### :compass: What's Changed
+
+#### :toolbox: Maintenance
+
+- fix: :construction_worker: Update `ci` workflow for auto-release (#1033)
+  @Anselmoo
+
+#### :snake: Python
+
+- fix: :construction_worker: Update `ci` workflow for auto-release (#1033)
+  @Anselmoo
+
+#### :octocat: Github Actions
+
+- fix: :construction_worker: Update `ci` workflow for auto-release (#1033)
+  @Anselmoo
+
+#### :link: Dependency Updates
+
+- fix: :construction_worker: Update `ci` workflow for auto-release (#1033)
+  @Anselmoo
+
+#### :memo: Changelog
+
+- docs: :card_index_dividers: Update CHANGELOG for release/v0.22.7 (#1032)
+  @Anselmoo
+
+### :package: Full Changelog
+
+**Full Changelog**:
+https://github.com/Anselmoo/spectrafit/compare/v0.22.7...v0.22.8
+
+### :gear: Who Contributes
+
+@Anselmoo
+
 ## v0.22.7 🌈 - 2023-09-27
 
 ### :compass: What's Changed
