@@ -39,7 +39,12 @@ include = [
   { path = "examples/", format = "sdist" },
   { path = "spectrafit/plugins/img/SpectraFit.png", format = "sdist" },
 ]
-exclude = ["docs/", "tools/"]
+exclude = [
+  "docs/",
+  "tools/",
+  "spectrafit/test/",
+  "spectrafit/**/test/",
+]
 
 
 [tool.poetry.dependencies]
