@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "SpectraFit"
-version = "0.22.8"
+version = "0.22.9"
 description = "Fast fitting of 2D- and 3D-Spectra with established routines"
 readme = "README.md"
 authors = ["Anselm Hahn <anselm.hahn@gmail.com>"]
@@ -35,7 +35,7 @@ classifiers = [
   "Topic :: Scientific/Engineering :: Information Analysis",
 ]
 include = [
-  { path = "spectrafit/test/", format = "sdist" },
+  # { path = "spectrafit/test/", format = "sdist" },
   { path = "examples/", format = "sdist" },
   { path = "spectrafit/plugins/img/SpectraFit.png", format = "sdist" },
 ]

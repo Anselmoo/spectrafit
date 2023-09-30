@@ -52,7 +52,7 @@ class PlotSpectra:
             row of the grid plot contains the residuals of each single fit, the
             second row the best fit of the model with single peak contributions.
         """
-        n_spec = len(list(self.args["data_statistic"])) - 1 if self.args else 1
+        n_spec: int = len(list(self.args["data_statistic"])) - 1 if self.args else 1
         _, axs = plt.subplots(
             nrows=2,
             ncols=n_spec,
