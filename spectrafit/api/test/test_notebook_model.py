@@ -1,5 +1,7 @@
 """Test of the notebook model."""
 
+from math import isclose
+
 from _plotly_utils.colors.qualitative import Plotly as PlotlyColors
 from spectrafit.api.notebook_model import ColorAPI
 from spectrafit.api.notebook_model import FnameAPI
@@ -63,8 +65,8 @@ def test_legend_model() -> None:
     """Test the Legend model."""
     legend = LegendAPI()
     assert legend.orientation == "h"
-    assert legend.x == 1
-    assert legend.y == 1.02
+    assert isclose(legend.x, 1)
+    assert isclose(legend.y, 1.02)
     assert legend.xanchor == "right"
     assert legend.yanchor == "bottom"
 
