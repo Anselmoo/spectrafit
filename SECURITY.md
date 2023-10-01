@@ -1,45 +1,46 @@
 # Security Policy
 
+This document describes the security policy for [SpectraFit][1].
+
 ## Supported Versions
 
-Use this section to tell people about which versions of your project are
-currently being supported with security updates.
+Our current policy is to support the latest version of [SpectraFit][2] and the
+last two minor releases.
 
-| Version |     Supported      |
-| :------ | :----------------: |
-| 0.22.x  | :white_check_mark: |
-| 0.21.x  |        :x:         |
-| 0.20.x  |        :x:         |
-| 0.19.x  |        :x:         |
-| 0.18.x  |        :x:         |
-| 0.17.x  |        :x:         |
-| 0.16.x  |        :x:         |
-| 0.14.x  |        :x:         |
-| 0.13.x  |        :x:         |
-| 0.12.x  |        :x:         |
-| 0.11.x  |        :x:         |
-| 0.10.x  |        :x:         |
-| 0.9.x   |        :x:         |
-| 0.8.x   |        :x:         |
-| 0.7.x   |        :x:         |
-| 0.6.x   |        :x:         |
-| 0.5.x   |        :x:         |
-| 0.4.x   |        :x:         |
-| 0.3.x   |        :x:         |
-| 0.1.x   |        :x:         |
+## Security Checks
 
-> Security is currently performed via [GitHub's CodeQL][1]. See also the
-> [workflows][2]
+Currently, the following security checks are implemented in the CI pipelines or
+as third-party services:
+
+| Tool                     | Checks                                                                        |       Implemented as        |
+| :----------------------- | :---------------------------------------------------------------------------- | :-------------------------: |
+| [GitHub's CodeQL][3]     | Used to check for potential vulnerabilities in the code.                      |     :hammer_and_wrench:     |
+| [Synk][4]                | Used to check for known vulnerabilities in the dependencies.                  |           :robot:           |
+| [SonarCloud][5]          | Used to find code quality issues and potential vulnerabilities.               |           :robot:           |
+| [GitHub's Dependabot][6] | Used to check for outdated dependencies.                                      |           :robot:           |
+| [Pre-commit][7]          | Used to check for code quality and formatting issues.                         | :hammer_and_wrench: :robot: |
+| [Codecov][8]             | Used to check for coverage rate to ensure that the code is completely tested. | :hammer_and_wrench: :robot: |
+
+Additionally, branch protection rules are used to ensure that the code is
+reviewed before it is merged into the main branch.
 
 ## Reporting a Vulnerability
 
-Use this section to tell people how to report a vulnerability.
+If you find a vulnerability, please report it by opening an issue [here][9].
+Please use the `vulnerability` template and provide as much information as
+possible.
 
-Tell them where to go, how often they can expect to get an update on a reported
-vulnerability, what to expect if the vulnerability is accepted or declined,
-etc.; see also [GitHub Advisory Database][3].
+> Current Python vulnerabilities can be found at the [:link:GitHub's Advisory
+> Database][10]. See also: [:link:GitHub's Security Lab][11].
 
-[1]: https://securitylab.github.com/tools/codeql/
-[2]:
-  https://github.com/Anselmoo/spectrafit/blob/main/.github/workflows/codeql-analysis.yml
-[3]: https://github.com/advisories?query=type%3Areviewed+ecosystem%3Apip
+[1]: https://github.com/Anselmoo/spectrafit/
+[2]: https://github.com/Anselmoo/spectrafit/releases
+[3]: https://securitylab.github.com/tools/codeql/
+[4]: https://synk.io/
+[5]: https://sonarcloud.io/
+[6]: https://github.com/dependabot
+[7]: https://pre-commit.com/
+[8]: https://codecov.io/
+[9]: https://github.com/Anselmoo/spectrafit/issues/new/choose
+[10]: https://github.com/advisories?query=type%3Areviewed+ecosystem%3Apip
+[11]: https://securitylab.github.com/
