@@ -1,4 +1,5 @@
 """Test the pptx_model module."""
+from math import isclose
 from typing import Tuple
 from typing import Type
 from typing import Union
@@ -62,10 +63,10 @@ def test_goodness_of_fit() -> None:
         akaike_information=2.0,
         bayesian_information=3.0,
     )
-    assert goodness_of_fit.chi2 == 1.0
-    assert goodness_of_fit.r_chi2 == 0.5
-    assert goodness_of_fit.akaike == 2.0
-    assert goodness_of_fit.bayesian == 3.0
+    assert isclose(goodness_of_fit.chi2, 1.0)
+    assert isclose(goodness_of_fit.r_chi2, 0.5)
+    assert isclose(goodness_of_fit.akaike, 2.0)
+    assert isclose(goodness_of_fit.bayesian, 3.0)
 
 
 def test_regression_metrics() -> None:

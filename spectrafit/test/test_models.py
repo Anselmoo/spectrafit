@@ -1,6 +1,6 @@
 """Pytest of the model-module."""
-import math
 
+from math import isclose
 from math import log
 from math import pi
 from math import sqrt
@@ -35,31 +35,33 @@ class TestConstants:
 
     def test_ln2(self) -> None:
         """Test the Constants class."""
-        assert Constants.ln2 == log(2.0)
+        assert isclose(Constants.ln2, log(2.0), rel_tol=1e-5)
 
     def test_sq2pi(self) -> None:
         """Test the Constants class."""
-        assert Constants.sq2pi == sqrt(2.0 * pi)
+        assert isclose(Constants.sq2pi, sqrt(2.0 * pi), rel_tol=1e-5)
 
     def test_sqpi(self) -> None:
         """Test the Constants class."""
-        assert Constants.sqpi == sqrt(pi)
+        assert isclose(Constants.sqpi, sqrt(pi), rel_tol=1e-5)
 
     def test_sq2(self) -> None:
         """Test the Constants class."""
-        assert Constants.sq2 == sqrt(2.0)
+        assert isclose(Constants.sq2, sqrt(2.0), rel_tol=1e-5)
 
     def test_fwhmg2sig(self) -> None:
         """Test the Constants class."""
-        assert Constants.fwhmg2sig == 1 / (2.0 * sqrt(2.0 * log(2.0)))
+        assert isclose(
+            Constants.fwhmg2sig, 1 / (2.0 * sqrt(2.0 * log(2.0))), rel_tol=1e-5
+        )
 
     def test_fwhml2sig(self) -> None:
         """Test the Constants class."""
-        assert Constants.fwhml2sig == 1 / 2.0
+        assert isclose(Constants.fwhml2sig, 1 / 2.0, rel_tol=1e-5)
 
     def test_fwhmv2sig(self) -> None:
         """Test the Constants class."""
-        assert math.isclose(Constants.fwhmv2sig, 1 / 3.60131, rel_tol=1e-5)
+        assert isclose(Constants.fwhmv2sig, 1 / 3.60131, rel_tol=1e-5)
 
 
 class TestNotSupported:
@@ -686,7 +688,7 @@ class TestAutoPeakDetection:
 
         auto = AutoPeakDetection(x=x, data=data, args=args)
         _val = auto.estimated_rel_height
-        assert _val == 0.0
+        assert isclose(_val, 0.0)
 
     def test_rel_heigh_2(self) -> None:
         """Test if the relative height is calculated correctly."""
@@ -705,8 +707,9 @@ class TestAutoPeakDetection:
         data = np.arange(10, dtype=np.float64)
 
         auto = AutoPeakDetection(x=x, data=data, args=args)
-        _val = auto.estimated_plateau_size
-        assert _val == (0.0, 9.0)
+        _val: Tuple[float, float] = auto.estimated_plateau_size
+        assert isclose(_val[0], 0.0)
+        assert isclose(_val[1], 9.0)
 
     def test_distance(self) -> None:
         """Test if the distance is calculated correctly."""
@@ -716,7 +719,7 @@ class TestAutoPeakDetection:
 
         auto = AutoPeakDetection(x=x, data=data, args=args)
         _val = auto.estimate_distance
-        assert _val != 1.0
+        assert not isclose(_val, 1.0)
 
     def test_autopeakdetection_mean(self) -> None:
         """Test of auto default detection with negative values."""
@@ -779,7 +782,7 @@ class TestAutoPeakDetection:
         )
         val = ad.estimated_wlen
 
-        assert val == 1 + 1e-9
+        assert isclose(val, 1 + 1e-9, abs_tol=1e-9)
 
     def test_raise_autopeaks(self) -> None:
         """Test raise of AutoPeakDetection."""

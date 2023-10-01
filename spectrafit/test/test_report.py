@@ -1,4 +1,5 @@
 """Pytest of report model."""
+from math import isclose
 from typing import Any
 from typing import Dict
 from typing import Union
@@ -138,9 +139,9 @@ def test_get_init_value(
     par_fixed: Parameter,
 ) -> None:
     """Test of the get init value."""
-    assert get_init_value(par_init) == 1.0
+    assert isclose(float(get_init_value(par_init)), 1.0)
     assert get_init_value(par_expr) == f"As expressed value: {par_expr.expr}"
-    assert get_init_value(**par_model) == 2.0
+    assert isclose(float(get_init_value(**par_model)), 2.0)
     assert get_init_value(par_fixed) == f"As fixed value: {par_fixed.min}"
 
 
