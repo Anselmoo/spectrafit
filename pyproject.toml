@@ -107,7 +107,7 @@ prospector = { extras = [
   "pylint",
 ], version = "^1.10.2" }
 bump-pydantic = "^0.7"
-types-setuptools = "^68.0.0.3"
+types-setuptools = ">=68.0.0.3,<70.0.0.0"
 
 [tool.poetry.group.docs.dependencies]
 mkdocs-material = "^9.4.0"
