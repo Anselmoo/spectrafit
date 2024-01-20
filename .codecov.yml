@@ -6,3 +6,6 @@ coverage:
     patch:
       default:
         target: 100%
+comment:
+  layout: "diff,flags,tree,betaprofiling"
+  show_critical_paths: true
