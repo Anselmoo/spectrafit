@@ -80,7 +80,7 @@ class SolverModelsAPI(BaseModel):
         description="Minimizer options",
     )
     optimizer: Dict[str, Any] = Field(
-        default={"max_nfev": 1000, "method": "leastsq"},
+        default={"max_nfev": None, "method": "leastsq"},
         description="Optimzer options",
     )
 
