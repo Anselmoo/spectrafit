@@ -62,24 +62,24 @@ class PlotSpectra:
         )
 
         for i in range(n_spec):
-            axs[0, i].set_title(f"Spectrum #{i+1}")
+            axs[0, i].set_title(f"Spectrum #{i + 1}")
             sns.regplot(
                 x=ColumnNamesAPI().energy,
-                y=f"{ColumnNamesAPI().residual}_{i+1}",
+                y=f"{ColumnNamesAPI().residual}_{i + 1}",
                 data=self.df,
                 ax=axs[0, i],
                 color=color[5],
             )
             axs[1, i] = sns.lineplot(
                 x=ColumnNamesAPI().energy,
-                y=f"{ColumnNamesAPI().intensity}_{i+1}",
+                y=f"{ColumnNamesAPI().intensity}_{i + 1}",
                 data=self.df,
                 ax=axs[1, i],
                 color=color[1],
             )
             axs[1, i] = sns.lineplot(
                 x=ColumnNamesAPI().energy,
-                y=f"fit_{i+1}",
+                y=f"fit_{i + 1}",
                 data=self.df,
                 ax=axs[1, i],
                 ls="--",
@@ -89,7 +89,7 @@ class PlotSpectra:
                 peak
                 for peak in self.df.columns
                 if not peak.startswith(tuple(ColumnNamesAPI().model_dump().values()))
-                and peak.endswith(f"_{i+1}")
+                and peak.endswith(f"_{i + 1}")
             ]
             color_peaks = sns.color_palette("rocket", len(peaks))
             for j, peak in enumerate(peaks):
