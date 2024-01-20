@@ -373,9 +373,9 @@ class PPTXLayoutAPI:
         self.tmp_fname = self.tmp_plot(pd.DataFrame(data.output.df_fit))
         self.title = data.input.description.project_name
         self.df_gof = pd.DataFrame({k: [v] for k, v in data.solver.goodness_of_fit})
-        self.df_regression = pd.DataFrame(**data.solver.regression_metrics.dict())
+        self.df_regression = pd.DataFrame(**data.solver.regression_metrics.model_dump())
         self.df_variables = pd.DataFrame.from_dict(
-            data.solver.variables, orient="index", columns=None
+            data.solver.variables, orient="index"
         )
 
     def tmp_plot(self, df_fit: pd.DataFrame) -> Path:
