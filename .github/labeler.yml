@@ -1,3 +1,5 @@
+codeowners:
+  - .github/CODEOWNERS
 codespaces:
   - .devcontainer/**
 dependencies:
