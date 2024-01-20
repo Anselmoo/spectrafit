@@ -203,6 +203,7 @@ def fit_report_as_dict(
         "errorbars": {},
         "correlations": {},
         "covariance_matrix": {},
+        "fit_insights": {},
     }
 
     result, buffer, params = _extracted_gof_from_results(
@@ -298,6 +299,14 @@ def _extracted_gof_from_results(
         buffer["statistics"]["akaike_information"] = result.aic
         buffer["statistics"]["bayesian_information"] = result.bic
 
+        buffer["fit_insights"]["success"] = result.success
+        buffer["fit_insights"]["message"] = result.message
+        buffer["fit_insights"]["errorbars"] = result.errorbars
+        buffer["fit_insights"]["max_nfev"] = result.max_nfev
+        buffer["fit_insights"]["nfev"] = result.nfev
+        buffer["fit_insights"]["scale_covar"] = result.scale_covar
+        buffer["fit_insights"]["calc_covar"] = result.calc_covar
+
         if not result.errorbars:
             warn(
                 "\n\n## WARNING ##\nUncertainties could "
@@ -317,6 +326,7 @@ def _extracted_gof_from_results(
                     buffer["errorbars"]["at_initial_value"] = name
                 if np.allclose(par.value, par.min) or np.allclose(par.value, par.max):
                     buffer["errorbars"]["at_boundary"] = name
+
     return result, buffer, params
 
 
