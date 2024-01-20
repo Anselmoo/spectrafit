@@ -9,6 +9,7 @@ from typing import List
 from typing import Optional
 from typing import Tuple
 from typing import Union
+from warnings import warn
 
 import numpy as np
 import pandas as pd
@@ -154,7 +155,10 @@ class RegressionMetrics:
                 try:
                     metric_dict[fnc.__name__].append(fnc(y_true, y_pred))
                 except ValueError as err:
-                    print(f"## Warning: {err} for {fnc.__name__}!")
+                    warn(
+                        f"\n\n## WARNING ##\n{err} for function: "
+                        f"{fnc.__name__}\n#############\n"
+                    )
                     metric_dict[fnc.__name__].append(np.nan)
         return pd.DataFrame(metric_dict).T.to_dict(orient="split")
 
@@ -173,6 +177,10 @@ def fit_report_as_dict(
             1. Fit Statistics
             2. Fit variables
             3. Fit correlations
+
+    !!! tip "About `Pydantic` for the report"
+
+        In a next release, the report will be generated as a `Pydantic` model.
 
     Args:
         inpars (minimize): Input Parameters from a fit or the  Minimizer results
@@ -291,11 +299,15 @@ def _extracted_gof_from_results(
         buffer["statistics"]["bayesian_information"] = result.bic
 
         if not result.errorbars:
-            print("##  Warning: uncertainties could not be estimated:")
+            warn(
+                "\n\n## WARNING ##\nUncertainties could "
+                "not be estimated\n#############\n"
+            )
             if result.method not in ("leastsq", "least_squares"):
-                print(
-                    f"The fitting method '{result.method}' does not natively calculate"
-                    " and uncertainties cannot be estimated due to be out of region!"
+                warn(
+                    f"\n\n## WARNING ##\nThe fitting method '{result.method}' does not "
+                    "natively calculate and uncertainties cannot be estimated due to "
+                    "be out of region!\n#############\n"
                 )
 
             parnames_varying = [par for par in result.params if result.params[par].vary]
