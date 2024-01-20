@@ -44,29 +44,24 @@ class DataPreProcessingAPI(BaseModel):
     )
     energy_start: Optional[float] = Field(
         default=None,
-        dtypes=float,
         description="Start energy of the spectra; default to None.",
     )
     energy_stop: Optional[float] = Field(
         default=None,
-        dtypes=float,
         description="Stop energy of the spectra; default to None.",
     )
     smooth: int = Field(
         default=0,
         ge=0,
-        dtypes=int,
         description="Smoothing level of the spectra; default to 0.",
     )
     shift: float = Field(
         default=0,
-        dtypes=float,
         description="Shift the energy axis; default to 0.",
     )
     column: List[Union[int, str]] = Field(
         min_length=1,
         default=[0, 1],
-        dtypes=[int, str],
         description="Column of the data.",
     )
 

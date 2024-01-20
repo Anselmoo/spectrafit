@@ -1455,12 +1455,12 @@ class ModelParameters(AutoPeakDetection):
         if col_i:
             if key_3 != "amplitude":
                 self.params.add(
-                    f"{key_2}_{key_3}_{key_1}_{col_i+1}",
+                    f"{key_2}_{key_3}_{key_1}_{col_i + 1}",
                     expr=f"{key_2}_{key_3}_{key_1}_1",
                 )
             else:
                 self.params.add(
-                    f"{key_2}_{key_3}_{key_1}_{col_i+1}",
+                    f"{key_2}_{key_3}_{key_1}_{col_i + 1}",
                     **value_3,
                 )
 
@@ -1532,7 +1532,12 @@ class SolverModels(ModelParameters):
                 **self.args_solver["minimizer"],
             )
 
-        return (minimizer, minimizer.minimize(**self.args_solver["optimizer"]))
+        return (
+            minimizer,
+            minimizer.minimize(
+                **self.args_solver["optimizer"],
+            ),
+        )
 
     @staticmethod
     def solve_local_fitting(

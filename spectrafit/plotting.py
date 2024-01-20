@@ -1,8 +1,17 @@
-"""Plotting of the fit results."""
+"""Plotting of the fit results.
+
+!!! info "About the Font Cache"
+
+    For avoiding problems with the font cache, the font cache is rebuilt at the
+    beginning of the program. This can take a few seconds. If you want to avoid
+    this, you can comment out the line `matplotlib.font_manager._rebuild()` in
+    the `plotting.py` file.
+"""
 from typing import Any
 from typing import Dict
 from typing import Optional
 
+import matplotlib.font_manager
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
@@ -10,6 +19,8 @@ import seaborn as sns
 from matplotlib.widgets import MultiCursor
 from spectrafit.api.tools_model import ColumnNamesAPI
 
+
+matplotlib.font_manager.findfont("serif", rebuild_if_missing=True)
 
 sns.set_theme(style="whitegrid")
 color = sns.color_palette("Paired")
@@ -62,24 +73,24 @@ class PlotSpectra:
         )
 
         for i in range(n_spec):
-            axs[0, i].set_title(f"Spectrum #{i+1}")
+            axs[0, i].set_title(f"Spectrum #{i + 1}")
             sns.regplot(
                 x=ColumnNamesAPI().energy,
-                y=f"{ColumnNamesAPI().residual}_{i+1}",
+                y=f"{ColumnNamesAPI().residual}_{i + 1}",
                 data=self.df,
                 ax=axs[0, i],
                 color=color[5],
             )
             axs[1, i] = sns.lineplot(
                 x=ColumnNamesAPI().energy,
-                y=f"{ColumnNamesAPI().intensity}_{i+1}",
+                y=f"{ColumnNamesAPI().intensity}_{i + 1}",
                 data=self.df,
                 ax=axs[1, i],
                 color=color[1],
             )
             axs[1, i] = sns.lineplot(
                 x=ColumnNamesAPI().energy,
-                y=f"fit_{i+1}",
+                y=f"fit_{i + 1}",
                 data=self.df,
                 ax=axs[1, i],
                 ls="--",
@@ -89,7 +100,7 @@ class PlotSpectra:
                 peak
                 for peak in self.df.columns
                 if not peak.startswith(tuple(ColumnNamesAPI().model_dump().values()))
-                and peak.endswith(f"_{i+1}")
+                and peak.endswith(f"_{i + 1}")
             ]
             color_peaks = sns.color_palette("rocket", len(peaks))
             for j, peak in enumerate(peaks):
