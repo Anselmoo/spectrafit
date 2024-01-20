@@ -1,8 +1,17 @@
-"""Plotting of the fit results."""
+"""Plotting of the fit results.
+
+!!! info "About the Font Cache"
+
+    For avoiding problems with the font cache, the font cache is rebuilt at the
+    beginning of the program. This can take a few seconds. If you want to avoid
+    this, you can comment out the line `matplotlib.font_manager._rebuild()` in
+    the `plotting.py` file.
+"""
 from typing import Any
 from typing import Dict
 from typing import Optional
 
+import matplotlib.font_manager
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
@@ -10,6 +19,8 @@ import seaborn as sns
 from matplotlib.widgets import MultiCursor
 from spectrafit.api.tools_model import ColumnNamesAPI
 
+
+matplotlib.font_manager.findfont("serif", rebuild_if_missing=True)
 
 sns.set_theme(style="whitegrid")
 color = sns.color_palette("Paired")
