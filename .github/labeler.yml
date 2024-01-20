@@ -28,7 +28,7 @@ docker:
   - .dockerignore
   - .devcontainer/Dockerfile
 release:
-  - "spectrafit/__init__.py"
+  - spectrafit/__init__.py
 vendor:
   - vendor/**
 maintenance:
