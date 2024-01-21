@@ -369,8 +369,8 @@ class DataFramePlot:
         fig.update_layout(
             title=args_plot.title,
             legend_title=args_plot.legend_title,
-            legend=args_plot.legend.dict(),
-            font=args_plot.font.dict(),
+            legend=args_plot.legend.model_dump(),
+            font=args_plot.font.model_dump(),
             showlegend=args_plot.show_legend,
             width=args_plot.size[0],
             height=height,
@@ -939,7 +939,9 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
     @property
     def pre_process(self) -> None:
         """Pre-processing class."""
-        self.df, _pre_statistic = PreProcessing(df=self.df, args=self.args_pre.dict())()
+        self.df, _pre_statistic = PreProcessing(
+            df=self.df, args=self.args_pre.model_dump()
+        )()
         self.pre_statistic = _pre_statistic["data_statistic"]
         self.df_pre = self.df.copy()
 
