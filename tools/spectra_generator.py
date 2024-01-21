@@ -22,13 +22,13 @@ def double_peak(fname: str) -> None:
             "energy": x,
             "y_1": stats.norm.pdf(x, 1, sigma) + 0.75 * stats.norm.pdf(x, 5, sigma),
             "y_2": stats.norm.pdf(x, 1, sigma)
-            + np.random.rand(100) / 10.0
+            + np.random.default_rng(11).normal(size=100) / 10.0
             + 0.75 * stats.norm.pdf(x, 5, sigma)
-            + np.random.rand(100) / 10.0,
+            + np.random.default_rng(22).normal(size=100) / 10.0,
             "y_3": stats.norm.pdf(x, 1, sigma)
-            + np.random.rand(100) / 100.0
+            + np.random.default_rng(33).normal(size=100) / 100.0
             + 0.75 * stats.norm.pdf(x, 5, sigma)
-            + np.random.rand(100) / 100.0,
+            + np.random.default_rng(44).normal(size=100) / 100.0,
         }
     ).to_csv(Path(fname), index=False)
 

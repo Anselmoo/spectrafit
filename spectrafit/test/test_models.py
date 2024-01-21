@@ -30,6 +30,20 @@ def assert_solver_models(mp: Tuple[Minimizer, Any]) -> None:
     assert isinstance(mp, tuple)
 
 
+@pytest.fixture
+def random_df() -> pd.DataFrame:
+    """Fixture for random dataframe."""
+    return pd.DataFrame(
+        {
+            "Energy": np.arange(100).astype(np.float64),
+            "Intensity_1": np.random.default_rng(101).random(100),
+            "Intensity_2": np.random.default_rng(102).random(100),
+            "Intensity_3": np.random.default_rng(103).random(100),
+            "Intensity_4": np.random.default_rng(104).random(100),
+        }
+    )
+
+
 class TestConstants:
     """Test constants."""
 
@@ -250,16 +264,16 @@ class TestModelParametersSolver:
     df = pd.DataFrame(
         {
             "Energy": np.arange(10).astype(np.float64),
-            "Intensity": np.random.rand(10),
+            "Intensity": np.random.default_rng(10).random(10),
         }
     )
     df_global = pd.DataFrame(
         {
             "Energy": np.arange(10).astype(np.float64),
-            "Intensity_1": np.random.rand(10),
-            "Intensity_2": np.random.rand(10),
-            "Intensity_3": np.random.rand(10),
-            "Intensity_4": np.random.rand(10),
+            "Intensity_1": np.random.default_rng(1).random(10),
+            "Intensity_2": np.random.default_rng(2).random(10),
+            "Intensity_3": np.random.default_rng(3).random(10),
+            "Intensity_4": np.random.default_rng(4).random(10),
         }
     )
 
@@ -584,17 +598,11 @@ class TestModelParametersSolver:
             },
         }
 
-    def test_all_model_local(self, args_setting: Dict[str, Any]) -> None:
+    def test_all_model_local(
+        self, random_df: pd.DataFrame, args_setting: Dict[str, Any]
+    ) -> None:
         """Test of the AllModel class for local fitting."""
-        df = pd.DataFrame(
-            {
-                "Energy": np.arange(100).astype(np.float64),
-                "Intensity_1": np.random.rand(100),
-                "Intensity_2": np.random.rand(100),
-                "Intensity_3": np.random.rand(100),
-                "Intensity_4": np.random.rand(100),
-            }
-        )
+        df = random_df
         args = {
             "autopeak": False,
             "global_": 0,
@@ -604,17 +612,11 @@ class TestModelParametersSolver:
         mp = SolverModels(df=df, args=args)()
         assert_solver_models(mp)
 
-    def test_all_model_global(self, args_setting: Dict[str, Any]) -> None:
+    def test_all_model_global(
+        self, random_df: pd.DataFrame, args_setting: Dict[str, Any]
+    ) -> None:
         """Test of the AllModel class for global fitting."""
-        df = pd.DataFrame(
-            {
-                "Energy": np.arange(100).astype(np.float64),
-                "Intensity_1": np.random.rand(100),
-                "Intensity_2": np.random.rand(100),
-                "Intensity_3": np.random.rand(100),
-                "Intensity_4": np.random.rand(100),
-            }
-        )
+        df = random_df
         args = {
             "autopeak": False,
             "global_": 1,
@@ -625,17 +627,9 @@ class TestModelParametersSolver:
         mp = SolverModels(df=df, args=args)()
         assert_solver_models(mp)
 
-    def test_all_model_global_fail(self) -> None:
+    def test_all_model_global_fail(self, random_df: pd.DataFrame) -> None:
         """Test of the AllModel class for global fitting."""
-        df = pd.DataFrame(
-            {
-                "Energy": np.arange(100).astype(np.float64),
-                "Intensity_1": np.random.rand(100),
-                "Intensity_2": np.random.rand(100),
-                "Intensity_3": np.random.rand(100),
-                "Intensity_4": np.random.rand(100),
-            }
-        )
+        df = random_df
         args = {
             "autopeak": True,
             "global_": 1,
