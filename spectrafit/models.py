@@ -753,7 +753,7 @@ class ReferenceKeys:
             model (str): Model name.
 
         Raises:
-            KeyError: If the model is not supported.
+            NotImplementedError: If the model is not implemented.
         """
         if model.split("_")[0] not in self.__models__:
             raise NotImplementedError(f"{model} is not supported!")
@@ -1532,12 +1532,11 @@ class SolverModels(ModelParameters):
                 **self.args_solver["minimizer"],
             )
 
-        return (
-            minimizer,
-            minimizer.minimize(
-                **self.args_solver["optimizer"],
-            ),
+        result = minimizer.minimize(
+            **self.args_solver["optimizer"],
         )
+        self.args_solver["optimizer"]["max_nfev"] = minimizer.max_nfev
+        return minimizer, result
 
     @staticmethod
     def solve_local_fitting(

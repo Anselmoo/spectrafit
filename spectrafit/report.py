@@ -156,15 +156,17 @@ class RegressionMetrics:
                     metric_dict[fnc.__name__].append(fnc(y_true, y_pred))
                 except ValueError as err:
                     warn(
-                        f"\n\n## WARNING ##\n{err} for function: "
-                        f"{fnc.__name__}\n#############\n"
+                        warn_meassage(
+                            msg=f"Regression metric '{fnc.__name__}' could not  "
+                            f"be calculated due to: {err}"
+                        )
                     )
                     metric_dict[fnc.__name__].append(np.nan)
         return pd.DataFrame(metric_dict).T.to_dict(orient="split")
 
 
 def fit_report_as_dict(
-    inpars: minimize, modelpars: Optional[Dict[str, Any]] = None
+    inpars: minimize, settings: Minimizer, modelpars: Optional[Dict[str, Any]] = None
 ) -> Dict[str, Dict[Any, Any]]:
     """Generate the best fit report as dictionary.
 
@@ -185,6 +187,9 @@ def fit_report_as_dict(
     Args:
         inpars (minimize): Input Parameters from a fit or the  Minimizer results
              returned from a fit.
+        settings (Minimizer): The lmfit `Minimizer`-class as a general minimizer
+                for curve fitting and optimization. It is required to extract the
+                initial settings of the fit.
         modelpars (Dict[str,  Any], optional): Known Model Parameters.
             Defaults to None.
 
@@ -203,11 +208,14 @@ def fit_report_as_dict(
         "errorbars": {},
         "correlations": {},
         "covariance_matrix": {},
-        "fit_insights": {},
+        "computional": {},
     }
 
     result, buffer, params = _extracted_gof_from_results(
         result=result, buffer=buffer, params=params
+    )
+    buffer = _extracted_computional_from_results(
+        result=result, settings=settings, buffer=buffer
     )
     for name in parnames:
         par = params[name]
@@ -271,6 +279,34 @@ def get_init_value(
     return f"As fixed value: {param.value}"
 
 
+def _extracted_computional_from_results(
+    result: minimize, settings: Minimizer, buffer: Dict[str, Any]
+) -> Dict[str, Any]:
+    """Extract the computional from the results.
+
+    Args:
+        result (minimize): Input Parameters from a fit or the  Minimizer results
+            returned from a fit.
+        settings (Minimizer): The lmfit `Minimizer`-class as a general minimizer
+                for curve fitting and optimization. It is required to extract the
+                initial settings of the fit.
+        buffer (Dict[str, Any]): The buffer to store the results.
+
+    Returns:
+        Dict[str, Any]: The buffer with updated results.
+    """
+    buffer["computional"]["success"] = result.success
+    buffer["computional"]["message"] = result.message
+    buffer["computional"]["errorbars"] = result.errorbars
+    buffer["computional"]["nfev"] = result.nfev
+
+    buffer["computional"]["max_nfev"] = settings.max_nfev
+    buffer["computional"]["scale_covar"] = settings.scale_covar
+    buffer["computional"]["calc_covar"] = settings.calc_covar
+
+    return buffer
+
+
 def _extracted_gof_from_results(
     result: minimize, buffer: Dict[str, Any], params: Parameters
 ) -> Tuple[minimize, Dict[str, Any], Parameters]:
@@ -299,24 +335,16 @@ def _extracted_gof_from_results(
         buffer["statistics"]["akaike_information"] = result.aic
         buffer["statistics"]["bayesian_information"] = result.bic
 
-        buffer["fit_insights"]["success"] = result.success
-        buffer["fit_insights"]["message"] = result.message
-        buffer["fit_insights"]["errorbars"] = result.errorbars
-        buffer["fit_insights"]["max_nfev"] = result.max_nfev
-        buffer["fit_insights"]["nfev"] = result.nfev
-        buffer["fit_insights"]["scale_covar"] = result.scale_covar
-        buffer["fit_insights"]["calc_covar"] = result.calc_covar
-
         if not result.errorbars:
-            warn(
-                "\n\n## WARNING ##\nUncertainties could "
-                "not be estimated\n#############\n"
-            )
+            warn(warn_meassage("Uncertainties could not be estimated"))
+
             if result.method not in ("leastsq", "least_squares"):
                 warn(
-                    f"\n\n## WARNING ##\nThe fitting method '{result.method}' does not "
-                    "natively calculate and uncertainties cannot be estimated due to "
-                    "be out of region!\n#############\n"
+                    warn_meassage(
+                        msg=f"The fitting method '{result.method}' does not "
+                        "natively calculate and uncertainties cannot be "
+                        "estimated due to be out of region!"
+                    )
                 )
 
             parnames_varying = [par for par in result.params if result.params[par].vary]
@@ -324,10 +352,36 @@ def _extracted_gof_from_results(
                 par = params[name]
                 if par.init_value and np.allclose(par.value, par.init_value):
                     buffer["errorbars"]["at_initial_value"] = name
+                    warn(
+                        warn_meassage(
+                            msg=f"The parameter '{name}' is at its initial "
+                            "value and uncertainties cannot be estimated!"
+                        )
+                    )
                 if np.allclose(par.value, par.min) or np.allclose(par.value, par.max):
                     buffer["errorbars"]["at_boundary"] = name
+                    warn(
+                        warn_meassage(
+                            msg=f"The parameter '{name}' is at its boundary "
+                            "and uncertainties cannot be estimated!"
+                        )
+                    )
 
     return result, buffer, params
+
+
+def warn_meassage(msg: str) -> str:
+    """Generate a warning message.
+
+    Args:
+        msg (str): The message to be printed.
+
+    Returns:
+        str: The warning message.
+    """
+    top = "\n\n## WARNING " + "#" * (len(msg) - len("## WARNING ")) + "\n"
+    header = "\n" + "#" * len(msg) + "\n"
+    return top + msg + header
 
 
 class PrintingResults:

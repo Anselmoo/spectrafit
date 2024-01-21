@@ -284,7 +284,7 @@ class PostProcessing:
 
         """
         self.args["fit_insights"] = fit_report_as_dict(
-            self.result, modelpars=self.result.params
+            inpars=self.result, settings=self.minimizer, modelpars=self.result.params
         )
         if self.args["conf_interval"]:
             try:
