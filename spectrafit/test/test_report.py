@@ -27,9 +27,9 @@ class TestRegressionMetrics:
             _ = RegressionMetrics(
                 pd.DataFrame(
                     {
-                        "intensity_0": np.random.rand(10),
-                        "intensity_1": np.random.rand(10),
-                        "fit_0": np.random.rand(10),
+                        "intensity_0": np.random.default_rng(0).normal(size=10),
+                        "intensity_1": np.random.default_rng(1).normal(size=10),
+                        "fit_0": np.random.default_rng(2).normal(size=10),
                     }
                 )
             )

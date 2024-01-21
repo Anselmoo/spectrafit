@@ -29,7 +29,7 @@ def df() -> pd.DataFrame:
     return pd.DataFrame(
         {
             "energy": np.linspace(0, 10, 100),
-            "intensity": np.random.rand(100),
+            "intensity": np.random.default_rng(0).normal(size=100),
         }
     )
 
@@ -40,10 +40,10 @@ def df_large() -> pd.DataFrame:
     return pd.DataFrame(
         {
             "Energy": np.arange(10).astype(np.float64),
-            "Intensity_1": np.random.rand(10),
-            "Intensity_2": np.random.rand(10),
-            "Intensity_3": np.random.rand(10),
-            "Intensity_4": np.random.rand(10),
+            "Intensity_1": np.random.default_rng(5).normal(size=10),
+            "Intensity_2": np.random.default_rng(6).normal(size=10),
+            "Intensity_3": np.random.default_rng(7).normal(size=10),
+            "Intensity_4": np.random.default_rng(8).normal(size=10),
         }
     )
 

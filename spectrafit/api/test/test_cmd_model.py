@@ -76,7 +76,7 @@ def test_global_fit() -> None:
     """Test for global fitting settings of CMD Model."""
     result = CMDModelAPI(infile="")
     result.global_ = 1
-    assert result.dict()["global_"] == 1
+    assert result.model_dump()["global_"] == 1
 
 
 def test_sha256() -> None:
