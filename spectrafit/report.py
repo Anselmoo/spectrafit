@@ -296,7 +296,8 @@ def _extracted_computional_from_results(
         Dict[str, Any]: The buffer with updated results.
     """
     buffer["computional"]["success"] = result.success
-    buffer["computional"]["message"] = result.message
+    if hasattr(result, "message"):
+        buffer["computional"]["message"] = result.message
     buffer["computional"]["errorbars"] = result.errorbars
     buffer["computional"]["nfev"] = result.nfev
 
