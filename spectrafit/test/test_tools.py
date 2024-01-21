@@ -452,7 +452,7 @@ def test_transform_numpy_dictionary() -> None:
         {"a": {"b": np.int32(1)}, "c": np.float64(2.0)}
     ) == {"a": {"b": 1}, "c": 2.0}
     assert transform_numpy_dictionary(
-        {"a": 1, "b": [np.int32(2)], "c": np.float64(3.0)}
+        {"a": 1, "b": [np.int64(2)], "c": np.float64(3.0)}
     ) == {
         "a": 1,
         "b": [2],
