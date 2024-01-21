@@ -111,6 +111,7 @@ def args_out_fixture() -> Dict[str, Any]:
                 "error_a": {"value": 1, "std": 2},
                 "error_b": {"value": 3, "std": 4},
             },
+            "computional": {"optmizer": "leastsq", "nfev": 1000},
         },
         "descriptive_statistic": pd.DataFrame({"mean": [1, 2], "std": [1, 2]}).to_dict(
             orient="list"

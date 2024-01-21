@@ -1,4 +1,5 @@
 """Collection of essential tools for running SpectraFit."""
+
 import gzip
 import json
 import pickle
@@ -284,7 +285,7 @@ class PostProcessing:
 
         """
         self.args["fit_insights"] = fit_report_as_dict(
-            self.result, modelpars=self.result.params
+            inpars=self.result, settings=self.minimizer, modelpars=self.result.params
         )
         if self.args["conf_interval"]:
             try:
@@ -463,7 +464,7 @@ class SaveResult:
                  additional information beyond the command line arguments.
         """
         self.df = df
-        self.args = args
+        self.args = transform_numpy_dictionary(args)
 
     def __call__(self) -> None:
         """Call the SaveResult class."""
@@ -481,7 +482,8 @@ class SaveResult:
                 2. The `correlation analysis` of the optimization process.
                 3. The `error analysis` of the optimization process.
         """
-        self.df.to_csv(Path(f"{self.args['outfile']}_fit.csv"), index=False)
+        _fname = Path(f"{self.args['outfile']}_fit.csv")
+        self.df.to_csv(_fname, index=False)
         pd.DataFrame(**self.args["linear_correlation"]).to_csv(
             Path(f"{self.args['outfile']}_correlation.csv"),
             index=True,
@@ -667,3 +669,51 @@ def pure_fname(fname: Path) -> Path:
     """
     _fname = fname.parent / fname.stem
     return pure_fname(_fname) if _fname.suffix else _fname
+
+
+def exclude_none_dictionary(value: Dict[str, Any]) -> Dict[str, Any]:
+    """Exclude `None` values from the dictionary.
+
+    Args:
+        value (Dict[str, Any]): Dictionary to be processed to
+            exclude `None` values.
+
+    Returns:
+        Dict[str, Any]: Dictionary without `None` values.
+    """
+    if isinstance(value, list):
+        return [exclude_none_dictionary(v) for v in value if v is not None]
+    elif isinstance(value, dict):
+        return {
+            k: exclude_none_dictionary(v) for k, v in value.items() if v is not None
+        }
+    else:
+        return value
+
+
+def transform_numpy_dictionary(value: Dict[str, Any]) -> Dict[str, Any]:
+    """Transform numpy values to python values.
+
+    Args:
+        value (Dict[str, Any]): Dictionary to be processed to
+            transform numpy values to python values.
+
+    Returns:
+        Dict[str, Any]: Dictionary with python values.
+    """
+    if isinstance(value, list):
+        return [transform_numpy_dictionary(v) for v in value]
+    elif isinstance(value, dict):
+        return {k: transform_numpy_dictionary(v) for k, v in value.items()}
+    elif isinstance(value, np.ndarray):
+        return transform_numpy_dictionary(value.tolist())
+    elif isinstance(value, np.int32):
+        return int(value)
+    elif isinstance(value, np.int64):
+        return int(value)
+    elif isinstance(value, np.bool_):
+        return bool(value)
+    elif isinstance(value, np.float64):
+        return float(value)
+    else:
+        return value

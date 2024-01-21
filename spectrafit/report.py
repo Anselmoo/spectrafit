@@ -9,6 +9,7 @@ from typing import List
 from typing import Optional
 from typing import Tuple
 from typing import Union
+from warnings import warn
 
 import numpy as np
 import pandas as pd
@@ -154,13 +155,18 @@ class RegressionMetrics:
                 try:
                     metric_dict[fnc.__name__].append(fnc(y_true, y_pred))
                 except ValueError as err:
-                    print(f"## Warning: {err} for {fnc.__name__}!")
+                    warn(
+                        warn_meassage(
+                            msg=f"Regression metric '{fnc.__name__}' could not  "
+                            f"be calculated due to: {err}"
+                        )
+                    )
                     metric_dict[fnc.__name__].append(np.nan)
         return pd.DataFrame(metric_dict).T.to_dict(orient="split")
 
 
 def fit_report_as_dict(
-    inpars: minimize, modelpars: Optional[Dict[str, Any]] = None
+    inpars: minimize, settings: Minimizer, modelpars: Optional[Dict[str, Any]] = None
 ) -> Dict[str, Dict[Any, Any]]:
     """Generate the best fit report as dictionary.
 
@@ -174,9 +180,16 @@ def fit_report_as_dict(
             2. Fit variables
             3. Fit correlations
 
+    !!! tip "About `Pydantic` for the report"
+
+        In a next release, the report will be generated as a `Pydantic` model.
+
     Args:
         inpars (minimize): Input Parameters from a fit or the  Minimizer results
              returned from a fit.
+        settings (Minimizer): The lmfit `Minimizer`-class as a general minimizer
+                for curve fitting and optimization. It is required to extract the
+                initial settings of the fit.
         modelpars (Dict[str,  Any], optional): Known Model Parameters.
             Defaults to None.
 
@@ -195,10 +208,14 @@ def fit_report_as_dict(
         "errorbars": {},
         "correlations": {},
         "covariance_matrix": {},
+        "computional": {},
     }
 
     result, buffer, params = _extracted_gof_from_results(
         result=result, buffer=buffer, params=params
+    )
+    buffer = _extracted_computional_from_results(
+        result=result, settings=settings, buffer=buffer
     )
     for name in parnames:
         par = params[name]
@@ -262,6 +279,35 @@ def get_init_value(
     return f"As fixed value: {param.value}"
 
 
+def _extracted_computional_from_results(
+    result: minimize, settings: Minimizer, buffer: Dict[str, Any]
+) -> Dict[str, Any]:
+    """Extract the computional from the results.
+
+    Args:
+        result (minimize): Input Parameters from a fit or the  Minimizer results
+            returned from a fit.
+        settings (Minimizer): The lmfit `Minimizer`-class as a general minimizer
+                for curve fitting and optimization. It is required to extract the
+                initial settings of the fit.
+        buffer (Dict[str, Any]): The buffer to store the results.
+
+    Returns:
+        Dict[str, Any]: The buffer with updated results.
+    """
+    buffer["computional"]["success"] = result.success
+    if hasattr(result, "message"):
+        buffer["computional"]["message"] = result.message
+    buffer["computional"]["errorbars"] = result.errorbars
+    buffer["computional"]["nfev"] = result.nfev
+
+    buffer["computional"]["max_nfev"] = settings.max_nfev
+    buffer["computional"]["scale_covar"] = settings.scale_covar
+    buffer["computional"]["calc_covar"] = settings.calc_covar
+
+    return buffer
+
+
 def _extracted_gof_from_results(
     result: minimize, buffer: Dict[str, Any], params: Parameters
 ) -> Tuple[minimize, Dict[str, Any], Parameters]:
@@ -291,11 +337,15 @@ def _extracted_gof_from_results(
         buffer["statistics"]["bayesian_information"] = result.bic
 
         if not result.errorbars:
-            print("##  Warning: uncertainties could not be estimated:")
+            warn(warn_meassage("Uncertainties could not be estimated"))
+
             if result.method not in ("leastsq", "least_squares"):
-                print(
-                    f"The fitting method '{result.method}' does not natively calculate"
-                    " and uncertainties cannot be estimated due to be out of region!"
+                warn(
+                    warn_meassage(
+                        msg=f"The fitting method '{result.method}' does not "
+                        "natively calculate and uncertainties cannot be "
+                        "estimated due to be out of region!"
+                    )
                 )
 
             parnames_varying = [par for par in result.params if result.params[par].vary]
@@ -303,9 +353,36 @@ def _extracted_gof_from_results(
                 par = params[name]
                 if par.init_value and np.allclose(par.value, par.init_value):
                     buffer["errorbars"]["at_initial_value"] = name
+                    warn(
+                        warn_meassage(
+                            msg=f"The parameter '{name}' is at its initial "
+                            "value and uncertainties cannot be estimated!"
+                        )
+                    )
                 if np.allclose(par.value, par.min) or np.allclose(par.value, par.max):
                     buffer["errorbars"]["at_boundary"] = name
+                    warn(
+                        warn_meassage(
+                            msg=f"The parameter '{name}' is at its boundary "
+                            "and uncertainties cannot be estimated!"
+                        )
+                    )
+
     return result, buffer, params
+
+
+def warn_meassage(msg: str) -> str:
+    """Generate a warning message.
+
+    Args:
+        msg (str): The message to be printed.
+
+    Returns:
+        str: The warning message.
+    """
+    top = "\n\n## WARNING " + "#" * (len(msg) - len("## WARNING ")) + "\n"
+    header = "\n" + "#" * len(msg) + "\n"
+    return top + msg + header
 
 
 class PrintingResults:

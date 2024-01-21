@@ -16,8 +16,10 @@ from spectrafit.tools import PostProcessing
 from spectrafit.tools import PreProcessing
 from spectrafit.tools import SaveResult
 from spectrafit.tools import check_keywords_consistency
+from spectrafit.tools import exclude_none_dictionary
 from spectrafit.tools import pkl2any
 from spectrafit.tools import pure_fname
+from spectrafit.tools import transform_numpy_dictionary
 from spectrafit.tools import unicode_check
 
 
@@ -427,3 +429,33 @@ def test_pure_fname(tmp_path: Path) -> None:
     tmp_name = "test_pure_fname"
     tmp_fname = tmp_path / f"{tmp_name}.pkl.gz.test"
     assert pure_fname(tmp_fname) == tmp_path / tmp_name
+
+
+def test_exclude_none_dictionary() -> None:
+    """Testing exclude_none_dictionary."""
+    assert exclude_none_dictionary({"a": None, "b": 2, "c": {"d": None, "e": 3}}) == {
+        "b": 2,
+        "c": {"e": 3},
+    }
+    assert exclude_none_dictionary({"a": {"b": None}, "c": [2, None]}) == {
+        "a": {},
+        "c": [2],
+    }
+
+
+def test_transform_numpy_dictionary() -> None:
+    """Testing transform_numpy_dictionary."""
+    assert transform_numpy_dictionary(
+        {"a": np.int32(1), "b": np.float64(2.0), "c": np.bool_(True)}
+    ) == {"a": 1, "b": 2.0, "c": True}
+    assert transform_numpy_dictionary(
+        {"a": {"b": np.int32(1)}, "c": np.float64(2.0)}
+    ) == {"a": {"b": 1}, "c": 2.0}
+    assert transform_numpy_dictionary(
+        {"a": 1, "b": [np.int64(2)], "c": np.float64(3.0)}
+    ) == {
+        "a": 1,
+        "b": [2],
+        "c": 3.0,
+    }
+    assert transform_numpy_dictionary({"a": np.array([1, 2, 3])}) == {"a": [1, 2, 3]}
