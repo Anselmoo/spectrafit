@@ -1,54 +1,81 @@
+root:
+- changed-files:
+  - any-glob-to-any-file: '*'
 codeowners:
-  - .github/CODEOWNERS
+  - changed-files:
+    - any-glob-to-any-file: .github/CODEOWNERS
 codespaces:
   - .devcontainer/**
 dependencies:
-  - poetry.lock
-  - github/dependabot.yml
+  - changed-files:
+    - any-glob-to-any-file:
+      - poetry.lock
+      - github/dependabot.yml
 documentation:
-  - docs/**
-  - Examples/**
-  - mkdocs.yml
-  - README.md
-  - INSTALLATION.md
+  - changed-files:
+    - any-glob-to-any-file:
+      - docs/**
+      - Examples/**
+      - mkdocs.yml
+      - README.md
+      - INSTALLATION.md
 forms:
-  - .github/ISSUE_TEMPLATE/**
-  - .github/pull_request_template.md
+  - changed-files:
+    - any-glob-to-any-file:
+      - .github/ISSUE_TEMPLATE/**
+      - .github/pull_request_template.md
 github-actions:
-  - .github/workflows/**
+  - changed-files:
+    - any-glob-to-any-file: .github/workflows/**
 pre-commit:
-  - .pre-commit-config.yaml
-  - .pre-commit-hooks.yaml
+  - changed-files:
+    - any-glob-to-any-file:
+      - .pre-commit-config.yaml
+      - .pre-commit-hooks.yaml
 python:
-  - "spectrafit/**/*.py"
+  - changed-files:
+    - any-glob-to-any-file: "spectrafit/**/*.py"
 testing:
-  - "spectrafit/**/test_*.py"
+  - changed-files:
+    - any-glob-to-any-file: "spectrafit/**/test_*.py"
 docker:
-  - Dockerfile
-  - .dockerignore
-  - .devcontainer/Dockerfile
+  - changed-files:
+    - any-glob-to-any-file:
+      - Dockerfile
+      - .dockerignore
+      - .devcontainer/Dockerfile
 release:
-  - spectrafit/__init__.py
+  - changed-files:
+      - any-glob-to-any-file: spectrafit/__init__.py
 vendor:
-  - vendor/**
+  - changed-files:
+    - any-glob-to-any-file: vendor/**
 maintenance:
-  - .gitignore
-  - .github/dependabot.yml
-  - .github/release-drafter.yml
-  - .github/labeler.yml
-  - .github/workflows/label.yml
-  - .sonarcloud.properties
-  - .pre-commit-config.yaml
-  - .prettierignore
-  - .pylintrc
-  - .sonarcloud.properties
-  - .sourcery.yaml
-  - "pyproject.toml"
+  - changed-files:
+    - any-glob-to-any-file:
+      - .gitignore
+      - .github/dependabot.yml
+      - .github/release-drafter.yml
+      - .github/labeler.yml
+      - .github/workflows/label.yml
+      - .sonarcloud.properties
+      - .pre-commit-config.yaml
+      - .prettierignore
+      - .pylintrc
+      - .sonarcloud.properties
+      - .sourcery.yaml
+      - "pyproject.toml"
 license:
-  - LICENSE
+  - changed-files:
+    - any-glob-to-any-file:
+      - LICENSE
+      - THIRD_PARTY_LICENSES
 security:
-  - SECURITY.md
+  - changed-files:
+    - any-glob-to-any-file: SECURITY.md
 code-of-conduct:
-  - CODE_OF_CONDUCT.md
+  - changed-files:
+    - any-glob-to-any-file: CODE_OF_CONDUCT.md
 changelog:
-  - CHANGELOG.md
+  - changed-files:
+    - any-glob-to-any-file: CHANGELOG.md
