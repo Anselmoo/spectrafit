@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any
 from typing import Dict
 from typing import List
+from typing import MutableMapping
 from typing import Optional
 
 import pandas as pd
@@ -123,7 +124,7 @@ class DataConverter(Converter):
         return vars(parser.parse_args())
 
     @staticmethod
-    def convert(infile: Path, file_format: str) -> pd.DataFrame:
+    def convert(infile: Path, file_format: str) -> MutableMapping[str, Any]:
         """Convert the input file to the target file format.
 
         Args:
@@ -134,7 +135,8 @@ class DataConverter(Converter):
             ValueError: If the file format is not supported.
 
         Returns:
-            pd.DataFrame: The converted data as a pandas DataFrame.
+            MutableMapping[str, Any]: The converted data as a MutableMapping[str, Any],
+                which belongs to DataFrame.
         """
         if file_format.upper() not in choices:
             raise ValueError(f"File format '{file_format}' is not supported.")

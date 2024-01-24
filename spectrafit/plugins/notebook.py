@@ -44,7 +44,7 @@ from spectrafit.models import SolverModels
 from spectrafit.tools import PostProcessing
 from spectrafit.tools import PreProcessing
 from spectrafit.tools import exclude_none_dictionary
-from spectrafit.tools import transform_numpy_dictionary
+from spectrafit.tools import transform_nested_types
 from spectrafit.utilities.transformer import list2dict
 
 
@@ -772,7 +772,7 @@ class ExportReport(SolverResults):
             output=self.make_output_contribution,
         ).model_dump(exclude_none=True)
         report = exclude_none_dictionary(report)
-        report = transform_numpy_dictionary(report)
+        report = transform_nested_types(report)
         return report
 
 

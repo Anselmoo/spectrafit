@@ -19,7 +19,7 @@ import tomli
 import yaml
 
 from lmfit import Minimizer
-from lmfit import conf_interval
+from lmfit.confidence import ConfidenceInterval
 from lmfit.minimizer import MinimizerException
 from spectrafit.api.tools_model import ColumnNamesAPI
 from spectrafit.models import calculated_model
@@ -289,9 +289,21 @@ class PostProcessing:
         )
         if self.args["conf_interval"]:
             try:
-                self.args["confidence_interval"] = conf_interval(
+                _min_rel_change = self.args["conf_interval"].pop("min_rel_change", None)
+                ci = ConfidenceInterval(
                     self.minimizer, self.result, **self.args["conf_interval"]
                 )
+                if _min_rel_change is not None:
+                    ci.min_rel_change = _min_rel_change
+                    self.args["conf_interval"]["min_rel_change"] = _min_rel_change
+
+                trace = self.args["conf_interval"].get("trace")
+
+                if trace is True:
+                    self.args["confidence_interval"] = (ci.calc_all_ci(), ci.trace_dict)
+                else:
+                    self.args["confidence_interval"] = ci.calc_all_ci()
+
             except (MinimizerException, ValueError, KeyError) as exc:
                 print(f"Error: {exc} -> No confidence interval could be calculated!")
                 self.args["confidence_interval"] = {}
@@ -464,7 +476,7 @@ class SaveResult:
                  additional information beyond the command line arguments.
         """
         self.df = df
-        self.args = transform_numpy_dictionary(args)
+        self.args = transform_nested_types(args)
 
     def __call__(self) -> None:
         """Call the SaveResult class."""
@@ -501,7 +513,7 @@ class SaveResult:
             with open(
                 Path(f"{self.args['outfile']}_summary.json"), "w", encoding="utf-8"
             ) as f:
-                json.dump(self.args, f, indent=4)
+                json.dump(transform_nested_types(self.args), f, indent=4)
         else:
             raise FileNotFoundError("No output file provided!")
 
@@ -691,8 +703,8 @@ def exclude_none_dictionary(value: Dict[str, Any]) -> Dict[str, Any]:
         return value
 
 
-def transform_numpy_dictionary(value: Dict[str, Any]) -> Dict[str, Any]:
-    """Transform numpy values to python values.
+def transform_nested_types(value: Dict[str, Any]) -> Dict[str, Any]:
+    """Transform nested types numpy values to python values.
 
     Args:
         value (Dict[str, Any]): Dictionary to be processed to
@@ -702,11 +714,13 @@ def transform_numpy_dictionary(value: Dict[str, Any]) -> Dict[str, Any]:
         Dict[str, Any]: Dictionary with python values.
     """
     if isinstance(value, list):
-        return [transform_numpy_dictionary(v) for v in value]
+        return [transform_nested_types(v) for v in value]
+    elif isinstance(value, tuple):
+        return tuple(transform_nested_types(v) for v in value)
     elif isinstance(value, dict):
-        return {k: transform_numpy_dictionary(v) for k, v in value.items()}
+        return {k: transform_nested_types(v) for k, v in value.items()}
     elif isinstance(value, np.ndarray):
-        return transform_numpy_dictionary(value.tolist())
+        return transform_nested_types(value.tolist())
     elif isinstance(value, np.int32):
         return int(value)
     elif isinstance(value, np.int64):

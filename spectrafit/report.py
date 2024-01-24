@@ -18,7 +18,6 @@ from art import tprint
 from lmfit import Minimizer
 from lmfit import Parameter
 from lmfit import Parameters
-from lmfit import conf_interval
 from lmfit import report_ci
 from lmfit import report_fit
 from lmfit.minimizer import MinimizerException
@@ -456,13 +455,9 @@ class PrintingResults:
         print("\nConfidence Interval:\n")
         if self.args["conf_interval"]:
             try:
-                report_ci(
-                    conf_interval(
-                        self.minimizer, self.result, **self.args["conf_interval"]
-                    )
-                )
+                report_ci(self.args["confidence_interval"][0])
             except (MinimizerException, ValueError, KeyError, TypeError) as exc:
-                print(f"Error: {exc} -> No confidence interval could be calculated!")
+                warn(f"Error: {exc} -> No confidence interval could be calculated!")
                 self.args["confidence_interval"] = {}
 
     def print_linear_correlation(self) -> None:

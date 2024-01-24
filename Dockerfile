@@ -11,7 +11,7 @@ LABEL project="SpectraFit"
 LABEL description="📊📈🔬 SpectraFit is a command-line and Jupyter-notebook tool for quick data-fitting based on the regular expression of distribution functions."
 LABEL license = "BSD-3-Clause"
 LABEL url = "https://github.com/Anselmoo/spectrafit"
-LABEL vendor = "https://github.com/jupyter/docker-stacks/blob/main/scipy-notebook/Dockerfile"
+LABEL vendor = "https://github.com/jupyter/docker-stacks/tree/main/images/scipy-notebook"
 
 # Fix: https://github.com/hadolint/hadolint/wiki/DL4006
 # Fix: https://github.com/koalaman/shellcheck/wiki/SC3014

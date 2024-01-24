@@ -11,6 +11,7 @@ import pandas as pd
 import pytest
 
 from pandas._testing import assert_frame_equal
+from spectrafit.models import DistributionModels
 from spectrafit.models import SolverModels
 from spectrafit.tools import PostProcessing
 from spectrafit.tools import PreProcessing
@@ -19,7 +20,7 @@ from spectrafit.tools import check_keywords_consistency
 from spectrafit.tools import exclude_none_dictionary
 from spectrafit.tools import pkl2any
 from spectrafit.tools import pure_fname
-from spectrafit.tools import transform_numpy_dictionary
+from spectrafit.tools import transform_nested_types
 from spectrafit.tools import unicode_check
 
 
@@ -93,6 +94,7 @@ def args_1() -> Dict[str, Any]:
             "maxiter": 20,
             "verbose": 1,
             "prob_func": None,
+            "min_rel_change": 10e-6,
         },
         "peaks": {
             "1": {
@@ -128,6 +130,35 @@ def args_2() -> Dict[str, Any]:
             "1": {
                 "constant": {
                     "amplitude": {"max": 200, "min": 10, "vary": False, "value": 1},
+                }
+            },
+        },
+    }
+
+
+@pytest.fixture(name="args__min_rel_change")
+def args_3() -> Dict[str, Any]:
+    """Args fixture."""
+    return {
+        "autopeak": False,
+        "global_": 0,
+        "column": ["energy", "intensity"],
+        "minimizer": {"nan_policy": "propagate", "calc_covar": False},
+        "optimizer": {"max_nfev": 100, "method": "leastsq"},
+        "conf_interval": {
+            "p_names": None,
+            "sigmas": None,
+            "maxiter": 100,
+            "verbose": 0,
+            "prob_func": None,
+            "min_rel_change": 0.001,
+        },
+        "peaks": {
+            "1": {
+                "gaussian": {
+                    "center": {"vary": True, "value": 1},
+                    "fwhmg": {"vary": True, "value": 1},
+                    "amplitude": {"vary": True, "value": 1},
                 }
             },
         },
@@ -364,6 +395,36 @@ class TestPostProcessing:
         pp.make_insight_report()
         assert pp.args["confidence_interval"] == {}
 
+    @pytest.mark.parametrize("trace_value", [True, False])
+    def test_insight_report_new_min_rel_change(
+        self,
+        trace_value: bool,
+        args__min_rel_change: Dict[str, Any],
+    ) -> None:
+        """Testing insight report for no report of the confidence interval."""
+        x = np.linspace(0, 2, 100, dtype=np.float64)
+        df = pd.DataFrame(
+            {
+                "energy": x,
+                "intensity": DistributionModels.gaussian(x, 1, 1, 1),
+            }
+        )
+
+        args__min_rel_change["conf_interval"]["trace"] = trace_value
+        minimizer, result = SolverModels(df=df, args=args__min_rel_change)()
+        pp = PostProcessing(
+            df=df,
+            args=args__min_rel_change,
+            minimizer=minimizer,
+            result=result,
+        )
+        pp.make_insight_report()
+        assert pp.args["confidence_interval"] == {}
+
+        pp.args["confidence_interval"]["trace"] = False
+        pp.make_insight_report()
+        assert pp.args["confidence_interval"] == {}
+
 
 class TestPickle:
     """Test Pickle tool."""
@@ -443,19 +504,27 @@ def test_exclude_none_dictionary() -> None:
     }
 
 
-def test_transform_numpy_dictionary() -> None:
-    """Testing transform_numpy_dictionary."""
-    assert transform_numpy_dictionary(
+def test_transform_nested_types() -> None:
+    """Testing transform_nested_types."""
+    assert transform_nested_types(
         {"a": np.int32(1), "b": np.float64(2.0), "c": np.bool_(True)}
     ) == {"a": 1, "b": 2.0, "c": True}
-    assert transform_numpy_dictionary(
-        {"a": {"b": np.int32(1)}, "c": np.float64(2.0)}
-    ) == {"a": {"b": 1}, "c": 2.0}
-    assert transform_numpy_dictionary(
+    assert transform_nested_types({"a": {"b": np.int32(1)}, "c": np.float64(2.0)}) == {
+        "a": {"b": 1},
+        "c": 2.0,
+    }
+    assert transform_nested_types(
         {"a": 1, "b": [np.int64(2)], "c": np.float64(3.0)}
     ) == {
         "a": 1,
         "b": [2],
         "c": 3.0,
     }
-    assert transform_numpy_dictionary({"a": np.array([1, 2, 3])}) == {"a": [1, 2, 3]}
+    assert transform_nested_types({"a": np.array([1, 2, 3])}) == {"a": [1, 2, 3]}
+
+    assert transform_nested_types(
+        {"a": (np.int32(1), np.int64(4)), "b": np.float64(2.0)}
+    ) == {
+        "a": (1, 4),
+        "b": 2.0,
+    }
