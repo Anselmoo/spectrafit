@@ -93,6 +93,7 @@ def args_1() -> Dict[str, Any]:
             "maxiter": 20,
             "verbose": 1,
             "prob_func": None,
+            "min_rel_change": 10e-6,
         },
         "peaks": {
             "1": {
