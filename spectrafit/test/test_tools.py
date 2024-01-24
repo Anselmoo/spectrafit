@@ -11,6 +11,7 @@ import pandas as pd
 import pytest
 
 from pandas._testing import assert_frame_equal
+from spectrafit.models import DistributionModels
 from spectrafit.models import SolverModels
 from spectrafit.tools import PostProcessing
 from spectrafit.tools import PreProcessing
@@ -143,20 +144,21 @@ def args_3() -> Dict[str, Any]:
         "global_": 0,
         "column": ["energy", "intensity"],
         "minimizer": {"nan_policy": "propagate", "calc_covar": False},
-        "optimizer": {"max_nfev": 10, "method": "leastsq"},
+        "optimizer": {"max_nfev": 100, "method": "leastsq"},
         "conf_interval": {
-            "p_names": ["pseudovoigt_amplitude_1"],
-            "sigmas": 0.001,
-            "trace": True,
-            "maxiter": 10,
+            "p_names": None,
+            "sigmas": None,
+            "maxiter": 100,
             "verbose": 0,
             "prob_func": None,
             "min_rel_change": 0.001,
         },
         "peaks": {
             "1": {
-                "constant": {
-                    "amplitude": {"max": 200, "min": 10, "vary": False, "value": 1},
+                "gaussian": {
+                    "center": {"vary": True, "value": 1},
+                    "fwhmg": {"vary": True, "value": 1},
+                    "amplitude": {"vary": True, "value": 1},
                 }
             },
         },
@@ -393,21 +395,33 @@ class TestPostProcessing:
         pp.make_insight_report()
         assert pp.args["confidence_interval"] == {}
 
+    @pytest.mark.parametrize("trace_value", [True, False])
     def test_insight_report_new_min_rel_change(
         self,
-        random_dataframe: pd.DataFrame,
+        trace_value: bool,
         args__min_rel_change: Dict[str, Any],
     ) -> None:
         """Testing insight report for no report of the confidence interval."""
-        minimizer, result = SolverModels(
-            df=random_dataframe, args=args__min_rel_change
-        )()
+        x = np.linspace(0, 2, 100, dtype=np.float64)
+        df = pd.DataFrame(
+            {
+                "energy": x,
+                "intensity": DistributionModels.gaussian(x, 1, 1, 1),
+            }
+        )
+
+        args__min_rel_change["conf_interval"]["trace"] = trace_value
+        minimizer, result = SolverModels(df=df, args=args__min_rel_change)()
         pp = PostProcessing(
-            df=random_dataframe,
+            df=df,
             args=args__min_rel_change,
             minimizer=minimizer,
             result=result,
         )
+        pp.make_insight_report()
+        assert pp.args["confidence_interval"] == {}
+
+        pp.args["confidence_interval"]["trace"] = False
         pp.make_insight_report()
         assert pp.args["confidence_interval"] == {}
 
