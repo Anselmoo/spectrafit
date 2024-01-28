@@ -101,7 +101,7 @@ class TestNotSupported:
     df = pd.DataFrame(
         {
             "energy": np.arange(10),
-            "intensity": np.random.random_sample((10,)),
+            "intensity": np.random.default_rng(42).standard_normal((10,)),
         }
     )
 
@@ -639,10 +639,7 @@ class TestModelParametersSolver:
         }
 
         with pytest.raises(KeyError) as pytest_wrapped_e:
-            _ = SolverModels(
-                df=df, args=args
-            )().will_exit_somewhere_down_the_stack()  # type: ignore
-
+            SolverModels(df=df, args=args)()
         assert pytest_wrapped_e.type == KeyError
         assert (
             pytest_wrapped_e.value.args[0]
