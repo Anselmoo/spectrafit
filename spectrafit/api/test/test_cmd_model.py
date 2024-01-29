@@ -1,6 +1,5 @@
 """Test of CMD and Tool Model."""
 
-
 from getpass import getuser
 from hashlib import sha256
 from socket import gethostname

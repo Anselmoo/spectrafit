@@ -1,4 +1,5 @@
 """Minimization models for curve fitting."""
+
 from collections import defaultdict
 from dataclasses import dataclass
 from math import log
@@ -563,10 +564,7 @@ class DistributionModels:
             NDArray[np.float64]: Third order polynomial function of `x`
         """
         return np.array(
-            coefficient0
-            + coefficient1 * x
-            + coefficient2 * x**2
-            + coefficient3 * x**3
+            coefficient0 + coefficient1 * x + coefficient2 * x**2 + coefficient3 * x**3
         )
 
     @staticmethod

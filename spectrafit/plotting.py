@@ -7,6 +7,7 @@
     this, you can comment out the line `matplotlib.font_manager._rebuild()` in
     the `plotting.py` file.
 """
+
 from typing import Any
 from typing import Dict
 from typing import Optional

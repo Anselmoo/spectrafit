@@ -1,4 +1,5 @@
 """Pytest of report model."""
+
 from math import isclose
 from typing import Any
 from typing import Dict

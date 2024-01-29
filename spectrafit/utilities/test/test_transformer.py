@@ -1,4 +1,5 @@
 """Test of the jupyter plugin."""
+
 from typing import Any
 from typing import Dict
 from typing import List

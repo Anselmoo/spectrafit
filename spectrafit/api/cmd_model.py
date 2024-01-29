@@ -1,6 +1,5 @@
 """Reference model for the API of the command line interface."""
 
-
 from datetime import datetime
 from getpass import getuser
 from hashlib import sha256

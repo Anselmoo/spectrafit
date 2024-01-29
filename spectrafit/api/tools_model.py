@@ -1,6 +1,5 @@
 """Reference model for the API of the SpectraFit tools."""
 
-
 from typing import Any
 from typing import Dict
 from typing import List

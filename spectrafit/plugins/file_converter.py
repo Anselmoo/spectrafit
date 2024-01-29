@@ -1,4 +1,5 @@
 """Convert the input and output files to the preferred file format."""
+
 import argparse
 import json
 

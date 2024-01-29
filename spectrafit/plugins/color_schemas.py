@@ -1,4 +1,5 @@
 """Color themes for the Plots in Jupyter Notebooks."""
+
 from typing import List
 
 from spectrafit.api.notebook_model import ColorAPI

@@ -1,6 +1,5 @@
 """Reference model for the API of the models distributions."""
 
-
 from typing import Callable
 from typing import List
 from typing import Optional
