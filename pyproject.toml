@@ -82,7 +82,7 @@ python-pptx = { version = "^0.6.22", optional = true }
 [tool.poetry.group.dev.dependencies]
 pylint = "^2.16.1"
 mypy = "^1.1.1"
-black = { extras = ["jupyter"], version = ">=22.8,<24.0" }
+black = { extras = ["jupyter"], version = "^24.0" }
 blacken-docs = "^1.12.1"
 isort = "^5.10.1"
 pre-commit = "^3.2.0"
