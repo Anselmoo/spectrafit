@@ -26,9 +26,9 @@
         model = model.lower()
         if model.split("_")[0] not in __implemented_models__:
             raise KeyError(f"{model} is not supported")
-        peak_kwargs[(model.split("_")[-1], model.split("_")[0])][model.split("_")[1]] = (
-            params[model]
-        )
+        peak_kwargs[(model.split("_")[-1], model.split("_")[0])][
+            model.split("_")[1]
+        ] = params[model]
 
     for key, _kwarg in peak_kwargs.items():
         if key[1] == "my_new_model":
