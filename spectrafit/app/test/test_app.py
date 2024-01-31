@@ -1,4 +1,5 @@
 """Test of the Jupiter plugin app."""
+
 from unittest import mock
 
 

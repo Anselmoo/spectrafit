@@ -1,6 +1,5 @@
 """Reference model for the API of the Jupyter Notebook interface."""
 
-
 from typing import Any
 from typing import Optional
 from typing import Tuple

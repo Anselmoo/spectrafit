@@ -1,4 +1,5 @@
 """Tools for generating spectra for testing."""
+
 import math
 
 from pathlib import Path

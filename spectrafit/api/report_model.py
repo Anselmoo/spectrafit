@@ -1,4 +1,5 @@
 """Reference model for the API of the Jupyter Notebook report."""
+
 from typing import Any
 from typing import Dict
 from typing import Hashable

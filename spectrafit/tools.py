@@ -253,9 +253,11 @@ class PostProcessing:
         if self.args["global_"]:
             return df.rename(
                 columns={
-                    col: ColumnNamesAPI().energy
-                    if i == 0
-                    else f"{ColumnNamesAPI().intensity}_{i}"
+                    col: (
+                        ColumnNamesAPI().energy
+                        if i == 0
+                        else f"{ColumnNamesAPI().intensity}_{i}"
+                    )
                     for i, col in enumerate(df.columns)
                 }
             )

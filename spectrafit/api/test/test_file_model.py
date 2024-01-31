@@ -1,4 +1,5 @@
 """Test the file model."""
+
 import pytest
 
 from spectrafit.api.file_model import DataFileAPI

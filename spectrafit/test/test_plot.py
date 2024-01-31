@@ -1,4 +1,5 @@
 """Pytest of the plotting features of spectrafit."""
+
 import pandas as pd
 
 from matplotlib import pyplot

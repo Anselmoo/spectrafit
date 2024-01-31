@@ -1,6 +1,5 @@
 """Starting jupyter lab as a app."""
 
-
 import sys
 
 from jupyterlab.labapp import main

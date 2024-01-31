@@ -1,4 +1,5 @@
 """Abstract base class for the converter plugins."""
+
 from abc import ABC
 from abc import abstractmethod
 from pathlib import Path

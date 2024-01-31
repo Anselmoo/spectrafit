@@ -1,4 +1,5 @@
 """Convert the lock file to a powerpoint presentation."""
+
 import argparse
 
 from pathlib import Path

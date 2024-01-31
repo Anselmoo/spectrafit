@@ -1,4 +1,5 @@
 """SpectraFit, the command line tool for fitting."""
+
 import argparse
 
 from typing import Any

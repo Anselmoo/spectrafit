@@ -1,4 +1,5 @@
 """Test the pptx_model module."""
+
 from math import isclose
 from typing import Tuple
 from typing import Type
