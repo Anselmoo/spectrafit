@@ -389,7 +389,7 @@ def warn_meassage(msg: str) -> str:
 
 
 class FitReport:
-    """Generates fit reports based on the result of the fitting process.
+    """Generate fit reports based on the result of the fitting process.
 
     Args:
         inpars (Parameters): The input parameters used for fitting.
@@ -431,7 +431,7 @@ class FitReport:
         min_correl: float = 0.0,
         modelpars: Optional[Callable[..., Any]] = None,
     ) -> None:
-        """Initializes the Report object.
+        """Initialize the Report object.
 
         Args:
             inpars (Parameters or object): The input parameters or
@@ -555,7 +555,7 @@ class FitReport:
         return pd.DataFrame(variables)
 
     def generate_correlations(self) -> pd.DataFrame:
-        """Generates a correlation matrix for the varying parameters.
+        """Generate a correlation matrix for the varying parameters.
 
         Returns:
             pd.DataFrame: The correlation matrix with the
@@ -581,7 +581,7 @@ class FitReport:
         return correl_matrix
 
     def generate_report(self) -> Dict[str, pd.DataFrame]:
-        """Generates a report.
+        """Generate a report.
 
         !!! note "About the Report"
             This report contains fit statistics,
