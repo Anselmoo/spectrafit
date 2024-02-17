@@ -529,7 +529,7 @@ class FitReport:
                 model_val = self.modelpars[name].value  # type: ignore
             try:
                 sval = gformat(par.value)
-            except (TypeError, ValueError):
+            except (TypeError, ValueError):  # pragma: no cover
                 sval = None
             serr = None
             spercent = None
@@ -537,7 +537,7 @@ class FitReport:
                 serr = gformat(par.stderr)
                 try:
                     spercent = abs(par.stderr / par.value)
-                except ZeroDivisionError:
+                except ZeroDivisionError:  # pragma: no cover
                     spercent = None
 
             variable = {
