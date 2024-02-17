@@ -3,6 +3,7 @@
 from math import isclose
 from typing import Any
 from typing import Dict
+from typing import List
 from typing import Union
 
 import numpy as np
@@ -12,6 +13,7 @@ import pytest
 from lmfit import Parameter
 from lmfit import Parameters
 from pytest_mock.plugin import MockerFixture
+from spectrafit.report import FitReport
 from spectrafit.report import PrintingResults
 from spectrafit.report import PrintingStatus
 from spectrafit.report import RegressionMetrics
@@ -186,3 +188,101 @@ class TestPrintingStatus:
         """Test of the credits message."""
         self.ps.credits()
         self.assert_capfd(capfd=capfd)
+
+
+@pytest.mark.parametrize(
+    "sort_pars,show_correl,min_correl,modelpars,expected_parnames",
+    [
+        (True, True, 0.0, None, ["a", "b"]),  # ID: sort-true-showcorrel-true
+        (False, False, 0.0, None, ["a", "b"]),  # ID: sort-false-showcorrel-false
+        (
+            True,
+            True,
+            0.5,
+            {"a": Parameter(name="a", value=2)},
+            ["a", "b"],
+        ),  # ID: mincorrel-0.5-modelpars
+    ],
+    ids=[
+        "sort-true-showcorrel-true",
+        "sort-false-showcorrel-false",
+        "mincorrel-0.5-modelpars",
+    ],
+)
+def test_fit_report_init(
+    sort_pars: bool,
+    show_correl: bool,
+    min_correl: float,
+    modelpars: Union[None, Dict[str, Parameters]],
+    expected_parnames: List[str],
+) -> None:
+    """Test the initialization of the FitReport class.
+
+    Args:
+        sort_pars (bool): The input value for the sort_pars parameter.
+        show_correl (bool): The input value for the show_correl parameter.
+        min_correl (float): The input value for the min_correl parameter.
+        modelpars (Union[None, Dict[str, Parameters]]): The input value for the
+            modelpars parameter.
+        expected_parnames (List[str]): The expected parnames attribute of the
+            FitReport class.
+    """
+    params = Parameters()
+    params.add_many(("a", 1, True), ("b", 2, True))
+    report = FitReport(
+        inpars=params,
+        sort_pars=sort_pars,
+        show_correl=show_correl,
+        min_correl=min_correl,
+        modelpars=modelpars,  # type: ignore
+    )
+    assert report.parnames == expected_parnames
+
+
+@pytest.mark.parametrize(
+    "inpars,expected_result",
+    [
+        (Parameters(), None),  # ID: empty-parameters
+        ("not_parameters", AttributeError),  # ID: incorrect-type
+    ],
+    ids=["empty-parameters", "incorrect-type"],
+)
+def test_generate_fit_statistics_edge_cases(
+    inpars: Union[Parameters, str], expected_result: Union[None, Exception]
+) -> None:
+    """Test the edge cases of the  method in the FitReport class.
+
+    Args:
+        inpars (Union[Parameters, str]): The input parameters for the
+            FitReport class. If it is a string, it is expected to
+            raise an exception.
+        expected_result (Union[None, Exception]): The expected
+            result of the generate_fit_statistics method.
+    """
+    if isinstance(inpars, str):
+        with pytest.raises(expected_result) as exc_info:  # type: ignore
+            FitReport(inpars=inpars)
+        assert isinstance(exc_info.value, expected_result)  # type: ignore
+        return
+    report = FitReport(inpars=inpars)
+    result = report.generate_fit_statistics()
+    assert result is expected_result
+
+
+# Error cases
+@pytest.mark.parametrize(
+    "inpars,exception",
+    [
+        ([], AttributeError),
+    ],
+    ids=["list-instead-parameters"],
+)
+def test_fit_report_init_error_cases(inpars: List[Any], exception: Exception) -> None:
+    """Test the initialization of FitReport with error cases.
+
+    Args:
+        inpars (List[Any]): The input parameters for FitReport.
+        exception (Exception): The expected exception to be raised.
+    """
+    with pytest.raises(exception):  # type: ignore
+        FitReport(inpars=inpars)

@@ -4,6 +4,7 @@ import pprint
 import sys
 
 from typing import Any
+from typing import Callable
 from typing import Dict
 from typing import Hashable
 from typing import List
@@ -20,9 +21,11 @@ from lmfit import Minimizer
 from lmfit import Parameter
 from lmfit import Parameters
 from lmfit import report_ci
-from lmfit import report_fit
 from lmfit.minimizer import MinimizerException
 from lmfit.minimizer import minimize
+from lmfit.printfuncs import alphanumeric_sort
+from lmfit.printfuncs import getfloat_attr
+from lmfit.printfuncs import gformat
 from numpy.typing import NDArray
 from sklearn.metrics import explained_variance_score
 from sklearn.metrics import max_error
@@ -103,8 +106,8 @@ class RegressionMetrics:
 
         Args:
             df (pd.DataFrame): DataFrame containing the input data (`x` and `data`),
-                 as well as the best fit and the corresponding residuum. Hence, it will
-                 be extended by the single contribution of the model.
+                 as well as the best fit and the corresponding residuum. Hence,
+                 it will be extended by the single contribution of the model.
             name_true (str, optional): Name of the data. Defaults to "intensity".
             name_pred (str, optional): Name of the fit data. Defaults to "fit".
 
@@ -385,6 +388,244 @@ def warn_meassage(msg: str) -> str:
     return top + msg + header
 
 
+class FitReport:
+    """Generates fit reports based on the result of the fitting process.
+
+    Args:
+        inpars (Parameters): The input parameters used for fitting.
+        sort_pars (bool, optional): Whether to sort the parameters.
+            Defaults to True.
+        show_correl (bool, optional): Whether to show correlations of components.
+            Defaults to True.
+        min_correl (float, optional): The minimum correlation value to consider.
+            Defaults to 0.0.
+        modelpars (dict, optional): The model parameters. Defaults to None.
+
+    Attributes:
+        inpars (Parameters): The input parameters used for fitting.
+        sort_pars (bool): Whether to sort the parameters.
+        show_correl (bool): Whether to show correlations of components.
+        min_correl (float): The minimum correlation value to consider.
+        modelpars (dict): The model parameters.
+        result (FitResult): The result of the fitting process.
+        params (Parameters): The parameters used for fitting.
+        parnames (list): The names of the parameters.
+
+    Methods:
+        generate_fit_statistics(): Generate fit statistics based on the result
+            of the fitting process.
+        generate_variables(): Generate a DataFrame containing information
+            about the variables.
+        generate_correlations(): Generate a correlation matrix for the
+            varying parameters.
+        generate_report(): Generate a report containing fit statistics,
+            correlations, and variables.
+        __call__(): Generate and print a report based on the data.
+    """
+
+    def __init__(
+        self,
+        inpars: Union[Parameters, Callable[..., Any]],
+        sort_pars: bool = True,
+        show_correl: bool = True,
+        min_correl: float = 0.0,
+        modelpars: Optional[Callable[..., Any]] = None,
+    ) -> None:
+        """Initializes the Report object.
+
+        Args:
+            inpars (Parameters or object): The input parameters or
+                object.
+            sort_pars (bool, optional): Whether to sort the parameters.
+                Defaults to True.
+            show_correl (bool, optional): Whether to show correlations.
+                Defaults to True.
+            min_correl (float, optional): The minimum correlation value.
+                Defaults to 0.0.
+            modelpars (object, optional): The model parameters.
+                Defaults to None.
+        """
+        self.inpars = inpars
+        self.sort_pars = sort_pars
+        self.show_correl = show_correl
+        self.min_correl = min_correl
+        self.modelpars = modelpars
+
+        if isinstance(self.inpars, Parameters):
+            self.result, self.params = None, self.inpars
+        if hasattr(self.inpars, "params"):
+            self.result = self.inpars
+            self.params = self.inpars.params
+
+        if self.sort_pars:
+            key = self.sort_pars if callable(self.sort_pars) else alphanumeric_sort
+            self.parnames = sorted(self.params, key=key)
+        else:
+            self.parnames = list(self.params.keys())
+
+    def generate_fit_statistics(self) -> Optional[pd.DataFrame]:
+        """Generate fit statistics based on the result of the fitting process.
+
+        Returns:
+            Optional[pd.DataFrame]: A pandas DataFrame containing the
+            fit statistics, including:
+                - fitting method
+                - function evals
+                - data points
+                - variables
+                - chi-square
+                - reduced chi-square
+                - Akaike info crit
+                - Bayesian info crit
+                - R-squared (if available)
+        """
+        if self.result is not None:
+            return pd.DataFrame(
+                {
+                    "fitting method": [self.result.method],  # type: ignore
+                    "function evals": [getfloat_attr(self.result, "nfev")],
+                    "data points": [getfloat_attr(self.result, "ndata")],
+                    "variables": [getfloat_attr(self.result, "nvarys")],
+                    "chi-square": [getfloat_attr(self.result, "chisqr")],
+                    "reduced chi-square": [getfloat_attr(self.result, "redchi")],
+                    "Akaike info crit": [getfloat_attr(self.result, "aic")],
+                    "Bayesian info crit": [getfloat_attr(self.result, "bic")],
+                    "R-squared": [
+                        (
+                            getfloat_attr(self.result, "rsquared")
+                            if hasattr(self.result, "rsquared")
+                            else None
+                        )
+                    ],
+                }
+            )
+        return None
+
+    def generate_variables(self) -> pd.DataFrame:
+        """Generate a pandas DataFrame containing information about the variables.
+
+        Returns:
+            pd.DataFrame: A DataFrame with the following columns:
+                - name: The name of the variable
+                - value: The current value of the variable
+                - stderr absolute: The absolute standard error of the variable
+                - stderr percent: The percentage standard error of the variable
+                - expr: The expression defining the variable (if any)
+                - init: The initial value of the variable
+                - model_value: The value of the variable in the model (if applicable)
+                - fixed: A boolean indicating whether the variable is fixed or not
+        """
+        variables = []
+        namelen = max(len(n) for n in self.parnames)
+        for name in self.parnames:
+            par = self.params[name]
+            space = " " * (namelen - len(name))
+            nout = f"{name}:{space}"
+            inval = None
+            if par.init_value is not None:
+                inval = par.init_value
+            model_val = None
+            if self.modelpars is not None and name in self.modelpars:  # type: ignore
+                model_val = self.modelpars[name].value  # type: ignore
+            try:
+                sval = gformat(par.value)
+            except (TypeError, ValueError):
+                sval = None
+            serr = None
+            spercent = None
+            if par.stderr is not None:
+                serr = gformat(par.stderr)
+                try:
+                    spercent = abs(par.stderr / par.value)
+                except ZeroDivisionError:
+                    spercent = None
+
+            variable = {
+                "name": nout,
+                "value": sval,
+                "stderr absolute": serr,
+                "stderr percent": spercent,
+                "expr": par.expr if par.expr is not None else "",
+                "init": inval,
+                "model_value": model_val,
+                "fixed": par.vary,
+            }
+
+            variables.append(variable)
+        return pd.DataFrame(variables)
+
+    def generate_correlations(self) -> pd.DataFrame:
+        """Generates a correlation matrix for the varying parameters.
+
+        Returns:
+            pd.DataFrame: The correlation matrix with the
+                varying parameters as rows and columns.
+        """
+        correl_matrix = pd.DataFrame(index=self.parnames, columns=self.parnames)
+        for i, name in enumerate(self.parnames):
+            par = self.params[name]
+            if not par.vary:
+                continue
+            if hasattr(par, "correl") and par.correl is not None:
+                for name2 in self.parnames[i + 1 :]:
+                    if (
+                        name != name2
+                        and name2 in par.correl
+                        and abs(par.correl[name2]) > self.min_correl
+                    ):
+                        correl_matrix.loc[name, name2] = par.correl[name2]
+                        correl_matrix.loc[name2, name] = par.correl[
+                            name2
+                        ]  # mirror the value
+        correl_matrix.fillna(1, inplace=True)  # fill diagonal with 1s
+        return correl_matrix
+
+    def generate_report(self) -> Dict[str, pd.DataFrame]:
+        """Generates a report.
+
+        !!! note "About the Report"
+            This report contains fit statistics,
+            correlations of components (if enabled),
+            and variables and values.
+
+        Returns:
+            report (Dict[str, pd.DataFrame]): A dictionary containing
+                the generated report.
+        """
+        report = {}
+        report["Fit Statistics"] = self.generate_fit_statistics()
+        if self.show_correl:
+            report["Correlations of Components"] = self.generate_correlations()
+        report["Variables and Values"] = self.generate_variables()
+        return report
+
+    def __call__(self) -> None:
+        """Generate and print a report based on the data.
+
+        This method generates a report using the `generate_report` method and
+            prints it to the console.
+        The report is organized into sections, where each section is
+            represented by a DataFrame.
+        The report is printed using the `tabulate` function from the
+            `tabulate` library.
+        The table format is chosen based on the platform, using "fancy_grid"
+            for non-Windows platforms and "grid" for Windows.
+        The floating point numbers in the table are formatted with three
+            decimal places.
+        """
+        report = self.generate_report()
+        for section, df in report.items():
+            print(f"\n{section}\n")
+            print(
+                tabulate(
+                    df,
+                    headers="keys",
+                    tablefmt="fancy_grid" if sys.platform != "win32" else "grid",
+                    floatfmt=".3f",
+                )
+            )
+
+
 class PrintingResults:
     """Print the results of the fitting process."""
 
@@ -398,10 +639,10 @@ class PrintingResults:
 
         Args:
             args (Dict[str,Any]): The input file arguments as a dictionary with
-                 additional information beyond the command line arguments.
+                additional information beyond the command line arguments.
             result (Any): The lmfit `results` as a kind of result based class.
-            minimizer (Minimizer): The lmfit `Minimizer`-class as a general minimizer
-                 for curve fitting and optimization.
+            minimizer (Minimizer): The lmfit `Minimizer`-class as a general
+                minimizer for curve fitting and optimization.
         """
         self.args = args
         self.result = result
@@ -446,10 +687,7 @@ class PrintingResults:
 
     def print_fit_results(self) -> None:
         """Print the fit results."""
-        print("\nFit Results and Insights:\n")
-        print(
-            report_fit(self.result, modelpars=self.result.params, **self.args["report"])
-        )
+        FitReport(self.result, modelpars=self.result.params, **self.args["report"])()
 
     def print_confidence_interval(self) -> None:
         """Print the confidence interval."""
