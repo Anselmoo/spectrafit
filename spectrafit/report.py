@@ -177,7 +177,7 @@ def fit_report_as_dict(
 
         The report contains the best-fit values for the parameters and their
         uncertainties and correlations. The report is generated as dictionary and
-        consits of the following three main criteria:
+        consists of the following three main criteria:
 
             1. Fit Statistics
             2. Fit variables
@@ -583,10 +583,10 @@ class FitReport:
     def generate_report(self) -> Dict[str, pd.DataFrame]:
         """Generate a report.
 
-        !!! note "About the Report"
-            This report contains fit statistics,
-            correlations of components (if enabled),
-            and variables and values.
+        !!! info "About the Report"
+
+            This report contains fit statistics, correlations of
+            components (if enabled), and variables and values.
 
         Returns:
             report (Dict[str, pd.DataFrame]): A dictionary containing
@@ -594,9 +594,9 @@ class FitReport:
         """
         report = {}
         report["Fit Statistics"] = self.generate_fit_statistics()
+        report["Variables and Values"] = self.generate_variables()
         if self.show_correl:
             report["Correlations of Components"] = self.generate_correlations()
-        report["Variables and Values"] = self.generate_variables()
         return report
 
     def __call__(self) -> None:
