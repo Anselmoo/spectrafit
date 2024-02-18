@@ -13,6 +13,7 @@ import pytest
 from lmfit import Parameter
 from lmfit import Parameters
 from pytest_mock.plugin import MockerFixture
+from spectrafit.report import CIReport
 from spectrafit.report import FitReport
 from spectrafit.report import PrintingResults
 from spectrafit.report import PrintingStatus
@@ -286,3 +287,54 @@ def test_fit_report_init_error_cases(inpars: List[Any], exception: Exception) ->
     """
     with pytest.raises(exception):  # type: ignore
         FitReport(inpars=inpars)
+
+
+@pytest.mark.parametrize(
+    "ci, with_offset, ndigits, expected_output, test_id",
+    [
+        (
+            {"param1": [(0.025, 2), (0.975, 4)], "param2": [(0.025, 3), (0.975, 5)]},
+            True,
+            5,
+            pd.DataFrame(
+                index=["param1", "param2"],
+                columns=["BEST", "0.025% - LOWER", "0.975% - UPPER"],
+                data=[[1.0, 2.0, 4.0], [2.0, 3.0, 5.0]],
+            ),
+            "Run - 1",
+        ),
+        (
+            {
+                "param1": [(0.0, 1), (0.025, 2), (0.975, 4)],
+                "param2": [(0.0, 2), (0.025, 3), (0.975, 5)],
+            },
+            False,
+            3,
+            pd.DataFrame(
+                index=["param1", "param2"],
+                columns=["BEST", "0.025% - LOWER", "0.975% - UPPER"],
+                data=[[1.0, 2.0, 4.0], [2.0, 3.0, 5.0]],
+            ),
+            "2",
+        ),
+        (
+            {"param1": [(0.0, 1)]},
+            True,
+            2,
+            pd.DataFrame({"BEST": {"param1": 1.0}}),
+            "3",
+        ),
+        ({}, True, 5, pd.DataFrame(), "4"),
+    ],
+)
+def test_CIReport(
+    ci: Dict[str, List[Any]],
+    with_offset: bool,
+    ndigits: int,
+    expected_output: pd.DataFrame,
+    test_id: str,
+) -> None:
+    """Test the CIReport class."""
+    report = CIReport(ci=ci, with_offset=with_offset, ndigits=ndigits)
+
+    report()

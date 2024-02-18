@@ -20,7 +20,6 @@ from art import tprint
 from lmfit import Minimizer
 from lmfit import Parameter
 from lmfit import Parameters
-from lmfit import report_ci
 from lmfit.minimizer import MinimizerException
 from lmfit.minimizer import minimize
 from lmfit.printfuncs import alphanumeric_sort
@@ -388,6 +387,73 @@ def warn_meassage(msg: str) -> str:
     return top + msg + header
 
 
+class CIReport:
+    """Generate a report of confidence intervals.
+
+    !!! info "About the Confidence Interval Report"
+
+        This class is responsible for generating a report that displays confidence
+        intervals for a given set of parameters. The report can be generated as a
+        table.
+
+        Please also check the original implementation of the `lmfit` package:
+        https://lmfit.github.io/lmfit-py/confidence.html#lmfit.ci_report
+
+    Args:
+        ci (Parameters): The confidence intervals for the parameters.
+        with_offset (bool, optional): Whether to include the offset in the report.
+            Defaults to True.
+        ndigits (int, optional): The number of digits to display in the report.
+            Defaults to 5.
+    """
+
+    def __init__(
+        self,
+        ci: Dict[str, List[Tuple[float, float]]],
+        with_offset: Optional[bool] = True,
+        ndigits: Optional[int] = 5,
+    ):
+        """Initialize the Report object.
+
+        Args:
+            ci (Dict[str, List[Tuple[float, float]]]): The confidence intervals for
+                the parameters.
+            with_offset (bool, optional): Whether to include an offset in the report.
+                Defaults to True.
+            ndigits (int, optional): The number of digits to round the report values to.
+                Defaults to 5.
+        """
+        self.ci = ci
+        self.with_offset = with_offset
+        self.ndigits = ndigits
+        self.df = pd.DataFrame()
+
+    def convp(self, x: Tuple[float, float], bound_type: str) -> str:
+        """Convert the confidence interval to a string."""
+        return "BEST" if abs(x[0]) < 1.0e-2 else f"{x[0] * 100:.2f}% - {bound_type}"
+
+    def __call__(self) -> None:
+        """Generate the Confidence report as a table."""
+        report: Dict[str, Dict[str, float]] = {}
+
+        for name, row in self.ci.items():
+            offset = 0.0
+            if self.with_offset:
+                for cval, val in row:
+                    if abs(cval) < 1.0e-2:
+                        offset = val
+            for i, (cval, val) in enumerate(row):
+                sval = val if cval < 1.0e-2 else val - offset
+                bound_type = "LOWER" if i < len(row) / 2 else "UPPER"
+                report.setdefault(self.convp((cval, val), bound_type), {})[name] = sval
+        self.df = pd.DataFrame(report)
+        self.tabulate(df=self.df)
+
+    def tabulate(self, df: pd.DataFrame) -> None:
+        """Print the Confidence report as a table."""
+        PrintingResults.print_tabulate_df(df=df, floatfmt=f".{self.ndigits}f")
+
+
 class FitReport:
     """Generate fit reports based on the result of the fitting process.
 
@@ -616,14 +682,7 @@ class FitReport:
         report = self.generate_report()
         for section, df in report.items():
             print(f"\n{section}\n")
-            print(
-                tabulate(
-                    df,
-                    headers="keys",
-                    tablefmt="fancy_grid" if sys.platform != "win32" else "grid",
-                    floatfmt=".3f",
-                )
-            )
+            PrintingResults.print_tabulate_df(df=df)
 
 
 class PrintingResults:
@@ -663,12 +722,25 @@ class PrintingResults:
         Args:
             args (Dict[str, Any]): The args to be printed as a dictionary.
         """
+        PrintingResults.print_tabulate_df(
+            df=pd.DataFrame(**args).T,
+        )
+
+    @staticmethod
+    def print_tabulate_df(df: pd.DataFrame, floatfmt: str = ".3f") -> None:
+        """Print the results of the fitting process.
+
+        Args:
+            df (pd.DataFrame): The DataFrame to be printed.
+            floatfmt (str, optional): The format of the floating point numbers.
+                Defaults to ".3f".
+        """
         print(
             tabulate(
-                pd.DataFrame(**args).T,
+                df,
                 headers="keys",
                 tablefmt="fancy_grid" if sys.platform != "win32" else "grid",
-                floatfmt=".3f",
+                floatfmt=floatfmt,
             )
         )
 
@@ -694,7 +766,7 @@ class PrintingResults:
         print("\nConfidence Interval:\n")
         if self.args["conf_interval"]:
             try:
-                report_ci(self.args["confidence_interval"][0])
+                CIReport(self.args["confidence_interval"][0])()
             except (MinimizerException, ValueError, KeyError, TypeError) as exc:
                 warn(f"Error: {exc} -> No confidence interval could be calculated!")
                 self.args["confidence_interval"] = {}
