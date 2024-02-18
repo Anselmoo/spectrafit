@@ -327,7 +327,7 @@ def test_fit_report_init_error_cases(inpars: List[Any], exception: Exception) ->
         ({}, True, 5, pd.DataFrame(), "4"),
     ],
 )
-def test_CIReport(
+def test_ci_report(
     ci: Dict[str, List[Any]],
     with_offset: bool,
     ndigits: int,
