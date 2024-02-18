@@ -410,44 +410,82 @@ class CIReport:
     def __init__(
         self,
         ci: Dict[str, List[Tuple[float, float]]],
-        with_offset: Optional[bool] = True,
-        ndigits: Optional[int] = 5,
+        with_offset: bool = True,
+        ndigits: int = 5,
+        best_tol: float = 1.0e-2,
     ):
         """Initialize the Report object.
 
         Args:
             ci (Dict[str, List[Tuple[float, float]]]): The confidence intervals for
                 the parameters.
-            with_offset (bool, optional): Whether to include an offset in the report.
+            with_offset (bool): Whether to include an offset in the report.
                 Defaults to True.
-            ndigits (int, optional): The number of digits to round the report values to.
+            ndigits (int): The number of digits to round the report values to.
                 Defaults to 5.
+            best_tol (float): The tolerance for the best value.
+                Defaults to 1.0e-2.
         """
         self.ci = ci
         self.with_offset = with_offset
         self.ndigits = ndigits
+        self.best_tol = best_tol
+
         self.df = pd.DataFrame()
 
     def convp(self, x: Tuple[float, float], bound_type: str) -> str:
-        """Convert the confidence interval to a string."""
-        return "BEST" if abs(x[0]) < 1.0e-2 else f"{x[0] * 100:.2f}% - {bound_type}"
+        """Convert the confidence interval to a string.
+
+        Args:
+            x (Tuple[float, float]): The confidence interval.
+            bound_type (str): The type of the bound.
+
+        Returns:
+            str: The confidence interval as a string.
+        """
+        return (
+            "BEST" if abs(x[0]) < self.best_tol else f"{x[0] * 100:.2f}% - {bound_type}"
+        )
+
+    def calculate_offset(self, row: List[Tuple[float, float]]) -> float:
+        """Calculate the offset for a row.
+
+        Args:
+            row (List[Tuple[float, float]]): The row to calculate the offset for.
+
+        Returns:
+            float: The offset for the row.
+        """
+        offset = 0.0
+        if self.with_offset:
+            for cval, val in row:
+                if abs(cval) < (self.best_tol or 0.0):
+                    offset = val
+        return offset
+
+    def create_report_row(
+        self, name: str, row: List[Tuple[float, float]], offset: float
+    ) -> None:
+        """Create a row for the report.
+
+        Args:
+            name (str): The name of the row.
+            row (List[Tuple[float, float]]): The row to create the report for.
+            offset (float): The offset for the row.
+        """
+        for i, (cval, val) in enumerate(row):
+            sval = val if cval < self.best_tol else val - offset
+            bound_type = "LOWER" if i < len(row) / 2 else "UPPER"
+            self.report.setdefault(self.convp((cval, val), bound_type), {})[name] = sval
 
     def __call__(self) -> None:
         """Generate the Confidence report as a table."""
-        report: Dict[str, Dict[str, float]] = {}
-
+        self.report: Dict[str, Dict[str, float]] = {}
         for name, row in self.ci.items():
-            offset = 0.0
-            if self.with_offset:
-                for cval, val in row:
-                    if abs(cval) < 1.0e-2:
-                        offset = val
-            for i, (cval, val) in enumerate(row):
-                sval = val if cval < 1.0e-2 else val - offset
-                bound_type = "LOWER" if i < len(row) / 2 else "UPPER"
-                report.setdefault(self.convp((cval, val), bound_type), {})[name] = sval
-        self.df = pd.DataFrame(report)
-        self.tabulate(df=self.df)
+            offset = self.calculate_offset(row)
+            self.create_report_row(name, row, offset)
+
+        self.tabulate(df=pd.DataFrame(self.report))
 
     def tabulate(self, df: pd.DataFrame) -> None:
         """Print the Confidence report as a table."""
