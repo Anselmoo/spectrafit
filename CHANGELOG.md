@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.0.0.post1 🌈 - 2024-02-19
+
+### :compass: What's Changed
+
+#### :toolbox: Maintenance
+
+* fix: :bug: add missing `100%x` in FitReport class (#1187) @Anselmoo
+
+#### :snake: Python
+
+* fix: :bug: add missing `100%x` in FitReport class (#1187) @Anselmoo
+
+#### :link: Dependency Updates
+
+* fix: :bug: add missing `100%x` in FitReport class (#1187) @Anselmoo
+
+#### :memo: Changelog
+
+* docs: :card_index_dividers: Update CHANGELOG for release/v1.0.0.post0 (#1184) @Anselmoo
+
+### :package: Full Changelog
+
+**Full Changelog**: https://github.com/Anselmoo/spectrafit/compare/v1.0.0.post0...v1.0.1
+
+### :gear: Who Contributes
+
+@Anselmoo
+
 ## v1.0.0.post0 🌈 - 2024-02-18
 
 ### :compass: What's Changed
