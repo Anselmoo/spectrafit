@@ -5,4 +5,4 @@
     SpectraFit uses [Semantic Versioning](https://semver.org/).
 """
 
-__version__ = "1.0.0.post0"
+__version__ = "1.0.0.post1"
