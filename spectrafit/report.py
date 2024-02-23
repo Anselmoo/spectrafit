@@ -640,7 +640,7 @@ class FitReport:
             if par.stderr is not None:
                 serr = gformat(par.stderr)
                 try:
-                    spercent = abs(par.stderr / par.value)
+                    spercent = abs(par.stderr / par.value) * 100
                 except ZeroDivisionError:  # pragma: no cover
                     spercent = None
 
@@ -649,7 +649,7 @@ class FitReport:
                 "value": sval,
                 "stderr absolute": serr,
                 "stderr percent": spercent,
-                "expr": par.expr if par.expr is not None else "",
+                "expr": par.expr,
                 "init": inval,
                 "model_value": model_val,
                 "fixed": par.vary,
