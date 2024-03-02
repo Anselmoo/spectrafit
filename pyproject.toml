@@ -44,9 +44,15 @@ exclude = ["docs/", "tools/", "spectrafit/test/", "spectrafit/**/test/"]
 
 [tool.poetry.dependencies]
 python = ">=3.8,<3.12"
-lmfit = "^1.1.0"
-pandas = ">=1.5,<3.0"
-numpy = "^1.23.4"
+lmfit = "^1.2.2"
+pandas = [
+  { version = "<2.2.1", markers = "python_version < '3.9'" },
+  { version = "^2.2.1", markers = "python_version >= '3.9'" },
+]
+numpy = [
+  { version = "<1.26.4", markers = "python_version < '3.9'" },
+  { version = "^1.26.4", markers = "python_version >= '3.9'" },
+]
 emcee = "^3.1.2"
 tabulate = "^0.9.0"
 PyYAML = "^6.0"
@@ -58,11 +64,10 @@ scikit-learn = "^1.2.0"
 art = ">=5.8,<7.0"
 tomli = "^2.0.1"
 tomli-w = "^1.0.0"
-pydantic = "^2.1.0"
+pydantic = "^2.6.3"
 scipy = [
   { version = "^1.10.1", markers = "python_version < '3.9'" },
   { version = "^1.12.0", markers = "python_version >= '3.9'" },
-
 ]
 jupyterlab = { version = ">=3.5.2,<5.0.0", optional = true }
 plotly = { version = "^5.14.0", optional = true }
