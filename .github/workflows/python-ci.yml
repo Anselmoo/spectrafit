@@ -73,8 +73,12 @@ jobs:
       - name: Codecov
         uses: codecov/codecov-action@v4.1.0
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+          name: codecov-umbrella
+          flags: unittests
+          verbose: true
           env_vars: OS,PYTHON
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
   minimal-build:
     name: Build SpectraFit without dev-dependencies
     runs-on: ubuntu-latest
