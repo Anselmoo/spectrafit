@@ -1851,13 +1851,13 @@ colors = ["colorama (>=0.4.6)"]
 
 [[package]]
 name = "itables"
-version = "1.7.0"
+version = "1.7.1"
 description = "Interactive Tables in Jupyter"
 optional = true
 python-versions = "*"
 files = [
-    {file = "itables-1.7.0-py3-none-any.whl", hash = "sha256:2f41528b6ef93fe838fed1e00a35c844a4ebf91fbfaa852b5aad83e039a8026c"},
-    {file = "itables-1.7.0.tar.gz", hash = "sha256:ad6ddd91feb65bde5c7a53fe77f222358fcd68dc80b90840ae06391745120d5c"},
+    {file = "itables-1.7.1-py3-none-any.whl", hash = "sha256:9b7b483a33d23b1a77f46c3caef8f060598a5f4168c61d872c6a08d7a30e4a76"},
+    {file = "itables-1.7.1.tar.gz", hash = "sha256:77fc16f20d4368c139b912ebc26a3e39a2b474be37021ee53cc758bf3a36c8d1"},
 ]
 
 [package.dependencies]
