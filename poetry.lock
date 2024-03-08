@@ -1185,13 +1185,13 @@ files = [
 
 [[package]]
 name = "dtale"
-version = "3.10.0"
+version = "3.11.0"
 description = "Web Client for Visualizing Pandas Objects"
 optional = true
 python-versions = "*"
 files = [
-    {file = "dtale-3.10.0-py2.py3-none-any.whl", hash = "sha256:6ce85880aba4a735182d4863e001825b6e8d3b40b2d85eea955de314285a1028"},
-    {file = "dtale-3.10.0.tar.gz", hash = "sha256:7b1d849e066f44fa285e82e99809ef7a28c8a62a1f31a1a137bb1631afe3d52c"},
+    {file = "dtale-3.11.0-py2.py3-none-any.whl", hash = "sha256:0a5aadba3879e09a2135575e94e034a4f6050ca542abde171ee441f36c1ce7cd"},
+    {file = "dtale-3.11.0.tar.gz", hash = "sha256:c82dfdbe01fb5768dd88dea6bf856a6262a33c66303a622c0fa0fd470dc85254"},
 ]
 
 [package.dependencies]
