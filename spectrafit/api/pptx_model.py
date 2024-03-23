@@ -339,7 +339,7 @@ class PPTXBasicTitleAPI(BaseModel):
     table_3_description: str = "Table 3: Variables"
 
     credit_logo: Path = (
-        Path(pkg_resources.get_distribution("spectrafit").location)
+        Path(str(pkg_resources.get_distribution("spectrafit").location))
         / "spectrafit/plugins/img/SpectraFit.png"
     )
     credit_description: str = f"SpectraFit: v{__version__}"
