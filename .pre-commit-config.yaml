@@ -18,8 +18,6 @@ repos:
       - id: check-added-large-files
         args: ["--maxkb=1000"]
         exclude: \.ipynb
-      - id: no-commit-to-branch
-        args: ['--branch', 'main']
   - repo: https://github.com/psf/black.git
     rev: 24.3.0
     hooks:
