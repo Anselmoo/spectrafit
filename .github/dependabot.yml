@@ -24,6 +24,6 @@ updates:
 
   # Maintain dependencies for Dependabot
   - package-ecosystem: "devcontainers"
-    directory: "/"
+    directory: ".github/"
     schedule:
       interval: "weekly"
