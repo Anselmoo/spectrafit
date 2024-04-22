@@ -1258,13 +1258,13 @@ tests = ["importlib-metadata", "importlib-metadata (<=3.7.3)", "ipython (<8.0.0)
 
 [[package]]
 name = "emcee"
-version = "3.1.4"
+version = "3.1.6"
 description = "The Python ensemble sampling toolkit for MCMC"
 optional = false
 python-versions = "*"
 files = [
-    {file = "emcee-3.1.4-py2.py3-none-any.whl", hash = "sha256:13d216a96b4f60661839d5f6ec482eda9e86b499502cda2bf6d8cc839ccf3e59"},
-    {file = "emcee-3.1.4.tar.gz", hash = "sha256:8e0e19dc8bcef9c6d02f860bef8ddc6c876b8878a6ce666943e2c5cfd9317fed"},
+    {file = "emcee-3.1.6-py2.py3-none-any.whl", hash = "sha256:f2d63752023bdccf744461450e512a5b417ae7d28f18e12acd76a33de87580cb"},
+    {file = "emcee-3.1.6.tar.gz", hash = "sha256:11af4daf6ab8f9ca69681e3c29054665db7bbd87fd4eb8e437d2c3a1248c637d"},
 ]
 
 [package.dependencies]
