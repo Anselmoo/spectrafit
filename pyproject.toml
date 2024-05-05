@@ -83,7 +83,7 @@ dash-bootstrap-templates = { version = "^1.0.7", optional = true }
 python-pptx = { version = "^0.6.22", optional = true }
 
 [tool.poetry.group.dev.dependencies]
-pylint = "^2.16.1"
+pylint = "^3.0.0"
 mypy = "^1.9.0"
 black = { extras = ["jupyter"], version = "^24.0" }
 blacken-docs = "^1.12.1"
