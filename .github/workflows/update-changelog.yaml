@@ -112,5 +112,5 @@ jobs:
           fi
       - name: Deploy documentation develops
         run: |
-          poetry run mike deploy --push --rebase --update-aliases ${{ github.event.release.tag_name }} latest --message "Release ${{ github.event.release.tag_name }}"
-          poetry run mike set-default --push --rebase latest
+          poetry run mike deploy --push --update-aliases ${{ github.event.release.tag_name }} latest --message "Release ${{ github.event.release.tag_name }}"
+          poetry run mike set-default --push latest
