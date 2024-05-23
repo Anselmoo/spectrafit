@@ -4,6 +4,7 @@
 [![Conda](https://img.shields.io/conda/v/conda-forge/spectrafit?label=Anaconda.org&logo=anaconda)](https://github.com/conda-forge/spectrafit-feedstock)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/spectrafit?color=gree&logo=Python&logoColor=yellow)](https://pypi.org/project/spectrafit/)
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/Anselmoo/spectrafit/main.svg)](https://results.pre-commit.ci/latest/github/Anselmoo/spectrafit/main)
+[![doi](https://img.shields.io/badge/10.1021/acsomega.3c09262-blue?logo=DOI&logoColor=white)](https://pubs.acs.org/doi/full/10.1021/acsomega.3c09262)
 
 <p align="center">
 <img src="https://github.com/Anselmoo/spectrafit/blob/c5f7ee05e5610fb8ef4e237a88f62977b6f832e5/docs/images/spectrafit_synopsis.png?raw=true">
