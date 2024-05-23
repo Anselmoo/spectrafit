@@ -5,29 +5,71 @@ cff-version: 1.2.0
 title: >-
   Introducing SpectraFit: An Open-Source Tool for
   Interactive Spectral Analysis
-message: 'If you are using SpectraFit, please cite it as below.'
+message: 'If you use this software, please cite both the article from preferred-citation and the software itself.'
+preferred-citation:
+  authors:
+    - given-names: Anselm W.
+      family-names: Hahn
+      email: anselm.hahn@gmail.com
+      orcid: 'https://orcid.org/0000-0003-4543-4833'
+    - given-names: Joseph
+      family-names: Zsombor-Pindera
+      orcid: 'https://orcid.org/0000-0002-9051-1319'
+    - given-names: Pierre
+      family-names: Kennepohl
+      orcid: 'https://orcid.org/0000-0003-3408-9157'
+    - given-names: Serena
+      family-names: DeBeer
+      orcid: 'https://orcid.org/0000-0002-5196-3400'
+  title: >-
+    Introducing SpectraFit: An Open-Source Tool for Interactive Spectral
+    Analysis
+  year: 2024
+  doi: 10.1021/acsomega.3c09262
+  journal: ACS Omega
+  type: article
 type: software
 authors:
   - given-names: Anselm W.
     family-names: Hahn
     email: anselm.hahn@gmail.com
     orcid: 'https://orcid.org/0000-0003-4543-4833'
+contributors:
   - given-names: Joseph
     family-names: Zsombor-Pindera
     orcid: 'https://orcid.org/0000-0002-9051-1319'
-  - given-names: Pierre
-    family-names: Kennepohl
-    orcid: 'https://orcid.org/0000-0003-3408-9157'
-  - given-names: Serena
-    family-names: DeBeer
-    orcid: 'https://orcid.org/0000-0002-5196-3400'
+references:
+  authors:
+    - given-names: Anselm W.
+      family-names: Hahn
+      email: anselm.hahn@gmail.com
+      orcid: 'https://orcid.org/0000-0003-4543-4833'
+    - given-names: Joseph
+      family-names: Zsombor-Pindera
+      orcid: 'https://orcid.org/0000-0002-9051-1319'
+    - given-names: Pierre
+      family-names: Kennepohl
+      orcid: 'https://orcid.org/0000-0003-3408-9157'
+    - given-names: Serena
+      family-names: DeBeer
+      orcid: 'https://orcid.org/0000-0002-5196-3400'
+  scope: >-
+      Cite this paper if you want to reference the general concepts of the
+      software.
+  title: >-
+    Introducing SpectraFit: An Open-Source Tool for Interactive Spectral
+    Analysis
+  year: 2024
+  doi: 10.1021/acsomega.3c09262
+  journal: ACS Omega
+  type: article
 identifiers:
   - type: doi
     value: 10.1021/acsomega.3c09262
-    description: ACS Omega
-repository-code: 'https://github.com/Anselmoo/spectrafit'
-url: 'https://pubs.acs.org/doi/full/10.1021/acsomega.3c09262'
-repository: 'https://anselmoo.github.io/spectrafit/'
+    description: 'ACS Omega'
+repository-code: 'https://github.com/Anselmoo/spectrafit/tree/main/spectrafit'
+url: 'https://anselmoo.github.io/spectrafit/'
+repository: 'https://github.com/Anselmoo/spectrafit'
 repository-artifact: >-
   https://github.com/Anselmoo/spectrafit/pkgs/container/spectrafit
 keywords:
