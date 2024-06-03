@@ -116,8 +116,8 @@ bump-pydantic = "^0.8.0"
 types-setuptools = ">=70.0.0.20240524,<70.1.0.0"
 
 [tool.poetry.group.docs.dependencies]
-mkdocs-material = "^9.4.0"
-mkdocstrings = { extras = ["python"], version = ">=0.24.3,<0.26.0" }
+mkdocs-material = "^9.5.0"
+mkdocstrings = { extras = ["python"], version = ">=0.25.1,<0.26.0" }
 mkdocs-literate-nav = ">=0.4.1,<0.7.0"
 mkdocs-section-index = "^0.3.4"
 mkdocs-autorefs = ">=0.5,<1.1"
