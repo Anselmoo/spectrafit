@@ -6543,4 +6543,4 @@ jupyter-dash = ["dash-bootstrap-components", "dash-bootstrap-templates", "ipywid
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8,<3.12"
-content-hash = "b285b5998f3dceaccdb8f8265097884649b505889344042f00709148c348a668"
+content-hash = "484e0feb377beed07de742cf6b6ab53652bee18e04f2737fc5838ce42ff754a6"
