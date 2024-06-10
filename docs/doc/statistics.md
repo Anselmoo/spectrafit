@@ -361,5 +361,4 @@ sp.solver_model(
 [24]: https://jupyter.org/
 
 [^1]: requires a strictly postive `y_true` and `y_pred` array
-
 [^2]: requires `sklearn >= 1.1.2`
