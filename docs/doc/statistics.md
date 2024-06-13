@@ -320,6 +320,9 @@ sp.solver_model(
 )
 ```
 
+[^1]: requires a strictly postive `y_true` and `y_pred` array
+[^2]: requires `sklearn >= 1.1.2`
+
 [1]: https://en.wikipedia.org/wiki/Goodness_of_fit
 [2]: https://lmfit.github.io/lmfit-py/fitting.html?highlight=goodness
 [3]: https://en.wikipedia.org/wiki/Chi-squared_test
@@ -359,7 +362,3 @@ sp.solver_model(
 [23]:
   https://scikit-learn.org/stable/modules/generated/sklearn.metrics.d2_absolute_error_score.html
 [24]: https://jupyter.org/
-
-[^1]: requires a strictly postive `y_true` and `y_pred` array
-
-[^2]: requires `sklearn >= 1.1.2`
