@@ -321,6 +321,7 @@ sp.solver_model(
 ```
 
 [^1]: requires a strictly postive `y_true` and `y_pred` array
+
 [^2]: requires `sklearn >= 1.1.2`
 
 [1]: https://en.wikipedia.org/wiki/Goodness_of_fit
