@@ -33,7 +33,7 @@ jobs:
   build:
     name: Python ${{ matrix.python-version }} - ${{ matrix.os }} - ${{ matrix.arch }} - ${{ github.event_name }}
     # Temporary fix for pre-commit
-    # needs: pre-commit
+    needs: pre-commit
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
