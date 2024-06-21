@@ -1916,13 +1916,13 @@ colors = ["colorama (>=0.4.6)"]
 
 [[package]]
 name = "itables"
-version = "2.1.1"
+version = "2.1.2"
 description = "Pandas and Polar DataFrames as interactive DataTables"
 optional = true
 python-versions = ">=3.7"
 files = [
-    {file = "itables-2.1.1-py3-none-any.whl", hash = "sha256:d533dc32bcec3d9c2f5e6e182a1eea74fa340686d05b37d19c3789323620b546"},
-    {file = "itables-2.1.1.tar.gz", hash = "sha256:b1e2157f100580851b97e62c2e8a8af59ca8ff4ff7463d108aa9cef2f191fb66"},
+    {file = "itables-2.1.2-py3-none-any.whl", hash = "sha256:3648f88bb130e8bfb9843dd6f8479b6e4c6cda6263a9bfaef269a4e7344340ac"},
+    {file = "itables-2.1.2.tar.gz", hash = "sha256:8ddfc471f63be1c68c5964e13eb2d9cc389c4eacad23d4564255c8bada1d5e1f"},
 ]
 
 [package.dependencies]
