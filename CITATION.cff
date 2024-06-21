@@ -51,12 +51,11 @@ preferred-citation:
     orcid: 'https://orcid.org/0000-0002-5196-3400'
   doi: '10.1021/acsomega.3c09262'
   journal: 'ACS Omega'
-  # Comes later
-  # month: 9
-  # start: 1 # First page number
-  # end: 10 # Last page number
-  # issue: 1
-  # volume: 1
+  month: 5
+  start: 23252 # First page number
+  end: 23265 # Last page number
+  issue: 22
+  volume: 9
   title: >-
     'Introducing SpectraFit: An Open-Source Tool for Interactive Spectral Analysis'
   year: 2024
