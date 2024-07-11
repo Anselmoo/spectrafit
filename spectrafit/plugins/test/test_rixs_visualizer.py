@@ -1,5 +1,7 @@
 """Test of the RIXS Visualizer."""
 
+import sys
+
 from pathlib import Path
 from typing import Any
 from typing import Tuple
@@ -15,6 +17,7 @@ from spectrafit.plugins.rixs_visualizer import RIXSFigure
 from spectrafit.plugins.rixs_visualizer import RIXSVisualizer
 
 
+@pytest.mark.skipif(sys.version_info < (3, 10), reason="Requires Python 3.10 or higher")
 @pytest.fixture(scope="module", autouse=True, name="test_data")
 def fixture_test_data() -> (
     Tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]]
@@ -31,6 +34,9 @@ def fixture_test_data() -> (
 class TestRixsFigure:
     """Test of the RIXS Figure."""
 
+    @pytest.mark.skipif(
+        sys.version_info < (3, 10), reason="Requires Python 3.10 or higher"
+    )
     def test__init__(self, test_data: NDArray[np.float64]) -> None:
         """Test the initialization."""
         _rixs_figure = RIXSFigure(
@@ -42,6 +48,9 @@ class TestRixsFigure:
         assert _rixs_figure.emission_energy.shape == (100,)
         assert _rixs_figure.rixs_map.shape == (100, 100)
 
+    @pytest.mark.skipif(
+        sys.version_info < (3, 10), reason="Requires Python 3.10 or higher"
+    )
     def test_create_rixs_figure(self, test_data: NDArray[np.float64]) -> None:
         """Test the creation of RIXS figure."""
         _rixs_figure = RIXSFigure(
@@ -62,6 +71,9 @@ class TestRixsFigure:
 class TestRIXSApp:
     """Test of the App."""
 
+    @pytest.mark.skipif(
+        sys.version_info < (3, 10), reason="Requires Python 3.10 or higher"
+    )
     def test__init__(self, test_data: NDArray[np.float64]) -> None:
         """Test the initialization."""
         _app = RIXSApp(
@@ -75,6 +87,9 @@ class TestRIXSApp:
 
     # Create a pytest for load data
 
+    @pytest.mark.skipif(
+        sys.version_info < (3, 10), reason="Requires Python 3.10 or higher"
+    )
     @pytest.mark.parametrize("file_format", ["npy", "npz", "json", "toml", "lock"])
     def test_load_data(
         self,
@@ -100,6 +115,9 @@ class TestRIXSApp:
         assert _model.emission_energy.shape == (100,)
         assert _model.rixs_map.shape == (100, 100)
 
+    @pytest.mark.skipif(
+        sys.version_info < (3, 10), reason="Requires Python 3.10 or higher"
+    )
     def test_load_data_error(self, tmp_path: Path) -> None:
         """Test the loading of data."""
         with pytest.raises(ValueError) as excinfo:
@@ -108,6 +126,9 @@ class TestRIXSApp:
         assert "File type" in str(excinfo.value)
 
     # test cmd line
+    @pytest.mark.skipif(
+        sys.version_info < (3, 10), reason="Requires Python 3.10 or higher"
+    )
     def test_cmd_line(self, script_runner: Any) -> None:
         """Test the command line."""
         ret = script_runner.run(
