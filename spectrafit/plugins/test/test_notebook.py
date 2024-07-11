@@ -237,7 +237,10 @@ def test_dataframe_display(dataframe: pd.DataFrame) -> None:
     assert "Invalid mode: wrong." in str(excinfo.value)
 
 
-@pytest.mark.skipif(sys.platform == "win32", reason="does not run on windows")
+@pytest.mark.skipif(
+    sys.platform == "win32" or sys.version_info < (3, 10),
+    reason="does not run on windows or with Python < 3.10",
+)
 @pytest.mark.webtest
 class TestDataFramePlot:
     """Test the DataFramePlot class."""
@@ -442,7 +445,10 @@ class TestSpectraFitNotebook:
             suffix="csv",
         ).exists()
 
-    @pytest.mark.skipif(sys.platform == "win32", reason="does not run on windows")
+    @pytest.mark.skipif(
+        sys.platform == "win32" or sys.version_info < (3, 10),
+        reason="does not run on windows or with Python < 3.10",
+    )
     @pytest.mark.webtest
     def test_plot_org(
         self,
@@ -453,7 +459,10 @@ class TestSpectraFitNotebook:
             class_spectrafit["sp"].plot_original_df
             mock_show.assert_called_once()
 
-    @pytest.mark.skipif(sys.platform == "win32", reason="does not run on windows")
+    @pytest.mark.skipif(
+        sys.platform == "win32" or sys.version_info < (3, 10),
+        reason="does not run on windows or with Python < 3.10",
+    )
     @pytest.mark.webtest
     def test_plot_current(
         self,
@@ -464,7 +473,10 @@ class TestSpectraFitNotebook:
             class_spectrafit["sp"].plot_current_df
             mock_show.assert_called_once()
 
-    @pytest.mark.skipif(sys.platform == "win32", reason="does not run on windows")
+    @pytest.mark.skipif(
+        sys.platform == "win32" or sys.version_info < (3, 10),
+        reason="does not run on windows or with Python < 3.10",
+    )
     @pytest.mark.webtest
     def test_plot_preprocess(
         self,
@@ -475,7 +487,10 @@ class TestSpectraFitNotebook:
             class_spectrafit["sp"].plot_preprocessed_df
             mock_show.assert_called_once()
 
-    @pytest.mark.skipif(sys.platform == "win32", reason="does not run on windows")
+    @pytest.mark.skipif(
+        sys.platform == "win32" or sys.version_info < (3, 10),
+        reason="does not run on windows or with Python < 3.10",
+    )
     @pytest.mark.webtest
     def test_plot_fit(
         self,
@@ -486,7 +501,10 @@ class TestSpectraFitNotebook:
             class_spectrafit["sp"].plot_fit_df()
             mock_show.assert_called_once()
 
-    @pytest.mark.skipif(sys.platform == "win32", reason="does not run on windows")
+    @pytest.mark.skipif(
+        sys.platform == "win32" or sys.version_info < (3, 10),
+        reason="does not run on windows or with Python < 3.10",
+    )
     @pytest.mark.webtest
     def test_plot_global(
         self,
