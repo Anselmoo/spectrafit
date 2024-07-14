@@ -19,7 +19,7 @@ if sys.version_info >= (3, 10):
 else:
     RIXSApp = None
 
-from spectrafit.plugins.rixs_visualizer import RIXSApp
+
 from spectrafit.plugins.rixs_visualizer import RIXSFigure
 from spectrafit.plugins.rixs_visualizer import RIXSVisualizer
 
