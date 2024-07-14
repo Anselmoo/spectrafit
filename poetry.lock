@@ -6092,13 +6092,13 @@ files = [
 
 [[package]]
 name = "types-setuptools"
-version = "70.1.0.20240625"
+version = "70.3.0.20240710"
 description = "Typing stubs for setuptools"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "types-setuptools-70.1.0.20240625.tar.gz", hash = "sha256:eb7175c9a304de4de9f4dfd0f299c754ac94cd9e30a262fbb5ff3047a0a6c517"},
-    {file = "types_setuptools-70.1.0.20240625-py3-none-any.whl", hash = "sha256:181986729bdae9fa7efc7d37f1578361739e35dd6ec456d37de8e8f3bd2be1ef"},
+    {file = "types-setuptools-70.3.0.20240710.tar.gz", hash = "sha256:842cbf399812d2b65042c9d6ff35113bbf282dee38794779aa1f94e597bafc35"},
+    {file = "types_setuptools-70.3.0.20240710-py3-none-any.whl", hash = "sha256:bd0db2a4b9f2c49ac5564be4e0fb3125c4c46b1f73eafdcbceffa5b005cceca4"},
 ]
 
 [[package]]
@@ -6611,4 +6611,4 @@ jupyter-dash = ["dash-bootstrap-components", "dash-bootstrap-templates", "ipywid
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8,<3.12"
-content-hash = "4a72efe6f4ad8fc56d4d4200d00bf2d4fa827c83201867bf084f5fc91c61b447"
+content-hash = "72c03c647e83bb2415ffa7cb7f0c2f18fd5b0e7e1e4ae7535f64fd5f83d27b48"
