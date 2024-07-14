@@ -12,6 +12,13 @@ import pytest
 
 from numpy.typing import NDArray
 from spectrafit.plugins.rixs_converter import RIXSConverter
+
+
+if sys.version_info >= (3, 10):
+    from spectrafit.plugins.rixs_visualizer import RIXSApp
+else:
+    RIXSApp = None
+
 from spectrafit.plugins.rixs_visualizer import RIXSApp
 from spectrafit.plugins.rixs_visualizer import RIXSFigure
 from spectrafit.plugins.rixs_visualizer import RIXSVisualizer
