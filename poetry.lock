@@ -1241,13 +1241,13 @@ files = [
 
 [[package]]
 name = "dtale"
-version = "3.12.0"
+version = "3.13.1"
 description = "Web Client for Visualizing Pandas Objects"
 optional = true
 python-versions = "*"
 files = [
-    {file = "dtale-3.12.0-py2.py3-none-any.whl", hash = "sha256:ede98ae3fdf7773c3a55b7ac8eb5cbc6183bf0184521c820286bda57eed95560"},
-    {file = "dtale-3.12.0.tar.gz", hash = "sha256:4f011fcceabd5708a8aba9665d1e26cf68569c6867a96bed6fb34a9225b26e60"},
+    {file = "dtale-3.13.1-py2.py3-none-any.whl", hash = "sha256:1f0264c11a0b27a61f3583f2a3312bd273b890c8c206092a477c460fe82edc9f"},
+    {file = "dtale-3.13.1.tar.gz", hash = "sha256:6b082f7c4548328f774fbc774ca8458055d71a418261d2a5a25b6cdd7479f941"},
 ]
 
 [package.dependencies]
@@ -1291,7 +1291,7 @@ scikit-learn = [
 ]
 scipy = [
     {version = "<=1.10.1", markers = "python_version == \"3.8\""},
-    {version = "!=1.12.0rc1", markers = "python_version >= \"3.9\""},
+    {version = "<1.12.0rc1 || >1.12.0rc1,<1.14.0 || >1.14.0", markers = "python_version >= \"3.9\""},
 ]
 seaborn = {version = "*", markers = "python_version > \"3.7\""}
 six = "*"
