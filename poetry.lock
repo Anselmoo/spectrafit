@@ -154,17 +154,17 @@ dev = ["bandit (>=1.5.1)", "coverage (>=4.1)", "pydocstyle (>=3.0.0)", "vulture 
 
 [[package]]
 name = "asteval"
-version = "0.9.33"
+version = "1.0.1"
 description = "Safe, minimalistic evaluator of python expression using ast module"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "asteval-0.9.33-py3-none-any.whl", hash = "sha256:aae3a0308575a545c8cecc43a6632219e6a90963a56380c74632cf54311e43bf"},
-    {file = "asteval-0.9.33.tar.gz", hash = "sha256:94981701f4d252c88aa5e821121b1aabef73a003da138fc6405169c9e675d24d"},
+    {file = "asteval-1.0.1-py3-none-any.whl", hash = "sha256:c7992cc6d0487ab29700b4531d9e7870e4b2e16cf94603cd5b71b21503fb0cde"},
+    {file = "asteval-1.0.1.tar.gz", hash = "sha256:377f4917e5b717bc525b887345231791945fe89c43660b7902a64e69827db87f"},
 ]
 
 [package.extras]
-all = ["Sphinx", "build", "coverage", "pytest", "pytest-cov", "twine"]
+all = ["asteval[dev,doc,test]"]
 dev = ["build", "twine"]
 doc = ["Sphinx"]
 test = ["coverage", "pytest", "pytest-cov"]
@@ -2572,21 +2572,21 @@ dev = ["Sphinx (>=5.1.1)", "black (==23.9.1)", "build (>=0.10.0)", "coverage (>=
 
 [[package]]
 name = "lmfit"
-version = "1.3.1"
+version = "1.3.2"
 description = "Least-Squares Minimization with Bounds and Constraints"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "lmfit-1.3.1-py3-none-any.whl", hash = "sha256:5486c19fe6b3899e4562b9976dee42d1a064a81ce76fe280a9970398fa300312"},
-    {file = "lmfit-1.3.1.tar.gz", hash = "sha256:bc386244adbd10ef1a2a2c4f9d17b3def905552c0a64aef854f0ad46cc309cc5"},
+    {file = "lmfit-1.3.2-py3-none-any.whl", hash = "sha256:2b834f054cd7a5172f3b431345b292e5d95ea387d6f96d60ad35a11b8efee6ac"},
+    {file = "lmfit-1.3.2.tar.gz", hash = "sha256:31beeae1f027c1b8c14dcd7f2e8488a80b75fb389e77fca677549bdc2fe597bb"},
 ]
 
 [package.dependencies]
-asteval = ">=0.9.28"
+asteval = ">=1.0"
 dill = ">=0.3.4"
 numpy = ">=1.19"
 scipy = ">=1.6"
-uncertainties = ">=3.1.4"
+uncertainties = ">=3.2.2"
 
 [package.extras]
 all = ["lmfit[dev,doc,test]"]
@@ -6167,13 +6167,13 @@ files = [
 
 [[package]]
 name = "uncertainties"
-version = "3.2.1"
+version = "3.2.2"
 description = "calculations with values with uncertainties, error propagation"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "uncertainties-3.2.1-py3-none-any.whl", hash = "sha256:80dea7f0c2fe37c9de6893b2352311b5f332be60060cbd6387f88050f7ec345d"},
-    {file = "uncertainties-3.2.1.tar.gz", hash = "sha256:b05417b58bdef236c20e711fb2fee18e4db7348a92edcec01318b32aab34925e"},
+    {file = "uncertainties-3.2.2-py3-none-any.whl", hash = "sha256:fd8543355952f4052786ed4150acaf12e23117bd0f5bd03ea07de466bce646e7"},
+    {file = "uncertainties-3.2.2.tar.gz", hash = "sha256:e62c86fdc64429828229de6ab4e11466f114907e6bd343c077858994cc12e00b"},
 ]
 
 [package.extras]
