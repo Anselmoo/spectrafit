@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "SpectraFit"
-version = "1.0.1"
+version = "1.0.2"
 description = "Fast fitting of 2D- and 3D-Spectra with established routines"
 readme = "README.md"
 authors = ["Anselm Hahn <anselm.hahn@gmail.com>"]
@@ -82,7 +82,10 @@ pydot = { version = "^3.0.0", optional = true }
 jupyter-dash = { version = "^0.4.2", optional = true }
 ipywidgets = { version = "^8.0.4", optional = true }
 dash-bootstrap-components = { version = "^1.3.0", optional = true }
-dash-bootstrap-templates = { version = "^1.0.7", optional = true }
+dash-bootstrap-templates = [
+  { version = "<=1.1.2", markers = "python_version < '3.10'" },
+  { version = "^1.2.0", markers = "python_version >= '3.10'" },
+]
 python-pptx = { version = "^0.6.22", optional = true }
 
 [tool.poetry.group.dev.dependencies]
@@ -113,7 +116,7 @@ prospector = { extras = [
   "pylint",
 ], version = "^1.10.2" }
 bump-pydantic = "^0.8.0"
-types-setuptools = ">=70.3.0.20240710,<70.4.0.0"
+types-setuptools = ">=71.1.0.20240726,<71.2.0.0"
 
 [tool.poetry.group.docs.dependencies]
 mkdocs-material = "^9.5.0"
