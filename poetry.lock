@@ -4504,13 +4504,13 @@ toml = ["tomli (>=1.2.3)"]
 
 [[package]]
 name = "pydot"
-version = "3.0.0"
+version = "3.0.1"
 description = "Python interface to Graphviz's Dot"
 optional = true
 python-versions = ">=3.8"
 files = [
-    {file = "pydot-3.0.0-py3-none-any.whl", hash = "sha256:4d7e680af1f0b62b3dc7dc0ad5bed6c764add94cb1fc932c5ce2567639d2e712"},
-    {file = "pydot-3.0.0.tar.gz", hash = "sha256:764640e04f7560dbf0fdfae25f8b6ab59f8c0cd93351d552d779b00d70885411"},
+    {file = "pydot-3.0.1-py3-none-any.whl", hash = "sha256:43f1e878dc1ff7c1c2e3470a6999d4e9e97771c5c862440c2f0af0ba844c231f"},
+    {file = "pydot-3.0.1.tar.gz", hash = "sha256:e18cf7f287c497d77b536a3d20a46284568fea390776dface6eabbdf1b1b5efc"},
 ]
 
 [package.dependencies]
