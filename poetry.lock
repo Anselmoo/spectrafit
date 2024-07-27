@@ -1059,6 +1059,26 @@ pandas = ["numpy", "pandas"]
 
 [[package]]
 name = "dash-bootstrap-templates"
+version = "1.1.2"
+description = "A collection of Plotly figure templates with a Bootstrap theme"
+optional = false
+python-versions = "*"
+files = [
+    {file = "dash-bootstrap-templates-1.1.2.tar.gz", hash = "sha256:ad09b6d22500b7de3fd6cfe4886389de653ef16320969915f728b4bac5a7ba30"},
+    {file = "dash_bootstrap_templates-1.1.2-py3-none-any.whl", hash = "sha256:87bb1e9dd7ac475f07d1237159091b9d154aa80fdae5fe579fb868e87343dfcd"},
+]
+
+[package.dependencies]
+dash = "*"
+dash-bootstrap-components = ">=1.0.0"
+importlib-resources = {version = ">=5.1.0", markers = "python_version < \"3.9\""}
+numpy = "*"
+
+[package.extras]
+dev = ["spectra", "tinycss2"]
+
+[[package]]
+name = "dash-bootstrap-templates"
 version = "1.2.0"
 description = "A collection of Plotly figure templates with a Bootstrap theme"
 optional = false
@@ -1071,7 +1091,6 @@ files = [
 [package.dependencies]
 dash = "*"
 dash-bootstrap-components = ">=1.0.0"
-importlib-resources = {version = ">=5.1.0", markers = "python_version < \"3.9\""}
 numpy = "*"
 
 [package.extras]
@@ -6679,4 +6698,4 @@ jupyter-dash = ["dash-bootstrap-components", "dash-bootstrap-templates", "dash-b
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8,<3.12"
-content-hash = "2f49ded574a36568fa185bcd8228b8b03c7df959d68793208d3abb5fb4aa4554"
+content-hash = "8516ed919e1451450907224f0a1a63088471b8ffde257eb41ce2c8f6f684eb84"
