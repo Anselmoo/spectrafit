@@ -57,7 +57,9 @@ jobs:
         uses: docker/metadata-action@v4.6.0
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: type=sha,format=long
+          tags: |
+            type=sha,format=long
+            type=ref,event=branch,branch=main,tag=latest
 
       - name: Build and Push container images
         uses: docker/build-push-action@v6.5.0
@@ -69,7 +71,7 @@ jobs:
           labels: ${{ steps.docker_meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          # outputs: type=image,name=target,annotation-index.org.opencontainers.image.description=${{ fromJSON(steps.docker_meta.outputs.json).labels['org.opencontainers.image.description'] }}
+          outputs: type=image,name=target,annotation-index.org.opencontainers.image.description=${{ fromJSON(steps.docker_meta.outputs.json).labels['org.opencontainers.image.description'] }}
 
       # https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#using-an-intermediate-environment-variable
       - name: Sign image with a key
