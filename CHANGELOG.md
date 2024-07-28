@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.0.3.post0 🌈 - 2024-07-28
+
+### :compass: What's Changed
+
+#### :toolbox: Maintenance
+
+* build: :bookmark: Update to post-release (#1451) @Anselmoo
+
+#### :snake: Python
+
+* build: :bookmark: Update to post-release (#1451) @Anselmoo
+
+#### :octocat: Github Actions
+
+* chore(deps): update docker/metadata-action action to v5 (#1449) @renovate
+* build: ⚙️  Activate output in docker push (#1450) @Anselmoo
+
+#### :link: Dependency Updates
+
+* build: :bookmark: Update to post-release (#1451) @Anselmoo
+
+### :package: Full Changelog
+
+**Full Changelog**: https://github.com/Anselmoo/spectrafit/compare/v1.0.3...v1.0.4
+
+### :gear: Who Contributes
+
+@Anselmoo, @renovate and @renovate[bot]
+
 ## v1.0.3 🌈 - 2024-07-28
 
 ### :compass: What's Changed
