@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.0.3 🌈 - 2024-07-28
+
+### :compass: What's Changed
+
+#### :octocat: Github Actions
+
+* feat: :construction_worker: Update Docker dependencies for Docker actions (#1437) @Anselmoo
+
+#### :memo: Changelog
+
+* docs: :card_index_dividers: Changlog update for v1.0.2 (#1434) @Anselmoo
+
+### :package: Full Changelog
+
+**Full Changelog**: https://github.com/Anselmoo/spectrafit/compare/v1.0.2...v1.0.3
+
+### :gear: Who Contributes
+
+@Anselmoo
+
 ## v1.0.2 🌈 - 2024-07-28
 
 ### :compass: What's Changed
