@@ -2,6 +2,113 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.0.2 🌈 - 2024-07-28
+
+### :compass: What's Changed
+
+* chore: :pencil2: Update CITATION.cff (#1370) @Anselmoo
+
+#### :toolbox: Maintenance
+
+* build: :bookmark: Bump version to `1.0.2` (#1432) @Anselmoo
+* [pre-commit.ci] pre-commit autoupdate (#1427) @pre-commit-ci
+* fix(deps): update dependency pydot to v3 (#1413) @renovate
+* chore(deps): update dependency types-setuptools to >=70.3.0.20240710,<70.4.0.0 (#1404) @renovate
+* [pre-commit.ci] pre-commit autoupdate (#1401) @pre-commit-ci
+* [pre-commit.ci] pre-commit autoupdate (#1391) @pre-commit-ci
+* chore(deps): update dependency types-setuptools to >=70.1.0.20240625,<70.2.0.0 (#1377) @renovate
+* [pre-commit.ci] pre-commit autoupdate (#1365) @pre-commit-ci
+* ci: ⬆️ pre-commit autoupdate (#1355) @pre-commit-ci
+* fix(deps): update dependency itables to v2.1.1 (#1352) @renovate
+* bump: :arrow_up:  Update scikit-learn dependency to v1.5.0 (#1347) @Anselmoo
+* chore(deps): update dependency types-setuptools to v70 (#1325) @renovate
+
+#### :snake: Python
+
+* build: :bookmark: Bump version to `1.0.2` (#1432) @Anselmoo
+* build: bump certifi from 2024.6.2 to 2024.7.4 (#1396) @dependabot
+
+#### :octocat: Github Actions
+
+* build: :bookmark: Bump version to `1.0.2` (#1432) @Anselmoo
+* chore(deps): update docker/login-action action to v3.3.0 (#1426) @renovate
+* chore(deps): update docker/setup-buildx-action digest to aa33708 (#1425) @renovate
+* chore(deps): update docker/metadata-action digest to 60a0d34 (#1429) @renovate
+* chore(deps): update docker/setup-buildx-action digest to 49a04d6 (#1395) @renovate
+* chore(deps): update docker/build-push-action digest to 1ca370b (#1415) @renovate
+* chore(deps): update docker/build-push-action digest to a254f8c (#1378) @renovate
+* chore(deps): update docker/metadata-action digest to a64d048 (#1384) @renovate
+* ci: Delete .github/workflows/snyk-security.yml (#1412) @Anselmoo
+* build: bump snyk/actions from 806182742461562b67788a64410098c9d9b96adb to 640e31719aac3e44867d239dc86c20c3e34c8e4f (#1410) @dependabot
+* ci: Update snyk-security.yml (#1408) @Anselmoo
+* ci: 🧷 Create snyk-security.yml (#1406) @Anselmoo
+* build: bump docker/build-push-action from 6.2.0 to 6.3.0 (#1399) @dependabot
+* build: bump docker/setup-buildx-action from abe89fb761023d1d963c81f6b5e0df54236dc097 to 2ad185228a349d19414702819e06df9fa4314287 (#1400) @dependabot
+* build: bump docker/build-push-action from 6.1.0 to 6.2.0 (#1389) @dependabot
+* chore(deps): update pypa/gh-action-pypi-publish digest to fb9fc6a (#1382) @renovate
+* chore(deps): update docker/build-push-action digest to 31159d4 (#1354) @renovate
+* chore(deps): update docker/setup-buildx-action digest to abe89fb (#1369) @renovate
+* docs: :rotating_light: Fix formatting issues in documentation (#1364) @Anselmoo
+* build: bump pypa/gh-action-pypi-publish from 87b624f8716b1150d93f45fa364e49eceebf3ffd to ec4db0b4ddc65acdf4bff5fa45ac92d78b56bdf0 (#1362) @dependabot
+* chore(deps): update codecov/codecov-action action to v4.5.0 (#1359) @renovate
+* ci: ⬆️ pre-commit autoupdate (#1355) @pre-commit-ci
+* chore(deps): update docker/build-push-action digest to ca052bb (#1334) @renovate
+* chore(deps): update pypa/gh-action-pypi-publish digest to 87b624f (#1339) @renovate
+* chore(deps): update docker/login-action action to v3.2.0 (#1336) @renovate
+* build: bump codecov/codecov-action from 4.4.0 to 4.4.1 (#1333) @dependabot
+
+#### :card_index_dividers: Documentation
+
+* chore(deps): update docker/build-push-action digest to 31159d4 (#1354) @renovate
+* docs: :rotating_light: Fix formatting issues in documentation (#1364) @Anselmoo
+* fix: :wrench: Update dependencies and fix formatting issues in documentation (#1357) @Anselmoo
+* ci: ⬆️ pre-commit autoupdate (#1355) @pre-commit-ci
+
+#### :link: Dependency Updates
+
+* chore(deps): update dependency pre-commit to v3.7.1 (#1433) @renovate
+* build: :bookmark: Bump version to `1.0.2` (#1432) @Anselmoo
+* chore(deps): update dependency mkdocs-material to v9.5.30 (#1428) @renovate
+* chore(deps): update dependency mypy to v1.11.0 (#1418) @renovate
+* fix(deps): update dependency pydot to v3 (#1413) @renovate
+* build: bump snyk/actions from 806182742461562b67788a64410098c9d9b96adb to 640e31719aac3e44867d239dc86c20c3e34c8e4f (#1410) @dependabot
+* chore(deps): update dependency types-setuptools to >=70.3.0.20240710,<70.4.0.0 (#1404) @renovate
+* build: bump docker/build-push-action from 6.2.0 to 6.3.0 (#1399) @dependabot
+* build: bump docker/setup-buildx-action from abe89fb761023d1d963c81f6b5e0df54236dc097 to 2ad185228a349d19414702819e06df9fa4314287 (#1400) @dependabot
+* build: bump certifi from 2024.6.2 to 2024.7.4 (#1396) @dependabot
+* build: bump docker/build-push-action from 6.1.0 to 6.2.0 (#1389) @dependabot
+* chore(deps): update dependency blacken-docs to v1.18.0 (#1385) @renovate
+* fix(deps): update dependency openpyxl to v3.1.5 (#1383) @renovate
+* chore(deps): update dependency types-setuptools to >=70.1.0.20240625,<70.2.0.0 (#1377) @renovate
+* chore(deps): update dependency mike to v2.1.2 (#1373) @renovate
+* chore(deps): update dependency pre-commit to v3.7.1 (#1348) @renovate
+* build: bump pypa/gh-action-pypi-publish from 87b624f8716b1150d93f45fa364e49eceebf3ffd to ec4db0b4ddc65acdf4bff5fa45ac92d78b56bdf0 (#1362) @dependabot
+* chore(deps): update dependency mkdocs-material to v9.5.27 (#1360) @renovate
+* fix: :wrench: Update dependencies and fix formatting issues in documentation (#1357) @Anselmoo
+* chore(deps): update dependency dash to v2.17.1 (#1356) @renovate
+* fix(deps): update dependency itables to v2.1.1 (#1352) @renovate
+* chore(deps): update dependency pytest to v8.2.2 (#1350) @renovate
+* bump: :arrow_up:  Update scikit-learn dependency to v1.5.0 (#1347) @Anselmoo
+* chore(deps): update dependency types-setuptools to v70 (#1325) @renovate
+* fix(deps): update dependency itables to v2.1.0 (#1335) @renovate
+* build: bump codecov/codecov-action from 4.4.0 to 4.4.1 (#1333) @dependabot
+
+#### :memo: Changelog
+
+* docs: :card_index_dividers: Changlog update for v1.0.1 (#1331) @Anselmoo
+
+#### :package: Vendor
+
+* build: :bookmark: Bump version to `1.0.2` (#1432) @Anselmoo
+
+### :package: Full Changelog
+
+**Full Changelog**: https://github.com/Anselmoo/spectrafit/compare/v1.0.1...v1.0.2
+
+### :gear: Who Contributes
+
+@Anselmoo, @renovate and @renovate[bot]
+
 ## v1.0.1 🌈 - 2024-05-24
 
 ### :compass: What's Changed
