@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.0.3.post2 - 2024-07-29
+
+### What's Changed
+
+* docs: :card_index_dividers: Changlog update for v1.0.3.post1 by @Anselmoo in https://github.com/Anselmoo/spectrafit/pull/1454
+* chore: :green_heart: Update dependencies to latest versions by @Anselmoo in https://github.com/Anselmoo/spectrafit/pull/1457
+
+**Full Changelog**: https://github.com/Anselmoo/spectrafit/compare/v1.0.3.post1...1.0.3.post2
+
+### What's Changed
+
+* docs: :card_index_dividers: Changlog update for v1.0.3.post1 by @Anselmoo in https://github.com/Anselmoo/spectrafit/pull/1454
+* chore: :green_heart: Update dependencies to latest versions by @Anselmoo in https://github.com/Anselmoo/spectrafit/pull/1457
+
+**Full Changelog**: https://github.com/Anselmoo/spectrafit/compare/v1.0.3.post1...v1.0.3.post2
+
 ## v1.0.3.post1 🌈 - 2024-07-29
 
 ### :compass: What's Changed
