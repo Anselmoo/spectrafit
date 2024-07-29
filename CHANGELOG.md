@@ -2,6 +2,38 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.0.3.post1 🌈 - 2024-07-29
+
+### :compass: What's Changed
+
+#### :toolbox: Maintenance
+
+* build: :green_heart: Update Docker actions  (#1453) @Anselmoo
+
+#### :snake: Python
+
+* build: :green_heart: Update Docker actions  (#1453) @Anselmoo
+
+#### :octocat: Github Actions
+
+* build: :green_heart: Update Docker actions  (#1453) @Anselmoo
+
+#### :link: Dependency Updates
+
+* build: :green_heart: Update Docker actions  (#1453) @Anselmoo
+
+#### :memo: Changelog
+
+* docs: :card_index_dividers: Changlog update for v1.0.3.post0 (#1452) @Anselmoo
+
+### :package: Full Changelog
+
+**Full Changelog**: https://github.com/Anselmoo/spectrafit/compare/v1.0.3.post0...v1.0.4
+
+### :gear: Who Contributes
+
+@Anselmoo
+
 ## v1.0.3.post0 🌈 - 2024-07-28
 
 ### :compass: What's Changed
