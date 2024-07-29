@@ -57,8 +57,8 @@ jobs:
         uses: docker/metadata-action@v5.5.1
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: |
-            type=pep440,pattern={{version}},prefix=v
+          # tags: |
+          #   type=pep440,pattern={{version}},prefix=v
 
       - name: Build and Push container images
         uses: docker/build-push-action@v6.5.0
