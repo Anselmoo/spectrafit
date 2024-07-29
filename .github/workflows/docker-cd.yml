@@ -58,8 +58,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=sha,format=long
-            type=ref,event=branch,branch=main,tag=latest
+            type=pep440,pattern={{version}},prefix=v
 
       - name: Build and Push container images
         uses: docker/build-push-action@v6.5.0
