@@ -8,27 +8,28 @@ All notable changes to this project will be documented in this file.
 
 #### :toolbox: Maintenance
 
-* build: :green_heart: Update Docker actions  (#1453) @Anselmoo
+- build: :green_heart: Update Docker actions (#1453) @Anselmoo
 
 #### :snake: Python
 
-* build: :green_heart: Update Docker actions  (#1453) @Anselmoo
+- build: :green_heart: Update Docker actions (#1453) @Anselmoo
 
 #### :octocat: Github Actions
 
-* build: :green_heart: Update Docker actions  (#1453) @Anselmoo
+- build: :green_heart: Update Docker actions (#1453) @Anselmoo
 
 #### :link: Dependency Updates
 
-* build: :green_heart: Update Docker actions  (#1453) @Anselmoo
+- build: :green_heart: Update Docker actions (#1453) @Anselmoo
 
 #### :memo: Changelog
 
-* docs: :card_index_dividers: Changlog update for v1.0.3.post0 (#1452) @Anselmoo
+- docs: :card_index_dividers: Changlog update for v1.0.3.post0 (#1452) @Anselmoo
 
 ### :package: Full Changelog
 
-**Full Changelog**: https://github.com/Anselmoo/spectrafit/compare/v1.0.3.post0...v1.0.4
+**Full Changelog**:
+https://github.com/Anselmoo/spectrafit/compare/v1.0.3.post0...v1.0.4
 
 ### :gear: Who Contributes
 
