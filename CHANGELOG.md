@@ -8,27 +8,28 @@ All notable changes to this project will be documented in this file.
 
 #### :toolbox: Maintenance
 
-* chore: :green_heart: Update dependencies to latest versions (#1457) @Anselmoo
+- chore: :green_heart: Update dependencies to latest versions (#1457) @Anselmoo
 
 #### :snake: Python
 
-* chore: :green_heart: Update dependencies to latest versions (#1457) @Anselmoo
+- chore: :green_heart: Update dependencies to latest versions (#1457) @Anselmoo
 
 #### :octocat: Github Actions
 
-* chore: :green_heart: Update dependencies to latest versions (#1457) @Anselmoo
+- chore: :green_heart: Update dependencies to latest versions (#1457) @Anselmoo
 
 #### :link: Dependency Updates
 
-* chore: :green_heart: Update dependencies to latest versions (#1457) @Anselmoo
+- chore: :green_heart: Update dependencies to latest versions (#1457) @Anselmoo
 
 #### :memo: Changelog
 
-* docs: :card_index_dividers: Changlog update for v1.0.3.post1 (#1454) @Anselmoo
+- docs: :card_index_dividers: Changlog update for v1.0.3.post1 (#1454) @Anselmoo
 
 ### :package: Full Changelog
 
-**Full Changelog**: https://github.com/Anselmoo/spectrafit/compare/v1.0.3.post1...v1.0.4
+**Full Changelog**:
+https://github.com/Anselmoo/spectrafit/compare/v1.0.3.post1...v1.0.4
 
 ### :gear: Who Contributes
 
