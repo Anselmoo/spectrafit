@@ -214,7 +214,49 @@ available plugins are:
 
 !!! info "About cosign"
 
-    _coming soon_
+    The `cosign` is a tool for signing and verifying container images as part of the
+    [sigstore][10] project.The `cosign` can be used to sign the `SpectraFit` container
+    image. The `cosign` can be [installed][11] via:
+
+    ```bash
+    # install cosign for macOS and Linux
+    brew install cosign
+    # install cosign via go
+    go install github.com/sigstore/cosign/v2/cmd/cosign@latest
+    ```
+
+    To verify the SpectraFit container image, SpectraFit's public key is required and
+    can be found under: https://github.com/Anselmoo/spectrafit/blob/main/cosign.pub.
+    You can save the public key to a file named cosign.pub:
+
+    ```bash
+    cat cosign.pub
+    -----BEGIN PUBLIC KEY-----
+    MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE/6fPQhwVsFvcfGtSFBIwdHbTxkF3
+    KaNOdpXBpmyrM/y1TM5YgTYl5mVq7km/LPukbXslcrVX1dT5H+FUP6+onQ==
+    -----END PUBLIC KEY-----
+    ```
+    Then, cosign can be used to verify the SpectraFit container image:
+
+    ```bash
+    cosign verify --key cosign.pub  ghcr.io/anselmoo/spectrafit:latest
+
+    # or export to json
+    cosign verify  --key cosign.pub  ghcr.io/anselmoo/spectrafit:latest > cosign_verify.json
+    ```
+
+    and the output can be saved to a file named `cosign_verify.json`.
+
+    ```bash
+    cat cosign_verify.json
+    [
+    {
+        "critical": {
+            "identity": {
+                "docker-reference": "ghcr.io/anselmoo/spectrafit"
+            },
+            ...
+    ```
 
 [1]: https://github.com/pypa/pipx
 [2]: https://conda.io/docs/
@@ -226,3 +268,5 @@ available plugins are:
 [7]: https://github.com/conda-forge/spectrafit-feedstock
 [8]: https://python-poetry.org/docs/
 [9]: https://github.com/Anselmoo/spectrafit/
+[10]: https://www.sigstore.dev
+[11]: https://docs.sigstore.dev/system_config/installation/
