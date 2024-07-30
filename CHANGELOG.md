@@ -2,6 +2,39 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.0.3.post2 🌈 - 2024-07-29
+
+### :compass: What's Changed
+
+#### :toolbox: Maintenance
+
+- chore: :green_heart: Update dependencies to latest versions (#1457) @Anselmoo
+
+#### :snake: Python
+
+- chore: :green_heart: Update dependencies to latest versions (#1457) @Anselmoo
+
+#### :octocat: Github Actions
+
+- chore: :green_heart: Update dependencies to latest versions (#1457) @Anselmoo
+
+#### :link: Dependency Updates
+
+- chore: :green_heart: Update dependencies to latest versions (#1457) @Anselmoo
+
+#### :memo: Changelog
+
+- docs: :card_index_dividers: Changlog update for v1.0.3.post1 (#1454) @Anselmoo
+
+### :package: Full Changelog
+
+**Full Changelog**:
+https://github.com/Anselmoo/spectrafit/compare/v1.0.3.post1...v1.0.4
+
+### :gear: Who Contributes
+
+@Anselmoo
+
 ## v1.0.3.post1 🌈 - 2024-07-29
 
 ### :compass: What's Changed
