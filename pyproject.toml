@@ -86,7 +86,7 @@ dash-bootstrap-templates = [
   { version = "<=1.1.2", markers = "python_version < '3.10'" },
   { version = "^1.2.0", markers = "python_version >= '3.10'" },
 ]
-python-pptx = { version = "^0.6.22", optional = true }
+python-pptx = { version = "^1.0.0", optional = true }
 
 [tool.poetry.group.dev.dependencies]
 pylint = "^2.16.1"
