@@ -19,7 +19,7 @@ repos:
         args: ["--maxkb=1000"]
         exclude: \.ipynb
   - repo: https://github.com/psf/black.git
-    rev: 24.4.2
+    rev: 24.8.0
     hooks:
       - id: black
   - repo: https://github.com/asottile/blacken-docs
@@ -33,13 +33,13 @@ repos:
       - id: isort
         additional_dependencies: [toml>=0.10.2]
   - repo: https://github.com/PyCQA/flake8.git
-    rev: 7.1.0
+    rev: 7.1.1
     hooks:
       - id: flake8
         exclude: ^spectrafit/test/, ^examples/
         entry: flake8  --max-doc-length 100 --max-line-length  88 --ignore E203,W503,W605
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.11.0
+    rev: v1.11.1
     hooks:
       - id: mypy
         additional_dependencies:
