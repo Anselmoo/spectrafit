@@ -1,0 +1,56 @@
+name: Weekly Poetry Update
+
+on:
+  schedule:
+    - cron: '0 0 * * 0' # Runs every Sunday at midnight
+
+jobs:
+  update-dependencies:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.10'
+
+    - name: Install Poetry
+      run: |
+        curl -sSL https://install.python-poetry.org | python3 -
+        export PATH="$HOME/.local/bin:$PATH"
+
+    - name: Install dependencies
+      run: poetry install
+
+    - name: Update dependencies
+      run: poetry update
+
+    - name: Create new branch
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+        git checkout -b update-dependencies-$(date +%Y%m%d)
+        git add .
+        git commit -m "chore(deps): :arrows_counterclockwise: update dependencies $(date +%Y%m%d)"
+        git push origin update-dependencies-$(date +%Y%m%d)
+
+    - name: Create Pull Request
+      id: create_pr
+      uses: peter-evans/create-pull-request@v5
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        branch: update-dependencies-$(date +%Y%m%d)
+        title: "chore(deps): :arrows_counterclockwise: update dependencies $(date +%Y%m%d)"
+        body: "This PR updates dependencies to their latest versions."
+        labels: dependencies
+        assignees: ${{ github.actor }}
+
+    - name: Enable auto-merge
+      uses: pascalgn/automerge-action@v0
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        pull-request: ${{ steps.create_pr.outputs.pull-request-number }}
+        merge-method: squash
