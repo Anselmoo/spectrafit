@@ -2,11 +2,15 @@ name: Weekly Poetry Update
 
 on:
   schedule:
-    - cron: '0 0 * * 0' # Runs every Sunday at midnight
+    # - cron: '0 0 * * 0' # Runs every Sunday at midnight
+    - cron: '0 0 * * *' # Runs every hour for testing
 
 jobs:
   update-dependencies:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
 
     steps:
     - name: Checkout repository
@@ -48,9 +52,8 @@ jobs:
         labels: dependencies
         assignees: ${{ github.actor }}
 
-    - name: Enable auto-merge
-      uses: pascalgn/automerge-action@v0
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        pull-request: ${{ steps.create_pr.outputs.pull-request-number }}
-        merge-method: squash
+    - name: Set Auto PR
+      run: |
+        gh pr merge update-dependencies-$(date +%Y%m%d) --auto --rebase
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
