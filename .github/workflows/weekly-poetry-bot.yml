@@ -2,8 +2,7 @@ name: Weekly Poetry Update
 
 on:
   schedule:
-    # - cron: '0 0 * * 0' # Runs every Sunday at midnight
-    - cron: '0 * * * *' # Runs every hour for testing
+    - cron: '0 0 * * 0' # Runs every Sunday at midnight
 
 jobs:
   update-dependencies:
@@ -30,15 +29,22 @@ jobs:
       run: poetry install
 
     - name: Update dependencies
-      run: poetry update
+      run: poetry update | tee poetry-update.log
 
     - name: Create new branch
       run: |
         git config --global user.name 'github-actions[bot]'
         git config --global user.email 'github-actions[bot]@users.noreply.github.com'
         git checkout -b update-dependencies-$(date +%Y%m%d)
-        git add .
-        git commit -m "chore(deps): :arrows_counterclockwise: update dependencies $(date +%Y%m%d)"
+        git add poetry.lock
+        if git diff-index --quiet HEAD; then
+          echo "No changes detected, creating an empty commit."
+          git commit --allow-empty -m "chore(deps): :arrows_counterclockwise: no updates for $(date +%Y%m%d)"
+        else
+          echo "Changes detected, creating a commit with update log."
+          update_log=$(cat update.log)
+          git commit -m "$(echo -e "chore(deps): :arrows_counterclockwise: update dependencies $(date +%Y%m%d)\n\n$update_log")"
+        fi
         git push origin update-dependencies-$(date +%Y%m%d)
 
     - name: Create Pull Request
