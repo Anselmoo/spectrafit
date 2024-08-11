@@ -3,7 +3,7 @@ name: Weekly Poetry Update
 on:
   schedule:
     # - cron: '0 0 * * 0' # Runs every Sunday at midnight
-    - cron: '0 0 * * *' # Runs every hour for testing
+    - cron: '0 * * * *' # Runs every hour for testing
 
 jobs:
   update-dependencies:
