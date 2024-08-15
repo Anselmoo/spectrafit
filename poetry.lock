@@ -3390,13 +3390,13 @@ mkdocs = ">=1.2"
 
 [[package]]
 name = "mkdocs-table-reader-plugin"
-version = "2.2.2"
+version = "3.0.1"
 description = "MkDocs plugin to directly insert tables from files into markdown."
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "mkdocs_table_reader_plugin-2.2.2-py3-none-any.whl", hash = "sha256:fed04dc54ddb1269893171098f3464a5f85f96b8160c065cd4f7e536012611f2"},
-    {file = "mkdocs_table_reader_plugin-2.2.2.tar.gz", hash = "sha256:198e3f556a59b4c66b227bbe3a2714cde8161b2ff33903de8611b89c04e1e014"},
+    {file = "mkdocs_table_reader_plugin-3.0.1-py3-none-any.whl", hash = "sha256:9944be79f212d6b45a41aadfbe1946d4939b3e9b0245a847a5acfbf4767e1c97"},
+    {file = "mkdocs_table_reader_plugin-3.0.1.tar.gz", hash = "sha256:1580327ba39ee2b4d3763704215666eb909b86116596a8dbffd5715afdfa1e20"},
 ]
 
 [package.dependencies]
@@ -6785,4 +6785,4 @@ jupyter-dash = ["dash-bootstrap-components", "dash-bootstrap-templates", "dash-b
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8,<3.12"
-content-hash = "3bef82acb6393a6284ac2c9f6283bbc709f133f9411a58378f28b94776c74f24"
+content-hash = "0d5257aed9500dfc661c79de0308257c44647505523202e470fe010633cc55cf"
