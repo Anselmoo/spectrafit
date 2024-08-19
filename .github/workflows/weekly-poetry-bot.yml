@@ -41,8 +41,8 @@ jobs:
           echo "No changes detected, creating an empty commit."
           git commit --allow-empty -m "chore(deps): :arrows_counterclockwise: no updates for $(date +%Y%m%d)"
         else
-          echo "Changes detected, creating a commit with update log."
-          update_log=$(cat update.log)
+          echo "Changes detected, creating a commit with poetry-update log."
+          update_log=$(cat poetry-update.log)
           git commit -m "$(echo -e "chore(deps): :arrows_counterclockwise: update dependencies $(date +%Y%m%d)\n\n$update_log")"
         fi
         git push origin update-dependencies-$(date +%Y%m%d)
