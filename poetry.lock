@@ -3253,13 +3253,13 @@ min-versions = ["babel (==2.9.0)", "click (==7.0)", "colorama (==0.4)", "ghp-imp
 
 [[package]]
 name = "mkdocs-autorefs"
-version = "1.0.1"
+version = "1.1.0"
 description = "Automatically link across pages in MkDocs."
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "mkdocs_autorefs-1.0.1-py3-none-any.whl", hash = "sha256:aacdfae1ab197780fb7a2dac92ad8a3d8f7ca8049a9cbe56a4218cd52e8da570"},
-    {file = "mkdocs_autorefs-1.0.1.tar.gz", hash = "sha256:f684edf847eced40b570b57846b15f0bf57fb93ac2c510450775dcf16accb971"},
+    {file = "mkdocs_autorefs-1.1.0-py3-none-any.whl", hash = "sha256:492ac42f50214e81565e968f8cb0df9aba9d981542b9e7121b8f8ae9407fe6eb"},
+    {file = "mkdocs_autorefs-1.1.0.tar.gz", hash = "sha256:f2fd43b11f66284bd014f9b542a05c8ecbfaad4e0d7b30b68584788217b6c656"},
 ]
 
 [package.dependencies]
