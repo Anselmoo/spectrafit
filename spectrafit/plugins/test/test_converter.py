@@ -13,7 +13,6 @@ from typing import Tuple
 import numpy as np
 import pandas as pd
 import pytest
-import toml
 import tomli
 import tomli_w
 import yaml
@@ -855,8 +854,8 @@ class TestRixsConverter:
             assert np.allclose(data_json[keys[0]], data[keys[0]])
 
         if export_format in {"toml", "lock"}:
-            with open(fname.parent / f"{fname.stem}.{export_format}") as f:
-                data_toml = toml.load(f)
+            with open(fname.parent / f"{fname.stem}.{export_format}", "rb") as f:
+                data_toml = tomli.load(f)
             assert isinstance(data_toml, dict)
             assert np.allclose(data_toml[keys[0]], data[keys[0]])
 
