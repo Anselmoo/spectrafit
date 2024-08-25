@@ -46,7 +46,6 @@ jobs:
           update_log=$(cat poetry-update.log)
           git commit -m "$(echo -e "chore(deps): :arrows_counterclockwise: update dependencies $(date +%Y%m%d)\n\n$update_log")"
         fi
-        git push origin update-dependencies-$(date +%Y%m%d)
 
     - name: Create Pull Request via gh
       run: >-
