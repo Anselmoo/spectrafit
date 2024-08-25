@@ -47,19 +47,16 @@ jobs:
         fi
         git push origin update-dependencies-$(date +%Y%m%d)
 
-    - name: Create Pull Request
-      id: create_pr
-      uses: peter-evans/create-pull-request@v6
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        branch: update-dependencies-$(date +%Y%m%d)
-        title: "chore(deps): :arrows_counterclockwise: update dependencies $(date +%Y%m%d)"
-        body: "This PR updates dependencies to their latest versions."
-        labels: dependencies
-        assignees: ${{ github.actor }}
-
+    - name: Create Pull Request via gh
+      run: >-
+        gh pr create --title "chore(deps): :arrows_counterclockwise: update dependencies $(date +%Y%m%d)"
+        --body "This is an auto-generated pull request to update dependencies in poetry.lock."
+        --base main
+        --head update-dependencies-$(date +%Y%m%d)
+      env:
+        GITHUB_TOKEN: ${{ secrets.auto_changelog }}
     - name: Set Auto PR
       run: |
         gh pr merge update-dependencies-$(date +%Y%m%d) --auto --rebase
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.auto_changelog }}
