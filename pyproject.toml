@@ -119,7 +119,7 @@ bandit = "^1.7.5"
 #   "pylint",
 # ], version = "^1.10.3" }
 bump-pydantic = "^0.8.0"
-types-setuptools = ">=72.2.0.20240821,<72.3.0.0"
+types-setuptools = ">=72.2.0.20240821,<73.1.0.0"
 
 [tool.poetry.group.docs.dependencies]
 mkdocs-material = "^9.5.0"
