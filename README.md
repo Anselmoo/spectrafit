@@ -11,6 +11,9 @@
 </p>
 
 # SpectraFit
+---
+
+> Data Analysis Tool for all kinds of Spectra
 
 `SpectraFit` is a Python tool for quick data fitting based on the regular
 expression of distribution and linear functions via the command line (CMD) or
