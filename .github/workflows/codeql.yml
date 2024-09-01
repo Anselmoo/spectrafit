@@ -19,6 +19,9 @@ on:
     branches: ["main"]
   schedule:
     - cron: "40 19 * * 5"
+  repository_dispatch:
+    types: [create-pull-request]
+
 
 jobs:
   analyze:

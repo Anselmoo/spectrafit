@@ -75,8 +75,22 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    # - name: Merge Pull Request via gh
-    #   run: |
-    #     gh pr merge update-dependencies-${{ env.DATE }} --merge --auto
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Add Label to Pull Request
+      run: |
+        pr_number=$(gh pr view --json number --jq '.number')
+        gh pr edit $pr_number --add-label "weekly-update"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Wait for required checks
+      run: |
+        pr_number=$(gh pr view --json number --jq '.number')
+        gh pr checks --wait $pr_number
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Merge Pull Request via gh
+      run: |
+        gh pr merge update-dependencies-${{ env.DATE }} --merge --auto
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
