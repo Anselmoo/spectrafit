@@ -2,8 +2,9 @@ name: Weekly Poetry Update
 
 on:
   schedule:
-    # - cron: '* * * * *' # Runs every hour for testing purposes
-    - cron: '0 * * * *' # Runs every hour for testing purposes
+    - cron: '* * * * *' # Runs every hour for testing purposes
+    # - cron: '0 * * * *' # Runs every hour for testing purposes
+    # - cron: '0 0 * * 0' # Runs every Sunday at midnight
   workflow_dispatch: # Allows manual triggering of the workflow
 
 jobs:
@@ -64,7 +65,7 @@ jobs:
         gh auth setup-git
         git push -f origin update-dependencies-${{ env.DATE }}
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.WEEKLY_UPDATE }}
 
     - name: Create Pull Request via gh
       run: |
@@ -72,19 +73,18 @@ jobs:
         --body "This is an auto-generated pull request to update dependencies in poetry.lock." \
         --base main \
         --head update-dependencies-${{ env.DATE }}
-        --fill
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.WEEKLY_UPDATE }}
 
     - name: Add Label to Pull Request
       run: |
         pr_number=$(gh pr view --json number --jq '.number')
         gh pr edit $pr_number --add-label "weekly-update"
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.WEEKLY_UPDATE }}
 
     - name: Merge Pull Request via gh
       run: |
         gh pr merge update-dependencies-${{ env.DATE }} --merge --auto
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.WEEKLY_UPDATE }}
