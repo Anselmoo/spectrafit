@@ -67,8 +67,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Set Auto PR
+    - name: Merge Pull Request via gh
       run: |
-        gh pr merge update-dependencies-$(date +%Y%m%d%H%M) --auto --rebase
+        gh pr merge update-dependencies-$(date +%Y%m%d%H%M) --merge --auto
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
