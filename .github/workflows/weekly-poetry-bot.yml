@@ -2,8 +2,8 @@ name: Weekly Poetry Update
 
 on:
   schedule:
+    - cron: '* * * * *' # Runs every time for testing purposes
     # - cron: '0 0 * * 0' # Runs every Sunday at midnight
-    - cron: '0 * * * *' # Runs every hour for testing purposes
 
 jobs:
   update-dependencies:
@@ -26,11 +26,15 @@ jobs:
         curl -sSL https://install.python-poetry.org | python3 -
         export PATH="$HOME/.local/bin:$PATH"
 
+    - name: Set date variable
+      id: date
+      run: echo "DATE=$(date +%Y%m%d%H%M)" >> $GITHUB_ENV
+
     - name: Create new branch
       run: |
         git config --global user.name 'github-actions[bot]'
         git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-        git checkout -b update-dependencies-$(date +%Y%m%d%H%M)
+        git checkout -b update-dependencies-${{ env.DATE }}
 
     - name: Install dependencies
       run: poetry install
@@ -43,7 +47,7 @@ jobs:
         git add poetry.lock
         if git diff-index --quiet HEAD; then
           echo "No changes detected, creating an empty commit."
-          git commit --allow-empty -m "chore(deps): :arrows_counterclockwise: no updates for $(date +%Y%m%d%H%M)"
+          git commit --allow-empty -m "chore(deps): :arrows_counterclockwise: no updates for ${{ env.DATE }}"
         else
           echo "Changes detected, creating a commit with update log."
           if [ -f poetry-update.log ]; then
@@ -51,24 +55,24 @@ jobs:
           else
             update_log="No update log available."
           fi
-          git commit -m "$(echo -e "chore(deps): :arrows_counterclockwise: update dependencies $(date +%Y%m%d%H%M)\n\n$update_log")"
+          git commit -m "$(echo -e "chore(deps): :arrows_counterclockwise: update dependencies ${{ env.DATE }}\n\n$update_log")"
         fi
 
     - name: Push changes
       run: |
-        git push -f origin update-dependencies-$(date +%Y%m%d%H%M)
+        git push -f origin update-dependencies-${{ env.DATE }}
 
     - name: Create Pull Request via gh
       run: |
-        gh pr create --title "chore(deps): :arrows_counterclockwise: update dependencies $(date +%Y%m%d%H%M)" \
+        gh pr create --title "chore(deps): :arrows_counterclockwise: update dependencies ${{ env.DATE }}" \
         --body "This is an auto-generated pull request to update dependencies in poetry.lock." \
         --base main \
-        --head update-dependencies-$(date +%Y%m%d%H%M)
+        --head update-dependencies-${{ env.DATE }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Merge Pull Request via gh
       run: |
-        gh pr merge update-dependencies-$(date +%Y%m%d%H%M) --merge --auto
+        gh pr merge update-dependencies-${{ env.DATE }} --merge --auto
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
