@@ -72,6 +72,7 @@ jobs:
         --body "This is an auto-generated pull request to update dependencies in poetry.lock." \
         --base main \
         --head update-dependencies-${{ env.DATE }}
+        --fill
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -79,13 +80,6 @@ jobs:
       run: |
         pr_number=$(gh pr view --json number --jq '.number')
         gh pr edit $pr_number --add-label "weekly-update"
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Wait for required checks
-      run: |
-        pr_number=$(gh pr view --json number --jq '.number')
-        gh pr checks --wait $pr_number
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
