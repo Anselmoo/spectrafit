@@ -5,6 +5,8 @@ on:
     branches: [main, feature/*, release/*, hotfix/*]
   pull_request:
     branches: [main, develop]
+  repository_dispatch:
+    types: [create-pull-request]
 
 jobs:
   pre-commit:
