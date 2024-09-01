@@ -54,6 +54,10 @@ jobs:
           git commit -m "$(echo -e "chore(deps): :arrows_counterclockwise: update dependencies $(date +%Y%m%d%H%M)\n\n$update_log")"
         fi
 
+    - name: Push changes
+      run: |
+        git push -f origin update-dependencies-$(date +%Y%m%d%H%M)
+
     - name: Create Pull Request via gh
       run: |
         gh pr create --title "chore(deps): :arrows_counterclockwise: update dependencies $(date +%Y%m%d%H%M)" \
