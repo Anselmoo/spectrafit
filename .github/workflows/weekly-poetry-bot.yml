@@ -2,8 +2,8 @@ name: Weekly Poetry Update
 
 on:
   schedule:
-    - cron: '* * * * *' # Runs every hour for testing purposes
-    # - cron: '0 * * * *' # Runs every hour for testing purposes
+    # - cron: '* * * * *' # Runs every hour for testing purposes
+    - cron: '0 * * * *' # Runs every hour for testing purposes
   workflow_dispatch: # Allows manual triggering of the workflow
 
 jobs:
