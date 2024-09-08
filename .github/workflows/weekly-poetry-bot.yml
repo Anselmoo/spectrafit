@@ -68,7 +68,7 @@ jobs:
     - name: Create Pull Request via gh
       run: |
         gh pr create --title "chore(deps): :arrows_counterclockwise: update dependencies ${{ env.DATE }}" \
-        --body "This is an auto-generated pull request to update dependencies in poetry.lock." \
+        --body "This is an auto-generated pull request to update dependencies in `poetry.lock`." \
         --base main \
         --head update-dependencies-${{ env.DATE }}
       env:
