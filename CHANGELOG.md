@@ -6,104 +6,138 @@ All notable changes to this project will be documented in this file.
 
 ### :compass: What's Changed
 
-* chore(deps): :arrows_counterclockwise: update dependencies 20240826 (#1517) @github-actions
+- chore(deps): :arrows_counterclockwise: update dependencies 20240826 (#1517)
+  @github-actions
 
 #### :toolbox: Maintenance
 
-* build: :bookmark: Bump version to `v1.0.4` (#1588) @Anselmoo
-* chore(deps): update dependency mkdocstrings to >=0.26.0,<0.27.0 (#1568) @renovate
-* [pre-commit.ci] pre-commit autoupdate (#1571) @pre-commit-ci
-* chore(deps): update dependency types-setuptools to v74 (#1523) @renovate
-* build: bump types-setuptools from 72.2.0.20240821 to 73.0.0.20240822 (#1515) @dependabot
-* [pre-commit.ci] pre-commit autoupdate (#1519) @pre-commit-ci
-* fix: Remove `git push` (#1508) @Anselmoo
-* chore(deps): :arrow_up: update dependency pylint to v3 (#1502) @Anselmoo
-* chore(deps): update dependency types-setuptools to v72 (#1501) @renovate
-* chore(deps): update dependency mkdocs-table-reader-plugin to v3 (#1490) @renovate
-* [pre-commit.ci] pre-commit autoupdate (#1472) @pre-commit-ci
-* build: bump python-pptx from 0.6.23 to 1.0.0 (#1471) @dependabot
-* [pre-commit.ci] pre-commit autoupdate (#1455) @pre-commit-ci
+- build: :bookmark: Bump version to `v1.0.4` (#1588) @Anselmoo
+- chore(deps): update dependency mkdocstrings to >=0.26.0,<0.27.0 (#1568)
+  @renovate
+- [pre-commit.ci] pre-commit autoupdate (#1571) @pre-commit-ci
+- chore(deps): update dependency types-setuptools to v74 (#1523) @renovate
+- build: bump types-setuptools from 72.2.0.20240821 to 73.0.0.20240822 (#1515)
+  @dependabot
+- [pre-commit.ci] pre-commit autoupdate (#1519) @pre-commit-ci
+- fix: Remove `git push` (#1508) @Anselmoo
+- chore(deps): :arrow_up: update dependency pylint to v3 (#1502) @Anselmoo
+- chore(deps): update dependency types-setuptools to v72 (#1501) @renovate
+- chore(deps): update dependency mkdocs-table-reader-plugin to v3 (#1490)
+  @renovate
+- [pre-commit.ci] pre-commit autoupdate (#1472) @pre-commit-ci
+- build: bump python-pptx from 0.6.23 to 1.0.0 (#1471) @dependabot
+- [pre-commit.ci] pre-commit autoupdate (#1455) @pre-commit-ci
 
 #### :snake: Python
 
-* build: :bookmark: Bump version to `v1.0.4` (#1588) @Anselmoo
-* build: bump types-setuptools from 72.2.0.20240821 to 73.0.0.20240822 (#1515) @dependabot
-* chore(deps): :arrow_up: update dependency pylint to v3 (#1502) @Anselmoo
-* build: bump python-pptx from 0.6.23 to 1.0.0 (#1471) @dependabot
+- build: :bookmark: Bump version to `v1.0.4` (#1588) @Anselmoo
+- build: bump types-setuptools from 72.2.0.20240821 to 73.0.0.20240822 (#1515)
+  @dependabot
+- chore(deps): :arrow_up: update dependency pylint to v3 (#1502) @Anselmoo
+- build: bump python-pptx from 0.6.23 to 1.0.0 (#1471) @dependabot
 
 #### :octocat: Github Actions
 
-* chore: :pencil2: update pull request body to mention `poetry.lock` (#1582) @Anselmoo
-* chore(deps): update pypa/gh-action-pypi-publish digest to 3697819 (#1576) @renovate
-* chore(deps): update pypa/gh-action-pypi-publish digest to 0ab0b79 (#1572) @renovate
-* chore: :construction_worker: Update weekly-poetry-bot.yml to run every Sunday at midnight (#1565) @Anselmoo
-* ci: :green_heart: Update GitHub Actions workflow (#1563) @Anselmoo
-* ci: :green_heart: Update GitHub Actions workflow to include the --fill flag (#1553) @Anselmoo
-* ci: :green_heart: Add repository_dispatch event to GitHub Actions workflows (#1548) @Anselmoo
-* ci: :white_check_mark: Deactivate auto merge (#1542) @Anselmoo
-* fix: :page_facing_up: Update GitHub Actions workflow to use 'gh pr merge' command (#1534) @Anselmoo
-* fix: :green_heart: Set branch as env variable (#1531) @Anselmoo
-* fix: :bug: Add git push (#1530) @Anselmoo
-* fix: :heavy_minus_sign: Remove `git push` (#1529) @Anselmoo
-* chore(deps): update pypa/gh-action-pypi-publish digest to 8a08d61 (#1527) @renovate
-* fix: :green_heart: Update GitHub Actions workflow to use 'gh pr merge' command (#1528) @Anselmoo
-* Revert "ci: :test_tube: Update cron schedule for weekly poetry bot to run every hour" (#1518) @Anselmoo
-* ci: :test_tube: Update cron schedule for weekly poetry bot to run every hour (#1516) @Anselmoo
-* fix: :green_heart: Refactoring `weekly-poetry-bot.yml` (#1511) @Anselmoo
-* fix: Remove `git push` (#1508) @Anselmoo
-* chore: Update `weekly-poetry-bot.yml` (#1507) @Anselmoo
-* fix: :bug: Update poetry-update log file name for commit message (#1493) @Anselmoo
-* chore(deps): update docker/build-push-action action to v6.7.0 (#1489) @renovate
-* feat: :zap: Allows also empty commits (#1487) @Anselmoo
-* fix: Update weekly-poetry-bot.yml (#1485) @Anselmoo
-* chore: :test_tube: Update weekly-poetry-bot.yml workflow schedule for testing (#1484) @Anselmoo
-* chore(deps): update actions/checkout action to v4 (#1481) @renovate
-* chore(deps): update actions/setup-python action to v5 (#1482) @renovate
-* chore(deps): update peter-evans/create-pull-request action to v6 (#1483) @renovate
-* feat: :construction_worker: Add an automatic poetry update workflow (#1480) @Anselmoo
-* chore(deps): update docker/build-push-action action to v6.6.1 (#1476) @renovate
-* chore(deps): update sigstore/cosign-installer action to v3.6.0 (#1479) @renovate
-* chore(deps): update docker/setup-buildx-action action to v3.6.1 (#1456) @renovate
+- chore: :pencil2: update pull request body to mention `poetry.lock` (#1582)
+  @Anselmoo
+- chore(deps): update pypa/gh-action-pypi-publish digest to 3697819 (#1576)
+  @renovate
+- chore(deps): update pypa/gh-action-pypi-publish digest to 0ab0b79 (#1572)
+  @renovate
+- chore: :construction_worker: Update weekly-poetry-bot.yml to run every Sunday
+  at midnight (#1565) @Anselmoo
+- ci: :green_heart: Update GitHub Actions workflow (#1563) @Anselmoo
+- ci: :green_heart: Update GitHub Actions workflow to include the --fill flag
+  (#1553) @Anselmoo
+- ci: :green_heart: Add repository_dispatch event to GitHub Actions workflows
+  (#1548) @Anselmoo
+- ci: :white_check_mark: Deactivate auto merge (#1542) @Anselmoo
+- fix: :page_facing_up: Update GitHub Actions workflow to use 'gh pr merge'
+  command (#1534) @Anselmoo
+- fix: :green_heart: Set branch as env variable (#1531) @Anselmoo
+- fix: :bug: Add git push (#1530) @Anselmoo
+- fix: :heavy_minus_sign: Remove `git push` (#1529) @Anselmoo
+- chore(deps): update pypa/gh-action-pypi-publish digest to 8a08d61 (#1527)
+  @renovate
+- fix: :green_heart: Update GitHub Actions workflow to use 'gh pr merge' command
+  (#1528) @Anselmoo
+- Revert "ci: :test_tube: Update cron schedule for weekly poetry bot to run
+  every hour" (#1518) @Anselmoo
+- ci: :test_tube: Update cron schedule for weekly poetry bot to run every hour
+  (#1516) @Anselmoo
+- fix: :green_heart: Refactoring `weekly-poetry-bot.yml` (#1511) @Anselmoo
+- fix: Remove `git push` (#1508) @Anselmoo
+- chore: Update `weekly-poetry-bot.yml` (#1507) @Anselmoo
+- fix: :bug: Update poetry-update log file name for commit message (#1493)
+  @Anselmoo
+- chore(deps): update docker/build-push-action action to v6.7.0 (#1489)
+  @renovate
+- feat: :zap: Allows also empty commits (#1487) @Anselmoo
+- fix: Update weekly-poetry-bot.yml (#1485) @Anselmoo
+- chore: :test_tube: Update weekly-poetry-bot.yml workflow schedule for testing
+  (#1484) @Anselmoo
+- chore(deps): update actions/checkout action to v4 (#1481) @renovate
+- chore(deps): update actions/setup-python action to v5 (#1482) @renovate
+- chore(deps): update peter-evans/create-pull-request action to v6 (#1483)
+  @renovate
+- feat: :construction_worker: Add an automatic poetry update workflow (#1480)
+  @Anselmoo
+- chore(deps): update docker/build-push-action action to v6.6.1 (#1476)
+  @renovate
+- chore(deps): update sigstore/cosign-installer action to v3.6.0 (#1479)
+  @renovate
+- chore(deps): update docker/setup-buildx-action action to v3.6.1 (#1456)
+  @renovate
 
 #### :card_index_dividers: Documentation
 
-* docs: 📖 Update README.md (#1525) @Anselmoo
-* docs: :memo: docs: Update `SpectraFit` documentation link and add badge (#1464) @Anselmoo
-* docs: :memo: Update `cosign` installation instructions and add verification steps (#1460) @Anselmoo
+- docs: 📖 Update README.md (#1525) @Anselmoo
+- docs: :memo: docs: Update `SpectraFit` documentation link and add badge
+  (#1464) @Anselmoo
+- docs: :memo: Update `cosign` installation instructions and add verification
+  steps (#1460) @Anselmoo
 
 #### :link: Dependency Updates
 
-* build: :bookmark: Bump version to `v1.0.4` (#1588) @Anselmoo
-* chore(deps): :arrows_counterclockwise: update dependencies 202409080001 (#1581) @Anselmoo
-* chore(deps): update dependency mkdocstrings to >=0.26.0,<0.27.0 (#1568) @renovate
-* chore(deps): :arrows_counterclockwise: update dependencies 202409011744 (#1566) @Anselmoo
-* chore(deps): :arrows_counterclockwise: update dependencies 202409011735 (#1564) @Anselmoo
-* chore(deps): update dependency types-setuptools to v74 (#1523) @renovate
-* fix(deps): update dependency jupyterlab to v4.2.5 (#1520) @renovate
-* build: bump types-setuptools from 72.2.0.20240821 to 73.0.0.20240822 (#1515) @dependabot
-* chore(deps): :arrow_up: update dependency pylint to v3 (#1502) @Anselmoo
-* chore(deps): update dependency types-setuptools to v72 (#1501) @renovate
-* chore(deps): update dependency mkdocs-autorefs to v1.1.0 (#1495) @renovate
-* chore(deps): update dependency mkdocs-material to v9.5.32 (#1494) @renovate
-* chore(deps): update dependency types-setuptools to v71.1.0.20240813 (#1474) @renovate
-* chore(deps): update dependency mike to v2.1.3 (#1488) @renovate
-* chore(deps): update dependency mkdocs-table-reader-plugin to v3 (#1490) @renovate
-* chore(deps): :arrows_counterclockwise: update dependencies (#1486) @Anselmoo
-* build: bump python-pptx from 0.6.23 to 1.0.0 (#1471) @dependabot
-* chore(deps): update dependency mypy to v1.11.1 (#1461) @renovate
-* chore(deps): update dependency jupytext to v1.16.4 (#1403) @renovate
+- build: :bookmark: Bump version to `v1.0.4` (#1588) @Anselmoo
+- chore(deps): :arrows_counterclockwise: update dependencies 202409080001
+  (#1581) @Anselmoo
+- chore(deps): update dependency mkdocstrings to >=0.26.0,<0.27.0 (#1568)
+  @renovate
+- chore(deps): :arrows_counterclockwise: update dependencies 202409011744
+  (#1566) @Anselmoo
+- chore(deps): :arrows_counterclockwise: update dependencies 202409011735
+  (#1564) @Anselmoo
+- chore(deps): update dependency types-setuptools to v74 (#1523) @renovate
+- fix(deps): update dependency jupyterlab to v4.2.5 (#1520) @renovate
+- build: bump types-setuptools from 72.2.0.20240821 to 73.0.0.20240822 (#1515)
+  @dependabot
+- chore(deps): :arrow_up: update dependency pylint to v3 (#1502) @Anselmoo
+- chore(deps): update dependency types-setuptools to v72 (#1501) @renovate
+- chore(deps): update dependency mkdocs-autorefs to v1.1.0 (#1495) @renovate
+- chore(deps): update dependency mkdocs-material to v9.5.32 (#1494) @renovate
+- chore(deps): update dependency types-setuptools to v71.1.0.20240813 (#1474)
+  @renovate
+- chore(deps): update dependency mike to v2.1.3 (#1488) @renovate
+- chore(deps): update dependency mkdocs-table-reader-plugin to v3 (#1490)
+  @renovate
+- chore(deps): :arrows_counterclockwise: update dependencies (#1486) @Anselmoo
+- build: bump python-pptx from 0.6.23 to 1.0.0 (#1471) @dependabot
+- chore(deps): update dependency mypy to v1.11.1 (#1461) @renovate
+- chore(deps): update dependency jupytext to v1.16.4 (#1403) @renovate
 
 #### :microscope: Testing & Coverage
 
-* chore(deps): :arrow_up: update dependency pylint to v3 (#1502) @Anselmoo
+- chore(deps): :arrow_up: update dependency pylint to v3 (#1502) @Anselmoo
 
 #### :memo: Changelog
 
-* docs: :card_index_dividers: Changlog update for 1.0.3.post2 (#1458) @Anselmoo
+- docs: :card_index_dividers: Changlog update for 1.0.3.post2 (#1458) @Anselmoo
 
 ### :package: Full Changelog
 
-**Full Changelog**: https://github.com/Anselmoo/spectrafit/compare/v1.0.3.post2...v1.0.4
+**Full Changelog**:
+https://github.com/Anselmoo/spectrafit/compare/v1.0.3.post2...v1.0.4
 
 ### :gear: Who Contributes
 
