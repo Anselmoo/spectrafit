@@ -154,13 +154,13 @@ dev = ["bandit (>=1.5.1)", "coverage (>=4.1)", "pydocstyle (>=3.0.0)", "vulture 
 
 [[package]]
 name = "asteval"
-version = "1.0.2"
+version = "1.0.4"
 description = "Safe, minimalistic evaluator of python expression using ast module"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "asteval-1.0.2-py3-none-any.whl", hash = "sha256:2ece3179809185598d054289e089b8e7706c1a5afa5f7e7c236b3cdae0cf8290"},
-    {file = "asteval-1.0.2.tar.gz", hash = "sha256:00e27d9dc565858056d04ebf741f9db4dc4ba319ac3517d094b1608e7f73fa6a"},
+    {file = "asteval-1.0.4-py3-none-any.whl", hash = "sha256:7a88bfd0dd1eabdf20bb4995904df742cecf876f7f9e700f22231abf4e34d50c"},
+    {file = "asteval-1.0.4.tar.gz", hash = "sha256:15e63bd01fce65aded51357f7e1debc6f46100d777c372af11c27c07cb740074"},
 ]
 
 [package.extras]
@@ -1026,13 +1026,13 @@ tests = ["pytest", "pytest-cov", "pytest-xdist"]
 
 [[package]]
 name = "dash"
-version = "2.18.0"
+version = "2.18.1"
 description = "A Python framework for building reactive web-apps. Developed by Plotly."
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "dash-2.18.0-py3-none-any.whl", hash = "sha256:2d37b479be20bef1a184d35be4a654e4da131da6538d563fc813be3e28b90cbc"},
-    {file = "dash-2.18.0.tar.gz", hash = "sha256:9be6ea7562d40bb70211df8cbfb23611cc2ca9ae63cfca9af8f96679989adc40"},
+    {file = "dash-2.18.1-py3-none-any.whl", hash = "sha256:07c4513bb5f79a4b936847a0b49afc21dbd4b001ff77ea78d4d836043e211a07"},
+    {file = "dash-2.18.1.tar.gz", hash = "sha256:ffdf89690d734f6851ef1cb344222826ffb11ad2214ab9172668bf8aadd75d12"},
 ]
 
 [package.dependencies]
@@ -1613,13 +1613,13 @@ dev = ["flake8", "markdown", "twine", "wheel"]
 
 [[package]]
 name = "griffe"
-version = "1.3.0"
+version = "1.3.1"
 description = "Signatures for entire Python programs. Extract the structure, the frame, the skeleton of your project, to generate API documentation or find breaking changes in your API."
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "griffe-1.3.0-py3-none-any.whl", hash = "sha256:3c85b5704136379bed767ef9c1d7776cac50886e341b61b71c6983dfe04d7cb2"},
-    {file = "griffe-1.3.0.tar.gz", hash = "sha256:878cd99709b833fab7c41a6545188bcdbc1fcb3b441374449d34b69cb864de69"},
+    {file = "griffe-1.3.1-py3-none-any.whl", hash = "sha256:940aeb630bc3054b4369567f150b6365be6f11eef46b0ed8623aea96e6d17b19"},
+    {file = "griffe-1.3.1.tar.gz", hash = "sha256:3f86a716b631a4c0f96a43cb75d05d3c85975003c20540426c0eba3b0581c56a"},
 ]
 
 [package.dependencies]
@@ -1695,13 +1695,13 @@ zstd = ["zstandard (>=0.18.0)"]
 
 [[package]]
 name = "identify"
-version = "2.6.0"
+version = "2.6.1"
 description = "File identification library for Python"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "identify-2.6.0-py2.py3-none-any.whl", hash = "sha256:e79ae4406387a9d300332b5fd366d8994f1525e8414984e1a59e058b2eda2dd0"},
-    {file = "identify-2.6.0.tar.gz", hash = "sha256:cb171c685bdc31bcc4c1734698736a7d5b6c8bf2e0c15117f4d469c8640ae5cf"},
+    {file = "identify-2.6.1-py2.py3-none-any.whl", hash = "sha256:53863bcac7caf8d2ed85bd20312ea5dcfc22226800f6d6881f232d861db5a8f0"},
+    {file = "identify-2.6.1.tar.gz", hash = "sha256:91478c5fb7c3aac5ff7bf9b4344f803843dc586832d5f110d672b19aa1984c98"},
 ]
 
 [package.extras]
@@ -1709,14 +1709,17 @@ license = ["ukkonen"]
 
 [[package]]
 name = "idna"
-version = "3.8"
+version = "3.9"
 description = "Internationalized Domain Names in Applications (IDNA)"
 optional = false
 python-versions = ">=3.6"
 files = [
-    {file = "idna-3.8-py3-none-any.whl", hash = "sha256:050b4e5baadcd44d760cedbd2b8e639f2ff89bbc7a5730fcc662954303377aac"},
-    {file = "idna-3.8.tar.gz", hash = "sha256:d838c2c0ed6fced7693d5e8ab8e734d5f8fda53a039c0164afb0b82e771e3603"},
+    {file = "idna-3.9-py3-none-any.whl", hash = "sha256:69297d5da0cc9281c77efffb4e730254dd45943f45bbfb461de5991713989b1e"},
+    {file = "idna-3.9.tar.gz", hash = "sha256:e5c5dafde284f26e9e0f28f6ea2d6400abd5ca099864a67f576f3981c6476124"},
 ]
+
+[package.extras]
+all = ["flake8 (>=7.1.1)", "mypy (>=1.11.2)", "pytest (>=8.3.2)", "ruff (>=0.6.2)"]
 
 [[package]]
 name = "importlib-metadata"
@@ -4105,13 +4108,13 @@ files = [
 
 [[package]]
 name = "platformdirs"
-version = "4.3.2"
+version = "4.3.3"
 description = "A small Python package for determining appropriate platform-specific dirs, e.g. a `user data dir`."
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "platformdirs-4.3.2-py3-none-any.whl", hash = "sha256:eb1c8582560b34ed4ba105009a4badf7f6f85768b30126f351328507b2beb617"},
-    {file = "platformdirs-4.3.2.tar.gz", hash = "sha256:9e5e27a08aa095dd127b9f2e764d74254f482fef22b0970773bfba79d091ab8c"},
+    {file = "platformdirs-4.3.3-py3-none-any.whl", hash = "sha256:50a5450e2e84f44539718293cbb1da0a0885c9d14adf21b77bae4e66fc99d9b5"},
+    {file = "platformdirs-4.3.3.tar.gz", hash = "sha256:d4e0b7d8ec176b341fb03cb11ca12d0276faa8c485f9cd218f613840463fc2c0"},
 ]
 
 [package.extras]
@@ -4121,13 +4124,13 @@ type = ["mypy (>=1.11.2)"]
 
 [[package]]
 name = "plotly"
-version = "5.24.0"
+version = "5.24.1"
 description = "An open-source, interactive data visualization library for Python"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "plotly-5.24.0-py3-none-any.whl", hash = "sha256:0e54efe52c8cef899f7daa41be9ed97dfb6be622613a2a8f56a86a0634b2b67e"},
-    {file = "plotly-5.24.0.tar.gz", hash = "sha256:eae9f4f54448682442c92c1e97148e3ad0c52f0cf86306e1b76daba24add554a"},
+    {file = "plotly-5.24.1-py3-none-any.whl", hash = "sha256:f67073a1e637eb0dc3e46324d9d51e2fe76e9727c892dde64ddf1e1b51f29089"},
+    {file = "plotly-5.24.1.tar.gz", hash = "sha256:dbc8ac8339d248a4bcc36e08a5659bacfe1b079390b8953533f4eb22169b4bae"},
 ]
 
 [package.dependencies]
@@ -5884,13 +5887,13 @@ files = [
 
 [[package]]
 name = "types-pytz"
-version = "2024.1.0.20240417"
+version = "2024.2.0.20240913"
 description = "Typing stubs for pytz"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "types-pytz-2024.1.0.20240417.tar.gz", hash = "sha256:6810c8a1f68f21fdf0f4f374a432487c77645a0ac0b31de4bf4690cf21ad3981"},
-    {file = "types_pytz-2024.1.0.20240417-py3-none-any.whl", hash = "sha256:8335d443310e2db7b74e007414e74c4f53b67452c0cb0d228ca359ccfba59659"},
+    {file = "types-pytz-2024.2.0.20240913.tar.gz", hash = "sha256:4433b5df4a6fc587bbed41716d86a5ba5d832b4378e506f40d34bc9c81df2c24"},
+    {file = "types_pytz-2024.2.0.20240913-py3-none-any.whl", hash = "sha256:a1eebf57ebc6e127a99d2fa2ba0a88d2b173784ef9b3defcc2004ab6855a44df"},
 ]
 
 [[package]]
@@ -6007,13 +6010,13 @@ dev = ["flake8", "flake8-annotations", "flake8-bandit", "flake8-bugbear", "flake
 
 [[package]]
 name = "urllib3"
-version = "2.2.2"
+version = "2.2.3"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "urllib3-2.2.2-py3-none-any.whl", hash = "sha256:a448b2f64d686155468037e1ace9f2d2199776e17f0a46610480d311f73e3472"},
-    {file = "urllib3-2.2.2.tar.gz", hash = "sha256:dd505485549a7a552833da5e6063639d0d177c04f23bc3864e41e5dc5f612168"},
+    {file = "urllib3-2.2.3-py3-none-any.whl", hash = "sha256:ca899ca043dcb1bafa3e262d73aa25c465bfb49e0bd9dd5d59f1d0acba2f8fac"},
+    {file = "urllib3-2.2.3.tar.gz", hash = "sha256:e7d814a81dad81e6caf2ec9fdedb284ecc9c73076b62654547cc64ccdcae26e9"},
 ]
 
 [package.extras]
@@ -6266,13 +6269,13 @@ files = [
 
 [[package]]
 name = "zipp"
-version = "3.20.1"
+version = "3.20.2"
 description = "Backport of pathlib-compatible object wrapper for zip files"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "zipp-3.20.1-py3-none-any.whl", hash = "sha256:9960cd8967c8f85a56f920d5d507274e74f9ff813a0ab8889a5b5be2daf44064"},
-    {file = "zipp-3.20.1.tar.gz", hash = "sha256:c22b14cc4763c5a5b04134207736c107db42e9d3ef2d9779d465f5f1bcba572b"},
+    {file = "zipp-3.20.2-py3-none-any.whl", hash = "sha256:a817ac80d6cf4b23bf7f2828b7cabf326f15a001bea8b1f9b49631780ba28350"},
+    {file = "zipp-3.20.2.tar.gz", hash = "sha256:bc9eb26f4506fda01b81bcde0ca78103b6e62f991b381fec825435c836edbc29"},
 ]
 
 [package.extras]
