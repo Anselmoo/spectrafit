@@ -128,7 +128,10 @@ mkdocs-literate-nav = ">=0.4.1,<0.7.0"
 mkdocs-section-index = "^0.3.4"
 mkdocs-autorefs = "^1.0.1"
 mkdocs-minify-plugin = "^0.8.0"
-mkdocs-jupyter = "^0.24.0"
+mkdocs-jupyter = [
+  { version = "<=0.25.0", markers = "python_version < '3.9'" },
+  { version = "^0.25.0", markers = "python_version >= '3.9'" },
+]
 mkdocs-table-reader-plugin = "^3.0.0"
 mike = "^2.0.0"
 jupytext = "^1.14.5"
@@ -216,7 +219,7 @@ ignore = ["E203", "W503", "W605"]
 script_launch_mode = "subprocess"
 [tool.pytest.ini_options]
 minversion = "7.0"
-addopts = "--cov=./spectrafit/ --cov-report=xml --diff-symbols --plots -vv"
+addopts = "--cov=./spectrafit/ --cov-report=xml:coverage.xml --diff-symbols --plots -vv"
 testpaths = ["spectrafit"]
 
 [tool.pydocstyle]

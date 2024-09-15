@@ -3203,6 +3203,25 @@ nbconvert = ">=7.2.9,<8"
 pygments = ">2.12.0"
 
 [[package]]
+name = "mkdocs-jupyter"
+version = "0.25.0"
+description = "Use Jupyter in mkdocs websites"
+optional = false
+python-versions = ">=3.9"
+files = [
+    {file = "mkdocs_jupyter-0.25.0-py3-none-any.whl", hash = "sha256:d83d71deef19f0401505945bf92ec3bd5b40615af89308e72d5112929f8ee00b"},
+    {file = "mkdocs_jupyter-0.25.0.tar.gz", hash = "sha256:e26c1d341916bc57f96ea3f93d8d0a88fc77c87d4cee222f66d2007798d924f5"},
+]
+
+[package.dependencies]
+ipykernel = ">6.0.0,<7.0.0"
+jupytext = ">1.13.8,<2"
+mkdocs = ">=1.4.0,<2"
+mkdocs-material = ">9.0.0"
+nbconvert = ">=7.2.9,<8"
+pygments = ">2.12.0"
+
+[[package]]
 name = "mkdocs-literate-nav"
 version = "0.6.1"
 description = "MkDocs plugin to specify the navigation in Markdown instead of YAML"
@@ -6407,4 +6426,4 @@ jupyter-dash = ["dash-bootstrap-components", "dash-bootstrap-templates", "dash-b
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8,<3.12"
-content-hash = "b354650108464174e9e695b10482a71f3717ca05db02bca331d459b340e7361c"
+content-hash = "45bf36b954eb8f48525af58b69a647a4ea4bb84c5125fa881eeed05253bc2485"
