@@ -143,7 +143,7 @@ https://github.com/Anselmoo/spectrafit/compare/v1.0.3.post2...v1.0.4
 
 @Anselmoo, @github-actions, @github-actions[bot], @renovate and @renovate[bot]
 
-## 1.0.3.post2 🌈 - 2024-07-29
+## v1.0.3.post2 🌈 - 2024-07-29
 
 ### :compass: What's Changed
 
