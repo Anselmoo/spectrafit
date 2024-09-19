@@ -140,13 +140,13 @@ test = ["dateparser (==1.*)", "pre-commit", "pytest", "pytest-cov", "pytest-mock
 
 [[package]]
 name = "art"
-version = "6.2"
+version = "6.3"
 description = "ASCII Art Library For Python"
 optional = false
-python-versions = ">=3.5"
+python-versions = ">=3.6"
 files = [
-    {file = "art-6.2-py3-none-any.whl", hash = "sha256:d632d1d3f5fabcaf8673abe934b51df0017bc914d106e89d45ae4ebef0e3149a"},
-    {file = "art-6.2.tar.gz", hash = "sha256:506a0c4f261289a0e0d088de7beffcb1835078c4e44b0c5353bdaf47b490e76f"},
+    {file = "art-6.3-py3-none-any.whl", hash = "sha256:707ccb5d9c1da33225385e77fbc93a52bedf73a3cb288939979ed709226c4c27"},
+    {file = "art-6.3.tar.gz", hash = "sha256:0fbc28864583ba54bcdc17ec24ef6c51a1fc81729a5c68d9b38658bc0afbc598"},
 ]
 
 [package.extras]
