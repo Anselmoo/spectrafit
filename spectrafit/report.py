@@ -696,9 +696,10 @@ class FitReport:
             report (Dict[str, pd.DataFrame]): A dictionary containing
                 the generated report.
         """
-        report = {}
-        report["Fit Statistics"] = self.generate_fit_statistics()
-        report["Variables and Values"] = self.generate_variables()
+        report = {
+            "Fit Statistics": self.generate_fit_statistics(),
+            "Variables and Values": self.generate_variables(),
+        }
         if self.show_correl:
             report["Correlations of Components"] = self.generate_correlations()
         return report
