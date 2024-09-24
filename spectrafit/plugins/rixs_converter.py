@@ -23,30 +23,28 @@ choices_mode = {"sum", "mean"}
 
 
 class RIXSConverter(Converter):
-    """Transform the raw pkl data into a JSON, TOML, or numpy file for RIXS."""
+    """Convert raw pickle data into JSON, TOML, or numpy formats."""
 
     def get_args(self) -> Dict[str, Any]:
-        """Get the arguments from the command line.
+        """Retrieve command-line arguments.
 
         Returns:
-            Dict[str, Any]: Return the input file arguments as a dictionary without
-                additional information beyond the command line arguments.
+            Dict[str, Any]: Dictionary of input file arguments.
         """
         parser = argparse.ArgumentParser(
-            description="Converter for 'SpectraFit' from pkl files to a JSON, TOML, "
-            "or numpy file for RIXS-Visualizer.",
-            usage="%(prog)s [options] infile",
+            description="Convert 'SpectraFit' pickle files to JSON, "
+            "TOML, or numpy formats for RIXS-Visualizer.",
+            usage="%(prog)s [options] input_file",
         )
         parser.add_argument(
             "infile",
             type=Path,
-            help="Filename of the pkl file to convert to JSON, TOML, or numpy.",
+            help="Path to the pickle file to be converted.",
         )
         parser.add_argument(
             "-f",
             "--file-format",
-            help="File format for the optional encoding of the pickle file."
-            " Default is 'latin1'.",
+            help="Encoding format of the pickle file (default: 'latin1').",
             type=str,
             default="latin1",
             choices=choices_fformat,
@@ -54,33 +52,33 @@ class RIXSConverter(Converter):
         parser.add_argument(
             "-e",
             "--export-format",
-            help="File extension for the export.",
+            help="Desired export file format (default: 'json').",
             type=str,
             default="json",
             choices=choices_export,
         )
         parser.add_argument(
             "-ie",
-            "--incident_energy",
-            help="Name of the incident energy",
+            "--incident-energy",
+            help="Label for the incident energy.",
             type=str,
         )
         parser.add_argument(
             "-ee",
-            "--emission_energy",
-            help="Name of the emitted energy",
+            "--emission-energy",
+            help="Label for the emitted energy.",
             type=str,
         )
         parser.add_argument(
             "-rm",
-            "--rixs_map",
-            help="Name of the RIXS map",
+            "--rixs-map",
+            help="Label for the RIXS map.",
+            type=str,
         )
         parser.add_argument(
             "-m",
             "--mode",
-            help="Mode of the RIXS map post-processing, e.g. 'sum' or 'max'."
-            "Default is 'sum'.",
+            help="Post-processing mode for the RIXS map (default: 'sum').",
             type=str,
             default="sum",
             choices=choices_mode,
