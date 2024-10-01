@@ -179,15 +179,13 @@ class RIXSConverter(Converter):
             )
 
         if export_format == "json":
-            with open(
-                pure_fname(fname).with_suffix(f".{export_format}"),
+            with pure_fname(fname).with_suffix(f".{export_format}").open(
                 "w",
                 encoding="utf-8",
             ) as f:
                 json.dump(self.numpydict2listdict(data), f, indent=4)
         elif export_format in {"toml", "lock"}:
-            with open(
-                pure_fname(fname).with_suffix(f".{export_format}"),
+            with pure_fname(fname).with_suffix(f".{export_format}").open(
                 "wb",
             ) as f:
                 tomli_w.dump(self.numpydict2listdict(data), f, multiline_strings=False)

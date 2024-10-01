@@ -512,8 +512,8 @@ class SaveResult:
     def save_as_json(self) -> None:
         """Save the fitting result as json file."""
         if self.args["outfile"]:
-            with open(
-                Path(f"{self.args['outfile']}_summary.json"), "w", encoding="utf-8"
+            with Path(f"{self.args['outfile']}_summary.json").open(
+                "w", encoding="utf-8"
             ) as f:
                 json.dump(transform_nested_types(self.args), f, indent=4)
         else:
@@ -539,13 +539,13 @@ def read_input_file(fname: Path) -> MutableMapping[str, Any]:
     fname = Path(fname)
 
     if fname.suffix == ".toml":
-        with open(fname, "rb") as f:
+        with fname.open("rb") as f:
             args = tomli.load(f)
     elif fname.suffix == ".json":
-        with open(fname, encoding="utf-8") as f:
+        with fname.open(encoding="utf-8") as f:
             args = json.load(f)
     elif fname.suffix in {".yaml", ".yml"}:
-        with open(fname, encoding="utf-8") as f:
+        with fname.open(encoding="utf-8") as f:
             args = yaml.load(f, Loader=yaml.FullLoader)
     else:
         raise OSError(
@@ -654,7 +654,7 @@ def pkl2any(pkl_fname: Path, encoding: str = "latin1") -> Any:
         with gzip.open(pkl_fname, "rb") as f:
             return unicode_check(f, encoding=encoding)
     elif pkl_fname.suffix == ".pkl":
-        with open(pkl_fname, "rb") as f:
+        with pkl_fname.open("rb") as f:
             return unicode_check(f, encoding=encoding)
     else:
         choices = [".pkl", ".pkl.gz"]

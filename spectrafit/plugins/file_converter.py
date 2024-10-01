@@ -109,20 +109,17 @@ class FileConverter(Converter):
             )
 
         if export_format == "json":
-            with open(
-                fname.with_suffix(f".{export_format}"), "w", encoding="utf-8"
+            with fname.with_suffix(f".{export_format}").open(
+                "w", encoding="utf-8"
             ) as f:
                 json.dump(data, f, indent=4)
         elif export_format in {"yaml", "yml"}:
-            with open(
-                fname.with_suffix(f".{export_format}"), "w", encoding="utf-8"
+            with fname.with_suffix(f".{export_format}").open(
+                "w", encoding="utf-8"
             ) as f:
                 yaml.dump(data, f, default_flow_style=False)
         elif export_format in {"toml", "lock"}:
-            with open(
-                fname.with_suffix(f".{export_format}"),
-                "wb+",
-            ) as f:
+            with fname.with_suffix(f".{export_format}").open("wb+") as f:
                 tomli_w.dump(dict(**data), f)
 
     def __call__(self) -> None:

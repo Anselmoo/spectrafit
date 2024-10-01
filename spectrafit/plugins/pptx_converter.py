@@ -401,7 +401,7 @@ class PPTXConverter(Converter):
                 f"File format '{infile.suffix}' is not supported; it must be '.lock'"
             )
 
-        with open(infile, "rb") as f:
+        with infile.open("rb") as f:
             data = PPTXDataAPI(**tomli.load(f))
 
         return {file_format: data}

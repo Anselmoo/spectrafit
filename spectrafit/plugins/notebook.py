@@ -454,13 +454,12 @@ class ExportResults:
             args (FnameAPI): Arguments for the file export including the path, prefix,
                  and suffix.
         """
-        with open(
-            self.fname2path(
-                fname=args.fname,
-                prefix=args.prefix,
-                suffix=args.suffix,
-                folder=args.folder,
-            ),
+        with self.fname2path(
+            fname=args.fname,
+            prefix=args.prefix,
+            suffix=args.suffix,
+            folder=args.folder,
+        ).open(
             "wb+",
         ) as f:
             tomli_w.dump(report, f)
