@@ -637,10 +637,10 @@ class RIXSVisualizer:
         elif infile.suffix == ".npz":
             data = np.load(infile, allow_pickle=True)
         elif infile.suffix == ".json":
-            with open(infile, encoding="utf-8") as f:
+            with infile.open(encoding="utf-8") as f:
                 data = json.load(f)
         elif infile.suffix in {".toml", ".lock"}:
-            with open(infile, "rb") as f:
+            with infile.open("rb") as f:
                 data = tomli.load(f)
         else:
             raise ValueError(f"File type {infile.suffix} is not supported.")

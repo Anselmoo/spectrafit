@@ -82,7 +82,7 @@ class ExportData:
     def to_pickle(self) -> None:
         """Export the data to a pickle file."""
         if self.export_format.lower() == "pkl":
-            with open(self.fname, "wb") as f:
+            with self.fname.open("wb") as f:
                 pickle.dump(self.data, f)
         elif self.export_format.lower() == pkl_gz:
             with gzip.open(self.fname, "wb") as f:

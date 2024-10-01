@@ -28,7 +28,7 @@ def get_athena_column(fname: Path, comment: str = "#") -> Optional[List[str]]:
         Optional[List[str]]: The column names of the data file as a list.
 
     """
-    with open(fname, encoding="utf-8") as f:
+    with fname.open(encoding="utf-8") as f:
         data = f.read()
         lines = data.splitlines()
         return next(

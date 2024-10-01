@@ -111,8 +111,8 @@ class PklVisualizer(Converter):
             format=export_format,
         )
 
-        with open(
-            pure_fname(fname).with_suffix(".json"), "w+", encoding="utf-8"
+        with pure_fname(fname).with_suffix(".json").open(
+            "w+", encoding="utf-8"
         ) as outfile:
             json.dump(data, outfile, indent=4)
 
