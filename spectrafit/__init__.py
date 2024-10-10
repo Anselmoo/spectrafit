@@ -24,4 +24,4 @@ if sys.version_info[:2] == (3, 8):
         DeprecationWarning,
     )
 
-__version__ = "1.0.4"
+__version__ = "1.0.5"
