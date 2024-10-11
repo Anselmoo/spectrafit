@@ -8,57 +8,79 @@ All notable changes to this project will be documented in this file.
 
 #### :toolbox: Maintenance
 
-* build: :bookmark: Bump version to `v1.0.5` (#1630) @Anselmoo
-* [pre-commit.ci] pre-commit autoupdate (#1627) @pre-commit-ci
-* [pre-commit.ci] pre-commit autoupdate (#1618) @pre-commit-ci
-* [pre-commit.ci] pre-commit autoupdate (#1603) @pre-commit-ci
-* chore(deps): update dependency types-setuptools to v75 (#1593) @renovate
-* chore(deps): update dependency mkdocs-jupyter to ^0.25.0 (#1575) @renovate
+- build: :bookmark: Bump version to `v1.0.5` (#1630) @Anselmoo
+- [pre-commit.ci] pre-commit autoupdate (#1627) @pre-commit-ci
+- [pre-commit.ci] pre-commit autoupdate (#1618) @pre-commit-ci
+- [pre-commit.ci] pre-commit autoupdate (#1603) @pre-commit-ci
+- chore(deps): update dependency types-setuptools to v75 (#1593) @renovate
+- chore(deps): update dependency mkdocs-jupyter to ^0.25.0 (#1575) @renovate
 
 #### :snake: Python
 
-* build: :bookmark: Bump version to `v1.0.5` (#1630) @Anselmoo
-* refactor: :recycle: File I/O operations for better readability and maintainability (#1621) @Anselmoo
-* build: :lock: Warning for the end of support for `Python 3.8` is approaching (#1608) @Anselmoo
-* chore: :recycle: Update RIXSConverter class documentation and argument descriptions (#1605) @Anselmoo
-* refactor: :recycle: Refactor dictionary comprehension for generating report (#1600) @Anselmoo
+- build: :bookmark: Bump version to `v1.0.5` (#1630) @Anselmoo
+- refactor: :recycle: File I/O operations for better readability and
+  maintainability (#1621) @Anselmoo
+- build: :lock: Warning for the end of support for `Python 3.8` is approaching
+  (#1608) @Anselmoo
+- chore: :recycle: Update RIXSConverter class documentation and argument
+  descriptions (#1605) @Anselmoo
+- refactor: :recycle: Refactor dictionary comprehension for generating report
+  (#1600) @Anselmoo
 
 #### :octocat: Github Actions
 
-* chore(deps): update actions/checkout action to v4.2.1 (#1628) @renovate
-* chore(deps): update docker/setup-buildx-action action to v3.7.1 (#1624) @renovate
-* chore(deps): update sigstore/cosign-installer action to v3.7.0 (#1625) @renovate
-* chore(deps): update docker/setup-buildx-action action to v3.7.0 (#1623) @renovate
-* chore(deps): update docker/build-push-action action to v6.9.0 (#1617) @renovate
-* chore(deps): update pypa/gh-action-pypi-publish digest to f760068 (#1613) @renovate
-* chore(deps): update codecov/codecov-action action to v4.6.0 (#1619) @renovate
-* chore(deps): update docker/build-push-action action to v6.8.0 (#1611) @renovate
-* chore: :green_heart: update dependencies for `poetry.lock` reporting (#1614) @Anselmoo
-* chore(deps): update actions/checkout action to v4.2.0 (#1610) @renovate
-* chore(deps): update pypa/gh-action-pypi-publish digest to 897895f - autoclosed (#1596) @renovate
-* build: bump pypa/gh-action-pypi-publish from 36978192ca7715ea2e0d12e82d5518a651a9f739 to 897895f1e160c830e369f9779632ebc134688e1b (#1601) @dependabot
-* chore: :pencil2: update dependencies in weekly-poetry-bot.yml (#1599) @Anselmoo
+- chore(deps): update actions/checkout action to v4.2.1 (#1628) @renovate
+- chore(deps): update docker/setup-buildx-action action to v3.7.1 (#1624)
+  @renovate
+- chore(deps): update sigstore/cosign-installer action to v3.7.0 (#1625)
+  @renovate
+- chore(deps): update docker/setup-buildx-action action to v3.7.0 (#1623)
+  @renovate
+- chore(deps): update docker/build-push-action action to v6.9.0 (#1617)
+  @renovate
+- chore(deps): update pypa/gh-action-pypi-publish digest to f760068 (#1613)
+  @renovate
+- chore(deps): update codecov/codecov-action action to v4.6.0 (#1619) @renovate
+- chore(deps): update docker/build-push-action action to v6.8.0 (#1611)
+  @renovate
+- chore: :green_heart: update dependencies for `poetry.lock` reporting (#1614)
+  @Anselmoo
+- chore(deps): update actions/checkout action to v4.2.0 (#1610) @renovate
+- chore(deps): update pypa/gh-action-pypi-publish digest to 897895f - autoclosed
+  (#1596) @renovate
+- build: bump pypa/gh-action-pypi-publish from
+  36978192ca7715ea2e0d12e82d5518a651a9f739 to
+  897895f1e160c830e369f9779632ebc134688e1b (#1601) @dependabot
+- chore: :pencil2: update dependencies in weekly-poetry-bot.yml (#1599)
+  @Anselmoo
 
 #### :link: Dependency Updates
 
-* build: :bookmark: Bump version to `v1.0.5` (#1630) @Anselmoo
-* chore(deps): :arrows_counterclockwise: update dependencies 202410060001 (#1626) @Anselmoo
-* chore(deps): :arrows_counterclockwise: update dependencies 202409290001 (#1612) @Anselmoo
-* build: bump pypa/gh-action-pypi-publish from 36978192ca7715ea2e0d12e82d5518a651a9f739 to 897895f1e160c830e369f9779632ebc134688e1b (#1601) @dependabot
-* chore(deps): :arrows_counterclockwise: update dependencies 202409220001 (#1597) @Anselmoo
-* fix(deps): update dependency art to v6.3 (#1595) @renovate
-* chore(deps): update dependency types-setuptools to v75 (#1593) @renovate
-* chore(deps): update dependency mkdocs-jupyter to ^0.25.0 (#1575) @renovate
-* chore(deps): :arrows_counterclockwise: update dependencies 202409150001 (#1591) @Anselmoo
+- build: :bookmark: Bump version to `v1.0.5` (#1630) @Anselmoo
+- chore(deps): :arrows_counterclockwise: update dependencies 202410060001
+  (#1626) @Anselmoo
+- chore(deps): :arrows_counterclockwise: update dependencies 202409290001
+  (#1612) @Anselmoo
+- build: bump pypa/gh-action-pypi-publish from
+  36978192ca7715ea2e0d12e82d5518a651a9f739 to
+  897895f1e160c830e369f9779632ebc134688e1b (#1601) @dependabot
+- chore(deps): :arrows_counterclockwise: update dependencies 202409220001
+  (#1597) @Anselmoo
+- fix(deps): update dependency art to v6.3 (#1595) @renovate
+- chore(deps): update dependency types-setuptools to v75 (#1593) @renovate
+- chore(deps): update dependency mkdocs-jupyter to ^0.25.0 (#1575) @renovate
+- chore(deps): :arrows_counterclockwise: update dependencies 202409150001
+  (#1591) @Anselmoo
 
 #### :memo: Changelog
 
-* fix: 🌱  Update linting (#1592) @Anselmoo
-* docs: :card_index_dividers: Changlog update for v1.0.4 (#1590) @Anselmoo
+- fix: 🌱 Update linting (#1592) @Anselmoo
+- docs: :card_index_dividers: Changlog update for v1.0.4 (#1590) @Anselmoo
 
 ### :package: Full Changelog
 
-**Full Changelog**: https://github.com/Anselmoo/spectrafit/compare/v1.0.4...v1.0.5
+**Full Changelog**:
+https://github.com/Anselmoo/spectrafit/compare/v1.0.4...v1.0.5
 
 ### :gear: Who Contributes
 
