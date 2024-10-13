@@ -330,7 +330,7 @@ class DataFramePlot:
             args_plot (PlotAPI): PlotAPI object for the settings of the plot.
             df (pd.DataFrame): Data frame to plot.
         """
-        num_fits = sum(col.startswith(ColumnNamesAPI().fit) for col in df.columns)
+        num_fits = df.columns.str.startswith(ColumnNamesAPI().fit).sum()
         for i in range(1, num_fits + 1):
             cols = [col for col in df.columns if col.endswith(f"_{i}")]
             cols.append(ColumnNamesAPI().energy)
