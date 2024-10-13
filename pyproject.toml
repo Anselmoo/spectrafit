@@ -75,7 +75,7 @@ scipy = [
 jupyterlab = { version = ">=3.5.2,<5.0.0", optional = true }
 plotly = { version = "^5.21.0", optional = true }
 itables = { version = "^2.1.1", optional = true }
-kaleido = { version = "0.2.1", optional = true }
+kaleido = { version = "0.2.1.post1", optional = true }
 dtale = { version = "^3.9.0", optional = true }
 networkx = { extras = ["all"], version = "^3.0", optional = true }
 pydot = { version = "^3.0.0", optional = true }
