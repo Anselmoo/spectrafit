@@ -15,11 +15,14 @@ import sys
 import warnings
 
 
-if sys.version_info[:2] == (3, 8):
+PYTHON_38_VERSION = (3, 8)
+
+if sys.version_info[:2] == PYTHON_38_VERSION:
+    version_str = f"{PYTHON_38_VERSION[0]}.{PYTHON_38_VERSION[1]}"
     warnings.warn(
-        "Support for Python 3.8 is approaching its end-of-life. "
-        "Please consider upgrading to Python 3.9 or newer. "
-        "For more details, see: "
+        f"Support for Python {version_str} is approaching its end-of-life."
+        " Please consider upgrading to Python 3.9 or newer."
+        " For more details, see:"
         "https://devguide.python.org/versions/#end-of-life-branches.",
         DeprecationWarning,
     )
