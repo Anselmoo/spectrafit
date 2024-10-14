@@ -29,6 +29,8 @@ classifiers = [
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  # "Programming Language :: Python :: 3.13",
   "Programming Language :: Python :: Implementation :: CPython",
   "Topic :: Scientific/Engineering :: Physics",
   "Topic :: Scientific/Engineering :: Chemistry",
@@ -43,7 +45,7 @@ exclude = ["docs/", "tools/", "spectrafit/test/", "spectrafit/**/test/"]
 
 
 [tool.poetry.dependencies]
-python = ">=3.8,<3.12"
+python = ">=3.8,<3.13"
 lmfit = "^1.2.2"
 pandas = [
   { version = "<2.2.1", markers = "python_version < '3.9'" },
