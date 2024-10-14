@@ -18,9 +18,7 @@ import tomli_w
 import yaml
 
 from matplotlib import pyplot
-from nptyping import Float
-from nptyping import NDArray
-from nptyping import Shape
+from numpy.typing import NDArray
 from spectrafit.api.pptx_model import PPTXBasicTitleAPI
 from spectrafit.plugins.data_converter import DataConverter
 from spectrafit.plugins.file_converter import FileConverter
@@ -403,7 +401,7 @@ class TestDataConverter:
 
 
 @pytest.fixture(scope="function", autouse=True, name="tmp_file_dict")
-def tmp_file_dict() -> Dict[str, Dict[str, NDArray[Shape["200"], Float]]]:
+def tmp_file_dict() -> Dict[str, Dict[str, NDArray[Any]]]:
     """Create temporary file with pickle data."""
     return {
         "level_1": {
@@ -444,7 +442,7 @@ def tmp_file_nested_dict() -> Dict[str, Dict[str, Any]]:
 
 @pytest.fixture(scope="function", autouse=True, name="tmp_pkl_gz_file")
 def tmp_pkl_gz_file(
-    tmp_path: Path, tmp_file_dict: Dict[str, Dict[str, NDArray[Shape["200"], Float]]]
+    tmp_path: Path, tmp_file_dict: Dict[str, Dict[str, NDArray[np.float64]]]
 ) -> Path:
     """Create temporary file with pickle data.
 
@@ -462,7 +460,7 @@ def tmp_pkl_gz_file(
 
 @pytest.fixture(scope="function", autouse=True, name="tmp_file_pkl")
 def tmp_file_pkl(
-    tmp_path: Path, tmp_file_dict: Dict[str, Dict[str, NDArray[Shape["200"], Float]]]
+    tmp_path: Path, tmp_file_dict: Dict[str, Dict[str, NDArray[np.float64]]]
 ) -> Path:
     """Create temporary file with pickle data.
 
@@ -480,7 +478,7 @@ def tmp_file_pkl(
 
 @pytest.fixture(scope="function", autouse=True, name="tmp_file_pkl_gz")
 def tmp_file_pkl_gz(
-    tmp_path: Path, tmp_file_dict: Dict[str, Dict[str, NDArray[Shape["200"], Float]]]
+    tmp_path: Path, tmp_file_dict: Dict[str, Dict[str, NDArray[np.float64]]]
 ) -> Path:
     """Create temporary file with pickle data.
 
@@ -524,7 +522,7 @@ class TestPklConverter:
     def test_export_data(
         self,
         tmp_path: Path,
-        tmp_file_dict: Dict[str, Dict[str, NDArray[Shape["200"], Float]]],
+        tmp_file_dict: Dict[str, Dict[str, NDArray[np.float64]]],
         export_format: str,
     ) -> None:
         """Test export data.
@@ -564,8 +562,7 @@ class TestPklConverter:
             assert isinstance(data.get("data"), np.ndarray)
 
     def test_numpy2list(
-        self,
-        tmp_file_dict: Dict[str, Dict[str, NDArray[Shape["200"], Float]]],
+        self, tmp_file_dict: Dict[str, Dict[str, NDArray[np.float64]]]
     ) -> None:
         """Test numpy2list.
 
