@@ -147,76 +147,129 @@ class DataFramePlot:
         df_1: pd.DataFrame,
         df_2: Optional[pd.DataFrame] = None,
     ) -> None:
-        """Plot of two dataframes.
+        """Plot two dataframes.
 
         !!! info "About the plot"
 
-            The plot is a combination of two plots. The first plot is the
-            can be the residual plot of a fit or the _modified_ data. The second
-            plot can be the fit or the original data.
+            The plot is a combination of two plots. The first plot can be the
+            residual plot of a fit or the _modified_ data. The second plot can be the
+            fit or the original data.
 
         !!! missing "`line_dash_map`"
 
             Currently, the `line_dash_map` is not working, and the dash is not
-            plotted. Most likely, this is related to the fact that the columns
-            are not labeled in the dataframe.
+            plotted. This is likely due to the columns not being labeled in the
+            dataframe.
 
         Args:
             args_plot (PlotAPI): PlotAPI object for the settings of the plot.
             df_1 (pd.DataFrame): First dataframe to plot, which will generate
-                 automatically a fit plot with residual plot. The ratio is 70% to 20%
-                 with 10% space in between.
+                a fit plot with residual plot. The ratio is 70% to 20% with
+                10% space in between.
             df_2 (Optional[pd.DataFrame], optional): Second optional dataframe to
-                 plot for comparsion. In this case, the ratio will between first
-                 and second plot will be same. Defaults to None.
+                plot for comparison. In this case, the ratio between the first
+                and second plot will be the same. Defaults to None.
         """
         if df_2 is None:
-            _fig1 = px.line(
-                df_1,
-                x=ColumnNamesAPI().energy,
-                y=ColumnNamesAPI().residual,
-                color_discrete_sequence=[args_plot.color.residual],
-            )
-            _y = df_1.columns.drop([ColumnNamesAPI().energy, ColumnNamesAPI().residual])
-            _fig2 = px.line(
-                df_1,
-                x=ColumnNamesAPI().energy,
-                y=_y,
-                color_discrete_map={
-                    ColumnNamesAPI().intensity: args_plot.color.intensity,
-                    ColumnNamesAPI().fit: args_plot.color.fit,
-                    **{
-                        key: args_plot.color.components
-                        for key in _y.drop(
-                            [ColumnNamesAPI().intensity, ColumnNamesAPI().fit]
-                        )
-                    },
-                },
-                line_dash_map={
-                    ColumnNamesAPI().intensity: "solid",
-                    ColumnNamesAPI().fit: "longdash",
-                    **{
-                        key: "dash"
-                        for key in _y.drop(
-                            [ColumnNamesAPI().intensity, ColumnNamesAPI().fit]
-                        )
-                    },
-                },
-            )
+            fig = self._plot_single_dataframe(args_plot, df_1)
         else:
-            _fig1 = px.line(df_1, x=args_plot.x, y=args_plot.y)
-            _fig2 = px.line(df_2, x=args_plot.x, y=args_plot.y)
+            fig = self._plot_two_dataframes(args_plot, df_1, df_2)
 
+        fig.show(
+            config={
+                "toImageButtonOptions": {
+                    "format": "png",
+                    "filename": "plot_of_2_dataframes",
+                    "scale": 4,
+                }
+            }
+        )
+
+    def _plot_single_dataframe(self, args_plot: PlotAPI, df: pd.DataFrame) -> Figure:
+        """Plot a single dataframe with residuals."""
         fig = make_subplots(
             rows=2, cols=1, shared_xaxes=True, shared_yaxes=True, vertical_spacing=0.05
         )
 
-        for _spec_1 in _fig1["data"]:
-            fig.append_trace(_spec_1, row=1, col=1)
-        for _spec_2 in _fig2["data"]:
-            fig.append_trace(_spec_2, row=2, col=1)
+        residual_fig = self._create_residual_plot(df, args_plot)
+        fit_fig = self._create_fit_plot(df, args_plot)
+
+        for trace in residual_fig["data"]:
+            fig.add_trace(trace, row=1, col=1)
+        for trace in fit_fig["data"]:
+            fig.add_trace(trace, row=2, col=1)
+
+        self._update_plot_layout(fig, args_plot, df_2_provided=False)
+        return fig
+
+    def _plot_two_dataframes(
+        self, args_plot: PlotAPI, df_1: pd.DataFrame, df_2: pd.DataFrame
+    ) -> Figure:
+        """Plot two dataframes for comparison."""
+        fig = make_subplots(
+            rows=2, cols=1, shared_xaxes=True, shared_yaxes=True, vertical_spacing=0.05
+        )
+
+        fig1 = px.line(df_1, x=args_plot.x, y=args_plot.y)
+        fig2 = px.line(df_2, x=args_plot.x, y=args_plot.y)
+
+        for trace in fig1["data"]:
+            fig.add_trace(trace, row=1, col=1)
+        for trace in fig2["data"]:
+            fig.add_trace(trace, row=2, col=1)
+
+        self._update_plot_layout(fig, args_plot, df_2_provided=True)
+        return fig
+
+    def _create_residual_plot(self, df: pd.DataFrame, args_plot: PlotAPI) -> Figure:
+        """Create the residual plot."""
+        return px.line(
+            df,
+            x=ColumnNamesAPI().energy,
+            y=ColumnNamesAPI().residual,
+            color_discrete_sequence=[args_plot.color.residual],
+        )
+
+    def _create_fit_plot(self, df: pd.DataFrame, args_plot: PlotAPI) -> Figure:
+        """Create the fit plot."""
+        y_columns = df.columns.drop(
+            [ColumnNamesAPI().energy, ColumnNamesAPI().residual]
+        )
+        color_map = {
+            ColumnNamesAPI().intensity: args_plot.color.intensity,
+            ColumnNamesAPI().fit: args_plot.color.fit,
+            **{
+                key: args_plot.color.components
+                for key in y_columns.drop(
+                    [ColumnNamesAPI().intensity, ColumnNamesAPI().fit]
+                )
+            },
+        }
+        line_dash_map = {
+            ColumnNamesAPI().intensity: "solid",
+            ColumnNamesAPI().fit: "longdash",
+            **{
+                key: "dash"
+                for key in y_columns.drop(
+                    [ColumnNamesAPI().intensity, ColumnNamesAPI().fit]
+                )
+            },
+        }
+        return px.line(
+            df,
+            x=ColumnNamesAPI().energy,
+            y=y_columns,
+            color_discrete_map=color_map,
+            line_dash_map=line_dash_map,
+        )
+
+    def _update_plot_layout(
+        self, fig: Figure, args_plot: PlotAPI, df_2_provided: bool
+    ) -> None:
+        """Update the plot layout."""
         height = args_plot.size[1][0]
         self.update_layout_axes(fig, args_plot, height)
+
         xaxis_title = self.title_text(
             name=args_plot.xaxis_title.name, unit=args_plot.xaxis_title.unit
         )
@@ -226,7 +279,8 @@ class DataFramePlot:
 
         fig.update_xaxes(title_text=xaxis_title, row=1, col=1)
         fig.update_xaxes(title_text=xaxis_title, row=2, col=1)
-        if df_2 is None:
+
+        if not df_2_provided:
             residual_title = self.title_text(
                 name=args_plot.residual_title.name, unit=args_plot.residual_title.unit
             )
@@ -235,14 +289,8 @@ class DataFramePlot:
             fig.update_yaxes(title_text=residual_title, row=1, col=1)
         else:
             fig.update_yaxes(title_text=yaxis_title, row=1, col=1)
+
         fig.update_yaxes(title_text=yaxis_title, row=2, col=1)
-        fig.show(
-            config={
-                "toImageButtonOptions": dict(
-                    format="png", filename="plot_of_2_dataframes", scale=4
-                )
-            }
-        )
 
     def plot_dataframe(self, args_plot: PlotAPI, df: pd.DataFrame) -> None:
         """Plot the dataframe according to the PlotAPI arguments.
@@ -254,6 +302,7 @@ class DataFramePlot:
         fig = px.line(df, x=args_plot.x, y=args_plot.y)
         height = args_plot.size[1][0]
         self.update_layout_axes(fig, args_plot, height)
+
         fig.update_xaxes(
             title_text=self.title_text(
                 name=args_plot.xaxis_title.name, unit=args_plot.xaxis_title.unit
@@ -266,9 +315,11 @@ class DataFramePlot:
         )
         fig.show(
             config={
-                "toImageButtonOptions": dict(
-                    format="png", filename="plot_dataframe", scale=4
-                )
+                "toImageButtonOptions": {
+                    "format": "png",
+                    "filename": "plot_dataframe",
+                    "scale": 4,
+                }
             }
         )
 
@@ -279,21 +330,18 @@ class DataFramePlot:
             args_plot (PlotAPI): PlotAPI object for the settings of the plot.
             df (pd.DataFrame): Dataframe to plot.
         """
-        for i in range(
-            1,
-            sum(bool(_col.startswith(ColumnNamesAPI().fit)) for _col in df.columns) + 1,
-        ):
-            _col = [col for col in df.columns if col.endswith(str(i))]
-            _col.append(ColumnNamesAPI().energy)
-            _df = df[_col]
-            _df = _df.rename(
+        num_fits = df.columns.str.startswith(ColumnNamesAPI().fit).sum()
+        for i in range(1, num_fits + 1):
+            cols = [col for col in df.columns if col.endswith(f"_{i}")]
+            cols.append(ColumnNamesAPI().energy)
+            df_subset = df[cols].rename(
                 columns={
                     f"{ColumnNamesAPI().intensity}_{i}": ColumnNamesAPI().intensity,
                     f"{ColumnNamesAPI().fit}_{i}": ColumnNamesAPI().fit,
                     f"{ColumnNamesAPI().residual}_{i}": ColumnNamesAPI().residual,
                 }
             )
-            self.plot_2dataframes(args_plot, _df)
+            self.plot_2dataframes(args_plot, df_subset)
 
     def plot_metric(
         self,
@@ -307,27 +355,31 @@ class DataFramePlot:
         Args:
             args_plot (PlotAPI): PlotAPI object for the settings of the plot.
             df_metric (pd.DataFrame): Metric dataframe to plot.
-            bar_criteria (Union[str, List[str]]): String or list of criteria to plot as
-                 bars.
-            line_criteria (Union[str, List[str]]): String or l of criteria to plot as
-                 lines.
+            bar_criteria (Union[str, List[str]]): Criteria to plot as bars.
+            line_criteria (Union[str, List[str]]): Criteria to plot as lines.
         """
         fig = make_subplots(specs=[[{"secondary_y": True}]])
-        _fig_bar = px.bar(
+        fig_bar = px.bar(
             df_metric,
             y=bar_criteria,
             color_discrete_sequence=args_plot.color.bars,
         )
-        _fig_line = px.line(
+        fig_line = px.line(
             df_metric,
             y=line_criteria,
             color_discrete_sequence=args_plot.color.lines,
         )
-        _fig_line.update_traces(mode="lines+markers", yaxis="y2")
-        fig.add_traces(_fig_bar.data + _fig_line.data)
+        fig_line.update_traces(mode="lines+markers", yaxis="y2")
+
+        for trace in fig_bar.data:
+            fig.add_trace(trace)
+        for trace in fig_line.data:
+            fig.add_trace(trace)
+
         fig.update_layout(xaxis_type="category")
         height = args_plot.size[1][1]
         self.update_layout_axes(fig, args_plot, height)
+
         fig.update_xaxes(
             title_text=self.title_text(
                 name=args_plot.run_title.name, unit=args_plot.run_title.unit
@@ -347,9 +399,11 @@ class DataFramePlot:
         )
         fig.show(
             config={
-                "toImageButtonOptions": dict(
-                    format="png", filename="plot_metric", scale=4
-                )
+                "toImageButtonOptions": {
+                    "format": "png",
+                    "filename": "plot_metric",
+                    "scale": 4,
+                }
             }
         )
 
@@ -378,16 +432,17 @@ class DataFramePlot:
             plot_bgcolor=args_plot.color.plot,
         )
 
+        minor_ticks = self.get_minor(args_plot)
+
         fig.update_xaxes(
-            minor=self.get_minor(args_plot=args_plot),
+            minor=minor_ticks,
             gridcolor=args_plot.color.grid,
             linecolor=args_plot.color.line,
             zerolinecolor=args_plot.color.zero_line,
             color=args_plot.color.color,
         )
-
         fig.update_yaxes(
-            minor=self.get_minor(args_plot=args_plot),
+            minor=minor_ticks,
             gridcolor=args_plot.color.grid,
             linecolor=args_plot.color.line,
             zerolinecolor=args_plot.color.zero_line,
@@ -406,7 +461,7 @@ class DataFramePlot:
         Returns:
             str: Title text.
         """
-        return name if unit is None else f"{name} [{unit}]"
+        return f"{name} [{unit}]" if unit else name
 
     def get_minor(self, args_plot: PlotAPI) -> Dict[str, Union[str, bool]]:
         """Get the minor axis arguments.
@@ -417,12 +472,12 @@ class DataFramePlot:
         Returns:
             Dict[str, Union[str, bool]]: Dictionary with the minor axis arguments.
         """
-        return dict(
-            tickcolor=args_plot.color.ticks,
-            showgrid=args_plot.grid.show,
-            ticks=args_plot.grid.ticks,
-            griddash=args_plot.grid.dash,
-        )
+        return {
+            "tickcolor": args_plot.color.ticks,
+            "showgrid": args_plot.grid.show,
+            "ticks": args_plot.grid.ticks,
+            "griddash": args_plot.grid.dash,
+        }
 
 
 class ExportResults:
