@@ -139,7 +139,7 @@ class DataFrameDisplay:
 
 
 class DataFramePlot:
-    """Class to plot a data frame."""
+    """Class to plot a dataframe."""
 
     def plot_2dataframes(
         self,
@@ -147,7 +147,7 @@ class DataFramePlot:
         df_1: pd.DataFrame,
         df_2: Optional[pd.DataFrame] = None,
     ) -> None:
-        """Plot two data frames.
+        """Plot two dataframes.
 
         !!! info "About the plot"
 
@@ -159,14 +159,14 @@ class DataFramePlot:
 
             Currently, the `line_dash_map` is not working, and the dash is not
             plotted. This is likely due to the columns not being labeled in the
-            data frame.
+            dataframe.
 
         Args:
             args_plot (PlotAPI): PlotAPI object for the settings of the plot.
-            df_1 (pd.DataFrame): First data frame to plot, which will generate
+            df_1 (pd.DataFrame): First dataframe to plot, which will generate
                 a fit plot with residual plot. The ratio is 70% to 20% with
                 10% space in between.
-            df_2 (Optional[pd.DataFrame], optional): Second optional data frame to
+            df_2 (Optional[pd.DataFrame], optional): Second optional dataframe to
                 plot for comparison. In this case, the ratio between the first
                 and second plot will be the same. Defaults to None.
         """
@@ -186,7 +186,7 @@ class DataFramePlot:
         )
 
     def _plot_single_dataframe(self, args_plot: PlotAPI, df: pd.DataFrame) -> Figure:
-        """Plot a single data frame with residuals."""
+        """Plot a single dataframe with residuals."""
         fig = make_subplots(
             rows=2, cols=1, shared_xaxes=True, shared_yaxes=True, vertical_spacing=0.05
         )
@@ -205,7 +205,7 @@ class DataFramePlot:
     def _plot_two_dataframes(
         self, args_plot: PlotAPI, df_1: pd.DataFrame, df_2: pd.DataFrame
     ) -> Figure:
-        """Plot two data frames for comparison."""
+        """Plot two dataframes for comparison."""
         fig = make_subplots(
             rows=2, cols=1, shared_xaxes=True, shared_yaxes=True, vertical_spacing=0.05
         )
@@ -293,11 +293,11 @@ class DataFramePlot:
         fig.update_yaxes(title_text=yaxis_title, row=2, col=1)
 
     def plot_dataframe(self, args_plot: PlotAPI, df: pd.DataFrame) -> None:
-        """Plot the data frame according to the PlotAPI arguments.
+        """Plot the dataframe according to the PlotAPI arguments.
 
         Args:
             args_plot (PlotAPI): PlotAPI object for the settings of the plot.
-            df (pd.DataFrame): Data frame to plot.
+            df (pd.DataFrame): Dataframe to plot.
         """
         fig = px.line(df, x=args_plot.x, y=args_plot.y)
         height = args_plot.size[1][0]
@@ -324,11 +324,11 @@ class DataFramePlot:
         )
 
     def plot_global_fit(self, args_plot: PlotAPI, df: pd.DataFrame) -> None:
-        """Plot the global data frame according to the PlotAPI arguments.
+        """Plot the global dataframe according to the PlotAPI arguments.
 
         Args:
             args_plot (PlotAPI): PlotAPI object for the settings of the plot.
-            df (pd.DataFrame): Data frame to plot.
+            df (pd.DataFrame): Dataframe to plot.
         """
         num_fits = df.columns.str.startswith(ColumnNamesAPI().fit).sum()
         for i in range(1, num_fits + 1):
@@ -354,7 +354,7 @@ class DataFramePlot:
 
         Args:
             args_plot (PlotAPI): PlotAPI object for the settings of the plot.
-            df_metric (pd.DataFrame): Metric data frame to plot.
+            df_metric (pd.DataFrame): Metric dataframe to plot.
             bar_criteria (Union[str, List[str]]): Criteria to plot as bars.
             line_criteria (Union[str, List[str]]): Criteria to plot as lines.
         """
