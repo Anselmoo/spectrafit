@@ -45,7 +45,7 @@ exclude = ["docs/", "tools/", "spectrafit/test/", "spectrafit/**/test/"]
 
 
 [tool.poetry.dependencies]
-python = ">=3.8,<3.13"
+python = ">=3.13,<3.14"
 lmfit = "^1.2.2"
 pandas = [
   { version = "<2.2.1", markers = "python_version < '3.9'" },
