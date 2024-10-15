@@ -107,9 +107,9 @@ class SolverAPI(BaseModel):
         default={},
         description="Error bar comment if values reach initial value or boundary",
     )
-    computional: Dict[str, Any] = Field(
+    computational: Dict[str, Any] = Field(
         ...,
-        description="Computional information like number of function evaluations",
+        description="Computational information like number of function evaluations",
     )
 
 
