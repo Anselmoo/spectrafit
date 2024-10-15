@@ -210,13 +210,13 @@ def fit_report_as_dict(
         "errorbars": {},
         "correlations": {},
         "covariance_matrix": {},
-        "computional": {},
+        "computational": {},
     }
 
     result, buffer, params = _extracted_gof_from_results(
         result=result, buffer=buffer, params=params
     )
-    buffer = _extracted_computional_from_results(
+    buffer = _extracted_computational_from_results(
         result=result, settings=settings, buffer=buffer
     )
     for name in parnames:
@@ -281,10 +281,10 @@ def get_init_value(
     return f"As fixed value: {param.value}"
 
 
-def _extracted_computional_from_results(
+def _extracted_computational_from_results(
     result: minimize, settings: Minimizer, buffer: Dict[str, Any]
 ) -> Dict[str, Any]:
-    """Extract the computional from the results.
+    """Extract the computational from the results.
 
     Args:
         result (minimize): Input Parameters from a fit or the  Minimizer results
@@ -297,15 +297,15 @@ def _extracted_computional_from_results(
     Returns:
         Dict[str, Any]: The buffer with updated results.
     """
-    buffer["computional"]["success"] = result.success
+    buffer["computational"]["success"] = result.success
     if hasattr(result, "message"):
-        buffer["computional"]["message"] = result.message
-    buffer["computional"]["errorbars"] = result.errorbars
-    buffer["computional"]["nfev"] = result.nfev
+        buffer["computational"]["message"] = result.message
+    buffer["computational"]["errorbars"] = result.errorbars
+    buffer["computational"]["nfev"] = result.nfev
 
-    buffer["computional"]["max_nfev"] = settings.max_nfev
-    buffer["computional"]["scale_covar"] = settings.scale_covar
-    buffer["computional"]["calc_covar"] = settings.calc_covar
+    buffer["computational"]["max_nfev"] = settings.max_nfev
+    buffer["computational"]["scale_covar"] = settings.scale_covar
+    buffer["computational"]["calc_covar"] = settings.calc_covar
 
     return buffer
 

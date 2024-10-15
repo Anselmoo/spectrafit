@@ -652,13 +652,13 @@ class SolverResults:
         return self.args_out["linear_correlation"]
 
     @property
-    def get_computional(self) -> Dict[str, Any]:
+    def get_computational(self) -> Dict[str, Any]:
         """Get the computational time.
 
         Returns:
             Dict[str, Any]: Computational time as dictionary.
         """
-        return self.args_out["fit_insights"]["computional"]
+        return self.args_out["fit_insights"]["computational"]
 
     @property
     def settings_conf_interval(self) -> Union[bool, Dict[str, Any]]:
@@ -793,7 +793,7 @@ class ExportReport(SolverResults):
             covariance_matrix=self.get_covariance_matrix,
             variables=self.get_variables,
             errorbars=self.get_errorbars,
-            computional=self.get_computional,
+            computational=self.get_computational,
         )
 
     @property
