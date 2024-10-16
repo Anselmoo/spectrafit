@@ -14,10 +14,12 @@
 import sys
 import warnings
 
-from typing import Literal
+from typing import Tuple
+
+from typing_extensions import Literal
 
 
-PYTHON_38_VERSION: tuple[Literal[3], Literal[8]] = (3, 8)
+PYTHON_38_VERSION: Tuple[Literal[3], Literal[8]] = (3, 8)
 
 if sys.version_info[:2] == PYTHON_38_VERSION:
     version_str = f"{PYTHON_38_VERSION[0]}.{PYTHON_38_VERSION[1]}"
