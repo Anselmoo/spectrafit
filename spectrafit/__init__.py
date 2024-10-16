@@ -14,8 +14,12 @@
 import sys
 import warnings
 
+from typing import Tuple
 
-PYTHON_38_VERSION = (3, 8)
+from typing_extensions import Literal
+
+
+PYTHON_38_VERSION: Tuple[Literal[3], Literal[8]] = (3, 8)
 
 if sys.version_info[:2] == PYTHON_38_VERSION:
     version_str = f"{PYTHON_38_VERSION[0]}.{PYTHON_38_VERSION[1]}"
@@ -27,4 +31,4 @@ if sys.version_info[:2] == PYTHON_38_VERSION:
         DeprecationWarning,
     )
 
-__version__ = "1.0.5"
+__version__ = "1.0.6"
