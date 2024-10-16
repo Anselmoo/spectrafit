@@ -13,7 +13,7 @@ from spectrafit import __version__
 
 def test_version() -> None:
     """Test the version string."""
-    assert __version__ == "1.0.5"
+    assert __version__ == "1.0.6"
 
 
 def test_python_38_warning(monkeypatch: MonkeyPatch) -> None:
