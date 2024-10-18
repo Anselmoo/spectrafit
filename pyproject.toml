@@ -170,6 +170,9 @@ all = [
   "python-pptx",
 ]
 
+[tool.ruff.lint]
+fixable = ["ALL"]
+extend-ignore = ["E721", "E731"]
 
 
 
