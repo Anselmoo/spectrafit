@@ -9,7 +9,7 @@ from spectrafit.api.models_model import DistributionModelAPI
 
 
 def list2dict(
-    peak_list: List[Dict[str, Dict[str, Dict[str, Any]]]]
+    peak_list: List[Dict[str, Dict[str, Dict[str, Any]]]],
 ) -> Dict[str, Dict[str, Dict[str, Any]]]:
     """Convert the list of peaks to dictionary.
 

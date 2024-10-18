@@ -143,7 +143,7 @@ def pptx_data(project_name: str) -> Tuple[PPTXDataAPI, OutputAPI, InputAPI, Solv
 
 
 def test_pptx_data(
-    pptx_data: Tuple[PPTXDataAPI, OutputAPI, InputAPI, SolverAPI]
+    pptx_data: Tuple[PPTXDataAPI, OutputAPI, InputAPI, SolverAPI],
 ) -> None:
     """Test the PPTXData class."""
     assert pptx_data[0].output == pptx_data[1]

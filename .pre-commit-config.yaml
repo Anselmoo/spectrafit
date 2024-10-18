@@ -18,26 +18,13 @@ repos:
       - id: check-added-large-files
         args: ["--maxkb=1000"]
         exclude: \.ipynb
-  - repo: https://github.com/psf/black.git
-    rev: 24.10.0
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.7.0
     hooks:
-      - id: black
-  - repo: https://github.com/asottile/blacken-docs
-    rev: 1.19.0
-    hooks:
-      - id: blacken-docs
-        additional_dependencies: [black>=24.1.1]
-  - repo: https://github.com/PyCQA/isort.git
-    rev: 5.13.2
-    hooks:
-      - id: isort
-        additional_dependencies: [toml>=0.10.2]
-  - repo: https://github.com/PyCQA/flake8.git
-    rev: 7.1.1
-    hooks:
-      - id: flake8
-        exclude: ^spectrafit/test/, ^examples/
-        entry: flake8  --max-doc-length 100 --max-line-length  88 --ignore E203,W503,W605
+      - id: ruff
+        files: spectrafit/
+      - id: ruff-format
+        files: spectrafit/
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v1.11.2
     hooks:
@@ -58,19 +45,9 @@ repos:
     hooks:
       - id: pydocstyle
         additional_dependencies: [toml>=0.10.2]
-  - repo: https://github.com/PyCQA/pylint
-    rev: "v3.3.1"
-    hooks:
-      - id: pylint
-        additional_dependencies: [toml>=0.10.2, numpy>=1.23.4, pydantic>=2.1]
   - repo: https://github.com/pre-commit/mirrors-prettier
     rev: "v4.0.0-alpha.8"
     hooks:
       - id: prettier
         files: '\.(md|js|css)$'
         args: [--prose-wrap=always]
-  - repo: https://github.com/asottile/pyupgrade
-    rev: v3.18.0
-    hooks:
-      - id: pyupgrade
-        args: [--py38-plus]

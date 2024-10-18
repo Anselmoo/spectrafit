@@ -91,11 +91,8 @@ dash-bootstrap-templates = [
 python-pptx = { version = ">=0.6.22,<1.1.0", optional = true }
 
 [tool.poetry.group.dev.dependencies]
-pylint = "^3.0.0"
 mypy = "^1.9.0"
 black = { extras = ["jupyter"], version = "^24.0" }
-blacken-docs = "^1.12.1"
-isort = "^5.13.2"
 pre-commit = [
   { version = "<=3.7.1", markers = "python_version < '3.9'" },
   { version = "^3.7.1", markers = "python_version >= '3.9'" },
@@ -113,14 +110,9 @@ types-tabulate = ">=0.8.11,<0.10.0"
 types-mock = ">=4.0.15,<6.0.0"
 dash = { extras = ["testing"], version = "^2.7.1" }
 bandit = "^1.7.5"
-# prospector = { extras = [
-#   "bandit",
-#   "black",
-#   "isort",
-#   "pylint",
-# ], version = "^1.10.3" }
 bump-pydantic = "^0.8.0"
 types-setuptools = ">=75.2.0.20241018,<75.3.0.0"
+ruff = "^0.7.0"
 
 [tool.poetry.group.docs.dependencies]
 mkdocs-material = "^9.5.0"
@@ -178,43 +170,11 @@ all = [
   "python-pptx",
 ]
 
-[tool.isort]
-profile = "black"
-force_single_line = true
-atomic = true
-include_trailing_comma = true
-lines_after_imports = 2
-lines_between_types = 1
-use_parentheses = true
-src_paths = ["poetry", "tests"]
-skip_glob = ["*/setup.py"]
-filter_files = true
-known_first_party = "poetry"
+[tool.ruff.lint]
+fixable = ["ALL"]
+extend-ignore = ["E721", "E731"]
 
-[tool.black]
-line-length = 88
-include = '\.pyi?$'
-exclude = '''
-/(
-    \.eggs
-  | \.git
-  | \.hg
-  | \.mypy_cache
-  | \.tox
-  | \.venv
-  | _build
-  | buck-out
-  | build
-  | dist
-  | test
-  | tests/.*/setup.py
-)/
-'''
 
-[tool.flake8]
-max-doc-length = 100
-max-line-length = 88
-ignore = ["E203", "W503", "W605"]
 
 [tool.pytest]
 script_launch_mode = "subprocess"
@@ -223,9 +183,7 @@ minversion = "7.0"
 addopts = "--cov=./spectrafit/ --cov-report=xml:coverage.xml --diff-symbols --plots -vv"
 testpaths = ["spectrafit"]
 
-[tool.pydocstyle]
-match = '.*\.py'
-convention = "google"
+
 
 
 [tool.mypy]
