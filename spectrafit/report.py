@@ -530,7 +530,7 @@ class FitReport:
     def __init__(
         self,
         inpars: Union[Parameters, Callable[..., Any]],
-        sort_pars: bool = True,
+        sort_pars: Union[bool, Callable[[str], Any]] = True,
         show_correl: bool = True,
         min_correl: float = 0.0,
         modelpars: Optional[Callable[..., Any]] = None,
@@ -540,7 +540,7 @@ class FitReport:
         Args:
             inpars (Parameters or object): The input parameters or
                 object.
-            sort_pars (bool, optional): Whether to sort the parameters.
+            sort_pars (Union[bool, Callable[[str], Any]], optional): Whether to sort the parameters.
                 Defaults to True.
             show_correl (bool, optional): Whether to show correlations.
                 Defaults to True.
@@ -557,15 +557,22 @@ class FitReport:
 
         if isinstance(self.inpars, Parameters):
             self.result, self.params = None, self.inpars
-        if hasattr(self.inpars, "params"):
+        elif hasattr(self.inpars, "params"):
             self.result = self.inpars
             self.params = self.inpars.params
 
-        if self.sort_pars:
-            key = self.sort_pars if callable(self.sort_pars) else alphanumeric_sort
-            self.parnames = sorted(self.params, key=key)
-        else:
-            self.parnames = list(self.params.keys())
+        self.parnames = self._get_parnames()
+
+    def _get_parnames(self) -> List[str]:
+        """Get parameter names, sorted if required.
+
+        Returns:
+            List[str]: List of parameter names.
+        """
+        if not self.sort_pars:
+            return list(self.params.keys())
+        key = self.sort_pars if callable(self.sort_pars) else alphanumeric_sort
+        return sorted(self.params, key=key)
 
     def generate_fit_statistics(self) -> Optional[pd.DataFrame]:
         """Generate fit statistics based on the result of the fitting process.
