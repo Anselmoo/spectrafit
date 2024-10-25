@@ -1310,35 +1310,37 @@ files = [
 
 [[package]]
 name = "dtale"
-version = "3.14.1"
+version = "3.15.1"
 description = "Web Client for Visualizing Pandas Objects"
 optional = true
 python-versions = "*"
 files = [
-    {file = "dtale-3.14.1-py2.py3-none-any.whl", hash = "sha256:1a9907bc943a9ddee8157a36a11582d1e1b3e7ee0264c208fe58ec1520f0ac42"},
-    {file = "dtale-3.14.1.tar.gz", hash = "sha256:5c95e6db0fb5c78a6cae5c14f9b0921c59262614511220dbd13244874da3bb77"},
+    {file = "dtale-3.15.1-py2.py3-none-any.whl", hash = "sha256:d8429b8e4ba007bff69658c464f2757523bfb7a6d85799827125a9e5c7a1f6b5"},
+    {file = "dtale-3.15.1.tar.gz", hash = "sha256:8514784316996fc7492263a1fa52fbb3aac87657c153ccc5489172387af2810f"},
 ]
 
 [package.dependencies]
 beautifulsoup4 = {version = "!=4.13.0b2", markers = "python_version > \"3.0\""}
 certifi = {version = "*", markers = "python_version > \"3.0\""}
-contourpy = [
-    {version = "<1.2.0", markers = "python_version == \"3.8\""},
-    {version = "*", markers = "python_version >= \"3.9\""},
-]
 cycler = {version = "*", markers = "python_version > \"3.6\""}
 dash = {version = "*", markers = "python_version > \"3.7\""}
-dash-bootstrap-components = {version = "<=1.3.1", markers = "python_version > \"3.6\""}
+dash-bootstrap-components = {version = "*", markers = "python_version > \"3.0\""}
 dash-colorscales = "*"
 dash-daq = "*"
 et-xmlfile = {version = "*", markers = "python_version >= \"3.6\""}
-Flask = {version = "<2.3", markers = "python_version >= \"3.7\""}
-Flask-Compress = "*"
-flask-ngrok = {version = "*", markers = "python_version > \"3.0\""}
+Flask = {version = "*", markers = "python_version >= \"3.8\""}
+Flask-Compress = [
+    {version = "<=1.15", markers = "python_version <= \"3.8\""},
+    {version = "*", markers = "python_version > \"3.8\""},
+]
 future = ">=0.14.0"
 itsdangerous = {version = "*", markers = "python_version >= \"3.8\""}
-kaleido = "*"
+kaleido = [
+    {version = "<=0.2.1", markers = "python_version <= \"3.8\""},
+    {version = "*", markers = "python_version >= \"3.9\""},
+]
 lz4 = {version = "*", markers = "python_version > \"3.6\""}
+MarkupSafe = {version = "<=2.1.5", markers = "python_version == \"3.8\""}
 matplotlib = [
     {version = "<=3.7.2", markers = "python_version == \"3.8\""},
     {version = "*", markers = "python_version >= \"3.9\""},
@@ -1353,7 +1355,8 @@ numpy = {version = "*", markers = "python_version >= \"3.0\""}
 openpyxl = {version = "!=3.2.0b1", markers = "python_version >= \"3.0\""}
 pandas = "*"
 plotly = {version = "*", markers = "python_version >= \"3.6\""}
-requests = {version = "*", markers = "python_version >= \"3.7\""}
+pyparsing = {version = "<=3.0.9", markers = "python_version == \"3.8\""}
+requests = {version = "*", markers = "python_version >= \"3.8\""}
 scikit-learn = [
     {version = "<=1.3.2", markers = "python_version == \"3.8\""},
     {version = "*", markers = "python_version > \"3.8\""},
@@ -1379,6 +1382,7 @@ xlrd = "*"
 arctic = ["arctic (<=1.79.4)"]
 arcticdb = ["arcticdb"]
 dash-bio = ["ParmEd (==3.4.3)", "dash-bio", "dash-bio (==0.7.1)"]
+ngrok = ["flask-ngrok"]
 r = ["rpy2"]
 redis = ["redis", "redislite"]
 streamlit = ["streamlit"]
@@ -1527,21 +1531,6 @@ zstandard = [
     {version = "*", markers = "platform_python_implementation != \"PyPy\""},
     {version = "*", extras = ["cffi"], markers = "platform_python_implementation == \"PyPy\""},
 ]
-
-[[package]]
-name = "flask-ngrok"
-version = "0.0.25"
-description = "A simple way to demo Flask apps from your machine."
-optional = true
-python-versions = "*"
-files = [
-    {file = "flask-ngrok-0.0.25.tar.gz", hash = "sha256:3f8ec704ab54b981c08d7044702f2b46023bafc4958bfeb7cbc1a905fde6ef8d"},
-    {file = "flask_ngrok-0.0.25-py3-none-any.whl", hash = "sha256:724519a4dd3a2d374af50d4c0c21a26548737de0cf23f68dfb8d3b31c7311e93"},
-]
-
-[package.dependencies]
-Flask = ">=0.8"
-requests = "*"
 
 [[package]]
 name = "fonttools"
@@ -4490,13 +4479,13 @@ extra = ["pygments (>=2.12)"]
 
 [[package]]
 name = "pyparsing"
-version = "3.1.4"
+version = "3.0.9"
 description = "pyparsing module - Classes and methods to define and execute parsing grammars"
 optional = false
 python-versions = ">=3.6.8"
 files = [
-    {file = "pyparsing-3.1.4-py3-none-any.whl", hash = "sha256:a6a7ee4235a3f944aa1fa2249307708f893fe5717dc603503c6c7969c070fb7c"},
-    {file = "pyparsing-3.1.4.tar.gz", hash = "sha256:f86ec8d1a83f11977c9a6ea7598e8c27fc5cddfa5b07ea2241edbbde1d7bc032"},
+    {file = "pyparsing-3.0.9-py3-none-any.whl", hash = "sha256:5026bae9a10eeaefb61dab2f09052b9f4307d44aee4eda64b309723d8d206bbc"},
+    {file = "pyparsing-3.0.9.tar.gz", hash = "sha256:2b020ecf7d21b687f219b71ecad3631f644a47f01403fa1d1036b0c6416d70fb"},
 ]
 
 [package.extras]
