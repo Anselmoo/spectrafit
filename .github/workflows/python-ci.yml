@@ -73,7 +73,7 @@ jobs:
       - name: Test SpectraFit
         run: poetry run pytest
       - name: Codecov
-        uses: codecov/codecov-action@v5.0.6
+        uses: codecov/codecov-action@v5.0.7
         with:
           name: codecov-umbrella
           flags: unittests
