@@ -2,6 +2,115 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.1.0 🌈 - 2024-11-24
+
+### :compass: What's Changed
+
+#### :rocket: New
+
+* feature: :sparkles: fix syntax by adding missing commas in function signatures (#1656) @Anselmoo
+
+#### :bug: Bug Fixes
+
+* fix: :pencil2: correct spelling of 'computional' to 'computational' in multiple files (#1649) @Anselmoo
+
+#### :toolbox: Maintenance
+
+* chore: :bookmark: bump version to 1.1.0 and update dependencies (#1701) @Anselmoo
+* chore(deps): update dependency ruff to ^0.8.0 (#1697) @renovate
+* chore(deps): update dependency types-setuptools to >=75.5.0.20241116,<75.6.0.0 (#1678) @renovate
+* [pre-commit.ci] pre-commit autoupdate (#1690) @pre-commit-ci
+* [pre-commit.ci] pre-commit autoupdate (#1683) @pre-commit-ci
+* fix(deps): update dependency kaleido to v0.4.1 (#1686) @renovate
+* [pre-commit.ci] pre-commit autoupdate (#1676) @pre-commit-ci
+* [pre-commit.ci] pre-commit autoupdate (#1669) @pre-commit-ci
+* [pre-commit.ci] pre-commit autoupdate (#1661) @pre-commit-ci
+* feature: :sparkles: fix syntax by adding missing commas in function signatures (#1656) @Anselmoo
+* chore(deps): update dependency types-setuptools to >=75.2.0.20241018,<75.3.0.0 (#1653) @renovate
+* chore: :arrow_up: update subproject commit for docker-stacks (#1651) @Anselmoo
+* fix: :pencil2: correct spelling of 'computional' to 'computational' in multiple files (#1649) @Anselmoo
+* [pre-commit.ci] pre-commit autoupdate (#1644) @pre-commit-ci
+* fix(deps): update python to >=3.8,<3.14 (#1629) @renovate
+* chore: :package: Update dependencies in poetry.lock and pyproject.toml (#1642) @Anselmoo
+
+#### :snake: Python
+
+* chore: :bookmark: bump version to 1.1.0 and update dependencies (#1701) @Anselmoo
+* [pre-commit.ci] pre-commit autoupdate (#1661) @pre-commit-ci
+* feature: :sparkles: fix syntax by adding missing commas in function signatures (#1656) @Anselmoo
+* chore: :arrow_up: update subproject commit for docker-stacks (#1651) @Anselmoo
+* fix: :pencil2: correct spelling of 'computional' to 'computational' in multiple files (#1649) @Anselmoo
+* chore: :package: Update dependencies in poetry.lock and pyproject.toml (#1642) @Anselmoo
+* test: :white_check_mark: Add unit tests for SpectraFit version and Python 3.8 deprecation warning (#1641) @Anselmoo
+* refactor: :recycle: Refactor DataFramePlot methods to improve clarity (#1639) @Anselmoo
+
+#### :octocat: Github Actions
+
+* chore(deps): update pypa/gh-action-pypi-publish digest to 218af42 (#1700) @renovate
+* chore(deps): update docker/metadata-action action to v5.6.1 (#1692) @renovate
+* chore(deps): update codecov/codecov-action action to v5.0.7 (#1696) @renovate
+* chore(deps): update codecov/codecov-action action to v5.0.6 (#1693) @renovate
+* chore(deps): update pypa/gh-action-pypi-publish digest to 93e8795 (#1670) @renovate
+* build: bump pypa/gh-action-pypi-publish from 1.10.3 to 1.12.2 (#1681) @dependabot
+* chore(deps): update codecov/codecov-action action to v5 (#1685) @renovate
+* chore(deps): update actions/checkout action to v4.2.2 (#1662) @renovate
+* chore: :green_heart: update pull request body format in weekly poetry bot workflow (#1658) @Anselmoo
+* fix(deps): update python to >=3.8,<3.14 (#1629) @renovate
+
+#### :card_index_dividers: Documentation
+
+* feature: :sparkles: fix syntax by adding missing commas in function signatures (#1656) @Anselmoo
+
+#### :link: Dependency Updates
+
+* chore: :bookmark: bump version to 1.1.0 and update dependencies (#1701) @Anselmoo
+* chore(deps): :arrows_counterclockwise: update dependencies 202411240001 (#1699) @Anselmoo
+* chore(deps): update dependency ruff to ^0.8.0 (#1697) @renovate
+* chore(deps): update dependency types-setuptools to >=75.5.0.20241116,<75.6.0.0 (#1678) @renovate
+* chore(deps): :arrows_counterclockwise: update dependencies 202411170001 (#1689) @Anselmoo
+* build: bump pypa/gh-action-pypi-publish from 1.10.3 to 1.12.2 (#1681) @dependabot
+* fix(deps): update dependency kaleido to v0.4.1 (#1686) @renovate
+* chore(deps): :arrows_counterclockwise: update dependencies 202411100001 (#1680) @Anselmoo
+* chore(deps): :arrows_counterclockwise: update dependencies 202411030001 (#1673) @Anselmoo
+* fix(deps): update dependency networkx to v3.4.2 (#1667) @renovate
+* chore(deps): :arrows_counterclockwise: update dependencies 202410270001 (#1666) @Anselmoo
+* chore(deps): :arrows_counterclockwise: update dependencies 202410200001 (#1657) @Anselmoo
+* feature: :sparkles: fix syntax by adding missing commas in function signatures (#1656) @Anselmoo
+* chore(deps): update dependency types-setuptools to >=75.2.0.20241018,<75.3.0.0 (#1653) @renovate
+* chore(deps): update dependency mkdocstrings to v0.26.2 (#1652) @renovate
+* chore: :arrow_up: update subproject commit for docker-stacks (#1651) @Anselmoo
+* chore(deps): update dependency mkdocstrings to v0.26.2 (#1646) @renovate
+* fix(deps): update python to >=3.8,<3.14 (#1629) @renovate
+* chore(deps): update dependency mkdocstrings to v0.26.2 (#1643) @renovate
+* chore: :package: Update dependencies in poetry.lock and pyproject.toml (#1642) @Anselmoo
+* chore(deps): :arrows_counterclockwise: update dependencies 202410130001 (#1638) @Anselmoo
+* chore(deps): update dependency mkdocstrings to v0.26.2 (#1637) @renovate
+
+#### :microscope: Testing & Coverage
+
+* chore: :bookmark: bump version to 1.1.0 and update dependencies (#1701) @Anselmoo
+* feature: :sparkles: fix syntax by adding missing commas in function signatures (#1656) @Anselmoo
+* chore: :arrow_up: update subproject commit for docker-stacks (#1651) @Anselmoo
+* fix: :pencil2: correct spelling of 'computional' to 'computational' in multiple files (#1649) @Anselmoo
+* chore: :package: Update dependencies in poetry.lock and pyproject.toml (#1642) @Anselmoo
+* test: :white_check_mark: Add unit tests for SpectraFit version and Python 3.8 deprecation warning (#1641) @Anselmoo
+
+#### :memo: Changelog
+
+* docs: :card_index_dividers: Changlog update for v1.0.5 (#1635) @Anselmoo
+
+#### :package: Vendor
+
+* chore: :arrow_up: update subproject commit for docker-stacks (#1651) @Anselmoo
+
+### :package: Full Changelog
+
+**Full Changelog**: https://github.com/Anselmoo/spectrafit/compare/v1.0.5...v1.1.0
+
+### :gear: Who Contributes
+
+@Anselmoo, @github-actions[bot], @renovate and @renovate[bot]
+
 ## v1.0.5 🌈 - 2024-10-11
 
 ### :compass: What's Changed
