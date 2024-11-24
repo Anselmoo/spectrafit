@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "SpectraFit"
-version = "1.0.6"
+version = "1.1.0"
 description = "Fast fitting of 2D- and 3D-Spectra with established routines"
 readme = "README.md"
 authors = ["Anselm Hahn <anselm.hahn@gmail.com>"]
@@ -102,7 +102,7 @@ pre-commit = [
 ]
 pytest = ">=7.1.3,<9.0.0"
 pytest-clarity = "^1.0.1"
-pytest-cov = ">=3,<6"
+pytest-cov = ">=3,<7"
 pytest-console-scripts = "^1.3.1"
 pytest-xdist = ">=2.5,<4.0"
 pytest-plt = "^1.1.0"
@@ -119,7 +119,7 @@ ruff = "^0.8.0"
 
 [tool.poetry.group.docs.dependencies]
 mkdocs-material = "^9.5.0"
-mkdocstrings = { extras = ["python"], version = ">=0.26.0,<0.27.0" }
+mkdocstrings = { extras = ["python"], version = ">=0.26.0,<0.28.0" }
 mkdocs-literate-nav = ">=0.4.1,<0.7.0"
 mkdocs-section-index = "^0.3.4"
 mkdocs-autorefs = "^1.0.1"
@@ -178,15 +178,12 @@ fixable = ["ALL"]
 extend-ignore = ["E721", "E731"]
 
 
-
 [tool.pytest]
 script_launch_mode = "subprocess"
 [tool.pytest.ini_options]
 minversion = "7.0"
 addopts = "--cov=./spectrafit/ --cov-report=xml:coverage.xml --diff-symbols --plots -vv"
 testpaths = ["spectrafit"]
-
-
 
 
 [tool.mypy]
