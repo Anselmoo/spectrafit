@@ -119,7 +119,7 @@ ruff = "^0.8.0"
 
 [tool.poetry.group.docs.dependencies]
 mkdocs-material = "^9.5.0"
-mkdocstrings = { extras = ["python"], version = ">=0.26.0,<0.27.0" }
+mkdocstrings = { extras = ["python"], version = ">=0.27.0,<0.28.0" }
 mkdocs-literate-nav = ">=0.4.1,<0.7.0"
 mkdocs-section-index = "^0.3.4"
 mkdocs-autorefs = "^1.0.1"
