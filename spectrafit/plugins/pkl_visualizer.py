@@ -111,9 +111,11 @@ class PklVisualizer(Converter):
             format=export_format,
         )
 
-        with pure_fname(fname).with_suffix(".json").open(
-            "w+", encoding="utf-8"
-        ) as outfile:
+        with (
+            pure_fname(fname)
+            .with_suffix(".json")
+            .open("w+", encoding="utf-8") as outfile
+        ):
             json.dump(data, outfile, indent=4)
 
     def get_type(self, value: Any) -> Union[Dict[str, Any], str]:
