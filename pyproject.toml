@@ -114,7 +114,7 @@ types-mock = ">=4.0.15,<6.0.0"
 dash = { extras = ["testing"], version = "^2.7.1" }
 bandit = "^1.7.5"
 bump-pydantic = "^0.8.0"
-types-setuptools = ">=75.5.0.20241116,<75.6.0.0"
+types-setuptools = ">=75.5.0.20241116,<75.7.0.0"
 ruff = "^0.8.0"
 
 [tool.poetry.group.docs.dependencies]
