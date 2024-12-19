@@ -2399,13 +2399,13 @@ files = [
 
 [[package]]
 name = "jupytext"
-version = "1.16.4"
+version = "1.16.6"
 description = "Jupyter notebooks as Markdown documents, Julia, Python or R scripts"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "jupytext-1.16.4-py3-none-any.whl", hash = "sha256:76989d2690e65667ea6fb411d8056abe7cd0437c07bd774660b83d62acf9490a"},
-    {file = "jupytext-1.16.4.tar.gz", hash = "sha256:28e33f46f2ce7a41fb9d677a4a2c95327285579b64ca104437c4b9eb1e4174e9"},
+    {file = "jupytext-1.16.6-py3-none-any.whl", hash = "sha256:900132031f73fee15a1c9ebd862e05eb5f51e1ad6ab3a2c6fdd97ce2f9c913b4"},
+    {file = "jupytext-1.16.6.tar.gz", hash = "sha256:dbd03f9263c34b737003f388fc069e9030834fb7136879c4c32c32473557baa0"},
 ]
 
 [package.dependencies]
@@ -2417,11 +2417,11 @@ pyyaml = "*"
 tomli = {version = "*", markers = "python_version < \"3.11\""}
 
 [package.extras]
-dev = ["autopep8", "black", "flake8", "gitpython", "ipykernel", "isort", "jupyter-fs (>=1.0)", "jupyter-server (!=2.11)", "nbconvert", "pre-commit", "pytest", "pytest-cov (>=2.6.1)", "pytest-randomly", "pytest-xdist", "sphinx-gallery (<0.8)"]
+dev = ["autopep8", "black", "flake8", "gitpython", "ipykernel", "isort", "jupyter-fs (>=1.0)", "jupyter-server (!=2.11)", "nbconvert", "pre-commit", "pytest", "pytest-cov (>=2.6.1)", "pytest-randomly", "pytest-xdist", "sphinx (<8)", "sphinx-gallery (<0.8)"]
 docs = ["myst-parser", "sphinx", "sphinx-copybutton", "sphinx-rtd-theme"]
 test = ["pytest", "pytest-randomly", "pytest-xdist"]
 test-cov = ["ipykernel", "jupyter-server (!=2.11)", "nbconvert", "pytest", "pytest-cov (>=2.6.1)", "pytest-randomly", "pytest-xdist"]
-test-external = ["autopep8", "black", "flake8", "gitpython", "ipykernel", "isort", "jupyter-fs (>=1.0)", "jupyter-server (!=2.11)", "nbconvert", "pre-commit", "pytest", "pytest-randomly", "pytest-xdist", "sphinx-gallery (<0.8)"]
+test-external = ["autopep8", "black", "flake8", "gitpython", "ipykernel", "isort", "jupyter-fs (>=1.0)", "jupyter-server (!=2.11)", "nbconvert", "pre-commit", "pytest", "pytest-randomly", "pytest-xdist", "sphinx (<8)", "sphinx-gallery (<0.8)"]
 test-functional = ["pytest", "pytest-randomly", "pytest-xdist"]
 test-integration = ["ipykernel", "jupyter-server (!=2.11)", "nbconvert", "pytest", "pytest-randomly", "pytest-xdist"]
 test-ui = ["calysto-bash"]
