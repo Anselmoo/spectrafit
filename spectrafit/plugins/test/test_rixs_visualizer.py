@@ -1,6 +1,7 @@
 """Test of the RIXS Visualizer."""
 
 from pathlib import Path
+import sys
 from typing import Any
 from typing import Tuple
 
@@ -26,8 +27,7 @@ def fixture_test_data() -> (
 
 
 # Write test  RIXSFigure
-
-
+@pytest.mark.skipif(sys.version_info < (3, 9), reason="Requires Python 3.9 or higher")
 class TestRixsFigure:
     """Test of the RIXS Figure."""
 
