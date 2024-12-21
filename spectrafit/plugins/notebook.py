@@ -514,9 +514,7 @@ class ExportResults:
             prefix=args.prefix,
             suffix=args.suffix,
             folder=args.folder,
-        ).open(
-            "wb+",
-        ) as f:
+        ).open("wb+") as f:
             tomli_w.dump(report, f)
 
     @staticmethod
