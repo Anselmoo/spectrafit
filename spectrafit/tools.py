@@ -546,7 +546,7 @@ def read_input_file(fname: Path) -> MutableMapping[str, Any]:
             args = json.load(f)
     elif fname.suffix in {".yaml", ".yml"}:
         with fname.open(encoding="utf-8") as f:
-            args = yaml.safe_load(f, Loader=yaml.FullLoader)
+            args = yaml.load(f, Loader=yaml.FullLoader)
     else:
         raise OSError(
             f"ERROR: Input file {fname} has not supported file format.\n"
