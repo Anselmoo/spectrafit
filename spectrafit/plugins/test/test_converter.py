@@ -29,6 +29,7 @@ from spectrafit.plugins.pkl_visualizer import PklVisualizer
 from spectrafit.plugins.pptx_converter import PPTXConverter
 from spectrafit.plugins.rixs_converter import RIXSConverter
 
+
 @pytest.mark.skipif(sys.version_info < (3, 9), reason="Requires Python 3.9 or higher")
 class TestFileConverter:
     """Test the file converter plugin."""
