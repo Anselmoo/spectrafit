@@ -10,12 +10,15 @@ import plotly.graph_objects as go
 import pytest
 
 from numpy.typing import NDArray
-from spectrafit.plugins.rixs_converter import RIXSConverter
-from spectrafit.plugins.rixs_visualizer import RIXSApp
-from spectrafit.plugins.rixs_visualizer import RIXSFigure
-from spectrafit.plugins.rixs_visualizer import RIXSVisualizer
+
+if sys.version_info >= (3, 9):
+    from spectrafit.plugins.rixs_converter import RIXSConverter
+    from spectrafit.plugins.rixs_visualizer import RIXSApp, RIXSFigure, RIXSVisualizer
+else:
+    pytest.mark.skip("Requires Python 3.9 or higher", allow_module_level=True)
 
 
+@pytest.mark.skipif(sys.version_info < (3, 9), reason="Requires Python 3.9 or higher")
 @pytest.fixture(scope="module", autouse=True, name="test_data")
 def fixture_test_data() -> (
     Tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]]
