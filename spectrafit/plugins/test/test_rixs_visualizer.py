@@ -1,6 +1,7 @@
 """Test of the RIXS Visualizer."""
 
 from pathlib import Path
+import sys
 from typing import Any
 from typing import Tuple
 
@@ -9,25 +10,29 @@ import plotly.graph_objects as go
 import pytest
 
 from numpy.typing import NDArray
-from spectrafit.plugins.rixs_converter import RIXSConverter
-from spectrafit.plugins.rixs_visualizer import RIXSApp
-from spectrafit.plugins.rixs_visualizer import RIXSFigure
-from spectrafit.plugins.rixs_visualizer import RIXSVisualizer
+
+if sys.version_info >= (3, 9):
+    from spectrafit.plugins.rixs_converter import RIXSConverter
+    from spectrafit.plugins.rixs_visualizer import RIXSApp
+    from spectrafit.plugins.rixs_visualizer import RIXSFigure
+    from spectrafit.plugins.rixs_visualizer import RIXSVisualizer
+else:
+    pytest.mark.skip("Requires Python 3.9 or higher", allow_module_level=True)
 
 
+@pytest.mark.skipif(sys.version_info < (3, 9), reason="Requires Python 3.9 or higher")
 @pytest.fixture(scope="module", autouse=True, name="test_data")
 def fixture_test_data() -> (
     Tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]]
 ):
     """Test data."""
-    space_x_y = np.arange(0, 10, 0.1)
+    space_x_y = np.arange(0, 10, 0.1, dtype=np.float64)
     space_x, space_y = np.meshgrid(space_x_y, space_x_y)
     return space_x_y, space_x_y, np.sin(space_x) * np.cos(space_y)
 
 
 # Write test  RIXSFigure
-
-
+@pytest.mark.skipif(sys.version_info < (3, 9), reason="Requires Python 3.9 or higher")
 class TestRixsFigure:
     """Test of the RIXS Figure."""
 
@@ -59,6 +64,7 @@ class TestRixsFigure:
         assert isinstance(fig_xas, go.Figure)
 
 
+@pytest.mark.skipif(sys.version_info < (3, 9), reason="Requires Python 3.9 or higher")
 class TestRIXSApp:
     """Test of the App."""
 
