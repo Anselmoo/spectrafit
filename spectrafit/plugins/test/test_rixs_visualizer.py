@@ -26,7 +26,7 @@ def fixture_test_data() -> (
     Tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]]
 ):
     """Test data."""
-    space_x_y = np.arange(0, 10, 0.1)
+    space_x_y = np.arange(0, 10, 0.1, dtype=np.float64)
     space_x, space_y = np.meshgrid(space_x_y, space_x_y)
     return space_x_y, space_x_y, np.sin(space_x) * np.cos(space_y)
 

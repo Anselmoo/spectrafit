@@ -106,8 +106,9 @@ class DistributionModels:
             Union[NDArray[np.float64], float]: Lorentzian distribution of `x` given.
         """
         sigma = fwhml * Constants.fwhml2sig
-        return np.array(amplitude / (1 + ((1.0 * x - center) / sigma) ** 2)) / (
-            pi * sigma
+        return np.array(
+            amplitude / (1 + ((1.0 * x - center) / sigma) ** 2) / (pi * sigma),
+            dtype=np.float64,
         )
 
     @staticmethod
@@ -292,7 +293,7 @@ class DistributionModels:
         """
         if abs(sigma) < 1.0e-13:
             sigma = 1.0e-13
-        return np.subtract(x, center) / sigma
+        return np.array(np.subtract(x, center) / sigma, dtype=np.float64)
 
     @staticmethod
     def erf(
@@ -1587,7 +1588,7 @@ class SolverModels(ModelParameters):
 
         for key, _kwarg in peak_kwargs.items():
             val += getattr(DistributionModels(), key[0])(x, **_kwarg)
-        return val - data
+        return np.array(val - data, dtype=np.float64)
 
     @staticmethod
     def solve_global_fitting(

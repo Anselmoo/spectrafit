@@ -870,7 +870,7 @@ class TestRixsConverter:
         if export_format == "npy":
             data_npy = np.load(fname.parent / f"{fname.stem}.npy", allow_pickle=True)
             assert isinstance(data_npy, np.ndarray)
-            assert np.allclose(data_npy.item()[keys[0]], data[keys[0]])
+            assert np.allclose(data_npy.item()[keys[0]], data[keys[0]])  # type: ignore
 
         if export_format == "npz":
             data_npz = np.load(fname.parent / f"{fname.stem}.npz", allow_pickle=True)

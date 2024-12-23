@@ -662,7 +662,7 @@ class TestAutoPeakDetection:
     def test_key_not_available(self) -> None:
         """Test if the key is not available."""
         args = {"autopeak": True, "global_": 0}
-        x = np.arange(0, 10, 0.1)
+        x = np.arange(0, 10, 0.1, dtype=np.float64)
         data = (
             np.sin(np.arange(0, 10, 0.1)) ** 3 + 2 * np.cos(np.arange(0, 10, 0.1)) ** 2
         )
@@ -705,17 +705,17 @@ class TestAutoPeakDetection:
     def test_distance(self) -> None:
         """Test if the distance is calculated correctly."""
         args = {"autopeak": True, "global_": 0}
-        x = 3 * np.arange(10, dtype=np.float64)
-        data = 3 * np.exp(10, dtype=np.float64)
+        x = 3.0 * np.arange(10, dtype=np.float64)
+        data = 3.0 * np.exp(10, dtype=np.float64)
 
-        auto = AutoPeakDetection(x=x, data=data, args=args)
+        auto = AutoPeakDetection(x=x, data=data, args=args)  # type: ignore
         _val = auto.estimate_distance
         assert not isclose(_val, 1.0)
 
     def test_autopeakdetection_mean(self) -> None:
         """Test of auto default detection with negative values."""
         args = {"autopeak": True, "global_": 0}
-        x = np.arange(0, 10, 0.1)
+        x = np.arange(0, 10, 0.1, dtype=np.float64)
         data = (
             np.sin(np.arange(0, 10, 0.1)) ** 3 + 2 * np.cos(np.arange(0, 10, 0.1)) ** 2
         )
