@@ -307,6 +307,7 @@ def reference_dataframe() -> pd.DataFrame:
         }
     )
 
+
 @pytest.mark.skipif(sys.version_info < (3, 9), reason="Requires Python 3.9 or higher")
 class TestDataConverter:
     """Test DataConverter class."""
@@ -518,6 +519,7 @@ def tmp_file_pkl_nested(
         pickle.dump(tmp_file_nested_dict, f)
     return tmp_file
 
+
 @pytest.mark.skipif(sys.version_info < (3, 9), reason="Requires Python 3.9 or higher")
 class TestPklConverter:
     """Test PklConverter."""
@@ -692,6 +694,7 @@ class TestPklConverter:
             len(list(Path(tmp_file_pkl.parent).glob(f"*level_*.{export_format}"))) == 3
         )
 
+
 @pytest.mark.skipif(sys.version_info < (3, 9), reason="Requires Python 3.9 or higher")
 class TestPklAsGraph:
     """Test the pkl visualizer."""
@@ -808,6 +811,7 @@ def fixture_tmp_list_dict_rixs(
     with open(fname, "wb") as f:
         pickle.dump(data_list_dict, f)
     return fname, keys
+
 
 @pytest.mark.skipif(sys.version_info < (3, 9), reason="Requires Python 3.9 or higher")
 class TestRixsConverter:
@@ -1045,7 +1049,8 @@ fit = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8]
 gaussian_1 = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8]
 """
 
-@pytest.mark.skipif(
+
+@pytest.mark.skipif(sys.version_info < (3, 9), reason="Requires Python 3.9 or higher")
 class TestPPTXConverter:
     """Test the pptx converter."""
 
