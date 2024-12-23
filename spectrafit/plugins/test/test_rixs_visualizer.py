@@ -63,6 +63,7 @@ class TestRixsFigure:
         assert isinstance(fig_xes, go.Figure)
         assert isinstance(fig_xas, go.Figure)
 
+
 @pytest.mark.skipif(sys.version_info < (3, 9), reason="Requires Python 3.9 or higher")
 class TestRIXSApp:
     """Test of the App."""
