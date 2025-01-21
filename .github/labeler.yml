@@ -10,6 +10,7 @@ codespaces:
 dependencies:
   - changed-files:
       - any-glob-to-any-file:
+          - uv.lock
           - poetry.lock
           - github/dependabot.yml
 documentation:
