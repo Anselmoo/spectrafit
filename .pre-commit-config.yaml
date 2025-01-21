@@ -5,7 +5,7 @@ repos:
       - id: check-yaml
         exclude: mkdocs.yml
       - id: check-toml
-        exclude: poetry.lock
+        exclude: uv.lock
       - id: check-json
         exclude: .devcontainer/devcontainer.json
       - id: check-symlinks
