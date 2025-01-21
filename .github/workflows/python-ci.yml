@@ -56,7 +56,7 @@ jobs:
       - name: Install the project
         run: uv sync --all-extras --dev
       - name: Test SpectraFit
-        run: uv run -group dev --all-extras pytest spectrafit/
+        run: uv run --group dev --all-extras pytest spectrafit/
       - name: Codecov
         uses: codecov/codecov-action@v5.1.2
         with:
