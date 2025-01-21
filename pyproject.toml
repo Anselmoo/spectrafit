@@ -147,10 +147,11 @@ docs = [
 default-groups = ["dev", "docs"]
 
 [tool.hatch.build.targets.sdist]
-include = ["examples/", "spectrafit/plugins/img/SpectraFit.png"]
+include = ["spectrafit", "examples/", "spectrafit/plugins/img/SpectraFit.png"]
 exclude = ["docs/", "tools/", "spectrafit/test/", "spectrafit/**/test/"]
 
 [tool.hatch.build.targets.wheel]
+include = ["spectrafit", "examples/", "spectrafit/plugins/img/SpectraFit.png"]
 exclude = ["docs/", "tools/", "spectrafit/test/", "spectrafit/**/test/"]
 
 [build-system]

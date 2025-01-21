@@ -72,7 +72,7 @@ jobs:
     needs: build
     steps:
       - uses: actions/checkout@v4
-      - name: Install uv and dependencies with doc-dependencies
+      - name: Install uv
         uses: astral-sh/setup-uv@v5
         with:
           enable-cache: true
@@ -81,7 +81,23 @@ jobs:
       - name: Install the project
         run: |
           uv sync --all-extras
-          run pip install -e .
+          uv run pip install -e .
+  install-build:
+    name: Install SpectraFit from wheel
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+          python-version: "3.10"
+      - name: Install the project
+        run: |
+          uv sync --all-extras
+          uv pip install dist/spectrafit-1.*-py3-none-any.whl
   documentation:
     name: Build Documentation
     runs-on: ubuntu-latest
