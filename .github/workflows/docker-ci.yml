@@ -7,7 +7,6 @@ on:
   repository_dispatch:
     types: [create-pull-request]
 
-
 jobs:
   docker:
     # Only if Dockerfile is changed
