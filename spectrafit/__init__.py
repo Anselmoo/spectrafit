@@ -31,4 +31,4 @@ if sys.version_info[:2] == PYTHON_38_VERSION:
         DeprecationWarning,
     )
 
-__version__ = "1.1.0"
+__version__ = "1.1.1"
