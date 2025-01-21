@@ -48,26 +48,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
+        uses: astral-sh/setup-uv@v5
         with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
           python-version: ${{ matrix.python-version }}
-      - name: Check out repository
-        uses: actions/checkout@v4
-      - name: Set up python ${{ matrix.python-version }}
-        id: setup-python
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Install Poetry and dependencies with dev-dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install poetry
-          poetry config virtualenvs.create true
-          poetry config virtualenvs.in-project true
-          poetry config virtualenvs.path .venv
-          poetry install --no-interaction --with dev -E all
+      - name: Install the project
+        run: uv sync --all-extras --dev
       - name: Test SpectraFit
-        run: poetry run pytest
+        run: uv run -group dev --all-extras pytest spectrafit/
       - name: Codecov
         uses: codecov/codecov-action@v5.1.2
         with:
@@ -83,17 +72,16 @@ jobs:
     needs: build
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Install uv and dependencies with doc-dependencies
+        uses: astral-sh/setup-uv@v5
         with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
           python-version: "3.10"
-      - name: Install Poetry and dependencies without dev-dependencies
+      - name: Install the project
         run: |
-          python -m pip install --upgrade pip
-          pip install poetry
-          poetry config virtualenvs.create true
-          poetry config virtualenvs.in-project true
-          poetry config virtualenvs.path .venv
-          poetry install --no-interaction --only main
+          uv sync --all-extras
+          run pip install -e .
   documentation:
     name: Build Documentation
     runs-on: ubuntu-latest
@@ -102,27 +90,24 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: actions/setup-python@v5
+      - name: Install uv and dependencies with doc-dependencies
+        uses: astral-sh/setup-uv@v5
         with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
           python-version: "3.10"
-      - name: Install Poetry and dependencies with doc-dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install poetry
-          poetry config virtualenvs.create true
-          poetry config virtualenvs.in-project true
-          poetry config virtualenvs.path .venv
-          poetry install --no-interaction --with docs --all-extras
+      - name: Install the project
+        run: uv sync --all-extras --group docs
       - name: Set git config
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
       - name: Build documentation
         if: ${{ !contains(github.ref, 'refs/heads/main')}}
-        run: poetry run mkdocs build --clean
+        run: uv run --group docs --all-extras mkdocs build --clean
       - name: Deploy documentation develops
         if: contains(github.ref, 'refs/heads/main')
-        run: poetry run mike deploy --push --update-aliases develop
+        run: uv run --group docs --all-extras mike deploy --push --update-aliases develop
   devcontainer:
     name: Devcontainer
     needs: build
