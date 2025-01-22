@@ -94,10 +94,12 @@ jobs:
           enable-cache: true
           cache-dependency-glob: uv.lock
           python-version: "3.10"
-      - name: Install the project
+      - name: Setup the project
         run: |
           uv sync --all-extras
           uv build
+      - name: Install the wheel
+        run: |
           uv pip install dist/*.whl
           uv run spectrafit -v
   documentation:
