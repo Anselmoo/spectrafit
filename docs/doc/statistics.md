@@ -328,36 +328,21 @@ sp.solver_model(
 [6]: https://en.wikipedia.org/wiki/Covariance_matrix
 [7]: https://scikit-learn.org/stable/modules/classes.html#regression-metrics
 [8]: ../../examples/example6
-[9]:
-  https://scikit-learn.org/stable/modules/generated/sklearn.metrics.explained_variance_score.html
-[10]:
-  https://scikit-learn.org/stable/modules/generated/sklearn.metrics.r2_score.html
-[11]:
-  https://scikit-learn.org/stable/modules/generated/sklearn.metrics.max_error.html
-[12]:
-  https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_absolute_error.html
-[13]:
-  https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_squared_error.html
-[14]:
-  https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_squared_log_error.html
-[15]:
-  https://scikit-learn.org/stable/modules/generated/sklearn.metrics.median_absolute_error.html
-[16]:
-  https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_absolute_percentage_error.html
-[17]:
-  https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_percentage_error.html
-[18]:
-  https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_gamma_deviance.html
-[19]:
-  https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_tweedie_deviance.html
-[20]:
-  https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_pinball_loss.html
-[21]:
-  https://scikit-learn.org/stable/modules/generated/sklearn.metrics.d2_tweedie_score.html
-[22]:
-  https://scikit-learn.org/stable/modules/generated/sklearn.metrics.d2_pinball_score.html
-[23]:
-  https://scikit-learn.org/stable/modules/generated/sklearn.metrics.d2_absolute_error_score.html
+[9]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.explained_variance_score.html
+[10]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.r2_score.html
+[11]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.max_error.html
+[12]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_absolute_error.html
+[13]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_squared_error.html
+[14]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_squared_log_error.html
+[15]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.median_absolute_error.html
+[16]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_absolute_percentage_error.html
+[17]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_percentage_error.html
+[18]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_gamma_deviance.html
+[19]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_tweedie_deviance.html
+[20]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_pinball_loss.html
+[21]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.d2_tweedie_score.html
+[22]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.d2_pinball_score.html
+[23]: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.d2_absolute_error_score.html
 [24]: https://jupyter.org/
 
 <!-- prettier-ignore -->
