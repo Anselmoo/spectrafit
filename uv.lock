@@ -6077,7 +6077,7 @@ docs = [
     { name = "mathjax", specifier = ">=0.1.2,<0.2" },
     { name = "mike", specifier = ">=2.0.0,<3" },
     { name = "mkdocs-autorefs", specifier = ">=1.0.1,<2" },
-    { name = "mkdocs-jupyter", marker = "python_full_version < '3.9'", specifier = "<=0.25.0" },
+    { name = "mkdocs-jupyter", marker = "python_full_version < '3.9'", specifier = "<=0.25.1" },
     { name = "mkdocs-jupyter", marker = "python_full_version >= '3.9'", specifier = ">=0.25.0,<0.26" },
     { name = "mkdocs-literate-nav", specifier = ">=0.4.1,<0.7.0" },
     { name = "mkdocs-material", specifier = ">=9.5.0,<10" },
