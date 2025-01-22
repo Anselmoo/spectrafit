@@ -708,7 +708,7 @@ class TestAutoPeakDetection:
         x = 3.0 * np.arange(10, dtype=np.float64)
         data = 3.0 * np.exp(10, dtype=np.float64)
 
-        auto = AutoPeakDetection(x=x, data=data, args=args)  # type: ignore
+        auto = AutoPeakDetection(x=x, data=data, args=args)
         _val = auto.estimate_distance
         assert not isclose(_val, 1.0)
 
