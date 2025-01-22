@@ -161,7 +161,8 @@ class RegressionMetrics:
                         warn_meassage(
                             msg=f"Regression metric '{fnc.__name__}' could not  "
                             f"be calculated due to: {err}"
-                        )
+                        ),
+                        stacklevel=2,
                     )
                     metric_dict[fnc.__name__].append(np.nan)
         return pd.DataFrame(metric_dict).T.to_dict(orient="split")
@@ -339,7 +340,7 @@ def _extracted_gof_from_results(
         buffer["statistics"]["bayesian_information"] = result.bic
 
         if not result.errorbars:
-            warn(warn_meassage("Uncertainties could not be estimated"))
+            warn(warn_meassage("Uncertainties could not be estimated"), stacklevel=2)
 
             if result.method not in ("leastsq", "least_squares"):
                 warn(
@@ -347,7 +348,8 @@ def _extracted_gof_from_results(
                         msg=f"The fitting method '{result.method}' does not "
                         "natively calculate and uncertainties cannot be "
                         "estimated due to be out of region!"
-                    )
+                    ),
+                    stacklevel=2,
                 )
 
             parnames_varying = [par for par in result.params if result.params[par].vary]
@@ -359,7 +361,8 @@ def _extracted_gof_from_results(
                         warn_meassage(
                             msg=f"The parameter '{name}' is at its initial "
                             "value and uncertainties cannot be estimated!"
-                        )
+                        ),
+                        stacklevel=2,
                     )
                 if np.allclose(par.value, par.min) or np.allclose(par.value, par.max):
                     buffer["errorbars"]["at_boundary"] = name
@@ -367,7 +370,8 @@ def _extracted_gof_from_results(
                         warn_meassage(
                             msg=f"The parameter '{name}' is at its boundary "
                             "and uncertainties cannot be estimated!"
-                        )
+                        ),
+                        stacklevel=2,
                     )
 
     return result, buffer, params
@@ -814,7 +818,10 @@ class PrintingResults:
             try:
                 CIReport(self.args["confidence_interval"][0])()
             except (MinimizerException, ValueError, KeyError, TypeError) as exc:
-                warn(f"Error: {exc} -> No confidence interval could be calculated!")
+                warn(
+                    f"Error: {exc} -> No confidence interval could be calculated!",
+                    stacklevel=2,
+                )
                 self.args["confidence_interval"] = {}
 
     def print_linear_correlation(self) -> None:

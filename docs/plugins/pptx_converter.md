@@ -52,5 +52,4 @@ The following export formats are supported:
 
 [1]: ../../plugins/jupyter_interface
 [2]: https://lmfit.github.io/lmfit-py/fitting.html#goodness-of-fit-statistics
-[3]:
-  https://scikit-learn.org/stable/modules/model_evaluation.html#common-cases-predefined-values
+[3]: https://scikit-learn.org/stable/modules/model_evaluation.html#common-cases-predefined-values

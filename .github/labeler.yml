@@ -1,82 +1,83 @@
 root:
-- changed-files:
-  - any-glob-to-any-file: '*'
+  - changed-files:
+      - any-glob-to-any-file: "*"
 codeowners:
-- changed-files:
-  - any-glob-to-any-file: .github/CODEOWNERS
+  - changed-files:
+      - any-glob-to-any-file: .github/CODEOWNERS
 codespaces:
-- changed-files:
-  - any-glob-to-any-file:  .devcontainer/**
+  - changed-files:
+      - any-glob-to-any-file: .devcontainer/**
 dependencies:
-- changed-files:
-  - any-glob-to-any-file:
-    - poetry.lock
-    - github/dependabot.yml
+  - changed-files:
+      - any-glob-to-any-file:
+          - uv.lock
+          - poetry.lock
+          - github/dependabot.yml
 documentation:
-- changed-files:
-  - any-glob-to-any-file:
-    - docs/**
-    - Examples/**
-    - mkdocs.yml
-    - README.md
-    - INSTALLATION.md
+  - changed-files:
+      - any-glob-to-any-file:
+          - docs/**
+          - Examples/**
+          - mkdocs.yml
+          - README.md
+          - INSTALLATION.md
 forms:
-- changed-files:
-  - any-glob-to-any-file:
-    - .github/ISSUE_TEMPLATE/**
-    - .github/pull_request_template.md
+  - changed-files:
+      - any-glob-to-any-file:
+          - .github/ISSUE_TEMPLATE/**
+          - .github/pull_request_template.md
 github-actions:
-- changed-files:
-  - any-glob-to-any-file: .github/workflows/**
+  - changed-files:
+      - any-glob-to-any-file: .github/workflows/**
 pre-commit:
-- changed-files:
-  - any-glob-to-any-file:
-    - .pre-commit-config.yaml
-    - .pre-commit-hooks.yaml
+  - changed-files:
+      - any-glob-to-any-file:
+          - .pre-commit-config.yaml
+          - .pre-commit-hooks.yaml
 python:
-- changed-files:
-  - any-glob-to-any-file: "spectrafit/**/*.py"
+  - changed-files:
+      - any-glob-to-any-file: "spectrafit/**/*.py"
 testing:
-- changed-files:
-  - any-glob-to-any-file: "spectrafit/**/test_*.py"
+  - changed-files:
+      - any-glob-to-any-file: "spectrafit/**/test_*.py"
 docker:
-- changed-files:
-  - any-glob-to-any-file:
-    - Dockerfile
-    - .dockerignore
-    - .devcontainer/Dockerfile
+  - changed-files:
+      - any-glob-to-any-file:
+          - Dockerfile
+          - .dockerignore
+          - .devcontainer/Dockerfile
 release:
-- changed-files:
-    - any-glob-to-any-file: spectrafit/__init__.py
+  - changed-files:
+      - any-glob-to-any-file: spectrafit/__init__.py
 vendor:
-- changed-files:
-  - any-glob-to-any-file: vendor/**
+  - changed-files:
+      - any-glob-to-any-file: vendor/**
 maintenance:
-- changed-files:
-  - any-glob-to-any-file:
-    - .gitignore
-    - .github/dependabot.yml
-    - .github/release-drafter.yml
-    - .github/labeler.yml
-    - .github/workflows/label.yml
-    - .sonarcloud.properties
-    - .pre-commit-config.yaml
-    - .prettierignore
-    - .pylintrc
-    - .sonarcloud.properties
-    - .sourcery.yaml
-    - "pyproject.toml"
+  - changed-files:
+      - any-glob-to-any-file:
+          - .gitignore
+          - .github/dependabot.yml
+          - .github/release-drafter.yml
+          - .github/labeler.yml
+          - .github/workflows/label.yml
+          - .sonarcloud.properties
+          - .pre-commit-config.yaml
+          - .prettierignore
+          - .pylintrc
+          - .sonarcloud.properties
+          - .sourcery.yaml
+          - "pyproject.toml"
 license:
-- changed-files:
-  - any-glob-to-any-file:
-    - LICENSE
-    - THIRD_PARTY_LICENSES
+  - changed-files:
+      - any-glob-to-any-file:
+          - LICENSE
+          - THIRD_PARTY_LICENSES
 security:
-- changed-files:
-  - any-glob-to-any-file: SECURITY.md
+  - changed-files:
+      - any-glob-to-any-file: SECURITY.md
 code-of-conduct:
-- changed-files:
-  - any-glob-to-any-file: CODE_OF_CONDUCT.md
+  - changed-files:
+      - any-glob-to-any-file: CODE_OF_CONDUCT.md
 changelog:
-- changed-files:
-  - any-glob-to-any-file: CHANGELOG.md
+  - changed-files:
+      - any-glob-to-any-file: CHANGELOG.md

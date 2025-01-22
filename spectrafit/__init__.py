@@ -29,6 +29,7 @@ if sys.version_info[:2] == PYTHON_38_VERSION:
         " For more details, see:"
         "https://devguide.python.org/versions/#end-of-life-branches.",
         DeprecationWarning,
+        stacklevel=2,
     )
 
-__version__ = "1.1.0"
+__version__ = "1.2.0"

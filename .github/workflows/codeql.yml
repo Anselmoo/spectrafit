@@ -22,7 +22,6 @@ on:
   repository_dispatch:
     types: [create-pull-request]
 
-
 jobs:
   analyze:
     name: Analyze

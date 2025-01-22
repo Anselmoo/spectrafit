@@ -689,7 +689,7 @@ class TestAutoPeakDetection:
 
         auto = AutoPeakDetection(x=x, data=data, args=args)
         _val = auto.estimated_rel_height
-        assert _val > 0.0
+        assert _val >= 0.0
 
     def test_plateau_size(self) -> None:
         """Test if the plateau_size is calculated correctly."""

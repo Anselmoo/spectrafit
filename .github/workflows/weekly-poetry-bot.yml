@@ -2,7 +2,7 @@ name: Weekly Poetry Update
 
 on:
   schedule:
-    - cron: '0 0 * * 0' # Runs every Sunday at midnight
+    - cron: "0 0 * * 0" # Runs every Sunday at midnight
   workflow_dispatch: # Allows manual triggering of the workflow
 
 jobs:
@@ -13,76 +13,73 @@ jobs:
       pull-requests: write
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.10'
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+          python-version: "3.10"
 
-    - name: Install Poetry
-      run: |
-        curl -sSL https://install.python-poetry.org | python3 -
-        export PATH="$HOME/.local/bin:$PATH"
+      - name: Set date variable
+        id: date
+        run: echo "DATE=$(date +%Y%m%d%H%M)" >> $GITHUB_ENV
 
-    - name: Set date variable
-      id: date
-      run: echo "DATE=$(date +%Y%m%d%H%M)" >> $GITHUB_ENV
+      - name: Create new branch
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git checkout -b update-dependencies-${{ env.DATE }}
 
-    - name: Create new branch
-      run: |
-        git config --global user.name 'github-actions[bot]'
-        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-        git checkout -b update-dependencies-${{ env.DATE }}
+      - name: Install dependencies
+        run: uv sync --upgrade --all-groups --all-extras
 
-    - name: Install dependencies
-      run: poetry install
+      - name: Update dependencies
+        run: uv lock --upgrade  | tee uv-update.log
 
-    - name: Update dependencies
-      run: poetry update | tee poetry-update.log
-
-    - name: Commit changes
-      run: |
-        git add poetry.lock
-        if git diff-index --quiet HEAD; then
-          echo "No changes detected, creating an empty commit."
-          git commit --allow-empty -m "chore(deps): :arrows_counterclockwise: no updates for ${{ env.DATE }}"
-        else
-          echo "Changes detected, creating a commit with update log."
-          if [ -f poetry-update.log ]; then
-            update_log=$(cat poetry-update.log)
+      - name: Commit changes
+        run: |
+          git add uv.lock
+          if git diff-index --quiet HEAD; then
+            echo "No changes detected, creating an empty commit."
+            git commit --allow-empty -m "chore(deps): :arrows_counterclockwise: no updates for ${{ env.DATE }}"
           else
-            update_log="No update log available."
+            echo "Changes detected, creating a commit with update log."
+            if [ -f uv-update.log ]; then
+              update_log=$(cat uv-update.log)
+            else
+              update_log="No update log available."
+            fi
+            git commit -m "$(echo -e "chore(deps): :arrows_counterclockwise: update dependencies ${{ env.DATE }}\n\n$update_log")"
           fi
-          git commit -m "$(echo -e "chore(deps): :arrows_counterclockwise: update dependencies ${{ env.DATE }}\n\n$update_log")"
-        fi
 
-    - name: Push changes
-      run: |
-        gh auth setup-git
-        git push -f origin update-dependencies-${{ env.DATE }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.WEEKLY_UPDATE }}
+      - name: Push changes
+        run: |
+          gh auth setup-git
+          git push -f origin update-dependencies-${{ env.DATE }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.WEEKLY_UPDATE }}
 
-    - name: Create Pull Request via gh
-      run: |
-        gh pr create --title "chore(deps): :arrows_counterclockwise: update dependencies ${{ env.DATE }}" \
-        --body "This is an auto-generated pull request to update dependencies in \`poetry.lock\`. Updated packages: ${{ steps.update_log.outputs.log }}" \
-        --base main \
-        --head update-dependencies-${{ env.DATE }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.WEEKLY_UPDATE }}
+      - name: Create Pull Request via gh
+        run: |
+          gh pr create --title "chore(deps): :arrows_counterclockwise: update dependencies ${{ env.DATE }}" \
+          --body "This is an auto-generated pull request to update dependencies in \`uv.lock\`. Updated packages: ${{ steps.update_log.outputs.log }}" \
+          --base main \
+          --head update-dependencies-${{ env.DATE }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.WEEKLY_UPDATE }}
 
-    - name: Add Label to Pull Request
-      run: |
-        pr_number=$(gh pr view --json number --jq '.number')
-        gh pr edit $pr_number --add-label "weekly-update"
-      env:
-        GITHUB_TOKEN: ${{ secrets.WEEKLY_UPDATE }}
+      - name: Add Label to Pull Request
+        run: |
+          pr_number=$(gh pr view --json number --jq '.number')
+          gh pr edit $pr_number --add-label "weekly-update"
+        env:
+          GITHUB_TOKEN: ${{ secrets.WEEKLY_UPDATE }}
 
-    - name: Merge Pull Request via gh
-      run: |
-        gh pr merge update-dependencies-${{ env.DATE }} --merge --auto
-      env:
-        GITHUB_TOKEN: ${{ secrets.WEEKLY_UPDATE }}
+      - name: Merge Pull Request via gh
+        run: |
+          gh pr merge update-dependencies-${{ env.DATE }} --merge --auto
+        env:
+          GITHUB_TOKEN: ${{ secrets.WEEKLY_UPDATE }}

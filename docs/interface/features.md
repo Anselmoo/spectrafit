@@ -2489,10 +2489,8 @@ results. For interactive working the following tools are implemented:
 For more information, please check the [Jupyter Notebook Interface][24] section.
 
 [1]: https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.describe.html
-[2]:
-  ../../api/spectrafit_api/#spectrafit.spectrafit.extracted_from_command_line_runner
-[3]:
-  https://lmfit.github.io/lmfit-py/model.html?highlight=report#lmfit.model.ModelResult.fit_report
+[2]: ../../api/spectrafit_api/#spectrafit.spectrafit.extracted_from_command_line_runner
+[3]: https://lmfit.github.io/lmfit-py/model.html?highlight=report#lmfit.model.ModelResult.fit_report
 [4]: https://en.wikipedia.org/wiki/Akaike_information_criterion
 [5]: https://en.wikipedia.org/wiki/Bayesian_information_criterion
 [6]: /spectrafit/interface/features/#fit-statistic
@@ -2501,12 +2499,10 @@ For more information, please check the [Jupyter Notebook Interface][24] section.
 [9]: https://lmfit.github.io/lmfit-py/fitting.html?highlight=correlation
 [10]: https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.corr.html
 [11]: https://en.wikipedia.org/wiki/Confidence_interval
-[12]:
-  https://lmfit.github.io/lmfit-py/examples/example_confidence_interval.html?highlight=confidence
+[12]: https://lmfit.github.io/lmfit-py/examples/example_confidence_interval.html?highlight=confidence
 [13]: ../../api/plotting_api/
 [14]: /spectrafit/interface/features/#correlation-analysis
-[15]:
-  https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.from_dict.html
+[15]: https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.from_dict.html
 [16]: /spectrafit/interface/features/#pre-analysis
 [17]: https://en.wikipedia.org/wiki/Correlation
 [18]: https://docs.python.org/3/library/socket.html
