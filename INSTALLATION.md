@@ -113,38 +113,72 @@ To keep the system environment clean, the installation is done via the:
     conda config --set channel_priority strict
     ```
 
-=== "Poetry"
+=== "UV"
 
-    For installing `SpectraFit` via [Poetry][8], first `SpectraFit` has to be
+    For installing `SpectraFit` via [UV][10], first `SpectraFit` has to be
     downloaded or cloned from the [GitHub repository][9]. Optionally, the
     `SpectraFit` repo has to be unpacked. Next, `poetry` has to be installed
-    via `pip`:
+    via `curl` or `homebrew`:
+
 
     ```bash
-    pip install poetry
+        curl -LsSf https://astral.sh/uv/install.sh | sh
     ```
 
-    or via `conda`:
+    or via `homebrew`:
 
     ```bash
-    conda install -c conda-forge poetry
+    brew install uv
     ```
+
     _Installation_:
 
     ```bash
-    poetry install -E jupyter
+    uv sync --all-extras --all-groups
     ```
     _Usage_:
 
     ```bash
-    poetry run spectrafit --help
+    uv run spectrafit --help
     ```
 
-    or using the `poetry shell`:
+=== "Poetry"
 
-    ```bash
-    poetry shell
-    spectrafit --help
+    !!! failure "Poetry"
+
+        The installation via `Poetry` is deprecated and is replaced by
+        [`UV`][12] a new package manager for Python.
+
+        ~~For installing `SpectraFit` via [Poetry][8], first `SpectraFit` has to be
+        downloaded or cloned from the [GitHub repository][9]. Optionally, the
+        `SpectraFit` repo has to be unpacked. Next, `poetry` has to be installed
+        via `pip`:~~
+
+        ```bash
+        pip install poetry
+        ```
+
+        or via `conda`:
+
+        ```bash
+        conda install -c conda-forge poetry
+        ```
+        _Installation_:
+
+        ```bash
+        poetry install -E jupyter
+        ```
+        _Usage_:
+
+        ```bash
+        poetry run spectrafit --help
+        ```
+
+        or using the `poetry shell`:
+
+        ```bash
+        poetry shell
+        spectrafit --help
     ```
 
 _Result_:
@@ -262,11 +296,11 @@ available plugins are:
 [2]: https://conda.io/docs/
 [3]: https://anaconda.org/conda-forge/spectrafit
 [4]: https://github.com/Anselmoo/spectrafit/pkgs/container/spectrafit
-[5]:
-  https://github.com/jupyter/docker-stacks/blob/main/scipy-notebook/Dockerfile
+[5]: https://github.com/jupyter/docker-stacks/blob/main/scipy-notebook/Dockerfile
 [6]: ../../plugins/jupyter-spectrafit-interface
 [7]: https://github.com/conda-forge/spectrafit-feedstock
 [8]: https://python-poetry.org/docs/
 [9]: https://github.com/Anselmoo/spectrafit/
 [10]: https://www.sigstore.dev
 [11]: https://docs.sigstore.dev/system_config/installation/
+[12]: https://github.com/astral-sh/uv
