@@ -28,7 +28,8 @@ if sys.version_info[:2] == PYTHON_38_VERSION:
         " Please consider upgrading to Python 3.9 or newer."
         " For more details, see:"
         "https://devguide.python.org/versions/#end-of-life-branches.",
-        DeprecationWarning, stacklevel=2,
+        DeprecationWarning,
+        stacklevel=2,
     )
 
 __version__ = "1.2.0"
