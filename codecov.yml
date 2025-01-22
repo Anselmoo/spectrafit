@@ -10,4 +10,4 @@ comment:
   layout: "diff,flags,tree,betaprofiling"
   show_critical_paths: true
 github_checks:
-    annotations: true
+  annotations: true
