@@ -16,15 +16,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
         with:
+          enable-cache: true
+          cache-dependency-glob: uv.lock
           python-version: "3.10"
-
-      - name: Install Poetry
-        run: |
-          curl -sSL https://install.python-poetry.org | python3 -
-          export PATH="$HOME/.local/bin:$PATH"
 
       - name: Set date variable
         id: date
@@ -37,21 +34,21 @@ jobs:
           git checkout -b update-dependencies-${{ env.DATE }}
 
       - name: Install dependencies
-        run: poetry install
+        run: uv sync --upgrade --all-groups --all-extras
 
       - name: Update dependencies
-        run: poetry update | tee poetry-update.log
+        run: uv lock --upgrade  | tee uv-update.log
 
       - name: Commit changes
         run: |
-          git add poetry.lock
+          git add uv.lock
           if git diff-index --quiet HEAD; then
             echo "No changes detected, creating an empty commit."
             git commit --allow-empty -m "chore(deps): :arrows_counterclockwise: no updates for ${{ env.DATE }}"
           else
             echo "Changes detected, creating a commit with update log."
-            if [ -f poetry-update.log ]; then
-              update_log=$(cat poetry-update.log)
+            if [ -f uv-update.log ]; then
+              update_log=$(cat uv-update.log)
             else
               update_log="No update log available."
             fi
@@ -68,7 +65,7 @@ jobs:
       - name: Create Pull Request via gh
         run: |
           gh pr create --title "chore(deps): :arrows_counterclockwise: update dependencies ${{ env.DATE }}" \
-          --body "This is an auto-generated pull request to update dependencies in \`poetry.lock\`. Updated packages: ${{ steps.update_log.outputs.log }}" \
+          --body "This is an auto-generated pull request to update dependencies in \`uv.lock\`. Updated packages: ${{ steps.update_log.outputs.log }}" \
           --base main \
           --head update-dependencies-${{ env.DATE }}
         env:
