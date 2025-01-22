@@ -97,7 +97,8 @@ jobs:
       - name: Install the project
         run: |
           uv sync --all-extras
-          uv pip install dist/spectrafit-1.*-py3-none-any.whl
+          uv pip install dist/*.whl
+          uv run spectrafit -v
   documentation:
     name: Build Documentation
     runs-on: ubuntu-latest
