@@ -1,4 +1,4 @@
 python -m pip install --upgrade pip
-python -m pip install uv
+curl -LsSf https://astral.sh/uv/install.sh | sh
 uv venv --python 3.10
 uv sync --all-extras --all-groups
