@@ -6025,7 +6025,7 @@ requires-dist = [
     { name = "networkx", marker = "extra == 'graph'", specifier = ">=3.0.0,<4" },
     { name = "networkx", extras = ["all"], marker = "extra == 'all'", specifier = "~=3.0" },
     { name = "numdifftools", specifier = ">=0.9.41,<0.10" },
-    { name = "numpy", marker = "python_full_version < '3.9'", specifier = "<1.26.4" },
+    { name = "numpy", marker = "python_full_version < '3.9'", specifier = "<1.26.5" },
     { name = "numpy", marker = "python_full_version >= '3.9'", specifier = ">=1.26.4,<2" },
     { name = "openpyxl", specifier = ">=3.0.9,<4" },
     { name = "pandas", marker = "python_full_version < '3.9'", specifier = "<2.2.1" },
