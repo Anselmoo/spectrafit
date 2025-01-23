@@ -46,7 +46,7 @@ dependencies = [
   "seaborn>=0.13.0,<0.14",
   "numdifftools>=0.9.41,<0.10",
   "tqdm>=4.64.0,<5",
-  "scikit-learn<1.5.0 ; python_version < '3.9'",
+  "scikit-learn<1.6.2; python_version < '3.9'",
   "scikit-learn>=1.5.0,<2 ; python_version >= '3.9'",
   "art>=5.8,<7.0",
   "tomli>=2.0.1,<3",

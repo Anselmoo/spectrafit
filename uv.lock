@@ -6038,7 +6038,7 @@ requires-dist = [
     { name = "python-pptx", marker = "extra == 'all'", specifier = ">=0.6.22,<1.1.0" },
     { name = "python-pptx", marker = "extra == 'jupyter'", specifier = ">=0.6.22,<1.1.0" },
     { name = "pyyaml", specifier = "~=6.0" },
-    { name = "scikit-learn", marker = "python_full_version < '3.9'", specifier = "<1.5.0" },
+    { name = "scikit-learn", marker = "python_full_version < '3.9'", specifier = "<1.6.2" },
     { name = "scikit-learn", marker = "python_full_version >= '3.9'", specifier = ">=1.5.0,<2" },
     { name = "scipy", marker = "python_full_version < '3.9'", specifier = ">=1.10.1,<2" },
     { name = "scipy", marker = "python_full_version >= '3.9'", specifier = ">=1.13.0,<2" },
