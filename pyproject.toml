@@ -135,7 +135,7 @@ docs = [
   "mkdocs-section-index>=0.3.4,<0.4",
   "mkdocs-autorefs>=1.0.1,<2",
   "mkdocs-minify-plugin>=0.8.0,<0.9",
-  "mkdocs-jupyter<=0.25.0 ; python_version < '3.9'",
+  "mkdocs-jupyter<=0.25.1; python_version < '3.9'",
   "mkdocs-jupyter>=0.25.0,<0.26 ; python_version >= '3.9'",
   "mkdocs-table-reader-plugin>=3.0.0,<4",
   "mike>=2.0.0,<3",
