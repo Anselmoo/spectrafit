@@ -2,6 +2,126 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.2.0 🌈 - 2025-01-26
+
+### :compass: What's Changed
+
+* chore(deps): :arrows_counterclockwise: update dependencies 202501190001 (#1779) @Anselmoo
+* chore: :sparkles: add initial configuration files for various tools and linters (#1746) @Anselmoo
+
+#### :rocket: New
+
+* feat: ⭐  update dependency numpy to v2 (#1796) @[renovate[bot]](https://github.com/apps/renovate)
+* feat: ⭐ Introducing `UV` as package manager (#1785) @Anselmoo
+
+#### :computer: Codesspaces
+
+* chore: :recycle: update setup script to install UV via curl instead of pip (#1791) @Anselmoo
+* feat: ⭐ Introducing `UV` as package manager (#1785) @Anselmoo
+
+#### :toolbox: Maintenance
+
+* chore(deps): update dependency mkdocs-jupyter to <=0.25.1 (#1798) @[renovate[bot]](https://github.com/apps/renovate)
+* fix(deps): update dependency numpy to <3 (#1804) @[renovate[bot]](https://github.com/apps/renovate)
+* feat: ⭐  update dependency numpy to v2 (#1796) @[renovate[bot]](https://github.com/apps/renovate)
+* fix(deps): update dependency pandas to <2.2.4 (#1790) @[renovate[bot]](https://github.com/apps/renovate)
+* fix(deps): update dependency scikit-learn to <1.6.2 (#1792) @[renovate[bot]](https://github.com/apps/renovate)
+* chore(deps): update dependency types-setuptools to >=75.8.0.20250110,<75.9.0.0 (#1794) @[renovate[bot]](https://github.com/apps/renovate)
+* fix(deps): update dependency numpy to <1.26.5 (#1789) @[renovate[bot]](https://github.com/apps/renovate)
+* chore(deps): update dependency ruff to >=0.9.2,<0.10 (#1793) @[renovate[bot]](https://github.com/apps/renovate)
+* chore(deps): update dependency pre-commit to v4 (#1795) @[renovate[bot]](https://github.com/apps/renovate)
+* feat: ⭐ Introducing `UV` as package manager (#1785) @Anselmoo
+* [pre-commit.ci] pre-commit autoupdate (#1782) @[pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci)
+* [pre-commit.ci] pre-commit autoupdate (#1776) @[pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci)
+* chore(deps): update dependency types-setuptools to >=75.8.0.20250110,<75.9.0.0 (#1773) @[renovate[bot]](https://github.com/apps/renovate)
+* chore(deps): update dependency ruff to ^0.9.0 (#1772) @[renovate[bot]](https://github.com/apps/renovate)
+* [pre-commit.ci] pre-commit autoupdate (#1768) @[pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci)
+* build: :arrow_up: update configuration files for improved linting and formattingUpdate linting and formatting configurations (#1749) @Anselmoo
+* [pre-commit.ci] pre-commit autoupdate (#1707) @[pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci)
+* build: bump types-setuptools from 75.5.0.20241122 to 75.6.0.20241126 (#1715) @[dependabot[bot]](https://github.com/apps/dependabot)
+
+#### :snake: Python
+
+* feat: ⭐ Introducing `UV` as package manager (#1785) @Anselmoo
+* [pre-commit.ci] pre-commit autoupdate (#1776) @[pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci)
+* build: :arrow_up: update configuration files for improved linting and formattingUpdate linting and formatting configurations (#1749) @Anselmoo
+* [pre-commit.ci] pre-commit autoupdate (#1707) @[pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci)
+* build: bump types-setuptools from 75.5.0.20241122 to 75.6.0.20241126 (#1715) @[dependabot[bot]](https://github.com/apps/dependabot)
+
+#### :octocat: Github Actions
+
+* chore(deps): update pypa/gh-action-pypi-publish digest to e1dad8a (#1802) @[renovate[bot]](https://github.com/apps/renovate)
+* chore(deps): update docker/build-push-action action to v6.13.0 (#1803) @[renovate[bot]](https://github.com/apps/renovate)
+* chore(deps): update codecov/codecov-action action to v5.3.1 (#1800) @[renovate[bot]](https://github.com/apps/renovate)
+* chore(deps): update codecov/codecov-action action to v5.2.0 (#1786) @[renovate[bot]](https://github.com/apps/renovate)
+* feat: ⭐ Introducing `UV` as package manager (#1785) @Anselmoo
+* chore(deps): update docker/build-push-action action to v6.12.0 (#1777) @[renovate[bot]](https://github.com/apps/renovate)
+* chore(deps): update docker/build-push-action action to v6.11.0 (#1769) @[renovate[bot]](https://github.com/apps/renovate)
+* chore(deps): update docker/setup-qemu-action action to v3.3.0 (#1770) @[renovate[bot]](https://github.com/apps/renovate)
+* chore(deps): update pypa/gh-action-pypi-publish digest to 8cafb5c (#1757) @[renovate[bot]](https://github.com/apps/renovate)
+* build: :arrow_up: update configuration files for improved linting and formattingUpdate linting and formatting configurations (#1749) @Anselmoo
+* chore(deps): update codecov/codecov-action action to v5.1.2 (#1747) @[renovate[bot]](https://github.com/apps/renovate)
+* chore(deps): update actions/setup-python action to v5 (#1737) @[renovate[bot]](https://github.com/apps/renovate)
+* chore(deps): update docker/setup-buildx-action action to v3.8.0 (#1742) @[renovate[bot]](https://github.com/apps/renovate)
+* ci: :sparkles: add GitHub Actions workflow for Conda package builds (#1736) @Anselmoo
+* chore(deps): update pypa/gh-action-pypi-publish digest to 916e576 (#1726) @[renovate[bot]](https://github.com/apps/renovate)
+* build: bump codecov/codecov-action from 5.0.7 to 5.1.1 (#1732) @[dependabot[bot]](https://github.com/apps/dependabot)
+* build: bump pypa/gh-action-pypi-publish from e7723a410eb01c55f02a75cf26a230ed14f1b19e to cbd6d01d855e02aab0908c7709d5c0ddc88c617a (#1733) @[dependabot[bot]](https://github.com/apps/dependabot)
+* chore(deps): update pypa/gh-action-pypi-publish digest to e7723a4 (#1724) @[renovate[bot]](https://github.com/apps/renovate)
+* chore(deps): update docker/build-push-action action to v6.10.0 (#1709) @[renovate[bot]](https://github.com/apps/renovate)
+
+#### :card_index_dividers: Documentation
+
+* feat: ⭐ Introducing `UV` as package manager (#1785) @Anselmoo
+
+#### :link: Dependency Updates
+
+* chore(deps): update dependency mkdocs-jupyter to <=0.25.1 (#1798) @[renovate[bot]](https://github.com/apps/renovate)
+* fix(deps): update dependency numpy to <3 (#1804) @[renovate[bot]](https://github.com/apps/renovate)
+* feat: ⭐  update dependency numpy to v2 (#1796) @[renovate[bot]](https://github.com/apps/renovate)
+* chore(deps): :arrows_counterclockwise: update dependencies 202501260000 (#1801) @Anselmoo
+* build: :arrow_up: update executing to `uv.lock` (#1797) @Anselmoo
+* fix(deps): update dependency pandas to <2.2.4 (#1790) @[renovate[bot]](https://github.com/apps/renovate)
+* fix(deps): update dependency scikit-learn to <1.6.2 (#1792) @[renovate[bot]](https://github.com/apps/renovate)
+* chore(deps): update dependency types-setuptools to >=75.8.0.20250110,<75.9.0.0 (#1794) @[renovate[bot]](https://github.com/apps/renovate)
+* fix(deps): update dependency numpy to <1.26.5 (#1789) @[renovate[bot]](https://github.com/apps/renovate)
+* chore(deps): update dependency ruff to >=0.9.2,<0.10 (#1793) @[renovate[bot]](https://github.com/apps/renovate)
+* chore(deps): update dependency pre-commit to v4 (#1795) @[renovate[bot]](https://github.com/apps/renovate)
+* feat: ⭐ Introducing `UV` as package manager (#1785) @Anselmoo
+* chore(deps): update dependency types-setuptools to >=75.8.0.20250110,<75.9.0.0 (#1773) @[renovate[bot]](https://github.com/apps/renovate)
+* chore(deps): update dependency ruff to ^0.9.0 (#1772) @[renovate[bot]](https://github.com/apps/renovate)
+* chore(deps): :arrows_counterclockwise: update dependencies 202501050001 (#1765) @Anselmoo
+* chore(deps): update dependency ruff to v0.8.5 (#1762) @[renovate[bot]](https://github.com/apps/renovate)
+* build: :arrow_up: update configuration files for improved linting and formattingUpdate linting and formatting configurations (#1749) @Anselmoo
+* chore(deps): update dependency pre-commit to v4 (#1744) @[renovate[bot]](https://github.com/apps/renovate)
+* chore(deps): :arrows_counterclockwise: update dependencies 202412150001 (#1738) @Anselmoo
+* chore(deps): update dependency pytest-cov to v6 (#1730) @[renovate[bot]](https://github.com/apps/renovate)
+* build: bump codecov/codecov-action from 5.0.7 to 5.1.1 (#1732) @[dependabot[bot]](https://github.com/apps/dependabot)
+* build: bump pypa/gh-action-pypi-publish from e7723a410eb01c55f02a75cf26a230ed14f1b19e to cbd6d01d855e02aab0908c7709d5c0ddc88c617a (#1733) @[dependabot[bot]](https://github.com/apps/dependabot)
+* chore(deps): :arrows_counterclockwise: update dependencies 202412080001 (#1729) @Anselmoo
+* build: bump types-setuptools from 75.5.0.20241122 to 75.6.0.20241126 (#1715) @[dependabot[bot]](https://github.com/apps/dependabot)
+* chore(deps): :arrows_counterclockwise: update dependencies 202412020548 (#1719) @Anselmoo
+* chore(deps): update dependency mkdocstrings to v0.27.0 (#1702) @[renovate[bot]](https://github.com/apps/renovate)
+* chore(deps): update dependency pytest-cov to v6 (#1703) @[renovate[bot]](https://github.com/apps/renovate)
+
+#### :microscope: Testing & Coverage
+
+* feat: ⭐ Introducing `UV` as package manager (#1785) @Anselmoo
+* [pre-commit.ci] pre-commit autoupdate (#1776) @[pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci)
+* build: :arrow_up: update configuration files for improved linting and formattingUpdate linting and formatting configurations (#1749) @Anselmoo
+
+#### :memo: Changelog
+
+* docs: :card_index_dividers: Changlog update for v1.1.0 (#1704) @Anselmoo
+
+### :package: Full Changelog
+
+**Full Changelog**: https://github.com/Anselmoo/spectrafit/compare/v1.1.0...v1.2.0
+
+### :gear: Who Contributes
+
+@Anselmoo, @github-actions[bot], @renovate[bot] and [renovate[bot]](https://github.com/apps/renovate)
+
 ## v1.1.0 🌈 - 2024-11-24
 
 ### :compass: What's Changed
