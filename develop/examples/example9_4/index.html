@@ -449,7 +449,332 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 JupyterDash is deprecated, use Dash instead.
 See https://dash.plotly.com/dash-in-jupyter for more details.
 
-</pre> </div> </div> <div class=jp-OutputArea-child> <div class="jp-OutputPrompt jp-OutputArea-prompt"></div> <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type=text/html tabindex=0> <iframe allowfullscreen frameborder=0 height=650 src=http://127.0.0.1:8050/ width=100%></iframe> </div> </div> <div class=jp-OutputArea-child> <div class="jp-OutputPrompt jp-OutputArea-prompt"></div> <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type=text/html tabindex=0> <iframe allowfullscreen frameborder=0 height=650 src=http://127.0.0.1:8050/ width=100%></iframe> </div> </div> </div> </div> </div> </div> <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell"> <div class=jp-Cell-inputWrapper tabindex=0> <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser"> </div> <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt"> </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type=text/markdown> <p><img alt=_ src="https://github.com/Anselmoo/spectrafit/blob/9f46aac202a6edfe8d063ecd46fadd3c14a6e28d/docs/examples/images/Figure_9_4.png?raw=true"></p> </div> </div> </div> </div> <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell"> <div class=jp-Cell-inputWrapper tabindex=0> <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser"> </div> <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt"> </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type=text/markdown> <h2 id=what-is-needed-to-run-similiar-example>What is needed to run similiar example?<a class=anchor-link href=#what-is-needed-to-run-similiar-example>¶</a></h2><p>To run this example, you need to have the following <strong>three</strong> target arrays:</p> <ol> <li><code>incident_energy</code> axis as <strong>1D array</strong></li> <li><code>emission_energy</code> axis as <strong>1D array</strong></li> <li><code>rixs_map</code> as <strong>2D array</strong></li> </ol> <p>In the example above, <code>sin2_as_rixsmap</code> is used as reference function to generate all three arrays, but you can use any other function that returns the three arrays or load them from a file, like:</p> <div class=highlight><pre><span></span><span class=kn>import</span><span class=w> </span><span class=nn>pickle</span>
+</pre> </div> </div> <div class=jp-OutputArea-child> <div class="jp-OutputPrompt jp-OutputArea-prompt"></div> <div class="jp-RenderedText jp-OutputArea-output" data-mime-type=application/vnd.jupyter.stderr tabindex=0> <pre>
+<span class=ansi-red-fg>---------------------------------------------------------------------------</span>
+<span class=ansi-red-fg>ValueError</span>                                Traceback (most recent call last)
+Cell <span class=ansi-green-fg>In[4], line 1</span>
+<span class=ansi-green-fg>----&gt; 1</span> <span class=ansi-yellow-bg>_app</span><span class=ansi-yellow-bg style="color: rgb(98,98,98)">.</span><span class=ansi-yellow-bg>app_run</span><span class=ansi-yellow-bg>(</span><span class=ansi-yellow-bg>)</span>
+
+File <span class=ansi-green-fg>~/work/spectrafit/spectrafit/spectrafit/plugins/rixs_visualizer.py:511</span>, in <span class=ansi-cyan-fg>RIXSApp.app_run</span><span class=ansi-blue-fg>(self)</span>
+<span class="ansi-green-intense-fg ansi-bold">    497</span> <span class=ansi-bold style="color: rgb(0,135,0)">else</span>:
+<span class="ansi-green-intense-fg ansi-bold">    498</span>     app <span style="color: rgb(98,98,98)">=</span> dash<span style="color: rgb(98,98,98)">.</span>Dash(
+<span class="ansi-green-intense-fg ansi-bold">    499</span>         <span style="color: rgb(0,0,135)">__name__</span>,
+<span class="ansi-green-intense-fg ansi-bold">    500</span>         external_stylesheets<span style="color: rgb(98,98,98)">=</span>external_stylesheets,
+<span class=ansi-green-fg>   (...)</span>
+<span class="ansi-green-intense-fg ansi-bold">    506</span>         ],
+<span class="ansi-green-intense-fg ansi-bold">    507</span>     )
+<span class="ansi-green-intense-fg ansi-bold">    508</span> app<span style="color: rgb(98,98,98)">.</span>layout <span style="color: rgb(98,98,98)">=</span> dbc<span style="color: rgb(98,98,98)">.</span>Container(
+<span class="ansi-green-intense-fg ansi-bold">    509</span>     [
+<span class="ansi-green-intense-fg ansi-bold">    510</span>         <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>header(),
+<span class=ansi-green-fg>--&gt; 511</span>         <span class=ansi-yellow-bg style="color: rgb(0,135,0)">self</span><span class=ansi-yellow-bg style="color: rgb(98,98,98)">.</span><span class=ansi-yellow-bg>body</span><span class=ansi-yellow-bg>(</span><span class=ansi-yellow-bg>)</span>,
+<span class="ansi-green-intense-fg ansi-bold">    512</span>         <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>footer(),
+<span class="ansi-green-intense-fg ansi-bold">    513</span>     ],
+<span class="ansi-green-intense-fg ansi-bold">    514</span>     fluid<span style="color: rgb(98,98,98)">=</span><span class=ansi-bold style="color: rgb(0,135,0)">True</span>,
+<span class="ansi-green-intense-fg ansi-bold">    515</span> )
+<span class="ansi-green-intense-fg ansi-bold">    517</span> <span style="color: rgb(175,0,255)">@app</span><span style="color: rgb(98,98,98)">.</span>callback(
+<span class="ansi-green-intense-fg ansi-bold">    518</span>     [
+<span class="ansi-green-intense-fg ansi-bold">    519</span>         dash<span style="color: rgb(98,98,98)">.</span>dependencies<span style="color: rgb(98,98,98)">.</span>Output(<span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">xes-figure</span><span style="color: rgb(175,0,0)">"</span>, <span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">figure</span><span style="color: rgb(175,0,0)">"</span>),
+<span class=ansi-green-fg>   (...)</span>
+<span class="ansi-green-intense-fg ansi-bold">    536</span>     theme: <span style="color: rgb(0,135,0)">str</span>,
+<span class="ansi-green-intense-fg ansi-bold">    537</span> ) <span style="color: rgb(98,98,98)">-</span><span style="color: rgb(98,98,98)">&gt;</span> Tuple[go<span style="color: rgb(98,98,98)">.</span>Figure, go<span style="color: rgb(98,98,98)">.</span>Figure, go<span style="color: rgb(98,98,98)">.</span>Figure]:
+<span class="ansi-green-intense-fg ansi-bold">    538</span>     <span class=ansi-bold style="color: rgb(0,135,0)">if</span> hoverData <span class=ansi-bold style="color: rgb(175,0,255)">is</span> <span class=ansi-bold style="color: rgb(0,135,0)">None</span>:
+
+File <span class=ansi-green-fg>~/work/spectrafit/spectrafit/spectrafit/plugins/rixs_visualizer.py:427</span>, in <span class=ansi-cyan-fg>RIXSApp.body</span><span class=ansi-blue-fg>(self)</span>
+<span class="ansi-green-intense-fg ansi-bold">    420</span> opacity <span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>opacity()
+<span class="ansi-green-intense-fg ansi-bold">    421</span> rixs, xes, xas <span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>pre_body()
+<span class="ansi-green-intense-fg ansi-bold">    423</span> <span class=ansi-bold style="color: rgb(0,135,0)">return</span> (
+<span class="ansi-green-intense-fg ansi-bold">    424</span>     dbc<span style="color: rgb(98,98,98)">.</span>Card(
+<span class="ansi-green-intense-fg ansi-bold">    425</span>         dbc<span style="color: rgb(98,98,98)">.</span>CardBody(
+<span class="ansi-green-intense-fg ansi-bold">    426</span>             [
+<span class=ansi-green-fg>--&gt; 427</span>                 dbc<span style="color: rgb(98,98,98)">.</span>Row([<span class=ansi-yellow-bg>ThemeChangerAIO</span><span class=ansi-yellow-bg>(</span><span class=ansi-yellow-bg>aio_id</span><span class=ansi-yellow-bg style="color: rgb(98,98,98)">=</span><span class=ansi-yellow-bg style="color: rgb(175,0,0)">"</span><span class=ansi-yellow-bg style="color: rgb(175,0,0)">theme</span><span class=ansi-yellow-bg style="color: rgb(175,0,0)">"</span><span class=ansi-yellow-bg>)</span>]),
+<span class="ansi-green-intense-fg ansi-bold">    428</span>                 dbc<span style="color: rgb(98,98,98)">.</span>Row(
+<span class="ansi-green-intense-fg ansi-bold">    429</span>                     [
+<span class="ansi-green-intense-fg ansi-bold">    430</span>                         dbc<span style="color: rgb(98,98,98)">.</span>Col(
+<span class="ansi-green-intense-fg ansi-bold">    431</span>                             html<span style="color: rgb(98,98,98)">.</span>H1(<span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">RIXS Viewer</span><span style="color: rgb(175,0,0)">"</span>, className<span style="color: rgb(98,98,98)">=</span><span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">text-center</span><span style="color: rgb(175,0,0)">"</span>)
+<span class="ansi-green-intense-fg ansi-bold">    432</span>                         ),
+<span class="ansi-green-intense-fg ansi-bold">    433</span>                     ],
+<span class="ansi-green-intense-fg ansi-bold">    434</span>                     justify<span style="color: rgb(98,98,98)">=</span><span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">left</span><span style="color: rgb(175,0,0)">"</span>,
+<span class="ansi-green-intense-fg ansi-bold">    435</span>                 ),
+<span class="ansi-green-intense-fg ansi-bold">    436</span>                 html<span style="color: rgb(98,98,98)">.</span>Br(),
+<span class="ansi-green-intense-fg ansi-bold">    437</span>                 dbc<span style="color: rgb(98,98,98)">.</span>Row(
+<span class="ansi-green-intense-fg ansi-bold">    438</span>                     [
+<span class="ansi-green-intense-fg ansi-bold">    439</span>                         dbc<span style="color: rgb(98,98,98)">.</span>Col(colorscale),
+<span class="ansi-green-intense-fg ansi-bold">    440</span>                         dbc<span style="color: rgb(98,98,98)">.</span>Col(opacity),
+<span class="ansi-green-intense-fg ansi-bold">    441</span>                     ],
+<span class="ansi-green-intense-fg ansi-bold">    442</span>                 ),
+<span class="ansi-green-intense-fg ansi-bold">    443</span>                 html<span style="color: rgb(98,98,98)">.</span>Br(),
+<span class="ansi-green-intense-fg ansi-bold">    444</span>                 dbc<span style="color: rgb(98,98,98)">.</span>Row(
+<span class="ansi-green-intense-fg ansi-bold">    445</span>                     [
+<span class="ansi-green-intense-fg ansi-bold">    446</span>                         dbc<span style="color: rgb(98,98,98)">.</span>Col(rixs),
+<span class="ansi-green-intense-fg ansi-bold">    447</span>                         dbc<span style="color: rgb(98,98,98)">.</span>Col([xes, xas]),
+<span class="ansi-green-intense-fg ansi-bold">    448</span>                     ],
+<span class="ansi-green-intense-fg ansi-bold">    449</span>                     justify<span style="color: rgb(98,98,98)">=</span><span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">left</span><span style="color: rgb(175,0,0)">"</span>,
+<span class="ansi-green-intense-fg ansi-bold">    450</span>                 ),
+<span class="ansi-green-intense-fg ansi-bold">    451</span>                 html<span style="color: rgb(98,98,98)">.</span>Br(),
+<span class="ansi-green-intense-fg ansi-bold">    452</span>             ],
+<span class="ansi-green-intense-fg ansi-bold">    453</span>         ),
+<span class="ansi-green-intense-fg ansi-bold">    454</span>         class_name<span style="color: rgb(98,98,98)">=</span><span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">mt-4</span><span style="color: rgb(175,0,0)">"</span>,
+<span class="ansi-green-intense-fg ansi-bold">    455</span>     ),
+<span class="ansi-green-intense-fg ansi-bold">    456</span> )[<span style="color: rgb(98,98,98)">0</span>]
+
+File <span class=ansi-green-fg>~/work/spectrafit/spectrafit/.venv/lib/python3.10/site-packages/aio/aio_theme_changer.py:89</span>, in <span class=ansi-cyan-fg>ThemeChangerAIO.__init__</span><span class=ansi-blue-fg>(self, aio_id, custom_themes, custom_dark_themes, radio_props, button_props, offcanvas_props)</span>
+<span class="ansi-green-intense-fg ansi-bold">     63</span> <span style="color: rgb(175,0,0)">"""ThemeChangerAIO is an All-in-One component  composed  of a parent `html.Div` with</span>
+<span class="ansi-green-intense-fg ansi-bold">     64</span> <span style="color: rgb(175,0,0)">the following components as children:</span>
+<span class="ansi-green-intense-fg ansi-bold">     65</span> 
+<span class=ansi-green-fg>   (...)</span>
+<span class="ansi-green-intense-fg ansi-bold">     86</span> <span style="color: rgb(175,0,0)">- ThemeChangerAIO.ids.button(aio_id)</span>
+<span class="ansi-green-intense-fg ansi-bold">     87</span> <span style="color: rgb(175,0,0)">"""</span>
+<span class="ansi-green-intense-fg ansi-bold">     88</span> <span style="color: rgb(95,135,135)"># make all dash_bootstrap_templates templates available to plotly figures</span>
+<span class=ansi-green-fg>---&gt; 89</span> <span class=ansi-yellow-bg>load_figure_template</span><span class=ansi-yellow-bg>(</span><span class=ansi-yellow-bg style="color: rgb(175,0,0)">"</span><span class=ansi-yellow-bg style="color: rgb(175,0,0)">all</span><span class=ansi-yellow-bg style="color: rgb(175,0,0)">"</span><span class=ansi-yellow-bg>)</span>
+<span class="ansi-green-intense-fg ansi-bold">     91</span> <span style="color: rgb(95,135,135)"># concat custom themes and bootstrap themes</span>
+<span class="ansi-green-intense-fg ansi-bold">     92</span> themes_url <span style="color: rgb(98,98,98)">=</span> {<span style="color: rgb(98,98,98)">*</span><span style="color: rgb(98,98,98)">*</span>custom_themes, <span style="color: rgb(98,98,98)">*</span><span style="color: rgb(98,98,98)">*</span>dbc_themes_url} <span class=ansi-bold style="color: rgb(0,135,0)">if</span> custom_themes <span class=ansi-bold style="color: rgb(0,135,0)">else</span> dbc_themes_url
+
+File <span class=ansi-green-fg>~/work/spectrafit/spectrafit/.venv/lib/python3.10/site-packages/dash_bootstrap_templates/__init__.py:96</span>, in <span class=ansi-cyan-fg>load_figure_template</span><span class=ansi-blue-fg>(themes)</span>
+<span class="ansi-green-intense-fg ansi-bold">     94</span> <span class=ansi-bold style="color: rgb(0,135,0)">elif</span> themes <span style="color: rgb(98,98,98)">==</span> <span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">all</span><span style="color: rgb(175,0,0)">"</span>:
+<span class="ansi-green-intense-fg ansi-bold">     95</span>     <span class=ansi-bold style="color: rgb(0,135,0)">for</span> theme <span class=ansi-bold style="color: rgb(175,0,255)">in</span> dbc_templates:
+<span class=ansi-green-fg>---&gt; 96</span>         <span class=ansi-yellow-bg>read_template</span><span class=ansi-yellow-bg>(</span><span class=ansi-yellow-bg>theme</span><span class=ansi-yellow-bg>)</span>
+<span class="ansi-green-intense-fg ansi-bold">     97</span>         read_template(<span style="color: rgb(175,0,0)">f</span><span style="color: rgb(175,0,0)">"</span><span class=ansi-bold style="color: rgb(175,95,135)">{</span>theme<span class=ansi-bold style="color: rgb(175,95,135)">}</span><span style="color: rgb(175,0,0)">_dark</span><span style="color: rgb(175,0,0)">"</span>)
+<span class="ansi-green-intense-fg ansi-bold">     98</span>     pio<span style="color: rgb(98,98,98)">.</span>templates<span style="color: rgb(98,98,98)">.</span>default <span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">bootstrap</span><span style="color: rgb(175,0,0)">"</span>
+
+File <span class=ansi-green-fg>~/work/spectrafit/spectrafit/.venv/lib/python3.10/site-packages/dash_bootstrap_templates/__init__.py:74</span>, in <span class=ansi-cyan-fg>read_template</span><span class=ansi-blue-fg>(theme)</span>
+<span class="ansi-green-intense-fg ansi-bold">     70</span>     <span class=ansi-bold style="color: rgb(0,135,0)">with</span> (
+<span class="ansi-green-intense-fg ansi-bold">     71</span>             files(<span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">dash_bootstrap_templates</span><span style="color: rgb(175,0,0)">"</span>) <span style="color: rgb(98,98,98)">/</span> <span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">templates</span><span style="color: rgb(175,0,0)">"</span> <span style="color: rgb(98,98,98)">/</span> <span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">bootstrap.json</span><span style="color: rgb(175,0,0)">"</span>
+<span class="ansi-green-intense-fg ansi-bold">     72</span>     )<span style="color: rgb(98,98,98)">.</span>open() <span class=ansi-bold style="color: rgb(0,135,0)">as</span> f:
+<span class="ansi-green-intense-fg ansi-bold">     73</span>         template <span style="color: rgb(98,98,98)">=</span> json<span style="color: rgb(98,98,98)">.</span>load(f)
+<span class=ansi-green-fg>---&gt; 74</span> <span class=ansi-yellow-bg>pio</span><span class=ansi-yellow-bg style="color: rgb(98,98,98)">.</span><span class=ansi-yellow-bg>templates</span><span class=ansi-yellow-bg>[</span><span class=ansi-yellow-bg>theme</span><span class=ansi-yellow-bg>]</span> <span style="color: rgb(98,98,98)">=</span> template
+
+File <span class=ansi-green-fg>~/work/spectrafit/spectrafit/.venv/lib/python3.10/site-packages/plotly/io/_templates.py:95</span>, in <span class=ansi-cyan-fg>TemplatesConfig.__setitem__</span><span class=ansi-blue-fg>(self, key, value)</span>
+<span class="ansi-green-intense-fg ansi-bold">     94</span> <span class=ansi-bold style="color: rgb(0,135,0)">def</span><span style="color: rgb(188,188,188)"> </span><span style="color: rgb(0,0,255)">__setitem__</span>(<span style="color: rgb(0,135,0)">self</span>, key, value):
+<span class=ansi-green-fg>---&gt; 95</span>     <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_templates[key] <span style="color: rgb(98,98,98)">=</span> <span class=ansi-yellow-bg style="color: rgb(0,135,0)">self</span><span class=ansi-yellow-bg style="color: rgb(98,98,98)">.</span><span class=ansi-yellow-bg>_validate</span><span class=ansi-yellow-bg>(</span><span class=ansi-yellow-bg>value</span><span class=ansi-yellow-bg>)</span>
+
+File <span class=ansi-green-fg>~/work/spectrafit/spectrafit/.venv/lib/python3.10/site-packages/plotly/io/_templates.py:111</span>, in <span class=ansi-cyan-fg>TemplatesConfig._validate</span><span class=ansi-blue-fg>(self, value)</span>
+<span class="ansi-green-intense-fg ansi-bold">    107</span>     <span class=ansi-bold style="color: rgb(0,135,0)">from</span><span style="color: rgb(188,188,188)"> </span><span class=ansi-bold style="color: rgb(0,0,255)">plotly</span><span class=ansi-bold style="color: rgb(0,0,255)">.</span><span class=ansi-bold style="color: rgb(0,0,255)">validators</span><span class=ansi-bold style="color: rgb(0,0,255)">.</span><span class=ansi-bold style="color: rgb(0,0,255)">layout</span><span style="color: rgb(188,188,188)"> </span><span class=ansi-bold style="color: rgb(0,135,0)">import</span> TemplateValidator
+<span class="ansi-green-intense-fg ansi-bold">    109</span>     <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_validator <span style="color: rgb(98,98,98)">=</span> TemplateValidator()
+<span class=ansi-green-fg>--&gt; 111</span> <span class=ansi-bold style="color: rgb(0,135,0)">return</span> <span class=ansi-yellow-bg style="color: rgb(0,135,0)">self</span><span class=ansi-yellow-bg style="color: rgb(98,98,98)">.</span><span class=ansi-yellow-bg>_validator</span><span class=ansi-yellow-bg style="color: rgb(98,98,98)">.</span><span class=ansi-yellow-bg>validate_coerce</span><span class=ansi-yellow-bg>(</span><span class=ansi-yellow-bg>value</span><span class=ansi-yellow-bg>)</span>
+
+File <span class=ansi-green-fg>~/work/spectrafit/spectrafit/.venv/lib/python3.10/site-packages/_plotly_utils/basevalidators.py:2797</span>, in <span class=ansi-cyan-fg>BaseTemplateValidator.validate_coerce</span><span class=ansi-blue-fg>(self, v, skip_invalid)</span>
+<span class="ansi-green-intense-fg ansi-bold">   2791</span> <span class=ansi-bold style="color: rgb(0,135,0)">if</span> v <span style="color: rgb(98,98,98)">==</span> {} <span class=ansi-bold style="color: rgb(175,0,255)">or</span> <span style="color: rgb(0,135,0)">isinstance</span>(v, <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>data_class) <span class=ansi-bold style="color: rgb(175,0,255)">and</span> v<span style="color: rgb(98,98,98)">.</span>to_plotly_json() <span style="color: rgb(98,98,98)">==</span> {}:
+<span class="ansi-green-intense-fg ansi-bold">   2792</span>     <span style="color: rgb(95,135,135)"># Replace empty template with {'data': {'scatter': [{}]}} so that we can</span>
+<span class="ansi-green-intense-fg ansi-bold">   2793</span>     <span style="color: rgb(95,135,135)"># tell the difference between an un-initialized template and a template</span>
+<span class="ansi-green-intense-fg ansi-bold">   2794</span>     <span style="color: rgb(95,135,135)"># explicitly set to empty.</span>
+<span class="ansi-green-intense-fg ansi-bold">   2795</span>     <span class=ansi-bold style="color: rgb(0,135,0)">return</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>data_class(data_scatter<span style="color: rgb(98,98,98)">=</span>[{}])
+<span class=ansi-green-fg>-&gt; 2797</span> <span class=ansi-bold style="color: rgb(0,135,0)">return</span> <span class=ansi-yellow-bg style="color: rgb(0,135,0)">super</span><span class=ansi-yellow-bg>(</span><span class=ansi-yellow-bg>BaseTemplateValidator</span><span class=ansi-yellow-bg>,</span><span class=ansi-yellow-bg> </span><span class=ansi-yellow-bg style="color: rgb(0,135,0)">self</span><span class=ansi-yellow-bg>)</span><span class=ansi-yellow-bg style="color: rgb(98,98,98)">.</span><span class=ansi-yellow-bg>validate_coerce</span><span class=ansi-yellow-bg>(</span>
+<span class="ansi-green-intense-fg ansi-bold">   2798</span> <span class=ansi-yellow-bg>    </span><span class=ansi-yellow-bg>v</span><span class=ansi-yellow-bg>,</span><span class=ansi-yellow-bg> </span><span class=ansi-yellow-bg>skip_invalid</span><span class=ansi-yellow-bg style="color: rgb(98,98,98)">=</span><span class=ansi-yellow-bg>skip_invalid</span>
+<span class="ansi-green-intense-fg ansi-bold">   2799</span> <span class=ansi-yellow-bg>)</span>
+
+File <span class=ansi-green-fg>~/work/spectrafit/spectrafit/.venv/lib/python3.10/site-packages/_plotly_utils/basevalidators.py:2504</span>, in <span class=ansi-cyan-fg>CompoundValidator.validate_coerce</span><span class=ansi-blue-fg>(self, v, skip_invalid, _validate)</span>
+<span class="ansi-green-intense-fg ansi-bold">   2501</span>     v <span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>data_class()
+<span class="ansi-green-intense-fg ansi-bold">   2503</span> <span class=ansi-bold style="color: rgb(0,135,0)">elif</span> <span style="color: rgb(0,135,0)">isinstance</span>(v, <span style="color: rgb(0,135,0)">dict</span>):
+<span class=ansi-green-fg>-&gt; 2504</span>     v <span style="color: rgb(98,98,98)">=</span> <span class=ansi-yellow-bg style="color: rgb(0,135,0)">self</span><span class=ansi-yellow-bg style="color: rgb(98,98,98)">.</span><span class=ansi-yellow-bg>data_class</span><span class=ansi-yellow-bg>(</span><span class=ansi-yellow-bg>v</span><span class=ansi-yellow-bg>,</span><span class=ansi-yellow-bg> </span><span class=ansi-yellow-bg>skip_invalid</span><span class=ansi-yellow-bg style="color: rgb(98,98,98)">=</span><span class=ansi-yellow-bg>skip_invalid</span><span class=ansi-yellow-bg>,</span><span class=ansi-yellow-bg> </span><span class=ansi-yellow-bg>_validate</span><span class=ansi-yellow-bg style="color: rgb(98,98,98)">=</span><span class=ansi-yellow-bg>_validate</span><span class=ansi-yellow-bg>)</span>
+<span class="ansi-green-intense-fg ansi-bold">   2506</span> <span class=ansi-bold style="color: rgb(0,135,0)">elif</span> <span style="color: rgb(0,135,0)">isinstance</span>(v, <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>data_class):
+<span class="ansi-green-intense-fg ansi-bold">   2507</span>     <span style="color: rgb(95,135,135)"># Copy object</span>
+<span class="ansi-green-intense-fg ansi-bold">   2508</span>     v <span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>data_class(v)
+
+File <span class=ansi-green-fg>~/work/spectrafit/spectrafit/.venv/lib/python3.10/site-packages/plotly/graph_objs/layout/_template.py:327</span>, in <span class=ansi-cyan-fg>Template.__init__</span><span class=ansi-blue-fg>(self, arg, data, layout, **kwargs)</span>
+<span class="ansi-green-intense-fg ansi-bold">    325</span> _v <span style="color: rgb(98,98,98)">=</span> data <span class=ansi-bold style="color: rgb(0,135,0)">if</span> data <span class=ansi-bold style="color: rgb(175,0,255)">is</span> <span class=ansi-bold style="color: rgb(175,0,255)">not</span> <span class=ansi-bold style="color: rgb(0,135,0)">None</span> <span class=ansi-bold style="color: rgb(0,135,0)">else</span> _v
+<span class="ansi-green-intense-fg ansi-bold">    326</span> <span class=ansi-bold style="color: rgb(0,135,0)">if</span> _v <span class=ansi-bold style="color: rgb(175,0,255)">is</span> <span class=ansi-bold style="color: rgb(175,0,255)">not</span> <span class=ansi-bold style="color: rgb(0,135,0)">None</span>:
+<span class=ansi-green-fg>--&gt; 327</span>     <span class=ansi-yellow-bg style="color: rgb(0,135,0)">self</span><span class=ansi-yellow-bg>[</span><span class=ansi-yellow-bg style="color: rgb(175,0,0)">"</span><span class=ansi-yellow-bg style="color: rgb(175,0,0)">data</span><span class=ansi-yellow-bg style="color: rgb(175,0,0)">"</span><span class=ansi-yellow-bg>]</span> <span style="color: rgb(98,98,98)">=</span> _v
+<span class="ansi-green-intense-fg ansi-bold">    328</span> _v <span style="color: rgb(98,98,98)">=</span> arg<span style="color: rgb(98,98,98)">.</span>pop(<span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">layout</span><span style="color: rgb(175,0,0)">"</span>, <span class=ansi-bold style="color: rgb(0,135,0)">None</span>)
+<span class="ansi-green-intense-fg ansi-bold">    329</span> _v <span style="color: rgb(98,98,98)">=</span> layout <span class=ansi-bold style="color: rgb(0,135,0)">if</span> layout <span class=ansi-bold style="color: rgb(175,0,255)">is</span> <span class=ansi-bold style="color: rgb(175,0,255)">not</span> <span class=ansi-bold style="color: rgb(0,135,0)">None</span> <span class=ansi-bold style="color: rgb(0,135,0)">else</span> _v
+
+File <span class=ansi-green-fg>~/work/spectrafit/spectrafit/.venv/lib/python3.10/site-packages/plotly/basedatatypes.py:4852</span>, in <span class=ansi-cyan-fg>BasePlotlyType.__setitem__</span><span class=ansi-blue-fg>(self, prop, value)</span>
+<span class="ansi-green-intense-fg ansi-bold">   4850</span> <span style="color: rgb(95,135,135)"># ### Handle compound property ###</span>
+<span class="ansi-green-intense-fg ansi-bold">   4851</span> <span class=ansi-bold style="color: rgb(0,135,0)">if</span> <span style="color: rgb(0,135,0)">isinstance</span>(validator, CompoundValidator):
+<span class=ansi-green-fg>-&gt; 4852</span>     <span class=ansi-yellow-bg style="color: rgb(0,135,0)">self</span><span class=ansi-yellow-bg style="color: rgb(98,98,98)">.</span><span class=ansi-yellow-bg>_set_compound_prop</span><span class=ansi-yellow-bg>(</span><span class=ansi-yellow-bg>prop</span><span class=ansi-yellow-bg>,</span><span class=ansi-yellow-bg> </span><span class=ansi-yellow-bg>value</span><span class=ansi-yellow-bg>)</span>
+<span class="ansi-green-intense-fg ansi-bold">   4854</span> <span style="color: rgb(95,135,135)"># ### Handle compound array property ###</span>
+<span class="ansi-green-intense-fg ansi-bold">   4855</span> <span class=ansi-bold style="color: rgb(0,135,0)">elif</span> <span style="color: rgb(0,135,0)">isinstance</span>(validator, (CompoundArrayValidator, BaseDataValidator)):
+
+File <span class=ansi-green-fg>~/work/spectrafit/spectrafit/.venv/lib/python3.10/site-packages/plotly/basedatatypes.py:5263</span>, in <span class=ansi-cyan-fg>BasePlotlyType._set_compound_prop</span><span class=ansi-blue-fg>(self, prop, val)</span>
+<span class="ansi-green-intense-fg ansi-bold">   5260</span> <span style="color: rgb(95,135,135)"># Import value</span>
+<span class="ansi-green-intense-fg ansi-bold">   5261</span> <span style="color: rgb(95,135,135)"># ------------</span>
+<span class="ansi-green-intense-fg ansi-bold">   5262</span> validator <span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_get_validator(prop)
+<span class=ansi-green-fg>-&gt; 5263</span> val <span style="color: rgb(98,98,98)">=</span> <span class=ansi-yellow-bg>validator</span><span class=ansi-yellow-bg style="color: rgb(98,98,98)">.</span><span class=ansi-yellow-bg>validate_coerce</span><span class=ansi-yellow-bg>(</span><span class=ansi-yellow-bg>val</span><span class=ansi-yellow-bg>,</span><span class=ansi-yellow-bg> </span><span class=ansi-yellow-bg>skip_invalid</span><span class=ansi-yellow-bg style="color: rgb(98,98,98)">=</span><span class=ansi-yellow-bg style="color: rgb(0,135,0)">self</span><span class=ansi-yellow-bg style="color: rgb(98,98,98)">.</span><span class=ansi-yellow-bg>_skip_invalid</span><span class=ansi-yellow-bg>)</span>
+<span class="ansi-green-intense-fg ansi-bold">   5265</span> <span style="color: rgb(95,135,135)"># Save deep copies of current and new states</span>
+<span class="ansi-green-intense-fg ansi-bold">   5266</span> <span style="color: rgb(95,135,135)"># ------------------------------------------</span>
+<span class="ansi-green-intense-fg ansi-bold">   5267</span> curr_val <span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_compound_props<span style="color: rgb(98,98,98)">.</span>get(prop, <span class=ansi-bold style="color: rgb(0,135,0)">None</span>)
+
+File <span class=ansi-green-fg>~/work/spectrafit/spectrafit/.venv/lib/python3.10/site-packages/_plotly_utils/basevalidators.py:2504</span>, in <span class=ansi-cyan-fg>CompoundValidator.validate_coerce</span><span class=ansi-blue-fg>(self, v, skip_invalid, _validate)</span>
+<span class="ansi-green-intense-fg ansi-bold">   2501</span>     v <span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>data_class()
+<span class="ansi-green-intense-fg ansi-bold">   2503</span> <span class=ansi-bold style="color: rgb(0,135,0)">elif</span> <span style="color: rgb(0,135,0)">isinstance</span>(v, <span style="color: rgb(0,135,0)">dict</span>):
+<span class=ansi-green-fg>-&gt; 2504</span>     v <span style="color: rgb(98,98,98)">=</span> <span class=ansi-yellow-bg style="color: rgb(0,135,0)">self</span><span class=ansi-yellow-bg style="color: rgb(98,98,98)">.</span><span class=ansi-yellow-bg>data_class</span><span class=ansi-yellow-bg>(</span><span class=ansi-yellow-bg>v</span><span class=ansi-yellow-bg>,</span><span class=ansi-yellow-bg> </span><span class=ansi-yellow-bg>skip_invalid</span><span class=ansi-yellow-bg style="color: rgb(98,98,98)">=</span><span class=ansi-yellow-bg>skip_invalid</span><span class=ansi-yellow-bg>,</span><span class=ansi-yellow-bg> </span><span class=ansi-yellow-bg>_validate</span><span class=ansi-yellow-bg style="color: rgb(98,98,98)">=</span><span class=ansi-yellow-bg>_validate</span><span class=ansi-yellow-bg>)</span>
+<span class="ansi-green-intense-fg ansi-bold">   2506</span> <span class=ansi-bold style="color: rgb(0,135,0)">elif</span> <span style="color: rgb(0,135,0)">isinstance</span>(v, <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>data_class):
+<span class="ansi-green-intense-fg ansi-bold">   2507</span>     <span style="color: rgb(95,135,135)"># Copy object</span>
+<span class="ansi-green-intense-fg ansi-bold">   2508</span>     v <span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>data_class(v)
+
+File <span class=ansi-green-fg>~/work/spectrafit/spectrafit/.venv/lib/python3.10/site-packages/plotly/graph_objs/layout/template/_data.py:1791</span>, in <span class=ansi-cyan-fg>Data.__init__</span><span class=ansi-blue-fg>(self, arg, barpolar, bar, box, candlestick, carpet, choroplethmapbox, choroplethmap, choropleth, cone, contourcarpet, contour, densitymapbox, densitymap, funnelarea, funnel, heatmap, histogram2dcontour, histogram2d, histogram, icicle, image, indicator, isosurface, mesh3d, ohlc, parcats, parcoords, pie, sankey, scatter3d, scattercarpet, scattergeo, scattergl, scattermapbox, scattermap, scatterpolargl, scatterpolar, scatter, scattersmith, scatterternary, splom, streamtube, sunburst, surface, table, treemap, violin, volume, waterfall, **kwargs)</span>
+<span class="ansi-green-intense-fg ansi-bold">   1787</span>     <span style="color: rgb(0,135,0)">self</span>[<span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">waterfall</span><span style="color: rgb(175,0,0)">"</span>] <span style="color: rgb(98,98,98)">=</span> _v
+<span class="ansi-green-intense-fg ansi-bold">   1789</span> <span style="color: rgb(95,135,135)"># Process unknown kwargs</span>
+<span class="ansi-green-intense-fg ansi-bold">   1790</span> <span style="color: rgb(95,135,135)"># ----------------------</span>
+<span class=ansi-green-fg>-&gt; 1791</span> <span class=ansi-yellow-bg style="color: rgb(0,135,0)">self</span><span class=ansi-yellow-bg style="color: rgb(98,98,98)">.</span><span class=ansi-yellow-bg>_process_kwargs</span><span class=ansi-yellow-bg>(</span><span class=ansi-yellow-bg style="color: rgb(98,98,98)">*</span><span class=ansi-yellow-bg style="color: rgb(98,98,98)">*</span><span class=ansi-yellow-bg style="color: rgb(0,135,0)">dict</span><span class=ansi-yellow-bg>(</span><span class=ansi-yellow-bg>arg</span><span class=ansi-yellow-bg>,</span><span class=ansi-yellow-bg> </span><span class=ansi-yellow-bg style="color: rgb(98,98,98)">*</span><span class=ansi-yellow-bg style="color: rgb(98,98,98)">*</span><span class=ansi-yellow-bg>kwargs</span><span class=ansi-yellow-bg>)</span><span class=ansi-yellow-bg>)</span>
+<span class="ansi-green-intense-fg ansi-bold">   1793</span> <span style="color: rgb(95,135,135)"># Reset skip_invalid</span>
+<span class="ansi-green-intense-fg ansi-bold">   1794</span> <span style="color: rgb(95,135,135)"># ------------------</span>
+<span class="ansi-green-intense-fg ansi-bold">   1795</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_skip_invalid <span style="color: rgb(98,98,98)">=</span> <span class=ansi-bold style="color: rgb(0,135,0)">False</span>
+
+File <span class=ansi-green-fg>~/work/spectrafit/spectrafit/.venv/lib/python3.10/site-packages/plotly/basedatatypes.py:4378</span>, in <span class=ansi-cyan-fg>BasePlotlyType._process_kwargs</span><span class=ansi-blue-fg>(self, **kwargs)</span>
+<span class="ansi-green-intense-fg ansi-bold">   4376</span>     <span style="color: rgb(0,135,0)">self</span>[k] <span style="color: rgb(98,98,98)">=</span> v
+<span class="ansi-green-intense-fg ansi-bold">   4377</span> <span class=ansi-bold style="color: rgb(0,135,0)">elif</span> <span class=ansi-bold style="color: rgb(175,0,255)">not</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_skip_invalid:
+<span class=ansi-green-fg>-&gt; 4378</span>     <span class=ansi-bold style="color: rgb(0,135,0)">raise</span> err
+
+<span class=ansi-red-fg>ValueError</span>: Invalid property specified for object of type plotly.graph_objs.layout.template.Data: 'heatmapgl'
+
+Did you mean "heatmap"?
+
+    Valid properties:
+        barpolar
+            A tuple of :class:`plotly.graph_objects.Barpolar`
+            instances or dicts with compatible properties
+        bar
+            A tuple of :class:`plotly.graph_objects.Bar` instances
+            or dicts with compatible properties
+        box
+            A tuple of :class:`plotly.graph_objects.Box` instances
+            or dicts with compatible properties
+        candlestick
+            A tuple of :class:`plotly.graph_objects.Candlestick`
+            instances or dicts with compatible properties
+        carpet
+            A tuple of :class:`plotly.graph_objects.Carpet`
+            instances or dicts with compatible properties
+        choroplethmapbox
+            A tuple of
+            :class:`plotly.graph_objects.Choroplethmapbox`
+            instances or dicts with compatible properties
+        choroplethmap
+            A tuple of :class:`plotly.graph_objects.Choroplethmap`
+            instances or dicts with compatible properties
+        choropleth
+            A tuple of :class:`plotly.graph_objects.Choropleth`
+            instances or dicts with compatible properties
+        cone
+            A tuple of :class:`plotly.graph_objects.Cone` instances
+            or dicts with compatible properties
+        contourcarpet
+            A tuple of :class:`plotly.graph_objects.Contourcarpet`
+            instances or dicts with compatible properties
+        contour
+            A tuple of :class:`plotly.graph_objects.Contour`
+            instances or dicts with compatible properties
+        densitymapbox
+            A tuple of :class:`plotly.graph_objects.Densitymapbox`
+            instances or dicts with compatible properties
+        densitymap
+            A tuple of :class:`plotly.graph_objects.Densitymap`
+            instances or dicts with compatible properties
+        funnelarea
+            A tuple of :class:`plotly.graph_objects.Funnelarea`
+            instances or dicts with compatible properties
+        funnel
+            A tuple of :class:`plotly.graph_objects.Funnel`
+            instances or dicts with compatible properties
+        heatmap
+            A tuple of :class:`plotly.graph_objects.Heatmap`
+            instances or dicts with compatible properties
+        histogram2dcontour
+            A tuple of
+            :class:`plotly.graph_objects.Histogram2dContour`
+            instances or dicts with compatible properties
+        histogram2d
+            A tuple of :class:`plotly.graph_objects.Histogram2d`
+            instances or dicts with compatible properties
+        histogram
+            A tuple of :class:`plotly.graph_objects.Histogram`
+            instances or dicts with compatible properties
+        icicle
+            A tuple of :class:`plotly.graph_objects.Icicle`
+            instances or dicts with compatible properties
+        image
+            A tuple of :class:`plotly.graph_objects.Image`
+            instances or dicts with compatible properties
+        indicator
+            A tuple of :class:`plotly.graph_objects.Indicator`
+            instances or dicts with compatible properties
+        isosurface
+            A tuple of :class:`plotly.graph_objects.Isosurface`
+            instances or dicts with compatible properties
+        mesh3d
+            A tuple of :class:`plotly.graph_objects.Mesh3d`
+            instances or dicts with compatible properties
+        ohlc
+            A tuple of :class:`plotly.graph_objects.Ohlc` instances
+            or dicts with compatible properties
+        parcats
+            A tuple of :class:`plotly.graph_objects.Parcats`
+            instances or dicts with compatible properties
+        parcoords
+            A tuple of :class:`plotly.graph_objects.Parcoords`
+            instances or dicts with compatible properties
+        pie
+            A tuple of :class:`plotly.graph_objects.Pie` instances
+            or dicts with compatible properties
+        sankey
+            A tuple of :class:`plotly.graph_objects.Sankey`
+            instances or dicts with compatible properties
+        scatter3d
+            A tuple of :class:`plotly.graph_objects.Scatter3d`
+            instances or dicts with compatible properties
+        scattercarpet
+            A tuple of :class:`plotly.graph_objects.Scattercarpet`
+            instances or dicts with compatible properties
+        scattergeo
+            A tuple of :class:`plotly.graph_objects.Scattergeo`
+            instances or dicts with compatible properties
+        scattergl
+            A tuple of :class:`plotly.graph_objects.Scattergl`
+            instances or dicts with compatible properties
+        scattermapbox
+            A tuple of :class:`plotly.graph_objects.Scattermapbox`
+            instances or dicts with compatible properties
+        scattermap
+            A tuple of :class:`plotly.graph_objects.Scattermap`
+            instances or dicts with compatible properties
+        scatterpolargl
+            A tuple of :class:`plotly.graph_objects.Scatterpolargl`
+            instances or dicts with compatible properties
+        scatterpolar
+            A tuple of :class:`plotly.graph_objects.Scatterpolar`
+            instances or dicts with compatible properties
+        scatter
+            A tuple of :class:`plotly.graph_objects.Scatter`
+            instances or dicts with compatible properties
+        scattersmith
+            A tuple of :class:`plotly.graph_objects.Scattersmith`
+            instances or dicts with compatible properties
+        scatterternary
+            A tuple of :class:`plotly.graph_objects.Scatterternary`
+            instances or dicts with compatible properties
+        splom
+            A tuple of :class:`plotly.graph_objects.Splom`
+            instances or dicts with compatible properties
+        streamtube
+            A tuple of :class:`plotly.graph_objects.Streamtube`
+            instances or dicts with compatible properties
+        sunburst
+            A tuple of :class:`plotly.graph_objects.Sunburst`
+            instances or dicts with compatible properties
+        surface
+            A tuple of :class:`plotly.graph_objects.Surface`
+            instances or dicts with compatible properties
+        table
+            A tuple of :class:`plotly.graph_objects.Table`
+            instances or dicts with compatible properties
+        treemap
+            A tuple of :class:`plotly.graph_objects.Treemap`
+            instances or dicts with compatible properties
+        violin
+            A tuple of :class:`plotly.graph_objects.Violin`
+            instances or dicts with compatible properties
+        volume
+            A tuple of :class:`plotly.graph_objects.Volume`
+            instances or dicts with compatible properties
+        waterfall
+            A tuple of :class:`plotly.graph_objects.Waterfall`
+            instances or dicts with compatible properties
+        
+Did you mean "heatmap"?
+
+Bad property path:
+heatmapgl
+^^^^^^^^^</pre> </div> </div> </div> </div> </div> </div> <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell"> <div class=jp-Cell-inputWrapper tabindex=0> <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser"> </div> <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt"> </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type=text/markdown> <p><img alt=_ src="https://github.com/Anselmoo/spectrafit/blob/9f46aac202a6edfe8d063ecd46fadd3c14a6e28d/docs/examples/images/Figure_9_4.png?raw=true"></p> </div> </div> </div> </div> <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell"> <div class=jp-Cell-inputWrapper tabindex=0> <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser"> </div> <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt"> </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type=text/markdown> <h2 id=what-is-needed-to-run-similiar-example>What is needed to run similiar example?<a class=anchor-link href=#what-is-needed-to-run-similiar-example>¶</a></h2><p>To run this example, you need to have the following <strong>three</strong> target arrays:</p> <ol> <li><code>incident_energy</code> axis as <strong>1D array</strong></li> <li><code>emission_energy</code> axis as <strong>1D array</strong></li> <li><code>rixs_map</code> as <strong>2D array</strong></li> </ol> <p>In the example above, <code>sin2_as_rixsmap</code> is used as reference function to generate all three arrays, but you can use any other function that returns the three arrays or load them from a file, like:</p> <div class=highlight><pre><span></span><span class=kn>import</span><span class=w> </span><span class=nn>pickle</span>
 <span class=k>with</span> <span class=nb>open</span><span class=p>(</span><span class=s1>'rixs_map.pickle'</span><span class=p>,</span> <span class=s1>'rb'</span><span class=p>)</span> <span class=k>as</span> <span class=n>f</span><span class=p>:</span>
     <span class=n>incident_energy</span><span class=p>,</span> <span class=n>emission_energy</span><span class=p>,</span> <span class=n>rixs_map</span> <span class=o>=</span> <span class=n>pickle</span><span class=o>.</span><span class=n>load</span><span class=p>(</span><span class=n>f</span><span class=p>)</span>
 
