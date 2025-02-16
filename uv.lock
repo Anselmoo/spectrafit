@@ -463,33 +463,8 @@ css = [
 
 [[package]]
 name = "blinker"
-version = "1.8.2"
-source = { registry = "https://pypi.org/simple" }
-resolution-markers = [
-    "python_full_version < '3.9' and platform_python_implementation != 'PyPy' and sys_platform == 'win32'",
-    "python_full_version < '3.9' and platform_python_implementation != 'PyPy' and sys_platform != 'win32'",
-    "python_full_version < '3.9' and platform_python_implementation == 'PyPy' and sys_platform == 'win32'",
-    "python_full_version < '3.9' and platform_python_implementation == 'PyPy' and sys_platform != 'win32'",
-]
-sdist = { url = "https://files.pythonhosted.org/packages/1e/57/a6a1721eff09598fb01f3c7cda070c1b6a0f12d63c83236edf79a440abcc/blinker-1.8.2.tar.gz", hash = "sha256:8f77b09d3bf7c795e969e9486f39c2c5e9c39d4ee07424be2bc594ece9642d83", size = 23161 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/bb/2a/10164ed1f31196a2f7f3799368a821765c62851ead0e630ab52b8e14b4d0/blinker-1.8.2-py3-none-any.whl", hash = "sha256:1779309f71bf239144b9399d06ae925637cf6634cf6bd131104184531bf67c01", size = 9456 },
-]
-
-[[package]]
-name = "blinker"
 version = "1.9.0"
 source = { registry = "https://pypi.org/simple" }
-resolution-markers = [
-    "python_full_version >= '3.12' and platform_python_implementation != 'PyPy'",
-    "python_full_version >= '3.12' and platform_python_implementation == 'PyPy'",
-    "python_full_version == '3.11.*' and platform_python_implementation != 'PyPy'",
-    "python_full_version == '3.11.*' and platform_python_implementation == 'PyPy'",
-    "python_full_version == '3.10.*' and platform_python_implementation != 'PyPy'",
-    "python_full_version == '3.10.*' and platform_python_implementation == 'PyPy'",
-    "python_full_version == '3.9.*' and platform_python_implementation != 'PyPy'",
-    "python_full_version == '3.9.*' and platform_python_implementation == 'PyPy'",
-]
 sdist = { url = "https://files.pythonhosted.org/packages/21/28/9b3f50ce0e048515135495f198351908d99540d69bfdc8c1d15b73dc55ce/blinker-1.9.0.tar.gz", hash = "sha256:b4ce2265a7abece45e7cc896e98dbebe6cead56bcf805a3d23136d145f5445bf", size = 22460 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/10/cb/f2ad4230dc2eb1a74edf38f1a38b9b52277f75bef262d8908e60d957e13c/blinker-1.9.0-py3-none-any.whl", hash = "sha256:ba0efaa9080b619ff2f3459d1d500c57bddea4a6b424b60a91141db6fd2f08bc", size = 8458 },
@@ -1204,7 +1179,8 @@ dependencies = [
     { name = "dash-core-components" },
     { name = "dash-html-components" },
     { name = "dash-table" },
-    { name = "flask" },
+    { name = "flask", version = "2.2.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
+    { name = "flask", version = "3.0.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.9'" },
     { name = "importlib-metadata", version = "8.5.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
     { name = "importlib-metadata", version = "8.6.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.9'" },
     { name = "nest-asyncio" },
@@ -1239,7 +1215,7 @@ testing = [
 
 [[package]]
 name = "dash-bootstrap-components"
-version = "1.6.0"
+version = "1.3.1"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
     "python_full_version < '3.9' and platform_python_implementation != 'PyPy' and sys_platform == 'win32'",
@@ -1250,9 +1226,9 @@ resolution-markers = [
 dependencies = [
     { name = "dash", marker = "python_full_version < '3.9'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/a6/1e/59da44351adaaa2a747eb00993c498cadbe0f642b44ced7e7aabf368eaf6/dash_bootstrap_components-1.6.0.tar.gz", hash = "sha256:960a1ec9397574792f49a8241024fa3cecde0f5930c971a3fc81f016cbeb1095", size = 146828 }
+sdist = { url = "https://files.pythonhosted.org/packages/8f/d1/40e86aeef40b1e210d3e23b295c678490d995a898ad66582b88cd006cc94/dash-bootstrap-components-1.3.1.tar.gz", hash = "sha256:a4f4b61ae786248f23cfc89aab5b2953d602f0934ff4485fe1d56d60d829532d", size = 142139 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/cc/72/dda12d6c6a9a2901f5549cea05c7f180e89dee6fb8c5f5f037ce7101ba24/dash_bootstrap_components-1.6.0-py3-none-any.whl", hash = "sha256:97f0f47b38363f18863e1b247462229266ce12e1e171cfb34d3c9898e6e5cd1e", size = 222526 },
+    { url = "https://files.pythonhosted.org/packages/81/51/ef076f364c6ecdc6abf8c9aa73c4acd1c44fed523c9a9da20a41ab2fd4d8/dash_bootstrap_components-1.3.1-py3-none-any.whl", hash = "sha256:abb52d9318be2c0a8477d2253b3d101fb6da9fdde509249643edb21dd34cbbf2", size = 219710 },
 ]
 
 [[package]]
@@ -1283,7 +1259,7 @@ version = "2.1.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "dash" },
-    { name = "dash-bootstrap-components", version = "1.6.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
+    { name = "dash-bootstrap-components", version = "1.3.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
     { name = "dash-bootstrap-components", version = "1.7.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.9'" },
     { name = "importlib-resources", version = "6.4.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
     { name = "numpy", version = "1.24.4", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
@@ -1414,59 +1390,107 @@ wheels = [
 
 [[package]]
 name = "dtale"
+version = "3.14.1"
+source = { registry = "https://pypi.org/simple" }
+resolution-markers = [
+    "python_full_version < '3.9' and platform_python_implementation != 'PyPy' and sys_platform == 'win32'",
+    "python_full_version < '3.9' and platform_python_implementation != 'PyPy' and sys_platform != 'win32'",
+    "python_full_version < '3.9' and platform_python_implementation == 'PyPy' and sys_platform == 'win32'",
+    "python_full_version < '3.9' and platform_python_implementation == 'PyPy' and sys_platform != 'win32'",
+]
+dependencies = [
+    { name = "beautifulsoup4", marker = "python_full_version < '3.9'" },
+    { name = "certifi", marker = "python_full_version < '3.9'" },
+    { name = "contourpy", version = "1.1.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
+    { name = "cycler", marker = "python_full_version < '3.9'" },
+    { name = "dash", marker = "python_full_version < '3.9'" },
+    { name = "dash-bootstrap-components", version = "1.3.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
+    { name = "dash-colorscales", marker = "python_full_version < '3.9'" },
+    { name = "dash-daq", marker = "python_full_version < '3.9'" },
+    { name = "et-xmlfile", marker = "python_full_version < '3.9'" },
+    { name = "flask", version = "2.2.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
+    { name = "flask-compress", version = "1.15", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
+    { name = "flask-ngrok", marker = "python_full_version < '3.9'" },
+    { name = "future", marker = "python_full_version < '3.9'" },
+    { name = "itsdangerous", marker = "python_full_version < '3.9'" },
+    { name = "kaleido", marker = "python_full_version < '3.9'" },
+    { name = "lz4", version = "4.3.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
+    { name = "matplotlib", version = "3.7.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
+    { name = "missingno", marker = "python_full_version < '3.9'" },
+    { name = "networkx", version = "3.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
+    { name = "numpy", version = "1.24.4", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
+    { name = "openpyxl", marker = "python_full_version < '3.9'" },
+    { name = "pandas", version = "2.0.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
+    { name = "plotly", marker = "python_full_version < '3.9'" },
+    { name = "requests", marker = "python_full_version < '3.9'" },
+    { name = "scikit-learn", version = "1.3.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
+    { name = "scipy", version = "1.10.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
+    { name = "seaborn", marker = "python_full_version < '3.9'" },
+    { name = "six", marker = "python_full_version < '3.9'" },
+    { name = "squarify", marker = "python_full_version < '3.9'" },
+    { name = "statsmodels", version = "0.14.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
+    { name = "strsimpy", marker = "python_full_version < '3.9'" },
+    { name = "werkzeug", marker = "python_full_version < '3.9'" },
+    { name = "xarray", version = "2023.1.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
+    { name = "xlrd", marker = "python_full_version < '3.9'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/91/86/d3fd01e3f52b1fc3371ad29e078f05fb7ff4f76887b5cbd612ed68e7f974/dtale-3.14.1.tar.gz", hash = "sha256:5c95e6db0fb5c78a6cae5c14f9b0921c59262614511220dbd13244874da3bb77", size = 14077180 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/e1/48/ce96e5e4eaaaf7302f27dcda18eaca442b715852e00510046565840a27e3/dtale-3.14.1-py2.py3-none-any.whl", hash = "sha256:1a9907bc943a9ddee8157a36a11582d1e1b3e7ee0264c208fe58ec1520f0ac42", size = 14483866 },
+]
+
+[[package]]
+name = "dtale"
 version = "3.16.1"
 source = { registry = "https://pypi.org/simple" }
+resolution-markers = [
+    "python_full_version >= '3.12' and platform_python_implementation != 'PyPy'",
+    "python_full_version >= '3.12' and platform_python_implementation == 'PyPy'",
+    "python_full_version == '3.11.*' and platform_python_implementation != 'PyPy'",
+    "python_full_version == '3.11.*' and platform_python_implementation == 'PyPy'",
+    "python_full_version == '3.10.*' and platform_python_implementation != 'PyPy'",
+    "python_full_version == '3.10.*' and platform_python_implementation == 'PyPy'",
+    "python_full_version == '3.9.*' and platform_python_implementation != 'PyPy'",
+    "python_full_version == '3.9.*' and platform_python_implementation == 'PyPy'",
+]
 dependencies = [
-    { name = "beautifulsoup4" },
-    { name = "certifi" },
-    { name = "cycler" },
-    { name = "dash" },
-    { name = "dash-bootstrap-components", version = "1.6.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
+    { name = "beautifulsoup4", marker = "python_full_version >= '3.9'" },
+    { name = "certifi", marker = "python_full_version >= '3.9'" },
+    { name = "cycler", marker = "python_full_version >= '3.9'" },
+    { name = "dash", marker = "python_full_version >= '3.9'" },
     { name = "dash-bootstrap-components", version = "1.7.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.9'" },
-    { name = "dash-colorscales" },
-    { name = "dash-daq" },
-    { name = "et-xmlfile" },
-    { name = "flask" },
-    { name = "flask-compress", version = "1.15", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
+    { name = "dash-colorscales", marker = "python_full_version >= '3.9'" },
+    { name = "dash-daq", marker = "python_full_version >= '3.9'" },
+    { name = "et-xmlfile", marker = "python_full_version >= '3.9'" },
+    { name = "flask", version = "3.0.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.9'" },
     { name = "flask-compress", version = "1.17", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.9'" },
-    { name = "future" },
-    { name = "itsdangerous" },
-    { name = "kaleido" },
-    { name = "lz4", version = "4.3.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
+    { name = "future", marker = "python_full_version >= '3.9'" },
+    { name = "itsdangerous", marker = "python_full_version >= '3.9'" },
+    { name = "kaleido", marker = "python_full_version >= '3.9'" },
     { name = "lz4", version = "4.4.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.9'" },
-    { name = "markupsafe", version = "2.1.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
-    { name = "matplotlib", version = "3.7.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
     { name = "matplotlib", version = "3.9.4", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version == '3.9.*'" },
     { name = "matplotlib", version = "3.10.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
-    { name = "missingno" },
-    { name = "networkx", version = "3.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
+    { name = "missingno", marker = "python_full_version >= '3.9'" },
     { name = "networkx", version = "3.2.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version == '3.9.*'" },
     { name = "networkx", version = "3.4.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
-    { name = "numpy", version = "1.24.4", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
     { name = "numpy", version = "2.0.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version == '3.9.*'" },
     { name = "numpy", version = "2.2.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
-    { name = "openpyxl" },
-    { name = "pandas", version = "2.0.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
+    { name = "openpyxl", marker = "python_full_version >= '3.9'" },
     { name = "pandas", version = "2.2.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.9'" },
-    { name = "plotly" },
-    { name = "pyparsing", version = "3.0.9", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
-    { name = "requests" },
-    { name = "scikit-learn", version = "1.3.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
+    { name = "plotly", marker = "python_full_version >= '3.9'" },
+    { name = "requests", marker = "python_full_version >= '3.9'" },
     { name = "scikit-learn", version = "1.6.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.9'" },
-    { name = "scipy", version = "1.10.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
     { name = "scipy", version = "1.13.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version == '3.9.*'" },
     { name = "scipy", version = "1.15.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
-    { name = "seaborn" },
-    { name = "six" },
-    { name = "squarify" },
-    { name = "statsmodels", version = "0.14.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
+    { name = "seaborn", marker = "python_full_version >= '3.9'" },
+    { name = "six", marker = "python_full_version >= '3.9'" },
+    { name = "squarify", marker = "python_full_version >= '3.9'" },
     { name = "statsmodels", version = "0.14.4", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.9'" },
-    { name = "strsimpy" },
-    { name = "werkzeug" },
-    { name = "xarray", version = "2023.1.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
+    { name = "strsimpy", marker = "python_full_version >= '3.9'" },
+    { name = "werkzeug", marker = "python_full_version >= '3.9'" },
     { name = "xarray", version = "2024.7.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version == '3.9.*'" },
     { name = "xarray", version = "2025.1.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
-    { name = "xlrd" },
+    { name = "xlrd", marker = "python_full_version >= '3.9'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/98/76/8b46f34966a52507069a719770e9f2ad0baeae5c8d462a0c8f72eb0b6e54/dtale-3.16.1.tar.gz", hash = "sha256:98a5821c352817ceeac078f079d92de22f5921c8cf5b466e2163a438271ff0a4", size = 14296351 }
 wheels = [
@@ -1568,17 +1592,47 @@ wheels = [
 
 [[package]]
 name = "flask"
+version = "2.2.5"
+source = { registry = "https://pypi.org/simple" }
+resolution-markers = [
+    "python_full_version < '3.9' and platform_python_implementation != 'PyPy' and sys_platform == 'win32'",
+    "python_full_version < '3.9' and platform_python_implementation != 'PyPy' and sys_platform != 'win32'",
+    "python_full_version < '3.9' and platform_python_implementation == 'PyPy' and sys_platform == 'win32'",
+    "python_full_version < '3.9' and platform_python_implementation == 'PyPy' and sys_platform != 'win32'",
+]
+dependencies = [
+    { name = "click", marker = "python_full_version < '3.9'" },
+    { name = "importlib-metadata", version = "8.5.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
+    { name = "itsdangerous", marker = "python_full_version < '3.9'" },
+    { name = "jinja2", marker = "python_full_version < '3.9'" },
+    { name = "werkzeug", marker = "python_full_version < '3.9'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/5f/76/a4d2c4436dda4b0a12c71e075c508ea7988a1066b06a575f6afe4fecc023/Flask-2.2.5.tar.gz", hash = "sha256:edee9b0a7ff26621bd5a8c10ff484ae28737a2410d99b0bb9a6850c7fb977aa0", size = 697814 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/9f/1a/8b6d48162861009d1e017a9740431c78d860809773b66cac220a11aa3310/Flask-2.2.5-py3-none-any.whl", hash = "sha256:58107ed83443e86067e41eff4631b058178191a355886f8e479e347fa1285fdf", size = 101817 },
+]
+
+[[package]]
+name = "flask"
 version = "3.0.3"
 source = { registry = "https://pypi.org/simple" }
+resolution-markers = [
+    "python_full_version >= '3.12' and platform_python_implementation != 'PyPy'",
+    "python_full_version >= '3.12' and platform_python_implementation == 'PyPy'",
+    "python_full_version == '3.11.*' and platform_python_implementation != 'PyPy'",
+    "python_full_version == '3.11.*' and platform_python_implementation == 'PyPy'",
+    "python_full_version == '3.10.*' and platform_python_implementation != 'PyPy'",
+    "python_full_version == '3.10.*' and platform_python_implementation == 'PyPy'",
+    "python_full_version == '3.9.*' and platform_python_implementation != 'PyPy'",
+    "python_full_version == '3.9.*' and platform_python_implementation == 'PyPy'",
+]
 dependencies = [
-    { name = "blinker", version = "1.8.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
-    { name = "blinker", version = "1.9.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.9'" },
-    { name = "click" },
-    { name = "importlib-metadata", version = "8.5.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
+    { name = "blinker", marker = "python_full_version >= '3.9'" },
+    { name = "click", marker = "python_full_version >= '3.9'" },
     { name = "importlib-metadata", version = "8.6.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version == '3.9.*'" },
-    { name = "itsdangerous" },
-    { name = "jinja2" },
-    { name = "werkzeug" },
+    { name = "itsdangerous", marker = "python_full_version >= '3.9'" },
+    { name = "jinja2", marker = "python_full_version >= '3.9'" },
+    { name = "werkzeug", marker = "python_full_version >= '3.9'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/41/e1/d104c83026f8d35dfd2c261df7d64738341067526406b40190bc063e829a/flask-3.0.3.tar.gz", hash = "sha256:ceb27b0af3823ea2737928a4d99d125a06175b8512c445cbd9a9ce200ef76842", size = 676315 }
 wheels = [
@@ -1598,7 +1652,7 @@ resolution-markers = [
 dependencies = [
     { name = "brotli", marker = "python_full_version < '3.9' and platform_python_implementation != 'PyPy'" },
     { name = "brotlicffi", marker = "python_full_version < '3.9' and platform_python_implementation == 'PyPy'" },
-    { name = "flask", marker = "python_full_version < '3.9'" },
+    { name = "flask", version = "2.2.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
     { name = "zstandard", marker = "python_full_version < '3.9'" },
     { name = "zstandard", extra = ["cffi"], marker = "python_full_version < '3.9' and platform_python_implementation == 'PyPy'" },
 ]
@@ -1624,13 +1678,26 @@ resolution-markers = [
 dependencies = [
     { name = "brotli", marker = "python_full_version >= '3.9' and platform_python_implementation != 'PyPy'" },
     { name = "brotlicffi", marker = "python_full_version >= '3.9' and platform_python_implementation == 'PyPy'" },
-    { name = "flask", marker = "python_full_version >= '3.9'" },
+    { name = "flask", version = "3.0.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.9'" },
     { name = "zstandard", marker = "python_full_version >= '3.9'" },
     { name = "zstandard", extra = ["cffi"], marker = "python_full_version >= '3.9' and platform_python_implementation == 'PyPy'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/cc/1f/260db5a4517d59bfde7b4a0d71052df68fb84983bda9231100e3b80f5989/flask_compress-1.17.tar.gz", hash = "sha256:1ebb112b129ea7c9e7d6ee6d5cc0d64f226cbc50c4daddf1a58b9bd02253fbd8", size = 15733 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/f7/54/ff08f947d07c0a8a5d8f1c8e57b142c97748ca912b259db6467ab35983cd/Flask_Compress-1.17-py3-none-any.whl", hash = "sha256:415131f197c41109f08e8fdfc3a6628d83d81680fb5ecd0b3a97410e02397b20", size = 8723 },
+]
+
+[[package]]
+name = "flask-ngrok"
+version = "0.0.25"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "flask", version = "2.2.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
+    { name = "requests", marker = "python_full_version < '3.9'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/1e/41/43e7bdcc4dac453b927feff5e0c9e30f8d34ef46c19fa320256893926893/flask-ngrok-0.0.25.tar.gz", hash = "sha256:3f8ec704ab54b981c08d7044702f2b46023bafc4958bfeb7cbc1a905fde6ef8d", size = 2744 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/af/6c/f54cb686ad1129e27d125d182f90f52b32f284e6c8df58c1bae54fa1adbc/flask_ngrok-0.0.25-py3-none-any.whl", hash = "sha256:724519a4dd3a2d374af50d4c0c21a26548737de0cf23f68dfb8d3b31c7311e93", size = 3052 },
 ]
 
 [[package]]
@@ -2272,7 +2339,8 @@ source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "ansi2html" },
     { name = "dash" },
-    { name = "flask" },
+    { name = "flask", version = "2.2.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
+    { name = "flask", version = "3.0.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.9'" },
     { name = "ipykernel" },
     { name = "ipython", version = "8.12.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
     { name = "ipython", version = "8.18.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version == '3.9.*'" },
@@ -2532,15 +2600,10 @@ wheels = [
 
 [[package]]
 name = "kaleido"
-version = "0.2.1"
+version = "0.2.1.post1"
 source = { registry = "https://pypi.org/simple" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/e0/f7/0ccaa596ec341963adbb4f839774c36d5659e75a0812d946732b927d480e/kaleido-0.2.1-py2.py3-none-macosx_10_11_x86_64.whl", hash = "sha256:ca6f73e7ff00aaebf2843f73f1d3bacde1930ef5041093fe76b83a15785049a7", size = 85153681 },
-    { url = "https://files.pythonhosted.org/packages/45/8e/4297556be5a07b713bb42dde0f748354de9a6918dee251c0e6bdcda341e7/kaleido-0.2.1-py2.py3-none-macosx_11_0_arm64.whl", hash = "sha256:bb9a5d1f710357d5d432ee240ef6658a6d124c3e610935817b4b42da9c787c05", size = 85808197 },
-    { url = "https://files.pythonhosted.org/packages/ae/b3/a0f0f4faac229b0011d8c4a7ee6da7c2dca0b6fd08039c95920846f23ca4/kaleido-0.2.1-py2.py3-none-manylinux1_x86_64.whl", hash = "sha256:aa21cf1bf1c78f8fa50a9f7d45e1003c387bd3d6fe0a767cfbbf344b95bdc3a8", size = 79902476 },
-    { url = "https://files.pythonhosted.org/packages/a1/2b/680662678a57afab1685f0c431c2aba7783ce4344f06ec162074d485d469/kaleido-0.2.1-py2.py3-none-manylinux2014_aarch64.whl", hash = "sha256:845819844c8082c9469d9c17e42621fbf85c2b237ef8a86ec8a8527f98b6512a", size = 83711746 },
-    { url = "https://files.pythonhosted.org/packages/88/89/4b6f8bb3f9ab036fd4ad1cb2d628ab5c81db32ac9aa0641d7b180073ba43/kaleido-0.2.1-py2.py3-none-win32.whl", hash = "sha256:ecc72635860be616c6b7161807a65c0dbd9b90c6437ac96965831e2e24066552", size = 62312480 },
-    { url = "https://files.pythonhosted.org/packages/f7/9a/0408b02a4bcb3cf8b338a2b074ac7d1b2099e2b092b42473def22f7b625f/kaleido-0.2.1-py2.py3-none-win_amd64.whl", hash = "sha256:4670985f28913c2d063c5734d125ecc28e40810141bdb0a46f15b76c1d45f23c", size = 65945521 },
+    { url = "https://files.pythonhosted.org/packages/86/4b/d668e288b694661d2fbfc2b972db69cf1f30f8b8a91be14dcf9f000cab16/kaleido-0.2.1.post1-py2.py3-none-manylinux2014_armv7l.whl", hash = "sha256:d313940896c24447fc12c74f60d46ea826195fc991f58569a6e73864d53e5c20", size = 71653137 },
 ]
 
 [[package]]
@@ -6164,10 +6227,11 @@ dependencies = [
 
 [package.optional-dependencies]
 all = [
-    { name = "dash-bootstrap-components", version = "1.6.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
+    { name = "dash-bootstrap-components", version = "1.3.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
     { name = "dash-bootstrap-components", version = "1.7.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.9'" },
     { name = "dash-bootstrap-templates" },
-    { name = "dtale" },
+    { name = "dtale", version = "3.14.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
+    { name = "dtale", version = "3.16.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.9'" },
     { name = "ipywidgets" },
     { name = "itables" },
     { name = "jupyter-dash" },
@@ -6187,7 +6251,8 @@ graph = [
     { name = "pydot" },
 ]
 jupyter = [
-    { name = "dtale" },
+    { name = "dtale", version = "3.14.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
+    { name = "dtale", version = "3.16.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.9'" },
     { name = "itables" },
     { name = "jupyterlab" },
     { name = "kaleido" },
@@ -6195,7 +6260,7 @@ jupyter = [
     { name = "python-pptx" },
 ]
 jupyter-dash = [
-    { name = "dash-bootstrap-components", version = "1.6.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
+    { name = "dash-bootstrap-components", version = "1.3.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
     { name = "dash-bootstrap-components", version = "1.7.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.9'" },
     { name = "dash-bootstrap-templates" },
     { name = "ipywidgets" },
@@ -6265,8 +6330,8 @@ requires-dist = [
     { name = "jupyter-dash", marker = "extra == 'jupyter-dash'", specifier = ">=0.4.2,<0.5" },
     { name = "jupyterlab", marker = "extra == 'all'", specifier = ">=3.5.2,<5.0.0" },
     { name = "jupyterlab", marker = "extra == 'jupyter'", specifier = ">=3.5.2,<5.0.0" },
-    { name = "kaleido", marker = "extra == 'all'", specifier = "==0.2.1" },
-    { name = "kaleido", marker = "extra == 'jupyter'", specifier = "==0.2.1" },
+    { name = "kaleido", marker = "extra == 'all'", specifier = "==0.2.1.post1" },
+    { name = "kaleido", marker = "extra == 'jupyter'", specifier = "==0.2.1.post1" },
     { name = "lmfit", specifier = ">=1.2.2,<2" },
     { name = "networkx", marker = "extra == 'graph'", specifier = ">=3.0.0,<4" },
     { name = "networkx", extras = ["all"], marker = "extra == 'all'", specifier = "~=3.0" },
