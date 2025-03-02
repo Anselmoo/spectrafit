@@ -32,4 +32,4 @@ if sys.version_info[:2] == PYTHON_38_VERSION:
         stacklevel=2,
     )
 
-__version__ = "1.2.0"
+__version__ = "1.2.1"
