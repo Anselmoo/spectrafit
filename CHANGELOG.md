@@ -2,6 +2,72 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.2.1 🌈 - 2025-03-02
+
+### :compass: What's Changed
+
+#### :toolbox: Maintenance
+
+* build: :bookmark: bump version to `v1.2.1` (#1836) @Anselmoo
+* [pre-commit.ci] pre-commit autoupdate (#1828) @[pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci)
+* [pre-commit.ci] pre-commit autoupdate (#1819) @[pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci)
+* fix: :test_tube: remove unnecessary type ignore for AutoPeakDetection instantiation (#1818) @Anselmoo
+* [pre-commit.ci] pre-commit autoupdate (#1811) @[pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci)
+* fix(deps): update dependency plotly to v6 (#1808) @[renovate[bot]](https://github.com/apps/renovate)
+* [pre-commit.ci] pre-commit autoupdate (#1807) @[pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci)
+
+#### :snake: Python
+
+* build: :bookmark: bump version to `v1.2.1` (#1836) @Anselmoo
+* fix: :test_tube: remove unnecessary type ignore for AutoPeakDetection instantiation (#1818) @Anselmoo
+
+#### :octocat: Github Actions
+
+* chore(deps): update pypa/gh-action-pypi-publish digest to db8f07d (#1821) @[renovate[bot]](https://github.com/apps/renovate)
+* chore(deps): update docker/build-push-action action to v6.15.0 (#1830) @[renovate[bot]](https://github.com/apps/renovate)
+* chore(deps): update docker/metadata-action action to v5.7.0 (#1831) @[renovate[bot]](https://github.com/apps/renovate)
+* chore(deps): update docker/setup-buildx-action action to v3.10.0 (#1832) @[renovate[bot]](https://github.com/apps/renovate)
+* chore(deps): update docker/setup-qemu-action action to v3.6.0 (#1833) @[renovate[bot]](https://github.com/apps/renovate)
+* chore(deps): update codecov/codecov-action action to v5.4.0 (#1834) @[renovate[bot]](https://github.com/apps/renovate)
+* chore(deps): update docker/build-push-action action to v6.14.0 (#1823) @[renovate[bot]](https://github.com/apps/renovate)
+* build(deps): bump sigstore/cosign-installer from 3.8.0 to 3.8.1 (#1825) @[dependabot[bot]](https://github.com/apps/dependabot)
+* build(deps): bump docker/build-push-action from 6.13.0 to 6.14.0 (#1826) @[dependabot[bot]](https://github.com/apps/dependabot)
+* build(deps): bump pypa/gh-action-pypi-publish from 20d40f69a1d306453777ffecb5a86860e850ba0f to 31b23f5a660aa0186e00cf381c491ff4edf3d002 (#1827) @[dependabot[bot]](https://github.com/apps/dependabot)
+* chore(deps): update pypa/gh-action-pypi-publish digest to 20d40f6 (#1814) @[renovate[bot]](https://github.com/apps/renovate)
+* chore(deps): update docker/setup-buildx-action action to v3.9.0 (#1815) @[renovate[bot]](https://github.com/apps/renovate)
+* chore(deps): update docker/setup-qemu-action action to v3.4.0 (#1816) @[renovate[bot]](https://github.com/apps/renovate)
+* chore(deps): update sigstore/cosign-installer action to v3.8.0 (#1813) @[renovate[bot]](https://github.com/apps/renovate)
+
+#### :link: Dependency Updates
+
+* build: :bookmark: bump version to `v1.2.1` (#1836) @Anselmoo
+* chore(deps): :arrows_counterclockwise: update dependencies 202503020001 (#1835) @Anselmoo
+* build(deps): bump sigstore/cosign-installer from 3.8.0 to 3.8.1 (#1825) @[dependabot[bot]](https://github.com/apps/dependabot)
+* build(deps): bump docker/build-push-action from 6.13.0 to 6.14.0 (#1826) @[dependabot[bot]](https://github.com/apps/dependabot)
+* build(deps): bump pypa/gh-action-pypi-publish from 20d40f69a1d306453777ffecb5a86860e850ba0f to 31b23f5a660aa0186e00cf381c491ff4edf3d002 (#1827) @[dependabot[bot]](https://github.com/apps/dependabot)
+* chore(deps): :arrows_counterclockwise: update dependencies 202502230000 (#1824) @Anselmoo
+* chore(deps): :arrows_counterclockwise: update dependencies 202502160000 (#1820) @Anselmoo
+* fix: :test_tube: remove unnecessary type ignore for AutoPeakDetection instantiation (#1818) @Anselmoo
+* chore(deps): :arrows_counterclockwise: update dependencies 202502020001 (#1810) @Anselmoo
+* fix(deps): update dependency plotly to v6 (#1808) @[renovate[bot]](https://github.com/apps/renovate)
+
+#### :microscope: Testing & Coverage
+
+* build: :bookmark: bump version to `v1.2.1` (#1836) @Anselmoo
+* fix: :test_tube: remove unnecessary type ignore for AutoPeakDetection instantiation (#1818) @Anselmoo
+
+#### :memo: Changelog
+
+* docs: :card_index_dividers: Changlog update for v1.2.0 (#1805) @Anselmoo
+
+### :package: Full Changelog
+
+**Full Changelog**: https://github.com/Anselmoo/spectrafit/compare/v1.2.0...v1.2.1
+
+### :gear: Who Contributes
+
+@Anselmoo, @github-actions[bot], @renovate[bot] and [renovate[bot]](https://github.com/apps/renovate)
+
 ## v1.2.0 🌈 - 2025-01-26
 
 ### :compass: What's Changed
