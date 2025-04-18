@@ -19,10 +19,10 @@ from typing import Tuple
 from typing_extensions import Literal
 
 
-PYTHON_38_VERSION: Tuple[Literal[3], Literal[8]] = (3, 8)
+PYTHON_END_OF_LIFE: Tuple[Literal[3], Literal[8]] = (3, 8)
 
-if sys.version_info[:2] == PYTHON_38_VERSION:
-    version_str = f"{PYTHON_38_VERSION[0]}.{PYTHON_38_VERSION[1]}"
+if sys.version_info[:2] == PYTHON_END_OF_LIFE:
+    version_str = f"{PYTHON_END_OF_LIFE[0]}.{PYTHON_END_OF_LIFE[1]}"
     warnings.warn(
         f"Support for Python {version_str} is approaching its end-of-life."
         " Please consider upgrading to Python 3.9 or newer."

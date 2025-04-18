@@ -6,7 +6,7 @@ keywords = [
   "fitting",
   "curve-fitting",
   "peak-fitting",
-  "spectrum"
+  "spectrum",
 ]
 
 [fitting.parameters.minimizer]
