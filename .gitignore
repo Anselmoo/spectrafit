@@ -221,3 +221,12 @@ $RECYCLE.BIN/
 # Built Visual Studio Code Extensions
 *.vsix
 spectrafit/plugins/dev_notebook.ipynb
+.idea/.gitignore
+.idea/misc.xml
+.idea/modules.xml
+.idea/prettier.xml
+.idea/spectrafit.iml
+.idea/vcs.xml
+.idea/inspectionProfiles/Project_Default.xml
+.idea/libraries/gradle_wrapper.xml
+.idea/libraries/my_test_package.xml
