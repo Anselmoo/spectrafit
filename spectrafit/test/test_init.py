@@ -7,7 +7,7 @@ import warnings
 import spectrafit
 
 from pytest import MonkeyPatch
-from spectrafit import PYTHON_38_VERSION
+from spectrafit import PYTHON_END_OF_LIFE
 from spectrafit import __version__
 
 
@@ -16,12 +16,12 @@ def test_version() -> None:
     assert __version__ == "1.2.2"
 
 
-def test_python_38_warning(monkeypatch: MonkeyPatch) -> None:
+def test_python_end_of_life_warning(monkeypatch: MonkeyPatch) -> None:
     """Test that a warning is issued for Python 3.8."""
     # Set the Python version to 3.8
     monkeypatch.setattr(sys, "version_info", (3, 8, 0))
 
-    version_str = f"{PYTHON_38_VERSION[0]}.{PYTHON_38_VERSION[1]}"
+    version_str = f"{PYTHON_END_OF_LIFE[0]}.{PYTHON_END_OF_LIFE[1]}"
 
     with warnings.catch_warnings(record=True) as w:
         warnings.simplefilter("always")
