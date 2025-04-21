@@ -424,7 +424,7 @@ class TestGlobalFitting:
         )
 
 
-def test_npy_comparison():
+def test_npy_comparison() -> None:
     """Test comparison of data loaded from .npy files."""
     data_npy = np.load("path/to/data.npy", allow_pickle=True).item()
     data = {"key": np.array([1, 2, 3])}
