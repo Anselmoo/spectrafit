@@ -7,6 +7,7 @@ from typing import Any
 
 import pandas as pd
 import pytest
+import numpy as np
 
 from numpy.testing import assert_almost_equal
 
@@ -421,3 +422,11 @@ class TestGlobalFitting:
             )
             == 3
         )
+
+
+def test_npy_comparison() -> None:
+    """Test comparison of data loaded from .npy files."""
+    data_npy = np.load("path/to/data.npy", allow_pickle=True).item()
+    data = {"key": np.array([1, 2, 3])}
+    keys = list(data.keys())
+    assert np.allclose(data_npy[keys[0]], data[keys[0]])
