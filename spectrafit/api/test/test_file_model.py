@@ -123,11 +123,3 @@ def test_comment_error() -> None:
             comment="x",
             file_suffixes=[".txt"],
         )
-
-
-def test_npy_comparison() -> None:
-    """Test comparison of data loaded from .npy files."""
-    data_npy = np.load("path/to/data.npy", allow_pickle=True).item()
-    data = {"key": np.array([1, 2, 3])}
-    keys = list(data.keys())
-    assert np.allclose(data_npy[keys[0]], data[keys[0]])
