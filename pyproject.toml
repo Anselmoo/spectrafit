@@ -69,7 +69,7 @@ jupyter = [
 jupyter-dash = [
   "jupyter-dash>=0.4.2,<0.5",
   "ipywidgets>=8.0.4,<9",
-  "dash-bootstrap-components>=1.3.0,<2",
+  "dash-bootstrap-components>=2.0.2,<3",
   "dash-bootstrap-templates",
 ]
 graph = ["networkx>=3.0.0,<4", "pydot>=3.0.0,<4"]
@@ -83,7 +83,7 @@ all = [
   "pydot>=3.0.0,<4",
   "jupyter-dash>=0.4.2,<0.5",
   "ipywidgets>=8.0.4,<9",
-  "dash-bootstrap-components>=1.3.0,<2",
+  "dash-bootstrap-components>=2.0.2,<3",
   "dash-bootstrap-templates",
   "python-pptx>=0.6.22,<1.1.0",
 ]
