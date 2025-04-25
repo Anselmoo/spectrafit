@@ -2,6 +2,78 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.2.2 🌈 - 2025-04-25
+
+### :compass: What's Changed
+
+* chore: 🔧  Update sonar-scanner.properties (#1837) @Anselmoo
+
+#### :toolbox: Maintenance
+
+* build: :recycle: rebuild dependency from scratch for `uv` (#1872) @Anselmoo
+* chore: ⬆️  pre-commit autoupdate (#1864) @[pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci)
+* [pre-commit.ci] pre-commit autoupdate (#1860) @[pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci)
+* feat: :sparkles: smaller refactor changes for eol (#1862) @Anselmoo
+* [pre-commit.ci] pre-commit autoupdate (#1849) @[pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci)
+* build: :arrow_up: bump version to 1.2.2 and update max-version of Python to 3.13 (#1844) @Anselmoo
+* [pre-commit.ci] pre-commit autoupdate (#1842) @[pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci)
+* [pre-commit.ci] pre-commit autoupdate (#1839) @[pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci)
+
+#### :snake: Python
+
+* test: :ambulance: update pre-commit setup to use uv and enable caching (#1865) @Anselmoo
+* chore(deps): :arrows_counterclockwise: update dependencies 202504200001 (#1863) @Anselmoo
+* chore: ⬆️  pre-commit autoupdate (#1864) @[pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci)
+* feat: :sparkles: smaller refactor changes for eol (#1862) @Anselmoo
+* build: :arrow_up: bump version to 1.2.2 and update max-version of Python to 3.13 (#1844) @Anselmoo
+
+#### :octocat: Github Actions
+
+* chore(deps): update sigstore/cosign-installer action to v3.8.2 (#1866) @[renovate[bot]](https://github.com/apps/renovate)
+* chore(deps): update docker/build-push-action action to v6.16.0 (#1869) @[renovate[bot]](https://github.com/apps/renovate)
+* chore(deps): update astral-sh/setup-uv action to v6 (#1870) @[renovate[bot]](https://github.com/apps/renovate)
+* test: :ambulance: update pre-commit setup to use uv and enable caching (#1865) @Anselmoo
+* chore(deps): update codecov/codecov-action action to v5.4.2 (#1861) @[renovate[bot]](https://github.com/apps/renovate)
+* chore(deps): update docker/login-action action to v3.4.0 (#1847) @[renovate[bot]](https://github.com/apps/renovate)
+* chore(deps): update dependency python to 3.13 (#1843) @[renovate[bot]](https://github.com/apps/renovate)
+
+#### :card_index_dividers: Documentation
+
+* feat: :sparkles: smaller refactor changes for eol (#1862) @Anselmoo
+
+#### :link: Dependency Updates
+
+* build: :recycle: rebuild dependency from scratch for `uv` (#1872) @Anselmoo
+* chore(deps): :arrows_counterclockwise: update dependencies 202504200001 (#1863) @Anselmoo
+* chore(deps): :arrows_counterclockwise: update dependencies 202504130024 (#1859) @Anselmoo
+* chore(deps): :arrows_counterclockwise: update dependencies 202504060001 (#1858) @Anselmoo
+* chore(deps): :arrows_counterclockwise: update dependencies 202503300001 (#1856) @Anselmoo
+* chore(deps): :arrows_counterclockwise: update dependencies 202503230001 (#1853) @Anselmoo
+* chore(deps): :arrows_counterclockwise: update dependencies 202503160001 (#1848) @Anselmoo
+* build: :arrow_up: bump version to 1.2.2 and update max-version of Python to 3.13 (#1844) @Anselmoo
+* chore(deps): :arrows_counterclockwise: update dependencies 202503090000 (#1840) @Anselmoo
+
+#### :microscope: Testing & Coverage
+
+* test: :ambulance: update pre-commit setup to use uv and enable caching (#1865) @Anselmoo
+* chore(deps): :arrows_counterclockwise: update dependencies 202504200001 (#1863) @Anselmoo
+* chore: ⬆️  pre-commit autoupdate (#1864) @[pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci)
+* feat: :sparkles: smaller refactor changes for eol (#1862) @Anselmoo
+* build: :arrow_up: bump version to 1.2.2 and update max-version of Python to 3.13 (#1844) @Anselmoo
+
+#### :memo: Changelog
+
+* feat: :sparkles: smaller refactor changes for eol (#1862) @Anselmoo
+* docs: :card_index_dividers: Changlog update for v1.2.1 (#1838) @Anselmoo
+
+### :package: Full Changelog
+
+**Full Changelog**: https://github.com/Anselmoo/spectrafit/compare/v1.2.1...v1.2.2
+
+### :gear: Who Contributes
+
+@Anselmoo, @github-actions[bot], @renovate[bot] and [renovate[bot]](https://github.com/apps/renovate)
+
 ## v1.2.1 🌈 - 2025-03-02
 
 ### :compass: What's Changed
