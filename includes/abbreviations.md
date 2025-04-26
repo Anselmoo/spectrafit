@@ -1,8 +1,8 @@
 _[API]: Application Programming Interface
 _[ASCII]: American Standard Code for Information Interchange; a common plain text format
 _[Amplitude]: The height or maximum value of a peak function
-_[Athena]: Interactive graphical utility for XAS analysis based on `IFEFFIT` or `LARCH`
-_[Automatic Peak Detection]: Automatically finding peaks in the data using algorithms like `find_peaks`
+_[Athena]: Interactive graphical utility for XAS analysis based on IFEFFIT or LARCH
+_[Automatic Peak Detection]: Automatically finding peaks in the data using algorithms like find_peaks
 _[Background Subtraction]: Removing the underlying signal or baseline from the raw data
 _[Baseline]: The underlying signal or background upon which spectral features are superimposed
 _[Baseline Correction]: The process of estimating and removing the baseline signal
@@ -35,11 +35,11 @@ _[Emission]: Process by which a substance releases energy in the form of electro
 _[Energy]: Physical quantity often used as the independent variable (x-axis) in spectroscopic measurements (e.g., eV, keV)
 _[Environment (Virtual)]: Isolated Python environment managing dependencies for a specific project (e.g., using venv, Conda, Poetry)
 _[Excel]: Spreadsheet software developed by Microsoft
-_[Expressions]: Mathematical constraints or dependencies between different fitting Parameters, evaluated by `lmfit`
+_[Expressions]: Mathematical constraints or dependencies between different fitting Parameters, evaluated by lmfit
 _[Fluorescence]: Emission of light by a substance that has absorbed light or other electromagnetic radiation
 _[Fourier Transform]: Mathematical transform used to decompose a function into its constituent frequencies, used in FT-IR spectroscopy
 _[Frequency]: Number of occurrences of a repeating event per unit of time, related to energy and wavelength
-_[FWHM]: Full Width at Half Maximum; a measure of the width of a peak function (e.g., `fwhmg`, `fwhml`)
+_[FWHM]: Full Width at Half Maximum; a measure of the width of a peak function (e.g., fwhmg, fwhml)
 _[Gaussian]: A common bell-shaped peak function used in curve fitting
 _[Git]: Distributed version control system
 _[GitHub]: Platform for hosting Git repositories and collaboration
@@ -57,17 +57,17 @@ _[Jupyter Notebook]: Web-based interactive computing environment for creating an
 _[JupyterLab]: Next-generation web-based user interface for Project Jupyter
 _[L-edge]: Features in X-ray Absorption Spectroscopy (XAS) arising from electron transitions from the L atomic shell (n=2)
 _[Least-Squares]: An optimization method that minimizes the sum of the squares of the Residuals between observed data and a Model
-_[Levenberg-Marquardt]: An iterative algorithm used for solving non-linear Least-Squares problems, the default Optimizer in `lmfit`
+_[Levenberg-Marquardt]: An iterative algorithm used for solving non-linear Least-Squares problems, the default Optimizer in lmfit
 _[Lorentzian]: A common peak function, also known as the Cauchy distribution, used in curve fitting
 _[Matplotlib]: Plotting library for the Python programming language
 _[Maximum Likelihood Estimation (MLE)]: Method for estimating the parameters of a statistical model given observations
 _[Metadata]: Data that provides information about other data (e.g., experimental conditions, sample details)
-_[Minimizer]: The `lmfit` class used for defining and performing the optimization (fitting) problem
+_[Minimizer]: The lmfit class used for defining and performing the optimization (fitting) problem
 _[MkDocs Material]: A theme for the MkDocs static site generator, used for SpectraFit's documentation
-_[Model]: A mathematical function used to describe the data, often composed of one or more peak functions and a baseline, implemented using `lmfit` Models
+_[Model]: A mathematical function used to describe the data, often composed of one or more peak functions and a baseline, implemented using lmfit Models
 _[Model Component]: A distinct part of a composite Model, such as an individual peak or a baseline function
 _[Monte Carlo Methods]: Computational algorithms relying on repeated random sampling to obtain numerical results, sometimes used in error estimation
-_[Nelder-Mead]: A simplex-based optimization algorithm available in `lmfit`
+_[Nelder-Mead]: A simplex-based optimization algorithm available in lmfit
 _[NetworkX]: Python library for the creation, manipulation, and study of complex networks
 _[Noise]: Random fluctuations in data that obscure the underlying signal
 _[Non-linear Fitting]: Curve fitting where the model depends non-linearly on its parameters
@@ -118,7 +118,7 @@ _[Standard Deviation]: A measure of the amount of variation or dispersion of a s
 _[Standard Error]: An estimate of the standard deviation of a fitted Parameter, indicating its uncertainty
 _[TOML]: Tom's Obvious, Minimal Language
 _[Tolerance]: A threshold used in optimization algorithms to determine when convergence has been reached
-_[Trunk-Based Development]: A source-control branching model where developers collaborate on code in a single branch called 'trunk' (or `main`)
+_[Trunk-Based Development]: A source-control branching model where developers collaborate on code in a single branch called 'trunk' (or main)
 _[Uncertainty]: The range of possible values within which the true value of a measurement or parameter lies
 _[Units]: Standard quantities used for measurement (e.g., eV, nm, cm⁻¹)
 _[UV-Vis]: Ultraviolet-Visible Spectroscopy

@@ -2,6 +2,7 @@
 
 - [How to contribute](#how-to-contribute)
   - [Setup the development environment](#setup-the-development-environment)
+  - [Commit message guidelines](#commit-message-guidelines)
   - [Milestones](#milestones)
   - [Testing](#testing)
   - [Submitting changes](#submitting-changes)
@@ -17,23 +18,91 @@ Here are some important resources:
   or feature requests
 - [Pull requests](https://github.com/Anselmoo/spectrafit/pulls) for contributing
   code
-- Millestones, which are listed below.
+- Milestones, which are listed below.
 
 ## Setup the development environment
 
-`SpectraFit` is using [poetry][4] as python package management system and
+`SpectraFit` is using [uv][4] as python package management system and
 [pre-commit][5] for managing git hooks. For fixing bugs or developing new
-featuers, we recommend to use both tools. The python version should be `3.7.1`
+features, we recommend to use both tools. The python version should be `3.8.1`
 or higher and can be optional managed via [pyenv][6].
 
 ```bash
-pyenv local 3.8.11
-poetry install
+# Setting up your Python environment
+pyenv local 3.10.0
+
+# Install dependencies with uv
+uv pip install -e .
+
+# Install development dependencies
+uv pip install -e ".[dev]"
+
+# Install pre-commit hooks
 pre-commit install --install-hooks
 ```
 
-Even if we have not git hook for code style `markdown`, `json`, and `yaml`
+Even if we have no git hook for code style in `markdown`, `json`, and `yaml`
 files, we prefer the [prettier style][7] and its extension for `toml` files.
+
+## Commit message guidelines
+
+We follow the [Conventional Commits][14] specification for our commit messages. This leads to more readable messages that are easy to follow when looking through the project history.
+
+### Commit message format
+
+Each commit message consists of a **header**, a **body** and a **footer**. The header has a special format that includes a **type**, an optional **scope** and a **subject**:
+
+```
+<type>[optional scope]: <emoji> <subject>
+[optional body]
+[optional footer(s)]
+```
+
+Examples:
+
+```
+feat: ✨ add new peak fitting method
+fix: 🐛 handle NaN values in solver
+docs: 📝 update usage documentation
+```
+
+### Types and emojis
+
+We use the following types and associated emojis:
+
+| Type     |            Emoji             | Description                         |
+| -------- | :--------------------------: | ----------------------------------- |
+| feat     |      `:sparkles:` (✨)       | A new feature                       |
+| fix      |         `:bug:` (🐛)         | A bug fix                           |
+| docs     |        `:memo:` (📝)         | Documentation only changes          |
+| style    |      `:lipstick:` (💄)       | Changes that do not affect meaning  |
+| refactor |       `:recycle:` (♻️)       | Code change that is not a fix/feat  |
+| perf     |         `:zap:` (⚡)         | Performance improvement             |
+| test     |  `:white_check_mark:` (✅)   | Adding or correcting tests          |
+| build    | `:construction_worker:` (👷) | Build system or dependencies        |
+| ci       |       `:wrench:` (🔧)        | CI/CD configuration                 |
+| chore    |       `:hammer:` (🔨)        | Other changes that don't modify src |
+| revert   |       `:rewind:` (⏪)        | Reverts a previous commit           |
+
+### Scope
+
+The scope is optional and should be the name of the module affected (as perceived by the person reading the changelog generated from commit messages).
+
+### Subject
+
+The subject contains a succinct description of the change:
+
+- Use the imperative, present tense: "change" not "changed" nor "changes"
+- Don't capitalize the first letter
+- No dot (.) at the end
+
+### Body
+
+The body should include the motivation for the change and contrast this with previous behavior.
+
+### Footer
+
+The footer should contain any information about **Breaking Changes** and is also the place to reference GitHub issues that this commit **Closes**.
 
 ## Milestones
 
@@ -53,19 +122,26 @@ you've done (read more about
 test coverage. Please follow our coding conventions (below) and make sure all of
 your commits are atomic (one feature per commit).
 
-Always write a clear log message for your commits. One-line messages are fine
-for small changes, but bigger changes should look like this:
-
-```shell
-git commit -m "A brief summary of the commit"
-```
-
-> A paragraph describing what changed and its impact.
+Always write a clear log message for your commits following our [commit message guidelines](#commit-message-guidelines).
 
 In terms of connecting [issues][11] with the corresponding [PR][9], we prefer to
 use the the [GitHub convention of using the issue number][12] in the commit
 message. This also allows us to easily linking PRs with issues in our [Project
 Board][13].
+
+### Branching rules
+
+We follow a Trunk-Based Development approach:
+
+- All changes should branch from `main`
+- Use short-lived feature branches named with the pattern: `type/short-description`
+  Examples:
+  - `feat/peak-fitting`
+  - `fix/nan-handling`
+  - `docs/usage-update`
+- Merge to `main` via pull request after review and passing CI
+- Rebase frequently to keep branches up to date with `main`
+- Delete feature branches after merge
 
 ## Coding conventions
 
@@ -87,7 +163,7 @@ This template is adapted from [opengovernment][3].
 [1]: https://github.com/Anselmoo/spectrafit/actions
 [2]: https://google.github.io/styleguide/pyguide.html
 [3]: https://github.com/opengovernment/opengovernment/blob/main/CONTRIBUTING.md
-[4]: https://python-poetry.org
+[4]: https://github.com/astral-sh/uv
 [5]: https://pre-commit.com
 [6]: https://github.com/pyenv/pyenv
 [7]: https://prettier.io
@@ -97,3 +173,4 @@ This template is adapted from [opengovernment][3].
 [11]: https://github.com/Anselmoo/spectrafit/issues
 [12]: https://docs.github.com/en/issues/tracking-your-work-with-issues/linking-a-pull-request-to-an-issue
 [13]: https://github.com/Anselmoo/spectrafit/projects/1
+[14]: https://www.conventionalcommits.org/

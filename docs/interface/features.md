@@ -2,7 +2,11 @@
 
 ### Pre-Analysis
 
-As part of the fitting procedure in `SpectraFit`, the initial data will be first
+!!! info "Initial Data Analysis"
+As part of the fitting procedure in **SpectraFit**, the initial data will be first
+analyzed based on standard statistics to provide baseline insights.
+
+As part of the fitting procedure in **SpectraFit**, the initial data will be first
 analyzed based on standard statistic. The standard statistics includes:
 
 - [x] Number of points in the data array
@@ -16,7 +20,7 @@ The evaluation of the standard statistics is performed via [pandas-describe][1];
 see also the [Command Line Interface][2] for more information in the
 API-section.
 
-??? example "Pre-Analysis"
+??? example "Pre-Analysis Example"
 
     |       |      0 |      1 |
     | :---- | -----: | -----: |
@@ -36,6 +40,11 @@ API-section.
     | max   |   8.57 |   1.00 |
 
 ### Fit Statistic
+
+!!! tip "Statistical Insights"
+The fit statistics provide crucial information about the quality of your model fit.
+Pay special attention to reduced chi-square values and information criteria when
+comparing different models.
 
 The fit statistic provides standard statistics of the data based on the [fit
 report module][3] of lmfit. So following standard insights are provided by
@@ -70,7 +79,9 @@ And every of these attributes has to be analyzed according to the:
 3. Absolute Error
 4. Relative Error
 
-??? example "Variable Analysis"
+??? example "Variable Analysis Example"
+
+    [Download the full variable analysis table](../assets/data/variable_analysis_example.csv)
 
     | variable name           |       value | absolute error | relative error | init value |  model value |
     | :---------------------- | ----------: | -------------: | -------------: | ---------: | -----------: |
@@ -78,14 +89,7 @@ And every of these attributes has to be analyzed according to the:
     | pseudovoigt_center_1    |  0.03500058 | +/- 0.07534815 |        215.28% |          0 |   0.03500058 |
     | pseudovoigt_fwhmg_1     |  0.06876795 | +/- 0.04790400 |         69.66% |       0.02 |   0.06876795 |
     | pseudovoigt_fwhml_1     |  0.09252389 | +/- 0.03757126 |         40.61% |       0.01 |   0.09252389 |
-    | pseudovoigt_amplitude_2 |  0.09740402 | +/- 0.12049276 |        123.70% |          1 |   0.09740402 |
-    | pseudovoigt_center_2    | -0.01805236 | +/- 0.02098358 |        116.24% |          0 |  -0.01805236 |
-    | pseudovoigt_fwhmg_2     |  0.04334471 | +/- 0.03017987 |         69.63% |       0.02 |   0.04334471 |
-    | pseudovoigt_fwhml_2     |  0.09989511 | +/- 0.07669355 |         76.77% |       0.01 |   0.09989511 |
-    | constant_amplitude_3    |  0.03676873 | +/- 0.00277773 |          7.55% |          1 |   0.03676873 |
-    | gaussian_amplitude_4    |  0.01411288 | +/- 0.18946470 |       1342.49% |          1 |   0.01411288 |
-    | gaussian_center_4       |  7.8507e-04 | +/- 0.07239645 |       9221.69% |          0 | 0.0007850674 |
-    | gaussian_fwhmg_4        |  0.04893397 | +/- 0.27055202 |        552.89% |       0.02 |   0.04893397 |
+    | ...                     |         ... |            ... |            ... |        ... |          ... |
 
 ### Correlation Analysis
 
