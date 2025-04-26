@@ -18,7 +18,7 @@ This section provides practical examples to help you understand and use **Spectr
 The examples demonstrate various use cases and features of **SpectraFit**, from basic peak fitting to advanced applications. Each example includes detailed explanations, code snippets, and visualization of results.
 
 !!! tip "Learning Path"
-Start with the basic examples and progress to more advanced topics. The examples build upon concepts introduced in earlier sections.
+    Start with the basic examples and progress to more advanced topics. The examples build upon concepts introduced in earlier sections.
 
 ## Command-Line Examples
 

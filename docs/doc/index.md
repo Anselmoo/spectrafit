@@ -19,7 +19,7 @@ This section provides comprehensive technical documentation on the mathematical 
 **SpectraFit** implements various mathematical models, fitting algorithms, and statistical methods to analyze spectral data with precision and flexibility. This documentation explains the theoretical background and implementation details.
 
 !!! info "Documentation Scope"
-This section focuses on the technical aspects of **SpectraFit**. For usage instructions, see the [Interface](../interface/index.md) section.
+    This section focuses on the technical aspects of **SpectraFit**. For usage instructions, see the [Interface](../interface/index.md) section.
 
 ## Core Components
 
