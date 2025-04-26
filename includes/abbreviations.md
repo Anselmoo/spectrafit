@@ -2,7 +2,7 @@ _[API]: Application Programming Interface
 _[ASCII]: American Standard Code for Information Interchange; a common plain text format
 _[Amplitude]: The height or maximum value of a peak function
 _[Athena]: Interactive graphical utility for XAS analysis based on IFEFFIT or LARCH
-_[Automatic Peak Detection]: Automatically finding peaks in the data using algorithms like find_peaks
+*[Automatic Peak Detection]: Automatically finding peaks in the data using algorithms like find*peaks
 _[Background Subtraction]: Removing the underlying signal or baseline from the raw data
 _[Baseline]: The underlying signal or background upon which spectral features are superimposed
 _[Baseline Correction]: The process of estimating and removing the baseline signal
@@ -69,6 +69,7 @@ _[Model Component]: A distinct part of a composite Model, such as an individual 
 _[Monte Carlo Methods]: Computational algorithms relying on repeated random sampling to obtain numerical results, sometimes used in error estimation
 _[Nelder-Mead]: A simplex-based optimization algorithm available in lmfit
 _[NetworkX]: Python library for the creation, manipulation, and study of complex networks
+_[NMR]: Nuclear Magnetic Resonance Spectroscopy, a technique used to observe local magnetic fields around atomic nuclei
 _[Noise]: Random fluctuations in data that obscure the underlying signal
 _[Non-linear Fitting]: Curve fitting where the model depends non-linearly on its parameters
 _[Normalization]: Scaling data to a common range or standard, often between 0 and 1 or based on a specific feature
@@ -95,7 +96,7 @@ _[pytest]: A testing framework for Python code
 _[Quantification]: Determining the amount or concentration of a substance based on spectral features
 _[R-squared (R²)]: Coefficient of determination; a statistical measure of how well the regression predictions approximate the real data points (1 indicates perfect fit)
 _[Raman Spectroscopy]: Spectroscopic technique used to observe vibrational, rotational, and other low-frequency modes in a system
-_[Reduced Chi-squared (χ²_ν)]: Chi-squared divided by the Degrees of Freedom, providing a measure of Goodness-of-fit normalized by the number of free parameters
+_[Reduced Chi-squared (χ²*ν)]: Chi-squared divided by the Degrees of Freedom, providing a measure of Goodness-of-fit normalized by the number of free parameters
 _[Regression]: Statistical process for estimating the relationships between variables
 _[Repository]: A central location where code and its history are stored, typically using a VCS like Git
 _[Resolution (Spectral)]: The ability of a spectrometer to distinguish between closely spaced spectral features

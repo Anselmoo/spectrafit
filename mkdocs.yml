@@ -103,12 +103,12 @@ plugins:
   #     height: auto
   #     zoomable: true
   #     draggable: true
-  # - git-revision-date-localized:
-  #     enable_creation_date: true
-  #     type: timeago
-  #     fallback_to_build_date: true
-  #     exclude:
-  #       - index.md
+  - git-revision-date-localized:
+      enable_creation_date: true
+      type: timeago
+      fallback_to_build_date: true
+      exclude:
+        - index.md
 
 # Customization
 extra:
