@@ -120,7 +120,7 @@ based on the `lmfit` approach for [Fit Multiple Data Sets][2]. In this case of
     10.0,1.1150396360517513e-06,0.007827194075870354,0.016627220257220902
     ```
 
-example "How to use `Global Fit`"
+!!! example "How to use `Global Fit`"
 
     Global fit can be used in two ways:
 
