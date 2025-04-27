@@ -148,10 +148,17 @@ Define the settings in the input file as shown below:
 }
 ```
 
-If the settings are pre-defined in the input file, the corresponding command line arguments will be automatically replaced with them. If they are not defined, the command line arguments or their default values will be used. This allows for faster execution of **SpectraFit** and also ensures consistency in the fitting procedure in case of larger studies. For the detailed mechanism of overwriting the settings, please see the API documentation of [Command Line Module](../api/spectrafit_api.md#spectrafit.spectrafit.extracted_from_command_line_runner).
+If the settings are pre-defined in the input file, the corresponding command line arguments will be automatically replaced with them.
+If they are not defined, the command line arguments or their default values will be used. This allows for faster execution
+of **SpectraFit** and also ensures consistency in the fitting procedure in case of larger studies. For the detailed
+mechanism of overwriting the settings, please see the API documentation
+of [Command Line Module](../api/spectrafit_api.md#spectrafit.spectrafit.extracted_from_command_line_runner).
 
 !!! warning "Datatype of columns for pandas.read_csv"
-According to the documentation of [pandas.read_csv](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_csv.html), the datatype can be both: `int` or `str`. The `int` is the default. In case of using the header, the `str` is mandatory.
+
+    According to the documentation of [`pandas.read_csv`][17], the datatype of
+    can be both: `int` or `str`. The `in` is the default. In case of using
+    the header the `str` is the mandatory.
 
 ### Define Project Details
 
@@ -195,11 +202,19 @@ The input file can be extended with more parameters, which are optional in case 
 ```
 
 !!! warning "About confidence interval calculations"
-The calculations of the confidence intervals depends on the number of features and `maxiter`. Consequently, the confidence interval calculations should be only used for the final fit to keep the calculation time low.
 
-### Using Mathematical Expressions
+    The calculations of the confidence intervals depends on the number of
+    features and `maxiter`. Consequently, the confidence interval calculations
+    should be only used for the final fit to keep the calculation time low.
 
-The input file can be further extended by `expressions`, which are evaluated during the fitting process. The `expressions` have to be defined as attributes of the `fitting` object in the input file. It can only contain mathematical constraints or dependencies between different `peaks`; please compare the docs of [lmfit.eval](https://lmfit.github.io/lmfit-py/constraints.html) and [Expression Documentation](../doc/expression.md). The attributes are defined by the keyword `expr` followed by the string, which can contain any mathematical expression supported by Python.
+### Using mathematical expressions
+
+The input file can be further extended by `expressions`, which are evaluated during the fitting process.
+The `expressions` have to be defined as attributes of the `fitting` object in the input file.
+It can only contain mathematical constraints or dependencies between different `peaks`;
+please compare the docs of [lmfit.eval](https://lmfit.github.io/lmfit-py/constraints.html)
+and [Expression Documentation](../doc/expression.md). The attributes are defined by the keyword
+`expr` followed by the string, which can contain any mathematical expression supported by Python.
 
 !!! tip "About the importance of expressions"
 
@@ -322,7 +337,10 @@ spectrafit global_data.csv -i input.json -g 1
 For more info please see the [Global Fitting Example](../examples/example6.md).
 
 !!! danger "Correct Data Format for Global Fits"
-For the correct fitting, the data file has to contain only spectra data; meaning `energy` and `intensity` columns. **No other columns are allowed!!**
+
+    For the correct fitting the data file has to contain only spectra data;
+    meaning `energy` and `intensity` columns. **No other columns are
+    allowed!!**
 
 ### Activating Automatic Peak Detection for Fitting
 

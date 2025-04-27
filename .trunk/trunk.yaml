@@ -20,6 +20,7 @@ lint:
   disabled:
     - black
     - isort
+    - markdown-table-prettify
   enabled:
     - pre-commit-hooks@5.0.0:
         commands:
