@@ -205,7 +205,7 @@ The input file can be extended with more parameters, which are optional in case 
 
     The calculations of the confidence intervals depends on the number of
     features and `maxiter`. Consequently, the confidence interval calculations
-    should be only used for the final fit to put the calculation time low.
+    should be only used for the final fit to keep the calculation time low.
 
 ### Using mathematical expressions
 
