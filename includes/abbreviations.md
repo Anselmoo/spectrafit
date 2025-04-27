@@ -98,7 +98,7 @@
 *[Quantification]: Determining the amount or concentration of a substance based on spectral features
 *[R-squared (R²)]: Coefficient of determination; a statistical measure of how well the regression predictions approximate the real data points (1 indicates perfect fit)
 *[Raman Spectroscopy]: Spectroscopic technique used to observe vibrational, rotational, and other low-frequency modes in a system
-*[Reduced Chi-squared (χ²•ν)]: Chi-squared divided by the Degrees of Freedom, providing a measure of Goodness-of-fit normalized by the number of free parameters
+*[Reduced Chi-squared (χ²・ν)]: Chi-squared divided by the Degrees of Freedom, providing a measure of Goodness-of-fit normalized by the number of free parameters
 *[Regression]: Statistical process for estimating the relationships between variables
 *[Repository]: A central location where code and its history are stored, typically using a VCS like Git
 *[Resolution (Spectral)]: The ability of a spectrometer to distinguish between closely spaced spectral features
