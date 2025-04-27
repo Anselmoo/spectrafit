@@ -147,9 +147,9 @@ settings, please see the API documentation of [Command Line Module][4].
 
 !!! warning "Datatype of columns for `pandas.read_csv`"
 
-     According to the documentation of [`pandas.read_csv`][17], the datatype of
-     can be both: `int` or `str`. The `in` is the default. In case of using
-     the header the `str` is the mandatory.
+    According to the documentation of [`pandas.read_csv`][17], the datatype of
+    can be both: `int` or `str`. The `in` is the default. In case of using
+    the header the `str` is the mandatory.
 
 ### Define project details
 
@@ -204,9 +204,9 @@ keyword `parameters` as shown below:
 
 !!! warning "About confidence interval calculations"
 
-     The calculations of the confidence intervals depends on the number of
-     features and `maxiter`. Consequently, the confidence interval calculations
-     should be only used for the final fit to put the calculation time low.
+    The calculations of the confidence intervals depends on the number of
+    features and `maxiter`. Consequently, the confidence interval calculations
+    should be only used for the final fit to put the calculation time low.
 
 ### Using mathematical expressions
 
@@ -349,9 +349,9 @@ For more info please see the [example section][11].
 
 !!! danger "Correct Data Format for Global Fits"
 
-     For the correct fitting the data file has to contain only spectra data;
-     meaning `energy` and `intensity` columns. **No other columns are
-     allowed!!**
+    For the correct fitting the data file has to contain only spectra data;
+    meaning `energy` and `intensity` columns. **No other columns are
+    allowed!!**
 
 ### Activating Automatic Peak detection for Fitting
 
