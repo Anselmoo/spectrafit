@@ -1,3 +1,5 @@
+<!-- trunk-ignore-all(prettier) -->
+<!-- trunk-ignore(markdownlint/MD041) -->
 *[API]: Application Programming Interface
 *[ASCII]: American Standard Code for Information Interchange; a common plain text format
 *[Amplitude]: The height or maximum value of a peak function
