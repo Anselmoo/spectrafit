@@ -18,6 +18,7 @@ This section documents the plugins available for **SpectraFit**, which extend it
 Plugins enhance **SpectraFit** by adding support for different file formats, specialized data processing, and advanced visualization capabilities. These modular components can be used separately or in combination with the core functionality.
 
 !!! tip "Plugin Usage"
+
     Plugins can be accessed through dedicated functions in the API or through the command-line interface with specific flags.
 
 ## Available Plugins

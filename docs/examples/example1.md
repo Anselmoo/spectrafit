@@ -87,7 +87,8 @@ The input file has to look like the following:
 ```
 
 !!! tip "Parameter Definition"
-The peak parameters define initial values and constraints for the fitting process:
+
+    The peak parameters define initial values and constraints for the fitting process:
 
     - **amplitude**: Maximum intensity of the peak
     - **center**: Position of the peak maximum

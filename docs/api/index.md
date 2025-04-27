@@ -18,7 +18,8 @@ This section provides comprehensive documentation of the **SpectraFit** API, all
 The **SpectraFit** API is organized into several modules, each providing specific functionality for spectral analysis. This reference documents all public classes, functions, and their parameters.
 
 !!! info "API Usage"
-The API documentation is intended for users who want to integrate **SpectraFit** into their own Python code or develop extensions to the package.
+
+    The API documentation is intended for users who want to integrate **SpectraFit** into their own Python code or develop extensions to the package.
 
 ## Core API Modules
 

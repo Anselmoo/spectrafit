@@ -16,45 +16,47 @@ This guide covers both basic and advanced usage patterns for **SpectraFit**, inc
 ## Standard Usage
 
 !!! example "Basic Command"
-`bash
+
+    ```bash
+      spectrafit data_file.txt input_file.json
+    ```
+
+    In case of the standard usage of **SpectraFit**, the following steps are necessary:
+
+    1. Having a structured textfile available with or without header. Preferred fileformat can be `.csv` or `.txt`; however every file with a consistent separation is supported.
+
+    ```text
+    -1.600000000000000089e+00	0.000000000000000000e+00
+    -1.583333333333333481e+00	3.891050583657595843e-03
+    -1.566666666666666874e+00	3.973071404922200699e-03
+    -1.550000000000000266e+00	4.057709648331829684e-03
+    -1.533333333333333659e+00	4.145077720204749357e-03
+    -1.516666666666667052e+00	4.235294117647067993e-03
+    ```
+
+    2. A wide range of pre-defined separators can be chosen: `,`, `;`, `:`, `|`, `\t`, `s+`, ` `
+
+    3. Having an input file available as [JSON](https://en.wikipedia.org/wiki/JSON), [TOML](https://en.wikipedia.org/wiki/TOML), or [YAML](https://en.wikipedia.org/wiki/YAML). The input file must have at least the initial parameters for the peaks. More options are in the default settings not necessary, but can be activated by extending the objects in the input file.
+
+    4. More command line arguments can be seen by activating the `-h` or `--help` flag.
+
+    5. The attributes `minimizer` and `optimizer` must also be defined, because they control the optimization algorithm of lmfit. For information see [lmfit.mininizer](https://lmfit.github.io/lmfit-py/fitting.html?highlight=minimizer#module-lmfit.minimizer). The input file has to contain the following lines:
+
+    ```json
+    "parameters": {
+        "minimizer": { "nan_policy": "propagate", "calc_covar": true },
+        "optimizer": { "max_nfev": 1000, "method": "leastsq" }
+    }
+    ```
+
+    6. Starting **SpectraFit** via:
+    ```bash
     spectrafit data_file.txt input_file.json
-    `
-
-In case of the standard usage of **SpectraFit**, the following steps are necessary:
-
-1. Having a structured textfile available with or without header. Preferred fileformat can be `.csv` or `.txt`; however every file with a consistent separation is supported.
-
-   ```text
-   -1.600000000000000089e+00	0.000000000000000000e+00
-   -1.583333333333333481e+00	3.891050583657595843e-03
-   -1.566666666666666874e+00	3.973071404922200699e-03
-   -1.550000000000000266e+00	4.057709648331829684e-03
-   -1.533333333333333659e+00	4.145077720204749357e-03
-   -1.516666666666667052e+00	4.235294117647067993e-03
-   ```
-
-2. A wide range of pre-defined separators can be chosen: `,`, `;`, `:`, `|`, `\t`, `s+`, ` `
-
-3. Having an input file available as [JSON](https://en.wikipedia.org/wiki/JSON), [TOML](https://en.wikipedia.org/wiki/TOML), or [YAML](https://en.wikipedia.org/wiki/YAML). The input file must have at least the initial parameters for the peaks. More options are in the default settings not necessary, but can be activated by extending the objects in the input file.
-
-4. More command line arguments can be seen by activating the `-h` or `--help` flag.
-
-5. The attributes `minimizer` and `optimizer` must also be defined, because they control the optimization algorithm of lmfit. For information see [lmfit.mininizer](https://lmfit.github.io/lmfit-py/fitting.html?highlight=minimizer#module-lmfit.minimizer). The input file has to contain the following lines:
-
-   ```json
-   "parameters": {
-     "minimizer": { "nan_policy": "propagate", "calc_covar": true },
-     "optimizer": { "max_nfev": 1000, "method": "leastsq" }
-   }
-   ```
-
-6. Starting **SpectraFit** via:
-   ```bash
-   spectrafit data_file.txt input_file.json
-   ```
+    ```
 
 !!! info "Peak definition in the input file"
-In the input file, the peaks must be defined as nested objects, as shown below:
+
+    In the input file, the peaks must be defined as nested objects, as shown below:
 
     ```json
     "peaks": {
@@ -200,7 +202,8 @@ The calculations of the confidence intervals depends on the number of features a
 The input file can be further extended by `expressions`, which are evaluated during the fitting process. The `expressions` have to be defined as attributes of the `fitting` object in the input file. It can only contain mathematical constraints or dependencies between different `peaks`; please compare the docs of [lmfit.eval](https://lmfit.github.io/lmfit-py/constraints.html) and [Expression Documentation](../doc/expression.md). The attributes are defined by the keyword `expr` followed by the string, which can contain any mathematical expression supported by Python.
 
 !!! tip "About the importance of expressions"
-Using the `expr` attribute, the amplitude of the peak `2` can be defined as 1/3 of the amplitude of the peak `1`. In general, this expression mode is very useful in cases of fitting relative dependencies like the _L-edge X-ray Absorption Spectra_ (**L-XAS**), where relative dependencies between the _**L**<sub>3</sub>_ and _**L**<sub>2</sub>_ edge have to be defined.
+
+    Using the `expr` attribute, the amplitude of the peak `2` can be defined as 1/3 of the amplitude of the peak `1`. In general, this expression mode is very useful in cases of fitting relative dependencies like the _L-edge X-ray Absorption Spectra_ (**L-XAS**), where relative dependencies between the _**L**<sub>3</sub>_ and _**L**<sub>2</sub>_ edge have to be defined.
 
     ```json
     "peaks": {
@@ -383,141 +386,142 @@ The input file of **SpectraFit** are dictionary-like objects. The input file can
 Especially, the `toml` and `yaml` files are very useful for the configuration of **SpectraFit** due to their structure and simplicity. [ConvertSimple](https://www.convertsimple.com) allows easily to convert between these three file types.
 
 ??? example "Reference Input in JSON"
-`json
-    {
-      "settings": {
-        "column": [0, 1],
-        "decimal": ".",
-        "energy_start": 0,
-        "energy_stop": 8,
-        "header": null,
-        "infile": "spectrafit/test/rixs_fecl4.txt",
-        "outfile": "fit_results",
-        "oversampling": false,
-        "noplot": false,
-        "separator": "\t",
-        "shift": 0,
-        "smooth": 0,
-        "verbose": 1
-      },
-      "fitting": {
-        "description": {
-          "project_name": "Template",
-          "project_details": "Template for testing",
-          "keywords": [
-            "2D-Spectra",
-            "fitting",
-            "curve-fitting",
-            "peak-fitting",
-            "spectrum"
-          ]
-        },
-        "parameters": {
-          "minimizer": { "nan_policy": "propagate", "calc_covar": true },
-          "optimizer": { "max_nfev": 1000, "method": "leastsq" },
-          "report": { "min_correl": 0.0 },
-          "conf_interval": {
-            "p_names": null,
-            "sigmas": null,
-            "trace": true,
-            "maxiter": 200,
-            "verbose": 1,
-            "prob_func": null
-          }
-        },
-        "peaks": {
-          "1": {
-            "pseudovoigt": {
-              "amplitude": {
-                "max": 2,
-                "min": 0,
-                "vary": true,
-                "value": 1
-              },
-              "center": {
-                "max": 2,
-                "min": -2,
-                "vary": true,
-                "value": 0
-              },
-              "fwhmg": {
-                "max": 0.1,
-                "min": 0.02,
-                "vary": true,
-                "value": 0.01
-              },
-              "fwhml": {
-                "max": 0.1,
-                "min": 0.01,
-                "vary": true,
-                "value": 0.01
-              }
-            }
+
+    ```json
+        {
+          "settings": {
+            "column": [0, 1],
+            "decimal": ".",
+            "energy_start": 0,
+            "energy_stop": 8,
+            "header": null,
+            "infile": "spectrafit/test/rixs_fecl4.txt",
+            "outfile": "fit_results",
+            "oversampling": false,
+            "noplot": false,
+            "separator": "\t",
+            "shift": 0,
+            "smooth": 0,
+            "verbose": 1
           },
-          "2": {
-            "pseudovoigt": {
-              "amplitude": {
-                "max": 2,
-                "min": 0,
-                "vary": true,
-                "value": 1
-              },
-              "center": {
-                "max": 2,
-                "min": -2,
-                "vary": true,
-                "value": 0
-              },
-              "fwhmg": {
-                "max": 0.1,
-                "min": 0.02,
-                "vary": true,
-                "value": 0.01
-              },
-              "fwhml": {
-                "max": 0.1,
-                "min": 0.01,
-                "vary": true,
-                "value": 0.01
+          "fitting": {
+            "description": {
+              "project_name": "Template",
+              "project_details": "Template for testing",
+              "keywords": [
+                "2D-Spectra",
+                "fitting",
+                "curve-fitting",
+                "peak-fitting",
+                "spectrum"
+              ]
+            },
+            "parameters": {
+              "minimizer": { "nan_policy": "propagate", "calc_covar": true },
+              "optimizer": { "max_nfev": 1000, "method": "leastsq" },
+              "report": { "min_correl": 0.0 },
+              "conf_interval": {
+                "p_names": null,
+                "sigmas": null,
+                "trace": true,
+                "maxiter": 200,
+                "verbose": 1,
+                "prob_func": null
               }
-            }
-          },
-          "3": {
-            "constant": {
-              "amplitude": {
-                "max": 2,
-                "min": 0.01,
-                "vary": true,
-                "value": 1
-              }
-            }
-          },
-          "4": {
-            "gaussian": {
-              "amplitude": {
-                "max": 2,
-                "min": 0,
-                "vary": true,
-                "value": 1
+            },
+            "peaks": {
+              "1": {
+                "pseudovoigt": {
+                  "amplitude": {
+                    "max": 2,
+                    "min": 0,
+                    "vary": true,
+                    "value": 1
+                  },
+                  "center": {
+                    "max": 2,
+                    "min": -2,
+                    "vary": true,
+                    "value": 0
+                  },
+                  "fwhmg": {
+                    "max": 0.1,
+                    "min": 0.02,
+                    "vary": true,
+                    "value": 0.01
+                  },
+                  "fwhml": {
+                    "max": 0.1,
+                    "min": 0.01,
+                    "vary": true,
+                    "value": 0.01
+                  }
+                }
               },
-              "center": {
-                "max": 2,
-                "min": -2,
-                "vary": true,
-                "value": 0
+              "2": {
+                "pseudovoigt": {
+                  "amplitude": {
+                    "max": 2,
+                    "min": 0,
+                    "vary": true,
+                    "value": 1
+                  },
+                  "center": {
+                    "max": 2,
+                    "min": -2,
+                    "vary": true,
+                    "value": 0
+                  },
+                  "fwhmg": {
+                    "max": 0.1,
+                    "min": 0.02,
+                    "vary": true,
+                    "value": 0.01
+                  },
+                  "fwhml": {
+                    "max": 0.1,
+                    "min": 0.01,
+                    "vary": true,
+                    "value": 0.01
+                  }
+                }
               },
-              "fwhmg": {
-                "max": 0.1,
-                "min": 0.02,
-                "vary": true,
-                "value": 0.01
+              "3": {
+                "constant": {
+                  "amplitude": {
+                    "max": 2,
+                    "min": 0.01,
+                    "vary": true,
+                    "value": 1
+                  }
+                }
+              },
+              "4": {
+                "gaussian": {
+                  "amplitude": {
+                    "max": 2,
+                    "min": 0,
+                    "vary": true,
+                    "value": 1
+                  },
+                  "center": {
+                    "max": 2,
+                    "min": -2,
+                    "vary": true,
+                    "value": 0
+                  },
+                  "fwhmg": {
+                    "max": 0.1,
+                    "min": 0.02,
+                    "vary": true,
+                    "value": 0.01
+                  }
+                }
               }
             }
           }
         }
-      }
-    }
-    `
+    ```
 
 ## Jupyter Notebook Interface
 

@@ -13,24 +13,27 @@ tags:
 
 **SpectraFit** provides a wide range of mathematical models for fitting spectroscopic data. This page documents all the available models, their parameters, and examples of their use.
 
-!!! info "About implemented models"
-In principle, every model can be implemented in **SpectraFit** by extending the module `spectrafit.models` with new functions. It is important to extend the `raise` check in both `solver_model` and `calculated_model` for new function names.
+!!! info "About implemented modxels"
+
+    In principle, every model can bexx implemented in **SpectraFit** by extending the module `spectrafit.models` with new functions. It is important to extend the `raise` check in both `solver_model` and `calculated_model` for new function names.
 
     See the [lmfit custom model example](https://lmfit.github.io/lmfit-py/examples/documentation/model_two_components.html#sphx-glr-examples-documentation-model-two-components-py) for more details.
 
 !!! tip "Section navigation"
-Use the navigation on the left to quickly jump between model types, constants, and visualization examples.
+
+    Use the navigation on the left to quickly jump between model types, constants, and visualization examples.
 
 ## Model Notation Reference
 
 === "Model Notation"
-| Method | Old Notation | New Notation |
+
+| Method              | Old Notation | New Notation |
 | ------------------- | ------------ | ------------ |
-| **Gaussian-FWHM** | `fwhm` | `fwhmg` |
-| **Lorentzian-FWHM** | `fwhm` | `fwhml` |
-| **Pseudo-Voigt** | `fwhm_g` | `fwhmg` |
-| **Pseudo-Voigt** | `fwhm_l` | `fwhml` |
-| **Voigt** | `fwhm` | `fwhmv` |
+| **Gaussian-FWHM**   | `fwhm`       | `fwhmg`      |
+| **Lorentzian-FWHM** | `fwhm`       | `fwhml`      |
+| **Pseudo-Voigt**    | `fwhm_g`     | `fwhmg`      |
+| **Pseudo-Voigt**    | `fwhm_l`     | `fwhml`      |
+| **Voigt**           | `fwhm`       | `fwhmv`      |
 
 ## List of Implemented Models
 
@@ -137,19 +140,20 @@ Where:
 - $\sigma$ is related to the full width at half maximum (FWHM) by $\text{FWHM} = 2\sigma\sqrt{2\ln{2}}$
 
 !!! example "Gaussian Model Parameters"
-`json
-    {
-      "peaks": {
-        "1": {
-          "gaussian": {
-            "amplitude": {"max": 2, "min": 0, "vary": true, "value": 1},
-            "center": {"max": 2, "min": -2, "vary": true, "value": 0},
-            "fwhmg": {"max": 0.5, "min": 0.02, "vary": true, "value": 0.1}
+
+    ```json
+         {
+        "peaks": {
+          "1": {
+            "gaussian": {
+              "amplitude": {"max": 2, "min": 0, "vary": true, "value": 1},
+              "center": {"max": 2, "min": -2, "vary": true, "value": 0},
+              "fwhmg": {"max": 0.5, "min": 0.02, "vary": true, "value": 0.1}
+            }
           }
         }
       }
-    }
-    `
+    ```
 
 ### Lorentzian Distribution
 
@@ -164,19 +168,20 @@ Where:
 - $\gamma$ is the half-width at half-maximum (HWHM)
 
 !!! example "Lorentzian Model Parameters"
-`json
-    {
-      "peaks": {
-        "1": {
-          "lorentzian": {
-            "amplitude": {"max": 2, "min": 0, "vary": true, "value": 1},
-            "center": {"max": 2, "min": -2, "vary": true, "value": 0},
-            "fwhml": {"max": 0.5, "min": 0.02, "vary": true, "value": 0.1}
+
+    ```json
+        {
+          "peaks": {
+            "1": {
+              "lorentzian": {
+                "amplitude": {"max": 2, "min": 0, "vary": true, "value": 1},
+                "center": {"max": 2, "min": -2, "vary": true, "value": 0},
+                "fwhml": {"max": 0.5, "min": 0.02, "vary": true, "value": 0.1}
+              }
+            }
           }
         }
-      }
-    }
-    `
+    ```
 
 ### Pseudo-Voigt Distribution
 
@@ -191,20 +196,21 @@ Where:
 - $G(x)$ is the Gaussian component
 
 !!! example "Pseudo-Voigt Model Parameters"
-`json
-    {
-      "peaks": {
-        "1": {
-          "pseudovoigt": {
-            "amplitude": {"max": 2, "min": 0, "vary": true, "value": 1},
-            "center": {"max": 2, "min": -2, "vary": true, "value": 0},
-            "fwhmg": {"max": 0.5, "min": 0.02, "vary": true, "value": 0.1},
-            "fwhml": {"max": 0.5, "min": 0.01, "vary": true, "value": 0.1}
+
+  ```json
+      {
+        "peaks": {
+          "1": {
+            "pseudovoigt": {
+              "amplitude": {"max": 2, "min": 0, "vary": true, "value": 1},
+              "center": {"max": 2, "min": -2, "vary": true, "value": 0},
+              "fwhmg": {"max": 0.5, "min": 0.02, "vary": true, "value": 0.1},
+              "fwhml": {"max": 0.5, "min": 0.01, "vary": true, "value": 0.1}
+            }
           }
         }
       }
-    }
-    `
+  ```
 
 ### Voigt Distribution
 
@@ -215,20 +221,21 @@ $$f(x) = \int_{-\infty}^{\infty} G(x') \cdot L(x-x') dx'$$
 This distribution is implemented using the Faddeeva function.
 
 !!! example "Voigt Model Parameters"
-`json
-    {
-      "peaks": {
-        "1": {
-          "voigt": {
-            "amplitude": {"max": 2, "min": 0, "vary": true, "value": 1},
-            "center": {"max": 2, "min": -2, "vary": true, "value": 0},
-            "fwhmv": {"max": 0.5, "min": 0.02, "vary": true, "value": 0.1},
-            "gamma": {"max": 0.5, "min": 0.01, "vary": true, "value": 0.1}
+
+    ```json
+      {
+        "peaks": {
+          "1": {
+            "voigt": {
+              "amplitude": {"max": 2, "min": 0, "vary": true, "value": 1},
+              "center": {"max": 2, "min": -2, "vary": true, "value": 0},
+              "fwhmv": {"max": 0.5, "min": 0.02, "vary": true, "value": 0.1},
+              "gamma": {"max": 0.5, "min": 0.01, "vary": true, "value": 0.1}
+            }
           }
         }
       }
-    }
-    `
+    ```
 
 ## Background Models
 
@@ -317,7 +324,9 @@ For calculating the models, a few math constants are needed, which are implement
 ## Visualization of the Models
 
 !!! info "About Peaks' Components"
-Comparing components of the peaks in a table is important for identifying trends, patterns, and outliers in your data. Having this information in a table format makes it easier to visualize, interpret, and communicate results.
+
+    Comparing components of the peaks in a table is important for identifying trends, patterns, and outliers in your data.
+    Having this information in a table format makes it easier to visualize, interpret, and communicate results.
 
     This can be seen in [example9_3.ipynb](https://github.com/Anselmoo/spectrafit/blob/main/docs/examples/example9_3.ipynb).
 
@@ -329,7 +338,8 @@ Comparing components of the peaks in a table is important for identifying trends
     This provides an interactive table and allows exporting the iterative results as a CSV file.
 
 ??? example "Download Peak Components Example CSV"
-The following dataset demonstrates the structure of exported peak components. You can download and explore it:
+
+    The following dataset demonstrates the structure of exported peak components. You can download and explore it:
 
     [Download dataset](../assets/data/peaks_components_example.csv)
 
