@@ -151,7 +151,7 @@ Define the settings in the input file as shown below:
 If the settings are pre-defined in the input file, the corresponding command line arguments will be automatically replaced with them.
 If they are not defined, the command line arguments or their default values will be used. This allows for faster execution
 of **SpectraFit** and also ensures consistency in the fitting procedure in case of larger studies. For the detailed
-mechanism of overwriting the settings, please see the API documentation 
+mechanism of overwriting the settings, please see the API documentation
 of [Command Line Module](../api/spectrafit_api.md#spectrafit.spectrafit.extracted_from_command_line_runner).
 
 !!! warning "Datatype of columns for pandas.read_csv"
@@ -209,11 +209,11 @@ The input file can be extended with more parameters, which are optional in case 
 
 ### Using mathematical expressions
 
-The input file can be further extended by `expressions`, which are evaluated during the fitting process. 
-The `expressions` have to be defined as attributes of the `fitting` object in the input file. 
+The input file can be further extended by `expressions`, which are evaluated during the fitting process.
+The `expressions` have to be defined as attributes of the `fitting` object in the input file.
 It can only contain mathematical constraints or dependencies between different `peaks`;
-please compare the docs of [lmfit.eval](https://lmfit.github.io/lmfit-py/constraints.html) 
-and [Expression Documentation](../doc/expression.md). The attributes are defined by the keyword 
+please compare the docs of [lmfit.eval](https://lmfit.github.io/lmfit-py/constraints.html)
+and [Expression Documentation](../doc/expression.md). The attributes are defined by the keyword
 `expr` followed by the string, which can contain any mathematical expression supported by Python.
 
 !!! tip "About the importance of expressions"
