@@ -27,6 +27,8 @@ theme:
     - content.action.copy
     - content.code.copy
     - content.code.annotations
+    - content.action.edit
+    - content.action.view
     - navigation.expand
     - navigation.indexes
     - navigation.instant
