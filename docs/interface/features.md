@@ -43,9 +43,9 @@
 ### Fit Statistic
 
 !!! tip "Statistical Insights"
-The fit statistics provide crucial information about the quality of your model fit.
-Pay special attention to reduced chi-square values and information criteria when
-comparing different models.
+    The fit statistics provide crucial information about the quality of your model fit.
+    Pay special attention to reduced chi-square values and information criteria when
+    comparing different models. See the [Statistics Documentation](../doc/statistics.md#standard-statistics) for more details.
 
 The fit statistic provides standard statistics of the data based on the [fit
 report module][3] of lmfit. So following standard insights are provided by
@@ -60,7 +60,7 @@ lmfit:
 - [Akaike info criteria][4] is an estimator of prediction error
 - [Bayesian info criteria][5] is an estimator of model validity
 
-This information will be also saved and extended in the `json`-output.
+This information will be also saved and extended in the `json`-output. For a comprehensive overview of all statistical measures, including regression metrics, please refer to the [Statistics Documentation](../doc/statistics.md).
 
 ### Variable Analysis
 

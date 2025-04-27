@@ -140,4 +140,4 @@
 *[XPS]: X-ray Photoelectron Spectroscopy
 *[X-ray]: Form of electromagnetic radiation with high energy
 *[YAML]: YAML Ain't Markup Language
-*[Zero Filling]: Adding zeros to the end of a time-domain signal before Fourier Transform to increase spectral resolution (interpolation) \*[lmfit]: A Python library for Non-Linear Least-Squares Minimization and Curve Fitting
+*[Zero Filling]: Adding zeros to the end of a time-domain signal before Fourier Transform to increase spectral resolution (interpolation)

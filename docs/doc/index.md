@@ -44,7 +44,7 @@ This section provides comprehensive technical documentation on the mathematical 
 
 - :material-chart-bell-curve-cumulative: **[Statistics](statistics.md)**
 
-  Overview of statistical analysis methods for evaluating fit quality.
+  Overview of statistical analysis methods for evaluating fit quality, including goodness-of-fit, regression metrics, and correlation analysis.
 
 </div>
 
