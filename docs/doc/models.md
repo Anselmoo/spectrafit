@@ -197,7 +197,7 @@ Where:
 
 !!! example "Pseudo-Voigt Model Parameters"
 
-  ```json
+    ```json
       {
         "peaks": {
           "1": {
@@ -210,7 +210,7 @@ Where:
           }
         }
       }
-  ```
+    ```
 
 ### Voigt Distribution
 
