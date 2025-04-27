@@ -195,7 +195,8 @@ The input file can be extended with more parameters, which are optional in case 
 ```
 
 !!! warning "About confidence interval calculations"
-The calculations of the confidence intervals depends on the number of features and `maxiter`. Consequently, the confidence interval calculations should be only used for the final fit to keep the calculation time low.
+
+    The calculations of the confidence intervals depends on the number of features and `maxiter`. Consequently, the confidence interval calculations should be only used for the final fit to keep the calculation time low.
 
 ### Using Mathematical Expressions
 
