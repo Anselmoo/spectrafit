@@ -2,14 +2,14 @@ site_name: SpectraFit
 site_url: https://Anselmoo.github.io/spectrafit/
 site_author: Anselm Hahn
 site_description: >-
-  Technical documentation for SpectraFit, a Python package for fitting
+  Technical documentation for SpectraFit, a Python package for fitting spectroscopic data with a focus on X-ray spectroscopy techniques
 # Repository
 repo_name: Anselmoo/SpectraFit
 repo_url: https://github.com/Anselmoo/spectrafit
 edit_uri: "https://github.com/Anselmoo/spectrafit/tree/main/docs"
 
 # Copyright
-copyright: Copyright &copy; 2021 - 2023 Anselm Hahn
+copyright: Copyright &copy; 2021 - 2025 Anselm Hahn
 
 # Configuration
 theme:
@@ -28,7 +28,6 @@ theme:
     - content.code.copy
     - content.code.annotations
     - navigation.expand
-    - navigation.expand
     - navigation.indexes
     - navigation.instant
     - navigation.sections
@@ -43,7 +42,9 @@ theme:
     - toc.integrate
     - toc.follow
     - content.tooltips
+    - grid
   palette:
+    # Palette toggle for automatic mode
     - media: "(prefers-color-scheme)"
       toggle:
         icon: material/lightbulb-auto
@@ -67,13 +68,19 @@ theme:
     code: Roboto Mono
   icon:
     repo: material/github
+    # tag: material/tag
   logo: images/logo.svg
   favicon: images/logo.svg
 
 # Plugins
 plugins:
   - search
-  - mkdocstrings
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            show_source: true
+            docstring_style: google
   - autorefs
   - section-index
   - table-reader
@@ -86,9 +93,27 @@ plugins:
       include_source: true
       execute: true
       kernel_name: python3
+  - tags:
+      tags_file: tags.md
+  # - glightbox:
+  #     touchNavigation: true
+  #     loop: false
+  #     effect: zoom
+  #     width: 100%
+  #     height: auto
+  #     zoomable: true
+  #     draggable: true
+  - git-revision-date-localized:
+      enable_creation_date: true
+      type: timeago
+      fallback_to_build_date: true
+      exclude:
+        - index.md
 
 # Customization
 extra:
+  tags:
+    enabled: true
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/Anselmoo
@@ -186,6 +211,11 @@ markdown_extensions:
       combine_header_slug: True
       slugify:
         !!python/object/apply:pymdownx.slugs.slugify { kwds: { case: lower } }
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
 
 extra_css:
   - assets/css/custom.css
@@ -202,12 +232,14 @@ watch:
 nav:
   - Home: index.md
   - Getting started:
+      - Interface: interface/index.md
       - Installation: interface/installation.md
       - Usage: interface/usage.md
       - Features: interface/features.md
   - Examples:
-      - Working via CMD:
-          - Fitting of a Single Feature via Command-Line: examples/example1.md
+      - Overview: examples/index.md
+      - Command-Line Examples:
+          - Fitting of a Single Feature: examples/example1.md
           - JSON, TOML, YAML Inputs: examples/example2.md
           - Multi Peak Fitting: examples/example3.md
           - Working with Real Life Data: examples/example4.md
@@ -215,7 +247,7 @@ nav:
           - Global Fitting: examples/example6.md
           - Automatic Fitting: examples/example7.md
           - Working with Athena Data: examples/example8.md
-      - Working in Jupyter Notebooks:
+      - Jupyter Notebook Examples:
           - Default Plot: examples/example9_1.ipynb
           - Themes: examples/example9_2.ipynb
           - Export Results: examples/example9_3.ipynb
@@ -223,12 +255,14 @@ nav:
           - Using Converters as Module: examples/example9_5.ipynb
           - RIXS Global-Fitting in Jupyter: examples/example9_6.ipynb
   - Documentation:
+      - Overview: doc/index.md
       - Models: doc/models.md
       - Expression: doc/expression.md
       - Solvers: doc/solver.md
       - Fitting: doc/fitting.md
       - Statistics: doc/statistics.md
   - Plugins:
+      - Overview: plugins/index.md
       - File-Format-Conversion: plugins/file_converter.md
       - Data-Format-Conversion: plugins/data_converter.md
       - Jupyter-Notebook-Integration: plugins/jupyter_interface.md
@@ -237,6 +271,7 @@ nav:
       - PKL-Converter and Visualizer: plugins/pkl_converter_visualization.md
       - PPTX-Converter: plugins/pptx_converter.md
   - API:
+      - Overview: api/index.md
       - SpectraFit: api/spectrafit_api.md
       - Plotting: api/plotting_api.md
       - Jupyter-Notebook: api/notebook_api.md
@@ -256,3 +291,4 @@ nav:
           - v1.x.x: changelog.md
           - v0.x.x: changelogs/v0.x.x.md
       - Contributors: contributors.md
+  - Tags: tags.md
