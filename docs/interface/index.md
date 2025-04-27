@@ -18,6 +18,7 @@ Welcome to the interface documentation for **SpectraFit**, a comprehensive Pytho
 The interface of **SpectraFit** is designed to be flexible and user-friendly, accommodating both command-line usage and integration with Jupyter notebooks. This section covers everything you need to get started with **SpectraFit** and take advantage of its powerful features.
 
 !!! tip "Quick Navigation"
+
     * [Installation](installation.md) - Set up **SpectraFit** on your system
     * [Usage](usage.md) - Learn how to use **SpectraFit** with examples
     * [Features](features.md) - Explore the capabilities and statistical methods

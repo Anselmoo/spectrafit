@@ -3,9 +3,16 @@
 - [How to contribute](#how-to-contribute)
   - [Setup the development environment](#setup-the-development-environment)
   - [Commit message guidelines](#commit-message-guidelines)
+    - [Commit message format](#commit-message-format)
+    - [Types and emojis](#types-and-emojis)
+    - [Scope](#scope)
+    - [Subject](#subject)
+    - [Body](#body)
+    - [Footer](#footer)
   - [Milestones](#milestones)
   - [Testing](#testing)
   - [Submitting changes](#submitting-changes)
+    - [Branching rules](#branching-rules)
   - [Coding conventions](#coding-conventions)
   - [Note](#note)
 
@@ -52,7 +59,7 @@ We follow the [Conventional Commits][14] specification for our commit messages. 
 
 Each commit message consists of a **header**, a **body** and a **footer**. The header has a special format that includes a **type**, an optional **scope** and a **subject**:
 
-```
+```git
 <type>[optional scope]: <emoji> <subject>
 [optional body]
 [optional footer(s)]
@@ -60,7 +67,7 @@ Each commit message consists of a **header**, a **body** and a **footer**. The h
 
 Examples:
 
-```
+```git
 feat: ✨ add new peak fitting method
 fix: 🐛 handle NaN values in solver
 docs: 📝 update usage documentation
@@ -167,6 +174,9 @@ This template is adapted from [opengovernment][3].
 [5]: https://pre-commit.com
 [6]: https://github.com/pyenv/pyenv
 [7]: https://prettier.io
+
+<!-- trunk-ignore(markdownlint/MD053) -->
+
 [8]: https://lmfit.github.io/lmfit-py/fitting.html
 [9]: https://github.com/Anselmoo/spectrafit/pulls
 [10]: https://github.com/Anselmoo/spectrafit/milestones
