@@ -2,19 +2,24 @@
 
 ### Pre-Analysis
 
-As part of the fitting procedure in `SpectraFit`, the initial data will be first
-analyzed based on standard statistic. The standard statistics includes:
+!!! info "Initial Data Analysis"
 
-- [x] Number of points in the data array
-- [x] The mean value of the data array
-- [x] The standard deviation of the data array
-- [x] The minimum value of the data array
-- [x] The maximum value of the data array
-- [x] The percentage based contribution of the data array
+    As part of the fitting procedure in **SpectraFit**, the initial data will be first
+    analyzed based on standard statistics to provide baseline insights.
 
-The evaluation of the standard statistics is performed via [pandas-describe][1];
-see also the [Command Line Interface][2] for more information in the
-API-section.
+    As part of the fitting procedure in **SpectraFit**, the initial data will be first
+    analyzed based on standard statistics. The standard statistics includes:
+
+    - [x] Number of points in the data array
+    - [x] The mean value of the data array
+    - [x] The standard deviation of the data array
+    - [x] The minimum value of the data array
+    - [x] The maximum value of the data array
+    - [x] The percentage based contribution of the data array
+
+    The evaluation of the standard statistics is performed via [pandas-describe][1];
+    see also the [Command Line Interface][2] for more information in the
+    API-section.
 
 ??? example "Pre-Analysis"
 
@@ -206,10 +211,9 @@ different types of output files will be generated
              "noplot": true,
 
              "verbose": 1,
-
              ```
          2. The project-specific meta-data.
-             ```json
+              ```json
                "description": {
                "project_name": "Template",
                "project_details": "Template for testing",
