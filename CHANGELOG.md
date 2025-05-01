@@ -2,6 +2,58 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.3.0 🌈 - 2025-05-01
+
+### :compass: What's Changed
+
+* fix: ✏️ update abbreviations.md (#1880) @Anselmoo
+
+#### :rocket: New
+
+* docs: :star: Add edit functionality to docs (#1883) @Anselmoo
+* docs: :books: Enhance documentation for SpectraFit plugins and tags (#1879) @Anselmoo
+
+#### :toolbox: Maintenance
+
+* [pre-commit.ci] pre-commit autoupdate (#1884) @[pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci)
+* docs: :books: Enhance documentation for SpectraFit plugins and tags (#1879) @Anselmoo
+* chore: :arrow_up: bump version to 1.3.0 and update dependencies (#1877) @Anselmoo
+
+#### :snake: Python
+
+* chore: :arrow_up: bump version to 1.3.0 and update dependencies (#1877) @Anselmoo
+
+#### :card_index_dividers: Documentation
+
+* docs: :star: Add edit functionality to docs (#1883) @Anselmoo
+* fix: :pencil: correct wrong indentation (#1882) @Anselmoo
+* doc: :star: Improved Jupyter example presentation (#1881) @Anselmoo
+* docs: :books: Enhance documentation for SpectraFit plugins and tags (#1879) @Anselmoo
+* feat: :sparkles: enhance documentation with additional glossary terms and tooltips (#1875) @Anselmoo
+* docs: 📚 add glossary to documentation (#1874) @Anselmoo
+
+#### :link: Dependency Updates
+
+* docs: :books: Enhance documentation for SpectraFit plugins and tags (#1879) @Anselmoo
+* chore(deps): :arrows_counterclockwise: update dependencies 202504270001 (#1878) @Anselmoo
+* chore: :arrow_up: bump version to 1.3.0 and update dependencies (#1877) @Anselmoo
+
+#### :microscope: Testing & Coverage
+
+* chore: :arrow_up: bump version to 1.3.0 and update dependencies (#1877) @Anselmoo
+
+#### :memo: Changelog
+
+* docs: :card_index_dividers: Changlog update for v1.2.2 (#1873) @Anselmoo
+
+### :package: Full Changelog
+
+**Full Changelog**: https://github.com/Anselmoo/spectrafit/compare/v1.2.2...v1.3.0
+
+### :gear: Who Contributes
+
+@Anselmoo and @github-actions[bot]
+
 ## v1.2.2 🌈 - 2025-04-25
 
 ### :compass: What's Changed
