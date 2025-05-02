@@ -772,7 +772,8 @@ class ReferenceKeys:
 
     __automodels__ = [
         "gaussian",
-        "orcagaussianlorentzian",
+        "orcagaussian",
+        "lorentzian",
         "voigt",
         "pseudovoigt",
     ]
