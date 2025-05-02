@@ -1019,7 +1019,7 @@ class TestModel:
         "model, params",
         [
             ("gaussian", {"amplitude": {}, "center": {}, "fwhmg": {}}),
-            ("orcagaussian", {"amplitude": {}, "center": {}, "fwhmg": {}}),
+            ("orcagaussian", {"amplitude": {}, "center": {}, "width": {}}),
             ("lorentzian", {"amplitude": {}, "center": {}, "fwhml": {}}),
             ("voigt", {"center": {}, "fwhmv": {}, "gamma": {}}),
             (

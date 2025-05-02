@@ -68,7 +68,7 @@ class DistributionModels:
             Consequently, the core Gaussian calculation is defined as:
 
             $$
-            {\displaystyle g(x)={A\exp
+            {\displaystyle g(x)={A \exp
             (  -{\frac {1}{2}}{\frac {(x-\mu )^{2}}{\sigma ^{2}}} ) }
             $$
 

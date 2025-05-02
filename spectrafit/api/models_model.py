@@ -99,6 +99,16 @@ class FwhmvAPI(BaseModel):
     expr: Optional[str] = Field(default=None, description=__description__)
 
 
+class WidthAPI(BaseModel):
+    """Definition of the Width of the ORCA Gaussian of the models distributions."""
+
+    max: Optional[float] = Field(default=None, description="Maximum width.")
+    min: Optional[int] = Field(default=None, description="Minimum width.")
+    vary: bool = Field(default=True, description="Vary the width.")
+    value: Optional[float] = Field(default=None, description="Initial width value.")
+    expr: Optional[str] = Field(default=None, description=__description__)
+
+
 class GammaAPI(BaseModel):
     """Definition of the Gamma of the Voigt of the models distributions."""
 
@@ -195,7 +205,7 @@ class OrcaGaussianAPI(BaseModel):
 
     amplitude: AmplitudeAPI = AmplitudeAPI()
     center: CenterAPI = CenterAPI()
-    fwhmg: FwhmgAPI = FwhmgAPI()
+    width: WidthAPI = WidthAPI()
 
 
 class LorentzianAPI(BaseModel):
