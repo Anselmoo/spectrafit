@@ -48,6 +48,42 @@ class DistributionModels:
     """
 
     @staticmethod
+    def _gaussian_core(
+        x: NDArray[np.float64],
+        amplitude: float,
+        center: float,
+        scale: float,
+    ) -> NDArray[np.float64]:
+        """Core Gaussian calculation used by multiple staticmethods.
+
+        !!! note "About the core Gaussian calculation"
+
+            The core Gaussian calculation is used by the `gaussian`, `orca_gaussian`
+            for avoiding code duplication. The core Gaussian calculation is not normalized and
+            therefore the amplitude of the Gaussian is not directly comparable to the
+            amplitude of the classical definition of the
+            [Gaussian](https://en.wikipedia.org/wiki/Gaussian_function) function.
+
+
+            Consequently, the core Gaussian calculation is defined as:
+
+            $$
+            {\displaystyle g(x)={A\exp
+            (  -{\frac {1}{2}}{\frac {(x-\mu )^{2}}{\sigma ^{2}}} ) }
+            $$
+
+        Args:
+            x (NDArray[np.float64]): `x`-values of the data.
+            amplitude (float): Amplitude of the Gaussian distribution.
+            center (float): Center of the Gaussian distribution.
+            scale (float): Scale of the Gaussian distribution.
+
+        Returns:
+            NDArray[np.float64]: Gaussian distribution of `x` given.
+        """
+        return np.array(amplitude * np.exp(-((1.0 * x - center) ** 2) / (2 * scale**2)))
+
+    @staticmethod
     def gaussian(
         x: NDArray[np.float64],
         amplitude: float = 1.0,
@@ -74,8 +110,9 @@ class DistributionModels:
             NDArray[np.float64]: Gaussian distribution of `x` given.
         """
         sigma = fwhmg * Constants.fwhmg2sig
-        return np.array(amplitude / (Constants.sq2pi * sigma)) * np.exp(
-            -((1.0 * x - center) ** 2) / (2 * sigma**2)
+        norm_factor = amplitude / (Constants.sq2pi * sigma)
+        return norm_factor * DistributionModels._gaussian_core(
+            x=x, amplitude=1.0, center=center, scale=sigma
         )
 
     @staticmethod
@@ -108,7 +145,9 @@ class DistributionModels:
         Returns:
             NDArray[np.float64]: Gaussian distribution of `x` given.
         """
-        return np.array(amplitude * np.exp(-((1.0 * x - center) ** 2) / (2 * width**2)))
+        return DistributionModels._gaussian_core(
+            x=x, amplitude=amplitude, center=center, scale=width
+        )
 
     @staticmethod
     def lorentzian(
