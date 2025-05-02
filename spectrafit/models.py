@@ -54,7 +54,7 @@ class DistributionModels:
         center: float,
         scale: float,
     ) -> NDArray[np.float64]:
-        """Core Gaussian calculation used by multiple staticmethods.
+        r"""Core Gaussian calculation used by multiple staticmethods.
 
         !!! note "About the core Gaussian calculation"
 
