@@ -190,6 +190,14 @@ class GaussianAPI(BaseModel):
     fwhmg: FwhmgAPI = FwhmgAPI()
 
 
+class OrcaGaussianAPI(BaseModel):
+    """Definition of the ORCA Gaussian of the models distributions."""
+
+    amplitude: AmplitudeAPI = AmplitudeAPI()
+    center: CenterAPI = CenterAPI()
+    fwhmg: FwhmgAPI = FwhmgAPI()
+
+
 class LorentzianAPI(BaseModel):
     """Definition of the Lorentzian of the models distributions."""
 
@@ -371,6 +379,7 @@ class DistributionModelAPI(BaseModel):
     """Definition of the models distributions."""
 
     gaussian: GaussianAPI = GaussianAPI()
+    orcagaussian: OrcaGaussianAPI = OrcaGaussianAPI()
     lorentzian: LorentzianAPI = LorentzianAPI()
     voigt: VoigtAPI = VoigtAPI()
     pseudovoigt: PseudovoigtAPI = PseudovoigtAPI()
