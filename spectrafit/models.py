@@ -79,6 +79,38 @@ class DistributionModels:
         )
 
     @staticmethod
+    def orcagaussian(
+        x: NDArray[np.float64],
+        amplitude: float = 1.0,
+        center: float = 0.0,
+        width: float = 1.0,
+    ) -> NDArray[np.float64]:
+        r"""Return a 1-dimensional Gaussian distribution as implemented in the ORCA program.
+
+        $$
+        {\displaystyle g(x)= A \cdot \exp
+        (  -{\frac {(x-\mu)^{2}}{2 \cdot width^{2}}} ) }
+        $$
+
+        Unlike the standard gaussian function, this implementation uses the width parameter
+        directly without conversion to sigma, which is consistent with the ORCA quantum
+        chemistry program's approach.
+
+        Args:
+            x (NDArray[np.float64]): `x`-values of the data.
+            amplitude (float, optional): Amplitude of the Gaussian distribution.
+                 Defaults to 1.0.
+            center (float, optional): Center of the Gaussian distribution.
+                 Defaults to 0.0.
+            width (float, optional): Width parameter of the Gaussian distribution as used
+                 in the ORCA program. Defaults to 1.0.
+
+        Returns:
+            NDArray[np.float64]: Gaussian distribution of `x` given.
+        """
+        return np.array(amplitude * np.exp(-((1.0 * x - center) ** 2) / (2 * width**2)))
+
+    @staticmethod
     def lorentzian(
         x: NDArray[np.float64],
         amplitude: float = 1.0,
@@ -740,7 +772,7 @@ class ReferenceKeys:
 
     __automodels__ = [
         "gaussian",
-        "lorentzian",
+        "orcagaussianlorentzian",
         "voigt",
         "pseudovoigt",
     ]
@@ -761,7 +793,8 @@ class ReferenceKeys:
         """Check if model is available.
 
         Args:
-            model (str): Auto Model name (gaussian, lorentzian, voigt, or pseudovoigt).
+            model (str): Auto Model name (gaussian, orcagaussian,
+                lorentzian, voigt, or pseudovoigt).
 
         Raises:
             KeyError: If the model is not supported.
@@ -1237,6 +1270,36 @@ class ModelParameters(AutoPeakDetection):
             models = "gaussian"
 
         if models == "gaussian":
+            for i, (_cent, _amp, _fhmw) in enumerate(
+                zip(
+                    self.x[positions],
+                    properties["peak_heights"],
+                    properties["widths"],
+                ),
+                start=1,
+            ):
+                self.params.add(
+                    f"{models}_amplitude_{i}",
+                    value=_amp,
+                    min=-np.abs(1.25 * _amp),
+                    max=np.abs(1.25 * _amp),
+                    vary=True,
+                )
+                self.params.add(
+                    f"{models}_center_{i}",
+                    value=_cent,
+                    min=0.5 * _cent,
+                    max=2 * _cent,
+                    vary=True,
+                )
+                self.params.add(
+                    f"{models}_fwhmg_{i}",
+                    value=_fhmw,
+                    min=0,
+                    max=2 * _fhmw,
+                    vary=True,
+                )
+        elif models == "orcagaussian":
             for i, (_cent, _amp, _fhmw) in enumerate(
                 zip(
                     self.x[positions],

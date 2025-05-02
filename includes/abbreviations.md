@@ -77,6 +77,7 @@
 *[Normalization]: Scaling data to a common range or standard, often between 0 and 1 or based on a specific feature
 *[NumPy]: Fundamental package for scientific computing with Python
 *[Objective Function]: The function that an optimization algorithm seeks to minimize or maximize (e.g., sum of squared residuals in Least-Squares)
+*[ORCA]: A computational chemistry software package for quantum chemistry calculations
 *[Optimizer]: The algorithm (e.g., Levenberg-Marquardt, Nelder-Mead) used by the Minimizer to find the best-fit Parameters
 *[Overfitting]: Fitting a model too closely to the noise or random fluctuations in the data, rather than the underlying trend
 *[Pandas DataFrames]: Two-dimensional, size-mutable, and potentially heterogeneous tabular data structures in the Pandas Python library

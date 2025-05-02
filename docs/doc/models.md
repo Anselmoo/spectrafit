@@ -43,6 +43,10 @@ tags:
 
   Bell-shaped curve widely used for modeling spectral peaks.
 
+- :material-function-variant: **[Orca Gaussian Distribution](#orca-gaussian-distribution)**
+
+  Variant of Gaussian distribution with specific parameters.
+
 - :material-function-variant: **[Lorentzian Distribution](#lorentzian-distribution)**
 
   Distribution with wider tails than Gaussian, common in resonance phenomena.
@@ -140,6 +144,35 @@ Where:
 - $\sigma$ is related to the full width at half maximum (FWHM) by $\text{FWHM} = 2\sigma\sqrt{2\ln{2}}$
 
 !!! example "Gaussian Model Parameters"
+
+    ```json
+         {
+        "peaks": {
+          "1": {
+            "gaussian": {
+              "amplitude": {"max": 2, "min": 0, "vary": true, "value": 1},
+              "center": {"max": 2, "min": -2, "vary": true, "value": 0},
+              "fwhmg": {"max": 0.5, "min": 0.02, "vary": true, "value": 0.1}
+            }
+          }
+        }
+      }
+    ```
+
+### Orca Gaussian Distribution
+
+The [Orca][1] Gaussian distribution is a variant of the Gaussian distribution, defined by its amplitude, center, and width:
+$$f(x) = \frac{A}{\sigma\sqrt{2\pi}} \exp\left(-\frac{(x-\mu)^2}{2\sigma^2}\right)$$
+
+It is similar to the standard Gaussian distribution but uses a different notation for the amplitude with respect to the implementation in the  [`orca_mapspc`][2].
+
+Where:
+
+- $A$ is the amplitude
+- $\mu$ is the center (mean)
+- $\sigma$ is related to the full width at half maximum (FWHM) by $\text{FWHM} = 2\sigma\sqrt{2\ln{2}}$
+
+!!! example "ORCA Gaussian Model Parameters"
 
     ```json
          {
@@ -351,3 +384,6 @@ For calculating the models, a few math constants are needed, which are implement
 - [Fitting Documentation](fitting.md)
 - [API Reference](../api/modelling_api.md)
 - [Changelog](../changelog.md)
+
+[1]: https://www.faccts.de/docs/orca/6.0/manual/#
+[2]: https://www.faccts.de/docs/orca/6.0/manual/contents/detailed/utilities.html
