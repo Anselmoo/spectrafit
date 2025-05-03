@@ -1100,6 +1100,8 @@ class TestModel:
         assert len(mp) == 2
         for name in mp[0].params.keys():
             assert model in name
+
+
 class TestDefineParametersAuto:
     @pytest.fixture
     def mock_autodetect(self):
@@ -1207,7 +1209,9 @@ class TestDefineParametersAuto:
             assert f"orcagaussian_center_{i}" in mp.params
             assert f"orcagaussian_width_{i}" in mp.params
 
-    def test_default_gaussian_if_no_modeltype(self, mock_local_df, mock_autodetect, monkeypatch):
+    def test_default_gaussian_if_no_modeltype(
+        self, mock_local_df, mock_autodetect, monkeypatch
+    ):
         args = {
             "autopeak": True,  # no modeltype key
             "global_": 0,
@@ -1220,7 +1224,9 @@ class TestDefineParametersAuto:
         # Should default to Gaussian
         assert "gaussian_amplitude_1" in mp.params
 
-    def test_invalid_auto_model_raises(self, mock_local_df, mock_autodetect, monkeypatch):
+    def test_invalid_auto_model_raises(
+        self, mock_local_df, mock_autodetect, monkeypatch
+    ):
         args = {
             "autopeak": {"modeltype": "unknown"},
             "global_": 0,
