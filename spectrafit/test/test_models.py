@@ -2,7 +2,7 @@
 
 import sys
 from math import isclose, log, pi, sqrt
-from typing import TYPE_CHECKING, Any, Dict, Tuple
+from typing import Any, Dict, Tuple
 
 import numpy as np
 import pandas as pd
@@ -20,11 +20,10 @@ from spectrafit.models import (
     calculated_model,
 )
 
-if TYPE_CHECKING:
-    if sys.version_info < (3, 9):
-        from typing import Callable
-    else:
-        from collections.abc import Callable
+if sys.version_info < (3, 9):
+    from typing import Callable
+else:
+    from collections.abc import Callable
 
 
 def assert_solver_models(mp: Tuple[Minimizer, Any]) -> None:
