@@ -1,5 +1,6 @@
 """Pytest of the model-module."""
 
+from collections.abc import Callable
 from math import isclose
 from math import log
 from math import pi
@@ -1104,7 +1105,9 @@ class TestModel:
 
 class TestDefineParametersAuto:
     @pytest.fixture
-    def mock_autodetect(self):
+    def mock_autodetect(
+        self,
+    ) -> Callable[..., Tuple[NDArray[Any], Dict[str, NDArray[Any]]]]:
         # Mock positions and properties returned by find_peaks
         positions = np.array([3, 6, 9])
         properties = {
@@ -1112,13 +1115,15 @@ class TestDefineParametersAuto:
             "widths": np.array([1.0, 2.0, 3.0]),
         }
 
-        def _mock_fn(*args):
+        def _mock_fn(
+            *args: Tuple[Any, ...],
+        ) -> Tuple[NDArray[Any], Dict[str, NDArray[Any]]]:
             return positions, properties
 
         return _mock_fn
 
     @pytest.fixture
-    def mock_local_df(self):
+    def mock_local_df(self) -> pd.DataFrame:
         x_values = np.linspace(0, 10, 11)
         y_values = np.zeros_like(x_values)
         # Simulate signals at positions 3,6,9
@@ -1127,7 +1132,12 @@ class TestDefineParametersAuto:
         y_values[9] = 30
         return pd.DataFrame({"Energy": x_values, "Intensity": y_values})
 
-    def test_gaussian(self, mock_local_df, mock_autodetect, monkeypatch):
+    def test_gaussian(
+        self,
+        mock_local_df: pd.DataFrame,
+        mock_autodetect: Callable[..., Tuple[NDArray[Any], Dict[str, NDArray[Any]]]],
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
         args = {
             "autopeak": {"modeltype": "gaussian"},
             "global_": 0,
@@ -1144,7 +1154,12 @@ class TestDefineParametersAuto:
             assert f"gaussian_fwhmg_{i}" in mp.params
         assert mp.args["auto_generated_models"]["positions"] == [3, 6, 9]
 
-    def test_lorentzian(self, mock_local_df, mock_autodetect, monkeypatch):
+    def test_lorentzian(
+        self,
+        mock_local_df: pd.DataFrame,
+        mock_autodetect: Callable[..., Tuple[NDArray[Any], Dict[str, NDArray[Any]]]],
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
         args = {
             "autopeak": {"modeltype": "lorentzian"},
             "global_": 0,
@@ -1160,7 +1175,12 @@ class TestDefineParametersAuto:
             assert f"lorentzian_center_{i}" in mp.params
             assert f"lorentzian_fwhml_{i}" in mp.params
 
-    def test_voigt(self, mock_local_df, mock_autodetect, monkeypatch):
+    def test_voigt(
+        self,
+        mock_local_df: pd.DataFrame,
+        mock_autodetect: Callable[..., Tuple[NDArray[Any], Dict[str, NDArray[Any]]]],
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
         args = {
             "autopeak": {"modeltype": "voigt"},
             "global_": 0,
@@ -1176,7 +1196,12 @@ class TestDefineParametersAuto:
             assert f"voigt_center_{i}" in mp.params
             assert f"voigt_fwhmv_{i}" in mp.params
 
-    def test_pseudovoigt(self, mock_local_df, mock_autodetect, monkeypatch):
+    def test_pseudovoigt(
+        self,
+        mock_local_df: pd.DataFrame,
+        mock_autodetect: Callable[..., Tuple[NDArray[Any], Dict[str, NDArray[Any]]]],
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
         args = {
             "autopeak": {"modeltype": "pseudovoigt"},
             "global_": 0,
@@ -1193,7 +1218,12 @@ class TestDefineParametersAuto:
             assert f"pseudovoigt_fwhmg_{i}" in mp.params
             assert f"pseudovoigt_fwhml_{i}" in mp.params
 
-    def test_orcagaussian(self, mock_local_df, mock_autodetect, monkeypatch):
+    def test_orcagaussian(
+        self,
+        mock_local_df: pd.DataFrame,
+        mock_autodetect: Callable[..., Tuple[NDArray[Any], Dict[str, NDArray[Any]]]],
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
         args = {
             "autopeak": {"modeltype": "orcagaussian"},
             "global_": 0,
@@ -1210,8 +1240,11 @@ class TestDefineParametersAuto:
             assert f"orcagaussian_width_{i}" in mp.params
 
     def test_default_gaussian_if_no_modeltype(
-        self, mock_local_df, mock_autodetect, monkeypatch
-    ):
+        self,
+        mock_local_df: pd.DataFrame,
+        mock_autodetect: Callable[..., Tuple[NDArray[Any], Dict[str, NDArray[Any]]]],
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
         args = {
             "autopeak": True,  # no modeltype key
             "global_": 0,
@@ -1225,8 +1258,11 @@ class TestDefineParametersAuto:
         assert "gaussian_amplitude_1" in mp.params
 
     def test_invalid_auto_model_raises(
-        self, mock_local_df, mock_autodetect, monkeypatch
-    ):
+        self,
+        mock_local_df: pd.DataFrame,
+        mock_autodetect: Callable[..., Tuple[NDArray[Any], Dict[str, NDArray[Any]]]],
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
         args = {
             "autopeak": {"modeltype": "unknown"},
             "global_": 0,
