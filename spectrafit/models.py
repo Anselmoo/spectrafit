@@ -126,12 +126,14 @@ class DistributionModels:
 
         $$
         {\displaystyle g(x)= A \cdot \exp
-        (  -{\frac {(x-\mu)^{2}}{2 \cdot width^{2}}} ) }
+        (  -{\frac {(x-x_0)^{2}}{2 \cdot width^{2}}} ) }
         $$
 
         Unlike the standard gaussian function, this implementation uses the width parameter
         directly without conversion to sigma, which is consistent with the ORCA quantum
-        chemistry program's approach.
+        chemistry program's approach[^1].
+
+        [^1]: https://www.faccts.de/docs/orca/6.0/manual/contents/detailed/utilities.html
 
         Args:
             x (NDArray[np.float64]): `x`-values of the data.
@@ -1364,7 +1366,7 @@ class ModelParameters(AutoPeakDetection):
                 )
                 self.params.add(
                     f"{models}_width_{i}",
-                    value=_fhmw,
+                    value=_width,
                     min=0,
                     max=2 * _width,
                     vary=True,

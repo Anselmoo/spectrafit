@@ -1100,3 +1100,133 @@ class TestModel:
         assert len(mp) == 2
         for name in mp[0].params.keys():
             assert model in name
+class TestDefineParametersAuto:
+    @pytest.fixture
+    def mock_autodetect(self):
+        # Mock positions and properties returned by find_peaks
+        positions = np.array([3, 6, 9])
+        properties = {
+            "peak_heights": np.array([10.0, 20.0, 30.0]),
+            "widths": np.array([1.0, 2.0, 3.0]),
+        }
+
+        def _mock_fn(*args):
+            return positions, properties
+
+        return _mock_fn
+
+    @pytest.fixture
+    def mock_local_df(self):
+        x_values = np.linspace(0, 10, 11)
+        y_values = np.zeros_like(x_values)
+        # Simulate signals at positions 3,6,9
+        y_values[3] = 10
+        y_values[6] = 20
+        y_values[9] = 30
+        return pd.DataFrame({"Energy": x_values, "Intensity": y_values})
+
+    def test_gaussian(self, mock_local_df, mock_autodetect, monkeypatch):
+        args = {
+            "autopeak": {"modeltype": "gaussian"},
+            "global_": 0,
+            "column": ["Energy", "Intensity"],
+        }
+        mp = ModelParameters(df=mock_local_df, args=args)
+        monkeypatch.setattr(mp, "__autodetect__", mock_autodetect)
+        mp.define_parameters_auto()
+
+        # Should create 3 sets of Gaussian params
+        for i in range(1, 4):
+            assert f"gaussian_amplitude_{i}" in mp.params
+            assert f"gaussian_center_{i}" in mp.params
+            assert f"gaussian_fwhmg_{i}" in mp.params
+        assert mp.args["auto_generated_models"]["positions"] == [3, 6, 9]
+
+    def test_lorentzian(self, mock_local_df, mock_autodetect, monkeypatch):
+        args = {
+            "autopeak": {"modeltype": "lorentzian"},
+            "global_": 0,
+            "column": ["Energy", "Intensity"],
+        }
+        mp = ModelParameters(df=mock_local_df, args=args)
+        monkeypatch.setattr(mp, "__autodetect__", mock_autodetect)
+        mp.define_parameters_auto()
+
+        # Should create 3 sets of Lorentzian params
+        for i in range(1, 4):
+            assert f"lorentzian_amplitude_{i}" in mp.params
+            assert f"lorentzian_center_{i}" in mp.params
+            assert f"lorentzian_fwhml_{i}" in mp.params
+
+    def test_voigt(self, mock_local_df, mock_autodetect, monkeypatch):
+        args = {
+            "autopeak": {"modeltype": "voigt"},
+            "global_": 0,
+            "column": ["Energy", "Intensity"],
+        }
+        mp = ModelParameters(df=mock_local_df, args=args)
+        monkeypatch.setattr(mp, "__autodetect__", mock_autodetect)
+        mp.define_parameters_auto()
+
+        # Check fwhmv naming
+        for i in range(1, 4):
+            assert f"voigt_amplitude_{i}" in mp.params
+            assert f"voigt_center_{i}" in mp.params
+            assert f"voigt_fwhmv_{i}" in mp.params
+
+    def test_pseudovoigt(self, mock_local_df, mock_autodetect, monkeypatch):
+        args = {
+            "autopeak": {"modeltype": "pseudovoigt"},
+            "global_": 0,
+            "column": ["Energy", "Intensity"],
+        }
+        mp = ModelParameters(df=mock_local_df, args=args)
+        monkeypatch.setattr(mp, "__autodetect__", mock_autodetect)
+        mp.define_parameters_auto()
+
+        # Check fwhmg and fwhml naming
+        for i in range(1, 4):
+            assert f"pseudovoigt_amplitude_{i}" in mp.params
+            assert f"pseudovoigt_center_{i}" in mp.params
+            assert f"pseudovoigt_fwhmg_{i}" in mp.params
+            assert f"pseudovoigt_fwhml_{i}" in mp.params
+
+    def test_orcagaussian(self, mock_local_df, mock_autodetect, monkeypatch):
+        args = {
+            "autopeak": {"modeltype": "orcagaussian"},
+            "global_": 0,
+            "column": ["Energy", "Intensity"],
+        }
+        mp = ModelParameters(df=mock_local_df, args=args)
+        monkeypatch.setattr(mp, "__autodetect__", mock_autodetect)
+        mp.define_parameters_auto()
+
+        # Check width naming
+        for i in range(1, 4):
+            assert f"orcagaussian_amplitude_{i}" in mp.params
+            assert f"orcagaussian_center_{i}" in mp.params
+            assert f"orcagaussian_width_{i}" in mp.params
+
+    def test_default_gaussian_if_no_modeltype(self, mock_local_df, mock_autodetect, monkeypatch):
+        args = {
+            "autopeak": True,  # no modeltype key
+            "global_": 0,
+            "column": ["Energy", "Intensity"],
+        }
+        mp = ModelParameters(df=mock_local_df, args=args)
+        monkeypatch.setattr(mp, "__autodetect__", mock_autodetect)
+        mp.define_parameters_auto()
+
+        # Should default to Gaussian
+        assert "gaussian_amplitude_1" in mp.params
+
+    def test_invalid_auto_model_raises(self, mock_local_df, mock_autodetect, monkeypatch):
+        args = {
+            "autopeak": {"modeltype": "unknown"},
+            "global_": 0,
+            "column": ["Energy", "Intensity"],
+        }
+        mp = ModelParameters(df=mock_local_df, args=args)
+        monkeypatch.setattr(mp, "__autodetect__", mock_autodetect)
+        with pytest.raises(KeyError):
+            mp.define_parameters_auto()
