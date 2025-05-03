@@ -4,11 +4,10 @@ import importlib
 import sys
 import warnings
 
-import spectrafit
-
 from pytest import MonkeyPatch
-from spectrafit import PYTHON_END_OF_LIFE
-from spectrafit import __version__
+
+import spectrafit
+from spectrafit import PYTHON_END_OF_LIFE, __version__
 
 
 def test_version() -> None:

@@ -2,29 +2,19 @@
 
 from collections import defaultdict
 from dataclasses import dataclass
-from math import log
-from math import pi
-from math import sqrt
-from typing import Any
-from typing import Dict
-from typing import Optional
-from typing import Tuple
-from typing import Union
+from math import log, pi, sqrt
+from typing import Any, Dict, Optional, Tuple, Union
 
 import numpy as np
 import pandas as pd
-
-from lmfit import Minimizer
-from lmfit import Parameters
+from lmfit import Minimizer, Parameters
 from numpy.typing import NDArray
 from scipy.signal import find_peaks
-from scipy.special import erf
-from scipy.special import wofz
+from scipy.special import erf, wofz
 from scipy.stats import hmean
+
 from spectrafit.api.models_model import DistributionModelAPI
-from spectrafit.api.tools_model import AutopeakAPI
-from spectrafit.api.tools_model import GlobalFittingAPI
-from spectrafit.api.tools_model import SolverModelsAPI
+from spectrafit.api.tools_model import AutopeakAPI, GlobalFittingAPI, SolverModelsAPI
 
 
 class DistributionModels:

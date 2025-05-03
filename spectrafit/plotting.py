@@ -8,18 +8,15 @@
     the `plotting.py` file.
 """
 
-from typing import Any
-from typing import Dict
-from typing import Optional
+from typing import Any, Dict, Optional
 
 import matplotlib.font_manager
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
-
 from matplotlib.widgets import MultiCursor
-from spectrafit.api.tools_model import ColumnNamesAPI
 
+from spectrafit.api.tools_model import ColumnNamesAPI
 
 matplotlib.font_manager.findfont("serif", rebuild_if_missing=True)
 

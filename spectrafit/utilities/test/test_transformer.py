@@ -1,13 +1,10 @@
 """Test of the jupyter plugin."""
 
-from typing import Any
-from typing import Dict
-from typing import List
+from typing import Any, Dict, List
 
 import pytest
 
-from spectrafit.utilities.transformer import list2dict
-from spectrafit.utilities.transformer import remove_none_type
+from spectrafit.utilities.transformer import list2dict, remove_none_type
 
 
 @pytest.fixture

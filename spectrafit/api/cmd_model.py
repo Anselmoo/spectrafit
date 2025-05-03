@@ -4,21 +4,18 @@ from datetime import datetime
 from getpass import getuser
 from hashlib import sha256
 from socket import gethostname
-from typing import Any
-from typing import Dict
-from typing import List
-from typing import Optional
-from typing import Union
+from typing import Any, Dict, List, Optional, Union
 from uuid import uuid4
 
-from pydantic import BaseModel
-from pydantic import Field
-from pydantic import HttpUrl
+from pydantic import BaseModel, Field, HttpUrl
 from pydantic.functional_validators import field_validator
+
 from spectrafit import __version__
-from spectrafit.api.tools_model import AutopeakAPI
-from spectrafit.api.tools_model import DataPreProcessingAPI
-from spectrafit.api.tools_model import GlobalFittingAPI
+from spectrafit.api.tools_model import (
+    AutopeakAPI,
+    DataPreProcessingAPI,
+    GlobalFittingAPI,
+)
 
 
 class DescriptionAPI(BaseModel):

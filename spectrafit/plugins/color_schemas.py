@@ -2,9 +2,7 @@
 
 from typing import List
 
-from spectrafit.api.notebook_model import ColorAPI
-from spectrafit.api.notebook_model import FontAPI
-
+from spectrafit.api.notebook_model import ColorAPI, FontAPI
 
 __fira_code__ = "Fira Code"
 

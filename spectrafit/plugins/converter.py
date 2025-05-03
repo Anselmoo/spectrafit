@@ -1,11 +1,8 @@
 """Abstract base class for the converter plugins."""
 
-from abc import ABC
-from abc import abstractmethod
+from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Any
-from typing import Dict
-from typing import MutableMapping
+from typing import Any, Dict, MutableMapping
 
 
 class Converter(ABC):

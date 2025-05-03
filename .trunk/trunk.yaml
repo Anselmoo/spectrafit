@@ -19,10 +19,9 @@ runtimes:
 lint:
   disabled:
     - black
-    - isort
     - markdown-table-prettify
   enabled:
-    - markdown-table-prettify@3.6.0
+    - isort@6.0.1
     - pre-commit-hooks@5.0.0:
         commands:
           - end-of-file-fixer

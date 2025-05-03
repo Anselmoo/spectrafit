@@ -2,42 +2,30 @@
 
 import pprint
 import sys
-
-from typing import Any
-from typing import Callable
-from typing import Dict
-from typing import Hashable
-from typing import List
-from typing import Optional
-from typing import Tuple
-from typing import Union
+from typing import Any, Callable, Dict, Hashable, List, Optional, Tuple, Union
 from warnings import warn
 
 import numpy as np
 import pandas as pd
-
 from art import tprint
-from lmfit import Minimizer
-from lmfit import Parameter
-from lmfit import Parameters
-from lmfit.minimizer import MinimizerException
-from lmfit.minimizer import minimize
-from lmfit.printfuncs import alphanumeric_sort
-from lmfit.printfuncs import getfloat_attr
-from lmfit.printfuncs import gformat
+from lmfit import Minimizer, Parameter, Parameters
+from lmfit.minimizer import MinimizerException, minimize
+from lmfit.printfuncs import alphanumeric_sort, getfloat_attr, gformat
 from numpy.typing import NDArray
-from sklearn.metrics import explained_variance_score
-from sklearn.metrics import max_error
-from sklearn.metrics import mean_absolute_error
-from sklearn.metrics import mean_absolute_percentage_error
-from sklearn.metrics import mean_poisson_deviance
-from sklearn.metrics import mean_squared_error
-from sklearn.metrics import mean_squared_log_error
-from sklearn.metrics import median_absolute_error
-from sklearn.metrics import r2_score
-from spectrafit import __version__
+from sklearn.metrics import (
+    explained_variance_score,
+    max_error,
+    mean_absolute_error,
+    mean_absolute_percentage_error,
+    mean_poisson_deviance,
+    mean_squared_error,
+    mean_squared_log_error,
+    median_absolute_error,
+    r2_score,
+)
 from tabulate import tabulate
 
+from spectrafit import __version__
 
 CORREL_HEAD = "[[Correlations]] (unreported correlations are < %.3f)"
 pp = pprint.PrettyPrinter(indent=4)

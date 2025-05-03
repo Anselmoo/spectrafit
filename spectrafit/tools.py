@@ -4,27 +4,20 @@ import gzip
 import json
 import pickle
 import sys
-
 from pathlib import Path
-from typing import Any
-from typing import Dict
-from typing import MutableMapping
-from typing import Optional
-from typing import Tuple
-from typing import Union
+from typing import Any, Dict, MutableMapping, Optional, Tuple, Union
 
 import numpy as np
 import pandas as pd
 import tomli
 import yaml
-
 from lmfit import Minimizer
 from lmfit.confidence import ConfidenceInterval
 from lmfit.minimizer import MinimizerException
+
 from spectrafit.api.tools_model import ColumnNamesAPI
 from spectrafit.models import calculated_model
-from spectrafit.report import RegressionMetrics
-from spectrafit.report import fit_report_as_dict
+from spectrafit.report import RegressionMetrics, fit_report_as_dict
 
 
 class PreProcessing:

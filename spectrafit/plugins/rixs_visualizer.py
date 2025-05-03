@@ -3,13 +3,8 @@
 import argparse
 import json
 import logging
-
 from pathlib import Path
-from typing import Any
-from typing import Dict
-from typing import List
-from typing import Optional
-from typing import Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 import dash
 import dash_bootstrap_components as dbc
@@ -18,19 +13,19 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import tomli
-
-from dash import dcc
-from dash import html
-from dash_bootstrap_templates import ThemeChangerAIO
-from dash_bootstrap_templates import template_from_url
+from dash import dcc, html
+from dash_bootstrap_templates import ThemeChangerAIO, template_from_url
 from jupyter_dash import JupyterDash
 from numpy.typing import NDArray
-from spectrafit.api.rixs_model import MainTitleAPI
-from spectrafit.api.rixs_model import RIXSModelAPI
-from spectrafit.api.rixs_model import SizeRatioAPI
-from spectrafit.api.rixs_model import XAxisAPI
-from spectrafit.api.rixs_model import YAxisAPI
-from spectrafit.api.rixs_model import ZAxisAPI
+
+from spectrafit.api.rixs_model import (
+    MainTitleAPI,
+    RIXSModelAPI,
+    SizeRatioAPI,
+    XAxisAPI,
+    YAxisAPI,
+    ZAxisAPI,
+)
 from spectrafit.plugins.notebook import DataFramePlot
 
 

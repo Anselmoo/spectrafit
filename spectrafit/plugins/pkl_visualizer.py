@@ -2,19 +2,15 @@
 
 import argparse
 import json
-
 from pathlib import Path
-from typing import Any
-from typing import Dict
-from typing import Union
+from typing import Any, Dict, Union
 
 import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
 
 from spectrafit.plugins.converter import Converter
-from spectrafit.tools import pkl2any
-from spectrafit.tools import pure_fname
+from spectrafit.tools import pkl2any, pure_fname
 
 
 class PklVisualizer(Converter):

@@ -1,10 +1,6 @@
 """Reference model for the API of the Jupyter Notebook report."""
 
-from typing import Any
-from typing import Dict
-from typing import Hashable
-from typing import List
-from typing import Union
+from typing import Any, Dict, Hashable, List, Union
 
 from dtale import __version__ as dtale_version
 from emcee import __version__ as emcee_version
@@ -14,15 +10,14 @@ from numdifftools import __version__ as numdifftools_version
 from numpy import __version__ as numpy_version
 from pandas import __version__ as pandas_version
 from plotly import __version__ as plotly_version
-from pydantic import BaseModel
-from pydantic import ConfigDict
-from pydantic import Field
+from pydantic import BaseModel, ConfigDict, Field
 from pydantic import __version__ as pydantic_version
 from scipy import __version__ as scipy_version
 from sklearn import __version__ as sklearn_version
+from statsmodels import __version__ as statsmodels_version
+
 from spectrafit.api.cmd_model import DescriptionAPI
 from spectrafit.api.tools_model import DataPreProcessingAPI
-from statsmodels import __version__ as statsmodels_version
 
 
 class CreditsAPI(BaseModel):

@@ -1,15 +1,12 @@
 """Testing of the command line interface."""
 
 import sys
-
 from pathlib import Path
 from typing import Any
 
 import pandas as pd
 import pytest
-
 from numpy.testing import assert_almost_equal
-
 
 BUILTINS_INPUT = "builtins.input"
 

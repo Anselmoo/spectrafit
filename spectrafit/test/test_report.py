@@ -1,25 +1,23 @@
 """Pytest of report model."""
 
 from math import isclose
-from typing import Any
-from typing import Dict
-from typing import List
-from typing import Union
+from typing import Any, Dict, List, Union
 
 import numpy as np
 import pandas as pd
 import pytest
-
-from lmfit import Parameter
-from lmfit import Parameters
+from lmfit import Parameter, Parameters
 from pytest_mock.plugin import MockerFixture
-from spectrafit.report import CIReport
-from spectrafit.report import FitReport
-from spectrafit.report import PrintingResults
-from spectrafit.report import PrintingStatus
-from spectrafit.report import RegressionMetrics
-from spectrafit.report import _extracted_gof_from_results
-from spectrafit.report import get_init_value
+
+from spectrafit.report import (
+    CIReport,
+    FitReport,
+    PrintingResults,
+    PrintingStatus,
+    RegressionMetrics,
+    _extracted_gof_from_results,
+    get_init_value,
+)
 
 
 class TestRegressionMetrics:

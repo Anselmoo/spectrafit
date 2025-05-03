@@ -2,23 +2,15 @@
 
 import re
 import tempfile
-
 from pathlib import Path
-from typing import Dict
-from typing import List
-from typing import Tuple
-from typing import Type
-from typing import Union
+from typing import Dict, List, Tuple, Type, Union
 
 import pandas as pd
 import pkg_resources
-
 from matplotlib import pyplot as plt
 from pptx.util import Pt
-from pydantic import BaseModel
-from pydantic import ConfigDict
-from pydantic import Field
-from pydantic import field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator
+
 from spectrafit import __version__
 from spectrafit.plotting import PlotSpectra
 

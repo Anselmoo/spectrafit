@@ -1,8 +1,8 @@
 """Test of the Tools Model API."""
 
 import pytest
-
 from pydantic import ValidationError
+
 from spectrafit.api.tools_model import AutopeakAPI
 
 

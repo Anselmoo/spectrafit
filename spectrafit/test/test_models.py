@@ -1,30 +1,30 @@
 """Pytest of the model-module."""
 
-from math import isclose
-from math import log
-from math import pi
-from math import sqrt
-from typing import TYPE_CHECKING, Any
-from typing import Dict
-from typing import Tuple
+import sys
+from math import isclose, log, pi, sqrt
+from typing import TYPE_CHECKING, Any, Dict, Tuple
 
 import numpy as np
 import pandas as pd
 import pytest
-
-from lmfit import Minimizer
-from lmfit import Parameters
+from lmfit import Minimizer, Parameters
 from numpy.typing import NDArray
 from pydantic import ValidationError
-from spectrafit.models import AutoPeakDetection
-from spectrafit.models import Constants
-from spectrafit.models import DistributionModels
-from spectrafit.models import ModelParameters
-from spectrafit.models import SolverModels
-from spectrafit.models import calculated_model
+
+from spectrafit.models import (
+    AutoPeakDetection,
+    Constants,
+    DistributionModels,
+    ModelParameters,
+    SolverModels,
+    calculated_model,
+)
 
 if TYPE_CHECKING:
-    from collections.abc import Callable
+    if sys.version_info < (3, 9):
+        from typing import Callable
+    else:
+        from collections.abc import Callable
 
 
 def assert_solver_models(mp: Tuple[Minimizer, Any]) -> None:
