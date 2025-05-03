@@ -1340,7 +1340,7 @@ class ModelParameters(AutoPeakDetection):
                     vary=True,
                 )
         elif models == "orcagaussian":
-            for i, (_cent, _amp, _fhmw) in enumerate(
+            for i, (_cent, _amp, _width) in enumerate(
                 zip(
                     self.x[positions],
                     properties["peak_heights"],
@@ -1363,10 +1363,10 @@ class ModelParameters(AutoPeakDetection):
                     vary=True,
                 )
                 self.params.add(
-                    f"{models}_fwhmg_{i}",
+                    f"{models}_width_{i}",
                     value=_fhmw,
                     min=0,
-                    max=2 * _fhmw,
+                    max=2 * _width,
                     vary=True,
                 )
         elif models == "lorentzian":
