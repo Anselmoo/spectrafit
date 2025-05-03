@@ -1,50 +1,52 @@
 """Jupyter Notebook plugin for SpectraFit."""
 
 from pathlib import Path
-from typing import Any
-from typing import Dict
-from typing import List
-from typing import Optional
-from typing import Tuple
-from typing import Union
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import numpy as np
 import pandas as pd
 import plotly.express as px
 import tomli_w
-
 from dtale import show as dtale_show
-from IPython.display import display
-from IPython.display import display_markdown
+from IPython.display import display, display_markdown
 from itables import show as itables_show
 from plotly.graph_objects import Figure
 from plotly.subplots import make_subplots
+
 from spectrafit.api.cmd_model import DescriptionAPI
 from spectrafit.api.models_model import ConfIntervalAPI
-from spectrafit.api.notebook_model import ColorAPI
-from spectrafit.api.notebook_model import FnameAPI
-from spectrafit.api.notebook_model import FontAPI
-from spectrafit.api.notebook_model import GridAPI
-from spectrafit.api.notebook_model import LegendAPI
-from spectrafit.api.notebook_model import MetricAPI
-from spectrafit.api.notebook_model import PlotAPI
-from spectrafit.api.notebook_model import ResidualAPI
-from spectrafit.api.notebook_model import RunAPI
-from spectrafit.api.notebook_model import XAxisAPI
-from spectrafit.api.notebook_model import YAxisAPI
-from spectrafit.api.report_model import FitMethodAPI
-from spectrafit.api.report_model import InputAPI
-from spectrafit.api.report_model import OutputAPI
-from spectrafit.api.report_model import ReportAPI
-from spectrafit.api.report_model import SolverAPI
-from spectrafit.api.tools_model import ColumnNamesAPI
-from spectrafit.api.tools_model import DataPreProcessingAPI
-from spectrafit.api.tools_model import SolverModelsAPI
+from spectrafit.api.notebook_model import (
+    ColorAPI,
+    FnameAPI,
+    FontAPI,
+    GridAPI,
+    LegendAPI,
+    MetricAPI,
+    PlotAPI,
+    ResidualAPI,
+    RunAPI,
+    XAxisAPI,
+    YAxisAPI,
+)
+from spectrafit.api.report_model import (
+    FitMethodAPI,
+    InputAPI,
+    OutputAPI,
+    ReportAPI,
+    SolverAPI,
+)
+from spectrafit.api.tools_model import (
+    ColumnNamesAPI,
+    DataPreProcessingAPI,
+    SolverModelsAPI,
+)
 from spectrafit.models import SolverModels
-from spectrafit.tools import PostProcessing
-from spectrafit.tools import PreProcessing
-from spectrafit.tools import exclude_none_dictionary
-from spectrafit.tools import transform_nested_types
+from spectrafit.tools import (
+    PostProcessing,
+    PreProcessing,
+    exclude_none_dictionary,
+    transform_nested_types,
+)
 from spectrafit.utilities.transformer import list2dict
 
 

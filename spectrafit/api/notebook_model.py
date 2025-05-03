@@ -1,16 +1,10 @@
 """Reference model for the API of the Jupyter Notebook interface."""
 
-from typing import List
-from typing import Optional
-from typing import Tuple
-from typing import Union
+from typing import List, Optional, Tuple, Union
 
-from _plotly_utils.colors.carto import Burg
-from _plotly_utils.colors.carto import Purp_r
-from _plotly_utils.colors.carto import Teal_r
+from _plotly_utils.colors.carto import Burg, Purp_r, Teal_r
 from _plotly_utils.colors.qualitative import Plotly as PlotlyColors
-from pydantic import BaseModel
-from pydantic import Field
+from pydantic import BaseModel, Field
 from pydantic.functional_validators import field_validator
 
 

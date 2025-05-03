@@ -2,11 +2,8 @@
 
 import argparse
 import json
-
 from pathlib import Path
-from typing import Any
-from typing import Dict
-from typing import MutableMapping
+from typing import Any, Dict, MutableMapping
 
 import tomli_w
 import yaml

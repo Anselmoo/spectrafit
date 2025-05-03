@@ -1,21 +1,17 @@
 """Test of the RIXS Visualizer."""
 
-from pathlib import Path
 import sys
-from typing import Any
-from typing import Tuple
+from pathlib import Path
+from typing import Any, Tuple
 
 import numpy as np
 import plotly.graph_objects as go
 import pytest
-
 from numpy.typing import NDArray
 
 if sys.version_info >= (3, 9):
     from spectrafit.plugins.rixs_converter import RIXSConverter
-    from spectrafit.plugins.rixs_visualizer import RIXSApp
-    from spectrafit.plugins.rixs_visualizer import RIXSFigure
-    from spectrafit.plugins.rixs_visualizer import RIXSVisualizer
+    from spectrafit.plugins.rixs_visualizer import RIXSApp, RIXSFigure, RIXSVisualizer
 else:
     pytest.mark.skip("Requires Python 3.9 or higher", allow_module_level=True)
 

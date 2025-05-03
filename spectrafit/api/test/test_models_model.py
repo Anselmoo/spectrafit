@@ -9,6 +9,7 @@ from spectrafit.api.models_model import DistributionModelAPI
     "distribution_model",
     [
         "gaussian",
+        "orcagaussian",
         "lorentzian",
         "voigt",
         "pseudovoigt",

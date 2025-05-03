@@ -1,31 +1,24 @@
 """Test of the jupyter plugin."""
 
 import sys
-
 from pathlib import Path
-from typing import Any
-from typing import Dict
-from typing import List
-from typing import Union
+from typing import Any, Dict, List, Union
 from unittest import mock
 
 import pandas as pd
 import pytest
 
 from spectrafit.api.cmd_model import DescriptionAPI
-from spectrafit.api.notebook_model import FnameAPI
-from spectrafit.api.notebook_model import PlotAPI
-from spectrafit.api.report_model import InputAPI
-from spectrafit.api.report_model import OutputAPI
-from spectrafit.api.report_model import SolverAPI
-from spectrafit.api.tools_model import DataPreProcessingAPI
-from spectrafit.api.tools_model import SolverModelsAPI
-from spectrafit.plugins.notebook import DataFrameDisplay
-from spectrafit.plugins.notebook import DataFramePlot
-from spectrafit.plugins.notebook import ExportReport
-from spectrafit.plugins.notebook import ExportResults
-from spectrafit.plugins.notebook import SpectraFitNotebook
-
+from spectrafit.api.notebook_model import FnameAPI, PlotAPI
+from spectrafit.api.report_model import InputAPI, OutputAPI, SolverAPI
+from spectrafit.api.tools_model import DataPreProcessingAPI, SolverModelsAPI
+from spectrafit.plugins.notebook import (
+    DataFrameDisplay,
+    DataFramePlot,
+    ExportReport,
+    ExportResults,
+    SpectraFitNotebook,
+)
 
 __plotly_io_show__ = "plotly.io.show"
 

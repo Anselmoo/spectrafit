@@ -1,26 +1,21 @@
 """SpectraFit, the command line tool for fitting."""
 
 import argparse
-
-from typing import Any
-from typing import Dict
-from typing import MutableMapping
-from typing import Optional
-from typing import Tuple
+from typing import Any, Dict, MutableMapping, Optional, Tuple
 
 import pandas as pd
 
 from spectrafit.api.cmd_model import CMDModelAPI
 from spectrafit.models import SolverModels
 from spectrafit.plotting import PlotSpectra
-from spectrafit.report import PrintingResults
-from spectrafit.report import PrintingStatus
-from spectrafit.tools import PostProcessing
-from spectrafit.tools import PreProcessing
-from spectrafit.tools import SaveResult
-from spectrafit.tools import load_data
-from spectrafit.tools import read_input_file
-
+from spectrafit.report import PrintingResults, PrintingStatus
+from spectrafit.tools import (
+    PostProcessing,
+    PreProcessing,
+    SaveResult,
+    load_data,
+    read_input_file,
+)
 
 __status__ = PrintingStatus()
 

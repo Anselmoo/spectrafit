@@ -8,8 +8,7 @@ from typing import Any
 import pytest
 
 from spectrafit import __version__
-from spectrafit.api.cmd_model import CMDModelAPI
-from spectrafit.api.cmd_model import DescriptionAPI
+from spectrafit.api.cmd_model import CMDModelAPI, DescriptionAPI
 
 
 def test_default_cmd() -> None:

@@ -1,8 +1,8 @@
 """Pytest of the plotting features of spectrafit."""
 
 import pandas as pd
-
 from matplotlib import pyplot
+
 from spectrafit.plotting import PlotSpectra
 
 

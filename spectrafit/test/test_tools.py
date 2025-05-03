@@ -2,27 +2,26 @@
 
 import gzip
 import pickle
-
 from pathlib import Path
-from typing import Any
-from typing import Dict
+from typing import Any, Dict
 
 import numpy as np
 import pandas as pd
 import pytest
-
 from pandas._testing import assert_frame_equal
-from spectrafit.models import DistributionModels
-from spectrafit.models import SolverModels
-from spectrafit.tools import PostProcessing
-from spectrafit.tools import PreProcessing
-from spectrafit.tools import SaveResult
-from spectrafit.tools import check_keywords_consistency
-from spectrafit.tools import exclude_none_dictionary
-from spectrafit.tools import pkl2any
-from spectrafit.tools import pure_fname
-from spectrafit.tools import transform_nested_types
-from spectrafit.tools import unicode_check
+
+from spectrafit.models import DistributionModels, SolverModels
+from spectrafit.tools import (
+    PostProcessing,
+    PreProcessing,
+    SaveResult,
+    check_keywords_consistency,
+    exclude_none_dictionary,
+    pkl2any,
+    pure_fname,
+    transform_nested_types,
+    unicode_check,
+)
 
 
 @pytest.fixture(name="random_dataframe")

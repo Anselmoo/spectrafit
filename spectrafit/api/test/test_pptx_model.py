@@ -1,25 +1,25 @@
 """Test the pptx_model module."""
 
 from math import isclose
-from typing import Tuple
-from typing import Type
-from typing import Union
+from typing import Tuple, Type, Union
 
 import pandas as pd
 import pytest
 
-from spectrafit.api.pptx_model import DescriptionAPI
-from spectrafit.api.pptx_model import Field43API
-from spectrafit.api.pptx_model import Field169API
-from spectrafit.api.pptx_model import Field169HDRAPI
-from spectrafit.api.pptx_model import GoodnessOfFitAPI
-from spectrafit.api.pptx_model import InputAPI
-from spectrafit.api.pptx_model import MethodAPI
-from spectrafit.api.pptx_model import OutputAPI
-from spectrafit.api.pptx_model import PPTXDataAPI
-from spectrafit.api.pptx_model import PPTXLayoutAPI
-from spectrafit.api.pptx_model import RegressionMetricsAPI
-from spectrafit.api.pptx_model import SolverAPI
+from spectrafit.api.pptx_model import (
+    DescriptionAPI,
+    Field43API,
+    Field169API,
+    Field169HDRAPI,
+    GoodnessOfFitAPI,
+    InputAPI,
+    MethodAPI,
+    OutputAPI,
+    PPTXDataAPI,
+    PPTXLayoutAPI,
+    RegressionMetricsAPI,
+    SolverAPI,
+)
 
 
 @pytest.fixture

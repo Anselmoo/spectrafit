@@ -1,23 +1,21 @@
 """Convert the lock file to a powerpoint presentation."""
 
 import argparse
-
 from pathlib import Path
-from typing import Any
-from typing import Dict
-from typing import MutableMapping
-from typing import Type
+from typing import Any, Dict, MutableMapping, Type
 
 import pandas as pd
 import tomli
-
 from pptx import Presentation
 from pptx.util import Pt
-from spectrafit.api.pptx_model import PPTXDataAPI
-from spectrafit.api.pptx_model import PPTXLayoutAPI
-from spectrafit.api.pptx_model import PPTXPositionAPI
-from spectrafit.api.pptx_model import PPTXRatioAPI
-from spectrafit.api.pptx_model import PPTXStructureAPI
+
+from spectrafit.api.pptx_model import (
+    PPTXDataAPI,
+    PPTXLayoutAPI,
+    PPTXPositionAPI,
+    PPTXRatioAPI,
+    PPTXStructureAPI,
+)
 from spectrafit.plugins.converter import Converter
 
 

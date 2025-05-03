@@ -2,29 +2,19 @@
 
 from collections import defaultdict
 from dataclasses import dataclass
-from math import log
-from math import pi
-from math import sqrt
-from typing import Any
-from typing import Dict
-from typing import Optional
-from typing import Tuple
-from typing import Union
+from math import log, pi, sqrt
+from typing import Any, Dict, Optional, Tuple, Union
 
 import numpy as np
 import pandas as pd
-
-from lmfit import Minimizer
-from lmfit import Parameters
+from lmfit import Minimizer, Parameters
 from numpy.typing import NDArray
 from scipy.signal import find_peaks
-from scipy.special import erf
-from scipy.special import wofz
+from scipy.special import erf, wofz
 from scipy.stats import hmean
+
 from spectrafit.api.models_model import DistributionModelAPI
-from spectrafit.api.tools_model import AutopeakAPI
-from spectrafit.api.tools_model import GlobalFittingAPI
-from spectrafit.api.tools_model import SolverModelsAPI
+from spectrafit.api.tools_model import AutopeakAPI, GlobalFittingAPI, SolverModelsAPI
 
 
 class DistributionModels:
@@ -46,6 +36,42 @@ class DistributionModels:
         distributions are consquently using the `fwhm` parameter instead of the
         `sigma` parameter.
     """
+
+    @staticmethod
+    def _gaussian_core(
+        x: NDArray[np.float64],
+        amplitude: float,
+        center: float,
+        scale: float,
+    ) -> NDArray[np.float64]:
+        r"""Core Gaussian calculation used by multiple staticmethods.
+
+        !!! note "About the core Gaussian calculation"
+
+            The core Gaussian calculation is used by the `gaussian`, `orca_gaussian`
+            for avoiding code duplication. The core Gaussian calculation is not normalized and
+            therefore the amplitude of the Gaussian is not directly comparable to the
+            amplitude of the classical definition of the
+            [Gaussian](https://en.wikipedia.org/wiki/Gaussian_function) function.
+
+
+            Consequently, the core Gaussian calculation is defined as:
+
+            $$
+            {\displaystyle g(x)={A \exp
+            (  -{\frac {1}{2}}{\frac {(x-\mu )^{2}}{\sigma ^{2}}} ) }
+            $$
+
+        Args:
+            x (NDArray[np.float64]): `x`-values of the data.
+            amplitude (float): Amplitude of the Gaussian distribution.
+            center (float): Center of the Gaussian distribution.
+            scale (float): Scale of the Gaussian distribution.
+
+        Returns:
+            NDArray[np.float64]: Gaussian distribution of `x` given.
+        """
+        return np.array(amplitude * np.exp(-((1.0 * x - center) ** 2) / (2 * scale**2)))
 
     @staticmethod
     def gaussian(
@@ -74,8 +100,45 @@ class DistributionModels:
             NDArray[np.float64]: Gaussian distribution of `x` given.
         """
         sigma = fwhmg * Constants.fwhmg2sig
-        return np.array(amplitude / (Constants.sq2pi * sigma)) * np.exp(
-            -((1.0 * x - center) ** 2) / (2 * sigma**2)
+        norm_factor = amplitude / (Constants.sq2pi * sigma)
+        return norm_factor * DistributionModels._gaussian_core(
+            x=x, amplitude=1.0, center=center, scale=sigma
+        )
+
+    @staticmethod
+    def orcagaussian(
+        x: NDArray[np.float64],
+        amplitude: float = 1.0,
+        center: float = 0.0,
+        width: float = 1.0,
+    ) -> NDArray[np.float64]:
+        r"""Return a 1-dimensional Gaussian distribution as implemented in the ORCA program.
+
+        $$
+        {\displaystyle g(x)= A \cdot \exp
+        (  -{\frac {(x-x_0)^{2}}{2 \cdot width^{2}}} ) }
+        $$
+
+        Unlike the standard gaussian function, this implementation uses the width parameter
+        directly without conversion to sigma, which is consistent with the ORCA quantum
+        chemistry program's approach[^1].
+
+        [^1]: https://www.faccts.de/docs/orca/6.0/manual/contents/detailed/utilities.html
+
+        Args:
+            x (NDArray[np.float64]): `x`-values of the data.
+            amplitude (float, optional): Amplitude of the Gaussian distribution.
+                 Defaults to 1.0.
+            center (float, optional): Center of the Gaussian distribution.
+                 Defaults to 0.0.
+            width (float, optional): Width parameter of the Gaussian distribution as used
+                 in the ORCA program. Defaults to 1.0.
+
+        Returns:
+            NDArray[np.float64]: Gaussian distribution of `x` given.
+        """
+        return DistributionModels._gaussian_core(
+            x=x, amplitude=amplitude, center=center, scale=width
         )
 
     @staticmethod
@@ -740,6 +803,7 @@ class ReferenceKeys:
 
     __automodels__ = [
         "gaussian",
+        "orcagaussian",
         "lorentzian",
         "voigt",
         "pseudovoigt",
@@ -761,7 +825,8 @@ class ReferenceKeys:
         """Check if model is available.
 
         Args:
-            model (str): Auto Model name (gaussian, lorentzian, voigt, or pseudovoigt).
+            model (str): Auto Model name (gaussian, orcagaussian,
+                lorentzian, voigt, or pseudovoigt).
 
         Raises:
             KeyError: If the model is not supported.
@@ -1264,6 +1329,36 @@ class ModelParameters(AutoPeakDetection):
                     value=_fhmw,
                     min=0,
                     max=2 * _fhmw,
+                    vary=True,
+                )
+        elif models == "orcagaussian":
+            for i, (_cent, _amp, _width) in enumerate(
+                zip(
+                    self.x[positions],
+                    properties["peak_heights"],
+                    properties["widths"],
+                ),
+                start=1,
+            ):
+                self.params.add(
+                    f"{models}_amplitude_{i}",
+                    value=_amp,
+                    min=-np.abs(1.25 * _amp),
+                    max=np.abs(1.25 * _amp),
+                    vary=True,
+                )
+                self.params.add(
+                    f"{models}_center_{i}",
+                    value=_cent,
+                    min=0.5 * _cent,
+                    max=2 * _cent,
+                    vary=True,
+                )
+                self.params.add(
+                    f"{models}_width_{i}",
+                    value=_width,
+                    min=0,
+                    max=2 * _width,
                     vary=True,
                 )
         elif models == "lorentzian":

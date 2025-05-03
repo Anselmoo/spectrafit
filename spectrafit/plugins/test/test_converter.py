@@ -4,12 +4,9 @@ import gzip
 import json
 import pickle
 import shutil
-
-from pathlib import Path
 import sys
-from typing import Any
-from typing import Dict
-from typing import Tuple
+from pathlib import Path
+from typing import Any, Dict, Tuple
 
 import numpy as np
 import pandas as pd
@@ -17,16 +14,14 @@ import pytest
 import tomli
 import tomli_w
 import yaml
-
 from matplotlib import pyplot
 from numpy.typing import NDArray
+
 from spectrafit.api.pptx_model import PPTXBasicTitleAPI
 from spectrafit.plugins.data_converter import DataConverter
 from spectrafit.plugins.file_converter import FileConverter
-from spectrafit.plugins.pkl_converter import ExportData
-from spectrafit.plugins.pkl_converter import PklConverter
+from spectrafit.plugins.pkl_converter import ExportData, PklConverter
 from spectrafit.plugins.pkl_visualizer import PklVisualizer
-
 
 if sys.version_info >= (3, 9):
     from spectrafit.plugins.pptx_converter import PPTXConverter

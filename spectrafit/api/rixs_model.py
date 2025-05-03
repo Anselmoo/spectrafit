@@ -1,12 +1,8 @@
 """Reference model for the API of the Jupyter Notebook interface."""
 
-from typing import Any
-from typing import Optional
-from typing import Tuple
+from typing import Any, Optional, Tuple
 
-from pydantic import BaseModel
-from pydantic import ConfigDict
-from pydantic import Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class XAxisAPI(BaseModel):

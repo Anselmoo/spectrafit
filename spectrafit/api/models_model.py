@@ -1,12 +1,8 @@
 """Reference model for the API of the models distributions."""
 
-from typing import Callable
-from typing import List
-from typing import Optional
+from typing import Callable, List, Optional
 
-from pydantic import BaseModel
-from pydantic import Field
-
+from pydantic import BaseModel, Field
 
 __description__ = "Lmfit expression for explicit dependencies."
 
@@ -99,6 +95,16 @@ class FwhmvAPI(BaseModel):
     expr: Optional[str] = Field(default=None, description=__description__)
 
 
+class WidthAPI(BaseModel):
+    """Definition of the Width of the ORCA Gaussian of the models distributions."""
+
+    max: Optional[float] = Field(default=None, description="Maximum width.")
+    min: Optional[int] = Field(default=None, description="Minimum width.")
+    vary: bool = Field(default=True, description="Vary the width.")
+    value: Optional[float] = Field(default=None, description="Initial width value.")
+    expr: Optional[str] = Field(default=None, description=__description__)
+
+
 class GammaAPI(BaseModel):
     """Definition of the Gamma of the Voigt of the models distributions."""
 
@@ -188,6 +194,14 @@ class GaussianAPI(BaseModel):
     amplitude: AmplitudeAPI = AmplitudeAPI()
     center: CenterAPI = CenterAPI()
     fwhmg: FwhmgAPI = FwhmgAPI()
+
+
+class OrcaGaussianAPI(BaseModel):
+    """Definition of the ORCA Gaussian of the models distributions."""
+
+    amplitude: AmplitudeAPI = AmplitudeAPI()
+    center: CenterAPI = CenterAPI()
+    width: WidthAPI = WidthAPI()
 
 
 class LorentzianAPI(BaseModel):
@@ -371,6 +385,7 @@ class DistributionModelAPI(BaseModel):
     """Definition of the models distributions."""
 
     gaussian: GaussianAPI = GaussianAPI()
+    orcagaussian: OrcaGaussianAPI = OrcaGaussianAPI()
     lorentzian: LorentzianAPI = LorentzianAPI()
     voigt: VoigtAPI = VoigtAPI()
     pseudovoigt: PseudovoigtAPI = PseudovoigtAPI()

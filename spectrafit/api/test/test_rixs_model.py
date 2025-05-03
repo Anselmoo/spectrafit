@@ -2,12 +2,14 @@
 
 import numpy as np
 
-from spectrafit.api.rixs_model import MainTitleAPI
-from spectrafit.api.rixs_model import RIXSPlotAPI
-from spectrafit.api.rixs_model import SizeRatioAPI
-from spectrafit.api.rixs_model import XAxisAPI
-from spectrafit.api.rixs_model import YAxisAPI
-from spectrafit.api.rixs_model import ZAxisAPI
+from spectrafit.api.rixs_model import (
+    MainTitleAPI,
+    RIXSPlotAPI,
+    SizeRatioAPI,
+    XAxisAPI,
+    YAxisAPI,
+    ZAxisAPI,
+)
 
 
 def test__axises() -> None:

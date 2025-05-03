@@ -3,19 +3,13 @@
 import argparse
 import gzip
 import pickle
-
 from pathlib import Path
-from typing import Any
-from typing import Dict
-from typing import List
-from typing import Optional
+from typing import Any, Dict, List, Optional
 
 import numpy as np
 
 from spectrafit.plugins.converter import Converter
-from spectrafit.tools import pkl2any
-from spectrafit.tools import pure_fname
-
+from spectrafit.tools import pkl2any, pure_fname
 
 pkl_gz = "pkl.gz"
 

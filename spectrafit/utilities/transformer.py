@@ -1,9 +1,6 @@
 """Transformer functions for the SpectraFit."""
 
-from typing import Any
-from typing import Dict
-from typing import List
-from typing import Union
+from typing import Any, Dict, List, Union
 
 from spectrafit.api.models_model import DistributionModelAPI
 

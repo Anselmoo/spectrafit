@@ -2,20 +2,15 @@
 
 import argparse
 import json
-
 from pathlib import Path
-from typing import Any
-from typing import Dict
-from typing import MutableMapping
+from typing import Any, Dict, MutableMapping
 
 import numpy as np
 import tomli_w
 
 from spectrafit.api.rixs_model import RIXSModelAPI
 from spectrafit.plugins.converter import Converter
-from spectrafit.tools import pkl2any
-from spectrafit.tools import pure_fname
-
+from spectrafit.tools import pkl2any, pure_fname
 
 choices_fformat = {"latin1", "utf-8", "utf-16", "utf-32"}
 choices_export = {"json", "toml", "lock", "npy", "npz"}

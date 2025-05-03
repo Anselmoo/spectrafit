@@ -1,13 +1,9 @@
 """Definition of the data file model."""
 
 from pathlib import Path
-from typing import Callable
-from typing import List
-from typing import Optional
-from typing import Union
+from typing import Callable, List, Optional, Union
 
-from pydantic import BaseModel
-from pydantic import Field
+from pydantic import BaseModel, Field
 from pydantic.functional_validators import field_validator
 
 
