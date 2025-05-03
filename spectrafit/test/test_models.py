@@ -1,11 +1,10 @@
 """Pytest of the model-module."""
 
-from collections.abc import Callable
 from math import isclose
 from math import log
 from math import pi
 from math import sqrt
-from typing import Any
+from typing import TYPE_CHECKING, Any
 from typing import Dict
 from typing import Tuple
 
@@ -23,6 +22,9 @@ from spectrafit.models import DistributionModels
 from spectrafit.models import ModelParameters
 from spectrafit.models import SolverModels
 from spectrafit.models import calculated_model
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 
 def assert_solver_models(mp: Tuple[Minimizer, Any]) -> None:
