@@ -1,5 +1,7 @@
 """Reference model for the API of the Jupyter Notebook report."""
 
+from __future__ import annotations
+
 from typing import Any, Dict, Hashable, List, Union
 
 from dtale import __version__ as dtale_version

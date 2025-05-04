@@ -1,5 +1,7 @@
 """Test of CMD and Tool Model."""
 
+from __future__ import annotations
+
 from getpass import getuser
 from hashlib import sha256
 from socket import gethostname

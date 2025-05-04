@@ -1,5 +1,7 @@
 """Test of the notebook model."""
 
+from __future__ import annotations
+
 from math import isclose
 
 from _plotly_utils.colors.qualitative import Plotly as PlotlyColors

@@ -1,5 +1,7 @@
 """Convert the lock file to a powerpoint presentation."""
 
+from __future__ import annotations
+
 import argparse
 from pathlib import Path
 from typing import Any, Dict, MutableMapping, Type

@@ -1,7 +1,8 @@
 """Tools for generating spectra for testing."""
 
-import math
+from __future__ import annotations
 
+import math
 from pathlib import Path
 
 import numpy as np

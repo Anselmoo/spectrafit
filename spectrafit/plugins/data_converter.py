@@ -1,5 +1,7 @@
 """Transform the input data to a CSV file."""
 
+from __future__ import annotations
+
 import argparse
 import re
 from dataclasses import dataclass

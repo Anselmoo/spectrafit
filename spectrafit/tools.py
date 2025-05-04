@@ -1,5 +1,7 @@
 """Collection of essential tools for running SpectraFit."""
 
+from __future__ import annotations
+
 import gzip
 import json
 import pickle

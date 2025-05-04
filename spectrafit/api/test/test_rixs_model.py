@@ -1,5 +1,7 @@
 """Test of the RIXS Model API."""
 
+from __future__ import annotations
+
 import numpy as np
 
 from spectrafit.api.rixs_model import (

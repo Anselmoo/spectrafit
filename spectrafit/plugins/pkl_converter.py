@@ -1,5 +1,7 @@
 """Transform the raw pkl data into a CSV files."""
 
+from __future__ import annotations
+
 import argparse
 import gzip
 import pickle

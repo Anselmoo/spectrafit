@@ -1,5 +1,7 @@
 """Reference model for the API of the Jupyter Notebook interface."""
 
+from __future__ import annotations
+
 from typing import List, Optional, Tuple, Union
 
 from _plotly_utils.colors.carto import Burg, Purp_r, Teal_r

@@ -11,6 +11,8 @@
     [Release Schedule](https://devguide.python.org/versions/#end-of-life-branches).
 """
 
+from __future__ import annotations
+
 import sys
 import warnings
 from typing import Tuple
@@ -30,4 +32,4 @@ if sys.version_info[:2] == PYTHON_END_OF_LIFE:
         stacklevel=2,
     )
 
-__version__ = "1.3.0"
+__version__ = "1.4.0"

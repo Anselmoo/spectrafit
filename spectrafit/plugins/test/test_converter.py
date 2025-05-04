@@ -1,5 +1,7 @@
 """Test of the converter plugin."""
 
+from __future__ import annotations
+
 import gzip
 import json
 import pickle
