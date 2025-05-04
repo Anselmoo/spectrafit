@@ -1,5 +1,7 @@
 """Reference model for the API of the SpectraFit tools."""
 
+from __future__ import annotations
+
 from typing import Any, Dict, List, Optional, Union
 
 from pydantic import BaseModel, ConfigDict, Field

@@ -1,5 +1,7 @@
 """Test of the Jupiter plugin app."""
 
+from __future__ import annotations
+
 from unittest import mock
 
 

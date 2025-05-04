@@ -1,5 +1,7 @@
 """Pytest of the plotting features of spectrafit."""
 
+from __future__ import annotations
+
 import pandas as pd
 from matplotlib import pyplot
 

@@ -1,5 +1,7 @@
 """Test of the Tools Model API."""
 
+from __future__ import annotations
+
 import pytest
 from pydantic import ValidationError
 

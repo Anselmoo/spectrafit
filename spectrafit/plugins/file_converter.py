@@ -1,5 +1,7 @@
 """Convert the input and output files to the preferred file format."""
 
+from __future__ import annotations
+
 import argparse
 import json
 from pathlib import Path

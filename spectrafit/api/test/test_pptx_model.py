@@ -1,5 +1,7 @@
 """Test the pptx_model module."""
 
+from __future__ import annotations
+
 from math import isclose
 from typing import Tuple, Type, Union
 

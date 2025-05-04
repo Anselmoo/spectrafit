@@ -1,5 +1,7 @@
 """SpectraFit, the command line tool for fitting."""
 
+from __future__ import annotations
+
 import argparse
 from typing import Any, Dict, MutableMapping, Optional, Tuple
 

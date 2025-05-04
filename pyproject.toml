@@ -157,17 +157,25 @@ exclude = ["docs/", "tools/", "spectrafit/test/", "spectrafit/**/test/"]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
+[tool.ruff]
+fix = true
+include = ["*.py"]
+src = ["spectrafit"]
+target-version = "py38"
+
 [tool.ruff.lint]
 fixable = ["ALL"]
 extend-ignore = ["E721", "E731"]
 
+
 [tool.ruff.lint.isort]
-# known-first-party = ["spectrafit"]
 force-single-line = true
 lines-between-types = 1
-lines-after-imports = 2
+lines-after-imports = 4
 known-third-party = ["hatchling.build"]
 required-imports = ["from __future__ import annotations"]
+case-sensitive = true
+combine-as-imports = false
 
 [tool.pytest]
 script_launch_mode = "subprocess"

@@ -1,5 +1,7 @@
 """Reference model for the API of the models distributions."""
 
+from __future__ import annotations
+
 from typing import Callable, List, Optional
 
 from pydantic import BaseModel, Field

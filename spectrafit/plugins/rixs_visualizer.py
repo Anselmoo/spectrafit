@@ -1,5 +1,7 @@
 """This module contains the RIXS visualizer class."""
 
+from __future__ import annotations
+
 import argparse
 import json
 import logging

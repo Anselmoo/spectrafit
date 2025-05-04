@@ -1,5 +1,7 @@
 """Reference model for the API of the Jupyter Notebook interface."""
 
+from __future__ import annotations
+
 from typing import Any, Optional, Tuple
 
 from pydantic import BaseModel, ConfigDict, Field

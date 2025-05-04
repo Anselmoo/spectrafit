@@ -1,5 +1,7 @@
 """Test of the color schemas."""
 
+from __future__ import annotations
+
 from typing import Tuple, Type
 
 import pytest

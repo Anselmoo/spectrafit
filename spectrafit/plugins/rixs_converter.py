@@ -1,5 +1,7 @@
 """Transform the raw pkl data into a JSON, TOML, or numpy file for RIXS."""
 
+from __future__ import annotations
+
 import argparse
 import json
 from pathlib import Path

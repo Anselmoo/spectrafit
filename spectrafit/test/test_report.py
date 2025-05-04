@@ -1,5 +1,7 @@
 """Pytest of report model."""
 
+from __future__ import annotations
+
 from math import isclose
 from typing import Any, Dict, List, Union
 

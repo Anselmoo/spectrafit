@@ -11,6 +11,8 @@
     [Release Schedule](https://devguide.python.org/versions/#end-of-life-branches).
 """
 
+from __future__ import annotations
+
 import sys
 import warnings
 from typing import Tuple

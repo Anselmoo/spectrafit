@@ -1,5 +1,7 @@
 """Test the file model."""
 
+from __future__ import annotations
+
 import pytest
 
 from spectrafit.api.file_model import DataFileAPI

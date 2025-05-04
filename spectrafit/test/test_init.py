@@ -1,5 +1,7 @@
 """Tests for the SpectraFit __init__.py file."""
 
+from __future__ import annotations
+
 import importlib
 import sys
 import warnings

@@ -1,5 +1,7 @@
 """Test the model model."""
 
+from __future__ import annotations
+
 import pytest
 
 from spectrafit.api.models_model import DistributionModelAPI

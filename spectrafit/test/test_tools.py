@@ -1,5 +1,7 @@
 """Pytest of tools model."""
 
+from __future__ import annotations
+
 import gzip
 import pickle
 from pathlib import Path

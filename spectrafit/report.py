@@ -1,5 +1,7 @@
 """Fit-Results as Report."""
 
+from __future__ import annotations
+
 import pprint
 import sys
 from typing import Any, Callable, Dict, Hashable, List, Optional, Tuple, Union

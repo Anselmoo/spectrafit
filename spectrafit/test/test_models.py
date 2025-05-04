@@ -1,5 +1,7 @@
 """Pytest of the model-module."""
 
+from __future__ import annotations
+
 import sys
 from math import isclose, log, pi, sqrt
 from typing import Any, Dict, Tuple
