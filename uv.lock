@@ -1410,7 +1410,7 @@ dependencies = [
     { name = "requests" },
     { name = "retrying" },
     { name = "setuptools", version = "75.3.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
-    { name = "setuptools", version = "80.1.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.9'" },
+    { name = "setuptools", version = "80.3.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.9'" },
     { name = "typing-extensions" },
     { name = "werkzeug" },
 ]
@@ -2396,9 +2396,34 @@ wheels = [
 name = "joblib"
 version = "1.4.2"
 source = { registry = "https://pypi.org/simple" }
+resolution-markers = [
+    "python_full_version < '3.9' and platform_python_implementation != 'PyPy' and sys_platform == 'win32'",
+    "python_full_version < '3.9' and platform_python_implementation != 'PyPy' and sys_platform != 'win32'",
+    "python_full_version < '3.9' and platform_python_implementation == 'PyPy' and sys_platform == 'win32'",
+    "python_full_version < '3.9' and platform_python_implementation == 'PyPy' and sys_platform != 'win32'",
+]
 sdist = { url = "https://files.pythonhosted.org/packages/64/33/60135848598c076ce4b231e1b1895170f45fbcaeaa2c9d5e38b04db70c35/joblib-1.4.2.tar.gz", hash = "sha256:2382c5816b2636fbd20a09e0f4e9dad4736765fdfb7dca582943b9c1366b3f0e", size = 2116621, upload-time = "2024-05-02T12:15:05.765Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/91/29/df4b9b42f2be0b623cbd5e2140cafcaa2bef0759a00b7b70104dcfe2fb51/joblib-1.4.2-py3-none-any.whl", hash = "sha256:06d478d5674cbc267e7496a410ee875abd68e4340feff4490bcb7afb88060ae6", size = 301817, upload-time = "2024-05-02T12:15:00.765Z" },
+]
+
+[[package]]
+name = "joblib"
+version = "1.5.0"
+source = { registry = "https://pypi.org/simple" }
+resolution-markers = [
+    "python_full_version >= '3.12' and platform_python_implementation != 'PyPy'",
+    "python_full_version >= '3.12' and platform_python_implementation == 'PyPy'",
+    "python_full_version == '3.11.*' and platform_python_implementation != 'PyPy'",
+    "python_full_version == '3.11.*' and platform_python_implementation == 'PyPy'",
+    "python_full_version == '3.10.*' and platform_python_implementation != 'PyPy'",
+    "python_full_version == '3.10.*' and platform_python_implementation == 'PyPy'",
+    "python_full_version == '3.9.*' and platform_python_implementation != 'PyPy'",
+    "python_full_version == '3.9.*' and platform_python_implementation == 'PyPy'",
+]
+sdist = { url = "https://files.pythonhosted.org/packages/30/08/8bd4a0250247861420a040b33ccf42f43c426ac91d99405374ef117e5872/joblib-1.5.0.tar.gz", hash = "sha256:d8757f955389a3dd7a23152e43bc297c2e0c2d3060056dad0feefc88a06939b5", size = 330234, upload-time = "2025-05-03T21:09:39.553Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/da/d3/13ee227a148af1c693654932b8b0b02ed64af5e1f7406d56b088b57574cd/joblib-1.5.0-py3-none-any.whl", hash = "sha256:206144b320246485b712fc8cc51f017de58225fa8b414a1fe1764a7231aca491", size = 307682, upload-time = "2025-05-03T21:09:37.892Z" },
 ]
 
 [[package]]
@@ -2771,7 +2796,7 @@ dependencies = [
     { name = "jupyterlab-server", marker = "python_full_version >= '3.9'" },
     { name = "notebook-shim", marker = "python_full_version >= '3.9'" },
     { name = "packaging", marker = "python_full_version >= '3.9'" },
-    { name = "setuptools", version = "80.1.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.9'" },
+    { name = "setuptools", version = "80.3.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.9'" },
     { name = "tomli", marker = "python_full_version >= '3.9' and python_full_version < '3.11'" },
     { name = "tornado", marker = "python_full_version >= '3.9'" },
     { name = "traitlets", marker = "python_full_version >= '3.9'" },
@@ -5072,7 +5097,7 @@ version = "6.1.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "setuptools", version = "75.3.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
-    { name = "setuptools", version = "80.1.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.9'" },
+    { name = "setuptools", version = "80.3.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.9'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/01/d2/510cc0d218e753ba62a1bc1434651db3cd797a9716a0a66cc714cb4f0935/pbr-6.1.1.tar.gz", hash = "sha256:93ea72ce6989eb2eed99d0f75721474f69ad88128afdef5ac377eb797c4bf76b", size = 125702, upload-time = "2025-02-04T14:28:06.514Z" }
 wheels = [
@@ -6662,7 +6687,7 @@ resolution-markers = [
     "python_full_version < '3.9' and platform_python_implementation == 'PyPy' and sys_platform != 'win32'",
 ]
 dependencies = [
-    { name = "joblib", marker = "python_full_version < '3.9'" },
+    { name = "joblib", version = "1.4.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
     { name = "numpy", version = "1.24.4", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
     { name = "scipy", version = "1.10.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
     { name = "threadpoolctl", version = "3.5.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
@@ -6711,7 +6736,7 @@ resolution-markers = [
     "python_full_version == '3.9.*' and platform_python_implementation == 'PyPy'",
 ]
 dependencies = [
-    { name = "joblib", marker = "python_full_version >= '3.9'" },
+    { name = "joblib", version = "1.5.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.9'" },
     { name = "numpy", version = "2.0.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version == '3.9.*'" },
     { name = "numpy", version = "2.2.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
     { name = "scipy", version = "1.13.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version == '3.9.*'" },
@@ -6950,7 +6975,7 @@ wheels = [
 
 [[package]]
 name = "setuptools"
-version = "80.1.0"
+version = "80.3.0"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
     "python_full_version >= '3.12' and platform_python_implementation != 'PyPy'",
@@ -6962,9 +6987,9 @@ resolution-markers = [
     "python_full_version == '3.9.*' and platform_python_implementation != 'PyPy'",
     "python_full_version == '3.9.*' and platform_python_implementation == 'PyPy'",
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/aa/b2/bd26ed086b842b68c8fe9aac380ad7e5118cf84fa7abd45bb059a88368a8/setuptools-80.1.0.tar.gz", hash = "sha256:2e308396e1d83de287ada2c2fd6e64286008fe6aca5008e0b6a8cb0e2c86eedd", size = 1354038, upload-time = "2025-04-30T17:41:06.171Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/51/6c/a3f892949418b5b9aced7396919c75ffb57e38f08b712b565f5eb10677ee/setuptools-80.3.0.tar.gz", hash = "sha256:ec8308eb180b2312062b1c5523204acf872cd8b0a9e6c2ae76431b22bc4065d7", size = 1314475, upload-time = "2025-05-03T09:17:32.334Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/8b/f6/126c9309c8fe93e5d6bb850593cd58d591daf2da45cc78b61e48d8d95879/setuptools-80.1.0-py3-none-any.whl", hash = "sha256:ea0e7655c05b74819f82e76e11a85b31779fee7c4969e82f72bab0664e8317e4", size = 1240689, upload-time = "2025-04-30T17:41:03.789Z" },
+    { url = "https://files.pythonhosted.org/packages/e6/61/a6239ff35d64e55def020335626894895847cc6659c0f8e1b676c58aad3b/setuptools-80.3.0-py3-none-any.whl", hash = "sha256:a65cffc4fb86167e3020b3ef58e08226baad8b29a3b34ce2c9d07e901bac481d", size = 1200273, upload-time = "2025-05-03T09:17:29.995Z" },
 ]
 
 [[package]]
@@ -7121,7 +7146,7 @@ dev = [
     { name = "types-pyyaml", version = "6.0.12.20241230", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
     { name = "types-pyyaml", version = "6.0.12.20250402", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.9'" },
     { name = "types-setuptools", version = "75.8.0.20250110", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
-    { name = "types-setuptools", version = "80.0.0.20250429", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.9'" },
+    { name = "types-setuptools", version = "80.1.0.20250503", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.9'" },
     { name = "types-tabulate" },
     { name = "types-toml" },
 ]
@@ -7827,7 +7852,7 @@ wheels = [
 
 [[package]]
 name = "types-setuptools"
-version = "80.0.0.20250429"
+version = "80.1.0.20250503"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
     "python_full_version >= '3.12' and platform_python_implementation != 'PyPy'",
@@ -7840,11 +7865,11 @@ resolution-markers = [
     "python_full_version == '3.9.*' and platform_python_implementation == 'PyPy'",
 ]
 dependencies = [
-    { name = "setuptools", version = "80.1.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.9'" },
+    { name = "setuptools", version = "80.3.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.9'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/c5/49/0b22c24d20759d8594c094ec1c459b245b1a75e7e6bf104ff45c14efdb9f/types_setuptools-80.0.0.20250429.tar.gz", hash = "sha256:a4de44f1110f531e7f9453d72999437a1caa6052609e2c7c859dd6613ab0d593", size = 43353, upload-time = "2025-04-29T03:01:10.355Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/6a/63/973d60e59c70ef6fc98eff4f8fa1ef552c4f7486f79df68f16b3628b8ec1/types_setuptools-80.1.0.20250503.tar.gz", hash = "sha256:3cbdbe42c12e1d9179e6e87644a2cf176259411b5a3cc1d0fb0d824dc711d9ed", size = 43334, upload-time = "2025-05-03T02:58:15.134Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/06/c3/9e77e86da90bdf9544852188005a7413da7b693813bf493e61dc8714258c/types_setuptools-80.0.0.20250429-py3-none-any.whl", hash = "sha256:9bbcdcea88d1fda4b0f1371488333f606c78a8b10154a42530ed926ecf3242cb", size = 66003, upload-time = "2025-04-29T03:01:09.336Z" },
+    { url = "https://files.pythonhosted.org/packages/f2/c1/9e878008ad0ecac9d89c28831095fb6b1de76f0d59a1765f3d8816fb0694/types_setuptools-80.1.0.20250503-py3-none-any.whl", hash = "sha256:b25bcbfeebae06bc4d2d09231b0c0622e95bdbb36df070cfe40b925fcef97dd3", size = 65979, upload-time = "2025-05-03T02:58:14.038Z" },
 ]
 
 [[package]]
