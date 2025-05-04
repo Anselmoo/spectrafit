@@ -1,6 +1,6 @@
 [project]
 name = "SpectraFit"
-version = "1.3.0"
+version = "1.4.0"
 description = "Fast fitting of 2D- and 3D-Spectra with established routines"
 authors = [{ name = "Anselm Hahn", email = "anselm.hahn@gmail.com" }]
 requires-python = ">=3.8,<3.14"
@@ -160,6 +160,14 @@ build-backend = "hatchling.build"
 [tool.ruff.lint]
 fixable = ["ALL"]
 extend-ignore = ["E721", "E731"]
+
+[tool.ruff.lint.isort]
+# known-first-party = ["spectrafit"]
+force-single-line = true
+lines-between-types = 1
+lines-after-imports = 2
+known-third-party = ["hatchling.build"]
+required-imports = ["from __future__ import annotations"]
 
 [tool.pytest]
 script_launch_mode = "subprocess"
