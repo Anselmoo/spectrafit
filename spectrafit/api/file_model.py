@@ -3,9 +3,13 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Callable, List, Optional, Union
+from typing import Callable
+from typing import List
+from typing import Optional
+from typing import Union
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
+from pydantic import Field
 from pydantic.functional_validators import field_validator
 
 
@@ -47,7 +51,8 @@ class DataFileAPI(BaseModel):
         """Check if the delimiter is valid."""
         if v in {" ", "\t", ",", ";", "|", r"\s+"}:
             return v
-        raise ValueError(f" {v} is not a valid delimiter.")
+        msg = f" {v} is not a valid delimiter."
+        raise ValueError(msg)
 
     @field_validator("comment")
     @classmethod
@@ -55,4 +60,5 @@ class DataFileAPI(BaseModel):
         """Check if the comment marker is valid."""
         if v is None or v in {"#", "%"}:
             return v
-        raise ValueError(f" {v} is not a valid comment marker.")
+        msg = f" {v} is not a valid comment marker."
+        raise ValueError(msg)

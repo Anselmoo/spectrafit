@@ -4,14 +4,12 @@ from __future__ import annotations
 
 import numpy as np
 
-from spectrafit.api.rixs_model import (
-    MainTitleAPI,
-    RIXSPlotAPI,
-    SizeRatioAPI,
-    XAxisAPI,
-    YAxisAPI,
-    ZAxisAPI,
-)
+from spectrafit.api.rixs_model import MainTitleAPI
+from spectrafit.api.rixs_model import RIXSPlotAPI
+from spectrafit.api.rixs_model import SizeRatioAPI
+from spectrafit.api.rixs_model import XAxisAPI
+from spectrafit.api.rixs_model import YAxisAPI
+from spectrafit.api.rixs_model import ZAxisAPI
 
 
 def test__axises() -> None:
@@ -56,7 +54,10 @@ def test_rixs_model() -> None:
         z_axis=ZAxisAPI(name="test", unit="test_unit"),
         main_title=MainTitleAPI(rixs="test", xes="test", xas="test"),
         size_ratio=SizeRatioAPI(
-            size=(100, 100), ratio_rixs=(2, 2), ratio_xes=(3, 1.5), ratio_xas=(3, 1.5)
+            size=(100, 100),
+            ratio_rixs=(2, 2),
+            ratio_xes=(3, 1.5),
+            ratio_xas=(3, 1.5),
         ),
     )
     assert _model.incident_energy.shape == (3,)

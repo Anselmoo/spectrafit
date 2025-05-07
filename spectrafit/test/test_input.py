@@ -3,12 +3,15 @@
 from __future__ import annotations
 
 import sys
+
 from pathlib import Path
 from typing import Any
 
 import pandas as pd
 import pytest
+
 from numpy.testing import assert_almost_equal
+
 
 BUILTINS_INPUT = "builtins.input"
 
@@ -72,7 +75,10 @@ class TestFileFormat:
         "behavior due to encoding issues.",
     )
     def test_json_input(
-        self, monkeypatch: Any, script_runner: Any, tmp_path: Path
+        self,
+        monkeypatch: Any,
+        script_runner: Any,
+        tmp_path: Path,
     ) -> None:
         """Testing json support."""
         monkeypatch.setattr(BUILTINS_INPUT, lambda _: "n")
@@ -95,7 +101,10 @@ class TestFileFormat:
         "behavior due to encoding issues.",
     )
     def test_yml_input(
-        self, monkeypatch: Any, script_runner: Any, tmp_path: Path
+        self,
+        monkeypatch: Any,
+        script_runner: Any,
+        tmp_path: Path,
     ) -> None:
         """Testing yml support."""
         monkeypatch.setattr(BUILTINS_INPUT, lambda _: "n")
@@ -118,7 +127,10 @@ class TestFileFormat:
         "behavior due to encoding issues.",
     )
     def test_yaml_input(
-        self, monkeypatch: Any, script_runner: Any, tmp_path: Path
+        self,
+        monkeypatch: Any,
+        script_runner: Any,
+        tmp_path: Path,
     ) -> None:
         """Testing yaml support."""
         monkeypatch.setattr(BUILTINS_INPUT, lambda _: "n")
@@ -141,7 +153,10 @@ class TestFileFormat:
         "behavior due to encoding issues.",
     )
     def test_toml_input(
-        self, monkeypatch: Any, script_runner: Any, tmp_path: Path
+        self,
+        monkeypatch: Any,
+        script_runner: Any,
+        tmp_path: Path,
     ) -> None:
         """Testing toml support."""
         monkeypatch.setattr(BUILTINS_INPUT, lambda _: "n")
@@ -171,10 +186,8 @@ class TestFileFormatOutput:
             "-i",
             "spectrafit/test/scripts/test_input_2.json",
         )
-        assert (
-            len(list(Path(".").glob("spectrafit/test/export/fit_results*.json"))) == 1
-        )
-        assert len(list(Path(".").glob("spectrafit/test/export/fit_results*.csv"))) == 3
+        assert len(list(Path().glob("spectrafit/test/export/fit_results*.json"))) == 1
+        assert len(list(Path().glob("spectrafit/test/export/fit_results*.csv"))) == 3
 
 
 class TestMoreFeatures:
@@ -193,7 +206,10 @@ class TestMoreFeatures:
         assert ret.stderr == ""
 
     def test_energyrange_e0(
-        self, monkeypatch: Any, script_runner: Any, tmp_path: Path
+        self,
+        monkeypatch: Any,
+        script_runner: Any,
+        tmp_path: Path,
     ) -> None:
         """Testing lower energy range cut."""
         monkeypatch.setattr(BUILTINS_INPUT, lambda _: "n")
@@ -214,7 +230,10 @@ class TestMoreFeatures:
         assert_almost_equal(df_test["energy"].min(), 0.0, decimal=0)
 
     def test_energyrange_e1(
-        self, monkeypatch: Any, script_runner: Any, tmp_path: Path
+        self,
+        monkeypatch: Any,
+        script_runner: Any,
+        tmp_path: Path,
     ) -> None:
         """Testing upper energy range cut."""
         monkeypatch.setattr(BUILTINS_INPUT, lambda _: "n")
@@ -236,7 +255,10 @@ class TestMoreFeatures:
         assert_almost_equal(df_test["energy"].max(), 5.0, decimal=0)
 
     def test_energyrange_e0e1(
-        self, monkeypatch: Any, script_runner: Any, tmp_path: Path
+        self,
+        monkeypatch: Any,
+        script_runner: Any,
+        tmp_path: Path,
     ) -> None:
         """Testing lower and upper energy range cut."""
         monkeypatch.setattr(BUILTINS_INPUT, lambda _: "n")
@@ -323,7 +345,10 @@ class TestMoreFeatures:
         assert not ret.success
 
     def test_conf_interval(
-        self, monkeypatch: Any, script_runner: Any, tmp_path: Path
+        self,
+        monkeypatch: Any,
+        script_runner: Any,
+        tmp_path: Path,
     ) -> None:
         """Testing upper energy range cut."""
         monkeypatch.setattr(BUILTINS_INPUT, lambda _: "n")
@@ -367,7 +392,10 @@ class TestMoreFeatures:
         """Testing missing mininizmer parameter in input."""
         monkeypatch.setattr(BUILTINS_INPUT, lambda _: "n")
         ret = script_runner.run(
-            "spectrafit", "_", "-i", "spectrafit/test/scripts/test_input_9.json"
+            "spectrafit",
+            "_",
+            "-i",
+            "spectrafit/test/scripts/test_input_9.json",
         )
         assert not ret.success
 
@@ -379,21 +407,24 @@ class TestGlobalFitting:
         """Testing global fitting."""
         monkeypatch.setattr(BUILTINS_INPUT, lambda _: "n")
         ret = script_runner.run(
-            "spectrafit", "_", "-i", "spectrafit/test/scripts/test_input_global_0.json"
+            "spectrafit",
+            "_",
+            "-i",
+            "spectrafit/test/scripts/test_input_global_0.json",
         )
         assert ret.success
         assert ret.stderr == ""
         assert (
             len(
                 list(
-                    Path(".").glob("spectrafit/test/export/global_fit_results_0*.json")
-                )
+                    Path().glob("spectrafit/test/export/global_fit_results_0*.json"),
+                ),
             )
             == 1
         )
         assert (
             len(
-                list(Path(".").glob("spectrafit/test/export/global_fit_results_0*.csv"))
+                list(Path().glob("spectrafit/test/export/global_fit_results_0*.csv")),
             )
             == 3
         )
@@ -402,21 +433,24 @@ class TestGlobalFitting:
         """Testing global fitting."""
         monkeypatch.setattr(BUILTINS_INPUT, lambda _: "n")
         ret = script_runner.run(
-            "spectrafit", "_", "-i", "spectrafit/test/scripts/test_input_global_1.json"
+            "spectrafit",
+            "_",
+            "-i",
+            "spectrafit/test/scripts/test_input_global_1.json",
         )
         assert ret.success
         assert ret.stderr == ""
         assert (
             len(
                 list(
-                    Path(".").glob("spectrafit/test/export/global_fit_results_1*.json")
-                )
+                    Path().glob("spectrafit/test/export/global_fit_results_1*.json"),
+                ),
             )
             == 1
         )
         assert (
             len(
-                list(Path(".").glob("spectrafit/test/export/global_fit_results_1*.csv"))
+                list(Path().glob("spectrafit/test/export/global_fit_results_1*.csv")),
             )
             == 3
         )

@@ -3,17 +3,27 @@
 from __future__ import annotations
 
 import sys
-from pathlib import Path
-from typing import Any, Tuple
+
+from typing import TYPE_CHECKING
+from typing import Any
+from typing import Tuple
 
 import numpy as np
 import plotly.graph_objects as go
 import pytest
-from numpy.typing import NDArray
+
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from numpy.typing import NDArray
+
 
 if sys.version_info >= (3, 9):
     from spectrafit.plugins.rixs_converter import RIXSConverter
-    from spectrafit.plugins.rixs_visualizer import RIXSApp, RIXSFigure, RIXSVisualizer
+    from spectrafit.plugins.rixs_visualizer import RIXSApp
+    from spectrafit.plugins.rixs_visualizer import RIXSFigure
+    from spectrafit.plugins.rixs_visualizer import RIXSVisualizer
 else:
     pytest.mark.skip("Requires Python 3.9 or higher", allow_module_level=True)
 
@@ -21,7 +31,9 @@ else:
 @pytest.mark.skipif(sys.version_info < (3, 9), reason="Requires Python 3.9 or higher")
 @pytest.fixture(scope="module", autouse=True, name="test_data")
 def fixture_test_data() -> Tuple[
-    NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]
+    NDArray[np.float64],
+    NDArray[np.float64],
+    NDArray[np.float64],
 ]:
     """Test data."""
     space_x_y = np.arange(0, 10, 0.1, dtype=np.float64)
@@ -106,7 +118,7 @@ class TestRIXSApp:
 
     def test_load_data_error(self, tmp_path: Path) -> None:
         """Test the loading of data."""
-        with pytest.raises(ValueError) as excinfo:
+        with pytest.raises(ValueError, match=r"File type") as excinfo:
             RIXSVisualizer().load_data(infile=tmp_path / "test.txt")
 
         assert "File type" in str(excinfo.value)
@@ -115,6 +127,8 @@ class TestRIXSApp:
     def test_cmd_line(self, script_runner: Any) -> None:
         """Test the command line."""
         ret = script_runner.run(
-            "spectrafit-rixs-visualizer", "--help", expect_error=True
+            "spectrafit-rixs-visualizer",
+            "--help",
+            expect_error=True,
         )
         assert ret.success

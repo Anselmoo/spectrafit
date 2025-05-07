@@ -4,8 +4,12 @@ from __future__ import annotations
 
 import argparse
 import json
+
 from pathlib import Path
-from typing import Any, Dict, MutableMapping
+from typing import Any
+from typing import ClassVar
+from typing import Dict
+from typing import MutableMapping
 
 import tomli_w
 import yaml
@@ -26,10 +30,11 @@ class FileConverter(Converter):
         -[x] TOML (LOCK for the lock file)
 
     Attributes:
-        choices (Set[str]): The choices for the file format.
+        choices (ClassVar[set[str]]): The choices for the file format.
+
     """
 
-    choices = {"json", "yaml", "yml", "toml", "lock"}
+    choices: ClassVar[set[str]] = {"json", "yaml", "yml", "toml", "lock"}
 
     def get_args(self) -> Dict[str, Any]:
         """Get the arguments from the command line.
@@ -37,6 +42,7 @@ class FileConverter(Converter):
         Returns:
             Dict[str, Any]: Return the input file arguments as a dictionary without
                 additional information beyond the command line arguments.
+
         """
         parser = argparse.ArgumentParser(
             description="Converter for 'SpectraFit' input and output files.",
@@ -77,9 +83,11 @@ class FileConverter(Converter):
 
         Returns:
             MutableMapping[str, Any] : The converted file as a dictionary.
+
         """
         if file_format not in FileConverter.choices:
-            raise ValueError(f"The input file format '{file_format}' is not supported.")
+            msg = f"The input file format '{file_format}' is not supported."
+            raise ValueError(msg)
 
         return read_input_file(infile)
 
@@ -94,27 +102,34 @@ class FileConverter(Converter):
             data (Any): The converted file as a dictionary.
             fname (Path): The input file as a path object.
             export_format (str): The output file format.
+
         """
         if fname.suffix[1:] == export_format:
-            raise ValueError(
+            msg = (
                 f"The input file suffix '{fname.suffix[1:]}' is similar to the"
                 f" output file format '{export_format}'."
                 "Please use a different output file suffix."
             )
+            raise ValueError(
+                msg,
+            )
 
         if export_format not in self.choices:
+            msg = f"The output file format '{export_format}' is not supported."
             raise ValueError(
-                f"The output file format '{export_format}' is not supported."
+                msg,
             )
 
         if export_format == "json":
             with fname.with_suffix(f".{export_format}").open(
-                "w", encoding="utf-8"
+                "w",
+                encoding="utf-8",
             ) as f:
                 json.dump(data, f, indent=4)
         elif export_format in {"yaml", "yml"}:
             with fname.with_suffix(f".{export_format}").open(
-                "w", encoding="utf-8"
+                "w",
+                encoding="utf-8",
             ) as f:
                 yaml.dump(data, f, default_flow_style=False)
         elif export_format in {"toml", "lock"}:

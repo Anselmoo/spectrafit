@@ -1,3 +1,16 @@
+---
+title: Fitting
+description: Fitting in SpectraFit
+tags:
+  - fitting
+  - lmfit
+  - scipy
+  - optimization
+  - solver
+---
+
+## Fitting
+
 The fitting in `SpectraFit` is realized by `lmifit` and diveded into two parts:
 
 1. [Minimizer][1] is the class for defining the fitting problem. The

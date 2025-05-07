@@ -18,7 +18,7 @@ This section provides practical examples to help you understand and use **Spectr
 The examples demonstrate various use cases and features of **SpectraFit**, from basic peak fitting to advanced applications. Each example includes detailed explanations, code snippets, and visualization of results.
 
 !!! tip "Learning Path"
-    Start with the basic examples and progress to more advanced topics. The examples build upon concepts introduced in earlier sections.
+Start with the basic examples and progress to more advanced topics. The examples build upon concepts introduced in earlier sections.
 
 ## Command-Line Examples
 
@@ -48,6 +48,10 @@ Jupyter notebooks provide an interactive environment for **SpectraFit**, allowin
 - :material-code-json: **[Using Converters as Module](example9_5.ipynb)** - Convert between different file formats programmatically.
 - :material-earth: **[RIXS Global-Fitting in Jupyter](example9_6.ipynb)** - Apply global fitting approaches to RIXS datasets.
 
+- :material-atom: **[Mössbauer Spectroscopy](example10_1.ipynb)**
+
+  Fit and analyze Mössbauer spectra with specialized models.
+
 </div>
 
 ## Application Areas
@@ -59,6 +63,7 @@ These examples cover applications in various spectroscopic techniques:
 - Resonant Inelastic X-ray Scattering (RIXS)
 - Optical Spectroscopy
 - Vibrational Spectroscopy
+- Mössbauer Spectroscopy
 
 ## Next Steps
 

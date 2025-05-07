@@ -10,7 +10,8 @@ from typing import Any
 import pytest
 
 from spectrafit import __version__
-from spectrafit.api.cmd_model import CMDModelAPI, DescriptionAPI
+from spectrafit.api.cmd_model import CMDModelAPI
+from spectrafit.api.cmd_model import DescriptionAPI
 
 
 def test_default_cmd() -> None:
@@ -123,6 +124,6 @@ def test_overwrite_references(refs: Any) -> None:
 
 def test_illegal_references() -> None:
     """Test for illegal references of Description Model."""
-    with pytest.raises(ValueError) as exc:
+    with pytest.raises(ValueError, match=r"dummy.com") as exc:
         DescriptionAPI(refs=["dummy.com"])
     assert "dummy.com" in str(exc.value)

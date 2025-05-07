@@ -6,10 +6,13 @@ import importlib
 import sys
 import warnings
 
-from pytest import MonkeyPatch
+# Need to import pytest for runtime usage with MonkeyPatch
+import pytest  # noqa: TC002 (needed at runtime for MonkeyPatch)
 
 import spectrafit
-from spectrafit import PYTHON_END_OF_LIFE, __version__
+
+from spectrafit import PYTHON_END_OF_LIFE
+from spectrafit import __version__
 
 
 def test_version() -> None:
@@ -17,7 +20,7 @@ def test_version() -> None:
     assert __version__ == "1.4.0"
 
 
-def test_python_end_of_life_warning(monkeypatch: MonkeyPatch) -> None:
+def test_python_end_of_life_warning(monkeypatch: pytest.MonkeyPatch) -> None:
     """Test that a warning is issued for Python 3.8."""
     # Set the Python version to 3.8
     monkeypatch.setattr(sys, "version_info", (3, 8, 0))
@@ -38,7 +41,7 @@ def test_python_end_of_life_warning(monkeypatch: MonkeyPatch) -> None:
         )
 
 
-def test_no_warning_for_other_versions(monkeypatch: MonkeyPatch) -> None:
+def test_no_warning_for_other_versions(monkeypatch: pytest.MonkeyPatch) -> None:
     """Test that no warning is issued for Python versions other than 3.8."""
     # Set the Python version to 3.9
     monkeypatch.setattr(sys, "version_info", (3, 9, 0))

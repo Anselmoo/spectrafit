@@ -1,3 +1,11 @@
+---
+title: Statistics
+description: Statistics in SpectraFit
+tags:
+  - fitting
+  - statistics
+---
+
 ## Standard Statistics
 
 Standard statistics will be performed according to the [`Goodness of Fit`][1],

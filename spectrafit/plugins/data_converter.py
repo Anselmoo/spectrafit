@@ -4,9 +4,14 @@ from __future__ import annotations
 
 import argparse
 import re
+
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, List, MutableMapping, Optional
+from typing import Any
+from typing import Dict
+from typing import List
+from typing import MutableMapping
+from typing import Optional
 
 import pandas as pd
 
@@ -93,6 +98,7 @@ class DataConverter(Converter):
         Returns:
             Dict[str, Any]: Return the input file arguments as a dictionary without
                 additional information beyond the command line arguments.
+
         """
         parser = argparse.ArgumentParser(
             description="Converter for 'SpectraFit' from data files to CSV files.",
@@ -134,9 +140,11 @@ class DataConverter(Converter):
         Returns:
             MutableMapping[str, Any]: The converted data as a MutableMapping[str, Any],
                 which belongs to DataFrame.
+
         """
         if file_format.upper() not in choices:
-            raise ValueError(f"File format '{file_format}' is not supported.")
+            msg = f"File format '{file_format}' is not supported."
+            raise ValueError(msg)
 
         if callable(DataFormats.__dict__[file_format].names):
             names = DataFormats.__dict__[file_format].names(infile)
@@ -145,7 +153,8 @@ class DataConverter(Converter):
         DataFormats.__dict__[file_format].names = names
 
         return pd.read_csv(
-            infile, **DataFormats.__dict__[file_format].dict(exclude={"file_suffixes"})
+            infile,
+            **DataFormats.__dict__[file_format].dict(exclude={"file_suffixes"}),
         )
 
     def save(self, data: Any, fname: Path, export_format: str) -> None:
@@ -158,9 +167,11 @@ class DataConverter(Converter):
             data (Any): The converted data, which is a pandas DataFrame.
             fname (Path): The file name of the data file.
             export_format (str): The file format of the exported file.
+
         """
         if export_format.lower() not in choices_export:
-            raise ValueError(f"Export format '{export_format}' is not supported.")
+            msg = f"Export format '{export_format}' is not supported."
+            raise ValueError(msg)
         data.to_csv(fname.with_suffix(f".{export_format}"), index=False)
 
     def __call__(self) -> None:

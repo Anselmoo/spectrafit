@@ -4,15 +4,20 @@ from __future__ import annotations
 
 import argparse
 import json
+
 from pathlib import Path
-from typing import Any, Dict, MutableMapping
+from typing import Any
+from typing import Dict
+from typing import MutableMapping
 
 import numpy as np
 import tomli_w
 
 from spectrafit.api.rixs_model import RIXSModelAPI
 from spectrafit.plugins.converter import Converter
-from spectrafit.tools import pkl2any, pure_fname
+from spectrafit.tools import pkl2any
+from spectrafit.tools import pure_fname
+
 
 choices_fformat = {"latin1", "utf-8", "utf-16", "utf-32"}
 choices_export = {"json", "toml", "lock", "npy", "npz"}
@@ -27,6 +32,7 @@ class RIXSConverter(Converter):
 
         Returns:
             Dict[str, Any]: Dictionary of input file arguments.
+
         """
         parser = argparse.ArgumentParser(
             description="Convert 'SpectraFit' pickle files to JSON, "
@@ -93,6 +99,7 @@ class RIXSConverter(Converter):
 
         Returns:
             MutableMapping[str, Any]: The data dictionary from the pkl file.
+
         """
         data_dict = {}
         for _dict in pkl2any(infile, file_format):
@@ -123,9 +130,11 @@ class RIXSConverter(Converter):
 
         Returns:
             RIXSModelAPI: The RIXS map as a RIXSModelAPI pydantic object.
+
         """
         if mode not in choices_mode:
-            raise ValueError(f"Mode '{mode}' not in {choices_mode}.")
+            msg = f"Mode '{mode}' not in {choices_mode}."
+            raise ValueError(msg)
         if incident_energy not in data:
             self.raise_error(incident_energy, data)
         if emission_energy not in data:
@@ -155,8 +164,9 @@ class RIXSConverter(Converter):
             KeyError: If the key is not in the data.
 
         """
+        msg = f"Key '{wrong_key}' not in data. Aailable keys are: {list(data.keys())}."
         raise KeyError(
-            f"Key '{wrong_key}' not in data. Aailable keys are: {list(data.keys())}."
+            msg,
         )
 
     def save(self, data: Any, fname: Path, export_format: str) -> None:
@@ -169,10 +179,12 @@ class RIXSConverter(Converter):
 
         Raises:
             ValueError: If the export format is not in the choices.
+
         """
         if export_format not in choices_export:
+            msg = f"Export format '{export_format}' not in {choices_export}."
             raise ValueError(
-                f"Export format '{export_format}' not in {choices_export}."
+                msg,
             )
 
         if export_format == "json":
@@ -199,6 +211,7 @@ class RIXSConverter(Converter):
 
         Returns:
             MutableMapping[str, Any]: The data dictionary with lists.
+
         """
         return {k: v.tolist() for k, v in data.items()}
 

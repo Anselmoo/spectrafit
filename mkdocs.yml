@@ -14,6 +14,7 @@ copyright: Copyright &copy; 2021 - 2025 Anselm Hahn
 # Configuration
 theme:
   name: material
+  custom_dir: overrides
   static_templates:
     - 404.html
   include_search_page: true
@@ -36,6 +37,7 @@ theme:
     - navigation.tabs
     - navigation.tabs.sticky
     - navigation.top
+    - navigation.path
     - navigation.footer
     - navigation.tracking
     - search.highlight
@@ -256,6 +258,7 @@ nav:
           - RIXS Map Visualization: examples/example9_4.ipynb
           - Using Converters as Module: examples/example9_5.ipynb
           - RIXS Global-Fitting in Jupyter: examples/example9_6.ipynb
+          - Mössbauer Fitting: examples/example10_1.ipynb
   - Documentation:
       - Overview: doc/index.md
       - Models: doc/models.md

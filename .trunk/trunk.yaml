@@ -2,7 +2,7 @@
 # To learn more about the format of this file, see https://docs.trunk.io/reference/trunk-yaml
 version: 0.1
 cli:
-  version: 1.22.12
+  version: 1.22.15
 # Trunk provides extensibility via plugins. (https://docs.trunk.io/plugins)
 plugins:
   sources:
@@ -17,11 +17,19 @@ runtimes:
     - python@3.10.8
 # This is the section where you manage your linters. (https://docs.trunk.io/check/configuration)
 lint:
+  definitions:
+    - name: ruff
+      direct_configs:
+        - ./pyproject.toml
+    - name: mypy
+      direct_configs:
+        - ./mypy.ini
   disabled:
     - black
     - markdown-table-prettify
+    - isort
   enabled:
-    - isort@6.0.1
+    - sourcery@1.36.0
     - pre-commit-hooks@5.0.0:
         commands:
           - end-of-file-fixer
@@ -29,23 +37,23 @@ lint:
           - check-merge-conflict
     - actionlint@1.7.7
     - bandit@1.8.3
-    - checkov@3.2.408
+    - checkov@3.2.416
     - git-diff-check
     - hadolint@2.12.1-beta
     - markdownlint@0.44.0
     - mypy@1.15.0
-    - osv-scanner@2.0.1
-    - oxipng@9.1.4
+    - osv-scanner@2.0.2
+    - oxipng@9.1.5
     - prettier@3.5.3
-    - pylint@3.3.6
-    - renovate@39.257.8
-    - ruff@0.11.7
+    - pylint@3.3.7
+    - renovate@40.0.6
+    - ruff@0.11.8
     - shellcheck@0.10.0
     - shfmt@3.6.0
     - svgo@3.3.2
     - taplo@0.9.3
-    - trufflehog@3.88.25
-    - yamllint@1.37.0
+    - trufflehog@3.88.29
+    - yamllint@1.37.1
 actions:
   enabled:
     - trunk-announce
