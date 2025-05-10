@@ -25,33 +25,13 @@ Plugins enhance **SpectraFit** by adding support for different file formats, spe
 
 <div class="grid cards" markdown>
 
-- :material-file-replace: **[File-Format-Conversion](file_converter.md)**
-
-  Convert between different spectroscopic file formats.
-
-- :material-database-sync: **[Data-Format-Conversion](data_converter.md)**
-
-  Transform data structures for compatibility with other tools.
-
-- :material-notebook: **[Jupyter-Notebook-Integration](jupyter_interface.md)**
-
-  Enhanced features for interactive analysis in Jupyter.
-
-- :material-chart-scatter-plot-hexbin: **[RIXS-Visualization](rixs_visualization.md)**
-
-  Specialized plotting tools for RIXS spectroscopy.
-
-- :material-format-rotate-90: **[RIXS-Converter](rixs_converter.md)**
-
-  Process and transform RIXS datasets.
-
-- :material-package-variant-closed: **[PKL-Converter and Visualizer](pkl_converter_visualization.md)**
-
-  Work with pickle files for data persistence.
-
-- :material-presentation: **[PPTX-Converter](pptx_converter.md)**
-
-  Export results directly to PowerPoint presentations.
+- :material-file-replace: **[File-Format-Conversion](file_converter.md)** - Convert between different spectroscopic file formats.
+- :material-database-sync: **[Data-Format-Conversion](data_converter.md)** - Transform data structures for compatibility with other tools.
+- :material-notebook: **[Jupyter-Notebook-Integration](jupyter_interface.md)** - Enhanced features for interactive analysis in Jupyter.
+- :material-chart-scatter-plot-hexbin: **[RIXS-Visualization](rixs_visualization.md)** - Specialized plotting tools for RIXS spectroscopy.
+- :material-format-rotate-90: **[RIXS-Converter](rixs_converter.md)** - Process and transform RIXS datasets.
+- :material-package-variant-closed: **[PKL-Converter and Visualizer](pkl_converter_visualization.md)** - Work with pickle files for data persistence.
+- :material-presentation: **[PPTX-Converter](pptx_converter.md)** - Export results directly to PowerPoint presentations.
 
 </div>
 
