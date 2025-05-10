@@ -27,17 +27,9 @@ The interface of **SpectraFit** is designed to be flexible and user-friendly, ac
 
 <div class="grid cards" markdown>
 
-- :material-package-variant-closed: **[Installation](installation.md)**
-
-  Complete installation instructions for pip, conda, and development environments.
-
-- :material-console: **[Usage](usage.md)**
-
-  Command-line interface usage, input file formats, and common workflows.
-
-- :material-chart-bell-curve: **[Features](features.md)**
-
-  Statistical analysis, plotting capabilities, and output formats.
+- :material-package-variant-closed: **[Installation](installation.md)** - Complete installation instructions for pip, conda, and development environments.
+- :material-console: **[Usage](usage.md)** - Command-line interface usage, input file formats, and common workflows.
+- :material-chart-bell-curve: **[Features](features.md)** - Statistical analysis, plotting capabilities, and output formats.
 
 </div>
 

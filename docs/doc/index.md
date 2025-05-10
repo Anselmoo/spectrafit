@@ -26,25 +26,11 @@ This section provides comprehensive technical documentation on the mathematical 
 
 <div class="grid cards" markdown>
 
-- :material-function-variant: **[Models](models.md)**
-
-  Detailed information about the mathematical models available for peak fitting.
-
-- :material-code-braces: **[Expression](expression.md)**
-
-  Guide to creating custom expressions for complex fitting scenarios.
-
-- :material-calculator: **[Solvers](solver.md)**
-
-  Technical details on the optimization algorithms used for fitting.
-
-- :material-chart-line: **[Fitting](fitting.md)**
-
-  Explanation of the fitting process and parameter optimization.
-
-- :material-chart-bell-curve-cumulative: **[Statistics](statistics.md)**
-
-  Overview of statistical analysis methods for evaluating fit quality, including goodness-of-fit, regression metrics, and correlation analysis.
+- :material-function-variant: **[Models](models.md)** - Detailed information about the mathematical models available for peak fitting.
+- :material-code-braces: **[Expression](expression.md)** - Guide to creating custom expressions for complex fitting scenarios.
+- :material-calculator: **[Solvers](solver.md)** - Technical details on the optimization algorithms used for fitting.
+- :material-chart-line: **[Fitting](fitting.md)** - Explanation of the fitting process and parameter optimization.
+- :material-chart-bell-curve-cumulative: **[Statistics](statistics.md)** - Overview of statistical analysis methods for evaluating fit quality, including goodness-of-fit, regression metrics, and correlation analysis.
 
 </div>
 
