@@ -14,7 +14,7 @@ from spectrafit import PYTHON_END_OF_LIFE, __version__
 
 def test_version() -> None:
     """Test the version string."""
-    assert __version__ == "1.4.0"
+    assert __version__ == "1.3.1"
 
 
 def test_python_end_of_life_warning(monkeypatch: MonkeyPatch) -> None:

@@ -16,17 +16,19 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Python 3.13
-        uses: actions/setup-python@v5
+      - name: Set up Miniconda
+        uses: conda-incubator/setup-miniconda@v2
         with:
-          python-version: "3.13"
-      - name: Create conda environment with conda python 3.13
-        run: |
-          conda create -n base python=3.13 --yes
-      - name: Add conda to system path
-        run: |
-          # $CONDA is an environment variable pointing to the root of the miniconda directory
-          echo $CONDA/bin >> $GITHUB_PATH
+          auto-update-conda: true
+          python-version: "3.12"
+          channels: conda-forge,defaults
       - name: Install spectrafit package
+        shell: bash -l {0}
         run: |
+          conda info
           conda install -c conda-forge ${{ matrix.package }}
+      - name: Verify Python version
+        shell: bash -l {0}
+        run: |
+          python --version
+          which python
