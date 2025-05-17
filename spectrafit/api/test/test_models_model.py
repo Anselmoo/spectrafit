@@ -32,10 +32,14 @@ from spectrafit.api.models_model import DistributionModelAPI
         "pearson2",
         "pearson3",
         "pearson4",
+        "moessbauersinglet",
+        "moessbauerdoublet",
+        "moessbauersextet",
+        "moessbaueroctet",
     ],
 )
 def test_distribution_model(distribution_model: str) -> None:
     """Test the distribution model."""
     assert distribution_model in list(
-        DistributionModelAPI.schema()["properties"].keys()
+        DistributionModelAPI.model_json_schema()["properties"].keys(),
     )

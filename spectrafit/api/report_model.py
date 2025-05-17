@@ -2,7 +2,11 @@
 
 from __future__ import annotations
 
-from typing import Any, Dict, Hashable, List, Union
+from typing import Any
+from typing import Dict
+from typing import Hashable
+from typing import List
+from typing import Union
 
 from dtale import __version__ as dtale_version
 from emcee import __version__ as emcee_version
@@ -12,7 +16,9 @@ from numdifftools import __version__ as numdifftools_version
 from numpy import __version__ as numpy_version
 from pandas import __version__ as pandas_version
 from plotly import __version__ as plotly_version
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel
+from pydantic import ConfigDict
+from pydantic import Field
 from pydantic import __version__ as pydantic_version
 from scipy import __version__ as scipy_version
 from sklearn import __version__ as sklearn_version
@@ -51,7 +57,8 @@ class FitMethodAPI(BaseModel):
         description="Settings for the confidence interval calculation",
     )
     configurations: Dict[str, Any] = Field(
-        ..., description="Settings for the fitting configuration"
+        ...,
+        description="Settings for the fitting configuration",
     )
     settings_solver_models: Dict[str, Any] = Field(
         ...,
@@ -65,10 +72,12 @@ class InputAPI(BaseModel):
     description: DescriptionAPI = DescriptionAPI()
     credits: CreditsAPI = CreditsAPI()
     initial_model: List[Dict[str, Dict[str, Dict[str, Any]]]] = Field(
-        ..., description="Initial model for the fit"
+        ...,
+        description="Initial model for the fit",
     )
     method: FitMethodAPI = Field(
-        ..., description="Fitting method with optional including of confidence interval"
+        ...,
+        description="Fitting method with optional including of confidence interval",
     )
     pre_processing: DataPreProcessingAPI = Field(..., description="Data pre-processing")
 
@@ -78,23 +87,28 @@ class SolverAPI(BaseModel):
 
     goodness_of_fit: Dict[str, float] = Field(..., description="Goodness of fit")
     regression_metrics: Dict[str, List[Any]] = Field(
-        ..., description="Regression metrics"
+        ...,
+        description="Regression metrics",
     )
     descriptive_statistic: Dict[str, List[Any]] = Field(
-        ..., description="Descriptive statistic"
+        ...,
+        description="Descriptive statistic",
     )
     linear_correlation: Dict[str, List[Any]] = Field(
-        ..., description="Linear correlation"
+        ...,
+        description="Linear correlation",
     )
     component_correlation: Dict[str, Dict[str, Any]] = Field(
         default={},
         description="Linear correlation of each attribute of components. if possible",
     )
     confidence_interval: Dict[str, Any] = Field(
-        default={}, description="Confidence interval, if possible"
+        default={},
+        description="Confidence interval, if possible",
     )
     covariance_matrix: Dict[str, Dict[str, Any]] = Field(
-        default={}, description="Covariance matrix, if possible"
+        default={},
+        description="Covariance matrix, if possible",
     )
     variables: Dict[str, Dict[str, Any]] = Field(
         ...,

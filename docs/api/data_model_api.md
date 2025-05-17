@@ -20,6 +20,8 @@
 
 ::: spectrafit.api.models_model
 
+::: spectrafit.api.moessbauer_model
+
 ### Juptyer Notebook
 
 ::: spectrafit.api.notebook_model

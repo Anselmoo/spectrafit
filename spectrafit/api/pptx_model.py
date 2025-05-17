@@ -4,14 +4,24 @@ from __future__ import annotations
 
 import re
 import tempfile
+
 from pathlib import Path
-from typing import Dict, List, Tuple, Type, Union
+from typing import ClassVar
+from typing import Dict
+from typing import List
+from typing import Tuple
+from typing import Type
+from typing import Union
 
 import pandas as pd
 import pkg_resources
+
 from matplotlib import pyplot as plt
 from pptx.util import Pt
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel
+from pydantic import ConfigDict
+from pydantic import Field
+from pydantic import field_validator
 
 from spectrafit import __version__
 from spectrafit.plotting import PlotSpectra
@@ -69,12 +79,19 @@ class RegressionMetricsAPI(BaseModel):
 
         Returns:
             List[str]: The shortened metrics names.
+
         """
         pattern = r"(?<!\d)[a-zA-Z0-9]{2,}(?!\d)"
         abbreviations: Dict[str, str] = {}
+        min_abbrev_length = 2
         for metric in v:
-            abbreviation = "".join(re.findall(pattern, metric)).lower()[:2]
-            while abbreviation in abbreviations.values() or len(abbreviation) < 2:
+            abbreviation = "".join(re.findall(pattern, metric)).lower()[
+                :min_abbrev_length
+            ]
+            while (
+                abbreviation in abbreviations.values()
+                or len(abbreviation) < min_abbrev_length
+            ):
                 abbreviation = "".join(re.findall(pattern, metric)).lower()[
                     : len(abbreviation) + 1
                 ]
@@ -92,7 +109,8 @@ class SolverAPI(BaseModel):
     @field_validator("variables")
     @classmethod
     def short_variables(
-        cls, v: Dict[str, Dict[str, float]]
+        cls,
+        v: Dict[str, Dict[str, float]],
     ) -> Dict[str, Dict[str, float]]:
         """Shorten the variables names.
 
@@ -101,6 +119,7 @@ class SolverAPI(BaseModel):
 
         Returns:
             Dict[str, Dict[str, float]]: The shortened variables names.
+
         """
         new_dict = {}
         for key, value in v.items():
@@ -347,31 +366,46 @@ class PPTXLayoutAPI:
             The formats of the powerpoint presentation. This includes the ratio of
             `16:9` and `4:3` with pixel width and height of __1280__ and __720__
             respectively for `16:9` and __960__ and __720__ respectively for `4:3`.
+
     """
 
-    pptx_formats: Dict[
-        str, Tuple[Type[Union[Field169API, Field169HDRAPI, Field43API]], Dict[str, int]]
+    pptx_formats: ClassVar[
+        Dict[
+            str,
+            Tuple[Type[Union[Field169API, Field169HDRAPI, Field43API]], Dict[str, int]],
+        ]
     ] = {
         "16:9": (Field169API, {"width": 1280, "height": 720}),
         "16:9HDR": (Field169HDRAPI, {"width": 1920, "height": 1080}),
         "4:3": (Field43API, {"width": 960, "height": 720}),
     }
 
-    def __init__(self, format: str, data: PPTXDataAPI) -> None:
+    def __init__(self, format_: str, data: PPTXDataAPI) -> None:
         """Initialize the PPTXLayout class.
 
         Args:
-            format (str): The format of the powerpoint presentation.
+            format_ (str): The format of the powerpoint presentation.
             data (PPTXDataAPI): The data of the powerpoint presentation.
+
         """
-        self._format = format
+        self._format = format_
         self.tmp_fname = self.tmp_plot(pd.DataFrame(data.output.df_fit))
         self.title = data.input.description.project_name
         self.df_gof = pd.DataFrame({k: [v] for k, v in data.solver.goodness_of_fit})
         self.df_regression = pd.DataFrame(**data.solver.regression_metrics.model_dump())
         self.df_variables = pd.DataFrame.from_dict(
-            data.solver.variables, orient="index"
+            data.solver.variables,
+            orient="index",
         )
+
+    @property
+    def format(self) -> str:
+        """Get the format of the powerpoint presentation.
+
+        Returns:
+            str: The format of the powerpoint presentation.
+        """
+        return self._format
 
     def tmp_plot(self, df_fit: pd.DataFrame) -> Path:
         """Create a temporary plot.
@@ -381,6 +415,7 @@ class PPTXLayoutAPI:
 
         Returns:
             Path: The path to the temporary plot.
+
         """
         with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
             PlotSpectra(
@@ -396,6 +431,7 @@ class PPTXLayoutAPI:
 
         Returns:
             PPTXRatioAPI: The ratio of the powerpoint presentation.
+
         """
         return PPTXRatioAPI(
             width=Pt(self.pptx_formats[self._format][1]["width"]),
@@ -407,6 +443,7 @@ class PPTXLayoutAPI:
 
         Returns:
             PPTXHeaderAPI: The header of the powerpoint presentation.
+
         """
         return PPTXHeaderAPI(
             position=PPTXPositionAPI(
@@ -423,6 +460,7 @@ class PPTXLayoutAPI:
 
         Returns:
             PPTXSubTitleLeftAPI: The left subtitle of the powerpoint presentation.
+
         """
         return PPTXSubTitleLeftAPI(
             position=PPTXPositionAPI(
@@ -437,7 +475,7 @@ class PPTXLayoutAPI:
                     left=Pt(0),
                     top=Pt(
                         self.pptx_formats[self._format][1]["height"] // 5
-                        + self.pptx_formats[self._format][1]["height"] // 10
+                        + self.pptx_formats[self._format][1]["height"] // 10,
                     ),
                     width=Pt(self.pptx_formats[self._format][1]["width"] // 2),
                     height=Pt(3 * self.pptx_formats[self._format][1]["height"] // 5),
@@ -447,7 +485,7 @@ class PPTXLayoutAPI:
                         left=Pt(0),
                         top=Pt(
                             self.pptx_formats[self._format][1]["height"] // 10
-                            + 4 * self.pptx_formats[self._format][1]["height"] // 5
+                            + 4 * self.pptx_formats[self._format][1]["height"] // 5,
                         ),
                         width=Pt(self.pptx_formats[self._format][1]["width"] // 2),
                         height=Pt(18),
@@ -463,6 +501,7 @@ class PPTXLayoutAPI:
 
         Returns:
             PPTXSubTitleRightAPI: The right subtitle of the powerpoint presentation.
+
         """
         return PPTXSubTitleRightAPI(
             position=PPTXPositionAPI(
@@ -483,6 +522,7 @@ class PPTXLayoutAPI:
 
         Returns:
             PPTXTableAPI: The table 1 of the powerpoint presentation.
+
         """
         _basic_block = (
             self.pptx_formats[self._format][1]["height"] // 5
@@ -514,6 +554,7 @@ class PPTXLayoutAPI:
 
         Returns:
             PPTXTableAPI: The table 2 of the powerpoint presentation.
+
         """
         _basic_block = (
             self.pptx_formats[self._format][1]["height"] // 5
@@ -546,6 +587,7 @@ class PPTXLayoutAPI:
 
         Returns:
             PPTXTableAPI: The table 3 of the powerpoint presentation.
+
         """
         _basic_block = (
             self.pptx_formats[self._format][1]["height"] // 5
@@ -578,6 +620,7 @@ class PPTXLayoutAPI:
 
         Returns:
             PPTXFigureAPI: The credit of the powerpoint presentation.
+
         """
         return PPTXFigureAPI(
             position=PPTXPositionAPI(
@@ -604,6 +647,7 @@ class PPTXLayoutAPI:
         Returns:
             Union[Field169API, Field169HDRAPI, Field43API]: The powerpoint presentation
                 layout.
+
         """
         return self.pptx_formats[self._format][0](
             ratio=self.create_ratio(),

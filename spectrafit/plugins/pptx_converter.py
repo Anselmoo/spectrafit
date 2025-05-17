@@ -3,22 +3,30 @@
 from __future__ import annotations
 
 import argparse
-from pathlib import Path
-from typing import Any, Dict, MutableMapping, Type
 
-import pandas as pd
+from pathlib import Path
+from typing import TYPE_CHECKING
+from typing import Any
+from typing import Dict
+from typing import MutableMapping
+from typing import Optional
+from typing import Type
+
 import tomli
+
 from pptx import Presentation
 from pptx.util import Pt
 
-from spectrafit.api.pptx_model import (
-    PPTXDataAPI,
-    PPTXLayoutAPI,
-    PPTXPositionAPI,
-    PPTXRatioAPI,
-    PPTXStructureAPI,
-)
+from spectrafit.api.pptx_model import PPTXDataAPI
+from spectrafit.api.pptx_model import PPTXLayoutAPI
+from spectrafit.api.pptx_model import PPTXPositionAPI
+from spectrafit.api.pptx_model import PPTXRatioAPI
+from spectrafit.api.pptx_model import PPTXStructureAPI
 from spectrafit.plugins.converter import Converter
+
+
+if TYPE_CHECKING:
+    import pandas as pd
 
 
 class PPTXElements:
@@ -29,6 +37,7 @@ class PPTXElements:
 
         Args:
             slide (type): The slide of the powerpoint presentation.
+
         """
         self.slide = slide
 
@@ -36,7 +45,7 @@ class PPTXElements:
         self,
         text: str,
         position: PPTXPositionAPI,
-        font_size: Pt = Pt(16),
+        font_size: Optional[Pt] = None,
     ) -> None:
         """Create a textbox from the input file.
 
@@ -44,7 +53,8 @@ class PPTXElements:
             text (str): The text of the textbox.
             position (PPTXPositionAPI): The position of the textbox in the powerpoint
                 presentation.
-            font_size (Pt): The font size of the textbox. Defaults to Pt(16).
+            font_size (Optional[Pt]): The font size of the textbox. Defaults to 16 pt.
+
         """
         tx_box = self.slide.shapes.add_textbox(
             left=position.left,
@@ -52,6 +62,10 @@ class PPTXElements:
             width=position.width,
             height=position.height,
         )
+
+        # Set default font size if None
+        if font_size is None:  # pragma: no cover
+            font_size = Pt(16)
 
         tf = tx_box.text_frame
         tf.text = text
@@ -75,6 +89,7 @@ class PPTXElements:
                 powerpoint presentation.
             text (str): The text of the textbox.
             font_size (Pt): The font size of the textbox.
+
         """
         self.slide.shapes.add_picture(
             str(fname),
@@ -97,7 +112,7 @@ class PPTXElements:
         index_hidden: bool,
         text: str,
         position_textbox: PPTXPositionAPI,
-        font_size: Pt = Pt(12),
+        font_size: Optional[Pt] = None,
     ) -> None:
         """Create a table from the input file.
 
@@ -114,12 +129,20 @@ class PPTXElements:
             position_textbox (PPTXPositionAPI): The position of the textbox in the
                 powerpoint presentation.
             font_size (Pt, optional): The font size of the table. Defaults to Pt(12).
+
         """
         df = df.round(2)
         if transpose:
             df = df.transpose()
+
+        # Set default font size if None
+        if font_size is None:  # pragma: no cover
+            font_size = Pt(12)
+
         self.extract_table(
-            df=df, position_table=position_table, index_hidden=index_hidden
+            df=df,
+            position_table=position_table,
+            index_hidden=index_hidden,
         )
 
         self.create_textbox(
@@ -147,6 +170,7 @@ class PPTXElements:
                 powerpoint presentation.
             index_hidden (bool): Hide the index of the table in the powerpoint
                 presentation.
+
         """
         rows, cols = df.shape
         table = self.slide.shapes.add_table(
@@ -177,7 +201,7 @@ class PPTXElements:
         text: str,
         position_logo: PPTXPositionAPI,
         position_text: PPTXPositionAPI,
-        font_size: Pt = Pt(14),
+        font_size: Optional[Pt] = None,
     ) -> None:
         """Create a credit for spectrafit.
 
@@ -188,8 +212,12 @@ class PPTXElements:
                 presentation.
             position_text (PPTXPositionAPI): The position of the text in the powerpoint
                 presentation.
-            font_size (Pt): The font size of the textbox. Defaults to Pt(14).
-        """
+            font_size (Optional[Pt]): The font size of the textbox. Defaults to 14 pt.
+
+        """  # Set default font size if None
+        if font_size is None:  # pragma: no cover
+            font_size = Pt(14)
+
         self.create_figure(
             fname=fname,
             position_figure=position_logo,
@@ -205,6 +233,7 @@ class PPTXElements:
             text (str): The text of the title.
             position (PPTXPositionAPI): The position of the title in the powerpoint
                 presentation.
+
         """
         title = self.slide.shapes.title
         title.text = text
@@ -221,6 +250,7 @@ class PPTXElements:
             position (PPTXPositionAPI): The position of the subtitle in the powerpoint
                 presentation.
             index (int): The index of the subtitle in the powerpoint presentation.
+
         """
         subtitle = self.slide.placeholders[index]
         subtitle.text = text
@@ -234,7 +264,10 @@ class PPTXLayout(PPTXElements):
     """Generate a powerpoint presentation from a the spectrafit output."""
 
     def __init__(
-        self, ratio: PPTXRatioAPI, structure: PPTXStructureAPI, fname: Path
+        self,
+        ratio: PPTXRatioAPI,
+        structure: PPTXStructureAPI,
+        fname: Path,
     ) -> None:
         """Create a powerpoint presentation from a the spectrafit output.
 
@@ -242,6 +275,7 @@ class PPTXLayout(PPTXElements):
             ratio (PPTXRatioAPI): The ratio of the powerpoint presentation.
             structure (PPTXStructureAPI): The structure of the powerpoint presentation.
             fname (Path): The temporay filename of the powerpoint presentation.
+
         """
         self.ratio = ratio
         self.structure = structure
@@ -260,7 +294,8 @@ class PPTXLayout(PPTXElements):
     def top_element(self) -> None:
         """Create the top element of the powerpoint presentation."""
         self.create_title(
-            text=self.structure.header.text, position=self.structure.header.position
+            text=self.structure.header.text,
+            position=self.structure.header.position,
         )
 
     def lefr_element(self) -> None:
@@ -344,6 +379,7 @@ class PPTXConverter(Converter):
     Attributes:
         pixel_size (Dict[str, Dict[str, int]]): The pixel size of the powerpoint
             presentation.
+
     """
 
     pixel_size = PPTXLayoutAPI.pptx_formats.keys()
@@ -354,6 +390,7 @@ class PPTXConverter(Converter):
         Returns:
             Dict[str, Any]: Return the input file arguments as a dictionary without
                 additional information beyond the command line arguments.
+
         """
         parse = argparse.ArgumentParser(
             description="Converter for 'SpectraFit' from *.lock output to a "
@@ -389,17 +426,18 @@ class PPTXConverter(Converter):
 
         Returns:
             MutableMapping[str, Any]: The converted file as a dictionary.
+
         """
         if file_format not in PPTXConverter.pixel_size:
-            raise ValueError(
+            msg = (
                 f"File format '{file_format}' is not supported;"
                 f"it must be one of {PPTXConverter.pixel_size}"
             )
+            raise ValueError(msg)
 
         if infile.suffix != ".lock":
-            raise ValueError(
-                f"File format '{infile.suffix}' is not supported; it must be '.lock'"
-            )
+            msg = f"File format '{infile.suffix}' is not supported; it must be '.lock'"
+            raise ValueError(msg)
 
         with infile.open("rb") as f:
             data = PPTXDataAPI(**tomli.load(f))
@@ -409,7 +447,8 @@ class PPTXConverter(Converter):
     def save(self, data: Any, fname: Path, export_format: str) -> None:
         """Save the powerpoint presentation."""
         pptx_layout = PPTXLayoutAPI(
-            export_format, data=data[export_format]
+            export_format,
+            data=data[export_format],
         ).get_pptx_layout()
 
         PPTXLayout(

@@ -4,26 +4,28 @@ from __future__ import annotations
 
 import gzip
 import pickle
+
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
+from typing import Dict
 
 import numpy as np
 import pandas as pd
 import pytest
+
 from pandas._testing import assert_frame_equal
 
-from spectrafit.models import DistributionModels, SolverModels
-from spectrafit.tools import (
-    PostProcessing,
-    PreProcessing,
-    SaveResult,
-    check_keywords_consistency,
-    exclude_none_dictionary,
-    pkl2any,
-    pure_fname,
-    transform_nested_types,
-    unicode_check,
-)
+from spectrafit.models.builtin import DistributionModels
+from spectrafit.models.builtin import SolverModels
+from spectrafit.tools import PostProcessing
+from spectrafit.tools import PreProcessing
+from spectrafit.tools import SaveResult
+from spectrafit.tools import check_keywords_consistency
+from spectrafit.tools import exclude_none_dictionary
+from spectrafit.tools import pkl2any
+from spectrafit.tools import pure_fname
+from spectrafit.tools import transform_nested_types
+from spectrafit.tools import unicode_check
 
 
 @pytest.fixture(name="random_dataframe")
@@ -33,7 +35,7 @@ def df() -> pd.DataFrame:
         {
             "energy": np.linspace(0, 10, 100),
             "intensity": np.random.default_rng(0).normal(size=100),
-        }
+        },
     )
 
 
@@ -47,7 +49,7 @@ def df_large() -> pd.DataFrame:
             "Intensity_2": np.random.default_rng(6).normal(size=10),
             "Intensity_3": np.random.default_rng(7).normal(size=10),
             "Intensity_4": np.random.default_rng(8).normal(size=10),
-        }
+        },
     )
 
 
@@ -68,7 +70,7 @@ def args_0() -> Dict[str, Any]:
                     "center": {"max": 200, "min": -200, "vary": True, "value": 0},
                     "fwhmg": {"max": 2.5, "min": 0.00002, "vary": True, "value": 0.1},
                     "fwhml": {"max": 2.5, "min": 0.00001, "vary": True, "value": 1},
-                }
+                },
             },
             "2": {
                 "pseudovoigt": {
@@ -76,7 +78,7 @@ def args_0() -> Dict[str, Any]:
                     "center": {"max": 20, "min": -20, "vary": True, "value": 0.0},
                     "fwhmg": {"max": 2.51, "min": 0.00002, "vary": True, "value": 1.0},
                     "fwhml": {"max": 2.52, "min": 0.001, "vary": True, "value": 0.01},
-                }
+                },
             },
         },
     }
@@ -105,7 +107,7 @@ def args_1() -> Dict[str, Any]:
                     "center": {"max": 200, "min": -200, "vary": True, "value": 0},
                     "fwhmg": {"max": 2.5, "min": 0.00002, "vary": True, "value": 0.1},
                     "fwhml": {"max": 2.5, "min": 0.00001, "vary": True, "value": 1},
-                }
+                },
             },
         },
     }
@@ -132,7 +134,7 @@ def args_2() -> Dict[str, Any]:
             "1": {
                 "constant": {
                     "amplitude": {"max": 200, "min": 10, "vary": False, "value": 1},
-                }
+                },
             },
         },
     }
@@ -161,7 +163,7 @@ def args_3() -> Dict[str, Any]:
                     "center": {"vary": True, "value": 1},
                     "fwhmg": {"vary": True, "value": 1},
                     "amplitude": {"vary": True, "value": 1},
-                }
+                },
             },
         },
     }
@@ -324,7 +326,7 @@ class TestPreProcessing:
 
         assert pytest_wrapped_e.type == KeyError
         assert pytest_wrapped_e.value.args[0] == str(
-            f"ERROR: The {list(args_1.keys())[0]} is not parameter of the `cmd-input`!"
+            f"ERROR: The {next(iter(args_1.keys()))} is not parameter of the `cmd-input`!",
         )
 
 
@@ -356,25 +358,35 @@ class TestPostProcessing:
     """Test Post-Processing tool."""
 
     def test_post_processing_local(
-        self, random_dataframe_global: pd.DataFrame, args_0: Dict[str, Any]
+        self,
+        random_dataframe_global: pd.DataFrame,
+        args_0: Dict[str, Any],
     ) -> None:
         """Testing post processing for local fitting."""
         minimizer, result = SolverModels(df=random_dataframe_global, args=args_0)()
 
         df, args = PostProcessing(
-            df=random_dataframe_global, args=args_0, minimizer=minimizer, result=result
+            df=random_dataframe_global,
+            args=args_0,
+            minimizer=minimizer,
+            result=result,
         )()
         assert isinstance(df, pd.DataFrame)
         assert isinstance(args, dict)
 
     def test_post_processing_global(
-        self, random_dataframe_global: pd.DataFrame, args_1: Dict[str, Any]
+        self,
+        random_dataframe_global: pd.DataFrame,
+        args_1: Dict[str, Any],
     ) -> None:
         """Testing post processing for global fitting."""
         minimizer, result = SolverModels(df=random_dataframe_global, args=args_1)()
 
         df, args = PostProcessing(
-            df=random_dataframe_global, args=args_1, minimizer=minimizer, result=result
+            df=random_dataframe_global,
+            args=args_1,
+            minimizer=minimizer,
+            result=result,
         )()
         assert isinstance(df, pd.DataFrame)
         assert isinstance(args, dict)
@@ -386,7 +398,8 @@ class TestPostProcessing:
     ) -> None:
         """Testing insight report for no report of the confidence interval."""
         minimizer, result = SolverModels(
-            df=random_dataframe, args=args_conf_interval_fail
+            df=random_dataframe,
+            args=args_conf_interval_fail,
         )()
         pp = PostProcessing(
             df=random_dataframe,
@@ -409,7 +422,7 @@ class TestPostProcessing:
             {
                 "energy": x,
                 "intensity": DistributionModels.gaussian(x, 1, 1, 1),
-            }
+            },
         )
 
         args__min_rel_change["conf_interval"]["trace"] = trace_value
@@ -438,11 +451,11 @@ class TestPickle:
             "data": random_dataframe,
         }
         # write test file as pickle file with unicode utf-8
-        with open(args["outfile"], "wb") as f:
+        with Path(args["outfile"]).open("wb") as f:
             pickle.dump(args["data"], f, protocol=pickle.HIGHEST_PROTOCOL)
 
         # read test file as pickle file
-        with open(args["outfile"], "rb") as f:
+        with Path(args["outfile"]).open("rb") as f:
             df = unicode_check(f)
 
         assert isinstance(df, pd.DataFrame)
@@ -454,7 +467,7 @@ class TestPickle:
             "data": random_dataframe,
         }
         # write test file as pickle file with unicode utf-8
-        with open(args["outfile"], "wb") as f:
+        with Path(args["outfile"]).open("wb") as f:
             pickle.dump(args["data"], f, protocol=pickle.HIGHEST_PROTOCOL)
 
         # read test file as pickle file
@@ -483,7 +496,7 @@ class TestPickle:
             "outfile": tmp_path / "test_pkl2any_fail.fail",
         }
         # read test file as pickle file
-        with pytest.raises(ValueError):
+        with pytest.raises(ValueError, match="File format '.fail'"):
             pkl2any(args["outfile"])
 
 
@@ -509,14 +522,14 @@ def test_exclude_none_dictionary() -> None:
 def test_transform_nested_types() -> None:
     """Testing transform_nested_types."""
     assert transform_nested_types(
-        {"a": np.int32(1), "b": np.float64(2.0), "c": np.bool_(True)}
+        {"a": np.int32(1), "b": np.float64(2.0), "c": np.bool_(True)},
     ) == {"a": 1, "b": 2.0, "c": True}
     assert transform_nested_types({"a": {"b": np.int32(1)}, "c": np.float64(2.0)}) == {
         "a": {"b": 1},
         "c": 2.0,
     }
     assert transform_nested_types(
-        {"a": 1, "b": [np.int64(2)], "c": np.float64(3.0)}
+        {"a": 1, "b": [np.int64(2)], "c": np.float64(3.0)},
     ) == {
         "a": 1,
         "b": [2],
@@ -525,7 +538,7 @@ def test_transform_nested_types() -> None:
     assert transform_nested_types({"a": np.array([1, 2, 3])}) == {"a": [1, 2, 3]}
 
     assert transform_nested_types(
-        {"a": (np.int32(1), np.int64(4)), "b": np.float64(2.0)}
+        {"a": (np.int32(1), np.int64(4)), "b": np.float64(2.0)},
     ) == {
         "a": (1, 4),
         "b": 2.0,

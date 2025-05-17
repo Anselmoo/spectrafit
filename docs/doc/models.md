@@ -9,7 +9,7 @@ tags:
   - fitting-functions
 ---
 
-# Implemented Models in SpectraFit
+## Implemented Models in SpectraFit
 
 **SpectraFit** provides a wide range of mathematical models for fitting spectroscopic data. This page documents all the available models, their parameters, and examples of their use.
 
@@ -164,7 +164,7 @@ Where:
 The [Orca][1] Gaussian distribution is a variant of the Gaussian distribution, defined by its amplitude, center, and width:
 $$f(x) = \frac{A}{\sigma\sqrt{2\pi}} \exp\left(-\frac{(x-\mu)^2}{2\sigma^2}\right)$$
 
-It is similar to the standard Gaussian distribution but uses a different notation for the amplitude with respect to the implementation in the  [`orca_mapspc`][2].
+It is similar to the standard Gaussian distribution but uses a different notation for the amplitude with respect to the implementation in the [`orca_mapspc`][2].
 
 Where:
 
@@ -352,7 +352,7 @@ Flexible distribution with four parameters.
 
 For calculating the models, a few math constants are needed, which are implemented in the `constants` module.
 
-::: spectrafit.models.Constants
+<!-- ::: spectrafit.models.Constants -->
 
 ## Visualization of the Models
 

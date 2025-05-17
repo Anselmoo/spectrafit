@@ -4,7 +4,9 @@ from __future__ import annotations
 
 from typing import List
 
-from spectrafit.api.notebook_model import ColorAPI, FontAPI
+from spectrafit.api.notebook_model import ColorAPI
+from spectrafit.api.notebook_model import FontAPI
+
 
 __fira_code__ = "Fira Code"
 

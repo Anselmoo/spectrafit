@@ -3,21 +3,29 @@
 from __future__ import annotations
 
 import argparse
-from typing import Any, Dict, MutableMapping, Optional, Tuple
 
-import pandas as pd
+from typing import TYPE_CHECKING
+from typing import Any
+from typing import Dict
+from typing import MutableMapping
+from typing import Optional
+from typing import Tuple
 
 from spectrafit.api.cmd_model import CMDModelAPI
-from spectrafit.models import SolverModels
+from spectrafit.models.builtin import SolverModels
 from spectrafit.plotting import PlotSpectra
-from spectrafit.report import PrintingResults, PrintingStatus
-from spectrafit.tools import (
-    PostProcessing,
-    PreProcessing,
-    SaveResult,
-    load_data,
-    read_input_file,
-)
+from spectrafit.report import PrintingResults
+from spectrafit.report import PrintingStatus
+from spectrafit.tools import PostProcessing
+from spectrafit.tools import PreProcessing
+from spectrafit.tools import SaveResult
+from spectrafit.tools import load_data
+from spectrafit.tools import read_input_file
+
+
+if TYPE_CHECKING:
+    import pandas as pd
+
 
 __status__ = PrintingStatus()
 
@@ -28,6 +36,7 @@ def get_args() -> Dict[str, Any]:
     Returns:
         Dict[str, Any]: Return the input file arguments as a dictionary without
              additional information beyond the command line arguments.
+
     """
     parser = argparse.ArgumentParser(
         description="Fast Fitting Program for ascii txt files.",
@@ -191,6 +200,7 @@ def command_line_runner(args: Optional[Dict[str, Any]] = None) -> None:
         args (Dict[str, Any], optional): The input file arguments as a
              dictionary with additional information beyond the command line arguments.
              Defaults to None.
+
     """
     __status__.welcome()
     while True:
@@ -210,10 +220,9 @@ def command_line_runner(args: Optional[Dict[str, Any]] = None) -> None:
             __status__.thanks()
             __status__.credits()
             return
-        elif again == "y":  # pragma: no cover
+        if again == "y":
             continue
-        else:  # pragma: no cover
-            __status__.yes_no()
+        __status__.yes_no()
 
 
 def extracted_from_command_line_runner() -> Dict[str, Any]:
@@ -226,26 +235,29 @@ def extracted_from_command_line_runner() -> Dict[str, Any]:
     Returns:
         Dict[str, Any]: The input file arguments as a dictionary with additional
              information beyond the command line arguments.
+
     """
     result: Dict[str, Any] = get_args()
     _args: MutableMapping[str, Any] = read_input_file(result["input"])
 
-    if "settings" in _args.keys():
-        for key in _args["settings"].keys():
+    if "settings" in _args:
+        for key in _args["settings"]:
             result[key] = _args["settings"][key]
     result = CMDModelAPI(**result).model_dump()
-    if "description" in _args["fitting"].keys():
+    if "description" in _args["fitting"]:
         result["description"] = _args["fitting"]["description"]
-    if "parameters" in _args["fitting"].keys():
-        if "minimizer" in _args["fitting"]["parameters"].keys():
+    if "parameters" in _args["fitting"]:
+        if "minimizer" in _args["fitting"]["parameters"]:
             result["minimizer"] = _args["fitting"]["parameters"]["minimizer"]
         else:
-            raise KeyError("Missing 'minimizer' in 'parameters'!")
-        if "optimizer" in _args["fitting"]["parameters"].keys():
+            msg = "Missing 'minimizer' in 'parameters'!"
+            raise KeyError(msg)
+        if "optimizer" in _args["fitting"]["parameters"]:
             result["optimizer"] = _args["fitting"]["parameters"]["optimizer"]
         else:
-            raise KeyError("Missing key 'optimizer' in 'parameters'!")
-        if "report" in _args["fitting"]["parameters"].keys():
+            msg = "Missing key 'optimizer' in 'parameters'!"
+            raise KeyError(msg)
+        if "report" in _args["fitting"]["parameters"]:
             result["report"] = _args["fitting"]["parameters"]["report"]
         else:
             result["report"] = {
@@ -253,12 +265,12 @@ def extracted_from_command_line_runner() -> Dict[str, Any]:
                 "min_correl": 0.1,
                 "sort_pars": False,
             }
-        if "conf_interval" in _args["fitting"]["parameters"].keys():
+        if "conf_interval" in _args["fitting"]["parameters"]:
             result["conf_interval"] = _args["fitting"]["parameters"]["conf_interval"]
         else:
             result["conf_interval"] = None
 
-    if "peaks" in _args["fitting"].keys():
+    if "peaks" in _args["fitting"]:
         result["peaks"] = _args["fitting"]["peaks"]
     return result
 
@@ -277,6 +289,7 @@ def fitting_routine(args: Dict[str, Any]) -> Tuple[pd.DataFrame, Dict[str, Any]]
              dictionary contains the raw input data, the best fit, the single
              contributions and the corresponding residuum. Furthermore, the dictionary
              is extended by advanced statistical information of the fit.
+
     """
     df: pd.DataFrame = load_data(args)
     df, args = PreProcessing(df=df, args=args)()

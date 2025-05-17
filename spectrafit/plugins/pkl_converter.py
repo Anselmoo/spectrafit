@@ -5,13 +5,20 @@ from __future__ import annotations
 import argparse
 import gzip
 import pickle
+
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
+from typing import ClassVar
+from typing import Dict
+from typing import List
+from typing import Optional
 
 import numpy as np
 
 from spectrafit.plugins.converter import Converter
-from spectrafit.tools import pkl2any, pure_fname
+from spectrafit.tools import pkl2any
+from spectrafit.tools import pure_fname
+
 
 pkl_gz = "pkl.gz"
 
@@ -55,6 +62,7 @@ class ExportData:
             data (Dict[str, Any]): The data to export.
             fname (Path): The filename of the output file.
             export_format (str): The file format of the output file.
+
         """
         self.data = data
         self.fname = fname.with_suffix(f".{export_format}")
@@ -93,6 +101,7 @@ class ExportData:
 
         Returns:
             List[Dict[str, Any]]: The converted data.
+
         """
         return [
             {k: v.tolist() for k, v in d.items() if isinstance(v, np.ndarray)}
@@ -121,12 +130,13 @@ class PklConverter(Converter):
 
 
     Attributes:
-        choices_fformat (Set[str]): The choices for the file format.
-        choices_export (Set[str]): The choices for the export format.
+        choices_fformat (ClassVar[set[str]]): The choices for the file format.
+        choices_export (ClassVar[set[str]]): The choices for the export format.
+
     """
 
-    choices_fformat = {"latin1", "utf-8", "utf-16", "utf-32"}
-    choices_export = {"npy", "npz", "pkl", pkl_gz}
+    choices_fformat: ClassVar[set[str]] = {"latin1", "utf-8", "utf-16", "utf-32"}
+    choices_export: ClassVar[set[str]] = {"npy", "npz", "pkl", "pkl.gz"}
 
     def get_args(self) -> Dict[str, Any]:
         """Get the arguments from the command line.
@@ -134,6 +144,7 @@ class PklConverter(Converter):
         Returns:
             Dict[str, Any]: Return the input file arguments as a dictionary without
                 additional information beyond the command line arguments.
+
         """
         parser = argparse.ArgumentParser(
             description="Converter for 'SpectraFit' from pkl files to CSV files.",
@@ -173,10 +184,12 @@ class PklConverter(Converter):
 
         Returns:
             Dict[str, Any]: The data as a dictionary, which can be a nested dictionary
+
         """
 
         def _convert(
-            data_values: Dict[str, Any], _key: Optional[List[str]] = None
+            data_values: Dict[str, Any],
+            _key: Optional[List[str]] = None,
         ) -> List[Dict[str, Any]]:
             """Convert the data to a list of dictionaries.
 
@@ -196,6 +209,7 @@ class PklConverter(Converter):
 
             Returns:
                 List[Dict[str, Any]]: The data as a list of dictionaries.
+
             """
             data_list = []
             if _key is None:
@@ -206,7 +220,7 @@ class PklConverter(Converter):
                     data_list.extend(_convert(value, _key))
                     _key.pop()
                 elif isinstance(value, np.ndarray):
-                    data_list.append({"_".join(_key + [key]): value})
+                    data_list.append({"_".join([*_key, key]): value})
             return data_list
 
         data_dict = {}
@@ -225,9 +239,11 @@ class PklConverter(Converter):
 
         Raises:
             ValueError: If the export format is not supported.
+
         """
         if export_format.lower() not in self.choices_export:
-            raise ValueError(f"Unsupported file format '{export_format}'.")
+            msg = f"Unsupported file format '{export_format}'."
+            raise ValueError(msg)
 
         fname = pure_fname(fname)
 

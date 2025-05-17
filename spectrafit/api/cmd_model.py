@@ -3,21 +3,26 @@
 from __future__ import annotations
 
 from datetime import datetime
+from datetime import timezone
 from getpass import getuser
 from hashlib import sha256
 from socket import gethostname
-from typing import Any, Dict, List, Optional, Union
+from typing import Any
+from typing import Dict
+from typing import List
+from typing import Optional
+from typing import Union
 from uuid import uuid4
 
-from pydantic import BaseModel, Field, HttpUrl
+from pydantic import BaseModel
+from pydantic import Field
+from pydantic import HttpUrl
 from pydantic.functional_validators import field_validator
 
 from spectrafit import __version__
-from spectrafit.api.tools_model import (
-    AutopeakAPI,
-    DataPreProcessingAPI,
-    GlobalFittingAPI,
-)
+from spectrafit.api.tools_model import AutopeakAPI
+from spectrafit.api.tools_model import DataPreProcessingAPI
+from spectrafit.api.tools_model import GlobalFittingAPI
 
 
 class DescriptionAPI(BaseModel):
@@ -34,10 +39,12 @@ class DescriptionAPI(BaseModel):
         description="Project details",
     )
     keywords: List[str] = Field(
-        default=["spectra"], description="Keywords for the project"
+        default=["spectra"],
+        description="Keywords for the project",
     )
     authors: List[str] = Field(
-        default=["authors"], description="Authors of the project"
+        default=["authors"],
+        description="Authors of the project",
     )
     references: List[str] = Field(
         default=["https://github.com/Anselmoo/spectrafit"],
@@ -45,14 +52,17 @@ class DescriptionAPI(BaseModel):
         description="References for the project",
     )
     metadata: Optional[Union[Dict[Any, Any], List[Any]]] = Field(
-        default=None, description="Metadata for the project"
+        default=None,
+        description="Metadata for the project",
     )
     license: str = "BSD-3-Clause"
     version: str = __version__
     host_info: str = sha256(f"{getuser()}@{gethostname()}".encode()).hexdigest()
-    timestamp: str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    timestamp: str = datetime.now(tz=timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
     id_: str = Field(
-        default=str(uuid4()), alias="id", description="Unique ID of the project"
+        default=str(uuid4()),
+        alias="id",
+        description="Unique ID of the project",
     )
 
     @field_validator("references")

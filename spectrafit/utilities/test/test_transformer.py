@@ -2,11 +2,14 @@
 
 from __future__ import annotations
 
-from typing import Any, Dict, List
+from typing import Any
+from typing import Dict
+from typing import List
 
 import pytest
 
-from spectrafit.utilities.transformer import list2dict, remove_none_type
+from spectrafit.utilities.transformer import list2dict
+from spectrafit.utilities.transformer import remove_none_type
 
 
 @pytest.fixture
@@ -15,6 +18,7 @@ def reference_dict() -> Dict[str, Dict[str, Any]]:
 
     Returns:
         Dict[str, Dict[str, Any]]: Reference dictionary of two peaks.
+
     """
     return {
         "peaks": {
@@ -24,7 +28,7 @@ def reference_dict() -> Dict[str, Dict[str, Any]]:
                     "center": {"max": 2, "min": -2, "vary": True, "value": 0},
                     "fwhmg": {"max": 0.1, "min": 0.02, "vary": True, "value": 0.01},
                     "fwhml": {"max": 0.1, "min": 0.01, "vary": True, "value": 0.01},
-                }
+                },
             },
             "2": {
                 "pseudovoigt": {
@@ -32,7 +36,7 @@ def reference_dict() -> Dict[str, Dict[str, Any]]:
                     "center": {"max": 2, "min": -2, "vary": True, "value": 0},
                     "fwhmg": {"max": 0.1, "min": 0.02, "vary": True, "value": 0.01},
                     "fwhml": {"max": 0.1, "min": 0.01, "vary": True, "value": 0.01},
-                }
+                },
             },
         },
     }
@@ -44,6 +48,7 @@ def reference_list() -> List[Dict[str, Any]]:
 
     Returns:
         Dict[str, Dict[str, Any]]: Reference list of dictionaries of two peaks.
+
     """
     return [
         {
@@ -52,7 +57,7 @@ def reference_list() -> List[Dict[str, Any]]:
                 "center": {"max": 2, "min": -2, "vary": True, "value": 0},
                 "fwhmg": {"max": 0.1, "min": 0.02, "vary": True, "value": 0.01},
                 "fwhml": {"max": 0.1, "min": 0.01, "vary": True, "value": 0.01},
-            }
+            },
         },
         {
             "pseudovoigt": {
@@ -60,13 +65,14 @@ def reference_list() -> List[Dict[str, Any]]:
                 "center": {"max": 2, "min": -2, "vary": True, "value": 0},
                 "fwhmg": {"max": 0.1, "min": 0.02, "vary": True, "value": 0.01},
                 "fwhml": {"max": 0.1, "min": 0.01, "vary": True, "value": 0.01},
-            }
+            },
         },
     ]
 
 
 def test_converter(
-    reference_list: List[Dict[str, Any]], reference_dict: Dict[str, Dict[str, Any]]
+    reference_list: List[Dict[str, Any]],
+    reference_dict: Dict[str, Dict[str, Any]],
 ) -> None:
     """Test of the converter from list to dict.
 
@@ -74,6 +80,7 @@ def test_converter(
         reference_list (List[Dict[str, Any]]): Reference list of dictionaries of
              two peaks.
         reference_dict (Dict[str, Dict[str, Any]]): Reference dictionary of two peaks.
+
     """
     assert list2dict(reference_list) == reference_dict
 

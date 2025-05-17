@@ -3,23 +3,30 @@
 from __future__ import annotations
 
 from math import isclose
-from typing import Any, Dict, List, Union
+from typing import TYPE_CHECKING
+from typing import Any
+from typing import Dict
+from typing import List
+from typing import Union
 
 import numpy as np
 import pandas as pd
 import pytest
-from lmfit import Parameter, Parameters
-from pytest_mock.plugin import MockerFixture
 
-from spectrafit.report import (
-    CIReport,
-    FitReport,
-    PrintingResults,
-    PrintingStatus,
-    RegressionMetrics,
-    _extracted_gof_from_results,
-    get_init_value,
-)
+from lmfit import Parameter
+from lmfit import Parameters
+
+from spectrafit.report import CIReport
+from spectrafit.report import FitReport
+from spectrafit.report import PrintingResults
+from spectrafit.report import PrintingStatus
+from spectrafit.report import RegressionMetrics
+from spectrafit.report import _extracted_gof_from_results
+from spectrafit.report import get_init_value
+
+
+if TYPE_CHECKING:
+    from pytest_mock.plugin import MockerFixture
 
 
 class TestRegressionMetrics:
@@ -27,19 +34,17 @@ class TestRegressionMetrics:
 
     def test_raise_error(self) -> None:
         """Testing raise error."""
-        with pytest.raises(ValueError) as excinfo:
+        error_msg = r"The shape of the real and fit data-values are not equal!"
+        with pytest.raises(ValueError, match=error_msg):
             _ = RegressionMetrics(
                 pd.DataFrame(
                     {
                         "intensity_0": np.random.default_rng(0).normal(size=10),
                         "intensity_1": np.random.default_rng(1).normal(size=10),
                         "fit_0": np.random.default_rng(2).normal(size=10),
-                    }
-                )
+                    },
+                ),
             )
-        assert "The shape of the real and fit data-values are not equal!" in str(
-            excinfo.value
-        )
 
 
 def test_extracted_gof_from_results(mocker: MockerFixture) -> None:
@@ -60,6 +65,7 @@ def test_extracted_gof_from_results(mocker: MockerFixture) -> None:
 
         Mockup over `lmfit` is necessary for the test, because the `results` and
         `params` attributes have to be defined.
+
     """
     with mocker.patch("spectrafit.report._extracted_gof_from_results") as result:
         result = mocker.MagicMock()
@@ -192,7 +198,7 @@ class TestPrintingStatus:
 
 
 @pytest.mark.parametrize(
-    "sort_pars,show_correl,min_correl,modelpars,expected_parnames",
+    ("sort_pars", "show_correl", "min_correl", "modelpars", "expected_parnames"),
     [
         (True, True, 0.0, None, ["a", "b"]),  # ID: sort-true-showcorrel-true
         (False, False, 0.0, None, ["a", "b"]),  # ID: sort-false-showcorrel-false
@@ -227,6 +233,7 @@ def test_fit_report_init(
             modelpars parameter.
         expected_parnames (List[str]): The expected parnames attribute of the
             FitReport class.
+
     """
     params = Parameters()
     params.add_many(("a", 1, True), ("b", 2, True))
@@ -241,7 +248,7 @@ def test_fit_report_init(
 
 
 @pytest.mark.parametrize(
-    "inpars,expected_result",
+    ("inpars", "expected_result"),
     [
         (Parameters(), None),  # ID: empty-parameters
         ("not_parameters", AttributeError),  # ID: incorrect-type
@@ -249,7 +256,8 @@ def test_fit_report_init(
     ids=["empty-parameters", "incorrect-type"],
 )
 def test_generate_fit_statistics_edge_cases(
-    inpars: Union[Parameters, str], expected_result: Union[None, Exception]
+    inpars: Union[Parameters, str],
+    expected_result: Union[None, Exception],
 ) -> None:
     """Test the edge cases of the  method in the FitReport class.
 
@@ -259,6 +267,7 @@ def test_generate_fit_statistics_edge_cases(
             raise an exception.
         expected_result (Union[None, Exception]): The expected
             result of the generate_fit_statistics method.
+
     """
     if isinstance(inpars, str):
         with pytest.raises(expected_result) as exc_info:  # type: ignore
@@ -272,7 +281,7 @@ def test_generate_fit_statistics_edge_cases(
 
 # Error cases
 @pytest.mark.parametrize(
-    "inpars,exception",
+    ("inpars", "exception"),
     [
         ([], AttributeError),
     ],
@@ -284,13 +293,14 @@ def test_fit_report_init_error_cases(inpars: List[Any], exception: Exception) ->
     Args:
         inpars (List[Any]): The input parameters for FitReport.
         exception (Exception): The expected exception to be raised.
+
     """
     with pytest.raises(exception):  # type: ignore
         FitReport(inpars=inpars)
 
 
 @pytest.mark.parametrize(
-    "ci, with_offset, ndigits, expected_output, test_id",
+    ("ci", "with_offset", "ndigits", "expected_output", "test_id"),
     [
         (
             {"param1": [(0.025, 2), (0.975, 4)], "param2": [(0.025, 3), (0.975, 5)]},

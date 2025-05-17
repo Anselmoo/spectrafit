@@ -5,8 +5,14 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import TYPE_CHECKING
+from typing import Any
+from typing import Dict
+from typing import List
+from typing import Optional
+from typing import Tuple
 
 import dash
 import dash_bootstrap_components as dbc
@@ -15,20 +21,24 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import tomli
-from dash import dcc, html
-from dash_bootstrap_templates import ThemeChangerAIO, template_from_url
-from jupyter_dash import JupyterDash
-from numpy.typing import NDArray
 
-from spectrafit.api.rixs_model import (
-    MainTitleAPI,
-    RIXSModelAPI,
-    SizeRatioAPI,
-    XAxisAPI,
-    YAxisAPI,
-    ZAxisAPI,
-)
+from dash import dcc
+from dash import html
+from dash_bootstrap_templates import ThemeChangerAIO
+from dash_bootstrap_templates import template_from_url
+from jupyter_dash import JupyterDash
+
+from spectrafit.api.rixs_model import MainTitleAPI
+from spectrafit.api.rixs_model import RIXSModelAPI
+from spectrafit.api.rixs_model import SizeRatioAPI
+from spectrafit.api.rixs_model import XAxisAPI
+from spectrafit.api.rixs_model import YAxisAPI
+from spectrafit.api.rixs_model import ZAxisAPI
 from spectrafit.plugins.notebook import DataFramePlot
+
+
+if TYPE_CHECKING:
+    from numpy.typing import NDArray
 
 
 class RIXSFigure:
@@ -49,35 +59,45 @@ class RIXSFigure:
         incident_energy: NDArray[np.float64],
         emission_energy: NDArray[np.float64],
         rixs_map: NDArray[np.float64],
-        size: SizeRatioAPI = SizeRatioAPI(
-            size=(500, 500),
-            ratio_rixs=(2, 2),
-            ratio_xes=(3, 1),
-            ratio_xas=(3, 1),
-        ),
-        x_axis: XAxisAPI = XAxisAPI(name="Incident Energy", unit="eV"),
-        y_axis: YAxisAPI = YAxisAPI(name="Emission Energy", unit="eV"),
-        z_axis: ZAxisAPI = ZAxisAPI(name="Intensity", unit="a.u."),
-    ):
+        size: Optional[SizeRatioAPI] = None,
+        x_axis: Optional[XAxisAPI] = None,
+        y_axis: Optional[YAxisAPI] = None,
+        z_axis: Optional[ZAxisAPI] = None,
+    ) -> None:
         """Initialize the RIXS figure.
 
         Args:
             incident_energy (NDArray[np.float64]): Incident energy.
             emission_energy (NDArray[np.float64]): Emission energy.
             rixs_map (NDArray[np.float64]): RIXS data as a 2D array.
-            size (SizeRatioAPI, optional): Size of the figure.
-                 Defaults to SizeRatioAPI(size=(500, 500), ratio_rixs=(2, 2),
-                 ratio_xes=(3, 1), ratio_xas=(3, 1)).
-            x_axis (XAxisAPI, optional): X-Axis of the figure.
-                 Defaults to XAxisAPI(name="Incident Energy", unit="eV").
-            y_axis (YAxisAPI, optional): Y-Axis of the figure.
-                 Defaults to YAxisAPI(name="Emission Energy", unit="eV").
-            z_axis (ZAxisAPI, optional): Z-Axis of the figure.
-                 Defaults to ZAxisAPI(name="Intensity", unit="a.u.").
+            size (Optional[SizeRatioAPI], optional): Size of the figure.
+                 Defaults to None (will be set to SizeRatioAPI with default values).
+            x_axis (Optional[XAxisAPI], optional): X-Axis of the figure.
+                 Defaults to None (will be set to XAxisAPI with default values).
+            y_axis (Optional[YAxisAPI], optional): Y-Axis of the figure.
+                 Defaults to None (will be set to YAxisAPI with default values).
+            z_axis (Optional[ZAxisAPI], optional): Z-Axis of the figure.
+                 Defaults to None (will be set to ZAxisAPI with default values).
+
         """
         self.incident_energy = incident_energy
         self.emission_energy = emission_energy
         self.rixs_map = rixs_map
+
+        # Initialize default values if None
+        if x_axis is None:
+            x_axis = XAxisAPI(name="Incident Energy", unit="eV")
+        if y_axis is None:
+            y_axis = YAxisAPI(name="Emission Energy", unit="eV")
+        if z_axis is None:
+            z_axis = ZAxisAPI(name="Intensity", unit="a.u.")
+        if size is None:
+            size = SizeRatioAPI(
+                size=(500, 500),
+                ratio_rixs=(2, 2),
+                ratio_xes=(3, 1),
+                ratio_xas=(3, 1),
+            )
 
         self.x_axis = x_axis
         self.y_axis = y_axis
@@ -89,6 +109,7 @@ class RIXSFigure:
 
         Args:
             size (SizeRatioAPI): Size of the figure.
+
         """
         self.rixs_width = int(size.size[0] * size.ratio_rixs[0])
         self.rixs_height = int(size.size[1] * size.ratio_rixs[1])
@@ -112,6 +133,7 @@ class RIXSFigure:
 
         Returns:
             go.Figure: RIXS figure.
+
         """
         fig = go.Figure(
             data=[
@@ -121,13 +143,13 @@ class RIXSFigure:
                     z=self.rixs_map,
                     colorscale=colorscale,
                     opacity=opacity,
-                    contours_z=dict(
-                        show=True,
-                        usecolormap=True,
-                        highlightcolor="limegreen",
-                        project_z=True,
-                    ),
-                )
+                    contours_z={
+                        "show": True,
+                        "usecolormap": True,
+                        "highlightcolor": "limegreen",
+                        "project_z": True,
+                    },
+                ),
             ],
         )
 
@@ -135,24 +157,30 @@ class RIXSFigure:
             autosize=True,
             width=self.rixs_width,
             height=self.rixs_height,
-            scene=dict(
-                xaxis_title=DataFramePlot.title_text(
-                    name=self.x_axis.name, unit=self.x_axis.unit
+            scene={
+                "xaxis_title": DataFramePlot.title_text(
+                    name=self.x_axis.name,
+                    unit=self.x_axis.unit,
                 ),
-                yaxis_title=DataFramePlot.title_text(
-                    name=self.y_axis.name, unit=self.y_axis.unit
+                "yaxis_title": DataFramePlot.title_text(
+                    name=self.y_axis.name,
+                    unit=self.y_axis.unit,
                 ),
-                zaxis_title=DataFramePlot.title_text(
-                    name=self.z_axis.name, unit=self.z_axis.unit
+                "zaxis_title": DataFramePlot.title_text(
+                    name=self.z_axis.name,
+                    unit=self.z_axis.unit,
                 ),
-                aspectmode="cube",
-            ),
+                "aspectmode": "cube",
+            },
             template=template,
         )
         fig.update_traces(
-            contours_z=dict(
-                show=True, usecolormap=True, highlightcolor="limegreen", project_z=True
-            )
+            contours_z={
+                "show": True,
+                "usecolormap": True,
+                "highlightcolor": "limegreen",
+                "project_z": True,
+            },
         )
         return fig
 
@@ -171,6 +199,7 @@ class RIXSFigure:
 
         Returns:
             go.Figure: XES figure.
+
         """
         fig = px.line(x=x, y=y, template=template)
         fig.update_layout(
@@ -181,14 +210,16 @@ class RIXSFigure:
         # Udate the xaxis title
         fig.update_xaxes(
             title_text=DataFramePlot.title_text(
-                name=self.y_axis.name, unit=self.y_axis.unit
-            )
+                name=self.y_axis.name,
+                unit=self.y_axis.unit,
+            ),
         )
         # Update the yaxis title
         fig.update_yaxes(
             title_text=DataFramePlot.title_text(
-                name=self.z_axis.name, unit=self.z_axis.unit
-            )
+                name=self.z_axis.name,
+                unit=self.z_axis.unit,
+            ),
         )
         return fig
 
@@ -207,6 +238,7 @@ class RIXSFigure:
 
         Returns:
             go.Figure: XAS figure.
+
         """
         fig = px.line(x=x, y=y, template=template)
         fig.update_layout(
@@ -216,13 +248,15 @@ class RIXSFigure:
         )
         fig.update_xaxes(
             title_text=DataFramePlot.title_text(
-                name=self.x_axis.name, unit=self.x_axis.unit
-            )
+                name=self.x_axis.name,
+                unit=self.x_axis.unit,
+            ),
         )
         fig.update_yaxes(
             title_text=DataFramePlot.title_text(
-                name=self.z_axis.name, unit=self.z_axis.unit
-            )
+                name=self.z_axis.name,
+                unit=self.z_axis.unit,
+            ),
         )
         return fig
 
@@ -251,14 +285,9 @@ class RIXSApp(RIXSFigure):  # pragma: no cover
         incident_energy: NDArray[np.float64],
         emission_energy: NDArray[np.float64],
         rixs_map: NDArray[np.float64],
-        size: SizeRatioAPI = SizeRatioAPI(
-            size=(500, 500),
-            ratio_rixs=(2, 2),
-            ratio_xas=(3, 1),
-            ratio_xes=(3, 1),
-        ),
-        main_title: MainTitleAPI = MainTitleAPI(rixs="RIXS", xes="XES", xas="XAS"),
-        fdir: Path = Path("./"),
+        size: Optional[SizeRatioAPI] = None,
+        main_title: Optional[MainTitleAPI] = None,
+        fdir: Optional[Path] = None,
         mode: str = "server",
         jupyter_dash: bool = False,
         port: int = 8050,
@@ -270,19 +299,31 @@ class RIXSApp(RIXSFigure):  # pragma: no cover
             incident_energy (NDArray[np.float64]): Incident energy.
             emission_energy (NDArray[np.float64]): Emission energy.
             rixs_map (NDArray[np.float64]): RIXS data as a 2D array.
-            size (SizeRatioAPI, optional): Size of the figures. Defaults to
-                 SizeRatioAPI(size=(500, 500), ratio_rixs=(2, 2), ratio_xas=(3, 1),
-                 ratio_xes=(3, 1)).
-            main_title (MainTitleAPI, optional): Main title of the figures.
-                 Defaults to MainTitleAPI(rixs="RIXS", xes="XES", xas="XAS").
-            fdir (Path, optional): Directory to save the figures. Defaults to
-                 Path("./").
+            size (Optional[SizeRatioAPI], optional): Size of the figures. Defaults to
+                 None (will be set to SizeRatioAPI with default values).
+            main_title (Optional[MainTitleAPI], optional): Main title of the figures.
+                 Defaults to None (will be set to MainTitleAPI with default values).
+            fdir (Optional[Path], optional): Directory to save the figures.
+                 Defaults to None (will be set to current directory).
             mode (str, optional): Mode of the app. Defaults to "server".
             port (int, optional): Port of the app. Defaults to 8050.
             jupyter_dash (bool, optional): Jupyter Dash mode. Defaults to False.
             debug (bool, optional): Debug mode. Defaults to False.
 
         """
+        # Initialize default values if None
+        if size is None:
+            size = SizeRatioAPI(
+                size=(500, 500),
+                ratio_rixs=(2, 2),
+                ratio_xas=(3, 1),
+                ratio_xes=(3, 1),
+            )
+        if main_title is None:
+            main_title = MainTitleAPI(rixs="RIXS", xes="XES", xas="XAS")
+        if fdir is None:
+            fdir = Path("./")
+
         super().__init__(
             incident_energy=incident_energy,
             emission_energy=emission_energy,
@@ -308,6 +349,7 @@ class RIXSApp(RIXSFigure):  # pragma: no cover
 
         Returns:
             html.Div: Color scale dropdown.
+
         """
         return html.Div(
             [
@@ -349,6 +391,7 @@ class RIXSApp(RIXSFigure):  # pragma: no cover
 
         Returns:
             html.Div: Opacity slider.
+
         """
         return html.Div(
             [
@@ -361,7 +404,7 @@ class RIXSApp(RIXSFigure):  # pragma: no cover
                     value=1,
                     marks={i: str(i) for i in range(2)},
                 ),
-            ]
+            ],
         )
 
     def header(self) -> dbc.Card:
@@ -369,6 +412,7 @@ class RIXSApp(RIXSFigure):  # pragma: no cover
 
         Returns:
             dbc.Card: Header as a bootstrap card.
+
         """
         return dbc.Card(
             dbc.CardBody(
@@ -376,9 +420,9 @@ class RIXSApp(RIXSFigure):  # pragma: no cover
                     html.H4(
                         "RIXS Visualizer App",
                         className="bg-primary text-white p-2 mb-2 text-center",
-                    )
-                ]
-            )
+                    ),
+                ],
+            ),
         )
 
     def pre_body(self) -> Tuple[html.Div, html.Div, html.Div]:
@@ -386,24 +430,25 @@ class RIXSApp(RIXSFigure):  # pragma: no cover
 
         Returns:
             Tuple[html.Div, html.Div, html.Div]: Body as a tuple of three plot parts.
+
         """
         rixs = html.Div(
             [
                 dbc.Label(self.main_title.rixs),
                 dcc.Graph(id="rixs-figure"),
-            ]
+            ],
         )
         xes = html.Div(
             [
                 dbc.Label(self.main_title.xes),
                 dcc.Graph(id="xes-figure"),
-            ]
+            ],
         )
         xas = html.Div(
             [
                 dbc.Label(self.main_title.xas),
                 dcc.Graph(id="xas-figure"),
-            ]
+            ],
         )
         return rixs, xes, xas
 
@@ -412,6 +457,7 @@ class RIXSApp(RIXSFigure):  # pragma: no cover
 
         Returns:
             dbc.Card: Body as a bootstrap card.
+
         """
         colorscale = self.colorscale()
         opacity = self.opacity()
@@ -425,7 +471,7 @@ class RIXSApp(RIXSFigure):  # pragma: no cover
                         dbc.Row(
                             [
                                 dbc.Col(
-                                    html.H1("RIXS Viewer", className="text-center")
+                                    html.H1("RIXS Viewer", className="text-center"),
                                 ),
                             ],
                             justify="left",
@@ -457,6 +503,7 @@ class RIXSApp(RIXSFigure):  # pragma: no cover
 
         Returns:
             dbc.Card: Footer as a bootstrap card.
+
         """
         return (
             dbc.Card(
@@ -472,12 +519,12 @@ class RIXSApp(RIXSFigure):  # pragma: no cover
                     framework and uses the [Plotly](https://plotly.com/python/) library
                     for plotting. The code is available on
                     [GitHub](https://github.com/anselmoo/spectrafit).
-                    """
+                    """,
                                 ),
                             ],
                             justify="left",
-                        )
-                    ]
+                        ),
+                    ],
                 ),
                 class_name="mt-4",
             ),
@@ -499,7 +546,7 @@ class RIXSApp(RIXSFigure):  # pragma: no cover
                     {
                         "name": "viewport",
                         "content": "width=device-width, initial-scale=1",
-                    }
+                    },
                 ],
             )
         app.layout = dbc.Container(
@@ -572,13 +619,19 @@ class RIXSApp(RIXSFigure):  # pragma: no cover
             cx = clickData["points"][0]["x"]
             cy = clickData["points"][0]["y"]
             pd.DataFrame(
-                {"energy": self.emission_energy, "intensity": self.rixs_map[int(cy), :]}
+                {
+                    "energy": self.emission_energy,
+                    "intensity": self.rixs_map[int(cy), :],
+                },
             ).to_csv(
                 self.fdir / f"xes_cut_{np.round(cx, 8)}.txt",
                 index=False,
             )
             pd.DataFrame(
-                {"energy": self.incident_energy, "intensity": self.rixs_map[:, int(cx)]}
+                {
+                    "energy": self.incident_energy,
+                    "intensity": self.rixs_map[:, int(cx)],
+                },
             ).to_csv(
                 self.fdir / f"xas_cut_{np.round(cy, 8)}.txt",
                 index=False,
@@ -600,10 +653,11 @@ class RIXSVisualizer:
         Returns:
             Dict[str, Any]: Return the input file arguments as a dictionary without
                 additional information beyond the command line arguments.
+
         """
         parser = argparse.ArgumentParser(
             description="`RIXS-Visualizer` is a simple RIXS plane viewer, which "
-            "allows to visualize RIXS data in a 2D plane."
+            "allows to visualize RIXS data in a 2D plane.",
         )
         parser.add_argument(
             "infile",
@@ -628,6 +682,7 @@ class RIXSVisualizer:
                 attributes: incident_energy, emission_energy, and rixs_map. The
                 incident_energy and emission_energy are 1D arrays, and the rixs_map is
                 a 2D array.
+
         """
         if infile.suffix == ".npy":
             data = np.load(infile, allow_pickle=True).item()
@@ -640,7 +695,8 @@ class RIXSVisualizer:
             with infile.open("rb") as f:
                 data = tomli.load(f)
         else:
-            raise ValueError(f"File type {infile.suffix} is not supported.")
+            msg = f"File type {infile.suffix} is not supported."
+            raise ValueError(msg)
         return RIXSModelAPI(
             incident_energy=np.array(data["incident_energy"]),
             emission_energy=np.array(data["emission_energy"]),

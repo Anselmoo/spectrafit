@@ -6,20 +6,32 @@ import gzip
 import json
 import pickle
 import sys
+
 from pathlib import Path
-from typing import Any, Dict, MutableMapping, Optional, Tuple, Union
+from typing import TYPE_CHECKING
+from typing import Any
+from typing import Dict
+from typing import MutableMapping
+from typing import Optional
+from typing import Tuple
+from typing import Union
 
 import numpy as np
 import pandas as pd
 import tomli
 import yaml
-from lmfit import Minimizer
+
 from lmfit.confidence import ConfidenceInterval
 from lmfit.minimizer import MinimizerException
 
 from spectrafit.api.tools_model import ColumnNamesAPI
-from spectrafit.models import calculated_model
-from spectrafit.report import RegressionMetrics, fit_report_as_dict
+from spectrafit.models.builtin import calculated_model
+from spectrafit.report import RegressionMetrics
+from spectrafit.report import fit_report_as_dict
+
+
+if TYPE_CHECKING:
+    from lmfit import Minimizer
 
 
 class PreProcessing:
@@ -34,6 +46,7 @@ class PreProcessing:
                  be extended by the single contribution of the model.
             args (Dict[str,Any]): The input file arguments as a dictionary with
                  additional information beyond the command line arguments.
+
         """
         self.df = df
         self.args = args
@@ -50,14 +63,16 @@ class PreProcessing:
                     3. linear oversampled
                     4. smoothed
             Dict[str,Any]: Adding a descriptive statistics to the input dictionary.
+
         """
         df_copy: pd.DataFrame = self.df.copy()
         self.args["data_statistic"] = df_copy.describe(
-            percentiles=np.arange(0.1, 1.0, 0.1).tolist()
+            percentiles=np.arange(0.1, 1.0, 0.1).tolist(),
         ).to_dict(orient="split")
         try:
             if isinstance(self.args["energy_start"], (int, float)) or isinstance(
-                self.args["energy_stop"], (int, float)
+                self.args["energy_stop"],
+                (int, float),
             ):
                 df_copy = self.energy_range(df_copy, self.args)
             if self.args["shift"]:
@@ -66,8 +81,7 @@ class PreProcessing:
                 df_copy = self.oversampling(df_copy, self.args)
             if self.args["smooth"]:
                 df_copy = self.smooth_signal(df_copy, self.args)
-        except KeyError as exc:
-            print(f"KeyError: {exc} is not part of the dataframe!")
+        except KeyError:
             sys.exit(1)
         return (df_copy, self.args)
 
@@ -85,22 +99,25 @@ class PreProcessing:
         Returns:
             pd.DataFrame: DataFrame containing the `optimized` input data
                  (`x` and `data`), which are shrinked according to the energy range.
+
         """
         energy_start: Union[int, float] = args["energy_start"]
         energy_stop: Union[int, float] = args["energy_stop"]
 
         df_copy = df.copy()
         if isinstance(energy_start, (int, float)) and isinstance(
-            energy_stop, (int, float)
+            energy_stop,
+            (int, float),
         ):
             return df_copy.loc[
                 (df[args["column"][0]] >= energy_start)
                 & (df[args["column"][0]] <= energy_stop)
             ]
-        elif isinstance(energy_start, (int, float)):
+        if isinstance(energy_start, (int, float)):
             return df_copy.loc[df[args["column"][0]] >= energy_start]
-        elif isinstance(energy_stop, (int, float)):
+        if isinstance(energy_stop, (int, float)):
             return df_copy.loc[df[args["column"][0]] <= energy_stop]
+        return None  # pragma: no cover
 
     @staticmethod
     def energy_shift(df: pd.DataFrame, args: Dict[str, Any]) -> pd.DataFrame:
@@ -116,6 +133,7 @@ class PreProcessing:
         Returns:
             pd.DataFrame: DataFrame containing the `optimized` input data
                  (`x` and `data`), which are energy-shifted by the given value.
+
         """
         df_copy: pd.DataFrame = df.copy()
         df_copy.loc[:, args["column"][0]] = (
@@ -143,6 +161,7 @@ class PreProcessing:
         Returns:
             pd.DataFrame: DataFrame containing the `optimized` input data
                  (`x` and `data`), which are oversampled by the factor of 5.
+
         """
         x_values = np.linspace(
             df[args["column"][0]].min(),
@@ -168,11 +187,14 @@ class PreProcessing:
         Returns:
             pd.DataFrame: DataFrame containing the `optimized` input data
                  (`x` and `data`), which are smoothed by the given value.
+
         """
         box = np.ones(args["smooth"]) / args["smooth"]
         df_copy: pd.DataFrame = df.copy()
         df_copy.loc[:, args["column"][1]] = np.convolve(
-            df[args["column"][1]].to_numpy(), box, mode="same"
+            df[args["column"][1]].to_numpy(),
+            box,
+            mode="same",
         )
         return df_copy
 
@@ -181,7 +203,11 @@ class PostProcessing:
     """Post-processing of the dataframe."""
 
     def __init__(
-        self, df: pd.DataFrame, args: Dict[str, Any], minimizer: Minimizer, result: Any
+        self,
+        df: pd.DataFrame,
+        args: Dict[str, Any],
+        minimizer: Minimizer,
+        result: Any,
     ) -> None:
         """Initialize PostProcessing class.
 
@@ -193,6 +219,7 @@ class PostProcessing:
                  additional information beyond the command line arguments.
             minimizer (Minimizer): The minimizer class.
             result (Any): The result of the minimization of the best fit.
+
         """
         self.args = args
         self.df = self.rename_columns(df=df)
@@ -220,6 +247,7 @@ class PostProcessing:
 
         Returns:
             Optional[int]: The number of spectra of the global fitting.
+
         """
         if self.args["global_"]:
             return max(
@@ -244,6 +272,7 @@ class PostProcessing:
                  and `intensity` is extended by a `_`  and column index; like: `energy`
                  and `intensity_1`, `intensity_2`, `intensity_...` depending on
                  the dataset size.
+
         """
         if self.args["global_"]:
             return df.rename(
@@ -254,13 +283,13 @@ class PostProcessing:
                         else f"{ColumnNamesAPI().intensity}_{i}"
                     )
                     for i, col in enumerate(df.columns)
-                }
+                },
             )
         return df.rename(
             columns={
                 df.columns[0]: ColumnNamesAPI().energy,
                 df.columns[1]: ColumnNamesAPI().intensity,
-            }
+            },
         )
 
     def make_insight_report(self) -> None:
@@ -282,13 +311,17 @@ class PostProcessing:
 
         """
         self.args["fit_insights"] = fit_report_as_dict(
-            inpars=self.result, settings=self.minimizer, modelpars=self.result.params
+            inpars=self.result,
+            settings=self.minimizer,
+            modelpars=self.result.params,
         )
         if self.args["conf_interval"]:
             try:
                 _min_rel_change = self.args["conf_interval"].pop("min_rel_change", None)
                 ci = ConfidenceInterval(
-                    self.minimizer, self.result, **self.args["conf_interval"]
+                    self.minimizer,
+                    self.result,
+                    **self.args["conf_interval"],
                 )
                 if _min_rel_change is not None:
                     ci.min_rel_change = _min_rel_change
@@ -301,8 +334,7 @@ class PostProcessing:
                 else:
                     self.args["confidence_interval"] = ci.calc_all_ci()
 
-            except (MinimizerException, ValueError, KeyError) as exc:
-                print(f"Error: {exc} -> No confidence interval could be calculated!")
+            except (MinimizerException, ValueError, KeyError):
                 self.args["confidence_interval"] = {}
 
     def make_residual_fit(self) -> None:
@@ -405,7 +437,7 @@ class PostProcessing:
     def export_desprective_statistic2args(self) -> None:
         """Export the descriptive statistic of the spectra, fit, and contributions."""
         self.args["descriptive_statistic"] = self.df.describe(
-            percentiles=np.arange(0.1, 1, 0.1).tolist()
+            percentiles=np.arange(0.1, 1, 0.1).tolist(),
         ).to_dict(orient="split")
 
 
@@ -471,6 +503,7 @@ class SaveResult:
                  be extended by the single contribution of the model.
             args (Dict[str,Any]): The input file arguments as a dictionary with
                  additional information beyond the command line arguments.
+
         """
         self.df = df
         self.args = transform_nested_types(args)
@@ -508,11 +541,13 @@ class SaveResult:
         """Save the fitting result as json file."""
         if self.args["outfile"]:
             with Path(f"{self.args['outfile']}_summary.json").open(
-                "w", encoding="utf-8"
+                "w",
+                encoding="utf-8",
             ) as f:
                 json.dump(transform_nested_types(self.args), f, indent=4)
         else:
-            raise FileNotFoundError("No output file provided!")
+            msg = "No output file provided!"
+            raise FileNotFoundError(msg)
 
 
 def read_input_file(fname: Path) -> MutableMapping[str, Any]:
@@ -543,9 +578,12 @@ def read_input_file(fname: Path) -> MutableMapping[str, Any]:
         with fname.open(encoding="utf-8") as f:
             args = yaml.load(f, Loader=yaml.FullLoader)
     else:
-        raise OSError(
+        msg = (
             f"ERROR: Input file {fname} has not supported file format.\n"
             "Supported fileformats are: '*.json', '*.yaml', and '*.toml'"
+        )
+        raise OSError(
+            msg,
         )
     return args
 
@@ -569,6 +607,7 @@ def load_data(args: Dict[str, str]) -> pd.DataFrame:
         pd.DataFrame: DataFrame containing the input data (`x` and `data`),
              as well as the best fit and the corresponding residuum. Hence, it will be
              extended by the single contribution of the model.
+
     """
     try:
         if args["global_"]:
@@ -589,13 +628,13 @@ def load_data(args: Dict[str, str]) -> pd.DataFrame:
             decimal=args["decimal"],
             comment=args["comment"],
         )
-    except ValueError as exc:
-        print(f"Error: {exc} -> Dataframe contains non numeric data!")
+    except ValueError:
         sys.exit(1)
 
 
 def check_keywords_consistency(
-    check_args: MutableMapping[str, Any], ref_args: Dict[str, Any]
+    check_args: MutableMapping[str, Any],
+    ref_args: Dict[str, Any],
 ) -> None:
     """Check if the keywords are consistent.
 
@@ -608,10 +647,12 @@ def check_keywords_consistency(
 
     Raises:
         KeyError: If the keywords are not consistent.
+
     """
     for key in check_args:
-        if key not in ref_args.keys():
-            raise KeyError(f"ERROR: The {key} is not parameter of the `cmd-input`!")
+        if key not in ref_args:
+            msg = f"ERROR: The {key} is not parameter of the `cmd-input`!"
+            raise KeyError(msg)
 
 
 def unicode_check(f: Any, encoding: str = "latin1") -> Any:
@@ -624,6 +665,7 @@ def unicode_check(f: Any, encoding: str = "latin1") -> Any:
     Returns:
         Any: The pkl file, which can be a nested dictionary containing raw data,
             metadata, and other information.
+
     """
     try:
         data_dict = pickle.load(f)
@@ -644,6 +686,7 @@ def pkl2any(pkl_fname: Path, encoding: str = "latin1") -> Any:
 
     Returns:
         Any: Data or objects, which can contain various data types supported by pickle.
+
     """
     if pkl_fname.suffix == ".gz":
         with gzip.open(pkl_fname, "rb") as f:
@@ -653,10 +696,11 @@ def pkl2any(pkl_fname: Path, encoding: str = "latin1") -> Any:
             return unicode_check(f, encoding=encoding)
     else:
         choices = [".pkl", ".pkl.gz"]
-        raise ValueError(
+        msg = (
             f"File format '{pkl_fname.suffix}' is not supported. "
             f"Supported file formats are: {choices}"
         )
+        raise ValueError(msg)
 
 
 def pure_fname(fname: Path) -> Path:
@@ -675,6 +719,7 @@ def pure_fname(fname: Path) -> Path:
 
     Returns:
         Path: The filename without the suffix.
+
     """
     _fname = fname.parent / fname.stem
     return pure_fname(_fname) if _fname.suffix else _fname
@@ -689,15 +734,15 @@ def exclude_none_dictionary(value: Dict[str, Any]) -> Dict[str, Any]:
 
     Returns:
         Dict[str, Any]: Dictionary without `None` values.
+
     """
     if isinstance(value, list):
         return [exclude_none_dictionary(v) for v in value if v is not None]
-    elif isinstance(value, dict):
+    if isinstance(value, dict):
         return {
             k: exclude_none_dictionary(v) for k, v in value.items() if v is not None
         }
-    else:
-        return value
+    return value
 
 
 def transform_nested_types(value: Dict[str, Any]) -> Dict[str, Any]:
@@ -709,22 +754,18 @@ def transform_nested_types(value: Dict[str, Any]) -> Dict[str, Any]:
 
     Returns:
         Dict[str, Any]: Dictionary with python values.
+
     """
     if isinstance(value, list):
         return [transform_nested_types(v) for v in value]
-    elif isinstance(value, tuple):
+    if isinstance(value, tuple):
         return tuple(transform_nested_types(v) for v in value)
-    elif isinstance(value, dict):
+    if isinstance(value, dict):
         return {k: transform_nested_types(v) for k, v in value.items()}
-    elif isinstance(value, np.ndarray):
+    if isinstance(value, np.ndarray):
         return transform_nested_types(value.tolist())
-    elif isinstance(value, np.int32):
+    if isinstance(value, (np.int32, np.int64)):
         return int(value)
-    elif isinstance(value, np.int64):
-        return int(value)
-    elif isinstance(value, np.bool_):
+    if isinstance(value, np.bool_):
         return bool(value)
-    elif isinstance(value, np.float64):
-        return float(value)
-    else:
-        return value
+    return float(value) if isinstance(value, np.float64) else value

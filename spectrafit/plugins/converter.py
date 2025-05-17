@@ -2,9 +2,16 @@
 
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
-from pathlib import Path
-from typing import Any, Dict, MutableMapping
+from abc import ABC
+from abc import abstractmethod
+from typing import TYPE_CHECKING
+from typing import Any
+from typing import Dict
+from typing import MutableMapping
+
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 class Converter(ABC):
@@ -32,6 +39,7 @@ class Converter(ABC):
 
         Raises:
             ValueError: If the output file format is not supported.
+
         """
 
     @staticmethod
@@ -47,6 +55,7 @@ class Converter(ABC):
 
         Returns:
             MutableMapping[str, Any]: Converted file as a dictionary.
+
         """
 
     @abstractmethod
@@ -57,6 +66,7 @@ class Converter(ABC):
             data (Any): Data to save.
             fname (Path): Filename of the target file.
             export_format (str): Target file format.
+
         """
 
     @abstractmethod

@@ -4,19 +4,65 @@ from __future__ import annotations
 
 from collections import defaultdict
 from dataclasses import dataclass
-from math import log, pi, sqrt
-from typing import Any, Dict, Optional, Tuple, Union
+from math import log
+from math import pi
+from math import sqrt
+from typing import TYPE_CHECKING
+from typing import Any
+from typing import ClassVar
+from typing import Dict
+from typing import Optional
+from typing import Tuple
+from typing import Union
 
 import numpy as np
-import pandas as pd
-from lmfit import Minimizer, Parameters
-from numpy.typing import NDArray
+
+from lmfit import Minimizer
+from lmfit import Parameters
 from scipy.signal import find_peaks
-from scipy.special import erf, wofz
 from scipy.stats import hmean
 
 from spectrafit.api.models_model import DistributionModelAPI
-from spectrafit.api.tools_model import AutopeakAPI, GlobalFittingAPI, SolverModelsAPI
+from spectrafit.api.tools_model import AutopeakAPI
+from spectrafit.api.tools_model import GlobalFittingAPI
+from spectrafit.api.tools_model import SolverModelsAPI
+from spectrafit.models.moessbauer import moessbauer_doublet as _moessbauer_doublet
+from spectrafit.models.moessbauer import moessbauer_octet as _moessbauer_octet
+from spectrafit.models.moessbauer import moessbauer_sextet as _moessbauer_sextet
+from spectrafit.models.moessbauer import moessbauer_singlet as _moessbauer_singlet
+from spectrafit.models.regular import atan_step as _atan
+from spectrafit.models.regular import cgaussian as _cgaussian
+from spectrafit.models.regular import clorentzian as _clorentzian
+from spectrafit.models.regular import constant as _constant
+from spectrafit.models.regular import cvoigt as _cvoigt
+from spectrafit.models.regular import erf_step as _erf
+from spectrafit.models.regular import exponential as _exponential
+from spectrafit.models.regular import gaussian as _gaussian
+from spectrafit.models.regular import heaviside as _heaviside
+from spectrafit.models.regular import linear as _linear
+from spectrafit.models.regular import log_step as _log
+from spectrafit.models.regular import lorentzian as _lorentzian
+from spectrafit.models.regular import orcagaussian as _orcagaussian
+from spectrafit.models.regular import pearson1 as _pearson1
+from spectrafit.models.regular import pearson2 as _pearson2
+from spectrafit.models.regular import pearson3 as _pearson3
+from spectrafit.models.regular import pearson4 as _pearson4
+from spectrafit.models.regular import polynom2 as _polynom2
+from spectrafit.models.regular import polynom3 as _polynom3
+from spectrafit.models.regular import power as _power
+from spectrafit.models.regular import pseudovoigt as _pseudovoigt
+from spectrafit.models.regular import voigt as _voigt
+
+
+if TYPE_CHECKING:
+    import pandas as pd
+
+    from numpy.typing import NDArray
+
+# Constants for global fitting modes
+GLOBAL_NONE = 0  # No global fitting
+GLOBAL_STANDARD = 1  # Standard global fitting
+GLOBAL_WITH_PRE = 2  # Global fitting with pre-processing
 
 
 class DistributionModels:
@@ -35,45 +81,9 @@ class DistributionModels:
         the single contributions, the cumulative distribution is not normalized and
         therefore the amplitude of the single contributions is not directly comparable
         to the amplitude of the cumulative distribution. Also, the cumulative
-        distributions are consquently using the `fwhm` parameter instead of the
+        distributions are consequently using the `fwhm` parameter instead of the
         `sigma` parameter.
     """
-
-    @staticmethod
-    def _gaussian_core(
-        x: NDArray[np.float64],
-        amplitude: float,
-        center: float,
-        scale: float,
-    ) -> NDArray[np.float64]:
-        r"""Core Gaussian calculation used by multiple staticmethods.
-
-        !!! note "About the core Gaussian calculation"
-
-            The core Gaussian calculation is used by the `gaussian`, `orca_gaussian`
-            for avoiding code duplication. The core Gaussian calculation is not normalized and
-            therefore the amplitude of the Gaussian is not directly comparable to the
-            amplitude of the classical definition of the
-            [Gaussian](https://en.wikipedia.org/wiki/Gaussian_function) function.
-
-
-            Consequently, the core Gaussian calculation is defined as:
-
-            $$
-            {\displaystyle g(x)={A \exp
-            (  -{\frac {1}{2}}{\frac {(x-\mu )^{2}}{\sigma ^{2}}} ) }
-            $$
-
-        Args:
-            x (NDArray[np.float64]): `x`-values of the data.
-            amplitude (float): Amplitude of the Gaussian distribution.
-            center (float): Center of the Gaussian distribution.
-            scale (float): Scale of the Gaussian distribution.
-
-        Returns:
-            NDArray[np.float64]: Gaussian distribution of `x` given.
-        """
-        return np.array(amplitude * np.exp(-((1.0 * x - center) ** 2) / (2 * scale**2)))
 
     @staticmethod
     def gaussian(
@@ -82,30 +92,8 @@ class DistributionModels:
         center: float = 0.0,
         fwhmg: float = 1.0,
     ) -> NDArray[np.float64]:
-        r"""Return a 1-dimensional Gaussian distribution.
-
-        $$
-        {\displaystyle g(x)={\frac {1}{\sigma {\sqrt {2\pi }}}}\exp
-        (  -{\frac {1}{2}}{\frac {(x-\mu )^{2}}{\sigma ^{2}}} ) }
-        $$
-
-        Args:
-            x (NDArray[np.float64]): `x`-values of the data.
-            amplitude (float, optional): Amplitude of the Gaussian distribution.
-                 Defaults to 1.0.
-            center (float, optional): Center of the Gaussian distribution.
-                 Defaults to 0.0.
-            fwhmg (float, optional): Full width at half maximum (FWHM) of the Gaussian
-                distribution. Defaults to 1.0.
-
-        Returns:
-            NDArray[np.float64]: Gaussian distribution of `x` given.
-        """
-        sigma = fwhmg * Constants.fwhmg2sig
-        norm_factor = amplitude / (Constants.sq2pi * sigma)
-        return norm_factor * DistributionModels._gaussian_core(
-            x=x, amplitude=1.0, center=center, scale=sigma
-        )
+        """Return the wrapper function for the Gaussian model from regular_models."""
+        return _gaussian(x=x, amplitude=amplitude, center=center, fwhmg=fwhmg)
 
     @staticmethod
     def orcagaussian(
@@ -138,10 +126,9 @@ class DistributionModels:
 
         Returns:
             NDArray[np.float64]: Gaussian distribution of `x` given.
+
         """
-        return DistributionModels._gaussian_core(
-            x=x, amplitude=amplitude, center=center, scale=width
-        )
+        return _orcagaussian(x=x, amplitude=amplitude, center=center, width=width)
 
     @staticmethod
     def lorentzian(
@@ -169,12 +156,9 @@ class DistributionModels:
 
         Returns:
             Union[NDArray[np.float64], float]: Lorentzian distribution of `x` given.
+
         """
-        sigma = fwhml * Constants.fwhml2sig
-        return np.array(
-            amplitude / (1 + ((1.0 * x - center) / sigma) ** 2) / (pi * sigma),
-            dtype=np.float64,
-        )
+        return _lorentzian(x=x, amplitude=amplitude, center=center, fwhml=fwhml)
 
     @staticmethod
     def voigt(
@@ -202,12 +186,9 @@ class DistributionModels:
 
         Returns:
             NDArray[np.float64]: Voigt distribution of `x` given.
+
         """
-        sigma = fwhmv * Constants.fwhmv2sig
-        if gamma is None:
-            gamma = sigma
-        z = (x - center + 1j * gamma) / (sigma * Constants.sq2)
-        return np.array(wofz(z).real / (sigma * Constants.sq2pi))
+        return _voigt(x=x, center=center, fwhmv=fwhmv, gamma=gamma)
 
     @staticmethod
     def pseudovoigt(
@@ -237,30 +218,14 @@ class DistributionModels:
 
         Returns:
             NDArray[np.float64]: Pseudo-Voigt distribution of `x` given.
+
         """
-        f = np.power(
-            fwhmg**5
-            + 2.69269 * fwhmg**4 * fwhml
-            + 2.42843 * fwhmg**3 * fwhml**2
-            + 4.47163 * fwhmg**2 * fwhml**3
-            + 0.07842 * fwhmg * fwhml**4
-            + fwhml**5,
-            0.2,
-        )
-        n = (
-            1.36603 * (fwhml / f)
-            - 0.47719 * (fwhml / f) ** 2
-            + 0.11116 * (fwhml / f) ** 3
-        )
-        return np.array(
-            n
-            * DistributionModels.lorentzian(
-                x=x, amplitude=amplitude, center=center, fwhml=fwhml
-            )
-            + (1 - n)
-            * DistributionModels.gaussian(
-                x=x, amplitude=amplitude, center=center, fwhmg=fwhmg
-            )
+        return _pseudovoigt(
+            x=x,
+            amplitude=amplitude,
+            center=center,
+            fwhmg=fwhmg,
+            fwhml=fwhml,
         )
 
     @staticmethod
@@ -282,8 +247,9 @@ class DistributionModels:
 
         Returns:
             NDArray[np.float64]: Exponential decay of `x` given.
+
         """
-        return np.array(amplitude * np.exp(-x / decay) + intercept)
+        return _exponential(x=x, amplitude=amplitude, decay=decay, intercept=intercept)
 
     @staticmethod
     def power(
@@ -304,8 +270,9 @@ class DistributionModels:
 
         Returns:
             NDArray[np.float64]: power function of `x` given.
+
         """
-        return np.array(amplitude * np.power(x, exponent) + intercept)
+        return _power(x=x, amplitude=amplitude, exponent=exponent, intercept=intercept)
 
     @staticmethod
     def linear(
@@ -323,8 +290,9 @@ class DistributionModels:
 
         Returns:
             NDArray[np.float64]: Linear function of `x` given.
+
         """
-        return np.array(slope * x + intercept)
+        return _linear(x=x, slope=slope, intercept=intercept)
 
     @staticmethod
     def constant(
@@ -339,26 +307,9 @@ class DistributionModels:
 
         Returns:
             NDArray[np.float64]: Constant value of `x` given.
+
         """
-        return np.array(np.linspace(amplitude, amplitude, len(x)))
-
-    @staticmethod
-    def _norm(
-        x: NDArray[np.float64], center: float, sigma: float
-    ) -> NDArray[np.float64]:
-        """Normalize the data for step functions.
-
-        Args:
-            x (NDArray[np.float64]): `x`-values of the data.
-            center (float): Center of the step function.
-            sigma (float): Sigma of the step function.
-
-        Returns:
-            NDArray[np.float64]: Normalized data.
-        """
-        if abs(sigma) < 1.0e-13:
-            sigma = 1.0e-13
-        return np.array(np.subtract(x, center) / sigma, dtype=np.float64)
+        return _constant(x=x, amplitude=amplitude)
 
     @staticmethod
     def erf(
@@ -382,10 +333,9 @@ class DistributionModels:
 
         Returns:
             NDArray[np.float64]: Error function of `x` given.
+
         """
-        return np.array(
-            amplitude * 0.5 * (1 + erf(DistributionModels._norm(x, center, sigma)))
-        )
+        return _erf(x=x, amplitude=amplitude, center=center, sigma=sigma)
 
     @staticmethod
     def heaviside(
@@ -415,10 +365,9 @@ class DistributionModels:
 
         Returns:
             NDArray[np.float64]: Heaviside step function of `x` given.
+
         """
-        return np.array(
-            amplitude * 0.5 * (1 + np.sign(DistributionModels._norm(x, center, sigma)))
-        )
+        return _heaviside(x=x, amplitude=amplitude, center=center, sigma=sigma)
 
     @staticmethod
     def atan(
@@ -444,12 +393,9 @@ class DistributionModels:
 
         Returns:
             NDArray[np.float64]: Arctan step function of `x` given.
+
         """
-        return np.array(
-            amplitude
-            * 0.5
-            * (1 + np.arctan(DistributionModels._norm(x, center, sigma)) / pi)
-        )
+        return _atan(x=x, amplitude=amplitude, center=center, sigma=sigma)
 
     @staticmethod
     def log(
@@ -475,12 +421,9 @@ class DistributionModels:
 
         Returns:
             NDArray[np.float64]: Logarithmic step function of `x` given.
+
         """
-        return np.array(
-            amplitude
-            * 0.5
-            * (1 + np.log(DistributionModels._norm(x, center, sigma)) / pi)
-        )
+        return _log(x=x, amplitude=amplitude, center=center, sigma=sigma)
 
     @staticmethod
     def cgaussian(
@@ -506,11 +449,9 @@ class DistributionModels:
 
         Returns:
             NDArray[np.float64]: Cumulative Gaussian function of `x` given.
+
         """
-        sigma = fwhmg * Constants.fwhmg2sig
-        return np.array(
-            amplitude * 0.5 * (1 + erf((x - center) / (sigma * np.sqrt(2.0))))
-        )
+        return _cgaussian(x=x, amplitude=amplitude, center=center, fwhmg=fwhmg)
 
     @staticmethod
     def clorentzian(
@@ -536,9 +477,9 @@ class DistributionModels:
 
         Returns:
             NDArray[np.float64]: Cumulative Lorentzian function of `x` given.
+
         """
-        sigma = fwhml * Constants.fwhml2sig
-        return np.array(amplitude * (np.arctan((x - center) / sigma) / pi) + 0.5)
+        return _clorentzian(x=x, amplitude=amplitude, center=center, fwhml=fwhml)
 
     @staticmethod
     def cvoigt(
@@ -565,13 +506,14 @@ class DistributionModels:
 
         Returns:
             NDArray[np.float64]: Cumulative Voigt function of `x` given.
+
         """
-        sigma = fwhmv * Constants.fwhmv2sig
-        return np.array(
-            amplitude
-            * 0.5
-            * (1 + erf((x - center) / (sigma * np.sqrt(2.0))))
-            * np.exp(-(((x - center) / gamma) ** 2))
+        return _cvoigt(
+            x=x,
+            amplitude=amplitude,
+            center=center,
+            fwhmv=fwhmv,
+            gamma=gamma,
         )
 
     @staticmethod
@@ -598,8 +540,14 @@ class DistributionModels:
 
         Returns:
             NDArray[np.float64]: Third order polynomial function of `x`
+
         """
-        return np.array(coefficient0 + coefficient1 * x + coefficient2 * x**2)
+        return _polynom2(
+            x=x,
+            coefficient0=coefficient0,
+            coefficient1=coefficient1,
+            coefficient2=coefficient2,
+        )
 
     @staticmethod
     def polynom3(
@@ -628,9 +576,14 @@ class DistributionModels:
 
         Returns:
             NDArray[np.float64]: Third order polynomial function of `x`
+
         """
-        return np.array(
-            coefficient0 + coefficient1 * x + coefficient2 * x**2 + coefficient3 * x**3
+        return _polynom3(
+            x=x,
+            coefficient0=coefficient0,
+            coefficient1=coefficient1,
+            coefficient2=coefficient2,
+            coefficient3=coefficient3,
         )
 
     @staticmethod
@@ -661,11 +614,14 @@ class DistributionModels:
 
         Returns:
             NDArray[np.float64]: Pearson type I function of `x` given.
+
         """
-        return np.array(
-            amplitude
-            / (sigma * np.sqrt(2 * np.pi))
-            * np.power(1 + ((x - center) / sigma) ** 2, -1 / exponent)
+        return _pearson1(
+            x=x,
+            amplitude=amplitude,
+            center=center,
+            sigma=sigma,
+            exponent=exponent,
         )
 
     @staticmethod
@@ -696,11 +652,14 @@ class DistributionModels:
 
         Returns:
             NDArray[np.float64]: Pearson type II function of `x` given.
+
         """
-        return np.array(
-            amplitude
-            / (sigma * np.sqrt(2 * pi))
-            * np.power(1 + ((x - center) / (2 * sigma)) ** 2, -exponent)
+        return _pearson2(
+            x=x,
+            amplitude=amplitude,
+            center=center,
+            sigma=sigma,
+            exponent=exponent,
         )
 
     @staticmethod
@@ -735,14 +694,15 @@ class DistributionModels:
 
         Returns:
             NDArray[np.float64]: Pearson type III function of `x` given.
+
         """
-        return np.array(
-            amplitude
-            / (sigma * np.sqrt(2 * pi))
-            * np.power(1 + ((x - center) / (2 * sigma)) ** 2, -exponent)
-            * np.power(
-                1 + (skewness / exponent) * ((x - center) / sigma), -exponent - 1
-            )
+        return _pearson3(
+            x=x,
+            amplitude=amplitude,
+            center=center,
+            sigma=sigma,
+            exponent=exponent,
+            skewness=skewness,
         )
 
     @staticmethod
@@ -782,18 +742,185 @@ class DistributionModels:
 
         Returns:
             NDArray[np.float64]: Pearson type IV function of `x` given.
+
         """
-        return np.array(
-            amplitude
-            / (sigma * np.sqrt(2 * pi))
-            * np.power(1 + ((x - center) / (2 * sigma)) ** 2, -exponent)
-            * np.power(
-                1 + (skewness / exponent) * ((x - center) / sigma), -exponent - 1
-            )
-            * np.power(
-                1 + (kurtosis / exponent) * ((x - center) / sigma) ** 2,
-                -exponent - 1 / 2,
-            )
+        return _pearson4(
+            x=x,
+            amplitude=amplitude,
+            center=center,
+            sigma=sigma,
+            exponent=exponent,
+            skewness=skewness,
+            kurtosis=kurtosis,
+        )
+
+    @staticmethod
+    def moessbauersinglet(
+        x: NDArray[np.float64],
+        amplitude: float = 1.0,
+        isomershift: float = 0.0,
+        fwhml: float = 0.25,
+        center: float = 0.0,
+        background: float = 0.0,
+    ) -> NDArray[np.float64]:
+        """Compute a Mössbauer singlet via Lorentzian plus background.
+
+        Args:
+            x (NDArray[np.float64]): Velocity array (mm/s).
+            amplitude (float, optional): Peak amplitude. Defaults to 1.0.
+            isomershift (float, optional): Isomer shift (mm/s). Defaults to 0.0.
+            fwhml (float, optional): Lorentzian full-width at half-maximum. Defaults to 0.25.
+            center (float, optional): Global spectrum offset in mm/s. Defaults to 0.0.
+            background (float, optional): Constant background level. Defaults to 0.0.
+
+        Returns:
+            NDArray[np.float64]: Computed transmission intensity array.
+
+        """
+        # Call the implementation from moessbauer_models.py
+        return _moessbauer_singlet(
+            x=x,
+            amplitude=amplitude,
+            isomer_shift=isomershift,
+            fwhml=fwhml,
+            center=center,
+            background=background,
+        )
+
+    @staticmethod
+    def moessbauerdoublet(
+        x: NDArray[np.float64],
+        amplitude: float = 1.0,
+        isomershift: float = 0.4,
+        fwhml: float = 0.25,
+        quadrupolesplitting: float = 0.8,
+        center: float = 0.0,
+        background: float = 0.0,
+    ) -> NDArray[np.float64]:
+        """Compute a Mössbauer doublet via two Lorentzians plus background.
+
+        Args:
+            x (NDArray[np.float64]): Velocity or energy array (mm/s).
+            amplitude (float, optional): Peak amplitude. Defaults to 1.0.
+            isomershift (float, optional): Isomer shift (mm/s). Defaults to 0.4.
+            fwhml (float, optional): Lorentzian full-width at half-maximum. Defaults to 0.25.
+            quadrupolesplitting (float, optional): Quadrupole splitting (mm/s). Defaults to 0.8.
+            center (float, optional): Global spectrum offset in mm/s. Defaults to 0.0.
+            background (float, optional): Constant background level. Defaults to 0.0.
+
+        Returns:
+            NDArray[np.float64]: Computed intensity array.
+
+        """
+        # Call the implementation from moessbauer_models.py
+        return _moessbauer_doublet(
+            x=x,
+            amplitude=amplitude,
+            isomer_shift=isomershift,
+            fwhml=fwhml,
+            quadrupole_splitting=quadrupolesplitting,
+            center=center,
+            background=background,
+        )
+
+    @staticmethod
+    def moessbauersextet(
+        x: NDArray[np.float64],
+        amplitude: float = 1.0,
+        isomershift: float = 0.0,
+        fwhml: float = 0.25,
+        magneticfield: float = 33.0,
+        quadrupoleshift: float = 0.0,
+        center: float = 0.0,
+        background: float = 0.0,
+        anglethetaphi: Optional[Dict[str, float]] = None,
+    ) -> NDArray[np.float64]:
+        """Compute a Mössbauer sextet via six Lorentzians plus background.
+
+        Args:
+            x (NDArray[np.float64]): Velocity or energy array (mm/s).
+            amplitude (float, optional): Peak amplitude. Defaults to 1.0.
+            isomershift (float, optional): Isomer shift (mm/s). Defaults to 0.0.
+            fwhml (float, optional): Lorentzian full-width at half-maximum. Defaults to 0.25.
+            magneticfield (float, optional): Hyperfine field in Tesla. Defaults to 33.0.
+            quadrupoleshift (float, optional): First-order quadrupole shift in mm/s.
+                Defaults to 0.0.
+            center (float, optional): Global spectrum offset in mm/s. Defaults to 0.0.
+            background (float, optional): Constant background level. Defaults to 0.0.
+            anglethetaphi (Dict[str, float], optional): Orientation angles. Defaults to None.
+
+        Returns:
+            NDArray[np.float64]: Computed intensity array.
+        """
+        return _moessbauer_sextet(
+            x=x,
+            amplitude=amplitude,
+            isomer_shift=isomershift,
+            fwhml=fwhml,
+            magnetic_field=magneticfield,
+            quadrupole_shift=quadrupoleshift,
+            center=center,
+            angle_theta_phi=anglethetaphi,
+            background=background,
+        )
+
+    @staticmethod
+    def moessbaueroctet(
+        x: NDArray[np.float64],
+        amplitude: float = 1.0,
+        isomershift: float = 0.0,
+        fwhml: float = 0.25,
+        magneticfield: float = 33.0,
+        quadrupoleshift: float = 0.0,
+        center: float = 0.0,
+        efg_vzz: float = 1e21,
+        efg_eta: float = 0.0,
+        anglethetaphi: Optional[Dict[str, float]] = None,
+        temperature: float = 300.0,
+        sodshift: float = 0.0,
+        sitefraction: float = 1.0,
+        background: float = 0.0,
+    ) -> NDArray[np.float64]:
+        """Compute a Mössbauer octet via eight Lorentzians plus background.
+
+        Used for materials with a mixture of magnetic and quadrupole interactions.
+
+        Args:
+            x (NDArray[np.float64]): Velocity or energy array (mm/s).
+            amplitude (float, optional): Peak amplitude. Defaults to 1.0.
+            isomershift (float, optional): Isomer shift (mm/s). Defaults to 0.0.
+            fwhml (float, optional): Lorentzian full-width at half-maximum. Defaults to 0.25.
+            magneticfield (float, optional): Hyperfine field in Tesla. Defaults to 33.0.
+            quadrupoleshift (float, optional): First-order quadrupole shift in mm/s.
+                Defaults to 0.0.
+            center (float, optional): Global spectrum offset in mm/s. Defaults to 0.0.
+            efg_vzz (float, optional): Principal component of EFG tensor. Defaults to 1e21.
+            efg_eta (float, optional): EFG asymmetry parameter. Defaults to 0.0.
+            anglethetaphi (Dict[str, float], optional): Orientation angles. Defaults to None.
+            temperature (float, optional): Temperature in K. Defaults to 300.0.
+            sodshift (float, optional): Second-order Doppler shift in mm/s. Defaults to 0.0.
+            sitefraction (float, optional): Site fraction. Defaults to 1.0.
+            background (float, optional): Constant background level. Defaults to 0.0.
+
+        Returns:
+            NDArray[np.float64]: Computed intensity array.
+        """
+        # Call the implementation from moessbauer_models.py
+        return _moessbauer_octet(
+            x=x,
+            amplitude=amplitude,
+            isomer_shift=isomershift,
+            fwhml=fwhml,
+            magnetic_field=magneticfield,
+            quadrupole_shift=quadrupoleshift,
+            center=center,
+            efg_vzz=efg_vzz,
+            efg_eta=efg_eta,
+            angle_theta_phi=anglethetaphi,
+            temperature=temperature,
+            sod_shift=sodshift,
+            site_fraction=sitefraction,
+            background=background,
         )
 
 
@@ -801,14 +928,29 @@ class DistributionModels:
 class ReferenceKeys:
     """Reference keys for model fitting and peak detection."""
 
-    __models__ = list(DistributionModelAPI.model_json_schema()["properties"].keys())
+    __models__: ClassVar[list[str]] = list(
+        DistributionModelAPI.model_json_schema()["properties"].keys(),
+    )
 
-    __automodels__ = [
+    __automodels__: ClassVar[list[str]] = [
         "gaussian",
         "orcagaussian",
         "lorentzian",
         "voigt",
         "pseudovoigt",
+    ]
+
+    # Mössbauer models
+    __moessbauer_models__: ClassVar[list[str]] = [
+        "moessbauersinglet",
+        "moessbauerdoublet",
+        "moessbauersextet",
+        "moessbaueroctet",
+        # Add underscored versions for compatibility
+        "moessbauer_singlet",
+        "moessbauer_doublet",
+        "moessbauer_sextet",
+        "moessbauer_octet",
     ]
 
     def model_check(self, model: str) -> None:
@@ -819,9 +961,17 @@ class ReferenceKeys:
 
         Raises:
             NotImplementedError: If the model is not implemented.
+
         """
-        if model.split("_")[0] not in self.__models__:
-            raise NotImplementedError(f"{model} is not supported!")
+        model_prefix = model.split("_")[0]
+
+        # Check in main models list
+        if (
+            model_prefix not in self.__models__
+            and model_prefix not in self.__moessbauer_models__
+        ):
+            msg = f"{model} is not supported!"
+            raise NotImplementedError(msg)
 
     def automodel_check(self, model: str) -> None:
         """Check if model is available.
@@ -832,9 +982,11 @@ class ReferenceKeys:
 
         Raises:
             KeyError: If the model is not supported.
+
         """
         if model not in self.__automodels__:
-            raise KeyError(f"{model} is not supported!")
+            msg = f"{model} is not supported for auto detection! Use one of {self.__automodels__}"
+            raise KeyError(msg)
 
     def detection_check(self, args: Dict[str, Any]) -> None:
         """Check if detection is available.
@@ -846,88 +998,9 @@ class ReferenceKeys:
         Raises:
             KeyError: If the key is not parameter of the `scipy.signal.find_peaks`
                 function. This will be checked via `pydantic` in `spectrafit.api`.
+
         """
         AutopeakAPI(**args)
-
-
-@dataclass(frozen=True)
-class Constants:
-    r"""Mathematical constants for the curve models.
-
-    !!! info "Constants"
-
-        1. Natural logarithm of 2
-
-            $$
-            ln2 = \log{2}
-            $$
-
-        2. Square root of 2 times pi
-
-            $$
-            sq2pi = \sqrt{2 \pi}
-            $$
-
-        3. Square root of pi
-
-            $$
-            sqpi = \sqrt{ \pi}
-            $$
-
-        4. Square root of 2
-
-            $$
-            sq2 = \sqrt{2}
-            $$
-
-        5. Full width at half maximum to sigma for Gaussian
-
-            $$
-            fwhmg2sig = \frac{1}{ 2 \sqrt{2\log{2}}}
-            $$
-
-        6. Full width at half maximum to sigma for Lorentzian
-
-            $$
-            fwhml2sig = \frac{1}{2}
-            $$
-
-        7. Full width at half maximum to sigma for Voigt according to the article by
-            Olivero and Longbothum[^1], check also
-            [XPSLibary website](https://xpslibrary.com/voigt-peak-shape/).
-
-            $$
-            fwhm_{\text{Voigt}} \approx 0.5346 \cdot fwhm_{\text{Gaussian}} +
-              \sqrt{ 0.2166 fwhm_{\text{Lorentzian}}^2  + fwhm_{\text{Gaussian}}^2 }
-
-            $$
-
-            In case of equal FWHM for Gaussian and Lorentzian, the Voigt FWHM can be
-            defined as:
-
-            $$
-            fwhm_{\text{Voigt}} \approx 1.0692 + 2 \sqrt{0.2166 + 2 \ln{2}} \cdot \sigma
-            $$
-
-            $$
-            fwhmv2sig = \frac{1}{fwhm_{\text{Voigt}}}
-            $$
-
-        [^1]:
-            J.J. Olivero, R.L. Longbothum,
-            _Empirical fits to the Voigt line width: A brief review_,
-            **Journal of Quantitative Spectroscopy and Radiative Transfer**,
-            Volume 17, Issue 2, 1977, Pages 233-236, ISSN 0022-4073,
-            https://doi.org/10.1016/0022-4073(77)90161-3.
-    """
-
-    ln2 = log(2.0)
-    sq2pi = sqrt(2.0 * pi)
-    sqpi = sqrt(pi)
-    sq2 = sqrt(2.0)
-    fwhmg2sig = 1 / (2.0 * sqrt(2.0 * log(2.0)))
-    fwhml2sig = 1 / 2.0
-    fwhmv2sig = 1 / (2 * 0.5346 + 2 * sqrt(0.2166 + log(2) * 2))
 
 
 class AutoPeakDetection:
@@ -946,6 +1019,7 @@ class AutoPeakDetection:
             data (NDArray[np.float64]): `y`-values of the data as 1d-array.
             args (Dict[str, Any]): The input file arguments as a dictionary with
                  additional information beyond the command line arguments.
+
         """
         self.x = x
         self.data = data
@@ -953,7 +1027,9 @@ class AutoPeakDetection:
 
     @staticmethod
     def check_key_exists(
-        key: str, args: Dict[str, Any], value: Union[float, Tuple[Any, Any]]
+        key: str,
+        args: Dict[str, Any],
+        value: Union[float, Tuple[Any, Any]],
     ) -> Any:
         """Check if a key exists in a dictionary.
 
@@ -972,6 +1048,7 @@ class AutoPeakDetection:
 
         Returns:
             Any: The reference value for `scipy.signal.find_peaks`.
+
         """
         return args.get(key, value)
 
@@ -996,6 +1073,7 @@ class AutoPeakDetection:
         Returns:
             Tuple[float, float]: Tuple of the inverse signal to noise ratio and
                  the maximum value of the `data`.
+
         """
         return 1 - self.data.mean() / self.data.std(), self.data.max()
 
@@ -1006,6 +1084,7 @@ class AutoPeakDetection:
         Returns:
             Tuple[float, float]: Minimum and maximum value of the spectrum `data`,
                  respectively, `intensity`.
+
         """
         return self.data.min(), self.data.max()
 
@@ -1015,6 +1094,7 @@ class AutoPeakDetection:
 
         Returns:
             float: Estimated distance between peaks.
+
         """
         min_step = np.diff(self.x).min()
         return max(min_step, 1.0)
@@ -1032,11 +1112,12 @@ class AutoPeakDetection:
 
         Returns:
             Tuple[float, float]: Tuple of the harmonic-mean and maximum value of `data`.
+
         """
         try:
             return hmean(self.data), self.data.max()
-        except ValueError as exc:
-            print(f"{exc}: Using standard arithmetic mean of NumPy.\n")
+        except ValueError:
+            pass
         return self.data.mean(), self.data.max()
 
     @property
@@ -1051,6 +1132,7 @@ class AutoPeakDetection:
 
         Returns:
             Tuple[float, float]: Estimated width lower and uper end of the peaks.
+
         """
         return (
             np.diff(self.x).min(),
@@ -1070,11 +1152,11 @@ class AutoPeakDetection:
 
         Returns:
             float: Estimated relative height of a peak.
+
         """
         try:
             rel_height = (hmean(self.data) - self.data.min()) / 4
-        except ValueError as exc:
-            print(f"{exc}: Using standard arithmetic mean of NumPy.\n")
+        except ValueError:
             rel_height = (self.data.mean() - self.data.min()) / 4
         return rel_height if rel_height > 0 else 0.0
 
@@ -1092,6 +1174,7 @@ class AutoPeakDetection:
 
         Returns:
             float: Estimated window length is set to the numeric value of > 1.
+
         """
         wlen = self.data.size / 100
         return wlen if wlen > 1.0 else 1 + 1e-9
@@ -1103,6 +1186,7 @@ class AutoPeakDetection:
         Returns:
             Tuple[float, float]: Estimated plateau size is set to `zero` for the lower
                  end and the maximum value of the `x` for the upper end.
+
         """
         return 0.0, self.x.max()
 
@@ -1125,33 +1209,48 @@ class AutoPeakDetection:
         elif isinstance(self._args, dict):
             ReferenceKeys().detection_check(self._args)
             self.height = self.check_key_exists(
-                key="height", args=self._args, value=self.estimate_height
+                key="height",
+                args=self._args,
+                value=self.estimate_height,
             )
             self.threshold = self.check_key_exists(
-                key="threshold", args=self._args, value=self.estimate_threshold
+                key="threshold",
+                args=self._args,
+                value=self.estimate_threshold,
             )
             self.distance = self.check_key_exists(
-                key="distance", args=self._args, value=self.estimate_distance
+                key="distance",
+                args=self._args,
+                value=self.estimate_distance,
             )
             self.prominence = self.check_key_exists(
-                key="prominence", args=self._args, value=self.estimate_prominence
+                key="prominence",
+                args=self._args,
+                value=self.estimate_prominence,
             )
             self.width = self.check_key_exists(
-                key="width", args=self._args, value=self.estimated_width
+                key="width",
+                args=self._args,
+                value=self.estimated_width,
             )
             self.wlen = self.check_key_exists(
-                key="wlen", args=self._args, value=self.estimated_wlen
+                key="wlen",
+                args=self._args,
+                value=self.estimated_wlen,
             )
             self.rel_height = self.check_key_exists(
-                key="rel_height", args=self._args, value=self.estimated_rel_height
+                key="rel_height",
+                args=self._args,
+                value=self.estimated_rel_height,
             )
             self.plateau_size = self.check_key_exists(
-                key="plateau_size", args=self._args, value=0.0
+                key="plateau_size",
+                args=self._args,
+                value=0.0,
             )
         else:
-            raise TypeError(
-                f"The type of the `args` is not supported: {type(self._args)}"
-            )
+            msg = f"The type of the `args` is not supported: {type(self._args)}"
+            raise TypeError(msg)
 
     def default_values(self) -> None:
         """Set the default values for the peak detection."""
@@ -1212,6 +1311,7 @@ class ModelParameters(AutoPeakDetection):
                 basis of the initial parameters or they can be completley defined by the
                 user. The `global fitting` definition starts at `1` similiar to the
                 peaks attributes notation.
+
         """
         self.col_len = df.shape[1] - 1
         self.args = args
@@ -1221,7 +1321,9 @@ class ModelParameters(AutoPeakDetection):
         super().__init__(self.x, self.data, self.args)
 
     def df_to_numvalues(
-        self, df: pd.DataFrame, args: Dict[str, Any]
+        self,
+        df: pd.DataFrame,
+        args: Dict[str, Any],
     ) -> Tuple[NDArray[np.float64], NDArray[np.float64]]:
         """Transform the dataframe to numeric values of `x` and `data`.
 
@@ -1241,6 +1343,7 @@ class ModelParameters(AutoPeakDetection):
         Returns:
             Tuple[NDArray[np.float64], NDArray[np.float64]]: Tuple of `x` and
                  `data` as numpy arrays.
+
         """
         if args["global_"]:
             return (
@@ -1255,6 +1358,7 @@ class ModelParameters(AutoPeakDetection):
 
         Returns:
             Parameters: Model parameters class.
+
         """
         self.__perform__()
         return self.params
@@ -1264,6 +1368,7 @@ class ModelParameters(AutoPeakDetection):
 
         Returns:
             str: String representation of the model parameters.
+
         """
         self.__perform__()
         return str(self.params)
@@ -1274,23 +1379,22 @@ class ModelParameters(AutoPeakDetection):
         Raises:
             KeyError: Global fitting is combination with automatic peak detection is
                  not implemented yet.
+
         """
-        if self.args["global_"] == 0 and not self.args["autopeak"]:
+        if self.args["global_"] == GLOBAL_NONE and not self.args["autopeak"]:
             self.define_parameters()
-        elif self.args["global_"] == 1 and not self.args["autopeak"]:
+        elif self.args["global_"] == GLOBAL_STANDARD and not self.args["autopeak"]:
             self.define_parameters_global()
-        elif self.args["global_"] == 2 and not self.args["autopeak"]:
+        elif self.args["global_"] == GLOBAL_WITH_PRE and not self.args["autopeak"]:
             self.define_parameters_global_pre()
-        elif self.args["global_"] == 0:
+        elif self.args["global_"] == GLOBAL_NONE:
             self.initialize_peak_detection()
             self.define_parameters_auto()
-        elif self.args["global_"] in [1, 2]:
-            raise KeyError(
-                "Global fitting mode with automatic peak detection "
-                "is not supported yet."
-            )
+        elif self.args["global_"] in [GLOBAL_STANDARD, GLOBAL_WITH_PRE]:
+            msg = "Global fitting mode with automatic peak detection is not supported yet."
+            raise KeyError(msg)
 
-    def define_parameters_auto(self) -> None:
+    def define_parameters_auto(self) -> None:  # noqa: C901
         """Auto define the model parameters for local fitting."""
         positions, properties = self.__autodetect__()
         if (
@@ -1487,28 +1591,40 @@ class ModelParameters(AutoPeakDetection):
             key_1 (str): The key of the first level of the input dictionary.
             value_1 (Dict[str, Any]): The value of the first level of the input
                  dictionary.
+
         """
         for key_2, value_2 in value_1.items():
             self.define_parameters_loop_2(key_1=key_1, key_2=key_2, value_2=value_2)
 
     def define_parameters_loop_2(
-        self, key_1: str, key_2: str, value_2: Dict[str, Any]
+        self,
+        key_1: str,
+        key_2: str,
+        value_2: Dict[str, Any],
     ) -> None:
         """Loop through the input parameters for a `params`-dictionary.
 
         Args:
             key_1 (str): The key of the first level of the input dictionary.
             key_2 (str): The key of the second level of the input dictionary.
-            value_2 (Dict[str, Any]): The value of the second level of the input
+            value_2 (Dict[str, Any]): The value of the first level of the input
                  dictionary.
+
         """
         for key_3, value_3 in value_2.items():
             self.define_parameters_loop_3(
-                key_1=key_1, key_2=key_2, key_3=key_3, value_3=value_3
+                key_1=key_1,
+                key_2=key_2,
+                key_3=key_3,
+                value_3=value_3,
             )
 
     def define_parameters_loop_3(
-        self, key_1: str, key_2: str, key_3: str, value_3: Dict[str, Any]
+        self,
+        key_1: str,
+        key_2: str,
+        key_3: str,
+        value_3: Dict[str, Any],
     ) -> None:
         """Loop through the input parameters for a `params`-dictionary.
 
@@ -1518,6 +1634,7 @@ class ModelParameters(AutoPeakDetection):
             key_3 (str): The key of the third level of the input dictionary.
             value_3 (Dict[str, Any]): The value of the third level of the input
                  dictionary.
+
         """
         self.params.add(f"{key_2}_{key_3}_{key_1}", **value_3)
 
@@ -1536,7 +1653,12 @@ class ModelParameters(AutoPeakDetection):
                         )
 
     def _define_parameter(
-        self, col_i: int, key_1: str, key_2: str, key_3: str, value_3: Dict[str, Any]
+        self,
+        col_i: int,
+        key_1: str,
+        key_2: str,
+        key_3: str,
+        value_3: Dict[str, Any],
     ) -> None:
         """Define the input parameters for a `params`-dictionary for global fitting.
 
@@ -1547,6 +1669,7 @@ class ModelParameters(AutoPeakDetection):
             key_3 (str): The key of the third level of the input dictionary.
             value_3 (Dict[str, Any]): The value of the third level of the input
                  dictionary.
+
         """
         if col_i:
             if key_3 != "amplitude":
@@ -1601,6 +1724,7 @@ class SolverModels(ModelParameters):
             df (pd.DataFrame): DataFrame containing the input data (`x` and `data`).
             args (Dict[str, Any]): The input file arguments as a dictionary with
                  additional information beyond the command line arguments.
+
         """
         super().__init__(df=df, args=args)
         self.args_solver = SolverModelsAPI(**args).model_dump()
@@ -1612,6 +1736,7 @@ class SolverModels(ModelParameters):
 
         Returns:
             Tuple[Minimizer, Any]: Minimizer class and the fitting results.
+
         """
         if self.args_global["global_"]:
             minimizer = Minimizer(
@@ -1640,31 +1765,7 @@ class SolverModels(ModelParameters):
         x: NDArray[np.float64],
         data: NDArray[np.float64],
     ) -> NDArray[np.float64]:
-        r"""Solving the fitting problem.
-
-        !!! note "About implemented models"
-            `solve_local_fitting` is a wrapper function for the calling the implemented
-            moldels. Based on the `params` dictionary, the function calls the
-            corresponding models and merge them to the general model with will be
-            optimized by the `lmfit`-optimizer.
-            Currently the following models are supported:
-
-            - [Gaussian](https://en.wikipedia.org/wiki/Gaussian_function)
-            - [Lorentzian](https://en.wikipedia.org/wiki/Cauchy_distribution)
-                also known as Cauchy distribution
-            - [Voigt](https://en.wikipedia.org/wiki/Voigt_profile)
-            - [Pseudo Voigt][1]
-            - Exponential
-            - [power][2] (also known as Log-parabola or just power)
-            - Linear
-            - Constant
-            - [Error Function](https://en.wikipedia.org/wiki/Error_function)
-            - [Arcus Tangens][3]
-            - Logarithmic
-
-            [1]: https://en.wikipedia.org/wiki/Voigt_profile#Pseudo-Voigt_approximation
-            [2]: https://en.wikipedia.org/wiki/Power_law
-            [3]: https://en.wikipedia.org/wiki/Inverse_trigonometric_functions
+        """Solving the fitting problem.
 
         Args:
             params (Dict[str, Parameters]): The best optimized parameters of the fit.
@@ -1673,15 +1774,19 @@ class SolverModels(ModelParameters):
 
         Returns:
             NDArray[np.float64]: The best-fitted data based on the proposed model.
+
         """
         val = np.zeros(x.shape)
         peak_kwargs: Dict[Tuple[str, str], Parameters] = defaultdict(dict)
+        for model_name, param_value in params.items():
+            _model = model_name.lower()
+            ReferenceKeys().model_check(model=_model)
+            c_name = _model.split("_")
 
-        for model in params:
-            model = model.lower()
-            ReferenceKeys().model_check(model=model)
-            c_name = model.split("_")
-            peak_kwargs[(c_name[0], c_name[2])][c_name[1]] = params[model]
+            model_key = c_name[0]
+            param_name = c_name[1]
+            peak_id = c_name[2]
+            peak_kwargs[(model_key, peak_id)][param_name] = param_value
 
         for key, _kwarg in peak_kwargs.items():
             val += getattr(DistributionModels(), key[0])(x, **_kwarg)
@@ -1716,15 +1821,16 @@ class SolverModels(ModelParameters):
 
         Returns:
             NDArray[np.float64]: The best-fitted data based on the proposed model.
+
         """
         val = np.zeros(data.shape)
         peak_kwargs: Dict[Tuple[str, str, str], Parameters] = defaultdict(dict)
 
-        for model in params:
-            model = model.lower()
-            ReferenceKeys().model_check(model=model)
-            c_name = model.split("_")
-            peak_kwargs[(c_name[0], c_name[2], c_name[3])][c_name[1]] = params[model]
+        for model, value in params.items():
+            model_lower = model.lower()
+            ReferenceKeys().model_check(model=model_lower)
+            c_name = model_lower.split("_")
+            peak_kwargs[(c_name[0], c_name[2], c_name[3])][c_name[1]] = value
         for key, _kwarg in peak_kwargs.items():
             i = int(key[2]) - 1
             val[:, i] += getattr(DistributionModels(), key[0])(x, **_kwarg)
@@ -1757,17 +1863,18 @@ def calculated_model(
     Returns:
         pd.DataFrame: Extended dataframe containing the single contributions of the
             models.
+
     """
     peak_kwargs: Dict[Any, Parameters] = defaultdict(dict)
 
-    for model in params:
-        model = model.lower()
-        ReferenceKeys().model_check(model=model)
-        p_name = model.split("_")
+    for model, value in params.items():
+        model_lower = model.lower()
+        ReferenceKeys().model_check(model=model_lower)
+        p_name = model_lower.split("_")
         if global_fit:
-            peak_kwargs[(p_name[0], p_name[2], p_name[3])][p_name[1]] = params[model]
+            peak_kwargs[(p_name[0], p_name[2], p_name[3])][p_name[1]] = value
         else:
-            peak_kwargs[(p_name[0], p_name[2])][p_name[1]] = params[model]
+            peak_kwargs[(p_name[0], p_name[2])][p_name[1]] = value
 
     _df = df.copy()
     for key, _kwarg in peak_kwargs.items():
@@ -1775,3 +1882,21 @@ def calculated_model(
         _df[c_name] = getattr(DistributionModels(), key[0])(x, **_kwarg)
 
     return _df
+
+
+@dataclass(frozen=True)
+class Constants:
+    """Constants used for calculations.
+
+    This class provides mathematical constants used across the package.
+    It's implemented as a frozen dataclass with class variables
+    to ensure they can't be modified.
+    """
+
+    ln2: ClassVar[float] = log(2.0)
+    sq2pi: ClassVar[float] = sqrt(2.0 * pi)
+    sqpi: ClassVar[float] = sqrt(pi)
+    sq2: ClassVar[float] = sqrt(2.0)
+    fwhmg2sig: ClassVar[float] = 1 / (2.0 * sqrt(2.0 * log(2.0)))
+    fwhml2sig: ClassVar[float] = 1 / 2.0
+    fwhmv2sig: ClassVar[float] = 1 / 3.60131

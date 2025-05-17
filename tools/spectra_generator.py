@@ -3,11 +3,13 @@
 from __future__ import annotations
 
 import math
+
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
-import scipy.stats as stats
+
+from scipy import stats
 
 
 def double_peak(fname: str) -> None:
@@ -31,7 +33,7 @@ def double_peak(fname: str) -> None:
             + np.random.default_rng(33).normal(size=100) / 100.0
             + 0.75 * stats.norm.pdf(x, 5, sigma)
             + np.random.default_rng(44).normal(size=100) / 100.0,
-        }
+        },
     ).to_csv(Path(fname), index=False)
 
 

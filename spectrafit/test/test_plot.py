@@ -2,13 +2,18 @@
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 import pandas as pd
-from matplotlib import pyplot
 
 from spectrafit.plotting import PlotSpectra
 
 
-def test_succeeds(plt: pyplot) -> None:
+if TYPE_CHECKING:
+    from matplotlib.figure import Figure
+
+
+def test_succeeds(plt: Figure) -> None:
     """Test that PlotSpectra class succeeds for 2D-plotting."""
     df = pd.DataFrame(
         {
@@ -77,14 +82,14 @@ def test_succeeds(plt: pyplot) -> None:
                 0.05590190952638515,
                 0.0462071362168292,
             ],
-        }
+        },
     )
     args = {"noplot": True, "global_": False}
     PlotSpectra(df=df, args=args)()
     plt.show()
 
 
-def test_empty(plt: pyplot) -> None:
+def test_empty(plt: Figure) -> None:
     """Test that PlotSpectra class succeeds for no-plotting."""
     df = pd.DataFrame(
         {
@@ -153,7 +158,7 @@ def test_empty(plt: pyplot) -> None:
                 0.05590190952638515,
                 0.0462071362168292,
             ],
-        }
+        },
     )
     args = {"noplot": False, "global_": False}
     PlotSpectra(df=df, args=args)()

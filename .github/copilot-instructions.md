@@ -114,7 +114,3 @@ chore: 🔨 update dependencies
 - Merge to `main` via pull request after review and passing CI.
 - Rebase frequently to keep branches up to date with `main`.
 - Delete feature branches after merge.
-
-```
-
-```

@@ -75,7 +75,7 @@ def test_delimiter_regex() -> None:
 
 def test_delimiter_regex_error() -> None:
     """Test the delimiter validator for regex error."""
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="s is not a valid delimiter."):
         DataFileAPI(
             skiprows=0,
             skipfooter=0,
@@ -116,7 +116,7 @@ def test_comment() -> None:
 
 def test_comment_error() -> None:
     """Test the comment marker validator for error."""
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="x is not a valid comment marker."):
         DataFileAPI(
             skiprows=0,
             skipfooter=0,

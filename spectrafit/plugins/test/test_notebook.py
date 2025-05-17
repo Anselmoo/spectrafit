@@ -3,24 +3,31 @@
 from __future__ import annotations
 
 import sys
+
 from pathlib import Path
-from typing import Any, Dict, List, Union
+from typing import Any
+from typing import Dict
+from typing import List
+from typing import Union
 from unittest import mock
 
 import pandas as pd
 import pytest
 
 from spectrafit.api.cmd_model import DescriptionAPI
-from spectrafit.api.notebook_model import FnameAPI, PlotAPI
-from spectrafit.api.report_model import InputAPI, OutputAPI, SolverAPI
-from spectrafit.api.tools_model import DataPreProcessingAPI, SolverModelsAPI
-from spectrafit.plugins.notebook import (
-    DataFrameDisplay,
-    DataFramePlot,
-    ExportReport,
-    ExportResults,
-    SpectraFitNotebook,
-)
+from spectrafit.api.notebook_model import FnameAPI
+from spectrafit.api.notebook_model import PlotAPI
+from spectrafit.api.report_model import InputAPI
+from spectrafit.api.report_model import OutputAPI
+from spectrafit.api.report_model import SolverAPI
+from spectrafit.api.tools_model import DataPreProcessingAPI
+from spectrafit.api.tools_model import SolverModelsAPI
+from spectrafit.plugins.notebook import DataFrameDisplay
+from spectrafit.plugins.notebook import DataFramePlot
+from spectrafit.plugins.notebook import ExportReport
+from spectrafit.plugins.notebook import ExportResults
+from spectrafit.plugins.notebook import SpectraFitNotebook
+
 
 __plotly_io_show__ = "plotly.io.show"
 
@@ -29,7 +36,7 @@ __plotly_io_show__ = "plotly.io.show"
 def dataframe_fixture() -> pd.DataFrame:
     """Create a DataFrameDisplay object."""
     return pd.read_csv(
-        "https://raw.githubusercontent.com/Anselmoo/spectrafit/main/Examples/data.csv"
+        "https://raw.githubusercontent.com/Anselmoo/spectrafit/main/Examples/data.csv",
     )
 
 
@@ -38,7 +45,7 @@ def dataframe_2_fixture() -> pd.DataFrame:
     """Create a DataFrameDisplay object."""
     return pd.read_csv(
         "https://raw.githubusercontent.com/Anselmoo/"
-        "spectrafit/main/Examples/example_1_fit.csv"
+        "spectrafit/main/Examples/example_1_fit.csv",
     )
 
 
@@ -47,7 +54,7 @@ def dataframe_global_fixture() -> pd.DataFrame:
     """Create a DataFrameDisplay object."""
     return pd.read_csv(
         "https://github.com/Anselmoo/spectrafit/blob/"
-        "9cf51ce020925228be26468763466c7fd91fedf0/Examples/example_6_fit.csv?raw=true"
+        "9cf51ce020925228be26468763466c7fd91fedf0/Examples/example_6_fit.csv?raw=true",
     )
 
 
@@ -79,14 +86,14 @@ def initial_model_fixture() -> List[Dict[str, Dict[str, Dict[str, Any]]]]:
                 "center": {"max": 2, "min": -2, "vary": True, "value": 0},
                 "fwhmg": {"max": 0.1, "min": 0.02, "vary": True, "value": 0.01},
                 "fwhml": {"max": 0.1, "min": 0.01, "vary": True, "value": 0.01},
-            }
+            },
         },
         {
             "gaussian": {
                 "amplitude": {"max": 1.2, "min": 0.5, "vary": True, "value": 0.3},
                 "center": {"max": 4, "min": 2, "vary": True, "value": 3.5},
                 "fwhmg": {"max": 0.1, "min": 0.02, "vary": False, "value": 1.3},
-            }
+            },
         },
     ]
 
@@ -109,7 +116,7 @@ def args_out_fixture() -> Dict[str, Any]:
             "computational": {"optmizer": "leastsq", "nfev": 1000},
         },
         "descriptive_statistic": pd.DataFrame({"mean": [1, 2], "std": [1, 2]}).to_dict(
-            orient="list"
+            orient="list",
         ),
         "linear_correlation": pd.DataFrame({"a": [1, 2, 3], "b": [4, 5, 6]})
         .corr()
@@ -190,7 +197,7 @@ def class_spectrafit_fixture_fit_global(
     """Create a SpectraFitNotebook object."""
     dataframe_init = pd.read_csv(
         "https://github.com/Anselmoo/spectrafit/blob/"
-        "9cf51ce020925228be26468763466c7fd91fedf0/Examples/data_global.csv?raw=true"
+        "9cf51ce020925228be26468763466c7fd91fedf0/Examples/data_global.csv?raw=true",
     )
 
     sp = SpectraFitNotebook(
@@ -207,7 +214,10 @@ def class_spectrafit_fixture_fit_global(
 
 @pytest.fixture(name="class_spectrafit_fit")
 def class_spectrafit_fixture_fit(
-    dataframe: pd.DataFrame, x_column: str, y_column: str, tmp_path: Path
+    dataframe: pd.DataFrame,
+    x_column: str,
+    y_column: str,
+    tmp_path: Path,
 ) -> SpectraFitNotebook:
     """Create a SpectraFitNotebook object."""
     return SpectraFitNotebook(
@@ -226,7 +236,7 @@ def test_dataframe_display(dataframe: pd.DataFrame) -> None:
     DataFrameDisplay().df_display(df=dataframe, mode="interactive")
     DataFrameDisplay().df_display(df=dataframe, mode="dtale")
 
-    with pytest.raises(ValueError) as excinfo:
+    with pytest.raises(ValueError, match=r"Invalid mode: wrong.") as excinfo:
         DataFrameDisplay().df_display(df=dataframe, mode="wrong")
 
     assert "Invalid mode: wrong." in str(excinfo.value)
@@ -242,7 +252,8 @@ class TestDataFramePlot:
         pp = DataFramePlot()
         with mock.patch(__plotly_io_show__) as mock_show:
             pp.plot_dataframe(
-                args_plot=PlotAPI(x="Energy", y="Noisy", title="Test"), df=dataframe
+                args_plot=PlotAPI(x="Energy", y="Noisy", title="Test"),
+                df=dataframe,
             )
             mock_show.assert_called_once()
 
@@ -295,7 +306,7 @@ def test_dataframe_display_all(dataframe: pd.DataFrame) -> None:
     DataFrameDisplay().df_display(df=dataframe, mode="interactive")
     DataFrameDisplay().df_display(df=dataframe, mode="dtale")
 
-    with pytest.raises(ValueError) as excinfo:
+    with pytest.raises(ValueError, match=r"Invalid mode: wrong.") as excinfo:
         DataFrameDisplay().df_display(df=dataframe, mode="wrong")
 
     assert "Invalid mode: wrong." in str(excinfo.value)
@@ -333,7 +344,10 @@ class TestExportResults:
         assert isinstance(ExportResults.fname2path(fname="test", suffix="csv"), Path)
         assert isinstance(
             ExportResults.fname2path(
-                fname="test", suffix="csv", folder="tmp", prefix="prefix"
+                fname="test",
+                suffix="csv",
+                folder="tmp",
+                prefix="prefix",
             ),
             Path,
         )
@@ -345,19 +359,22 @@ class TestExportReport:
     def test_input(self, export_report: Dict[str, Any]) -> None:
         """Test the input function."""
         assert isinstance(
-            ExportReport(**export_report).make_input_contribution, InputAPI
+            ExportReport(**export_report).make_input_contribution,
+            InputAPI,
         )
 
     def test_solver(self, export_report: Dict[str, Any]) -> None:
         """Test the solver function."""
         assert isinstance(
-            ExportReport(**export_report).make_solver_contribution, SolverAPI
+            ExportReport(**export_report).make_solver_contribution,
+            SolverAPI,
         )
 
     def test_output(self, export_report: Dict[str, Any]) -> None:
         """Test the output function."""
         assert isinstance(
-            ExportReport(**export_report).make_output_contribution, OutputAPI
+            ExportReport(**export_report).make_output_contribution,
+            OutputAPI,
         )
 
 
@@ -383,15 +400,22 @@ class TestSpectraFitNotebook:
 
     def test_init_fail(self, dataframe: pd.DataFrame, x_column: str) -> None:
         """Test the initialization of the class."""
-        with pytest.raises(ValueError) as excinfo:
+        with pytest.raises(
+            ValueError, match=r"The dataframe must have 2 or more columns."
+        ) as excinfo:
             SpectraFitNotebook(
-                df=dataframe[[x_column]], x_column=x_column, y_column="wrong"
+                df=dataframe[[x_column]],
+                x_column=x_column,
+                y_column="wrong",
             )
 
         assert "The dataframe must have 2 or more columns." in str(excinfo.value)
 
     def test_pre_process(
-        self, dataframe: pd.DataFrame, x_column: str, y_column: str
+        self,
+        dataframe: pd.DataFrame,
+        x_column: str,
+        y_column: str,
     ) -> None:
         """Test the pre_process function."""
         sp = SpectraFitNotebook(df=dataframe, x_column=x_column, y_column=y_column)
@@ -413,16 +437,28 @@ class TestSpectraFitNotebook:
         class_spectrafit["sp"].export_df_peaks
 
         assert ExportResults.fname2path(
-            folder=class_spectrafit["tmpdir"], fname="test", prefix="act", suffix="csv"
+            folder=class_spectrafit["tmpdir"],
+            fname="test",
+            prefix="act",
+            suffix="csv",
         ).exists()
         assert ExportResults.fname2path(
-            folder=class_spectrafit["tmpdir"], fname="test", prefix="fit", suffix="csv"
+            folder=class_spectrafit["tmpdir"],
+            fname="test",
+            prefix="fit",
+            suffix="csv",
         ).exists()
         assert ExportResults.fname2path(
-            folder=class_spectrafit["tmpdir"], fname="test", prefix="org", suffix="csv"
+            folder=class_spectrafit["tmpdir"],
+            fname="test",
+            prefix="org",
+            suffix="csv",
         ).exists()
         assert ExportResults.fname2path(
-            folder=class_spectrafit["tmpdir"], fname="test", prefix="pre", suffix="csv"
+            folder=class_spectrafit["tmpdir"],
+            fname="test",
+            prefix="pre",
+            suffix="csv",
         ).exists()
         assert ExportResults.fname2path(
             folder=class_spectrafit["tmpdir"],
@@ -553,7 +589,7 @@ class TestSpectraFitNotebook:
                 show_plot=True,
                 show_df=True,
                 show_metric=False,
-                solver_settings=dict(optimizer={"max_nfev": 100}),
+                solver_settings={"optimizer": {"max_nfev": 100}},
             )
             mock_show.assert_called_once()
 

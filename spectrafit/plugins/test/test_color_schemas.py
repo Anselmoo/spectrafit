@@ -2,23 +2,23 @@
 
 from __future__ import annotations
 
-from typing import Tuple, Type
+from typing import Tuple
+from typing import Type
 
 import pytest
 
-from spectrafit.api.notebook_model import ColorAPI, FontAPI
-from spectrafit.plugins.color_schemas import (
-    ColorBlindColor,
-    ColorBlindFont,
-    DevOpsDarkColor,
-    DevOpsDarkFont,
-    DevOpsLightColor,
-    DevOpsLightFont,
-    DraculaColor,
-    DraculaFont,
-    MoonAkiColor,
-    MoonAkiFont,
-)
+from spectrafit.api.notebook_model import ColorAPI
+from spectrafit.api.notebook_model import FontAPI
+from spectrafit.plugins.color_schemas import ColorBlindColor
+from spectrafit.plugins.color_schemas import ColorBlindFont
+from spectrafit.plugins.color_schemas import DevOpsDarkColor
+from spectrafit.plugins.color_schemas import DevOpsDarkFont
+from spectrafit.plugins.color_schemas import DevOpsLightColor
+from spectrafit.plugins.color_schemas import DevOpsLightFont
+from spectrafit.plugins.color_schemas import DraculaColor
+from spectrafit.plugins.color_schemas import DraculaFont
+from spectrafit.plugins.color_schemas import MoonAkiColor
+from spectrafit.plugins.color_schemas import MoonAkiFont
 
 
 def test_dracula_color() -> None:

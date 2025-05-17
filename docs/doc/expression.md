@@ -1,3 +1,15 @@
+---
+title: Expressions
+description: Using expressions in SpectraFit for advanced fitting and constraints
+tags:
+  - expressions
+  - lmfit
+  - fitting
+  - constraints
+---
+
+## Expressions
+
 `lmfit` also provides an expression parser for use in fitting models.
 Consequently, the expression parser can be also used in SpectraFit for
 generating fits with constraint conditions or global fits.

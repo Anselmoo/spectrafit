@@ -164,18 +164,67 @@ src = ["spectrafit"]
 target-version = "py38"
 
 [tool.ruff.lint]
+select = ["ALL"]
 fixable = ["ALL"]
-extend-ignore = ["E721", "E731"]
+extend-ignore = [
+  "E721",
+  "E731",
+  "ANN401",
+  "UP006",
+  "UP007",
+  "PLR0913",
+  "S301",
+  "PD901",
+  "COM812",
+  "FBT001",  # Boolean type hint positional argument
+  "FBT002",  # Boolean default value positional argument
+  "FBT003",  # Boolean positional value in function call
+  "B018",    # Useless expression
+  "PT011",   # Pytest raises too broad
+  "PT012",   # Pytest raises with multiple statements
+  "PGH003",  # Blanket type ignore
+  "PLW2901", # Redefined loop name
+  "ARG001",  # Unused function argument
+  "PERF203", # Try except in loop
+  "S506",    # Unsafe yaml load
+  "PLR0911", # Too many return statements
+  "PLR0912", # Too many branches
+
+]
+
+[tool.ruff.lint.per-file-ignores]
+"spectrafit/**/test_*.py" = [
+  "S101",
+  "PLR2004",
+  "D102",
+  "D101",
+  "ANN201",
+  "ANN001",
+  "ARG001",
+]
+"spectrafit/models/moessbauer.py" = ["N813", "PLR0913"]
+"spectrafit/models/builtin.py" = ["PLR0913"]
+"spectrafit/api/*_model.py" = ["TC001", "TC003"]
+"spectrafit/plugins/rixs_visualizer.py" = ["N803"]
+"spectrafit/plugins/color_schemas.py" = ["RUF012"]
 
 
 [tool.ruff.lint.isort]
 force-single-line = true
 lines-between-types = 1
-lines-after-imports = 4
+lines-after-imports = 2
 known-third-party = ["hatchling.build"]
 required-imports = ["from __future__ import annotations"]
 case-sensitive = true
 combine-as-imports = false
+
+[tool.ruff.lint.pycodestyle]
+max-doc-length = 100
+max-line-length = 100
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
 
 [tool.pytest]
 script_launch_mode = "subprocess"
@@ -184,6 +233,28 @@ script_launch_mode = "subprocess"
 minversion = "7.0"
 addopts = "--cov=./spectrafit/ --cov-report=xml:coverage.xml --diff-symbols --plots -vv"
 testpaths = ["spectrafit"]
+markers = [
+  "moessbauer: tests for Mössbauer spectroscopy models",
+  "api: tests for API models",
+  "models: tests for model implementations",
+  "performance: tests that check performance characteristics",
+  "integration: tests that check integration between components",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+  "pragma: no cover",
+  "def __repr__",
+  "if TYPE_CHECKING:",
+  "raise NotImplementedError",
+  "if __name__ == .__main__.:",
+  "pass",
+  "\\.\\.\\.",
+  "if again == \"y\":",
+  "__status__.yes_no()",
+]
+skip_covered = true
+show_missing = true
 
 [tool.mypy]
 plugins = ["pydantic.mypy", "numpy.typing.mypy_plugin"]
