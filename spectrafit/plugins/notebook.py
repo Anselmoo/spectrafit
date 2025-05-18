@@ -319,10 +319,19 @@ class DataFramePlot:
             fig["layout"]["yaxis1"].update(domain=[0.8, 1])
             fig["layout"]["yaxis2"].update(domain=[0, 0.7])
             fig.update_yaxes(title_text=residual_title, row=1, col=1)
+            fig.update_yaxes(title_text=yaxis_title, row=2, col=1)
+
+            # Apply y-axis inversion if requested (for main spectrum)
+            if args_plot.yaxis_title.invert:
+                fig.update_yaxes(autorange="reversed", row=2, col=1)
         else:
             fig.update_yaxes(title_text=yaxis_title, row=1, col=1)
+            fig.update_yaxes(title_text=yaxis_title, row=2, col=1)
 
-        fig.update_yaxes(title_text=yaxis_title, row=2, col=1)
+            # Apply y-axis inversion if requested (for both plots in this layout)
+            if args_plot.yaxis_title.invert:
+                fig.update_yaxes(autorange="reversed", row=1, col=1)
+                fig.update_yaxes(autorange="reversed", row=2, col=1)
 
     def plot_dataframe(self, args_plot: PlotAPI, df: pd.DataFrame) -> None:
         """Plot the dataframe according to the PlotAPI arguments.
