@@ -39,7 +39,8 @@ class YAxisAPI(BaseModel):
     )
     invert: bool = Field(
         default=False,
-        description="Invert the y-axis (e.g., for transmission spectra where absorption points down).",
+        description="Invert the y-axis"
+        " (e.g., for transmission spectra where absorption points down).",
     )
 
 
