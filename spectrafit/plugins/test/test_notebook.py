@@ -591,10 +591,19 @@ class TestSpectraFitNotebook:
         self,
         class_spectrafit_fit_global: Dict[Any, Any],
     ) -> None:
-        """Test the plot function for global fitting routine."""
+        """Test the plot function for global fitting routine.
+
+        The fixture class_spectrafit_fit_global loads a dataframe with 3 datasets
+        (y_1, y_2, y_3), and the plot_global_fit method iterates over each dataset
+        to create separate plots. Therefore, we expect 3 calls to the plotting function.
+
+        For global fit, we expect 3 calls because there are 3 datasets
+        """
         with mock.patch(__plotly_io_show__) as mock_show:
             class_spectrafit_fit_global["sp"].plot_fit_df()
-            mock_show.assert_called_once()
+            assert mock_show.call_count == 3, (
+                f"Expected 3 calls, got {mock_show.call_count}"
+            )
 
     def test_display(
         self,
