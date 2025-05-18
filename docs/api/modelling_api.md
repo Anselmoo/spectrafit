@@ -4,6 +4,7 @@ description: SpectraFit Modelling API
 keywords: [SpectraFit, Modelling API, Spectroscopy, Data Analysis]
 tags:
   - api
+icon: material/alert-decagram
 ---
 
 !!! note "About Models"

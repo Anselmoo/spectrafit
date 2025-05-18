@@ -298,6 +298,74 @@ class TestDataFramePlot:
             )
             mock_show.assert_called()
 
+    def test_yaxis_api_invert(self) -> None:
+        """Test that YAxisAPI invert parameter works as expected."""
+        from spectrafit.api.notebook_model import YAxisAPI
+
+        # Test default value (False)
+        y_axis_default = YAxisAPI()
+        assert y_axis_default.invert is False
+
+        # Test explicitly set to True
+        y_axis_inverted = YAxisAPI(invert=True)
+        assert y_axis_inverted.invert is True
+
+        # Test in PlotAPI context
+        from spectrafit.api.notebook_model import PlotAPI
+
+        plot_api = PlotAPI(
+            x="x",
+            y="y",
+            yaxis_title=YAxisAPI(invert=True),
+        )
+
+        assert plot_api.yaxis_title.invert is True
+
+    def test_plot_with_inverted_yaxis(self) -> None:
+        """Test that plots use inverted y-axis when specified."""
+        import plotly.graph_objects as go
+
+        from plotly.subplots import make_subplots
+
+        from spectrafit.api.notebook_model import PlotAPI
+        from spectrafit.api.notebook_model import YAxisAPI
+
+        pp = DataFramePlot()
+
+        # Create a PlotAPI with y-axis inversion
+        plot_api_inverted = PlotAPI(
+            x="x",
+            y="y",
+            yaxis_title=YAxisAPI(invert=True),
+        )
+
+        # Test with combined mocks to avoid long lines
+        with mock.patch.object(go.Figure, "update_yaxes") as mock_update_yaxes:
+            with mock.patch(__plotly_io_show__), mock.patch.object(
+                pp, "_create_residual_plot", return_value=go.Figure()
+            ), mock.patch.object(
+                pp, "_create_fit_plot", return_value=go.Figure()
+            ), mock.patch.object(
+                pp, "_plot_single_dataframe", return_value=go.Figure()
+            ):
+                # Create a figure with subplots for testing _update_plot_layout
+                fig = make_subplots(rows=2, cols=1)
+                pp._update_plot_layout(fig, plot_api_inverted, df_2_provided=False)
+
+            # Verify update_yaxes was called with autorange="reversed"
+            has_reversed = False
+            for call in mock_update_yaxes.call_args_list:
+                kwargs = call[1]
+                if (
+                    kwargs
+                    and "autorange" in kwargs
+                    and kwargs["autorange"] == "reversed"
+                ):
+                    has_reversed = True
+                    break
+
+            assert has_reversed, "update_yaxes not called with autorange='reversed'"
+
 
 def test_dataframe_display_all(dataframe: pd.DataFrame) -> None:
     """Test the DataFrameDisplay class."""
@@ -523,10 +591,19 @@ class TestSpectraFitNotebook:
         self,
         class_spectrafit_fit_global: Dict[Any, Any],
     ) -> None:
-        """Test the plot function for global fitting routine."""
+        """Test the plot function for global fitting routine.
+
+        The fixture class_spectrafit_fit_global loads a dataframe with 3 datasets
+        (y_1, y_2, y_3), and the plot_global_fit method iterates over each dataset
+        to create separate plots. Therefore, we expect 3 calls to the plotting function.
+
+        For global fit, we expect 3 calls because there are 3 datasets
+        """
         with mock.patch(__plotly_io_show__) as mock_show:
             class_spectrafit_fit_global["sp"].plot_fit_df()
-            mock_show.assert_called()
+            assert mock_show.call_count == 3, (
+                f"Expected 3 calls, got {mock_show.call_count}"
+            )
 
     def test_display(
         self,
@@ -698,3 +775,128 @@ class TestSpectraFitNotebook:
             conf_interval=False,
         )
         sp.generate_report
+
+
+@pytest.mark.skipif(sys.platform == "win32", reason="does not run on windows")
+class TestUpdatePlotLayout:
+    """Test cases for y-axis inversion in _update_plot_layout method."""
+
+    def test_update_plot_layout_with_df2_provided_invert_true(self) -> None:
+        """Test that BOTH plots are inverted when df_2_provided=True and invert=True."""
+        # Setup
+        pp = DataFramePlot()
+        from plotly.subplots import make_subplots  # Add proper import
+
+        from spectrafit.api.notebook_model import YAxisAPI
+
+        # Create test figure with subplots
+        fig = make_subplots(rows=2, cols=1)
+
+        # Create PlotAPI with y-axis inversion enabled
+        plot_api = PlotAPI(
+            x="x",
+            y="y",
+            yaxis_title=YAxisAPI(invert=True),
+        )
+
+        # Mock update_yaxes method to track calls
+        with mock.patch.object(fig, "update_yaxes") as mock_update_yaxes:
+            # Call _update_plot_layout with df_2_provided=True
+            pp._update_plot_layout(fig, plot_api, df_2_provided=True)
+
+            # Extract calls with autorange="reversed"
+            reversed_calls = [
+                call
+                for call in mock_update_yaxes.call_args_list
+                if call[1].get("autorange") == "reversed"
+            ]
+
+            # Verify we have exactly 2 calls with autorange="reversed"
+            assert len(reversed_calls) == 2, (
+                "Should invert both y-axes when df_2_provided=True"
+            )
+
+            # Check that both rows (1,1) and (2,1) were inverted
+            row_col_pairs = [
+                (call[1].get("row"), call[1].get("col")) for call in reversed_calls
+            ]
+            assert (1, 1) in row_col_pairs, "Row 1, Col 1 should be inverted"
+            assert (2, 1) in row_col_pairs, "Row 2, Col 1 should be inverted"
+
+    def test_update_plot_layout_without_df2_provided_invert_true(self) -> None:
+        """Test that ONLY the main plot is inverted when df_2_provided=False and invert=True."""
+        # Setup
+        pp = DataFramePlot()
+        from plotly.subplots import make_subplots  # Add proper import
+
+        from spectrafit.api.notebook_model import YAxisAPI
+
+        # Create test figure with subplots
+        fig = make_subplots(rows=2, cols=1)
+
+        # Create PlotAPI with y-axis inversion enabled
+        plot_api = PlotAPI(
+            x="x",
+            y="y",
+            yaxis_title=YAxisAPI(invert=True),
+        )
+
+        # Mock update_yaxes method to track calls
+        with mock.patch.object(fig, "update_yaxes") as mock_update_yaxes:
+            # Call _update_plot_layout with df_2_provided=False
+            pp._update_plot_layout(fig, plot_api, df_2_provided=False)
+
+            # Extract calls with autorange="reversed"
+            reversed_calls = [
+                call
+                for call in mock_update_yaxes.call_args_list
+                if call[1].get("autorange") == "reversed"
+            ]
+
+            # Verify we have exactly 1 call with autorange="reversed"
+            assert len(reversed_calls) == 1, (
+                "Should only invert main plot when df_2_provided=False"
+            )
+
+            # Check that only row 2, col 1 (main plot) was inverted, not row 1 (residual plot)
+            row_col = (reversed_calls[0][1].get("row"), reversed_calls[0][1].get("col"))
+            assert row_col == (2, 1), (
+                "Only row 2, col 1 should be inverted when df_2_provided=False"
+            )
+
+    def test_update_plot_layout_invert_false_no_inversion(self) -> None:
+        """Test that NO plots are inverted when invert=False (regardless of df_2_provided)."""
+        # Setup
+        pp = DataFramePlot()
+        from plotly.subplots import make_subplots  # Add proper import
+
+        from spectrafit.api.notebook_model import YAxisAPI
+
+        # Create test figure with subplots
+        fig = make_subplots(rows=2, cols=1)
+
+        # Create PlotAPI with y-axis inversion disabled
+        plot_api = PlotAPI(
+            x="x",
+            y="y",
+            yaxis_title=YAxisAPI(invert=False),
+        )
+
+        # Test both df_2_provided scenarios to ensure no inversion happens in either case
+        for df_2_provided in [True, False]:
+            with mock.patch.object(fig, "update_yaxes") as mock_update_yaxes:
+                # Call _update_plot_layout
+                pp._update_plot_layout(fig, plot_api, df_2_provided=df_2_provided)
+
+                # Check no calls have autorange="reversed"
+                reversed_calls = [
+                    call
+                    for call in mock_update_yaxes.call_args_list
+                    if call[1].get("autorange") == "reversed"
+                ]
+
+                # Should have no calls with autorange="reversed"
+                assert len(reversed_calls) == 0, (
+                    "No y-axes should be inverted when invert=False"
+                    f" (df_2_provided={df_2_provided})"
+                )

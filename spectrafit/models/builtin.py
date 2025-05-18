@@ -946,11 +946,6 @@ class ReferenceKeys:
         "moessbauerdoublet",
         "moessbauersextet",
         "moessbaueroctet",
-        # Add underscored versions for compatibility
-        "moessbauer_singlet",
-        "moessbauer_doublet",
-        "moessbauer_sextet",
-        "moessbauer_octet",
     ]
 
     def model_check(self, model: str) -> None:

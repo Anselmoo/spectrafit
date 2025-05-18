@@ -7,6 +7,8 @@ for various Mössbauer patterns (singlet, doublet, sextet, octet).
 
 from __future__ import annotations
 
+import warnings
+
 from typing import TYPE_CHECKING
 from typing import Dict
 from typing import Optional
@@ -30,6 +32,13 @@ MIN_EFG_THRESHOLD = moessbauer_constants.min_efg_threshold
 MIN_FIELD_THRESHOLD = moessbauer_constants.min_field_threshold
 EV_TO_MM_S = moessbauer_constants.ev_to_mm_s
 MIN_VARIANCE_THRESHOLD = moessbauer_constants.min_variance_threshold
+
+# Add warning about experimental status
+warnings.warn(
+    message="Mössbauer models are experimental features and still need scientific validation.",
+    category=UserWarning,
+    stacklevel=2,
+)
 
 
 def moessbauer_singlet(

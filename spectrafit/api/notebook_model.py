@@ -37,10 +37,15 @@ class YAxisAPI(BaseModel):
         default="a.u.",
         description="Name of the y-axis units of the plot.",
     )
+    invert: bool = Field(
+        default=False,
+        description="Invert the y-axis"
+        " (e.g., for transmission spectra where absorption points down).",
+    )
 
 
 class ResidualAPI(BaseModel):
-    """Definition of the residual plot (Y-Axis) of the plotly figure."""
+    """Definition of the residual plot Y-Axis for the plotly figure."""
 
     name: str = Field(
         default="Residuals",

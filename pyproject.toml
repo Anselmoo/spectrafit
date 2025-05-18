@@ -207,6 +207,7 @@ extend-ignore = [
 "spectrafit/api/*_model.py" = ["TC001", "TC003"]
 "spectrafit/plugins/rixs_visualizer.py" = ["N803"]
 "spectrafit/plugins/color_schemas.py" = ["RUF012"]
+"spectrafit/plugins/test/test_notebook.py" = ["SLF001"]
 
 
 [tool.ruff.lint.isort]
