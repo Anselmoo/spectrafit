@@ -1,0 +1,1 @@
+"""SpectraFit App module."""

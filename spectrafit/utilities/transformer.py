@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
-from typing import Any, Dict, List, Union
+from typing import Any
+from typing import Dict
+from typing import List
+from typing import Union
 
 from spectrafit.api.models_model import DistributionModelAPI
 
@@ -19,10 +22,11 @@ def list2dict(
     Returns:
         Dict[str, Dict[str, Dict[str, Any]]]: Dictionary with the initial fitting
              parameters for the peaks.
+
     """
     peaks_dict: Dict[str, Dict[str, Dict[str, Any]]] = {"peaks": {}}
     for i, peak in enumerate(peak_list, start=1):
-        if list(peak)[0] in DistributionModelAPI().__dict__:
+        if next(iter(peak)) in DistributionModelAPI().__dict__:
             peaks_dict["peaks"][f"{i}"] = peak
     return peaks_dict
 
@@ -38,6 +42,7 @@ def remove_none_type(d: Any) -> Union[Dict[str, Any], List[Any]]:
 
     Returns:
         Union[Dict[str, Any], List[Any]]: Dictionary without None type.
+
     """
     if isinstance(d, dict):
         return {k: remove_none_type(v) for k, v in d.items() if v is not None}

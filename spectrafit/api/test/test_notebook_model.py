@@ -6,19 +6,17 @@ from math import isclose
 
 from _plotly_utils.colors.qualitative import Plotly as PlotlyColors
 
-from spectrafit.api.notebook_model import (
-    ColorAPI,
-    FnameAPI,
-    FontAPI,
-    GridAPI,
-    LegendAPI,
-    MetricAPI,
-    PlotAPI,
-    ResidualAPI,
-    RunAPI,
-    XAxisAPI,
-    YAxisAPI,
-)
+from spectrafit.api.notebook_model import ColorAPI
+from spectrafit.api.notebook_model import FnameAPI
+from spectrafit.api.notebook_model import FontAPI
+from spectrafit.api.notebook_model import GridAPI
+from spectrafit.api.notebook_model import LegendAPI
+from spectrafit.api.notebook_model import MetricAPI
+from spectrafit.api.notebook_model import PlotAPI
+from spectrafit.api.notebook_model import ResidualAPI
+from spectrafit.api.notebook_model import RunAPI
+from spectrafit.api.notebook_model import XAxisAPI
+from spectrafit.api.notebook_model import YAxisAPI
 
 
 def test_xaxis_model() -> None:

@@ -2,9 +2,18 @@
 
 from __future__ import annotations
 
-from typing import Callable, List, Optional
+from typing import Callable
+from typing import List
+from typing import Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
+from pydantic import Field
+
+from spectrafit.api.moessbauer_model import MoessbauerDoubletAPI
+from spectrafit.api.moessbauer_model import MoessbauerOctetAPI
+from spectrafit.api.moessbauer_model import MoessbauerSextetAPI
+from spectrafit.api.moessbauer_model import MoessbauerSingletAPI
+
 
 __description__ = "Lmfit expression for explicit dependencies."
 
@@ -124,7 +133,8 @@ class DecayAPI(BaseModel):
     min: Optional[int] = Field(default=None, description="Minimum decay rate.")
     vary: bool = Field(default=True, description="Vary the decay rate.")
     value: Optional[float] = Field(
-        default=None, description="Initial decay rate value."
+        default=None,
+        description="Initial decay rate value.",
     )
     expr: Optional[str] = Field(default=None, description=__description__)
 
@@ -176,7 +186,8 @@ class CoefficientAPI(BaseModel):
     min: Optional[int] = Field(default=None, description="Minimum coefficient.")
     vary: bool = Field(default=True, description="Vary the coefficient.")
     value: Optional[float] = Field(
-        default=None, description="Initial coefficient value."
+        default=None,
+        description="Initial coefficient value.",
     )
     expr: Optional[str] = Field(default=None, description=__description__)
 
@@ -408,16 +419,23 @@ class DistributionModelAPI(BaseModel):
     pearson2: Pearson2API = Pearson2API()
     pearson3: Pearson3API = Pearson3API()
     pearson4: Pearson4API = Pearson4API()
+    # Add Mössbauer models
+    moessbauersinglet: MoessbauerSingletAPI = MoessbauerSingletAPI()
+    moessbauerdoublet: MoessbauerDoubletAPI = MoessbauerDoubletAPI()
+    moessbauersextet: MoessbauerSextetAPI = MoessbauerSextetAPI()
+    moessbaueroctet: MoessbauerOctetAPI = MoessbauerOctetAPI()
 
 
 class ConfIntervalAPI(BaseModel):
     """Definition of Confidence Interval Function."""
 
     p_names: Optional[List[str]] = Field(
-        default=None, description="List of parameters names."
+        default=None,
+        description="List of parameters names.",
     )
     trace: bool = Field(
-        default=True, description="Trace of the confidence interfall matrix."
+        default=True,
+        description="Trace of the confidence interval matrix.",
     )
     maxiter: int = Field(
         default=200,
@@ -426,8 +444,10 @@ class ConfIntervalAPI(BaseModel):
         description="Maximum number of iteration",
     )
     verbose: bool = Field(
-        default=False, description="Print information about the fit process."
+        default=False,
+        description="Print information about the fit process.",
     )
     prob_func: Optional[Callable[[float], float]] = Field(
-        default=None, description="Probing function."
+        default=None,
+        description="Probing function.",
     )

@@ -1,3 +1,15 @@
+---
+title: Solver
+description: SpectraFit Solver
+tags:
+  - solver
+  - lmfit
+  - scipy
+  - optimization
+---
+
+## Solver
+
 The solving process of `SpectraFit` is based on the following three steps:
 
 1. _Defining the defining the model parameters_: The proposed peak is translated

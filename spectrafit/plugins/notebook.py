@@ -3,53 +3,59 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING
+from typing import Any
+from typing import Dict
+from typing import List
+from typing import Optional
+from typing import Tuple
+from typing import Union
 
 import numpy as np
 import pandas as pd
 import plotly.express as px
 import tomli_w
+
+from IPython.display import display
+from IPython.display import display_markdown
 from dtale import show as dtale_show
-from IPython.display import display, display_markdown
 from itables import show as itables_show
-from plotly.graph_objects import Figure
 from plotly.subplots import make_subplots
 
 from spectrafit.api.cmd_model import DescriptionAPI
 from spectrafit.api.models_model import ConfIntervalAPI
-from spectrafit.api.notebook_model import (
-    ColorAPI,
-    FnameAPI,
-    FontAPI,
-    GridAPI,
-    LegendAPI,
-    MetricAPI,
-    PlotAPI,
-    ResidualAPI,
-    RunAPI,
-    XAxisAPI,
-    YAxisAPI,
-)
-from spectrafit.api.report_model import (
-    FitMethodAPI,
-    InputAPI,
-    OutputAPI,
-    ReportAPI,
-    SolverAPI,
-)
-from spectrafit.api.tools_model import (
-    ColumnNamesAPI,
-    DataPreProcessingAPI,
-    SolverModelsAPI,
-)
-from spectrafit.models import SolverModels
-from spectrafit.tools import (
-    PostProcessing,
-    PreProcessing,
-    exclude_none_dictionary,
-    transform_nested_types,
-)
+from spectrafit.api.notebook_model import ColorAPI
+from spectrafit.api.notebook_model import FnameAPI
+from spectrafit.api.notebook_model import FontAPI
+from spectrafit.api.notebook_model import GridAPI
+from spectrafit.api.notebook_model import LegendAPI
+from spectrafit.api.notebook_model import MetricAPI
+from spectrafit.api.notebook_model import PlotAPI
+from spectrafit.api.notebook_model import ResidualAPI
+from spectrafit.api.notebook_model import RunAPI
+from spectrafit.api.notebook_model import XAxisAPI
+from spectrafit.api.notebook_model import YAxisAPI
+from spectrafit.api.report_model import FitMethodAPI
+from spectrafit.api.report_model import InputAPI
+from spectrafit.api.report_model import OutputAPI
+from spectrafit.api.report_model import ReportAPI
+from spectrafit.api.report_model import SolverAPI
+from spectrafit.api.tools_model import ColumnNamesAPI
+from spectrafit.api.tools_model import DataPreProcessingAPI
+from spectrafit.api.tools_model import SolverModelsAPI
+from spectrafit.models.builtin import SolverModels
+from spectrafit.tools import PostProcessing
+from spectrafit.tools import PreProcessing
+from spectrafit.tools import exclude_none_dictionary
+from spectrafit.tools import transform_nested_types
 from spectrafit.utilities.transformer import list2dict
+
+
+if TYPE_CHECKING:
+    from plotly.graph_objects import Figure
+
+# Constants
+MIN_DATAFRAME_COLUMNS = 2  # Minimum number of columns required in a dataframe
 
 
 class DataFrameDisplay:
@@ -86,6 +92,7 @@ class DataFrameDisplay:
         Returns:
             Optional[Any]: Returns the dtale object for plotting in the Jupyter
                  notebook, if mode is `dtale`.
+
         """
         if mode == "regular":
             self.regular_display(df=df)
@@ -96,9 +103,12 @@ class DataFrameDisplay:
         elif mode == "dtale":
             return self.dtale_display(df=df)
         elif mode is not None:
-            raise ValueError(
+            msg = (
                 f"Invalid mode: {mode}. "
                 "Valid modes are: regular, interactive, dtale, markdown."
+            )
+            raise ValueError(
+                msg,
             )
         return None
 
@@ -108,6 +118,7 @@ class DataFrameDisplay:
 
         Args:
             df (pd.DataFrame): Dataframe to display.
+
         """
         display(df)
 
@@ -117,6 +128,7 @@ class DataFrameDisplay:
 
         Args:
             df (pd.DataFrame): Dataframe to display.
+
         """
         itables_show(df)
 
@@ -129,6 +141,7 @@ class DataFrameDisplay:
 
         Returns:
             Any: Returns the dtale object for plotting in the Jupyter notebook.
+
         """
         return dtale_show(df)
 
@@ -138,6 +151,7 @@ class DataFrameDisplay:
 
         Args:
             df (pd.DataFrame): Dataframe to display.
+
         """
         display_markdown(df.to_markdown(), raw=True)
 
@@ -173,6 +187,7 @@ class DataFramePlot:
             df_2 (Optional[pd.DataFrame], optional): Second optional dataframe to
                 plot for comparison. In this case, the ratio between the first
                 and second plot will be the same. Defaults to None.
+
         """
         if df_2 is None:
             fig = self._plot_single_dataframe(args_plot, df_1)
@@ -185,14 +200,18 @@ class DataFramePlot:
                     "format": "png",
                     "filename": "plot_of_2_dataframes",
                     "scale": 4,
-                }
-            }
+                },
+            },
         )
 
     def _plot_single_dataframe(self, args_plot: PlotAPI, df: pd.DataFrame) -> Figure:
         """Plot a single dataframe with residuals."""
         fig = make_subplots(
-            rows=2, cols=1, shared_xaxes=True, shared_yaxes=True, vertical_spacing=0.05
+            rows=2,
+            cols=1,
+            shared_xaxes=True,
+            shared_yaxes=True,
+            vertical_spacing=0.05,
         )
 
         residual_fig = self._create_residual_plot(df, args_plot)
@@ -207,11 +226,18 @@ class DataFramePlot:
         return fig
 
     def _plot_two_dataframes(
-        self, args_plot: PlotAPI, df_1: pd.DataFrame, df_2: pd.DataFrame
+        self,
+        args_plot: PlotAPI,
+        df_1: pd.DataFrame,
+        df_2: pd.DataFrame,
     ) -> Figure:
         """Plot two dataframes for comparison."""
         fig = make_subplots(
-            rows=2, cols=1, shared_xaxes=True, shared_yaxes=True, vertical_spacing=0.05
+            rows=2,
+            cols=1,
+            shared_xaxes=True,
+            shared_yaxes=True,
+            vertical_spacing=0.05,
         )
 
         fig1 = px.line(df_1, x=args_plot.x, y=args_plot.y)
@@ -237,27 +263,23 @@ class DataFramePlot:
     def _create_fit_plot(self, df: pd.DataFrame, args_plot: PlotAPI) -> Figure:
         """Create the fit plot."""
         y_columns = df.columns.drop(
-            [ColumnNamesAPI().energy, ColumnNamesAPI().residual]
+            [ColumnNamesAPI().energy, ColumnNamesAPI().residual],
         )
         color_map = {
             ColumnNamesAPI().intensity: args_plot.color.intensity,
             ColumnNamesAPI().fit: args_plot.color.fit,
-            **{
-                key: args_plot.color.components
-                for key in y_columns.drop(
-                    [ColumnNamesAPI().intensity, ColumnNamesAPI().fit]
-                )
-            },
+            **dict.fromkeys(
+                y_columns.drop([ColumnNamesAPI().intensity, ColumnNamesAPI().fit]),
+                args_plot.color.components,
+            ),
         }
         line_dash_map = {
             ColumnNamesAPI().intensity: "solid",
             ColumnNamesAPI().fit: "longdash",
-            **{
-                key: "dash"
-                for key in y_columns.drop(
-                    [ColumnNamesAPI().intensity, ColumnNamesAPI().fit]
-                )
-            },
+            **dict.fromkeys(
+                y_columns.drop([ColumnNamesAPI().intensity, ColumnNamesAPI().fit]),
+                "dash",
+            ),
         }
         return px.line(
             df,
@@ -268,17 +290,22 @@ class DataFramePlot:
         )
 
     def _update_plot_layout(
-        self, fig: Figure, args_plot: PlotAPI, df_2_provided: bool
+        self,
+        fig: Figure,
+        args_plot: PlotAPI,
+        df_2_provided: bool,
     ) -> None:
         """Update the plot layout."""
         height = args_plot.size[1][0]
         self.update_layout_axes(fig, args_plot, height)
 
         xaxis_title = self.title_text(
-            name=args_plot.xaxis_title.name, unit=args_plot.xaxis_title.unit
+            name=args_plot.xaxis_title.name,
+            unit=args_plot.xaxis_title.unit,
         )
         yaxis_title = self.title_text(
-            name=args_plot.yaxis_title.name, unit=args_plot.yaxis_title.unit
+            name=args_plot.yaxis_title.name,
+            unit=args_plot.yaxis_title.unit,
         )
 
         fig.update_xaxes(title_text=xaxis_title, row=1, col=1)
@@ -286,15 +313,25 @@ class DataFramePlot:
 
         if not df_2_provided:
             residual_title = self.title_text(
-                name=args_plot.residual_title.name, unit=args_plot.residual_title.unit
+                name=args_plot.residual_title.name,
+                unit=args_plot.residual_title.unit,
             )
             fig["layout"]["yaxis1"].update(domain=[0.8, 1])
             fig["layout"]["yaxis2"].update(domain=[0, 0.7])
             fig.update_yaxes(title_text=residual_title, row=1, col=1)
+            fig.update_yaxes(title_text=yaxis_title, row=2, col=1)
+
+            # Apply y-axis inversion if requested (for main spectrum)
+            if args_plot.yaxis_title.invert:
+                fig.update_yaxes(autorange="reversed", row=2, col=1)
         else:
             fig.update_yaxes(title_text=yaxis_title, row=1, col=1)
+            fig.update_yaxes(title_text=yaxis_title, row=2, col=1)
 
-        fig.update_yaxes(title_text=yaxis_title, row=2, col=1)
+            # Apply y-axis inversion if requested (for both plots in this layout)
+            if args_plot.yaxis_title.invert:
+                fig.update_yaxes(autorange="reversed", row=1, col=1)
+                fig.update_yaxes(autorange="reversed", row=2, col=1)
 
     def plot_dataframe(self, args_plot: PlotAPI, df: pd.DataFrame) -> None:
         """Plot the dataframe according to the PlotAPI arguments.
@@ -302,6 +339,7 @@ class DataFramePlot:
         Args:
             args_plot (PlotAPI): PlotAPI object for the settings of the plot.
             df (pd.DataFrame): Dataframe to plot.
+
         """
         fig = px.line(df, x=args_plot.x, y=args_plot.y)
         height = args_plot.size[1][0]
@@ -309,13 +347,15 @@ class DataFramePlot:
 
         fig.update_xaxes(
             title_text=self.title_text(
-                name=args_plot.xaxis_title.name, unit=args_plot.xaxis_title.unit
-            )
+                name=args_plot.xaxis_title.name,
+                unit=args_plot.xaxis_title.unit,
+            ),
         )
         fig.update_yaxes(
             title_text=self.title_text(
-                name=args_plot.yaxis_title.name, unit=args_plot.yaxis_title.unit
-            )
+                name=args_plot.yaxis_title.name,
+                unit=args_plot.yaxis_title.unit,
+            ),
         )
         fig.show(
             config={
@@ -323,8 +363,8 @@ class DataFramePlot:
                     "format": "png",
                     "filename": "plot_dataframe",
                     "scale": 4,
-                }
-            }
+                },
+            },
         )
 
     def plot_global_fit(self, args_plot: PlotAPI, df: pd.DataFrame) -> None:
@@ -333,6 +373,7 @@ class DataFramePlot:
         Args:
             args_plot (PlotAPI): PlotAPI object for the settings of the plot.
             df (pd.DataFrame): Dataframe to plot.
+
         """
         num_fits = df.columns.str.startswith(ColumnNamesAPI().fit).sum()
         for i in range(1, num_fits + 1):
@@ -343,7 +384,7 @@ class DataFramePlot:
                     f"{ColumnNamesAPI().intensity}_{i}": ColumnNamesAPI().intensity,
                     f"{ColumnNamesAPI().fit}_{i}": ColumnNamesAPI().fit,
                     f"{ColumnNamesAPI().residual}_{i}": ColumnNamesAPI().residual,
-                }
+                },
             )
             self.plot_2dataframes(args_plot, df_subset)
 
@@ -361,6 +402,7 @@ class DataFramePlot:
             df_metric (pd.DataFrame): Metric dataframe to plot.
             bar_criteria (Union[str, List[str]]): Criteria to plot as bars.
             line_criteria (Union[str, List[str]]): Criteria to plot as lines.
+
         """
         fig = make_subplots(specs=[[{"secondary_y": True}]])
         fig_bar = px.bar(
@@ -386,18 +428,21 @@ class DataFramePlot:
 
         fig.update_xaxes(
             title_text=self.title_text(
-                name=args_plot.run_title.name, unit=args_plot.run_title.unit
-            )
+                name=args_plot.run_title.name,
+                unit=args_plot.run_title.unit,
+            ),
         )
         fig.update_yaxes(
             title_text=self.title_text(
-                name=args_plot.metric_title.name_0, unit=args_plot.metric_title.unit_0
+                name=args_plot.metric_title.name_0,
+                unit=args_plot.metric_title.unit_0,
             ),
             secondary_y=False,
         )
         fig.update_yaxes(
             title_text=self.title_text(
-                name=args_plot.metric_title.name_1, unit=args_plot.metric_title.unit_1
+                name=args_plot.metric_title.name_1,
+                unit=args_plot.metric_title.unit_1,
             ),
             secondary_y=True,
         )
@@ -407,12 +452,15 @@ class DataFramePlot:
                     "format": "png",
                     "filename": "plot_metric",
                     "scale": 4,
-                }
-            }
+                },
+            },
         )
 
     def update_layout_axes(
-        self, fig: Figure, args_plot: PlotAPI, height: int
+        self,
+        fig: Figure,
+        args_plot: PlotAPI,
+        height: int,
     ) -> Figure:
         """Update the layout of the plot.
 
@@ -423,6 +471,7 @@ class DataFramePlot:
 
         Returns:
             Figure: Updated figure.
+
         """
         fig.update_layout(
             title=args_plot.title,
@@ -464,6 +513,7 @@ class DataFramePlot:
 
         Returns:
             str: Title text.
+
         """
         return f"{name} [{unit}]" if unit else name
 
@@ -475,6 +525,7 @@ class DataFramePlot:
 
         Returns:
             Dict[str, Union[str, bool]]: Dictionary with the minor axis arguments.
+
         """
         return {
             "tickcolor": args_plot.color.ticks,
@@ -494,6 +545,7 @@ class ExportResults:
             df (pd.DataFrame): Dataframe to export.
             args (FnameAPI): Arguments for the file export including the path, prefix,
                  and suffix.
+
         """
         df.to_csv(
             self.fname2path(
@@ -512,6 +564,7 @@ class ExportResults:
             report (Dict[Any, Any]): Results as dictionary to export.
             args (FnameAPI): Arguments for the file export including the path, prefix,
                  and suffix.
+
         """
         with self.fname2path(
             fname=args.fname,
@@ -540,6 +593,7 @@ class ExportResults:
 
         Returns:
             Path: Path object of the file.
+
         """
         if prefix:
             fname = f"{prefix}_{fname}"
@@ -558,6 +612,7 @@ class SolverResults:
 
         Args:
             args_out (Dict[str, Any]): Dictionary of SpectraFit settings and results.
+
         """
         self.args_out = args_out
 
@@ -567,6 +622,7 @@ class SolverResults:
 
         Returns:
             Union[bool, int]: Global fitting settings.
+
         """
         return self.args_out["global_"]
 
@@ -576,6 +632,7 @@ class SolverResults:
 
         Returns:
             Dict[str, Any]: Configuration settings.
+
         """
         return self.args_out["fit_insights"]["configurations"]
 
@@ -585,6 +642,7 @@ class SolverResults:
 
         Returns:
             Dict[str, float]: Goodness of fit values as dictionary.
+
         """
         return self.args_out["fit_insights"]["statistics"]
 
@@ -594,6 +652,7 @@ class SolverResults:
 
         Returns:
             Dict[str, Dict[str, float]]: Variables of the fit.
+
         """
         return self.args_out["fit_insights"]["variables"]
 
@@ -603,6 +662,7 @@ class SolverResults:
 
         Returns:
             Dict[str, float]: Comments about the error bars as dictionary or dataframe.
+
         """
         return self.args_out["fit_insights"]["errorbars"]
 
@@ -612,6 +672,7 @@ class SolverResults:
 
         Returns:
             Dict[str, Any]: Linear correlation of the components as dictionary.
+
         """
         return self.args_out["fit_insights"]["correlations"]
 
@@ -621,6 +682,7 @@ class SolverResults:
 
         Returns:
             Dict[str, Any]: Covariance matrix as dictionary.
+
         """
         return self.args_out["fit_insights"]["covariance_matrix"]
 
@@ -630,6 +692,7 @@ class SolverResults:
 
         Returns:
             Dict[str, Any]: Regression metrics as dictionary.
+
         """
         return self.args_out["regression_metrics"]
 
@@ -640,6 +703,7 @@ class SolverResults:
         Returns:
             Dict[str, Any]: Descriptive statistic as dictionary of the spectra, fit, and
                  components as dictionary.
+
         """
         return self.args_out["descriptive_statistic"]
 
@@ -650,6 +714,7 @@ class SolverResults:
         Returns:
             Dict[str, Any]: Linear correlation of the spectra, fit, and components
                  as dictionary.
+
         """
         return self.args_out["linear_correlation"]
 
@@ -659,6 +724,7 @@ class SolverResults:
 
         Returns:
             Dict[str, Any]: Computational time as dictionary.
+
         """
         return self.args_out["fit_insights"]["computational"]
 
@@ -668,6 +734,7 @@ class SolverResults:
 
         Returns:
             Union[bool, Dict[str, Any]]: Confidence interval settings.
+
         """
         if isinstance(self.args_out["conf_interval"], dict):
             self.args_out["conf_interval"] = {
@@ -683,6 +750,7 @@ class SolverResults:
         Returns:
             Dict[Any, Any]: Confidence interval as dictionary with or without the
                     confidence interval results.
+
         """
         if self.args_out["conf_interval"] is False:
             return {}
@@ -701,6 +769,7 @@ class SolverResults:
         Returns:
             pd.DataFrame: Current metric based on `regression_metrics` and
             `goodness_of_fit` as dataframe.
+
         """
         gof = {key: [value] for key, value in self.get_gof.items()}
         reg = {
@@ -727,7 +796,7 @@ class ExportReport(SolverResults):
         args_out: Dict[str, Any],
         df_org: pd.DataFrame,
         df_fit: pd.DataFrame,
-        df_pre: pd.DataFrame = pd.DataFrame(),
+        df_pre: Optional[pd.DataFrame] = None,
     ) -> None:
         """Initialize the ExportReport class.
 
@@ -743,8 +812,9 @@ class ExportReport(SolverResults):
             df_org (pd.DataFrame): Dataframe of the original data for performing
                  the fit.
             df_fit (pd.DataFrame): Dataframe of the final fit data.
-            df_pre (Optional[pd.DataFrame], optional): Dataframe of the pre-processed.
-                 Defaults to pd.DataFrame().
+            df_pre (Optional[pd.DataFrame], optional): Dataframe of the pre-processed data.
+                 Defaults to None (empty DataFrame).
+
         """
         super().__init__(args_out=args_out)
         self.description = description
@@ -755,6 +825,8 @@ class ExportReport(SolverResults):
 
         self.df_org = df_org.to_dict(orient="list")
         self.df_fit = df_fit.to_dict(orient="list")
+        if df_pre is None:  # pragma: no cover
+            df_pre = pd.DataFrame()
         self.df_pre = df_pre.to_dict(orient="list")
 
     @property
@@ -763,6 +835,7 @@ class ExportReport(SolverResults):
 
         Returns:
             InputAPI: Input contribution of the report as class.
+
         """
         return InputAPI(
             description=self.description,
@@ -773,7 +846,7 @@ class ExportReport(SolverResults):
                 confidence_interval=self.settings_conf_interval,
                 configurations=self.settings_configurations,
                 settings_solver_models=self.settings_solver_models.model_dump(
-                    exclude_none=True
+                    exclude_none=True,
                 ),
             ),
         )
@@ -784,6 +857,7 @@ class ExportReport(SolverResults):
 
         Returns:
             SolverAPI: Solver contribution of the report as class.
+
         """
         return SolverAPI(
             goodness_of_fit=self.get_gof,
@@ -804,6 +878,7 @@ class ExportReport(SolverResults):
 
         Returns:
             OutputAPI: Output contribution of the report as class.
+
         """
         return OutputAPI(df_org=self.df_org, df_fit=self.df_fit, df_pre=self.df_pre)
 
@@ -821,6 +896,7 @@ class ExportReport(SolverResults):
         Returns:
             Dict[str, Any]: Report as dictionary by using the `.dict()` option of
                  pydantic. `None` is excluded.
+
         """
         report = ReportAPI(
             input=self.make_input_contribution,
@@ -828,8 +904,7 @@ class ExportReport(SolverResults):
             output=self.make_output_contribution,
         ).model_dump(exclude_none=True)
         report = exclude_none_dictionary(report)
-        report = transform_nested_types(report)
-        return report
+        return transform_nested_types(report)
 
 
 class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
@@ -844,7 +919,7 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
     df_peaks: pd.DataFrame = pd.DataFrame()
     initial_model: List[Dict[str, Dict[str, Dict[str, Any]]]]
 
-    def __init__(
+    def __init__(  # noqa: C901
         self,
         df: pd.DataFrame,
         x_column: str,
@@ -855,26 +930,22 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
         energy_start: Optional[float] = None,
         energy_stop: Optional[float] = None,
         title: Optional[str] = None,
-        xaxis_title: XAxisAPI = XAxisAPI(name="Energy", unit="eV"),
-        yaxis_title: YAxisAPI = YAxisAPI(name="Intensity", unit="a.u."),
-        residual_title: ResidualAPI = ResidualAPI(name="Residual", unit="a.u."),
-        metric_title: MetricAPI = MetricAPI(
-            name_0="Metrics", unit_0="a.u.", name_1="Metrics", unit_1="a.u."
-        ),
-        run_title: RunAPI = RunAPI(name="Run", unit="#"),
+        xaxis_title: Optional[XAxisAPI] = None,
+        yaxis_title: Optional[YAxisAPI] = None,
+        residual_title: Optional[ResidualAPI] = None,
+        metric_title: Optional[MetricAPI] = None,
+        run_title: Optional[RunAPI] = None,
         legend_title: str = "Spectra",
         show_legend: bool = True,
-        legend: LegendAPI = LegendAPI(
-            orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1
-        ),
-        font: FontAPI = FontAPI(family="Open Sans, monospace", size=12, color="black"),
+        legend: Optional[LegendAPI] = None,
+        font: Optional[FontAPI] = None,
         minor_ticks: bool = True,
-        color: ColorAPI = ColorAPI(),
-        grid: GridAPI = GridAPI(),
+        color: Optional[ColorAPI] = None,
+        grid: Optional[GridAPI] = None,
         size: Tuple[int, Tuple[int, int]] = (800, (600, 300)),
         fname: str = "results",
         folder: Optional[str] = None,
-        description: DescriptionAPI = DescriptionAPI(),
+        description: Optional[DescriptionAPI] = None,
     ) -> None:
         """Initialize the SpectraFitNotebook class.
 
@@ -944,12 +1015,14 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
 
         Raises:
             ValueError: If the dataframe only contains one column.
+
         """
         self.x_column = x_column
         self.y_column = y_column
 
-        if df.shape[1] < 2:
-            raise ValueError("The dataframe must have 2 or more columns.")
+        if df.shape[1] < MIN_DATAFRAME_COLUMNS:
+            msg = f"The dataframe must have {MIN_DATAFRAME_COLUMNS} or more columns."
+            raise ValueError(msg)
 
         if isinstance(self.y_column, list):
             self.global_ = 1
@@ -966,7 +1039,41 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
             shift=shift,
             column=list(self.df.columns),
         )
+        # Initialize default value for description if None
+        if description is None:
+            description = DescriptionAPI()
         self.args_desc = description
+
+        # Initialize default values for all API objects if None
+        if xaxis_title is None:
+            xaxis_title = XAxisAPI(name="Energy", unit="eV")
+        if yaxis_title is None:
+            yaxis_title = YAxisAPI(name="Intensity", unit="a.u.")
+        if residual_title is None:
+            residual_title = ResidualAPI(name="Residual", unit="a.u.")
+        if metric_title is None:
+            metric_title = MetricAPI(
+                name_0="Metrics",
+                unit_0="a.u.",
+                name_1="Metrics",
+                unit_1="a.u.",
+            )
+        if run_title is None:
+            run_title = RunAPI(name="Run", unit="#")
+        if legend is None:
+            legend = LegendAPI(
+                orientation="h",
+                yanchor="bottom",
+                y=1.02,
+                xanchor="right",
+                x=1,
+            )
+        if font is None:
+            font = FontAPI(family="Open Sans, monospace", size=12, color="black")
+        if color is None:
+            color = ColorAPI()
+        if grid is None:
+            grid = GridAPI()
 
         self.args_plot = PlotAPI(
             x=self.x_column,
@@ -996,7 +1103,8 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
     def pre_process(self) -> None:
         """Pre-processing class."""
         self.df, _pre_statistic = PreProcessing(
-            df=self.df, args=self.args_pre.model_dump()
+            df=self.df,
+            args=self.args_pre.model_dump(),
         )()
         self.pre_statistic = _pre_statistic["data_statistic"]
         self.df_pre = self.df.copy()
@@ -1079,7 +1187,9 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
     def plot_preprocessed_df(self) -> None:
         """Plot the current processed spectra."""
         self.plot_2dataframes(
-            args_plot=self.args_plot, df_1=self.df_pre, df_2=self.df_org
+            args_plot=self.args_plot,
+            df_1=self.df_pre,
+            df_2=self.df_org,
         )
 
     def plot_fit_df(self) -> None:
@@ -1101,6 +1211,7 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
                     bar plot. Defaults to None.
             line_criteria (Optional[Union[str, List[str]]], optional): Criteria for
                     the line plot. Defaults to None.
+
         """
         if bar_criteria is None:
             bar_criteria = [
@@ -1141,6 +1252,7 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
     def solver_model(
         self,
         initial_model: List[Dict[str, Dict[str, Dict[str, Any]]]],
+        *,
         show_plot: bool = True,
         show_metric: bool = True,
         show_df: bool = False,
@@ -1221,7 +1333,8 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
 
         if show_metric:
             self.plot_current_metric(
-                bar_criteria=bar_criteria, line_criteria=line_criteria
+                bar_criteria=bar_criteria,
+                line_criteria=line_criteria,
             )
 
         if show_df:
@@ -1249,9 +1362,10 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
                     pd.Series(
                         _list,
                         index=pd.MultiIndex.from_tuples(
-                            tuples, names=["component", "parameter"]
+                            tuples,
+                            names=["component", "parameter"],
                         ),
-                    )
+                    ),
                 ).T,
             ],
             ignore_index=True,
@@ -1269,6 +1383,7 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
 
         Args:
             mode (str, optional): Display mode. Defaults to "regular".
+
         """
         self.df_display(df=self.df_fit, mode=mode)
 
@@ -1277,6 +1392,7 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
 
         Args:
             mode (str, optional): Display mode. Defaults to "regular".
+
         """
         self.df_display(df=self.df_pre, mode=mode)
 
@@ -1285,6 +1401,7 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
 
         Args:
             mode (str, optional): Display mode. Defaults to "regular".
+
         """
         self.df_display(df=self.df_org, mode=mode)
 
@@ -1293,5 +1410,6 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
 
         Args:
             mode (str, optional): Display mode. Defaults to "regular".
+
         """
         self.df_display(df=self.df, mode=mode)

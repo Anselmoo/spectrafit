@@ -3,25 +3,25 @@
 from __future__ import annotations
 
 from math import isclose
-from typing import Tuple, Type, Union
+from typing import Tuple
+from typing import Type
+from typing import Union
 
 import pandas as pd
 import pytest
 
-from spectrafit.api.pptx_model import (
-    DescriptionAPI,
-    Field43API,
-    Field169API,
-    Field169HDRAPI,
-    GoodnessOfFitAPI,
-    InputAPI,
-    MethodAPI,
-    OutputAPI,
-    PPTXDataAPI,
-    PPTXLayoutAPI,
-    RegressionMetricsAPI,
-    SolverAPI,
-)
+from spectrafit.api.pptx_model import DescriptionAPI
+from spectrafit.api.pptx_model import Field43API
+from spectrafit.api.pptx_model import Field169API
+from spectrafit.api.pptx_model import Field169HDRAPI
+from spectrafit.api.pptx_model import GoodnessOfFitAPI
+from spectrafit.api.pptx_model import InputAPI
+from spectrafit.api.pptx_model import MethodAPI
+from spectrafit.api.pptx_model import OutputAPI
+from spectrafit.api.pptx_model import PPTXDataAPI
+from spectrafit.api.pptx_model import PPTXLayoutAPI
+from spectrafit.api.pptx_model import RegressionMetricsAPI
+from spectrafit.api.pptx_model import SolverAPI
 
 
 @pytest.fixture
@@ -116,8 +116,8 @@ def pptx_data(project_name: str) -> Tuple[PPTXDataAPI, OutputAPI, InputAPI, Solv
     output_data = OutputAPI(
         df_fit=pd.read_csv(
             "https://raw.githubusercontent.com/Anselmoo"
-            "/spectrafit/main/Examples/example_1_fit.csv"
-        ).to_dict(orient="list")
+            "/spectrafit/main/Examples/example_1_fit.csv",
+        ).to_dict(orient="list"),
     )
     goodness_of_fit = GoodnessOfFitAPI(
         chi_square=1.0,
@@ -153,15 +153,15 @@ def test_pptx_data(
     assert pptx_data[0].solver == pptx_data[3]
 
 
-@pytest.mark.parametrize("format", ["16:9", "16:9HDR", "4:3"])
+@pytest.mark.parametrize("format_str", ["16:9", "16:9HDR", "4:3"])
 def test_pptx_layout_init(
-    format: str,
+    format_str: str,
     pptx_data: Tuple[PPTXDataAPI, OutputAPI, InputAPI, SolverAPI],
     project_name: str,
 ) -> None:
     """Test the PPTXLayout class."""
-    layout = PPTXLayoutAPI(format, pptx_data[0])
-    assert layout._format == format
+    layout = PPTXLayoutAPI(format_str, pptx_data[0])
+    assert layout.format == format_str
     assert layout.title == project_name
     assert isinstance(layout.df_gof, pd.DataFrame)
     assert isinstance(layout.df_regression, pd.DataFrame)
@@ -180,14 +180,14 @@ def test_pptx_layout_tmp_plot(
 
 
 @pytest.mark.parametrize(
-    "format, expected_output",
+    ("format_str", "expected_output"),
     [("16:9", Field169API), ("16:9HDR", Field169HDRAPI), ("4:3", Field43API)],
 )
 def test_get_pptx_layout(
-    format: str,
+    format_str: str,
     pptx_data: Tuple[PPTXDataAPI, OutputAPI, InputAPI, SolverAPI],
     expected_output: Type[Union[Field169API, Field169HDRAPI, Field43API]],
 ) -> None:
     """Test the PPTXLayout class."""
-    layout = PPTXLayoutAPI(format, pptx_data[0])
+    layout = PPTXLayoutAPI(format_str, pptx_data[0])
     assert isinstance(layout.get_pptx_layout(), expected_output)

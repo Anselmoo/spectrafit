@@ -10,15 +10,23 @@
 
 from __future__ import annotations
 
-from typing import Any, Dict, Optional
+from typing import TYPE_CHECKING
+from typing import Any
+from typing import Dict
+from typing import Optional
 
 import matplotlib.font_manager
 import matplotlib.pyplot as plt
-import pandas as pd
 import seaborn as sns
+
 from matplotlib.widgets import MultiCursor
 
 from spectrafit.api.tools_model import ColumnNamesAPI
+
+
+if TYPE_CHECKING:
+    import pandas as pd
+
 
 matplotlib.font_manager.findfont("serif", rebuild_if_missing=True)
 
@@ -39,6 +47,7 @@ class PlotSpectra:
             args (Dict[str, Any], optional): The input file arguments as a dictionary
                  with additional information beyond the command line arguments. Only
                  needed for global fitting. Defaults to None.
+
         """
         self.df = df
         self.args = args
@@ -138,7 +147,10 @@ class PlotSpectra:
         > part shows the fit and the single contributions of the fit.
         """
         fig, (ax1, ax2) = plt.subplots(
-            2, sharex=True, figsize=(9, 9), gridspec_kw={"height_ratios": [1, 2]}
+            2,
+            sharex=True,
+            figsize=(9, 9),
+            gridspec_kw={"height_ratios": [1, 2]},
         )
         ax1 = sns.regplot(
             x=ColumnNamesAPI().energy,
@@ -179,5 +191,10 @@ class PlotSpectra:
             )
 
         _ = MultiCursor(
-            fig.canvas, (ax1, ax2), color=color[4], ls="--", lw=1, horizOn=True
+            fig.canvas,
+            (ax1, ax2),
+            color=color[4],
+            ls="--",
+            lw=1,
+            horizOn=True,
         )

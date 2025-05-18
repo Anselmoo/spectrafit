@@ -4,27 +4,33 @@ from __future__ import annotations
 
 import argparse
 import json
+
 from pathlib import Path
-from typing import Any, Dict, Union
+from typing import Any
+from typing import ClassVar
+from typing import Dict
+from typing import Union
 
 import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
 
 from spectrafit.plugins.converter import Converter
-from spectrafit.tools import pkl2any, pure_fname
+from spectrafit.tools import pkl2any
+from spectrafit.tools import pure_fname
 
 
 class PklVisualizer(Converter):
     """Visualize the pkl data as a graph.
 
     Attributes:
-        choices_fformat (Set[str]): The choices for the file format.
-        choices_export (Set[str]): The choices for the export format.
+        choices_fformat (ClassVar[set[str]]): The choices for the file format.
+        choices_export (ClassVar[set[str]]): The choices for the export format.
+
     """
 
-    choices_fformat = {"latin1", "utf-8", "utf-16", "utf-32"}
-    choices_export = {"png", "pdf", "jpg", "jpeg"}
+    choices_fformat: ClassVar[set[str]] = {"latin1", "utf-8", "utf-16", "utf-32"}
+    choices_export: ClassVar[set[str]] = {"png", "pdf", "jpg", "jpeg"}
 
     def get_args(self) -> Dict[str, Any]:
         """Get the arguments from the command line.
@@ -32,6 +38,7 @@ class PklVisualizer(Converter):
         Returns:
             Dict[str, Any]: Return the input file arguments as a dictionary without
                 additional information beyond the command line arguments.
+
         """
         parser = argparse.ArgumentParser(
             description="Converter for 'SpectraFit' from pkl files to a graph.",
@@ -71,19 +78,25 @@ class PklVisualizer(Converter):
             file_format (str): The encoding of the pickle file.
 
         Raises:
-            ValueError: If the data is not a dictionary.
+            TypeError: If the data is not a dictionary.
 
         Returns:
             Dict[str, Any]: The data as a dictionary, which can be a nested dictionary.
+
         """
         data = PklVisualizer().get_type(pkl2any(infile, encoding=file_format))
         if not isinstance(data, dict):
-            raise ValueError(f"Data is not a dictionary: {data}")
+            msg = f"Data is not a dictionary: {data}"
+            raise TypeError(msg)
         graph = PklVisualizer().create_graph(fname=infile, data_dict=data)
 
         pos = nx.kamada_kawai_layout(graph, scale=2)
         nx.draw_networkx_nodes(
-            graph, pos, node_size=100, node_color="lightblue", alpha=0.8
+            graph,
+            pos,
+            node_size=100,
+            node_color="lightblue",
+            alpha=0.8,
         )
         nx.draw_networkx_edges(graph, pos, width=0.5, edge_color="grey", alpha=0.5)
         nx.draw_networkx_labels(graph, pos, font_size=10, font_family="sans-serif")
@@ -100,16 +113,18 @@ class PklVisualizer(Converter):
 
         Raises:
             ValueError: If the export format is not supported.
+
         """
         if export_format.lower() not in self.choices_export:
-            raise ValueError(f"Export format '{export_format}' is not supported.")
+            msg = f"Export format '{export_format}' is not supported."
+            raise ValueError(msg)
 
         plt.savefig(
             pure_fname(fname).with_suffix(f".{export_format}"),
             format=export_format,
         )
 
-        with open(pure_fname(fname).with_suffix(".json"), "w+", encoding="utf-8") as f:
+        with pure_fname(fname).with_suffix(".json").open("w+", encoding="utf-8") as f:
             json.dump(data, f, indent=4)
 
     def get_type(self, value: Any) -> Union[Dict[str, Any], str]:
@@ -120,6 +135,7 @@ class PklVisualizer(Converter):
 
         Returns:
             Union[Dict[str, Any], str]: The type of the value.
+
         """
         if isinstance(value, dict):
             return {key: self.get_type(value) for key, value in value.items()}
@@ -133,6 +149,7 @@ class PklVisualizer(Converter):
         Args:
             graph (nx.DiGraph): The graph to add nodes to.
             data_dict (Dict[str, Any]): The data dictionary to get the nodes from.
+
         """
         for key, value in data_dict.items():
             graph.add_node(key)
@@ -162,6 +179,7 @@ class PklVisualizer(Converter):
 
         Returns:
             nx.DiGraph: The graph created from the data dictionary.
+
         """
         graph = nx.DiGraph()
         graph.add_node(str(fname.name))

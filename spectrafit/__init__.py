@@ -15,9 +15,11 @@ from __future__ import annotations
 
 import sys
 import warnings
+
 from typing import Tuple
 
 from typing_extensions import Literal
+
 
 PYTHON_END_OF_LIFE: Tuple[Literal[3], Literal[8]] = (3, 8)
 

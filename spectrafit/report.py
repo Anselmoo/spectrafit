@@ -3,31 +3,50 @@
 from __future__ import annotations
 
 import pprint
-import sys
-from typing import Any, Callable, Dict, Hashable, List, Optional, Tuple, Union
+
+from typing import TYPE_CHECKING
+from typing import Any
+from typing import Callable
+from typing import Dict
+from typing import Hashable
+from typing import List
+from typing import Optional
+from typing import Tuple
+from typing import Union
 from warnings import warn
 
 import numpy as np
 import pandas as pd
+
 from art import tprint
-from lmfit import Minimizer, Parameter, Parameters
-from lmfit.minimizer import MinimizerException, minimize
-from lmfit.printfuncs import alphanumeric_sort, getfloat_attr, gformat
-from numpy.typing import NDArray
-from sklearn.metrics import (
-    explained_variance_score,
-    max_error,
-    mean_absolute_error,
-    mean_absolute_percentage_error,
-    mean_poisson_deviance,
-    mean_squared_error,
-    mean_squared_log_error,
-    median_absolute_error,
-    r2_score,
-)
-from tabulate import tabulate
+from lmfit import Minimizer
+from lmfit import Parameter
+from lmfit import Parameters
+from lmfit.minimizer import MinimizerException
+from lmfit.minimizer import minimize
+from lmfit.printfuncs import alphanumeric_sort
+from lmfit.printfuncs import getfloat_attr
+from lmfit.printfuncs import gformat
+from sklearn.metrics import explained_variance_score
+from sklearn.metrics import max_error
+from sklearn.metrics import mean_absolute_error
+from sklearn.metrics import mean_absolute_percentage_error
+from sklearn.metrics import mean_poisson_deviance
+from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_squared_log_error
+from sklearn.metrics import median_absolute_error
+from sklearn.metrics import r2_score
 
 from spectrafit import __version__
+
+
+# Constants for verbosity levels
+VERBOSE_REGULAR = 1  # Regular output mode
+VERBOSE_DETAILED = 2  # Detailed/verbose output mode
+
+if TYPE_CHECKING:
+    from numpy.typing import NDArray
+
 
 CORREL_HEAD = "[[Correlations]] (unreported correlations are < %.3f)"
 pp = pprint.PrettyPrinter(indent=4)
@@ -69,7 +88,10 @@ class RegressionMetrics:
     """
 
     def __init__(
-        self, df: pd.DataFrame, name_true: str = "intensity", name_pred: str = "fit"
+        self,
+        df: pd.DataFrame,
+        name_true: str = "intensity",
+        name_pred: str = "fit",
     ) -> None:
         """Initialize the regression metrics of the Fit(s) for the post analysis.
 
@@ -79,13 +101,19 @@ class RegressionMetrics:
                  be extended by the single contribution of the model.
             name_true (str, optional): Name of the data. Defaults to "intensity".
             name_pred (str, optional): Name of the fit data. Defaults to "fit".
+
         """
         self.y_true, self.y_pred = self.initialize(
-            df=df, name_true=name_true, name_pred=name_pred
+            df=df,
+            name_true=name_true,
+            name_pred=name_pred,
         )
 
     def initialize(
-        self, df: pd.DataFrame, name_true: str = "intensity", name_pred: str = "fit"
+        self,
+        df: pd.DataFrame,
+        name_true: str = "intensity",
+        name_pred: str = "fit",
     ) -> Tuple[NDArray[np.float64], NDArray[np.float64]]:
         """Initialize the regression metrics of the Fit(s) for the post analysis.
 
@@ -107,6 +135,7 @@ class RegressionMetrics:
         Returns:
             Tuple[NDArray[np.float64], NDArray[np.float64]]: Tuple of true and predicted
                 (fit) intensities.
+
         """
         true = df[
             [col_name for col_name in df.columns if name_true in col_name]
@@ -117,7 +146,8 @@ class RegressionMetrics:
         ].to_numpy()
 
         if pred.shape != true.shape:
-            raise ValueError("The shape of the real and fit data-values are not equal!")
+            msg = "The shape of the real and fit data-values are not equal!"
+            raise ValueError(msg)
 
         return (
             (true, pred) if true.shape[1] > 1 else (np.array([true]), np.array([pred]))
@@ -128,6 +158,7 @@ class RegressionMetrics:
 
         Returns:
             Dict[Hashable, Any]: Dictionary containing the regression metrics.
+
         """
         metrics_fnc = (
             explained_variance_score,
@@ -150,7 +181,7 @@ class RegressionMetrics:
                     warn(
                         warn_meassage(
                             msg=f"Regression metric '{fnc.__name__}' could not  "
-                            f"be calculated due to: {err}"
+                            f"be calculated due to: {err}",
                         ),
                         stacklevel=2,
                     )
@@ -158,8 +189,10 @@ class RegressionMetrics:
         return pd.DataFrame(metric_dict).T.to_dict(orient="split")
 
 
-def fit_report_as_dict(
-    inpars: minimize, settings: Minimizer, modelpars: Optional[Dict[str, Any]] = None
+def fit_report_as_dict(  # noqa: C901
+    inpars: minimize,
+    settings: Minimizer,
+    modelpars: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Dict[Any, Any]]:
     """Generate the best fit report as dictionary.
 
@@ -188,6 +221,7 @@ def fit_report_as_dict(
 
     Returns:
          Dict[str, Dict[Any, Any]]: The report as a dictionary.
+
     """
     result = inpars
     params = inpars.params
@@ -205,10 +239,14 @@ def fit_report_as_dict(
     }
 
     result, buffer, params = _extracted_gof_from_results(
-        result=result, buffer=buffer, params=params
+        result=result,
+        buffer=buffer,
+        params=params,
     )
     buffer = _extracted_computational_from_results(
-        result=result, settings=settings, buffer=buffer
+        result=result,
+        settings=settings,
+        buffer=buffer,
     )
     for name in parnames:
         par = params[name]
@@ -252,7 +290,8 @@ def fit_report_as_dict(
 
 
 def get_init_value(
-    param: Parameter, modelpars: Optional[Parameter] = None
+    param: Parameter,
+    modelpars: Optional[Parameter] = None,
 ) -> Union[float, str]:
     """Get the initial value of a parameter.
 
@@ -262,6 +301,7 @@ def get_init_value(
 
     Returns:
         Union[float, str]: The initial value.
+
     """
     if param.init_value is not None:
         return param.init_value
@@ -273,7 +313,9 @@ def get_init_value(
 
 
 def _extracted_computational_from_results(
-    result: minimize, settings: Minimizer, buffer: Dict[str, Any]
+    result: minimize,
+    settings: Minimizer,
+    buffer: Dict[str, Any],
 ) -> Dict[str, Any]:
     """Extract the computational from the results.
 
@@ -287,6 +329,7 @@ def _extracted_computational_from_results(
 
     Returns:
         Dict[str, Any]: The buffer with updated results.
+
     """
     buffer["computational"]["success"] = result.success
     if hasattr(result, "message"):
@@ -302,7 +345,9 @@ def _extracted_computational_from_results(
 
 
 def _extracted_gof_from_results(
-    result: minimize, buffer: Dict[str, Any], params: Parameters
+    result: minimize,
+    buffer: Dict[str, Any],
+    params: Parameters,
 ) -> Tuple[minimize, Dict[str, Any], Parameters]:
     """Extract the goodness of fit from the results.
 
@@ -315,6 +360,7 @@ def _extracted_gof_from_results(
         minimize: The results.
         Dict[str, Any]: The buffer with updated results.
         Parameters: The parameters.
+
     """
     if result is not None:
         buffer["configurations"]["fitting_method"] = result.method
@@ -337,7 +383,7 @@ def _extracted_gof_from_results(
                     warn_meassage(
                         msg=f"The fitting method '{result.method}' does not "
                         "natively calculate and uncertainties cannot be "
-                        "estimated due to be out of region!"
+                        "estimated due to be out of region!",
                     ),
                     stacklevel=2,
                 )
@@ -350,7 +396,7 @@ def _extracted_gof_from_results(
                     warn(
                         warn_meassage(
                             msg=f"The parameter '{name}' is at its initial "
-                            "value and uncertainties cannot be estimated!"
+                            "value and uncertainties cannot be estimated!",
                         ),
                         stacklevel=2,
                     )
@@ -359,7 +405,7 @@ def _extracted_gof_from_results(
                     warn(
                         warn_meassage(
                             msg=f"The parameter '{name}' is at its boundary "
-                            "and uncertainties cannot be estimated!"
+                            "and uncertainties cannot be estimated!",
                         ),
                         stacklevel=2,
                     )
@@ -375,6 +421,7 @@ def warn_meassage(msg: str) -> str:
 
     Returns:
         str: The warning message.
+
     """
     top = "\n\n## WARNING " + "#" * (len(msg) - len("## WARNING ")) + "\n"
     header = "\n" + "#" * len(msg) + "\n"
@@ -399,6 +446,7 @@ class CIReport:
             Defaults to True.
         ndigits (int, optional): The number of digits to display in the report.
             Defaults to 5.
+
     """
 
     def __init__(
@@ -407,7 +455,7 @@ class CIReport:
         with_offset: bool = True,
         ndigits: int = 5,
         best_tol: float = 1.0e-2,
-    ):
+    ) -> None:
         """Initialize the Report object.
 
         Args:
@@ -419,6 +467,7 @@ class CIReport:
                 Defaults to 5.
             best_tol (float): The tolerance for the best value.
                 Defaults to 1.0e-2.
+
         """
         self.ci = ci
         self.with_offset = with_offset
@@ -436,6 +485,7 @@ class CIReport:
 
         Returns:
             str: The confidence interval as a string.
+
         """
         return (
             "BEST" if abs(x[0]) < self.best_tol else f"{x[0] * 100:.2f}% - {bound_type}"
@@ -449,6 +499,7 @@ class CIReport:
 
         Returns:
             float: The offset for the row.
+
         """
         offset = 0.0
         if self.with_offset:
@@ -458,7 +509,10 @@ class CIReport:
         return offset
 
     def create_report_row(
-        self, name: str, row: List[Tuple[float, float]], offset: float
+        self,
+        name: str,
+        row: List[Tuple[float, float]],
+        offset: float,
     ) -> None:
         """Create a row for the report.
 
@@ -466,6 +520,7 @@ class CIReport:
             name (str): The name of the row.
             row (List[Tuple[float, float]]): The row to create the report for.
             offset (float): The offset for the row.
+
         """
         for i, (cval, val) in enumerate(row):
             sval = val if cval < self.best_tol else val - offset
@@ -519,6 +574,7 @@ class FitReport:
         generate_report(): Generate a report containing fit statistics,
             correlations, and variables.
         __call__(): Generate and print a report based on the data.
+
     """
 
     def __init__(
@@ -542,6 +598,7 @@ class FitReport:
                 Defaults to 0.0.
             modelpars (object, optional): The model parameters.
                 Defaults to None.
+
         """
         self.inpars = inpars
         self.sort_pars = sort_pars
@@ -562,6 +619,7 @@ class FitReport:
 
         Returns:
             List[str]: List of parameter names.
+
         """
         if not self.sort_pars:
             return list(self.params.keys())
@@ -583,6 +641,7 @@ class FitReport:
                 - Akaike info crit
                 - Bayesian info crit
                 - R-squared (if available)
+
         """
         if self.result is not None:
             return pd.DataFrame(
@@ -600,9 +659,9 @@ class FitReport:
                             getfloat_attr(self.result, "rsquared")
                             if hasattr(self.result, "rsquared")
                             else None
-                        )
+                        ),
                     ],
-                }
+                },
             )
         return None
 
@@ -619,6 +678,7 @@ class FitReport:
                 - init: The initial value of the variable
                 - model_value: The value of the variable in the model (if applicable)
                 - fixed: A boolean indicating whether the variable is fixed or not
+
         """
         variables = []
         namelen = max(len(n) for n in self.parnames)
@@ -665,6 +725,7 @@ class FitReport:
         Returns:
             pd.DataFrame: The correlation matrix with the
                 varying parameters as rows and columns.
+
         """
         correl_matrix = pd.DataFrame(index=self.parnames, columns=self.parnames)
         for i, name in enumerate(self.parnames):
@@ -682,8 +743,7 @@ class FitReport:
                         correl_matrix.loc[name2, name] = par.correl[
                             name2
                         ]  # mirror the value
-        correl_matrix.fillna(1, inplace=True)  # fill diagonal with 1s
-        return correl_matrix
+        return correl_matrix.fillna(1)  # fill diagonal with 1s
 
     def generate_report(self) -> Dict[str, pd.DataFrame]:
         """Generate a report.
@@ -696,6 +756,7 @@ class FitReport:
         Returns:
             report (Dict[str, pd.DataFrame]): A dictionary containing
                 the generated report.
+
         """
         report = {
             "Fit Statistics": self.generate_fit_statistics(),
@@ -720,8 +781,7 @@ class FitReport:
             decimal places.
         """
         report = self.generate_report()
-        for section, df in report.items():
-            print(f"\n{section}\n")
+        for df in report.values():
             PrintingResults.print_tabulate_df(df=df)
 
 
@@ -742,6 +802,7 @@ class PrintingResults:
             result (Any): The lmfit `results` as a kind of result based class.
             minimizer (Minimizer): The lmfit `Minimizer`-class as a general
                 minimizer for curve fitting and optimization.
+
         """
         self.args = args
         self.result = result
@@ -750,9 +811,9 @@ class PrintingResults:
 
     def __call__(self) -> None:
         """Print the results of the fitting process."""
-        if self.args["verbose"] == 1:
+        if self.args["verbose"] == VERBOSE_REGULAR:
             self.printing_regular_mode()
-        elif self.args["verbose"] == 2:
+        elif self.args["verbose"] == VERBOSE_DETAILED:
             self.printing_verbose_mode()
 
     @staticmethod
@@ -761,6 +822,7 @@ class PrintingResults:
 
         Args:
             args (Dict[str, Any]): The args to be printed as a dictionary.
+
         """
         PrintingResults.print_tabulate_df(
             df=pd.DataFrame(**args).T,
@@ -774,15 +836,8 @@ class PrintingResults:
             df (pd.DataFrame): The DataFrame to be printed.
             floatfmt (str, optional): The format of the floating point numbers.
                 Defaults to ".3f".
+
         """
-        print(
-            tabulate(
-                df,
-                headers="keys",
-                tablefmt="fancy_grid" if sys.platform != "win32" else "grid",
-                floatfmt=floatfmt,
-            )
-        )
 
     def printing_regular_mode(self) -> None:
         """Print the fitting results in the regular mode."""
@@ -794,7 +849,6 @@ class PrintingResults:
 
     def print_statistic(self) -> None:
         """Print the statistic."""
-        print("\nStatistic:\n")
         self.print_tabulate(args=self.args["data_statistic"])
 
     def print_fit_results(self) -> None:
@@ -803,7 +857,6 @@ class PrintingResults:
 
     def print_confidence_interval(self) -> None:
         """Print the confidence interval."""
-        print("\nConfidence Interval:\n")
         if self.args["conf_interval"]:
             try:
                 CIReport(self.args["confidence_interval"][0])()
@@ -816,12 +869,10 @@ class PrintingResults:
 
     def print_linear_correlation(self) -> None:
         """Print the linear correlation."""
-        print("\nOverall Linear-Correlation:\n")
         self.print_tabulate(args=self.args["linear_correlation"])
 
     def print_regression_metrics(self) -> None:
         """Print the regression metrics."""
-        print("\nRegression Metrics:\n")
         self.print_tabulate(args=self.args["regression_metrics"])
 
     def printing_verbose_mode(self) -> None:
@@ -835,33 +886,27 @@ class PrintingResults:
 
     def print_statistic_verbose(self) -> None:
         """Print the data statistic in verbose mode."""
-        print("\nStatistic:\n")
         pp.pprint(self.args["data_statistic"])
 
     def print_input_parameters_verbose(self) -> None:
         """Print input parameters in verbose mode."""
-        print("Input Parameter:\n")
         pp.pprint(self.args)
 
     def print_fit_results_verbose(self) -> None:
         """Print fit results in verbose mode."""
-        print("\nFit Results and Insights:\n")
         pp.pprint(self.args["fit_insights"])
 
     def print_confidence_interval_verbose(self) -> None:
         """Print confidence interval in verbose mode."""
         if self.args["conf_interval"]:
-            print("\nConfidence Interval:\n")
             pp.pprint(self.args["confidence_interval"])
 
     def print_linear_correlation_verbose(self) -> None:
         """Print overall linear-correlation in verbose mode."""
-        print("\nOverall Linear-Correlation:\n")
         pp.pprint(self.args["linear_correlation"])
 
     def print_regression_metrics_verbose(self) -> None:
         """Print regression metrics in verbose mode."""
-        print("\nRegression Metrics:\n")
         pp.pprint(self.args["regression_metrics"])
 
 
@@ -878,35 +923,16 @@ class PrintingStatus:
 
     def start(self) -> None:
         """Print the start of the fitting process."""
-        print("\nStart of the fitting process:\n")
 
     def end(self) -> None:
         """Print the end of the fitting process."""
-        print("\nEnd of the fitting process:\n")
 
     def thanks(self) -> None:
         """Print the end of the fitting process."""
-        print("\nThanks for using SpectraFit!")
 
     def yes_no(self) -> None:
         """Print the end of the fitting process."""
-        print("\nDo you want to continue? (y/n)")
 
     def credits(self) -> None:
         """Print the credits of the fitting process."""
         tprint("\nCredits:\n", font="3-d")
-        print(
-            "The fitting process is based on the following software:"
-            "\n\t- lmfit (https://lmfit.github.io/lmfit-py/index.html)"
-            "\n\t- statsmodel (https://www.statsmodels.org/stable/)"
-            "\n\t- scipy (https://docs.scipy.org/doc/scipy/reference/index.html)"
-            "\n\t- scikit-learn (https://scikit-learn.org/stable/)"
-            "\n\t- numpy (https://docs.scipy.org/doc/numpy/reference/index.html)"
-            "\n\t- pandas (https://pandas.pydata.org/pandas-docs/stable/index.html)"
-            "\n\t- matplotlib (https://matplotlib.org/index.html)"
-            "\n\t- seaborn (https://seaborn.pydata.org/index.html)"
-            "\n\t- tabulate (https://github.com/astanin/python-tabulate))"
-            "\n\t- argparse (https://docs.python.org/3/library/argparse.html)"
-            "\n\t- anymany more "
-            "(https://github.com/Anselmoo/spectrafit/network/dependencies)"
-        )
