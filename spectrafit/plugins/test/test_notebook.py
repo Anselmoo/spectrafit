@@ -298,6 +298,74 @@ class TestDataFramePlot:
             )
             mock_show.assert_called()
 
+    def test_yaxis_api_invert(self) -> None:
+        """Test that YAxisAPI invert parameter works as expected."""
+        from spectrafit.api.notebook_model import YAxisAPI
+
+        # Test default value (False)
+        y_axis_default = YAxisAPI()
+        assert y_axis_default.invert is False
+
+        # Test explicitly set to True
+        y_axis_inverted = YAxisAPI(invert=True)
+        assert y_axis_inverted.invert is True
+
+        # Test in PlotAPI context
+        from spectrafit.api.notebook_model import PlotAPI
+
+        plot_api = PlotAPI(
+            x="x",
+            y="y",
+            yaxis_title=YAxisAPI(invert=True),
+        )
+
+        assert plot_api.yaxis_title.invert is True
+
+    def test_plot_with_inverted_yaxis(self) -> None:
+        """Test that plots use inverted y-axis when specified."""
+        import plotly.graph_objects as go
+
+        from plotly.subplots import make_subplots
+
+        from spectrafit.api.notebook_model import PlotAPI
+        from spectrafit.api.notebook_model import YAxisAPI
+
+        pp = DataFramePlot()
+
+        # Create a PlotAPI with y-axis inversion
+        plot_api_inverted = PlotAPI(
+            x="x",
+            y="y",
+            yaxis_title=YAxisAPI(invert=True),
+        )
+
+        # Test with combined mocks to avoid long lines
+        with mock.patch.object(go.Figure, "update_yaxes") as mock_update_yaxes:
+            with mock.patch(__plotly_io_show__), mock.patch.object(
+                pp, "_create_residual_plot", return_value=go.Figure()
+            ), mock.patch.object(
+                pp, "_create_fit_plot", return_value=go.Figure()
+            ), mock.patch.object(
+                pp, "_plot_single_dataframe", return_value=go.Figure()
+            ):
+                # Create a figure with subplots for testing _update_plot_layout
+                fig = make_subplots(rows=2, cols=1)
+                pp._update_plot_layout(fig, plot_api_inverted, df_2_provided=False)  # noqa: SLF001
+
+            # Verify update_yaxes was called with autorange="reversed"
+            has_reversed = False
+            for call in mock_update_yaxes.call_args_list:
+                kwargs = call[1]
+                if (
+                    kwargs
+                    and "autorange" in kwargs
+                    and kwargs["autorange"] == "reversed"
+                ):
+                    has_reversed = True
+                    break
+
+            assert has_reversed, "update_yaxes not called with autorange='reversed'"
+
 
 def test_dataframe_display_all(dataframe: pd.DataFrame) -> None:
     """Test the DataFrameDisplay class."""
@@ -526,7 +594,7 @@ class TestSpectraFitNotebook:
         """Test the plot function for global fitting routine."""
         with mock.patch(__plotly_io_show__) as mock_show:
             class_spectrafit_fit_global["sp"].plot_fit_df()
-            mock_show.assert_called()
+            mock_show.assert_called_once()
 
     def test_display(
         self,
