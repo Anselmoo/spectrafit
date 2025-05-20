@@ -21,6 +21,7 @@ jobs:
           fetch-depth: 0 # Fetch all history and tags for proper mirroring
 
       - name: Mirror to GitLab
+        shell: bash
         env:
           GITLAB_HOSTNAME: ${{ secrets.GITLAB_HOSTNAME }}
           GITLAB_USERNAME: ${{ secrets.GITLAB_USERNAME }}
@@ -36,10 +37,6 @@ jobs:
 
           # Set default GitLab hostname if not provided
           GITLAB_HOSTNAME="${GITLAB_HOSTNAME:-gitlab.com}"
-
-          # Get current branch name
-          CURRENT_BRANCH="${GITHUB_REF#refs/heads/}"
-          echo "🔍 Current branch: $CURRENT_BRANCH"
 
           # Configure git
           git config --global user.name "GitHub Actions"
@@ -60,12 +57,33 @@ jobs:
             exit 0
           fi
 
-          # Check if we're dealing with a tag
+          # Handle different GitHub ref types
           if [[ "$GITHUB_REF" == refs/tags/* ]]; then
+            # Handle tags
             TAG_NAME="${GITHUB_REF#refs/tags/}"
             echo "🏷️ Pushing tag: $TAG_NAME"
             git push gitlab "$TAG_NAME"
             exit 0
+          elif [[ "$GITHUB_REF" == refs/pull/* ]]; then
+            # Handle pull requests - push the source branch instead
+            PR_NUMBER=$(echo $GITHUB_REF | cut -d'/' -f3)
+            SOURCE_BRANCH="${GITHUB_HEAD_REF}"
+            TARGET_BRANCH="${GITHUB_BASE_REF}"
+
+            echo "🔄 Processing pull request #$PR_NUMBER from $SOURCE_BRANCH to $TARGET_BRANCH"
+
+            # Check if PR source branch exists locally
+            if git show-ref --verify --quiet "refs/remotes/origin/$SOURCE_BRANCH"; then
+              echo "🔄 Pushing PR source branch to GitLab: $SOURCE_BRANCH"
+              git push gitlab "refs/remotes/origin/$SOURCE_BRANCH:refs/heads/$SOURCE_BRANCH"
+            else
+              echo "⚠️ PR source branch not found locally, skipping mirror"
+            fi
+            exit 0
+          else
+            # Regular branch handling
+            CURRENT_BRANCH="${GITHUB_REF#refs/heads/}"
+            echo "🔍 Current branch: $CURRENT_BRANCH"
           fi
 
           # Check if branch exists on GitLab
@@ -77,29 +95,37 @@ jobs:
             REMOTE_SHA=$(git rev-parse "gitlab/$CURRENT_BRANCH")
             BASE_SHA=$(git merge-base HEAD "gitlab/$CURRENT_BRANCH")
 
+            # Branch comparison logic
             if [ "$LOCAL_SHA" = "$REMOTE_SHA" ]; then
               echo "🟢 Branches are identical. No action needed."
-            elif [ "$LOCAL_SHA" = "$BASE_SHA" ]; then
-              echo "⬇️ GitLab branch is ahead. Pulling changes..."
-              git merge "gitlab/$CURRENT_BRANCH"
-            elif [ "$REMOTE_SHA" = "$BASE_SHA" ]; then
-              echo "⬆️ GitHub branch is ahead. Pushing changes..."
-              git push gitlab "$CURRENT_BRANCH":"$CURRENT_BRANCH"
             else
-              echo "⚠️ Branches have diverged. Creating conflict resolution branch..."
-              CONFLICT_BRANCH="merge-conflict/$CURRENT_BRANCH-$(date +%s)"
-              git checkout -b "$CONFLICT_BRANCH"
+              if [ "$LOCAL_SHA" = "$BASE_SHA" ]; then
+                echo "⬇️ GitLab branch is ahead. Pulling changes..."
+                git merge "gitlab/$CURRENT_BRANCH"
+              fi
 
-              if git merge "gitlab/$CURRENT_BRANCH"; then
-                echo "🔀 Automatic merge successful. Pushing merged branch to GitLab..."
-                git push gitlab "$CONFLICT_BRANCH"
-                echo "🔗 Created conflict resolution branch: $CONFLICT_BRANCH"
-              else
-                echo "❌ Merge conflicts detected. Manual resolution needed."
-                git merge --abort
-                echo "⬆️ Pushing GitHub version to GitLab as-is..."
-                git checkout "$CURRENT_BRANCH"
+              if [ "$REMOTE_SHA" = "$BASE_SHA" ]; then
+                echo "⬆️ GitHub branch is ahead. Pushing changes..."
                 git push gitlab "$CURRENT_BRANCH":"$CURRENT_BRANCH"
+              else
+                # Only handle diverged branches if neither condition above was true
+                if [ "$LOCAL_SHA" != "$BASE_SHA" ] && [ "$REMOTE_SHA" != "$BASE_SHA" ]; then
+                  echo "⚠️ Branches have diverged. Creating conflict resolution branch..."
+                  CONFLICT_BRANCH="merge-conflict/$CURRENT_BRANCH-$(date +%s)"
+                  git checkout -b "$CONFLICT_BRANCH"
+
+                  if git merge "gitlab/$CURRENT_BRANCH"; then
+                    echo "🔀 Automatic merge successful. Pushing merged branch to GitLab..."
+                    git push gitlab "$CONFLICT_BRANCH"
+                    echo "🔗 Created conflict resolution branch: $CONFLICT_BRANCH"
+                  else
+                    echo "❌ Merge conflicts detected. Manual resolution needed."
+                    git merge --abort
+                    echo "⬆️ Pushing GitHub version to GitLab as-is..."
+                    git checkout "$CURRENT_BRANCH"
+                    git push gitlab "$CURRENT_BRANCH":"$CURRENT_BRANCH"
+                  fi
+                fi
               fi
             fi
           else
