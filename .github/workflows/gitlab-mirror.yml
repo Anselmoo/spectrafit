@@ -1,5 +1,4 @@
 name: Mirror to GitLab
-description: Mirror repository to GitLab CE instance
 
 on:
   push:
@@ -23,12 +22,10 @@ jobs:
 
       - name: Mirror to GitLab
         env:
-          # Can be gitlab.com or your self-hosted instance URL without https://
-          GITLAB_HOSTNAME: "${{ secrets.GITLAB_HOSTNAME || 'gitlab.com' }}"
-          GITLAB_USERNAME: "${{ secrets.GITLAB_USERNAME }}"
-          GITLAB_TOKEN: "${{ secrets.GITLAB_TOKEN }}"
-          # Format: username/project or group/project
-          GITLAB_PROJECT_PATH: "${{ secrets.GITLAB_PROJECT_PATH }}"
+          GITLAB_HOSTNAME: ${{ secrets.GITLAB_HOSTNAME }}
+          GITLAB_USERNAME: ${{ secrets.GITLAB_USERNAME }}
+          GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
+          GITLAB_PROJECT_PATH: ${{ secrets.GITLAB_PROJECT_PATH }}
         run: |
           # Check for required secrets
           if [ -z "$GITLAB_USERNAME" ] || [ -z "$GITLAB_TOKEN" ] || [ -z "$GITLAB_PROJECT_PATH" ]; then
@@ -36,6 +33,13 @@ jobs:
             echo "Please set GITLAB_USERNAME, GITLAB_TOKEN, and GITLAB_PROJECT_PATH secrets."
             exit 1
           fi
+
+          # Set default GitLab hostname if not provided
+          GITLAB_HOSTNAME="${GITLAB_HOSTNAME:-gitlab.com}"
+
+          # Get current branch name
+          CURRENT_BRANCH="${GITHUB_REF#refs/heads/}"
+          echo "🔍 Current branch: $CURRENT_BRANCH"
 
           # Configure git
           git config --global user.name "GitHub Actions"
@@ -46,8 +50,61 @@ jobs:
           GITLAB_URL="https://${GITLAB_USERNAME}:${GITLAB_TOKEN}@${GITLAB_HOSTNAME}/${GITLAB_PROJECT_PATH}.git"
           git remote add gitlab "${GITLAB_URL}"
 
-          # Push all branches and tags to GitLab
-          echo "🚀 Pushing to GitLab..."
-          git push --force --mirror gitlab
+          # Fetch from GitLab to see remote state
+          echo "🔄 Fetching from GitLab..."
+          if ! git fetch gitlab; then
+            echo "⚠️ Could not fetch from GitLab. The repository might not exist or credentials are invalid."
+            echo "🚀 Pushing all branches and tags to GitLab..."
+            git push --force --mirror gitlab
+            echo "✅ Repository successfully mirrored to GitLab"
+            exit 0
+          fi
 
-          echo "✅ Repository successfully mirrored to GitLab"
+          # Check if we're dealing with a tag
+          if [[ "$GITHUB_REF" == refs/tags/* ]]; then
+            TAG_NAME="${GITHUB_REF#refs/tags/}"
+            echo "🏷️ Pushing tag: $TAG_NAME"
+            git push gitlab "$TAG_NAME"
+            exit 0
+          fi
+
+          # Check if branch exists on GitLab
+          if git branch -r | grep -q "gitlab/$CURRENT_BRANCH"; then
+            echo "✅ Branch $CURRENT_BRANCH exists on GitLab"
+
+            # Compare branches
+            LOCAL_SHA=$(git rev-parse HEAD)
+            REMOTE_SHA=$(git rev-parse "gitlab/$CURRENT_BRANCH")
+            BASE_SHA=$(git merge-base HEAD "gitlab/$CURRENT_BRANCH")
+
+            if [ "$LOCAL_SHA" = "$REMOTE_SHA" ]; then
+              echo "🟢 Branches are identical. No action needed."
+            elif [ "$LOCAL_SHA" = "$BASE_SHA" ]; then
+              echo "⬇️ GitLab branch is ahead. Pulling changes..."
+              git merge "gitlab/$CURRENT_BRANCH"
+            elif [ "$REMOTE_SHA" = "$BASE_SHA" ]; then
+              echo "⬆️ GitHub branch is ahead. Pushing changes..."
+              git push gitlab "$CURRENT_BRANCH":"$CURRENT_BRANCH"
+            else
+              echo "⚠️ Branches have diverged. Creating conflict resolution branch..."
+              CONFLICT_BRANCH="merge-conflict/$CURRENT_BRANCH-$(date +%s)"
+              git checkout -b "$CONFLICT_BRANCH"
+
+              if git merge "gitlab/$CURRENT_BRANCH"; then
+                echo "🔀 Automatic merge successful. Pushing merged branch to GitLab..."
+                git push gitlab "$CONFLICT_BRANCH"
+                echo "🔗 Created conflict resolution branch: $CONFLICT_BRANCH"
+              else
+                echo "❌ Merge conflicts detected. Manual resolution needed."
+                git merge --abort
+                echo "⬆️ Pushing GitHub version to GitLab as-is..."
+                git checkout "$CURRENT_BRANCH"
+                git push gitlab "$CURRENT_BRANCH":"$CURRENT_BRANCH"
+              fi
+            fi
+          else
+            echo "🆕 Branch $CURRENT_BRANCH does not exist on GitLab. Creating it..."
+            git push gitlab "$CURRENT_BRANCH"
+          fi
+
+          echo "✅ Mirroring process completed"
