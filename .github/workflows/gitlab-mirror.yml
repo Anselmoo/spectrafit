@@ -1,0 +1,53 @@
+name: Mirror to GitLab
+description: Mirror repository to GitLab CE instance
+
+on:
+  push:
+    branches: ["**"]
+    tags: ["**"]
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  mirror:
+    name: 🔄 Mirror to GitLab
+    runs-on: ubuntu-latest
+    # Avoid running twice on PRs
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetch all history and tags for proper mirroring
+
+      - name: Mirror to GitLab
+        env:
+          # Can be gitlab.com or your self-hosted instance URL without https://
+          GITLAB_HOSTNAME: "${{ secrets.GITLAB_HOSTNAME || 'gitlab.com' }}"
+          GITLAB_USERNAME: "${{ secrets.GITLAB_USERNAME }}"
+          GITLAB_TOKEN: "${{ secrets.GITLAB_TOKEN }}"
+          # Format: username/project or group/project
+          GITLAB_PROJECT_PATH: "${{ secrets.GITLAB_PROJECT_PATH }}"
+        run: |
+          # Check for required secrets
+          if [ -z "$GITLAB_USERNAME" ] || [ -z "$GITLAB_TOKEN" ] || [ -z "$GITLAB_PROJECT_PATH" ]; then
+            echo "❌ Error: Missing required GitLab credentials or project path."
+            echo "Please set GITLAB_USERNAME, GITLAB_TOKEN, and GITLAB_PROJECT_PATH secrets."
+            exit 1
+          fi
+
+          # Configure git
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "github-actions@github.com"
+
+          # Add GitLab remote with credentials
+          echo "📝 Adding GitLab remote..."
+          GITLAB_URL="https://${GITLAB_USERNAME}:${GITLAB_TOKEN}@${GITLAB_HOSTNAME}/${GITLAB_PROJECT_PATH}.git"
+          git remote add gitlab "${GITLAB_URL}"
+
+          # Push all branches and tags to GitLab
+          echo "🚀 Pushing to GitLab..."
+          git push --force --mirror gitlab
+
+          echo "✅ Repository successfully mirrored to GitLab"

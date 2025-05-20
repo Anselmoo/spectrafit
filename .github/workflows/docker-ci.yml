@@ -9,6 +9,7 @@ on:
 
 jobs:
   docker:
+    if: github.repository == 'Anselmoo/spectrafit'
     # Only if Dockerfile is changed
     name: Docker Image
     runs-on: ubuntu-latest

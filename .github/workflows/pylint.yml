@@ -4,6 +4,7 @@ on: [push]
 
 jobs:
   build:
+    if: github.repository == 'Anselmoo/spectrafit'
     runs-on: ubuntu-latest
     strategy:
       matrix:

@@ -10,6 +10,7 @@ on:
 
 jobs:
   pre-commit:
+    if: github.repository == 'Anselmoo/spectrafit'
     name: Pre-commit
     runs-on: ubuntu-latest
     steps:
@@ -32,6 +33,7 @@ jobs:
         run: |
           uv run pre-commit run --all-files --color=always
   build:
+    if: github.repository == 'Anselmoo/spectrafit'
     name: Python ${{ matrix.python-version }} - ${{ matrix.os }} - ${{ matrix.arch }} - ${{ github.event_name }}
     needs: pre-commit
     runs-on: ${{ matrix.os }}
@@ -67,6 +69,7 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
   minimal-build:
+    if: github.repository == 'Anselmoo/spectrafit'
     name: Build SpectraFit without dev-dependencies
     runs-on: ubuntu-latest
     needs: build
@@ -83,6 +86,7 @@ jobs:
           uv sync --all-extras
           uv run pip install -e .
   install-build:
+    if: github.repository == 'Anselmoo/spectrafit'
     name: Install SpectraFit from wheel
     runs-on: ubuntu-latest
     needs: build
@@ -103,6 +107,7 @@ jobs:
           uv pip install dist/*.whl
           uv run spectrafit -v
   documentation:
+    if: github.repository == 'Anselmoo/spectrafit'
     name: Build Documentation
     runs-on: ubuntu-latest
     needs: build
@@ -129,6 +134,7 @@ jobs:
         if: contains(github.ref, 'refs/heads/main')
         run: uv run --group docs --all-extras mike deploy --push --update-aliases develop
   devcontainer:
+    if: github.repository == 'Anselmoo/spectrafit'
     name: Devcontainer
     needs: build
     runs-on: ubuntu-latest

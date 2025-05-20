@@ -4,6 +4,7 @@ on: [push]
 
 jobs:
   build-linux:
+    if: github.repository == 'Anselmoo/spectrafit'
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -16,7 +17,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Miniconda
+      - name: Set up Miniconda for ${{ matrix.package }}
         uses: conda-incubator/setup-miniconda@v3
         with:
           auto-update-conda: true
