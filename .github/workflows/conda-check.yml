@@ -1,9 +1,11 @@
-name: Python Package using Conda
+name: 🐍 CI - Conda
 
 on: [push]
 
 jobs:
   build-linux:
+    if: github.repository == 'Anselmoo/spectrafit'
+    name: 🏗️ Build (Linux)
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -15,19 +17,20 @@ jobs:
       max-parallel: 5
 
     steps:
-      - uses: actions/checkout@v4
-      - name: Set up Miniconda
+      - name: 🛎️ Checkout repository
+        uses: actions/checkout@v4
+      - name: 🐍 Set up Conda
         uses: conda-incubator/setup-miniconda@v3
         with:
           auto-update-conda: true
           python-version: "3.12"
           channels: conda-forge,defaults
-      - name: Install spectrafit package
+      - name: 📦 Install spectrafit package
         shell: bash -l {0}
         run: |
           conda info
           conda install -c conda-forge ${{ matrix.package }}
-      - name: Verify Python version
+      - name: ✅ Verify Python version
         shell: bash -l {0}
         run: |
           python --version

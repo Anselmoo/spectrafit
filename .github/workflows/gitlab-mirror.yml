@@ -1,0 +1,136 @@
+name: 🦊 Mirror to GitLab
+
+on:
+  push:
+    branches: ["**"]
+    tags: ["**"]
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  mirror:
+    name: 🔄 Mirror to GitLab
+    runs-on: ubuntu-latest
+    # Avoid running twice on PRs
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+
+    steps:
+      - name: 🛎️ Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetch all history and tags for proper mirroring
+
+      - name: 🔗 Mirror to GitLab
+        shell: bash
+        env:
+          GITLAB_HOSTNAME: ${{ secrets.GITLAB_HOSTNAME }}
+          GITLAB_USERNAME: ${{ secrets.GITLAB_USERNAME }}
+          GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
+          GITLAB_PROJECT_PATH: ${{ secrets.GITLAB_PROJECT_PATH }}
+        run: |
+          # Check for required secrets
+          if [ -z "$GITLAB_USERNAME" ] || [ -z "$GITLAB_TOKEN" ] || [ -z "$GITLAB_PROJECT_PATH" ]; then
+            echo "❌ Error: Missing required GitLab credentials or project path."
+            echo "Please set GITLAB_USERNAME, GITLAB_TOKEN, and GITLAB_PROJECT_PATH secrets."
+            exit 1
+          fi
+
+          # Set default GitLab hostname if not provided
+          GITLAB_HOSTNAME="${GITLAB_HOSTNAME:-gitlab.com}"
+
+          # Configure git
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "github-actions@github.com"
+
+          # Add GitLab remote with credentials
+          echo "📝 Adding GitLab remote..."
+          GITLAB_URL="https://${GITLAB_USERNAME}:${GITLAB_TOKEN}@${GITLAB_HOSTNAME}/${GITLAB_PROJECT_PATH}.git"
+          git remote add gitlab "${GITLAB_URL}"
+
+          # Fetch from GitLab to see remote state
+          echo "🔄 Fetching from GitLab..."
+          if ! git fetch gitlab; then
+            echo "⚠️ Could not fetch from GitLab. The repository might not exist or credentials are invalid."
+            echo "🚀 Pushing all branches and tags to GitLab..."
+            git push --force --mirror gitlab
+            echo "✅ Repository successfully mirrored to GitLab"
+            exit 0
+          fi
+
+          # Handle different GitHub ref types
+          if [[ "$GITHUB_REF" == refs/tags/* ]]; then
+            # Handle tags
+            TAG_NAME="${GITHUB_REF#refs/tags/}"
+            echo "🏷️ Pushing tag: $TAG_NAME"
+            git push gitlab "$TAG_NAME"
+            exit 0
+          elif [[ "$GITHUB_REF" == refs/pull/* ]]; then
+            # Handle pull requests - push the source branch instead
+            PR_NUMBER=$(echo $GITHUB_REF | cut -d'/' -f3)
+            SOURCE_BRANCH="${GITHUB_HEAD_REF}"
+            TARGET_BRANCH="${GITHUB_BASE_REF}"
+
+            echo "🔄 Processing pull request #$PR_NUMBER from $SOURCE_BRANCH to $TARGET_BRANCH"
+
+            # Check if PR source branch exists locally
+            if git show-ref --verify --quiet "refs/remotes/origin/$SOURCE_BRANCH"; then
+              echo "🔄 Pushing PR source branch to GitLab: $SOURCE_BRANCH"
+              git push gitlab "refs/remotes/origin/$SOURCE_BRANCH:refs/heads/$SOURCE_BRANCH"
+            else
+              echo "⚠️ PR source branch not found locally, skipping mirror"
+            fi
+            exit 0
+          else
+            # Regular branch handling
+            CURRENT_BRANCH="${GITHUB_REF#refs/heads/}"
+            echo "🔍 Current branch: $CURRENT_BRANCH"
+          fi
+
+          # Check if branch exists on GitLab
+          if git branch -r | grep -q "gitlab/$CURRENT_BRANCH"; then
+            echo "✅ Branch $CURRENT_BRANCH exists on GitLab"
+
+            # Compare branches
+            LOCAL_SHA=$(git rev-parse HEAD)
+            REMOTE_SHA=$(git rev-parse "gitlab/$CURRENT_BRANCH")
+            BASE_SHA=$(git merge-base HEAD "gitlab/$CURRENT_BRANCH")
+
+            # Branch comparison logic
+            if [ "$LOCAL_SHA" = "$REMOTE_SHA" ]; then
+              echo "🟢 Branches are identical. No action needed."
+            else
+              if [ "$LOCAL_SHA" = "$BASE_SHA" ]; then
+                echo "⬇️ GitLab branch is ahead. Pulling changes..."
+                git merge "gitlab/$CURRENT_BRANCH"
+              fi
+
+              if [ "$REMOTE_SHA" = "$BASE_SHA" ]; then
+                echo "⬆️ GitHub branch is ahead. Pushing changes..."
+                git push gitlab "$CURRENT_BRANCH":"$CURRENT_BRANCH"
+              else
+                # Only handle diverged branches if neither condition above was true
+                if [ "$LOCAL_SHA" != "$BASE_SHA" ] && [ "$REMOTE_SHA" != "$BASE_SHA" ]; then
+                  echo "⚠️ Branches have diverged. Creating conflict resolution branch..."
+                  CONFLICT_BRANCH="merge-conflict/$CURRENT_BRANCH-$(date +%s)"
+                  git checkout -b "$CONFLICT_BRANCH"
+
+                  if git merge "gitlab/$CURRENT_BRANCH"; then
+                    echo "🔀 Automatic merge successful. Pushing merged branch to GitLab..."
+                    git push gitlab "$CONFLICT_BRANCH"
+                    echo "🔗 Created conflict resolution branch: $CONFLICT_BRANCH"
+                  else
+                    echo "❌ Merge conflicts detected. Manual resolution needed."
+                    git merge --abort
+                    echo "⬆️ Pushing GitHub version to GitLab as-is..."
+                    git checkout "$CURRENT_BRANCH"
+                    git push gitlab "$CURRENT_BRANCH":"$CURRENT_BRANCH"
+                  fi
+                fi
+              fi
+            fi
+          else
+            echo "🆕 Branch $CURRENT_BRANCH does not exist on GitLab. Creating it..."
+            git push gitlab "$CURRENT_BRANCH"
+          fi
+
+          echo "✅ Mirroring process completed"

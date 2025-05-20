@@ -1,4 +1,4 @@
-name: CD - Package Publishing
+name: 🚀 CD - Package Publishing
 on:
   release:
     types:
@@ -17,21 +17,22 @@ env:
 jobs:
   PyPi-Package-Release:
     if: github.repository == 'Anselmoo/spectrafit'
-    name: Publish on PyPi
+    name: 🐍 Publish on PyPi
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Python
+        name: 🛎️ Checkout repository
+      - name: 🐍 Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.13"
-      - name: Install dependencies
+      - name: 📦 Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install build
-      - name: Build package
+      - name: 🏗️ Build package
         run: python -m build
-      - name: Publish package
+      - name: 🚀 Publish package
         uses: pypa/gh-action-pypi-publish@db8f07d3871a0a180efa06b95d467625c19d5d5f
         with:
           user: __token__

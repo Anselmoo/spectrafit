@@ -1,20 +1,22 @@
-name: CI - Greet first-time contributors
+name: 👋 CI - Greet first-time contributors
 
 on: [pull_request_target, issues]
 
 jobs:
   greeting:
+    name: 💌 Send Greeting
     runs-on: ubuntu-latest
     permissions:
       issues: write
       pull-requests: write
     steps:
-      - uses: actions/first-interaction@v1.3.0
+      - name: 🤝 Handle First Interaction
+        uses: actions/first-interaction@v1.3.0
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           issue-message: >-
-            Welcome! Thank you for opening your first issue.
+            Welcome! Thank you for opening your first issue. 🎉
             We appreciate your contribution and will address it as soon as possible.
           pr-message: >-
-            Hello! Congratulations on submitting your first pull request.
+            Hello! Congratulations on submitting your first pull request. 🎉
             We are grateful for your contribution and will review it shortly.

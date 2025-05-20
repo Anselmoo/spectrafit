@@ -1,4 +1,4 @@
-name: CI - Release Drafter
+name: 🔧 CI - Release Drafter
 
 on:
   push:
@@ -9,6 +9,7 @@ on:
 jobs:
   update_release_draft:
     if: github.repository == 'Anselmoo/spectrafit'
+    name: 📝 Update Release Draft
     runs-on: ubuntu-latest
     steps:
       # Drafts your next Release notes as Pull Requests are merged into "main"

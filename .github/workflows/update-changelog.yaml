@@ -1,4 +1,4 @@
-name: CI - Update Changelog
+name: 📝 CI - Update Changelog
 
 on:
   release:
@@ -9,7 +9,7 @@ on:
 jobs:
   Changelog-Update:
     if: ${{ contains(github.event.release.prerelease, false) }}
-    name: Update Changelog
+    name: 📋 Update Changelog
     runs-on: ubuntu-latest
     permissions:
       # Give the default GITHUB_TOKEN write permission to commit and push the
@@ -17,16 +17,16 @@ jobs:
       # https://github.blog/changelog/2023-02-02-github-actions-updating-the-default-github_token-permissions-to-read-only/
       contents: write
     steps:
-      - name: Checkout code
+      - name: 📥 Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Update Changelog
+      - name: 📝 Update Changelog
         uses: stefanzweifel/changelog-updater-action@v1
         with:
           release-notes: ${{ github.event.release.body }}
           latest-version: ${{ github.event.release.name }}
-      - name: Commit updated CHANGELOG
+      - name: 💾 Commit updated CHANGELOG
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           branch: release/${{ github.event.release.tag_name }}
@@ -36,7 +36,7 @@ jobs:
 
   Changelog-Pull-Request:
     if: ${{ contains(github.event.release.prerelease, false) }}
-    name: Create Pull Request for an Automatic Changelog Update
+    name: 🔄 Create Pull Request for Changelog Update
     needs: Changelog-Update
     runs-on: ubuntu-latest
     permissions:
@@ -46,12 +46,12 @@ jobs:
       contents: write
       pull-requests: write
     steps:
-      - name: Create Pull Request
+      - name: 📥 Checkout code
         uses: actions/checkout@v4
         with:
           ref: release/${{ github.event.release.tag_name }}
           fetch-depth: 0
-      - name: Create PR via gh
+      - name: 🔀 Create PR via gh
         run: >-
           gh pr create --title "docs: :card_index_dividers: Changlog update for ${{ github.event.release.tag_name }}"
           --body "This is an auto-generated pull request to merge release/${{ github.event.release.tag_name }} with [Changelog](CHANGELOG.md) updates to main."
@@ -59,7 +59,7 @@ jobs:
           --head release/${{ github.event.release.tag_name }}
         env:
           GITHUB_TOKEN: ${{ secrets.auto_changelog }}
-      - name: Set Auto PR
+      - name: 🔁 Set Auto PR
         run: |
           gh pr merge release/${{ github.event.release.tag_name }} --auto --rebase
         env:
@@ -67,39 +67,41 @@ jobs:
 
   Release-Documentation:
     if: ${{ contains(github.event.release.prerelease, false) }}
-    name: Build Documentation from new release branch 'release/${{ github.event.release.tag_name }}'
+    name: 📚 Build Documentation from the new ✨ release branch 'release/${{ github.event.release.tag_name }}'
     needs: Changelog-Update
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           ref: release/${{ github.event.release.tag_name }}
-      - uses: actions/setup-python@v5
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v5
         with:
           python-version: "3.13"
-      - name: Install uv
+      - name: 🛠️ Install uv
         uses: astral-sh/setup-uv@v6
         with:
           enable-cache: true
           cache-dependency-glob: uv.lock
           python-version: "3.10"
-      - name: Install the project
+      - name: 📦 Install the project
         run: |
           uv sync --all-extras --all-groups
-      - name: Set git config
+      - name: ⚙️ Set git config
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-      - name: Fetch tags
+      - name: 🏷️ Fetch tags
         run: git fetch --tags --prune
-      - name: Determine previous release
+      - name: 📝 Determine previous release
         id: previous_release
         run: echo "::set-output name=previous_tag::$(git describe --tags $(git rev-list --tags --skip=1 --max-count=1) --abbrev=0)"
-      - name: Determine current release
+      - name: 📝 Determine current release
         id: current_release
         run: echo "::set-output name=current_tag::$(git describe --tags --abbrev=0)"
-      - name: Check if minor release
+      - name: 🔍 Check if minor release
         id: is_minor_release
         run: |
           previous_tag=$(/bin/echo ${{ steps.previous_release.outputs.previous_tag }})
@@ -109,7 +111,7 @@ jobs:
           if [[ "$previous_version" == "$current_version" ]]; then
             uv run mike delete ${{ steps.previous_release.outputs.previous_tag }} --push
           fi
-      - name: Deploy documentation develops
+      - name: 📚 Deploy documentation develops
         run: |
           uv run mike deploy --push --update-aliases ${{ github.event.release.tag_name }} latest --message "Release ${{ github.event.release.tag_name }}"
           uv run mike set-default --push latest
