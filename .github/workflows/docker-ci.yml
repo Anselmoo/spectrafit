@@ -1,4 +1,4 @@
-name: CI - Docker Image
+name: CI - Docker Image 🐳
 on:
   push:
     branches: [main]
@@ -11,19 +11,21 @@ jobs:
   docker:
     if: github.repository == 'Anselmoo/spectrafit'
     # Only if Dockerfile is changed
-    name: Docker Image
+    name: 🐳 Docker Image Build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: dorny/paths-filter@v3.0.2
+      - name: 🛎️ Checkout repository
+        uses: actions/checkout@v4
+      - name: 🗂️ Filter Dockerfile changes
+        uses: dorny/paths-filter@v3.0.2
         id: filter
         with:
           filters: |
             docker:
               - 'Dockerfile'
-      - name: Build the Docker image for AMD64
+      - name: 🏗️ Build the Docker image for AMD64
         run: |
           docker build . --file Dockerfile --tag spectrafit:$(date +%s)
-      # - name: Build the Docker image for ARM64
+      # - name: 🏗️ Build the Docker image for ARM64
       #   run: |
       #     docker build . --file Dockerfile --tag spectrafit-arm64:$(date +%s) --platform linux/arm64

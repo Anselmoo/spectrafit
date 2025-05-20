@@ -1,4 +1,4 @@
-name: CI - Python Package
+name: CI - Python Package 🐍
 
 on:
   push:
@@ -11,30 +11,30 @@ on:
 jobs:
   pre-commit:
     if: github.repository == 'Anselmoo/spectrafit'
-    name: Pre-commit
+    name: 🧹 Pre-commit
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: 🛎️ Checkout
         uses: actions/checkout@v4
-      - name: Set up uv for pre-commit
+      - name: 🐍 Set up uv for pre-commit
         uses: astral-sh/setup-uv@v6
         with:
           enable-cache: true
           cache-dependency-glob: uv.lock
           python-version: 3.11
-      - name: Cash pre-commit
+      - name: 💾 Cache pre-commit
         uses: actions/cache@v4
         with:
           path: ~/.cache/pre-commit
           key: ${{ runner.os }}-pre-commit-${{ hashFiles('**/.pre-commit-config.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pre-commit-
-      - name: Pre-commit
+      - name: ✅ Pre-commit run
         run: |
           uv run pre-commit run --all-files --color=always
   build:
     if: github.repository == 'Anselmoo/spectrafit'
-    name: Python ${{ matrix.python-version }} - ${{ matrix.os }} - ${{ matrix.arch }} - ${{ github.event_name }}
+    name: 🏗️ Build & Test Python ${{ matrix.python-version }} - ${{ matrix.os }} - ${{ matrix.arch }} - ${{ github.event_name }}
     needs: pre-commit
     runs-on: ${{ matrix.os }}
     strategy:
@@ -47,18 +47,19 @@ jobs:
       run:
         shell: bash
     steps:
-      - uses: actions/checkout@v4
-      - name: Set up Python ${{ matrix.python-version }}
+      - name: 🛎️ Checkout
+        uses: actions/checkout@v4
+      - name: 🐍 Set up Python ${{ matrix.python-version }}
         uses: astral-sh/setup-uv@v6
         with:
           enable-cache: true
           cache-dependency-glob: uv.lock
           python-version: ${{ matrix.python-version }}
-      - name: Install the project
+      - name: 📦 Install the project
         run: uv sync --all-extras --dev
-      - name: Test SpectraFit
+      - name: 🧪 Test SpectraFit
         run: uv run --group dev --all-extras pytest spectrafit/
-      - name: Codecov
+      - name: 📊 Codecov
         if: ${{ success() && !cancelled() }}
         uses: codecov/codecov-action@v5.4.3
         with:
@@ -70,75 +71,79 @@ jobs:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
   minimal-build:
     if: github.repository == 'Anselmoo/spectrafit'
-    name: Build SpectraFit without dev-dependencies
+    name: 🏗️ Minimal Build
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - uses: actions/checkout@v4
-      - name: Install uv
+      - name: 🛎️ Checkout
+        uses: actions/checkout@v4
+      - name: 🐍 Install uv
         uses: astral-sh/setup-uv@v6
         with:
           enable-cache: true
           cache-dependency-glob: uv.lock
           python-version: "3.10"
-      - name: Install the project
+      - name: 📦 Install the project
         run: |
           uv sync --all-extras
           uv run pip install -e .
   install-build:
     if: github.repository == 'Anselmoo/spectrafit'
-    name: Install SpectraFit from wheel
+    name: 🏗️ Install from Wheel
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - uses: actions/checkout@v4
-      - name: Install uv
+      - name: 🛎️ Checkout
+        uses: actions/checkout@v4
+      - name: 🐍 Install uv
         uses: astral-sh/setup-uv@v6
         with:
           enable-cache: true
           cache-dependency-glob: uv.lock
           python-version: "3.10"
-      - name: Setup the project
+      - name: 🏗️ Setup the project
         run: |
           uv sync --all-extras
           uv build
-      - name: Install the wheel
+      - name: 📦 Install the wheel
         run: |
           uv pip install dist/*.whl
           uv run spectrafit -v
   documentation:
     if: github.repository == 'Anselmoo/spectrafit'
-    name: Build Documentation
+    name: 📚 Build Documentation
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - uses: actions/checkout@v4
+      - name: 🛎️ Checkout
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Install uv and dependencies with doc-dependencies
+      - name: 🐍 Install uv and doc dependencies
         uses: astral-sh/setup-uv@v6
         with:
           enable-cache: true
           cache-dependency-glob: uv.lock
           python-version: "3.10"
-      - name: Install the project
+      - name: 📦 Install the project
         run: uv sync --all-extras --group docs
-      - name: Set git config
+      - name: 🛠️ Set git config
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-      - name: Build documentation
+      - name: 🏗️ Build documentation
         if: ${{ !contains(github.ref, 'refs/heads/main')}}
         run: uv run --group docs --all-extras mkdocs build --clean
-      - name: Deploy documentation develops
+      - name: 🚀 Deploy documentation develops
         if: contains(github.ref, 'refs/heads/main')
         run: uv run --group docs --all-extras mike deploy --push --update-aliases develop
   devcontainer:
     if: github.repository == 'Anselmoo/spectrafit'
-    name: Devcontainer
+    name: 🐳 Devcontainer
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Build devcontainer
+      - name: 🛎️ Checkout
+        uses: actions/checkout@v4
+      - name: 🏗️ Build devcontainer
         uses: devcontainers/ci@v0.3

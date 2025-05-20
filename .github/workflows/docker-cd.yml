@@ -1,4 +1,4 @@
-name: CD - Publish Docker image on ghcr.io
+name: 🚢 CD - Publish Docker image on ghcr.io
 
 # cos
 # separate terms of service, privacy policy, and support
@@ -29,24 +29,25 @@ jobs:
       packages: write
       id-token: write # needed for signing the images with GitHub OIDC Token
 
-    name: build-image
+    name: 🛠️ Build Image
     steps:
-      - uses: actions/checkout@v4.2.2
+      - name: 🛎️ Checkout repository
+        uses: actions/checkout@v4.2.2
         with:
           fetch-depth: 1
 
-      - name: Install Cosign
+      - name: 📦 Install Cosign
         uses: sigstore/cosign-installer@v3.8.2
         # with:
-        #   cosign-release: 'v2.2.4' # optional
+        #   cosign-release: \'v2.2.4\' # optional
 
-      - name: Set up QEMU
+      - name: 🔧 Setup QEMU
         uses: docker/setup-qemu-action@v3.6.0
 
-      - name: Set up Docker Buildx
+      - name: 🐳 Set up Docker Buildx
         uses: docker/setup-buildx-action@v3.10.0
 
-      - name: Login to GitHub Container Registry
+      - name: 🔑 Login to GitHub Container Registry
         uses: docker/login-action@v3.4.0
         with:
           registry: ${{ env.REGISTRY }}
@@ -54,13 +55,14 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - id: docker_meta
+        name: 🏷️ Extract Docker metadata
         uses: docker/metadata-action@v5.7.0
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           # tags: |
           #   type=pep440,pattern={{version}},prefix=v
 
-      - name: Build and Push container images
+      - name: 🏗️ Build and Push container images
         uses: docker/build-push-action@v6.17.0
         id: build-and-push
         with:
@@ -73,7 +75,7 @@ jobs:
           outputs: type=image,name=target,annotation-index.org.opencontainers.image.description=${{ fromJSON(steps.docker_meta.outputs.json).labels['org.opencontainers.image.description'] }}
 
       # https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#using-an-intermediate-environment-variable
-      - name: Sign image with a key
+      - name: ✍️ Sign image with a key
         run: |
           images=""
           for tag in ${TAGS}; do
@@ -86,7 +88,7 @@ jobs:
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
           DIGEST: ${{ steps.build-and-push.outputs.digest }}
 
-      - name: Sign the images with GitHub OIDC Token
+      - name: ✍️ Sign the images with GitHub OIDC Token
         env:
           DIGEST: ${{ steps.build-and-push.outputs.digest }}
           TAGS: ${{ steps.docker_meta.outputs.tags }}

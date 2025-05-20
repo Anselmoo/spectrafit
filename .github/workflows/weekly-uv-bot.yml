@@ -1,4 +1,4 @@
-name: Weekly Poetry Update
+name: 🔄 Weekly UV Update
 
 on:
   schedule:
@@ -8,34 +8,34 @@ on:
 jobs:
   update-dependencies:
     if: github.repository == 'Anselmoo/spectrafit'
-    name: Update Dependencies
+    name: 📦 Update Dependencies
     runs-on: ubuntu-latest
     permissions:
       contents: write
       pull-requests: write
 
     steps:
-      - name: Checkout repository
+      - name: 📥 Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install uv
+      - name: 🛠️ Install uv
         uses: astral-sh/setup-uv@v6
         with:
           enable-cache: true
           cache-dependency-glob: uv.lock
           python-version: "3.10"
 
-      - name: Set date variable
+      - name: 📅 Set date variable
         id: date
         run: echo "DATE=$(date +%Y%m%d%H%M)" >> $GITHUB_ENV
 
-      - name: Create new branch
+      - name: 🌿 Create new branch
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git checkout -b update-dependencies-${{ env.DATE }}
 
-      - name: Install dependencies
+      - name: 📦 Install the dependencies
         run: uv sync --upgrade --all-groups --all-extras
 
       - name: Update dependencies
@@ -57,30 +57,33 @@ jobs:
             git commit -m "$(echo -e "chore(deps): :arrows_counterclockwise: update dependencies ${{ env.DATE }}\n\n$update_log")"
           fi
 
-      - name: Push changes
+      - name: 📤 Push changes
         run: |
           gh auth setup-git
           git push -f origin update-dependencies-${{ env.DATE }}
         env:
           GITHUB_TOKEN: ${{ secrets.WEEKLY_UPDATE }}
 
-      - name: Create Pull Request via gh
+      - name: 🔀 Create Pull Request via gh
+        id: create_pr
         run: |
-          gh pr create --title "chore(deps): :arrows_counterclockwise: update dependencies ${{ env.DATE }}" \
-          --body "This is an auto-generated pull request to update dependencies in \`uv.lock\`. Updated packages: ${{ steps.update_log.outputs.log }}" \
+          update_log=$(cat uv-update.log 2>/dev/null || echo "No update log available")
+          pr_url=$(gh pr create --title "chore(deps): :arrows_counterclockwise: update dependencies $(date +%Y%m%d%H%M)" \
+          --body "This is an auto-generated pull request to update dependencies in \`uv.lock\`.\n\nUpdate Log:\n\`\`\`\n$update_log\n\`\`\`" \
           --base main \
-          --head update-dependencies-${{ env.DATE }}
+          --head update-dependencies-$(date +%Y%m%d%H%M))
+          echo "pr_url=$pr_url" >> $GITHUB_OUTPUT
         env:
           GITHUB_TOKEN: ${{ secrets.WEEKLY_UPDATE }}
 
-      - name: Add Label to Pull Request
+      - name: 🏷️ Add Label to Pull Request
         run: |
-          pr_number=$(gh pr view --json number --jq '.number')
+          pr_number=$(gh pr view --json number --jq '.number' "${{ steps.create_pr.outputs.pr_url }}")
           gh pr edit $pr_number --add-label "weekly-update"
         env:
           GITHUB_TOKEN: ${{ secrets.WEEKLY_UPDATE }}
 
-      - name: Merge Pull Request via gh
+      - name: 🔄 Merge Pull Request via gh
         run: |
           gh pr merge update-dependencies-${{ env.DATE }} --merge --auto
         env:

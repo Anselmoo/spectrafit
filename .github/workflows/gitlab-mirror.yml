@@ -1,4 +1,4 @@
-name: Mirror to GitLab
+name: Mirror to GitLab 🚀
 
 on:
   push:
@@ -15,12 +15,12 @@ jobs:
     if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
 
     steps:
-      - name: Checkout repository
+      - name: 🛎️ Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0 # Fetch all history and tags for proper mirroring
 
-      - name: Mirror to GitLab
+      - name: 🔗 Mirror to GitLab
         shell: bash
         env:
           GITLAB_HOSTNAME: ${{ secrets.GITLAB_HOSTNAME }}

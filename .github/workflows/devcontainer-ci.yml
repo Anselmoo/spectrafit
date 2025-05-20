@@ -1,4 +1,4 @@
-name: CI - Devcontainer
+name: CI - Devcontainer 🐳
 on:
   # Trigger the workflow only if PR is merged
   push:
@@ -7,18 +7,19 @@ on:
 
 jobs:
   build:
+    name: 🏗️ Build Devcontainer
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout (GitHub)
+      - name: 🛎️ Checkout repository
         uses: actions/checkout@v4
 
-      - name: Login to GitHub Container Registry
+      - name: 🔑 Login to GitHub Container Registry
         uses: docker/login-action@v3.4.0
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build and use devcontainer
+      - name: 🐳 Build devcontainer
         uses: devcontainers/ci@v0.3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
