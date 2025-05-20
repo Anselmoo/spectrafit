@@ -1,4 +1,4 @@
-name: CI - Conda 🐍
+name: 🐍 CI - Conda
 
 on: [push]
 

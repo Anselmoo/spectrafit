@@ -1,4 +1,4 @@
-name: CI - Python Package 🐍
+name: 🐍 CI - Python Package
 
 on:
   push:

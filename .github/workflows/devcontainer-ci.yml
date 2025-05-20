@@ -1,4 +1,4 @@
-name: CI - Devcontainer 🐳
+name: 🐳 CI - Devcontainer
 on:
   # Trigger the workflow only if PR is merged
   push:
