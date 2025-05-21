@@ -1,0 +1,40 @@
+.base_ruff:
+  stage: pretest
+  tags:
+    - shared
+  image:
+    name: ghcr.io/astral-sh/ruff:${RUFF_VERSION}-alpine
+  before_script:
+    - cd $CI_PROJECT_DIR
+    - ruff --version
+
+ruff-check:
+  extends: .base_ruff
+  script:
+    - ruff check spectrafit --output-format=gitlab > code-quality-report.json
+  artifacts:
+    reports:
+      codequality:
+        - $CI_PROJECT_DIR/code-quality-report.json
+
+ruff-format:
+  extends: .base_ruff
+  script:
+    - ruff format --check spectrafit
+
+bandit-check:
+  stage: pretest
+  allow_failure: true
+  tags:
+    - shared
+  before_script:
+    - cd $CI_PROJECT_DIR
+    - python -m pip install --upgrade pip
+    - pip install bandit
+    - bandit --version
+  script:
+    - bandit -r -f html -o bandit-report.html --exit-zero -c .bandit.yml spectrafit/
+  artifacts:
+    paths:
+      - bandit-report.html
+    expire_in: 1 week

@@ -1,0 +1,29 @@
+# Bandit configuration file for SpectraFit
+# https://bandit.readthedocs.io/en/latest/config.html
+
+# Skip tests in test directory and virtual environments
+exclude_dirs: ["test", "tests", "venv", ".venv", "env", ".env"]
+
+# List of test IDs to skip
+skips: []
+
+# Set the confidence level threshold
+confidence_level: "HIGH"
+
+# Set the severity level threshold
+severity_level: "MEDIUM"
+
+# Number of lines of context to display
+number_of_lines: 3
+
+# Tests to run (default is all)
+# tests: []
+
+# Include test IDs in output
+show_test_ids: true
+
+# Output format (csv/json/txt/xml/yaml)
+output_format: txt
+
+# Whether to show skipped tests
+show_skipped: false

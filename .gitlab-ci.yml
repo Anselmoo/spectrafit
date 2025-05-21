@@ -1,56 +1,35 @@
-# To contribute improvements to CI/CD templates, please follow the Development guide at:
-# https://docs.gitlab.com/ee/development/cicd/templates.html
-# This specific template is located at:
-# https://gitlab.com/gitlab-org/gitlab/-/blob/main/lib/gitlab/ci/templates/Python.gitlab-ci.yml
+image: python:3.11
 
-# Official language image. Look for the different tagged releases at:
-# https://hub.docker.com/r/library/python/tags/
-image: python:latest
+include:
+  - template: Security/Secret-Detection.gitlab-ci.yml
+  - local: .gitlab/ci/pre-commit.yml
+  - local: .gitlab/ci/linting.yml
+  - local: .gitlab/ci/secret-detection.yml
+  - local: .gitlab/ci/testing.yml
+  - local: .gitlab/ci/docs.yml
+  - local: .gitlab/ci/deploy.yml
+  - local: .gitlab/ci/release.yml
+  - local: .gitlab/ci/github-mirror.yml
 
-# Change pip's cache directory to be inside the project directory since we can
-# only cache local items.
+stages:
+  - pretest
+  - test
+  - deploy
+  - prepare
+  - release
+  - mirror
+
 variables:
-  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+  PIP_CACHE_DIR: $CI_PROJECT_DIR/.cache/pip
+  PACKAGE_REGISTRY_URL: ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages
+  PYTHONPATH: ${CI_PROJECT_DIR}
+  RUFF_VERSION: 0.11.10
+  UV_VERSION: 0.7.4
+  BASE_LAYER: bookworm-slim
+  UV_LINK_MODE: copy
 
-# Pip's cache doesn't store the python packages
-# https://pip.pypa.io/en/stable/reference/pip_install/#caching
-#
-# If you want to also cache the installed packages, you have to install
-# them in a virtualenv and cache it as well.
 cache:
   paths:
     - .cache/pip
-    - venv/
-
-before_script:
-  - python -V # Print out python version for debugging
-  - pip install virtualenv
-  - virtualenv venv
-  - source venv/bin/activate
-
-test:
-  script:
-    - python setup.py test
-    - pip install tox flake8 # you can also use tox
-    - tox -e py36,flake8
-
-run:
-  script:
-    - python setup.py bdist_wheel
-    # an alternative approach is to install and run:
-    - pip install dist/*
-    # run the command here
-  artifacts:
-    paths:
-      - dist/*.whl
-
-pages:
-  script:
-    - pip install sphinx sphinx-rtd-theme
-    - cd doc ; make html
-    - mv build/html/ ../public/
-  artifacts:
-    paths:
-      - public
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - .cache/uv
+    - uv.lock

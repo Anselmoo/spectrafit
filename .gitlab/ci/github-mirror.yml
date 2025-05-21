@@ -1,0 +1,77 @@
+github_insiders_push:
+  stage: mirror
+  image: alpine:latest
+  variables:
+    GIT_STRATEGY: clone
+    GIT_DEPTH: 0 # Full clone to ensure all git objects are available
+    GITHUB_TARGET_BRANCH: "insiders"
+  needs:
+    - job: test-3.11
+      artifacts: true
+    - job: test-3.12
+      artifacts: true
+  script:
+    - apk add --no-cache git curl
+
+    # Configure git with secret identity
+    - git config --global user.name "${GIT_COMMIT_USER_NAME}"
+    - git config --global user.email "${GIT_COMMIT_USER_EMAIL}"
+
+    # Clean working directory
+    - git clean -fdx
+
+    # Add GitHub remote with access token
+    - echo "🔗 Setting up GitHub remote with credentials..."
+    - |
+      GITHUB_REPO_URL="https://x-access-token:${GITHUB_ACCESS_TOKEN}@github.com/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}.git"
+      git remote add github "${GITHUB_REPO_URL}"
+
+    # Fetch from both repositories
+    - echo "📥 Fetching from GitHub repository..."
+    - git fetch --verbose github || echo "⚠️ Failed to fetch from GitHub"
+    - git fetch --verbose origin || echo "⚠️ Failed to fetch from GitLab"
+
+    # Create an improved connection between GitHub main and insiders
+    - echo "🔄 Creating connected history between main and insiders..."
+    - |
+      # First check if GitHub main branch exists
+      if git ls-remote --heads github refs/heads/main | grep -q refs/heads/main; then
+        echo "✅ Found GitHub main branch, will use it as base"
+
+        # Store current commit hash for reference
+        CURRENT_COMMIT=$(git rev-parse HEAD)
+
+        # Create a temporary branch from GitHub's main branch
+        git checkout -b temp_branch github/main
+
+        # Check if there are differences between current content and GitHub main
+        if git diff --quiet $CURRENT_COMMIT temp_branch; then
+          echo "🟢 GitHub main and GitLab main are identical, pushing branch as is"
+          git push --force github temp_branch:${GITHUB_TARGET_BRANCH}
+        else
+          echo "🔄 Differences found, creating a connected commit"
+
+          # Create a new tree object based on our current commit
+          TREE_OBJ=$(git show -s --format=%T $CURRENT_COMMIT)
+
+          # Create a new commit with the current tree but based on GitHub's history
+          COMMIT_MSG="ci: 🔧 Sync insiders branch with main updates"
+          NEW_COMMIT=$(git commit-tree $TREE_OBJ -p HEAD -m "$COMMIT_MSG")
+
+          # Update the temp_branch to point to this new commit
+          git update-ref refs/heads/temp_branch $NEW_COMMIT
+
+          # Push this connected branch to GitHub insiders
+          git push --force github temp_branch:${GITHUB_TARGET_BRANCH}
+        fi
+      else
+        # Fallback - no GitHub main history to connect to
+        echo "⚠️ GitHub main branch not found, creating insiders from scratch"
+        git push --force github HEAD:${GITHUB_TARGET_BRANCH}
+      fi
+  only:
+    - main
+  dependencies: []
+  allow_failure: false
+  tags:
+    - shared

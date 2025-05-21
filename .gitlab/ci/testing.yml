@@ -1,0 +1,36 @@
+.test-template: &test-template
+  stage: test
+  tags:
+    - shared
+  needs:
+    - job: pre-commit
+      artifacts: true
+    - job: ruff-check
+      artifacts: true
+    - job: ruff-format
+      artifacts: true
+  before_script:
+    - uv sync --all-groups --all-extras
+    - python -m pip install --upgrade pip
+  script:
+    - uv run pytest
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage.xml
+      junit: junit.xml
+    paths:
+      - htmlcov/
+      - coverage.xml
+      - junit.xml
+    expire_in: 1 week
+  coverage: /^TOTAL.+? (\d+\%)$/
+
+test-3.11:
+  <<: *test-template
+  image: ghcr.io/astral-sh/uv:$UV_VERSION-python3.11-$BASE_LAYER
+
+test-3.12:
+  <<: *test-template
+  image: ghcr.io/astral-sh/uv:$UV_VERSION-python3.12-$BASE_LAYER

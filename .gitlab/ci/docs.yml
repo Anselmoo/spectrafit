@@ -1,0 +1,38 @@
+.mkdocs-template: &mkdocs-template
+  stage: test
+  tags:
+    - shared
+  variables:
+    GIT_DEPTH: 0 # Set to 0 to fetch complete history for proper mirroring
+  before_script:
+    - apt-get update && apt-get install -y git
+    - uv sync --all-groups --all-extras
+    - python -m pip install --upgrade pip
+
+mkdocs-test:
+  <<: *mkdocs-template
+  image: ghcr.io/astral-sh/uv:$UV_VERSION-python3.11-$BASE_LAYER
+  script:
+    - uv run mkdocs build --verbose --site-dir test
+  artifacts:
+    paths:
+      - test
+  rules:
+    - if: $CI_COMMIT_REF_NAME != $CI_DEFAULT_BRANCH
+
+pages:
+  <<: *mkdocs-template
+  image: ghcr.io/astral-sh/uv:$UV_VERSION-python3.11-$BASE_LAYER
+  stage: deploy
+  needs:
+    - job: test-3.11
+      artifacts: true
+    - job: test-3.12
+      artifacts: true
+  script:
+    - uv run mkdocs build --site-dir public
+  artifacts:
+    paths:
+      - public
+  rules:
+    - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH

@@ -230,3 +230,5 @@ spectrafit/plugins/dev_notebook.ipynb
 .idea/inspectionProfiles/Project_Default.xml
 .idea/libraries/gradle_wrapper.xml
 .idea/libraries/my_test_package.xml
+junit.xml
+bandit-report.html
