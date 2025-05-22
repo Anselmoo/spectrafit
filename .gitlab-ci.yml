@@ -1,4 +1,4 @@
-image: python:3.11
+image: python:3.13
 
 include:
   - template: Security/Secret-Detection.gitlab-ci.yml
