@@ -2,7 +2,9 @@ name: 🦊 Mirror to GitLab
 
 on:
   push:
-    branches: ["**"]
+    branches:
+      - "**"
+      - "!insiders" # Exclude insiders branch from push events
     tags: ["**"]
   pull_request:
     types: [opened, synchronize]
