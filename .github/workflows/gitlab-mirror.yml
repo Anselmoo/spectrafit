@@ -118,10 +118,10 @@ jobs:
                 if [ "$LOCAL_SHA" != "$BASE_SHA" ] && [ "$REMOTE_SHA" != "$BASE_SHA" ]; then
                   echo "⚠️ Branches have diverged. Creating GitHub mirror branch..."
                   MIRROR_BRANCH="github-mirror/$CURRENT_BRANCH-$CURRENT_COMMIT"
-                  
+
                   echo "🔀 Creating mirror branch: $MIRROR_BRANCH"
                   git checkout -b "$MIRROR_BRANCH"
-                  
+
                   echo "⬆️ Pushing GitHub version to GitLab mirror branch..."
                   if git push gitlab "$MIRROR_BRANCH"; then
                     echo "✅ Successfully created mirror branch: $MIRROR_BRANCH"
@@ -131,7 +131,7 @@ jobs:
                     echo "❌ Failed to push mirror branch to GitLab"
                     exit 1
                   fi
-                  
+
                   # Switch back to original branch
                   git checkout "$CURRENT_BRANCH"
                 fi
