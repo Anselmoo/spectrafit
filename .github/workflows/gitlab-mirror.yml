@@ -88,6 +88,10 @@ jobs:
             echo "🔍 Current branch: $CURRENT_BRANCH"
           fi
 
+          # Get current commit hash for branch naming
+          CURRENT_COMMIT=$(git rev-parse --short HEAD)
+          echo "📝 Current commit: $CURRENT_COMMIT"
+
           # Check if branch exists on GitLab
           if git branch -r | grep -q "gitlab/$CURRENT_BRANCH"; then
             echo "✅ Branch $CURRENT_BRANCH exists on GitLab"
@@ -112,21 +116,24 @@ jobs:
               else
                 # Only handle diverged branches if neither condition above was true
                 if [ "$LOCAL_SHA" != "$BASE_SHA" ] && [ "$REMOTE_SHA" != "$BASE_SHA" ]; then
-                  echo "⚠️ Branches have diverged. Creating conflict resolution branch..."
-                  CONFLICT_BRANCH="merge-conflict/$CURRENT_BRANCH-$(date +%s)"
-                  git checkout -b "$CONFLICT_BRANCH"
-
-                  if git merge "gitlab/$CURRENT_BRANCH"; then
-                    echo "🔀 Automatic merge successful. Pushing merged branch to GitLab..."
-                    git push gitlab "$CONFLICT_BRANCH"
-                    echo "🔗 Created conflict resolution branch: $CONFLICT_BRANCH"
+                  echo "⚠️ Branches have diverged. Creating GitHub mirror branch..."
+                  MIRROR_BRANCH="github-mirror/$CURRENT_BRANCH-$CURRENT_COMMIT"
+                  
+                  echo "🔀 Creating mirror branch: $MIRROR_BRANCH"
+                  git checkout -b "$MIRROR_BRANCH"
+                  
+                  echo "⬆️ Pushing GitHub version to GitLab mirror branch..."
+                  if git push gitlab "$MIRROR_BRANCH"; then
+                    echo "✅ Successfully created mirror branch: $MIRROR_BRANCH"
+                    echo "🔗 GitLab mirror branch contains GitHub commit: $CURRENT_COMMIT"
+                    echo "📋 Manual merge may be needed between gitlab/$CURRENT_BRANCH and $MIRROR_BRANCH"
                   else
-                    echo "❌ Merge conflicts detected. Manual resolution needed."
-                    git merge --abort
-                    echo "⬆️ Pushing GitHub version to GitLab as-is..."
-                    git checkout "$CURRENT_BRANCH"
-                    git push gitlab "$CURRENT_BRANCH":"$CURRENT_BRANCH"
+                    echo "❌ Failed to push mirror branch to GitLab"
+                    exit 1
                   fi
+                  
+                  # Switch back to original branch
+                  git checkout "$CURRENT_BRANCH"
                 fi
               fi
             fi
