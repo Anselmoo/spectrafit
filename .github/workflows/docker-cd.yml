@@ -63,7 +63,7 @@ jobs:
           #   type=pep440,pattern={{version}},prefix=v
 
       - name: 🏗️ Build and Push container images
-        uses: docker/build-push-action@v6.17.0
+        uses: docker/build-push-action@v6.18.0
         id: build-and-push
         with:
           platforms: linux/amd64,linux/arm64
