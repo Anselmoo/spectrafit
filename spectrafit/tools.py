@@ -10,11 +10,6 @@ import sys
 from pathlib import Path
 from typing import TYPE_CHECKING
 from typing import Any
-from typing import Dict
-from typing import MutableMapping
-from typing import Optional
-from typing import Tuple
-from typing import Union
 
 import numpy as np
 import pandas as pd
@@ -31,13 +26,15 @@ from spectrafit.report import fit_report_as_dict
 
 
 if TYPE_CHECKING:
+    from collections.abc import MutableMapping
+
     from lmfit import Minimizer
 
 
 class PreProcessing:
     """Summarized all pre-processing-filters  together."""
 
-    def __init__(self, df: pd.DataFrame, args: Dict[str, Any]) -> None:
+    def __init__(self, df: pd.DataFrame, args: dict[str, Any]) -> None:
         """Initialize PreProcessing class.
 
         Args:
@@ -51,7 +48,7 @@ class PreProcessing:
         self.df = df
         self.args = args
 
-    def __call__(self) -> Tuple[pd.DataFrame, Dict[str, Any]]:
+    def __call__(self) -> tuple[pd.DataFrame, dict[str, Any]]:
         """Apply all pre-processing-filters.
 
         Returns:
@@ -86,7 +83,7 @@ class PreProcessing:
         return (df_copy, self.args)
 
     @staticmethod
-    def energy_range(df: pd.DataFrame, args: Dict[str, Any]) -> pd.DataFrame:
+    def energy_range(df: pd.DataFrame, args: dict[str, Any]) -> pd.DataFrame:
         """Select the energy range for fitting.
 
         Args:
@@ -101,8 +98,8 @@ class PreProcessing:
                  (`x` and `data`), which are shrinked according to the energy range.
 
         """
-        energy_start: Union[int, float] = args["energy_start"]
-        energy_stop: Union[int, float] = args["energy_stop"]
+        energy_start: int | float = args["energy_start"]
+        energy_stop: int | float = args["energy_stop"]
 
         df_copy = df.copy()
         if isinstance(energy_start, (int, float)) and isinstance(
@@ -120,7 +117,7 @@ class PreProcessing:
         return None  # pragma: no cover
 
     @staticmethod
-    def energy_shift(df: pd.DataFrame, args: Dict[str, Any]) -> pd.DataFrame:
+    def energy_shift(df: pd.DataFrame, args: dict[str, Any]) -> pd.DataFrame:
         """Shift the energy axis by a given value.
 
         Args:
@@ -142,7 +139,7 @@ class PreProcessing:
         return df_copy
 
     @staticmethod
-    def oversampling(df: pd.DataFrame, args: Dict[str, Any]) -> pd.DataFrame:
+    def oversampling(df: pd.DataFrame, args: dict[str, Any]) -> pd.DataFrame:
         """Oversampling the data to increase the resolution of the data.
 
         !!! note "About Oversampling"
@@ -176,7 +173,7 @@ class PreProcessing:
         return pd.DataFrame({args["column"][0]: x_values, args["column"][1]: y_values})
 
     @staticmethod
-    def smooth_signal(df: pd.DataFrame, args: Dict[str, Any]) -> pd.DataFrame:
+    def smooth_signal(df: pd.DataFrame, args: dict[str, Any]) -> pd.DataFrame:
         """Smooth the intensity values.
 
         Args:
@@ -205,7 +202,7 @@ class PostProcessing:
     def __init__(
         self,
         df: pd.DataFrame,
-        args: Dict[str, Any],
+        args: dict[str, Any],
         minimizer: Minimizer,
         result: Any,
     ) -> None:
@@ -227,7 +224,7 @@ class PostProcessing:
         self.result = result
         self.data_size = self.check_global_fitting()
 
-    def __call__(self) -> Tuple[pd.DataFrame, Dict[str, Any]]:
+    def __call__(self) -> tuple[pd.DataFrame, dict[str, Any]]:
         """Call the post-processing."""
         self.make_insight_report()
         self.make_residual_fit()
@@ -238,7 +235,7 @@ class PostProcessing:
         self.export_desprective_statistic2args()
         return (self.df, self.args)
 
-    def check_global_fitting(self) -> Optional[int]:
+    def check_global_fitting(self) -> int | None:
         """Check if the global fitting is performed.
 
         !!! note "About Global Fitting"
@@ -444,7 +441,7 @@ class PostProcessing:
 class SaveResult:
     """Saving the result of the fitting process."""
 
-    def __init__(self, df: pd.DataFrame, args: Dict[str, Any]) -> None:
+    def __init__(self, df: pd.DataFrame, args: dict[str, Any]) -> None:
         """Initialize SaveResult class.
 
         !!! note "About SaveResult"
@@ -588,7 +585,7 @@ def read_input_file(fname: Path) -> MutableMapping[str, Any]:
     return args
 
 
-def load_data(args: Dict[str, str]) -> pd.DataFrame:
+def load_data(args: dict[str, str]) -> pd.DataFrame:
     """Load the data from a txt file.
 
     !!! note "About the data format"
@@ -634,7 +631,7 @@ def load_data(args: Dict[str, str]) -> pd.DataFrame:
 
 def check_keywords_consistency(
     check_args: MutableMapping[str, Any],
-    ref_args: Dict[str, Any],
+    ref_args: dict[str, Any],
 ) -> None:
     """Check if the keywords are consistent.
 
@@ -725,7 +722,7 @@ def pure_fname(fname: Path) -> Path:
     return pure_fname(_fname) if _fname.suffix else _fname
 
 
-def exclude_none_dictionary(value: Dict[str, Any]) -> Dict[str, Any]:
+def exclude_none_dictionary(value: dict[str, Any]) -> dict[str, Any]:
     """Exclude `None` values from the dictionary.
 
     Args:
@@ -745,7 +742,7 @@ def exclude_none_dictionary(value: Dict[str, Any]) -> Dict[str, Any]:
     return value
 
 
-def transform_nested_types(value: Dict[str, Any]) -> Dict[str, Any]:
+def transform_nested_types(value: dict[str, Any]) -> dict[str, Any]:
     """Transform nested types numpy values to python values.
 
     Args:

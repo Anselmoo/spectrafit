@@ -3,8 +3,6 @@
 from __future__ import annotations
 
 from typing import Callable
-from typing import List
-from typing import Optional
 
 from pydantic import BaseModel
 from pydantic import Field
@@ -21,31 +19,31 @@ __description__ = "Lmfit expression for explicit dependencies."
 class AmplitudeAPI(BaseModel):
     """Definition of the amplitude of the models distributions."""
 
-    max: Optional[float] = Field(default=None, description="Maximum amplitude.")
-    min: Optional[int] = Field(default=None, description="Minimum amplitude.")
+    max: float | None = Field(default=None, description="Maximum amplitude.")
+    min: int | None = Field(default=None, description="Minimum amplitude.")
     vary: bool = Field(default=True, description="Vary the amplitude.")
-    value: Optional[float] = Field(default=None, description="Initial Amplitude value.")
-    expr: Optional[str] = Field(default=None, description=__description__)
+    value: float | None = Field(default=None, description="Initial Amplitude value.")
+    expr: str | None = Field(default=None, description=__description__)
 
 
 class CenterAPI(BaseModel):
     """Definition of the center of the models distributions."""
 
-    max: Optional[float] = Field(default=None, description="Maximum center.")
-    min: Optional[int] = Field(default=None, description="Minimum center.")
+    max: float | None = Field(default=None, description="Maximum center.")
+    min: int | None = Field(default=None, description="Minimum center.")
     vary: bool = Field(default=True, description="Vary the center.")
-    value: Optional[float] = Field(default=None, description="Initial Center value.")
-    expr: Optional[str] = Field(default=None, description=__description__)
+    value: float | None = Field(default=None, description="Initial Center value.")
+    expr: str | None = Field(default=None, description=__description__)
 
 
 class FwhmgAPI(BaseModel):
     """Definition of the FWHM Gaussian of the models distributions."""
 
-    max: Optional[float] = Field(
+    max: float | None = Field(
         default=None,
         description="Maximum Full Width Half Maximum of the Gaussian Distribution.",
     )
-    min: Optional[int] = Field(
+    min: int | None = Field(
         default=None,
         description="Minimum Full Width Half Maximum of the Gaussian Distribution.",
     )
@@ -53,22 +51,22 @@ class FwhmgAPI(BaseModel):
         default=True,
         description="Vary the Full Width Half Maximum of the Gaussian Distribution.",
     )
-    value: Optional[float] = Field(
+    value: float | None = Field(
         default=None,
         description="Initial Full Width Half Maximum of "
         "the Gaussian Distribution value.",
     )
-    expr: Optional[str] = Field(default=None, description=__description__)
+    expr: str | None = Field(default=None, description=__description__)
 
 
 class FwhmlAPI(BaseModel):
     """Definition of the FWHM Lorentzian of the models distributions."""
 
-    max: Optional[float] = Field(
+    max: float | None = Field(
         default=None,
         description="Maximum Full Width Half Maximum of the Lorentzian Distribution.",
     )
-    min: Optional[int] = Field(
+    min: int | None = Field(
         default=None,
         description="Minimum Full Width Half Maximum of the Lorentzian Distribution.",
     )
@@ -76,22 +74,22 @@ class FwhmlAPI(BaseModel):
         default=True,
         description="Vary the Full Width Half Maximum of the Lorentzian Distribution.",
     )
-    value: Optional[float] = Field(
+    value: float | None = Field(
         default=None,
         description="Initial Full Width Half Maximum of "
         "the Lorentzian Distribution value.",
     )
-    expr: Optional[str] = Field(default=None, description=__description__)
+    expr: str | None = Field(default=None, description=__description__)
 
 
 class FwhmvAPI(BaseModel):
     """Definition of the FWHM Voigt of the models distributions."""
 
-    max: Optional[float] = Field(
+    max: float | None = Field(
         default=None,
         description="Maximum Full Width Half Maximum of the Voigt Distribution.",
     )
-    min: Optional[int] = Field(
+    min: int | None = Field(
         default=None,
         description="Minimum Full Width Half Maximum of the Voigt Distribution.",
     )
@@ -99,97 +97,97 @@ class FwhmvAPI(BaseModel):
         default=True,
         description="Vary the Full Width Half Maximum of the Voigt Distribution.",
     )
-    value: Optional[float] = Field(
+    value: float | None = Field(
         default=None,
         description="Initial Full Width Half Maximum of the Voigt Distribution value.",
     )
-    expr: Optional[str] = Field(default=None, description=__description__)
+    expr: str | None = Field(default=None, description=__description__)
 
 
 class WidthAPI(BaseModel):
     """Definition of the Width of the ORCA Gaussian of the models distributions."""
 
-    max: Optional[float] = Field(default=None, description="Maximum width.")
-    min: Optional[int] = Field(default=None, description="Minimum width.")
+    max: float | None = Field(default=None, description="Maximum width.")
+    min: int | None = Field(default=None, description="Minimum width.")
     vary: bool = Field(default=True, description="Vary the width.")
-    value: Optional[float] = Field(default=None, description="Initial width value.")
-    expr: Optional[str] = Field(default=None, description=__description__)
+    value: float | None = Field(default=None, description="Initial width value.")
+    expr: str | None = Field(default=None, description=__description__)
 
 
 class GammaAPI(BaseModel):
     """Definition of the Gamma of the Voigt of the models distributions."""
 
-    max: Optional[float] = Field(default=None, description="Maximum gamma.")
-    min: Optional[int] = Field(default=None, description="Minimum gamma.")
+    max: float | None = Field(default=None, description="Maximum gamma.")
+    min: int | None = Field(default=None, description="Minimum gamma.")
     vary: bool = Field(default=True, description="Vary the gamma.")
-    value: Optional[float] = Field(default=None, description="Initial Gamma value.")
-    expr: Optional[str] = Field(default=None, description=__description__)
+    value: float | None = Field(default=None, description="Initial Gamma value.")
+    expr: str | None = Field(default=None, description=__description__)
 
 
 class DecayAPI(BaseModel):
     """Definition of the Decay of the Exponential of the models distributions."""
 
-    max: Optional[float] = Field(default=None, description="Maximum decay rate.")
-    min: Optional[int] = Field(default=None, description="Minimum decay rate.")
+    max: float | None = Field(default=None, description="Maximum decay rate.")
+    min: int | None = Field(default=None, description="Minimum decay rate.")
     vary: bool = Field(default=True, description="Vary the decay rate.")
-    value: Optional[float] = Field(
+    value: float | None = Field(
         default=None,
         description="Initial decay rate value.",
     )
-    expr: Optional[str] = Field(default=None, description=__description__)
+    expr: str | None = Field(default=None, description=__description__)
 
 
 class InterceptAPI(BaseModel):
     """Definition of the Intercept of the Linear of the models distributions."""
 
-    max: Optional[float] = Field(default=None, description="Maximum intercept.")
-    min: Optional[int] = Field(default=None, description="Minimum intercept.")
+    max: float | None = Field(default=None, description="Maximum intercept.")
+    min: int | None = Field(default=None, description="Minimum intercept.")
     vary: bool = Field(default=True, description="Vary the intercept.")
-    value: Optional[float] = Field(default=None, description="Initial intercept value.")
-    expr: Optional[str] = Field(default=None, description=__description__)
+    value: float | None = Field(default=None, description="Initial intercept value.")
+    expr: str | None = Field(default=None, description=__description__)
 
 
 class ExponentAPI(BaseModel):
     """Definition of the Exponent of the Linear of the models distributions."""
 
-    max: Optional[float] = Field(default=None, description="Maximum exponent.")
-    min: Optional[int] = Field(default=None, description="Minimum exponent.")
+    max: float | None = Field(default=None, description="Maximum exponent.")
+    min: int | None = Field(default=None, description="Minimum exponent.")
     vary: bool = Field(default=True, description="Vary the exponent.")
-    value: Optional[float] = Field(default=None, description="Initial exponent value.")
-    expr: Optional[str] = Field(default=None, description=__description__)
+    value: float | None = Field(default=None, description="Initial exponent value.")
+    expr: str | None = Field(default=None, description=__description__)
 
 
 class SlopeAPI(BaseModel):
     """Definition of the Slope of the Linear of the models distributions."""
 
-    max: Optional[float] = Field(default=None, description="Maximum slope.")
-    min: Optional[int] = Field(default=None, description="Minimum slope.")
+    max: float | None = Field(default=None, description="Maximum slope.")
+    min: int | None = Field(default=None, description="Minimum slope.")
     vary: bool = Field(default=True, description="Vary the slope.")
-    value: Optional[float] = Field(default=None, description="Inital slope value.")
-    expr: Optional[str] = Field(default=None, description=__description__)
+    value: float | None = Field(default=None, description="Inital slope value.")
+    expr: str | None = Field(default=None, description=__description__)
 
 
 class SigmaAPI(BaseModel):
     """Definition of the Sigma of the models distributions."""
 
-    max: Optional[float] = Field(default=None, description="Maximum sigma.")
-    min: Optional[int] = Field(default=None, description="Minimum sigma.")
+    max: float | None = Field(default=None, description="Maximum sigma.")
+    min: int | None = Field(default=None, description="Minimum sigma.")
     vary: bool = Field(default=True, description="Vary the sigma.")
-    value: Optional[float] = Field(default=None, description="Initial sigma value.")
-    expr: Optional[str] = Field(default=None, description=__description__)
+    value: float | None = Field(default=None, description="Initial sigma value.")
+    expr: str | None = Field(default=None, description=__description__)
 
 
 class CoefficientAPI(BaseModel):
     """Definition of the Coefficient of the models distributions."""
 
-    max: Optional[float] = Field(default=None, description="Maximum coefficient.")
-    min: Optional[int] = Field(default=None, description="Minimum coefficient.")
+    max: float | None = Field(default=None, description="Maximum coefficient.")
+    min: int | None = Field(default=None, description="Minimum coefficient.")
     vary: bool = Field(default=True, description="Vary the coefficient.")
-    value: Optional[float] = Field(
+    value: float | None = Field(
         default=None,
         description="Initial coefficient value.",
     )
-    expr: Optional[str] = Field(default=None, description=__description__)
+    expr: str | None = Field(default=None, description=__description__)
 
 
 class PseudovoigtAPI(BaseModel):
@@ -338,21 +336,21 @@ class Polynomia3API(BaseModel):
 class SkewnessAPI(BaseModel):
     """Definition of the skewness of the models distributions."""
 
-    max: Optional[float] = Field(default=None, description="Maximum skewness.")
-    min: Optional[int] = Field(default=None, description="Minimum skewness.")
+    max: float | None = Field(default=None, description="Maximum skewness.")
+    min: int | None = Field(default=None, description="Minimum skewness.")
     vary: bool = Field(default=True, description="Vary the skewness.")
-    value: Optional[float] = Field(default=None, description="Initial skewness value.")
-    expr: Optional[str] = Field(default=None, description=__description__)
+    value: float | None = Field(default=None, description="Initial skewness value.")
+    expr: str | None = Field(default=None, description=__description__)
 
 
 class KurtosisAPI(BaseModel):
     """Definition of the kurtosis of the models distributions."""
 
-    max: Optional[float] = Field(default=None, description="Maximum kurtosis.")
-    min: Optional[int] = Field(default=None, description="Minimum kurtosis.")
+    max: float | None = Field(default=None, description="Maximum kurtosis.")
+    min: int | None = Field(default=None, description="Minimum kurtosis.")
     vary: bool = Field(default=True, description="Vary the kurtosis.")
-    value: Optional[float] = Field(default=None, description="Initial kurtosis value.")
-    expr: Optional[str] = Field(default=None, description=__description__)
+    value: float | None = Field(default=None, description="Initial kurtosis value.")
+    expr: str | None = Field(default=None, description=__description__)
 
 
 class Pearson1API(BaseModel):
@@ -429,7 +427,7 @@ class DistributionModelAPI(BaseModel):
 class ConfIntervalAPI(BaseModel):
     """Definition of Confidence Interval Function."""
 
-    p_names: Optional[List[str]] = Field(
+    p_names: list[str] | None = Field(
         default=None,
         description="List of parameters names.",
     )
@@ -447,7 +445,7 @@ class ConfIntervalAPI(BaseModel):
         default=False,
         description="Print information about the fit process.",
     )
-    prob_func: Optional[Callable[[float], float]] = Field(
+    prob_func: Callable[[float], float] | None = Field(
         default=None,
         description="Probing function.",
     )

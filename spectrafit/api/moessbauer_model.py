@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from typing import Optional
-
 from pydantic import BaseModel
 from pydantic import Field
 
@@ -15,21 +13,21 @@ __description__ = "Lmfit expression for explicit dependencies."
 class AmplitudeAPI(BaseModel):
     """Definition of the amplitude of the models distributions."""
 
-    max: Optional[float] = Field(default=None, description="Maximum amplitude.")
-    min: Optional[float] = Field(default=None, description="Minimum amplitude.")
+    max: float | None = Field(default=None, description="Maximum amplitude.")
+    min: float | None = Field(default=None, description="Minimum amplitude.")
     vary: bool = Field(default=True, description="Vary the amplitude.")
-    value: Optional[float] = Field(default=None, description="Initial Amplitude value.")
-    expr: Optional[str] = Field(default=None, description=__description__)
+    value: float | None = Field(default=None, description="Initial Amplitude value.")
+    expr: str | None = Field(default=None, description=__description__)
 
 
 class CenterAPI(BaseModel):
     """Definition of the center of the models distributions."""
 
-    max: Optional[float] = Field(default=None, description="Maximum center.")
-    min: Optional[float] = Field(default=None, description="Minimum center.")
+    max: float | None = Field(default=None, description="Maximum center.")
+    min: float | None = Field(default=None, description="Minimum center.")
     vary: bool = Field(default=True, description="Vary the center.")
-    value: Optional[float] = Field(default=None, description="Initial Center value.")
-    expr: Optional[str] = Field(default=None, description=__description__)
+    value: float | None = Field(default=None, description="Initial Center value.")
+    expr: str | None = Field(default=None, description=__description__)
 
 
 class IsomerShiftAPI(BaseModel):
@@ -39,11 +37,11 @@ class IsomerShiftAPI(BaseModel):
     Typically reported in mm/s.
     """
 
-    max: Optional[float] = Field(
+    max: float | None = Field(
         default=None,
         description="Maximum isomer shift value (mm/s).",
     )
-    min: Optional[float] = Field(
+    min: float | None = Field(
         default=None,
         description="Minimum isomer shift value (mm/s).",
     )
@@ -51,21 +49,21 @@ class IsomerShiftAPI(BaseModel):
         default=True,
         description="Vary the isomer shift parameter during fitting.",
     )
-    value: Optional[float] = Field(
+    value: float | None = Field(
         default=None,
         description="Initial isomer shift value (mm/s).",
     )
-    expr: Optional[str] = Field(default=None, description=__description__)
+    expr: str | None = Field(default=None, description=__description__)
 
 
 class FwhmlAPI(BaseModel):
     """Definition of the FWHM Lorentzian of the models distributions."""
 
-    max: Optional[float] = Field(
+    max: float | None = Field(
         default=None,
         description="Maximum Full Width Half Maximum of the Lorentzian Distribution.",
     )
-    min: Optional[float] = Field(
+    min: float | None = Field(
         default=None,
         description="Minimum Full Width Half Maximum of the Lorentzian Distribution.",
     )
@@ -73,22 +71,22 @@ class FwhmlAPI(BaseModel):
         default=True,
         description="Vary the Full Width Half Maximum of the Lorentzian Distribution.",
     )
-    value: Optional[float] = Field(
+    value: float | None = Field(
         default=None,
         description="Initial Full Width Half Maximum of "
         "the Lorentzian Distribution value.",
     )
-    expr: Optional[str] = Field(default=None, description=__description__)
+    expr: str | None = Field(default=None, description=__description__)
 
 
 class QuadrupoleSplittingAPI(BaseModel):
     """Definition of the Quadrupole Splitting parameter for Mössbauer distributions."""
 
-    max: Optional[float] = Field(
+    max: float | None = Field(
         default=None,
         description="Maximum Quadrupole Splitting value.",
     )
-    min: Optional[float] = Field(
+    min: float | None = Field(
         default=None,
         description="Minimum Quadrupole Splitting value.",
     )
@@ -96,21 +94,21 @@ class QuadrupoleSplittingAPI(BaseModel):
         default=True,
         description="Vary the Quadrupole Splitting parameter during fitting.",
     )
-    value: Optional[float] = Field(
+    value: float | None = Field(
         default=None,
         description="Initial Quadrupole Splitting value.",
     )
-    expr: Optional[str] = Field(default=None, description=__description__)
+    expr: str | None = Field(default=None, description=__description__)
 
 
 class HyperfineFieldAPI(BaseModel):
     """Definition of the Hyperfine Field parameter for Mössbauer distributions."""
 
-    max: Optional[float] = Field(
+    max: float | None = Field(
         default=None,
         description="Maximum Hyperfine Field value.",
     )
-    min: Optional[float] = Field(
+    min: float | None = Field(
         default=None,
         description="Minimum Hyperfine Field value.",
     )
@@ -118,21 +116,21 @@ class HyperfineFieldAPI(BaseModel):
         default=True,
         description="Vary the Hyperfine Field parameter during fitting.",
     )
-    value: Optional[float] = Field(
+    value: float | None = Field(
         default=None,
         description="Initial Hyperfine Field value.",
     )
-    expr: Optional[str] = Field(default=None, description=__description__)
+    expr: str | None = Field(default=None, description=__description__)
 
 
 class BackgroundAPI(BaseModel):
     """Definition of the Background parameter for Mössbauer distributions."""
 
-    max: Optional[float] = Field(
+    max: float | None = Field(
         default=None,
         description="Maximum Background value.",
     )
-    min: Optional[float] = Field(
+    min: float | None = Field(
         default=None,
         description="Minimum Background value.",
     )
@@ -140,11 +138,11 @@ class BackgroundAPI(BaseModel):
         default=True,
         description="Vary the Background parameter during fitting.",
     )
-    value: Optional[float] = Field(
+    value: float | None = Field(
         default=None,
         description="Initial Background value.",
     )
-    expr: Optional[str] = Field(default=None, description=__description__)
+    expr: str | None = Field(default=None, description=__description__)
 
 
 class MoessbauerSingletAPI(BaseModel):
@@ -316,5 +314,5 @@ class DynamicParameter(BaseModel):
         default=False,
         description="Whether to vary this parameter in fitting",
     )
-    min: Optional[float] = Field(default=None, description="Minimum allowed value")
-    max: Optional[float] = Field(default=None, description="Maximum allowed value")
+    min: float | None = Field(default=None, description="Minimum allowed value")
+    max: float | None = Field(default=None, description="Maximum allowed value")

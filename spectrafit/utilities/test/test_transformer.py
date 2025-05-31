@@ -3,8 +3,6 @@
 from __future__ import annotations
 
 from typing import Any
-from typing import Dict
-from typing import List
 
 import pytest
 
@@ -13,7 +11,7 @@ from spectrafit.utilities.transformer import remove_none_type
 
 
 @pytest.fixture
-def reference_dict() -> Dict[str, Dict[str, Any]]:
+def reference_dict() -> dict[str, dict[str, Any]]:
     """Check reference dictionary.
 
     Returns:
@@ -43,7 +41,7 @@ def reference_dict() -> Dict[str, Dict[str, Any]]:
 
 
 @pytest.fixture
-def reference_list() -> List[Dict[str, Any]]:
+def reference_list() -> list[dict[str, Any]]:
     """Check reference list dictionary.
 
     Returns:
@@ -71,8 +69,8 @@ def reference_list() -> List[Dict[str, Any]]:
 
 
 def test_converter(
-    reference_list: List[Dict[str, Any]],
-    reference_dict: Dict[str, Dict[str, Any]],
+    reference_list: list[dict[str, Any]],
+    reference_dict: dict[str, dict[str, Any]],
 ) -> None:
     """Test of the converter from list to dict.
 

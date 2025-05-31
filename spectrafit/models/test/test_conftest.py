@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
-from typing import Dict
 
 import numpy as np
 
@@ -42,7 +41,7 @@ def test_energy_data(energy_data: NDArray[np.float64]) -> None:
     assert np.isclose(energy_data[-1], 10.0, rtol=1e-10)
 
 
-def test_moessbauer_singlet_params(moessbauer_singlet_params: Dict[str, float]) -> None:
+def test_moessbauer_singlet_params(moessbauer_singlet_params: dict[str, float]) -> None:
     """Test that moessbauer_singlet_params fixture returns expected dictionary.
 
     Args:
@@ -63,7 +62,7 @@ def test_moessbauer_singlet_params(moessbauer_singlet_params: Dict[str, float]) 
     assert np.isclose(moessbauer_singlet_params["isomer_shift"], 0.0, rtol=1e-10)
 
 
-def test_moessbauer_doublet_params(moessbauer_doublet_params: Dict[str, float]) -> None:
+def test_moessbauer_doublet_params(moessbauer_doublet_params: dict[str, float]) -> None:
     """Test that moessbauer_doublet_params fixture returns expected dictionary.
 
     Args:
@@ -91,7 +90,7 @@ def test_moessbauer_doublet_params(moessbauer_doublet_params: Dict[str, float]) 
     )
 
 
-def test_moessbauer_sextet_params(moessbauer_sextet_params: Dict[str, float]) -> None:
+def test_moessbauer_sextet_params(moessbauer_sextet_params: dict[str, float]) -> None:
     """Test that moessbauer_sextet_params fixture returns expected dictionary.
 
     Args:
@@ -118,7 +117,7 @@ def test_moessbauer_sextet_params(moessbauer_sextet_params: Dict[str, float]) ->
     assert np.isclose(moessbauer_sextet_params["quadrupole_shift"], 0.0, rtol=1e-10)
 
 
-def test_moessbauer_octet_params(moessbauer_octet_params: Dict[str, float]) -> None:
+def test_moessbauer_octet_params(moessbauer_octet_params: dict[str, float]) -> None:
     """Test that moessbauer_octet_params fixture returns expected dictionary.
 
     Args:

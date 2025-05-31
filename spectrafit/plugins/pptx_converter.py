@@ -7,10 +7,6 @@ import argparse
 from pathlib import Path
 from typing import TYPE_CHECKING
 from typing import Any
-from typing import Dict
-from typing import MutableMapping
-from typing import Optional
-from typing import Type
 
 import tomli
 
@@ -26,13 +22,15 @@ from spectrafit.plugins.converter import Converter
 
 
 if TYPE_CHECKING:
+    from collections.abc import MutableMapping
+
     import pandas as pd
 
 
 class PPTXElements:
     """Generate a powerpoint presentation from a the spectrafit output."""
 
-    def __init__(self, slide: Type[Any]) -> None:
+    def __init__(self, slide: type[Any]) -> None:
         """Create a powerpoint presentation from a the spectrafit output.
 
         Args:
@@ -45,7 +43,7 @@ class PPTXElements:
         self,
         text: str,
         position: PPTXPositionAPI,
-        font_size: Optional[Pt] = None,
+        font_size: Pt | None = None,
     ) -> None:
         """Create a textbox from the input file.
 
@@ -112,7 +110,7 @@ class PPTXElements:
         index_hidden: bool,
         text: str,
         position_textbox: PPTXPositionAPI,
-        font_size: Optional[Pt] = None,
+        font_size: Pt | None = None,
     ) -> None:
         """Create a table from the input file.
 
@@ -201,7 +199,7 @@ class PPTXElements:
         text: str,
         position_logo: PPTXPositionAPI,
         position_text: PPTXPositionAPI,
-        font_size: Optional[Pt] = None,
+        font_size: Pt | None = None,
     ) -> None:
         """Create a credit for spectrafit.
 
@@ -384,7 +382,7 @@ class PPTXConverter(Converter):
 
     pixel_size = PPTXLayoutAPI.pptx_formats.keys()
 
-    def get_args(self) -> Dict[str, Any]:
+    def get_args(self) -> dict[str, Any]:
         """Get the arguments from the command line.
 
         Returns:

@@ -5,11 +5,6 @@ from __future__ import annotations
 from pathlib import Path
 from typing import TYPE_CHECKING
 from typing import Any
-from typing import Dict
-from typing import List
-from typing import Optional
-from typing import Tuple
-from typing import Union
 
 import numpy as np
 import pandas as pd
@@ -61,7 +56,7 @@ MIN_DATAFRAME_COLUMNS = 2  # Minimum number of columns required in a dataframe
 class DataFrameDisplay:
     """Class for displaying a dataframe in different ways."""
 
-    def df_display(self, df: pd.DataFrame, mode: Optional[str] = None) -> Optional[Any]:
+    def df_display(self, df: pd.DataFrame, mode: str | None = None) -> Any | None:
         """Call the DataframeDisplay class.
 
         !!! info "About `df_display`"
@@ -163,7 +158,7 @@ class DataFramePlot:
         self,
         args_plot: PlotAPI,
         df_1: pd.DataFrame,
-        df_2: Optional[pd.DataFrame] = None,
+        df_2: pd.DataFrame | None = None,
     ) -> None:
         """Plot two dataframes.
 
@@ -392,8 +387,8 @@ class DataFramePlot:
         self,
         args_plot: PlotAPI,
         df_metric: pd.DataFrame,
-        bar_criteria: Union[str, List[str]],
-        line_criteria: Union[str, List[str]],
+        bar_criteria: str | list[str],
+        line_criteria: str | list[str],
     ) -> None:
         """Plot the metric according to the PlotAPI arguments.
 
@@ -504,7 +499,7 @@ class DataFramePlot:
         return fig
 
     @staticmethod
-    def title_text(name: str, unit: Optional[str] = None) -> str:
+    def title_text(name: str, unit: str | None = None) -> str:
         """Return the title text.
 
         Args:
@@ -517,7 +512,7 @@ class DataFramePlot:
         """
         return f"{name} [{unit}]" if unit else name
 
-    def get_minor(self, args_plot: PlotAPI) -> Dict[str, Union[str, bool]]:
+    def get_minor(self, args_plot: PlotAPI) -> dict[str, str | bool]:
         """Get the minor axis arguments.
 
         Args:
@@ -557,7 +552,7 @@ class ExportResults:
             index=False,
         )
 
-    def export_report(self, report: Dict[Any, Any], args: FnameAPI) -> None:
+    def export_report(self, report: dict[Any, Any], args: FnameAPI) -> None:
         """Export the results as toml file.
 
         Args:
@@ -578,8 +573,8 @@ class ExportResults:
     def fname2path(
         fname: str,
         suffix: str,
-        prefix: Optional[str] = None,
-        folder: Optional[str] = None,
+        prefix: str | None = None,
+        folder: str | None = None,
     ) -> Path:
         """Translate string to Path object.
 
@@ -607,7 +602,7 @@ class ExportResults:
 class SolverResults:
     """Class for storing the results of the solver."""
 
-    def __init__(self, args_out: Dict[str, Any]) -> None:
+    def __init__(self, args_out: dict[str, Any]) -> None:
         """Initialize the SolverResults class.
 
         Args:
@@ -617,7 +612,7 @@ class SolverResults:
         self.args_out = args_out
 
     @property
-    def settings_global_fitting(self) -> Union[bool, int]:
+    def settings_global_fitting(self) -> bool | int:
         """Global fitting settings.
 
         Returns:
@@ -627,7 +622,7 @@ class SolverResults:
         return self.args_out["global_"]
 
     @property
-    def settings_configurations(self) -> Dict[str, Any]:
+    def settings_configurations(self) -> dict[str, Any]:
         """Configure settings.
 
         Returns:
@@ -637,7 +632,7 @@ class SolverResults:
         return self.args_out["fit_insights"]["configurations"]
 
     @property
-    def get_gof(self) -> Dict[str, float]:
+    def get_gof(self) -> dict[str, float]:
         """Get the goodness of fit values.
 
         Returns:
@@ -647,7 +642,7 @@ class SolverResults:
         return self.args_out["fit_insights"]["statistics"]
 
     @property
-    def get_variables(self) -> Dict[str, Dict[str, float]]:
+    def get_variables(self) -> dict[str, dict[str, float]]:
         """Get the variables of the fit.
 
         Returns:
@@ -657,7 +652,7 @@ class SolverResults:
         return self.args_out["fit_insights"]["variables"]
 
     @property
-    def get_errorbars(self) -> Dict[str, float]:
+    def get_errorbars(self) -> dict[str, float]:
         """Get the comments about the error bars of fit values.
 
         Returns:
@@ -667,7 +662,7 @@ class SolverResults:
         return self.args_out["fit_insights"]["errorbars"]
 
     @property
-    def get_component_correlation(self) -> Dict[str, Any]:
+    def get_component_correlation(self) -> dict[str, Any]:
         """Get the linear correlation of the components.
 
         Returns:
@@ -677,7 +672,7 @@ class SolverResults:
         return self.args_out["fit_insights"]["correlations"]
 
     @property
-    def get_covariance_matrix(self) -> Dict[str, Any]:
+    def get_covariance_matrix(self) -> dict[str, Any]:
         """Get the covariance matrix.
 
         Returns:
@@ -687,7 +682,7 @@ class SolverResults:
         return self.args_out["fit_insights"]["covariance_matrix"]
 
     @property
-    def get_regression_metrics(self) -> Dict[str, Any]:
+    def get_regression_metrics(self) -> dict[str, Any]:
         """Get the regression metrics.
 
         Returns:
@@ -697,7 +692,7 @@ class SolverResults:
         return self.args_out["regression_metrics"]
 
     @property
-    def get_descriptive_statistic(self) -> Dict[str, Any]:
+    def get_descriptive_statistic(self) -> dict[str, Any]:
         """Get the descriptive statistic.
 
         Returns:
@@ -708,7 +703,7 @@ class SolverResults:
         return self.args_out["descriptive_statistic"]
 
     @property
-    def get_linear_correlation(self) -> Dict[str, Any]:
+    def get_linear_correlation(self) -> dict[str, Any]:
         """Get the linear correlation.
 
         Returns:
@@ -719,7 +714,7 @@ class SolverResults:
         return self.args_out["linear_correlation"]
 
     @property
-    def get_computational(self) -> Dict[str, Any]:
+    def get_computational(self) -> dict[str, Any]:
         """Get the computational time.
 
         Returns:
@@ -729,7 +724,7 @@ class SolverResults:
         return self.args_out["fit_insights"]["computational"]
 
     @property
-    def settings_conf_interval(self) -> Union[bool, Dict[str, Any]]:
+    def settings_conf_interval(self) -> bool | dict[str, Any]:
         """Confidence interval settings.
 
         Returns:
@@ -744,7 +739,7 @@ class SolverResults:
         return self.args_out["conf_interval"]
 
     @property
-    def get_confidence_interval(self) -> Dict[Any, Any]:
+    def get_confidence_interval(self) -> dict[Any, Any]:
         """Get the confidence interval.
 
         Returns:
@@ -789,14 +784,14 @@ class ExportReport(SolverResults):
     def __init__(
         self,
         description: DescriptionAPI,
-        initial_model: List[Dict[str, Dict[str, Dict[str, Any]]]],
+        initial_model: list[dict[str, dict[str, dict[str, Any]]]],
         pre_processing: DataPreProcessingAPI,
         settings_solver_models: SolverModelsAPI,
         fname: FnameAPI,
-        args_out: Dict[str, Any],
+        args_out: dict[str, Any],
         df_org: pd.DataFrame,
         df_fit: pd.DataFrame,
-        df_pre: Optional[pd.DataFrame] = None,
+        df_pre: pd.DataFrame | None = None,
     ) -> None:
         """Initialize the ExportReport class.
 
@@ -882,7 +877,7 @@ class ExportReport(SolverResults):
         """
         return OutputAPI(df_org=self.df_org, df_fit=self.df_fit, df_pre=self.df_pre)
 
-    def __call__(self) -> Dict[str, Any]:
+    def __call__(self) -> dict[str, Any]:
         """Get the complete report as dictionary.
 
         !!! info "About the report and `exclude_none_dictionary`"
@@ -910,42 +905,42 @@ class ExportReport(SolverResults):
 class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
     """Jupyter Notebook plugin for SpectraFit."""
 
-    args: Dict[str, Any]
-    global_: Union[bool, int] = False
+    args: dict[str, Any]
+    global_: bool | int = False
     autopeak: bool = False
     df_fit: pd.DataFrame
     df_pre: pd.DataFrame = pd.DataFrame()
     df_metric: pd.DataFrame = pd.DataFrame()
     df_peaks: pd.DataFrame = pd.DataFrame()
-    initial_model: List[Dict[str, Dict[str, Dict[str, Any]]]]
+    initial_model: list[dict[str, dict[str, dict[str, Any]]]]
 
     def __init__(  # noqa: C901
         self,
         df: pd.DataFrame,
         x_column: str,
-        y_column: Union[str, List[str]],
+        y_column: str | list[str],
         oversampling: bool = False,
         smooth: int = 0,
         shift: float = 0,
-        energy_start: Optional[float] = None,
-        energy_stop: Optional[float] = None,
-        title: Optional[str] = None,
-        xaxis_title: Optional[XAxisAPI] = None,
-        yaxis_title: Optional[YAxisAPI] = None,
-        residual_title: Optional[ResidualAPI] = None,
-        metric_title: Optional[MetricAPI] = None,
-        run_title: Optional[RunAPI] = None,
+        energy_start: float | None = None,
+        energy_stop: float | None = None,
+        title: str | None = None,
+        xaxis_title: XAxisAPI | None = None,
+        yaxis_title: YAxisAPI | None = None,
+        residual_title: ResidualAPI | None = None,
+        metric_title: MetricAPI | None = None,
+        run_title: RunAPI | None = None,
         legend_title: str = "Spectra",
         show_legend: bool = True,
-        legend: Optional[LegendAPI] = None,
-        font: Optional[FontAPI] = None,
+        legend: LegendAPI | None = None,
+        font: FontAPI | None = None,
         minor_ticks: bool = True,
-        color: Optional[ColorAPI] = None,
-        grid: Optional[GridAPI] = None,
-        size: Tuple[int, Tuple[int, int]] = (800, (600, 300)),
+        color: ColorAPI | None = None,
+        grid: GridAPI | None = None,
+        size: tuple[int, tuple[int, int]] = (800, (600, 300)),
         fname: str = "results",
-        folder: Optional[str] = None,
-        description: Optional[DescriptionAPI] = None,
+        folder: str | None = None,
+        description: DescriptionAPI | None = None,
     ) -> None:
         """Initialize the SpectraFitNotebook class.
 
@@ -1097,7 +1092,7 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
         self.export_args_out = FnameAPI(fname=fname, folder=folder, suffix="lock")
 
         self.settings_solver_models: SolverModelsAPI = SolverModelsAPI()
-        self.pre_statistic: Dict[str, Any] = {}
+        self.pre_statistic: dict[str, Any] = {}
 
     @property
     def pre_process(self) -> None:
@@ -1110,7 +1105,7 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
         self.df_pre = self.df.copy()
 
     @property
-    def return_pre_statistic(self) -> Dict[str, Any]:
+    def return_pre_statistic(self) -> dict[str, Any]:
         """Return the pre-processing statistic."""
         return self.pre_statistic
 
@@ -1120,7 +1115,7 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
         return self.df_org
 
     @property
-    def return_df_pre(self) -> Union[pd.DataFrame, None]:
+    def return_df_pre(self) -> pd.DataFrame | None:
         """Return the pre-processed dataframe."""
         return self.df_pre
 
@@ -1201,8 +1196,8 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
 
     def plot_current_metric(
         self,
-        bar_criteria: Optional[Union[str, List[str]]] = None,
-        line_criteria: Optional[Union[str, List[str]]] = None,
+        bar_criteria: str | list[str] | None = None,
+        line_criteria: str | list[str] | None = None,
     ) -> None:
         """Plot the current metric.
 
@@ -1251,16 +1246,16 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
 
     def solver_model(
         self,
-        initial_model: List[Dict[str, Dict[str, Dict[str, Any]]]],
+        initial_model: list[dict[str, dict[str, dict[str, Any]]]],
         *,
         show_plot: bool = True,
         show_metric: bool = True,
         show_df: bool = False,
         show_peaks: bool = False,
-        conf_interval: Union[bool, Dict[str, Any]] = False,
-        bar_criteria: Optional[Union[str, List[str]]] = None,
-        line_criteria: Optional[Union[str, List[str]]] = None,
-        solver_settings: Optional[Dict[str, Any]] = None,
+        conf_interval: bool | dict[str, Any] = False,
+        bar_criteria: str | list[str] | None = None,
+        line_criteria: str | list[str] | None = None,
+        solver_settings: dict[str, Any] | None = None,
     ) -> None:
         """Solves the fit problem based on the proposed model.
 
@@ -1378,7 +1373,7 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
             ignore_index=True,
         )
 
-    def display_fit_df(self, mode: Optional[str] = "regular") -> None:
+    def display_fit_df(self, mode: str | None = "regular") -> None:
         """Display the fit dataframe.
 
         Args:
@@ -1387,7 +1382,7 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
         """
         self.df_display(df=self.df_fit, mode=mode)
 
-    def display_preprocessed_df(self, mode: Optional[str] = "regular") -> None:
+    def display_preprocessed_df(self, mode: str | None = "regular") -> None:
         """Display the preprocessed dataframe.
 
         Args:
@@ -1396,7 +1391,7 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
         """
         self.df_display(df=self.df_pre, mode=mode)
 
-    def display_original_df(self, mode: Optional[str] = "regular") -> None:
+    def display_original_df(self, mode: str | None = "regular") -> None:
         """Display the original dataframe.
 
         Args:
@@ -1405,7 +1400,7 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
         """
         self.df_display(df=self.df_org, mode=mode)
 
-    def display_current_df(self, mode: Optional[str] = "regular") -> None:
+    def display_current_df(self, mode: str | None = "regular") -> None:
         """Display the current dataframe.
 
         Args:

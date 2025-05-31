@@ -6,9 +6,15 @@ github_insiders_push:
     GIT_DEPTH: 0 # Full clone to ensure all git objects are available
     GITHUB_TARGET_BRANCH: "insiders"
   needs:
+    - job: test-3.9
+      artifacts: true
+    - job: test-3.10
+      artifacts: true
     - job: test-3.11
       artifacts: true
     - job: test-3.12
+      artifacts: true
+    - job: test-3.13
       artifacts: true
   script:
     - apk add --no-cache git curl
@@ -17,7 +23,25 @@ github_insiders_push:
     - git config --global user.name "${GIT_COMMIT_USER_NAME}"
     - git config --global user.email "${GIT_COMMIT_USER_EMAIL}"
 
-    # Clean working directory
+    # Store current commit hash before any operations
+    - CURRENT_COMMIT=$(git rev-parse HEAD)
+    - echo "📍 Current commit - $CURRENT_COMMIT"
+
+    # Handle any uncommitted changes more robustly
+    - echo "🧹 Handling uncommitted changes..."
+    - |
+      # Check if there are any uncommitted changes
+      if ! git diff --quiet || ! git diff --cached --quiet; then
+        echo "⚠️ Found uncommitted changes, stashing them..."
+        git add -A
+        git stash push -m "CI: temporary stash before mirror sync - $(date)"
+        STASH_CREATED=true
+      else
+        echo "✅ Working directory is clean"
+        STASH_CREATED=false
+      fi
+
+    # Clean any untracked files
     - git clean -fdx
 
     # Add GitHub remote with access token
@@ -27,50 +51,67 @@ github_insiders_push:
       git remote add github "${GITHUB_REPO_URL}"
 
     # Fetch from both repositories
-    - echo "📥 Fetching from GitHub repository..."
+    - echo "📥 Fetching from repositories..."
     - git fetch --verbose github || echo "⚠️ Failed to fetch from GitHub"
     - git fetch --verbose origin || echo "⚠️ Failed to fetch from GitLab"
 
     # Create an improved connection between GitHub main and insiders
     - echo "🔄 Creating connected history between main and insiders..."
     - |
-      # First check if GitHub main branch exists
+      # Check if GitHub main branch exists
       if git ls-remote --heads github refs/heads/main | grep -q refs/heads/main; then
         echo "✅ Found GitHub main branch, will use it as base"
 
-        # Store current commit hash for reference
-        CURRENT_COMMIT=$(git rev-parse HEAD)
+        # Get GitHub main commit hash without creating branches
+        GITHUB_MAIN_COMMIT=$(git rev-parse github/main)
+        echo "📍 GitHub main commit - $GITHUB_MAIN_COMMIT"
 
-        # Create a temporary branch from GitHub's main branch
-        git checkout -b temp_branch github/main
+        # Compare tree objects instead of using git diff with branches
+        CURRENT_TREE=$(git show -s --format=%T $CURRENT_COMMIT)
+        GITHUB_TREE=$(git show -s --format=%T $GITHUB_MAIN_COMMIT)
 
-        # Check if there are differences between current content and GitHub main
-        if git diff --quiet $CURRENT_COMMIT temp_branch; then
-          echo "🟢 GitHub main and GitLab main are identical, pushing branch as is"
-          git push --force github temp_branch:${GITHUB_TARGET_BRANCH}
+        if [ "$CURRENT_TREE" = "$GITHUB_TREE" ]; then
+          echo "🟢 GitHub main and GitLab main have identical content, pushing as is"
+          git push --force github $CURRENT_COMMIT:${GITHUB_TARGET_BRANCH}
         else
-          echo "🔄 Differences found, creating a connected commit"
+          echo "🔄 Content differences found, creating a connected commit"
 
-          # Create a new tree object based on our current commit
-          TREE_OBJ=$(git show -s --format=%T $CURRENT_COMMIT)
+          # Create a new commit with current tree but connected to GitHub history
+          COMMIT_MSG="ci: 🔧 sync insiders branch with main updates
 
-          # Create a new commit with the current tree but based on GitHub's history
-          COMMIT_MSG="ci: 🔧 Sync insiders branch with main updates"
-          NEW_COMMIT=$(git commit-tree $TREE_OBJ -p HEAD -m "$COMMIT_MSG")
+          This commit synchronizes the insiders branch with the latest changes
+          from the main branch while maintaining connection to GitHub history.
 
-          # Update the temp_branch to point to this new commit
-          git update-ref refs/heads/temp_branch $NEW_COMMIT
+          Original GitLab commit: $CURRENT_COMMIT
+          GitHub main commit: $GITHUB_MAIN_COMMIT"
 
-          # Push this connected branch to GitHub insiders
-          git push --force github temp_branch:${GITHUB_TARGET_BRANCH}
+          NEW_COMMIT=$(git commit-tree $CURRENT_TREE -p $GITHUB_MAIN_COMMIT -m "$COMMIT_MSG")
+
+          # Push this connected commit to GitHub insiders
+          git push --force github $NEW_COMMIT:${GITHUB_TARGET_BRANCH}
+
+          echo "✅ Successfully pushed connected commit: $NEW_COMMIT"
         fi
       else
         # Fallback - no GitHub main history to connect to
         echo "⚠️ GitHub main branch not found, creating insiders from scratch"
-        git push --force github HEAD:${GITHUB_TARGET_BRANCH}
+        git push --force github $CURRENT_COMMIT:${GITHUB_TARGET_BRANCH}
       fi
-  only:
-    - main
+
+    # Restore any stashed changes if we created a stash
+    - |
+      if [ "$STASH_CREATED" = "true" ]; then
+        echo "🔄 Restoring stashed changes..."
+        git stash pop || echo "⚠️ Failed to restore stash"
+      else
+        echo "ℹ️ No stash to restore"
+      fi
+
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "insiders"'
+      when: always
+    - if: '$CI_COMMIT_BRANCH == "insiders"'
+      when: always
   dependencies: []
   allow_failure: false
   tags:

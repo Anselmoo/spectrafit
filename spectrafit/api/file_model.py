@@ -4,9 +4,6 @@ from __future__ import annotations
 
 from pathlib import Path
 from typing import Callable
-from typing import List
-from typing import Optional
-from typing import Union
 
 from pydantic import BaseModel
 from pydantic import Field
@@ -16,7 +13,7 @@ from pydantic.functional_validators import field_validator
 class DataFileAPI(BaseModel):
     """Definition of a data file."""
 
-    skiprows: Optional[int] = Field(
+    skiprows: int | None = Field(
         default=None,
         description="Number of lines to skip at the beginning of the file.",
     )
@@ -28,26 +25,26 @@ class DataFileAPI(BaseModel):
         ...,
         description="Delimiter to use.",
     )
-    comment: Optional[str] = Field(
+    comment: str | None = Field(
         default=None,
         description="Comment marker to use.",
     )
-    names: Optional[Callable[[Path, str], Optional[List[str]]]] = Field(
+    names: Callable[[Path, str], list[str] | None] | None = Field(
         default=None,
         description="Column names can be provided by list of strings or a function",
     )
-    header: Optional[Union[int, List[str]]] = Field(
+    header: int | list[str] | None = Field(
         default=None,
         description="Column headers to use.",
     )
-    file_suffixes: List[str] = Field(
+    file_suffixes: list[str] = Field(
         ...,
         description="File suffixes to use.",
     )
 
     @field_validator("delimiter")
     @classmethod
-    def check_delimiter(cls, v: str) -> Optional[str]:
+    def check_delimiter(cls, v: str) -> str | None:
         """Check if the delimiter is valid."""
         if v in {" ", "\t", ",", ";", "|", r"\s+"}:
             return v
@@ -56,7 +53,7 @@ class DataFileAPI(BaseModel):
 
     @field_validator("comment")
     @classmethod
-    def check_comment(cls, v: str) -> Optional[str]:
+    def check_comment(cls, v: str) -> str | None:
         """Check if the comment marker is valid."""
         if v is None or v in {"#", "%"}:
             return v

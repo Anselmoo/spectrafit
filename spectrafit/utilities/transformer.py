@@ -3,16 +3,13 @@
 from __future__ import annotations
 
 from typing import Any
-from typing import Dict
-from typing import List
-from typing import Union
 
 from spectrafit.api.models_model import DistributionModelAPI
 
 
 def list2dict(
-    peak_list: List[Dict[str, Dict[str, Dict[str, Any]]]],
-) -> Dict[str, Dict[str, Dict[str, Any]]]:
+    peak_list: list[dict[str, dict[str, dict[str, Any]]]],
+) -> dict[str, dict[str, dict[str, Any]]]:
     """Convert the list of peaks to dictionary.
 
     Args:
@@ -24,14 +21,14 @@ def list2dict(
              parameters for the peaks.
 
     """
-    peaks_dict: Dict[str, Dict[str, Dict[str, Any]]] = {"peaks": {}}
+    peaks_dict: dict[str, dict[str, dict[str, Any]]] = {"peaks": {}}
     for i, peak in enumerate(peak_list, start=1):
         if next(iter(peak)) in DistributionModelAPI().__dict__:
             peaks_dict["peaks"][f"{i}"] = peak
     return peaks_dict
 
 
-def remove_none_type(d: Any) -> Union[Dict[str, Any], List[Any]]:
+def remove_none_type(d: Any) -> dict[str, Any] | list[Any]:
     """Remove None type from dictionary in a recursive fashion.
 
     1. Remove None type from each value in the dictionary

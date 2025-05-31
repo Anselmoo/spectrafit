@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 from typing import Any
-from typing import Union
 
 import numpy as np
 
@@ -26,7 +25,7 @@ from spectrafit.models.moessbauer import moessbauer_singlet
 
 
 def _ensure_float64(
-    arr: Union[NDArray[np.float64], NDArray[np.floating[Any]]],
+    arr: NDArray[np.float64] | NDArray[np.floating[Any]],
 ) -> NDArray[np.float64]:
     """Convert ndarray to float64 to satisfy mypy type checking.
 

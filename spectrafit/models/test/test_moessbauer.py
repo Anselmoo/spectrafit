@@ -7,8 +7,6 @@ and API integration tests. It covers singlets, doublets, sextets and octets.
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
-from typing import Dict
-from typing import Union
 
 import numpy as np
 import pytest
@@ -643,7 +641,7 @@ def patch_dependencies(monkeypatch: pytest.MonkeyPatch) -> None:
     ],
 )
 def test_moessbauer_octet_happy_and_edge_cases(
-    params: Dict[str, Union[float, NDArray[np.float64]]],
+    params: dict[str, float | NDArray[np.float64]],
     expected_shape: tuple[int, ...],
     expected_type: type,
     expected_min: float,

@@ -9,9 +9,6 @@ import pickle
 from pathlib import Path
 from typing import Any
 from typing import ClassVar
-from typing import Dict
-from typing import List
-from typing import Optional
 
 import numpy as np
 
@@ -55,7 +52,7 @@ class ExportData:
         ```
     """
 
-    def __init__(self, data: Dict[str, Any], fname: Path, export_format: str) -> None:
+    def __init__(self, data: dict[str, Any], fname: Path, export_format: str) -> None:
         """Export the data to a file.
 
         Args:
@@ -93,7 +90,7 @@ class ExportData:
                 pickle.dump(self.data, f)
 
     @staticmethod
-    def numpy2list(data: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    def numpy2list(data: list[dict[str, Any]]) -> list[dict[str, Any]]:
         """Convert the arrays of list dictionaries to a list of dictionaries with list.
 
         Args:
@@ -138,7 +135,7 @@ class PklConverter(Converter):
     choices_fformat: ClassVar[set[str]] = {"latin1", "utf-8", "utf-16", "utf-32"}
     choices_export: ClassVar[set[str]] = {"npy", "npz", "pkl", "pkl.gz"}
 
-    def get_args(self) -> Dict[str, Any]:
+    def get_args(self) -> dict[str, Any]:
         """Get the arguments from the command line.
 
         Returns:
@@ -175,7 +172,7 @@ class PklConverter(Converter):
         return vars(parser.parse_args())
 
     @staticmethod
-    def convert(infile: Path, file_format: str) -> Dict[str, Any]:
+    def convert(infile: Path, file_format: str) -> dict[str, Any]:
         """Convert the input file to the output file.
 
         Args:
@@ -188,9 +185,9 @@ class PklConverter(Converter):
         """
 
         def _convert(
-            data_values: Dict[str, Any],
-            _key: Optional[List[str]] = None,
-        ) -> List[Dict[str, Any]]:
+            data_values: dict[str, Any],
+            _key: list[str] | None = None,
+        ) -> list[dict[str, Any]]:
             """Convert the data to a list of dictionaries.
 
             The new key is the old key plus all the subkeys. The new value is the

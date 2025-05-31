@@ -2,19 +2,14 @@
 
 from __future__ import annotations
 
+import importlib.resources
 import re
 import tempfile
 
 from pathlib import Path
 from typing import ClassVar
-from typing import Dict
-from typing import List
-from typing import Tuple
-from typing import Type
-from typing import Union
 
 import pandas as pd
-import pkg_resources
 
 from matplotlib import pyplot as plt
 from pptx.util import Pt
@@ -50,7 +45,7 @@ class InputAPI(BaseModel):
 class OutputAPI(BaseModel):
     """Dataframe class for PPTXData output."""
 
-    df_fit: Dict[str, List[float]]
+    df_fit: dict[str, list[float]]
 
 
 class GoodnessOfFitAPI(BaseModel):
@@ -65,13 +60,13 @@ class GoodnessOfFitAPI(BaseModel):
 class RegressionMetricsAPI(BaseModel):
     """RegressionMetrics class."""
 
-    index: List[str]
-    columns: List[int]
-    data: List[List[float]]
+    index: list[str]
+    columns: list[int]
+    data: list[list[float]]
 
     @field_validator("index")
     @classmethod
-    def short_metrics(cls, v: List[str]) -> List[str]:
+    def short_metrics(cls, v: list[str]) -> list[str]:
         """Shorten the metrics names.
 
         Args:
@@ -82,7 +77,7 @@ class RegressionMetricsAPI(BaseModel):
 
         """
         pattern = r"(?<!\d)[a-zA-Z0-9]{2,}(?!\d)"
-        abbreviations: Dict[str, str] = {}
+        abbreviations: dict[str, str] = {}
         min_abbrev_length = 2
         for metric in v:
             abbreviation = "".join(re.findall(pattern, metric)).lower()[
@@ -104,14 +99,14 @@ class SolverAPI(BaseModel):
 
     goodness_of_fit: GoodnessOfFitAPI
     regression_metrics: RegressionMetricsAPI
-    variables: Dict[str, Dict[str, float]]
+    variables: dict[str, dict[str, float]]
 
     @field_validator("variables")
     @classmethod
     def short_variables(
         cls,
-        v: Dict[str, Dict[str, float]],
-    ) -> Dict[str, Dict[str, float]]:
+        v: dict[str, dict[str, float]],
+    ) -> dict[str, dict[str, float]]:
         """Shorten the variables names.
 
         Args:
@@ -350,12 +345,26 @@ class PPTXBasicTitleAPI(BaseModel):
     table_1_description: str = "Table 1: Goodness of Fit"
     table_2_description: str = "Table 2: Regression Metrics"
     table_3_description: str = "Table 3: Variables"
-
-    credit_logo: Path = (
-        Path(str(pkg_resources.get_distribution("spectrafit").location))
-        / "spectrafit/plugins/img/SpectraFit.png"
+    credit_logo: Path = Field(
+        default_factory=lambda: get_resource_path(
+            "spectrafit", "plugins/img/SpectraFit.png"
+        )
     )
     credit_description: str = f"SpectraFit: v{__version__}"
+
+
+def get_resource_path(package: str, resource: str) -> Path:
+    """Get the path to a resource file, supporting both Python 3.8 and 3.9+.
+
+    Args:
+        package (str): The package containing the resource
+        resource (str): The resource path within the package
+
+    Returns:
+        Path: Path object pointing to the resource
+    """
+    # Python 3.9+ approach
+    return Path(str(importlib.resources.files(package))) / resource
 
 
 class PPTXLayoutAPI:
@@ -370,9 +379,9 @@ class PPTXLayoutAPI:
     """
 
     pptx_formats: ClassVar[
-        Dict[
+        dict[
             str,
-            Tuple[Type[Union[Field169API, Field169HDRAPI, Field43API]], Dict[str, int]],
+            tuple[type[Field169API | Field169HDRAPI | Field43API], dict[str, int]],
         ]
     ] = {
         "16:9": (Field169API, {"width": 1280, "height": 720}),
@@ -641,7 +650,7 @@ class PPTXLayoutAPI:
             fname=PPTXBasicTitleAPI().credit_logo,
         )
 
-    def get_pptx_layout(self) -> Union[Field169API, Field169HDRAPI, Field43API]:
+    def get_pptx_layout(self) -> Field169API | Field169HDRAPI | Field43API:
         """Get the powerpoint presentation layout.
 
         Returns:

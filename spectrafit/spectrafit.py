@@ -6,10 +6,6 @@ import argparse
 
 from typing import TYPE_CHECKING
 from typing import Any
-from typing import Dict
-from typing import MutableMapping
-from typing import Optional
-from typing import Tuple
 
 from spectrafit.api.cmd_model import CMDModelAPI
 from spectrafit.models.builtin import SolverModels
@@ -24,13 +20,15 @@ from spectrafit.tools import read_input_file
 
 
 if TYPE_CHECKING:
+    from collections.abc import MutableMapping
+
     import pandas as pd
 
 
 __status__ = PrintingStatus()
 
 
-def get_args() -> Dict[str, Any]:
+def get_args() -> dict[str, Any]:
     """Get the arguments from the command line.
 
     Returns:
@@ -193,7 +191,7 @@ def get_args() -> Dict[str, Any]:
     return vars(parser.parse_args())
 
 
-def command_line_runner(args: Optional[Dict[str, Any]] = None) -> None:
+def command_line_runner(args: dict[str, Any] | None = None) -> None:
     """Run spectrafit from the command line.
 
     Args:
@@ -225,7 +223,7 @@ def command_line_runner(args: Optional[Dict[str, Any]] = None) -> None:
         __status__.yes_no()
 
 
-def extracted_from_command_line_runner() -> Dict[str, Any]:
+def extracted_from_command_line_runner() -> dict[str, Any]:
     """Extract the input commands from the terminal.
 
     Raises:
@@ -237,7 +235,7 @@ def extracted_from_command_line_runner() -> Dict[str, Any]:
              information beyond the command line arguments.
 
     """
-    result: Dict[str, Any] = get_args()
+    result: dict[str, Any] = get_args()
     _args: MutableMapping[str, Any] = read_input_file(result["input"])
 
     if "settings" in _args:
@@ -275,7 +273,7 @@ def extracted_from_command_line_runner() -> Dict[str, Any]:
     return result
 
 
-def fitting_routine(args: Dict[str, Any]) -> Tuple[pd.DataFrame, Dict[str, Any]]:
+def fitting_routine(args: dict[str, Any]) -> tuple[pd.DataFrame, dict[str, Any]]:
     """Run the fitting algorithm.
 
     Args:

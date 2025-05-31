@@ -7,12 +7,6 @@ import pprint
 from typing import TYPE_CHECKING
 from typing import Any
 from typing import Callable
-from typing import Dict
-from typing import Hashable
-from typing import List
-from typing import Optional
-from typing import Tuple
-from typing import Union
 from warnings import warn
 
 import numpy as np
@@ -45,6 +39,8 @@ VERBOSE_REGULAR = 1  # Regular output mode
 VERBOSE_DETAILED = 2  # Detailed/verbose output mode
 
 if TYPE_CHECKING:
+    from collections.abc import Hashable
+
     from numpy.typing import NDArray
 
 
@@ -114,7 +110,7 @@ class RegressionMetrics:
         df: pd.DataFrame,
         name_true: str = "intensity",
         name_pred: str = "fit",
-    ) -> Tuple[NDArray[np.float64], NDArray[np.float64]]:
+    ) -> tuple[NDArray[np.float64], NDArray[np.float64]]:
         """Initialize the regression metrics of the Fit(s) for the post analysis.
 
         For this reason, the dataframe is split into two numpy array for true
@@ -153,7 +149,7 @@ class RegressionMetrics:
             (true, pred) if true.shape[1] > 1 else (np.array([true]), np.array([pred]))
         )
 
-    def __call__(self) -> Dict[Hashable, Any]:
+    def __call__(self) -> dict[Hashable, Any]:
         """Calculate the regression metrics of the Fit(s) for the post analysis.
 
         Returns:
@@ -171,7 +167,7 @@ class RegressionMetrics:
             mean_absolute_percentage_error,
             mean_poisson_deviance,
         )
-        metric_dict: Dict[Hashable, Any] = {}
+        metric_dict: dict[Hashable, Any] = {}
         for fnc in metrics_fnc:
             metric_dict[fnc.__name__] = []
             for y_true, y_pred in zip(self.y_true.T, self.y_pred.T):
@@ -192,8 +188,8 @@ class RegressionMetrics:
 def fit_report_as_dict(  # noqa: C901
     inpars: minimize,
     settings: Minimizer,
-    modelpars: Optional[Dict[str, Any]] = None,
-) -> Dict[str, Dict[Any, Any]]:
+    modelpars: dict[str, Any] | None = None,
+) -> dict[str, dict[Any, Any]]:
     """Generate the best fit report as dictionary.
 
     !!! info "About `fit_report_as_dict`"
@@ -226,9 +222,9 @@ def fit_report_as_dict(  # noqa: C901
     result = inpars
     params = inpars.params
 
-    parnames: List[str] = list(params.keys())
+    parnames: list[str] = list(params.keys())
 
-    buffer: Dict[str, Dict[Any, Any]] = {
+    buffer: dict[str, dict[Any, Any]] = {
         "configurations": {},
         "statistics": {},
         "variables": {},
@@ -291,8 +287,8 @@ def fit_report_as_dict(  # noqa: C901
 
 def get_init_value(
     param: Parameter,
-    modelpars: Optional[Parameter] = None,
-) -> Union[float, str]:
+    modelpars: Parameter | None = None,
+) -> float | str:
     """Get the initial value of a parameter.
 
     Args:
@@ -315,8 +311,8 @@ def get_init_value(
 def _extracted_computational_from_results(
     result: minimize,
     settings: Minimizer,
-    buffer: Dict[str, Any],
-) -> Dict[str, Any]:
+    buffer: dict[str, Any],
+) -> dict[str, Any]:
     """Extract the computational from the results.
 
     Args:
@@ -346,9 +342,9 @@ def _extracted_computational_from_results(
 
 def _extracted_gof_from_results(
     result: minimize,
-    buffer: Dict[str, Any],
+    buffer: dict[str, Any],
     params: Parameters,
-) -> Tuple[minimize, Dict[str, Any], Parameters]:
+) -> tuple[minimize, dict[str, Any], Parameters]:
     """Extract the goodness of fit from the results.
 
     Args:
@@ -451,7 +447,7 @@ class CIReport:
 
     def __init__(
         self,
-        ci: Dict[str, List[Tuple[float, float]]],
+        ci: dict[str, list[tuple[float, float]]],
         with_offset: bool = True,
         ndigits: int = 5,
         best_tol: float = 1.0e-2,
@@ -476,7 +472,7 @@ class CIReport:
 
         self.df = pd.DataFrame()
 
-    def convp(self, x: Tuple[float, float], bound_type: str) -> str:
+    def convp(self, x: tuple[float, float], bound_type: str) -> str:
         """Convert the confidence interval to a string.
 
         Args:
@@ -491,7 +487,7 @@ class CIReport:
             "BEST" if abs(x[0]) < self.best_tol else f"{x[0] * 100:.2f}% - {bound_type}"
         )
 
-    def calculate_offset(self, row: List[Tuple[float, float]]) -> float:
+    def calculate_offset(self, row: list[tuple[float, float]]) -> float:
         """Calculate the offset for a row.
 
         Args:
@@ -511,7 +507,7 @@ class CIReport:
     def create_report_row(
         self,
         name: str,
-        row: List[Tuple[float, float]],
+        row: list[tuple[float, float]],
         offset: float,
     ) -> None:
         """Create a row for the report.
@@ -529,7 +525,7 @@ class CIReport:
 
     def __call__(self) -> None:
         """Generate the Confidence report as a table."""
-        self.report: Dict[str, Dict[str, float]] = {}
+        self.report: dict[str, dict[str, float]] = {}
         for name, row in self.ci.items():
             offset = self.calculate_offset(row)
             self.create_report_row(name, row, offset)
@@ -579,11 +575,11 @@ class FitReport:
 
     def __init__(
         self,
-        inpars: Union[Parameters, Callable[..., Any]],
-        sort_pars: Union[bool, Callable[[str], Any]] = True,
+        inpars: Parameters | Callable[..., Any],
+        sort_pars: bool | Callable[[str], Any] = True,
         show_correl: bool = True,
         min_correl: float = 0.0,
-        modelpars: Optional[Callable[..., Any]] = None,
+        modelpars: Callable[..., Any] | None = None,
     ) -> None:
         """Initialize the Report object.
 
@@ -614,7 +610,7 @@ class FitReport:
 
         self.parnames = self._get_parnames()
 
-    def _get_parnames(self) -> List[str]:
+    def _get_parnames(self) -> list[str]:
         """Get parameter names, sorted if required.
 
         Returns:
@@ -626,7 +622,7 @@ class FitReport:
         key = self.sort_pars if callable(self.sort_pars) else alphanumeric_sort
         return sorted(self.params, key=key)
 
-    def generate_fit_statistics(self) -> Optional[pd.DataFrame]:
+    def generate_fit_statistics(self) -> pd.DataFrame | None:
         """Generate fit statistics based on the result of the fitting process.
 
         Returns:
@@ -745,7 +741,7 @@ class FitReport:
                         ]  # mirror the value
         return correl_matrix.fillna(1)  # fill diagonal with 1s
 
-    def generate_report(self) -> Dict[str, pd.DataFrame]:
+    def generate_report(self) -> dict[str, pd.DataFrame]:
         """Generate a report.
 
         !!! info "About the Report"
@@ -790,7 +786,7 @@ class PrintingResults:
 
     def __init__(
         self,
-        args: Dict[str, Any],
+        args: dict[str, Any],
         result: Any,
         minimizer: Minimizer,
     ) -> None:
@@ -817,7 +813,7 @@ class PrintingResults:
             self.printing_verbose_mode()
 
     @staticmethod
-    def print_tabulate(args: Dict[str, Any]) -> None:
+    def print_tabulate(args: dict[str, Any]) -> None:
         """Print the results of the fitting process.
 
         Args:
