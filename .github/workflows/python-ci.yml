@@ -2,9 +2,9 @@ name: 🐍 CI - Python Package
 
 on:
   push:
-    branches: [main, feature/*, release/*, hotfix/*]
+    branches: [main, feature/*, release/*, hotfix/*, insiders]
   pull_request:
-    branches: [main, develop]
+    branches: [main, develop, insiders]
   repository_dispatch:
     types: [create-pull-request]
 
@@ -40,7 +40,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+        python-version: ["3.9", "3.10", "3.11", "3.12"]
         os: [ubuntu-latest, windows-latest, macOS-latest]
         arch: [x64]
     defaults:

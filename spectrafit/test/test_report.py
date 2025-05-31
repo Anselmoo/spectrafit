@@ -5,9 +5,6 @@ from __future__ import annotations
 from math import isclose
 from typing import TYPE_CHECKING
 from typing import Any
-from typing import Dict
-from typing import List
-from typing import Union
 
 import numpy as np
 import pandas as pd
@@ -73,7 +70,7 @@ def test_extracted_gof_from_results(mocker: MockerFixture) -> None:
         result.method = "not_a_method"
         with mocker.patch("spectrafit.report._extracted_gof_from_results") as params:
             params = mocker.MagicMock()
-            buffer: Dict[str, Dict[Any, Any]] = {
+            buffer: dict[str, dict[Any, Any]] = {
                 "configurations": {},
                 "statistics": {},
                 "variables": {},
@@ -125,7 +122,7 @@ def par_expr() -> Parameter:
     scope="module",
     name="par_model",
 )
-def par_model() -> Dict[str, Union[Parameter, Parameters]]:
+def par_model() -> dict[str, Parameter | Parameters]:
     """Parameter with expression."""
     modelpars = Parameters()
     modelpars.add("param", value=2.0)
@@ -145,7 +142,7 @@ def par_fixed() -> Parameter:
 def test_get_init_value(
     par_init: Parameter,
     par_expr: Parameter,
-    par_model: Dict[str, Union[Parameter, Parameters]],
+    par_model: dict[str, Parameter | Parameters],
     par_fixed: Parameter,
 ) -> None:
     """Test of the get init value."""
@@ -220,8 +217,8 @@ def test_fit_report_init(
     sort_pars: bool,
     show_correl: bool,
     min_correl: float,
-    modelpars: Union[None, Dict[str, Parameters]],
-    expected_parnames: List[str],
+    modelpars: None | dict[str, Parameters],
+    expected_parnames: list[str],
 ) -> None:
     """Test the initialization of the FitReport class.
 
@@ -256,8 +253,8 @@ def test_fit_report_init(
     ids=["empty-parameters", "incorrect-type"],
 )
 def test_generate_fit_statistics_edge_cases(
-    inpars: Union[Parameters, str],
-    expected_result: Union[None, Exception],
+    inpars: Parameters | str,
+    expected_result: None | Exception,
 ) -> None:
     """Test the edge cases of the  method in the FitReport class.
 
@@ -287,7 +284,7 @@ def test_generate_fit_statistics_edge_cases(
     ],
     ids=["list-instead-parameters"],
 )
-def test_fit_report_init_error_cases(inpars: List[Any], exception: Exception) -> None:
+def test_fit_report_init_error_cases(inpars: list[Any], exception: Exception) -> None:
     """Test the initialization of FitReport with error cases.
 
     Args:
@@ -338,7 +335,7 @@ def test_fit_report_init_error_cases(inpars: List[Any], exception: Exception) ->
     ],
 )
 def test_ci_report(
-    ci: Dict[str, List[Any]],
+    ci: dict[str, list[Any]],
     with_offset: bool,
     ndigits: int,
     expected_output: pd.DataFrame,

@@ -1,9 +1,10 @@
+# spell-checker: disable
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
     hooks:
       - id: check-yaml
-        exclude: mkdocs.yml
+        exclude: mkdocs.yml # Technical filename
       - id: check-toml
         exclude: uv.lock
       - id: check-json
@@ -17,31 +18,35 @@ repos:
       - id: check-case-conflict
       - id: check-added-large-files
         args: [--maxkb=1000]
-        exclude: \.ipynb
+        exclude: \.ipynb # Jupyter notebook extension
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.11.11
+    rev: v0.11.12
     hooks:
       - id: ruff
-        files: spectrafit/
+        files: spectrafit/ # Project directory name
       - id: ruff-format
-        files: spectrafit/
+        files: spectrafit/ # Project directory name
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.15.0
+    rev: v1.16.0
     hooks:
-      - id: mypy
-        additional_dependencies:
-          [
-            types-toml>=0.10.8.7,
-            types-PyYAML>=6.0.12.12,
-            types-tabulate>=0.9.0.3,
-            types-mock>=5.1.0.1,
-            types-setuptools>=68.2.0.0,
-            numpy>=1.23.4,
-            pydantic>=2.1,
-            pytest>=7.1.3,
+      - id: mypy # Python type checker
+        additional_dependencies: [
+            types-toml,
+            types-PyYAML,
+            types-tabulate,
+            types-mock,
+            types-setuptools, # Type stubs for setuptools
+            numpy, # NumPy library
+            pydantic, # Data validation library
+            pytest, # Testing framework
           ]
   - repo: https://github.com/pycqa/pydocstyle
     rev: 6.3.0
     hooks:
-      - id: pydocstyle
+      - id: pydocstyle # Python docstring style checker
         additional_dependencies: [toml>=0.10.2]
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v3.20.0
+    hooks:
+      - id: pyupgrade # Python code upgrader
+        args: ["--py39-plus"]

@@ -7,7 +7,6 @@ import pickle
 
 from pathlib import Path
 from typing import Any
-from typing import Dict
 
 import numpy as np
 import pandas as pd
@@ -54,7 +53,7 @@ def df_large() -> pd.DataFrame:
 
 
 @pytest.fixture(name="args_0")
-def args_0() -> Dict[str, Any]:
+def args_0() -> dict[str, Any]:
     """Args fixture."""
     return {
         "autopeak": False,
@@ -85,7 +84,7 @@ def args_0() -> Dict[str, Any]:
 
 
 @pytest.fixture(name="args_1")
-def args_1() -> Dict[str, Any]:
+def args_1() -> dict[str, Any]:
     """Args fixture."""
     return {
         "autopeak": False,
@@ -114,7 +113,7 @@ def args_1() -> Dict[str, Any]:
 
 
 @pytest.fixture(name="args_conf_interval_fail")
-def args_2() -> Dict[str, Any]:
+def args_2() -> dict[str, Any]:
     """Args fixture."""
     return {
         "autopeak": False,
@@ -141,7 +140,7 @@ def args_2() -> Dict[str, Any]:
 
 
 @pytest.fixture(name="args__min_rel_change")
-def args_3() -> Dict[str, Any]:
+def args_3() -> dict[str, Any]:
     """Args fixture."""
     return {
         "autopeak": False,
@@ -360,7 +359,7 @@ class TestPostProcessing:
     def test_post_processing_local(
         self,
         random_dataframe_global: pd.DataFrame,
-        args_0: Dict[str, Any],
+        args_0: dict[str, Any],
     ) -> None:
         """Testing post processing for local fitting."""
         minimizer, result = SolverModels(df=random_dataframe_global, args=args_0)()
@@ -377,7 +376,7 @@ class TestPostProcessing:
     def test_post_processing_global(
         self,
         random_dataframe_global: pd.DataFrame,
-        args_1: Dict[str, Any],
+        args_1: dict[str, Any],
     ) -> None:
         """Testing post processing for global fitting."""
         minimizer, result = SolverModels(df=random_dataframe_global, args=args_1)()
@@ -394,7 +393,7 @@ class TestPostProcessing:
     def test_insight_report_empty_conv(
         self,
         random_dataframe: pd.DataFrame,
-        args_conf_interval_fail: Dict[str, Any],
+        args_conf_interval_fail: dict[str, Any],
     ) -> None:
         """Testing insight report for no report of the confidence interval."""
         minimizer, result = SolverModels(
@@ -414,7 +413,7 @@ class TestPostProcessing:
     def test_insight_report_new_min_rel_change(
         self,
         trace_value: bool,
-        args__min_rel_change: Dict[str, Any],
+        args__min_rel_change: dict[str, Any],
     ) -> None:
         """Testing insight report for no report of the confidence interval."""
         x = np.linspace(0, 2, 100, dtype=np.float64)

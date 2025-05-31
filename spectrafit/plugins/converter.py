@@ -6,11 +6,10 @@ from abc import ABC
 from abc import abstractmethod
 from typing import TYPE_CHECKING
 from typing import Any
-from typing import Dict
-from typing import MutableMapping
 
 
 if TYPE_CHECKING:
+    from collections.abc import MutableMapping
     from pathlib import Path
 
 
@@ -30,7 +29,7 @@ class Converter(ABC):
     """
 
     @abstractmethod
-    def get_args(self) -> Dict[str, Any]:
+    def get_args(self) -> dict[str, Any]:
         """Get the arguments from the command line.
 
         Returns:

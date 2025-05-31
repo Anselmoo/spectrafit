@@ -10,8 +10,6 @@ from __future__ import annotations
 import warnings
 
 from typing import TYPE_CHECKING
-from typing import Dict
-from typing import Optional
 
 import numpy as np
 
@@ -148,7 +146,7 @@ def moessbauer_sextet(
     fwhml: float = 0.25,
     amplitude: float = 1.0,
     center: float = 0.0,
-    angle_theta_phi: Optional[Dict[str, float]] = None,
+    angle_theta_phi: dict[str, float] | None = None,
     quadrupole_shift: float = 0.0,
     background: float = 0.0,
 ) -> NDArray[np.float64]:
@@ -250,7 +248,7 @@ def moessbauer_octet(
     center: float = 0.0,
     efg_vzz: float = 1e21,
     efg_eta: float = 0.0,
-    angle_theta_phi: Optional[Dict[str, float]] = None,
+    angle_theta_phi: dict[str, float] | None = None,
     temperature: float = 300.0,
     sod_shift: float = 0.0,
     site_fraction: float = 1.0,

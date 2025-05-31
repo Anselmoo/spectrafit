@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from typing import List
-
 from spectrafit.api.notebook_model import ColorAPI
 from spectrafit.api.notebook_model import FontAPI
 
@@ -37,8 +35,8 @@ class DraculaColor(ColorAPI):
     intensity: str = "#bd93f9"
     residual: str = "#ff5555"
     fit: str = "#50fa7b"
-    bars: List[str] = ["#803C62", "#FFC4E6", "#FF79C6", "#806273", "#CC609D"]
-    lines: List[str] = ["#805C36", "#FFDCB8", "#FFB86C", "#806E5C", "#CC9356"]
+    bars: list[str] = ["#803C62", "#FFC4E6", "#FF79C6", "#806273", "#CC609D"]
+    lines: list[str] = ["#805C36", "#FFDCB8", "#FFB86C", "#806E5C", "#CC9356"]
     components: str = "#ff79c6"
     paper: str = "#282a36"
     plot: str = "#282a36"
@@ -77,8 +75,8 @@ class ColorBlindColor(ColorAPI):
     intensity: str = "#1f77b4"
     residual: str = "#ff7f0e"
     fit: str = "#d62728"
-    bars: List[str] = ["#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f"]
-    lines: List[str] = ["#8c564b", "#e377c2", "#7f7f7f", "#d62728", "#9467bd"]
+    bars: list[str] = ["#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f"]
+    lines: list[str] = ["#8c564b", "#e377c2", "#7f7f7f", "#d62728", "#9467bd"]
     components: str = "#2ca02c"
     paper: str = "#ffffff"
     plot: str = "#ffffff"
@@ -104,8 +102,8 @@ class MoonAkiColor(ColorAPI):
     intensity: str = "#f92672"
     residual: str = "#fd971f"
     fit: str = "#a6e22e"
-    bars: List[str] = ["#66d9ef", "#ae81ff", "#f92672", "#a6e22e", "#fd971f"]
-    lines: List[str] = ["#f92672", "#a6e22e", "#fd971f", "#66d9ef", "#ae81ff"]
+    bars: list[str] = ["#66d9ef", "#ae81ff", "#f92672", "#a6e22e", "#fd971f"]
+    lines: list[str] = ["#f92672", "#a6e22e", "#fd971f", "#66d9ef", "#ae81ff"]
     components: str = "#ae81ff"
     paper: str = "#272822"
     plot: str = "#272822"
@@ -134,8 +132,8 @@ class DevOpsDarkColor(ColorAPI):
     intensity: str = "#1e4f8a"
     residual: str = "#d73a49"
     fit: str = "#22863a"
-    bars: List[str] = ["#005cc5", "#6f42c1", "#d73a49", "#22863a", "#d73a49"]
-    lines: List[str] = ["#d73a49", "#22863a", "#d73a49", "#005cc5", "#6f42c1"]
+    bars: list[str] = ["#005cc5", "#6f42c1", "#d73a49", "#22863a", "#d73a49"]
+    lines: list[str] = ["#d73a49", "#22863a", "#d73a49", "#005cc5", "#6f42c1"]
     components: str = "#d73a49"
     paper: str = "#0d1117"
     plot: str = "#0d1117"
@@ -167,8 +165,8 @@ class DevOpsLightColor(ColorAPI):
     intensity: str = "#1e4f8a"
     residual: str = "#d73a49"
     fit: str = "#d73a49"
-    bars: List[str] = ["#005cc5", "#6f42c1", "#d73a49", "#22863a", "#d73a49"]
-    lines: List[str] = ["#d73a49", "#22863a", "#d73a49", "#005cc5", "#6f42c1"]
+    bars: list[str] = ["#005cc5", "#6f42c1", "#d73a49", "#22863a", "#d73a49"]
+    lines: list[str] = ["#d73a49", "#22863a", "#d73a49", "#005cc5", "#6f42c1"]
     components: str = "#22863a"
     paper: str = "#ffffff"
     plot: str = "#ffffff"

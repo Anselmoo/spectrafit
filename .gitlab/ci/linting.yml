@@ -2,6 +2,8 @@
   stage: pretest
   tags:
     - shared
+    - docker
+    - cloud
   image:
     name: ghcr.io/astral-sh/ruff:${RUFF_VERSION}-alpine
   before_script:

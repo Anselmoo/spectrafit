@@ -2,6 +2,8 @@
   stage: test
   tags:
     - shared
+    - docker
+    - cloud
   needs:
     - job: pre-commit
       artifacts: true
@@ -27,10 +29,20 @@
     expire_in: 1 week
   coverage: /^TOTAL.+? (\d+\%)$/
 
+# Build and test configuration
+# This file is used to define the CI/CD pipeline for testing the project
+test-3.9:
+  <<: *test-template
+  image: ghcr.io/astral-sh/uv:$UV_VERSION-python3.9-$BASE_LAYER
+test-3.10:
+  <<: *test-template
+  image: ghcr.io/astral-sh/uv:$UV_VERSION-python3.10-$BASE_LAYER
 test-3.11:
   <<: *test-template
   image: ghcr.io/astral-sh/uv:$UV_VERSION-python3.11-$BASE_LAYER
-
 test-3.12:
   <<: *test-template
   image: ghcr.io/astral-sh/uv:$UV_VERSION-python3.12-$BASE_LAYER
+test-3.13:
+  <<: *test-template
+  image: ghcr.io/astral-sh/uv:$UV_VERSION-python3.13-$BASE_LAYER

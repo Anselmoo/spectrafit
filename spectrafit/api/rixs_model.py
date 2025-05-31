@@ -3,8 +3,6 @@
 from __future__ import annotations
 
 from typing import Any
-from typing import Optional
-from typing import Tuple
 
 from pydantic import BaseModel
 from pydantic import ConfigDict
@@ -18,7 +16,7 @@ class XAxisAPI(BaseModel):
         default="Incident Energy",
         description="Name of the x-axis of the plot.",
     )
-    unit: Optional[str] = Field(
+    unit: str | None = Field(
         default="eV",
         description="Name of the x-axis units of the plot.",
     )
@@ -31,7 +29,7 @@ class YAxisAPI(BaseModel):
         default="Emission Energy",
         description="Name of the y-axis of the plot.",
     )
-    unit: Optional[str] = Field(
+    unit: str | None = Field(
         default="eV",
         description="Name of the y-axis units of the plot.",
     )
@@ -44,7 +42,7 @@ class ZAxisAPI(BaseModel):
         default="Intensity",
         description="Name of the z-axis of the plot.",
     )
-    unit: Optional[str] = Field(
+    unit: str | None = Field(
         default="a.u.",
         description="Name of the z-axis units of the plot.",
     )
@@ -61,19 +59,19 @@ class MainTitleAPI(BaseModel):
 class SizeRatioAPI(BaseModel):
     """Defintion of the size ratio of the plotly figure."""
 
-    size: Tuple[int, int] = Field(
+    size: tuple[int, int] = Field(
         default=(500, 500),
         description="Basic size of the plots in pixels.",
     )
-    ratio_rixs: Tuple[float, float] = Field(
+    ratio_rixs: tuple[float, float] = Field(
         default=(2, 2),
         description="Ratio of the RIXS plot.",
     )
-    ratio_xes: Tuple[float, float] = Field(
+    ratio_xes: tuple[float, float] = Field(
         default=(3, 1),
         description="Ratio of the XES plot.",
     )
-    ratio_xas: Tuple[float, float] = Field(
+    ratio_xas: tuple[float, float] = Field(
         default=(3, 1),
         description="Ratio of the XAS plot.",
     )
@@ -112,11 +110,11 @@ class RIXSPlotAPI(BaseModel):
         ...,
         description="Emission intensity values (RIXS), which has to be a 2D array.",
     )  # Should be NDArray[np.float64] but that's not supported for 3.8
-    energy_loss: Optional[Any] = Field(
+    energy_loss: Any | None = Field(
         default=None,
         description="Energy loss values.",
     )  # Should be NDArray[np.float64] but that's not supported for 3.8
-    energy_loss_intensity: Optional[Any] = Field(
+    energy_loss_intensity: Any | None = Field(
         default=None,
         description="Energy loss intensity values (XES), which has to be a 2D array.",
     )  # Should be NDArray[np.float64] but that's not supported for 3.8

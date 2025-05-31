@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-import sys
-
 from math import isclose
 from math import log
 from math import pi
@@ -11,8 +9,6 @@ from math import sqrt
 from typing import TYPE_CHECKING
 from typing import Any
 from typing import ClassVar
-from typing import Dict
-from typing import Tuple
 
 import numpy as np
 import pandas as pd
@@ -36,11 +32,7 @@ if TYPE_CHECKING:
     from numpy.typing import NDArray
 
 
-if sys.version_info < (3, 9):
-    from typing import Callable
-
-
-def assert_solver_models(mp: Tuple[Minimizer, Any]) -> None:
+def assert_solver_models(mp: tuple[Minimizer, Any]) -> None:
     """Assert SolverModels."""
     assert isinstance(mp.__str__(), str)
     assert isinstance(mp, tuple)
@@ -100,7 +92,7 @@ class TestNotSupported:
     """Test of not supported models."""
 
     # Using ClassVar per Ruff RUF012 even though mypy complains
-    args: ClassVar[Dict[str, Any]] = {
+    args: ClassVar[dict[str, Any]] = {
         "autopeak": False,
         "column": ["energy", "intensity"],
         "global_": 0,
@@ -186,7 +178,7 @@ class TestModelParametersSolver:
     """Test of model parameters."""
 
     # Using ClassVar per Ruff RUF012 even though mypy complains
-    args: ClassVar[Dict[str, Any]] = {
+    args: ClassVar[dict[str, Any]] = {
         "global_": 0,
         "autopeak": False,
         "column": ["Energy", "Intensity"],
@@ -217,7 +209,7 @@ class TestModelParametersSolver:
             },
         },
     }
-    args_global_1: ClassVar[Dict[str, Any]] = {
+    args_global_1: ClassVar[dict[str, Any]] = {
         "autopeak": False,
         "global_": 1,
         "column": ["Energy"],
@@ -242,7 +234,7 @@ class TestModelParametersSolver:
             },
         },
     }
-    args_global_2: ClassVar[Dict[str, Any]] = {
+    args_global_2: ClassVar[dict[str, Any]] = {
         "autopeak": False,
         "global_": 2,
         "column": ["Energy"],
@@ -340,7 +332,7 @@ class TestModelParametersSolver:
         assert_solver_models(mp)
 
     @pytest.fixture
-    def args_setting(self) -> Dict[str, Any]:
+    def args_setting(self) -> dict[str, Any]:
         """Fixture for args.
 
         Returns:
@@ -625,7 +617,7 @@ class TestModelParametersSolver:
     def test_all_model_local(
         self,
         random_df: pd.DataFrame,
-        args_setting: Dict[str, Any],
+        args_setting: dict[str, Any],
     ) -> None:
         """Test of the AllModel class for local fitting."""
         df = random_df
@@ -641,7 +633,7 @@ class TestModelParametersSolver:
     def test_all_model_global(
         self,
         random_df: pd.DataFrame,
-        args_setting: Dict[str, Any],
+        args_setting: dict[str, Any],
     ) -> None:
         """Test of the AllModel class for global fitting."""
         df = random_df
@@ -682,7 +674,7 @@ class TestAutoPeakDetection:
     @staticmethod
     def assert_isinstance(
         peaks: NDArray[np.float64],
-        properties: Dict[str, Any],
+        properties: dict[str, Any],
     ) -> None:
         """Assert if the peaks and properties are of the correct type."""
         assert isinstance(peaks, np.ndarray)
@@ -727,7 +719,7 @@ class TestAutoPeakDetection:
         data = np.arange(10, dtype=np.float64)
 
         auto = AutoPeakDetection(x=x, data=data, args=args)
-        _val: Tuple[float, float] = auto.estimated_plateau_size
+        _val: tuple[float, float] = auto.estimated_plateau_size
         assert isclose(_val[0], 0.0)
         assert isclose(_val[1], 9.0)
 
@@ -1045,7 +1037,7 @@ class TestModel:
         self,
         x_data: NDArray[np.float64],
         model: str,
-        params: Dict[str, float],
+        params: dict[str, float],
     ) -> None:
         """Test of all distribution models."""
         y_data = getattr(DistributionModels(), model)(x_data, **params)
@@ -1122,7 +1114,7 @@ class TestModel:
         self,
         df_data: pd.DataFrame,
         model: str,
-        params: Dict[str, Dict[Any, Any]],
+        params: dict[str, dict[Any, Any]],
     ) -> None:
         """Test if the model exists."""
         args = {
@@ -1147,7 +1139,7 @@ class TestDefineParametersAuto:
     @pytest.fixture
     def mock_autodetect(
         self,
-    ) -> Callable[..., Tuple[NDArray[Any], Dict[str, NDArray[Any]]]]:
+    ) -> Callable[..., tuple[NDArray[Any], dict[str, NDArray[Any]]]]:
         """Mock the autodetect method for testing."""
         # Mock positions and properties returned by find_peaks
         positions = np.array([3, 6, 9])
@@ -1157,8 +1149,8 @@ class TestDefineParametersAuto:
         }
 
         def _mock_fn(
-            *args: Tuple[Any, ...],
-        ) -> Tuple[NDArray[Any], Dict[str, NDArray[Any]]]:
+            *args: tuple[Any, ...],
+        ) -> tuple[NDArray[Any], dict[str, NDArray[Any]]]:
             return positions, properties
 
         return _mock_fn
@@ -1177,7 +1169,7 @@ class TestDefineParametersAuto:
     def test_gaussian(
         self,
         mock_local_df: pd.DataFrame,
-        mock_autodetect: Callable[..., Tuple[NDArray[Any], Dict[str, NDArray[Any]]]],
+        mock_autodetect: Callable[..., tuple[NDArray[Any], dict[str, NDArray[Any]]]],
         monkeypatch: pytest.MonkeyPatch,
     ) -> None:
         """Test auto-detection of Gaussian peaks."""
@@ -1200,7 +1192,7 @@ class TestDefineParametersAuto:
     def test_lorentzian(
         self,
         mock_local_df: pd.DataFrame,
-        mock_autodetect: Callable[..., Tuple[NDArray[Any], Dict[str, NDArray[Any]]]],
+        mock_autodetect: Callable[..., tuple[NDArray[Any], dict[str, NDArray[Any]]]],
         monkeypatch: pytest.MonkeyPatch,
     ) -> None:
         args = {
@@ -1221,7 +1213,7 @@ class TestDefineParametersAuto:
     def test_voigt(
         self,
         mock_local_df: pd.DataFrame,
-        mock_autodetect: Callable[..., Tuple[NDArray[Any], Dict[str, NDArray[Any]]]],
+        mock_autodetect: Callable[..., tuple[NDArray[Any], dict[str, NDArray[Any]]]],
         monkeypatch: pytest.MonkeyPatch,
     ) -> None:
         args = {
@@ -1242,7 +1234,7 @@ class TestDefineParametersAuto:
     def test_pseudovoigt(
         self,
         mock_local_df: pd.DataFrame,
-        mock_autodetect: Callable[..., Tuple[NDArray[Any], Dict[str, NDArray[Any]]]],
+        mock_autodetect: Callable[..., tuple[NDArray[Any], dict[str, NDArray[Any]]]],
         monkeypatch: pytest.MonkeyPatch,
     ) -> None:
         args = {
@@ -1264,7 +1256,7 @@ class TestDefineParametersAuto:
     def test_orcagaussian(
         self,
         mock_local_df: pd.DataFrame,
-        mock_autodetect: Callable[..., Tuple[NDArray[Any], Dict[str, NDArray[Any]]]],
+        mock_autodetect: Callable[..., tuple[NDArray[Any], dict[str, NDArray[Any]]]],
         monkeypatch: pytest.MonkeyPatch,
     ) -> None:
         args = {
@@ -1285,7 +1277,7 @@ class TestDefineParametersAuto:
     def test_default_gaussian_if_no_modeltype(
         self,
         mock_local_df: pd.DataFrame,
-        mock_autodetect: Callable[..., Tuple[NDArray[Any], Dict[str, NDArray[Any]]]],
+        mock_autodetect: Callable[..., tuple[NDArray[Any], dict[str, NDArray[Any]]]],
         monkeypatch: pytest.MonkeyPatch,
     ) -> None:
         args = {
@@ -1303,7 +1295,7 @@ class TestDefineParametersAuto:
     def test_invalid_auto_model_raises(
         self,
         mock_local_df: pd.DataFrame,
-        mock_autodetect: Callable[..., Tuple[NDArray[Any], Dict[str, NDArray[Any]]]],
+        mock_autodetect: Callable[..., tuple[NDArray[Any], dict[str, NDArray[Any]]]],
         monkeypatch: pytest.MonkeyPatch,
     ) -> None:
         args = {

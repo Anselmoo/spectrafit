@@ -16,12 +16,10 @@ from __future__ import annotations
 import sys
 import warnings
 
-from typing import Tuple
-
 from typing_extensions import Literal
 
 
-PYTHON_END_OF_LIFE: Tuple[Literal[3], Literal[8]] = (3, 8)
+PYTHON_END_OF_LIFE: tuple[Literal[3], Literal[8]] = (3, 8)
 
 if sys.version_info[:2] == PYTHON_END_OF_LIFE:
     version_str = f"{PYTHON_END_OF_LIFE[0]}.{PYTHON_END_OF_LIFE[1]}"

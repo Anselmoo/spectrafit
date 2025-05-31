@@ -1,5 +1,5 @@
 ---
-applyTo: "**/moessbauer*.py"
+applyTo: "spectrafit/**/moessbauer*.py"
 ---
 
 # Project physical standards for Moessbauer implementation in Python

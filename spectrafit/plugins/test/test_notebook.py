@@ -6,9 +6,6 @@ import sys
 
 from pathlib import Path
 from typing import Any
-from typing import Dict
-from typing import List
-from typing import Union
 from unittest import mock
 
 import pandas as pd
@@ -71,13 +68,13 @@ def y_column_fixture(dataframe: pd.DataFrame) -> str:
 
 
 @pytest.fixture(name="y_columns")
-def y_columns_fixture(dataframe: pd.DataFrame) -> List[str]:
+def y_columns_fixture(dataframe: pd.DataFrame) -> list[str]:
     """Create a y_column object."""
     return [str(dataframe.columns[2]), str(dataframe.columns[3])]
 
 
 @pytest.fixture(name="initial_model")
-def initial_model_fixture() -> List[Dict[str, Dict[str, Dict[str, Any]]]]:
+def initial_model_fixture() -> list[dict[str, dict[str, dict[str, Any]]]]:
     """Create a DataFrameDisplay object."""
     return [
         {
@@ -99,7 +96,7 @@ def initial_model_fixture() -> List[Dict[str, Dict[str, Dict[str, Any]]]]:
 
 
 @pytest.fixture(name="args_out")
-def args_out_fixture() -> Dict[str, Any]:
+def args_out_fixture() -> dict[str, Any]:
     """Create a DataFrameDisplay object."""
     return {
         "global_": False,
@@ -129,11 +126,11 @@ def args_out_fixture() -> Dict[str, Any]:
 
 @pytest.fixture(name="export_report")
 def export_report_fixture(
-    initial_model: List[Dict[str, Dict[str, Dict[str, Any]]]],
-    args_out: Dict[str, Any],
+    initial_model: list[dict[str, dict[str, dict[str, Any]]]],
+    args_out: dict[str, Any],
     dataframe: pd.DataFrame,
     dataframe_2: pd.DataFrame,
-) -> Dict[Any, Any]:
+) -> dict[Any, Any]:
     """Create a ExportReport object."""
     return {
         "description": DescriptionAPI(),
@@ -151,9 +148,9 @@ def export_report_fixture(
 @pytest.fixture(name="class_spectrafit")
 def class_spectrafit_fixture(
     dataframe_2: pd.DataFrame,
-    initial_model: List[Dict[str, Dict[str, Dict[str, Any]]]],
+    initial_model: list[dict[str, dict[str, dict[str, Any]]]],
     tmp_path: Path,
-) -> Dict[str, Union[SpectraFitNotebook, Path]]:
+) -> dict[str, SpectraFitNotebook | Path]:
     """Create a SpectraFitNotebook object."""
     _df = pd.DataFrame(data={"x": [1, 2, 3], "y": [1, 2, 3]})
     sp = SpectraFitNotebook(
@@ -191,9 +188,9 @@ def class_spectrafit_fixture(
 @pytest.fixture(name="class_spectrafit_fit_global")
 def class_spectrafit_fixture_fit_global(
     dataframe_global: pd.DataFrame,
-    initial_model: List[Dict[str, Dict[str, Dict[str, Any]]]],
+    initial_model: list[dict[str, dict[str, dict[str, Any]]]],
     tmp_path: Path,
-) -> Dict[str, Union[SpectraFitNotebook, Path]]:
+) -> dict[str, SpectraFitNotebook | Path]:
     """Create a SpectraFitNotebook object."""
     dataframe_init = pd.read_csv(
         "https://github.com/Anselmoo/spectrafit/blob/"
@@ -341,12 +338,15 @@ class TestDataFramePlot:
 
         # Test with combined mocks to avoid long lines
         with mock.patch.object(go.Figure, "update_yaxes") as mock_update_yaxes:
-            with mock.patch(__plotly_io_show__), mock.patch.object(
-                pp, "_create_residual_plot", return_value=go.Figure()
-            ), mock.patch.object(
-                pp, "_create_fit_plot", return_value=go.Figure()
-            ), mock.patch.object(
-                pp, "_plot_single_dataframe", return_value=go.Figure()
+            with (
+                mock.patch(__plotly_io_show__),
+                mock.patch.object(
+                    pp, "_create_residual_plot", return_value=go.Figure()
+                ),
+                mock.patch.object(pp, "_create_fit_plot", return_value=go.Figure()),
+                mock.patch.object(
+                    pp, "_plot_single_dataframe", return_value=go.Figure()
+                ),
             ):
                 # Create a figure with subplots for testing _update_plot_layout
                 fig = make_subplots(rows=2, cols=1)
@@ -424,21 +424,21 @@ class TestExportResults:
 class TestExportReport:
     """Test the ExportReport class."""
 
-    def test_input(self, export_report: Dict[str, Any]) -> None:
+    def test_input(self, export_report: dict[str, Any]) -> None:
         """Test the input function."""
         assert isinstance(
             ExportReport(**export_report).make_input_contribution,
             InputAPI,
         )
 
-    def test_solver(self, export_report: Dict[str, Any]) -> None:
+    def test_solver(self, export_report: dict[str, Any]) -> None:
         """Test the solver function."""
         assert isinstance(
             ExportReport(**export_report).make_solver_contribution,
             SolverAPI,
         )
 
-    def test_output(self, export_report: Dict[str, Any]) -> None:
+    def test_output(self, export_report: dict[str, Any]) -> None:
         """Test the output function."""
         assert isinstance(
             ExportReport(**export_report).make_output_contribution,
@@ -454,7 +454,7 @@ class TestSpectraFitNotebook:
         dataframe: pd.DataFrame,
         x_column: str,
         y_column: str,
-        y_columns: List[str],
+        y_columns: list[str],
     ) -> None:
         """Test the initialization of the class."""
         assert isinstance(
@@ -495,7 +495,7 @@ class TestSpectraFitNotebook:
         assert isinstance(sp.return_df, pd.DataFrame)
         assert isinstance(sp.return_pre_statistic, dict)
 
-    def test_export_df(self, class_spectrafit: Dict[Any, Any]) -> None:
+    def test_export_df(self, class_spectrafit: dict[Any, Any]) -> None:
         """Test the export_df function."""
         class_spectrafit["sp"].export_df_act
         class_spectrafit["sp"].export_df_fit
@@ -545,7 +545,7 @@ class TestSpectraFitNotebook:
     @pytest.mark.webtest
     def test_plot_org(
         self,
-        class_spectrafit: Dict[Any, Any],
+        class_spectrafit: dict[Any, Any],
     ) -> None:
         """Test the plot function."""
         with mock.patch(__plotly_io_show__) as mock_show:
@@ -556,7 +556,7 @@ class TestSpectraFitNotebook:
     @pytest.mark.webtest
     def test_plot_current(
         self,
-        class_spectrafit: Dict[Any, Any],
+        class_spectrafit: dict[Any, Any],
     ) -> None:
         """Test the plot function."""
         with mock.patch(__plotly_io_show__) as mock_show:
@@ -567,7 +567,7 @@ class TestSpectraFitNotebook:
     @pytest.mark.webtest
     def test_plot_preprocess(
         self,
-        class_spectrafit: Dict[Any, Any],
+        class_spectrafit: dict[Any, Any],
     ) -> None:
         """Test the plot function."""
         with mock.patch(__plotly_io_show__) as mock_show:
@@ -578,7 +578,7 @@ class TestSpectraFitNotebook:
     @pytest.mark.webtest
     def test_plot_fit(
         self,
-        class_spectrafit: Dict[Any, Any],
+        class_spectrafit: dict[Any, Any],
     ) -> None:
         """Test the plot function."""
         with mock.patch(__plotly_io_show__) as mock_show:
@@ -589,7 +589,7 @@ class TestSpectraFitNotebook:
     @pytest.mark.webtest
     def test_plot_global(
         self,
-        class_spectrafit_fit_global: Dict[Any, Any],
+        class_spectrafit_fit_global: dict[Any, Any],
     ) -> None:
         """Test the plot function for global fitting routine.
 
@@ -607,7 +607,7 @@ class TestSpectraFitNotebook:
 
     def test_display(
         self,
-        class_spectrafit: Dict[Any, Any],
+        class_spectrafit: dict[Any, Any],
     ) -> None:
         """Test the display function."""
         class_spectrafit["sp"].display_preprocessed_df
@@ -619,8 +619,8 @@ class TestSpectraFitNotebook:
         self,
         class_spectrafit_fit: SpectraFitNotebook,
         dataframe_2: pd.DataFrame,
-        initial_model: List[Dict[str, Dict[str, Dict[str, Any]]]],
-        args_out: Dict[str, Any],
+        initial_model: list[dict[str, dict[str, dict[str, Any]]]],
+        args_out: dict[str, Any],
     ) -> None:
         """Test the generate_report function."""
         sp = class_spectrafit_fit
@@ -638,7 +638,7 @@ class TestSpectraFitNotebook:
     def test_fit(
         self,
         class_spectrafit_fit: SpectraFitNotebook,
-        initial_model: List[Dict[str, Dict[str, Dict[str, Any]]]],
+        initial_model: list[dict[str, dict[str, dict[str, Any]]]],
     ) -> None:
         """Test the fit function."""
         sp = class_spectrafit_fit
@@ -655,7 +655,7 @@ class TestSpectraFitNotebook:
     def test_fit_new_solver(
         self,
         class_spectrafit_fit: SpectraFitNotebook,
-        initial_model: List[Dict[str, Dict[str, Dict[str, Any]]]],
+        initial_model: list[dict[str, dict[str, dict[str, Any]]]],
     ) -> None:
         """Test the fit function."""
         sp = class_spectrafit_fit
@@ -673,7 +673,7 @@ class TestSpectraFitNotebook:
     def test_metric(
         self,
         class_spectrafit_fit: SpectraFitNotebook,
-        initial_model: List[Dict[str, Dict[str, Dict[str, Any]]]],
+        initial_model: list[dict[str, dict[str, dict[str, Any]]]],
     ) -> None:
         """Test the metric plot function."""
         sp = class_spectrafit_fit
@@ -690,7 +690,7 @@ class TestSpectraFitNotebook:
     def test_conv_1(
         self,
         class_spectrafit_fit: SpectraFitNotebook,
-        initial_model: List[Dict[str, Dict[str, Dict[str, Any]]]],
+        initial_model: list[dict[str, dict[str, dict[str, Any]]]],
     ) -> None:
         """Test conf interval via bool."""
         sp = class_spectrafit_fit
@@ -709,7 +709,7 @@ class TestSpectraFitNotebook:
     def test_conv_2(
         self,
         class_spectrafit_fit: SpectraFitNotebook,
-        initial_model: List[Dict[str, Dict[str, Dict[str, Any]]]],
+        initial_model: list[dict[str, dict[str, dict[str, Any]]]],
     ) -> None:
         """Test conf interval via bool."""
         sp = class_spectrafit_fit
@@ -729,7 +729,7 @@ class TestSpectraFitNotebook:
     def test_conv_no(
         self,
         class_spectrafit_fit: SpectraFitNotebook,
-        initial_model: List[Dict[str, Dict[str, Dict[str, Any]]]],
+        initial_model: list[dict[str, dict[str, dict[str, Any]]]],
     ) -> None:
         """Test conf interval via bool for false."""
         sp = class_spectrafit_fit
@@ -762,7 +762,7 @@ class TestSpectraFitNotebook:
     def test_confidence_interval_false_expot(
         self,
         class_spectrafit_fit: SpectraFitNotebook,
-        initial_model: List[Dict[str, Dict[str, Dict[str, Any]]]],
+        initial_model: list[dict[str, dict[str, dict[str, Any]]]],
     ) -> None:
         """Test the confidence interval function."""
         sp = class_spectrafit_fit
