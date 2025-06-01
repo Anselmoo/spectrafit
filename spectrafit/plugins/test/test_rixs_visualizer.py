@@ -12,20 +12,16 @@ import numpy as np
 import plotly.graph_objects as go
 import pytest
 
+from spectrafit.plugins.rixs_converter import RIXSConverter
+from spectrafit.plugins.rixs_visualizer import RIXSApp
+from spectrafit.plugins.rixs_visualizer import RIXSFigure
+from spectrafit.plugins.rixs_visualizer import RIXSVisualizer
+
 
 if TYPE_CHECKING:
     from pathlib import Path
 
     from numpy.typing import NDArray
-
-
-if sys.version_info >= (3, 9):
-    from spectrafit.plugins.rixs_converter import RIXSConverter
-    from spectrafit.plugins.rixs_visualizer import RIXSApp
-    from spectrafit.plugins.rixs_visualizer import RIXSFigure
-    from spectrafit.plugins.rixs_visualizer import RIXSVisualizer
-else:
-    pytest.mark.skip("Requires Python 3.9 or higher", allow_module_level=True)
 
 
 @pytest.mark.skipif(sys.version_info < (3, 9), reason="Requires Python 3.9 or higher")

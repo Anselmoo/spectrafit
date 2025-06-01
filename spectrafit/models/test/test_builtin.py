@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-import sys
-
 from math import isclose
 from math import log
 from math import pi
@@ -34,10 +32,6 @@ if TYPE_CHECKING:
     from collections.abc import Callable
 
     from numpy.typing import NDArray
-
-
-if sys.version_info < (3, 9):
-    from typing import Callable
 
 
 def assert_solver_models(mp: Tuple[Minimizer, Any]) -> None:
