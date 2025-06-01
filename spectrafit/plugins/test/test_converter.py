@@ -28,19 +28,14 @@ from spectrafit.plugins.file_converter import FileConverter
 from spectrafit.plugins.pkl_converter import ExportData
 from spectrafit.plugins.pkl_converter import PklConverter
 from spectrafit.plugins.pkl_visualizer import PklVisualizer
+from spectrafit.plugins.pptx_converter import PPTXConverter
+from spectrafit.plugins.rixs_converter import RIXSConverter
 
 
 if TYPE_CHECKING:
     from matplotlib.figure import Figure
     from numpy.typing import NDArray
     from pytest_console_scripts import ScriptRunner
-
-
-if sys.version_info >= (3, 9):
-    from spectrafit.plugins.pptx_converter import PPTXConverter
-    from spectrafit.plugins.rixs_converter import RIXSConverter
-else:
-    pytest.mark.skip("Requires Python 3.9 or higher", allow_module_level=True)
 
 
 @pytest.mark.skipif(sys.version_info < (3, 9), reason="Requires Python 3.9 or higher")
