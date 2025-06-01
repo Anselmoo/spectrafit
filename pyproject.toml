@@ -278,7 +278,7 @@ markers = [
   "webtest: Web application tests",
 ]
 minversion = "7.0"
-# script_launch_mode = "subprocess"
+script_launch_mode = "subprocess"
 addopts = [
   "--strict-markers",
   "--strict-config",
