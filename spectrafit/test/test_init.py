@@ -21,9 +21,9 @@ def test_version() -> None:
 
 
 def test_python_end_of_life_warning(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Test that a warning is issued for Python 3.8."""
-    # Set the Python version to 3.8
-    monkeypatch.setattr(sys, "version_info", (3, 8, 0))
+    """Test that a warning is issued for Python 3.9."""
+    # Set the Python version to 3.9
+    monkeypatch.setattr(sys, "version_info", (3, 9, 0))
 
     version_str = f"{PYTHON_END_OF_LIFE[0]}.{PYTHON_END_OF_LIFE[1]}"
 
@@ -42,9 +42,9 @@ def test_python_end_of_life_warning(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 def test_no_warning_for_other_versions(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Test that no warning is issued for Python versions other than 3.8."""
-    # Set the Python version to 3.9
-    monkeypatch.setattr(sys, "version_info", (3, 9, 0))
+    """Test that no warning is issued for Python versions other than 3.9."""
+    # Set the Python version to 3.10
+    monkeypatch.setattr(sys, "version_info", (3, 10, 0))
 
     with warnings.catch_warnings(record=True) as w:
         warnings.simplefilter("always")
