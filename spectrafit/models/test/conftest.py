@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
-from typing import Dict
 
 import numpy as np
 import pytest
@@ -46,7 +45,7 @@ def distribution_model_instance() -> DistributionModels:
 
 
 @pytest.fixture
-def moessbauer_singlet_params() -> Dict[str, float]:
+def moessbauer_singlet_params() -> dict[str, float]:
     """Create parameters for testing the Mössbauer singlet model.
 
     Returns:
@@ -62,7 +61,7 @@ def moessbauer_singlet_params() -> Dict[str, float]:
 
 
 @pytest.fixture
-def moessbauer_doublet_params() -> Dict[str, float]:
+def moessbauer_doublet_params() -> dict[str, float]:
     """Create parameters for testing the Mössbauer doublet model.
 
     Returns:
@@ -79,7 +78,7 @@ def moessbauer_doublet_params() -> Dict[str, float]:
 
 
 @pytest.fixture
-def moessbauer_sextet_params() -> Dict[str, float]:
+def moessbauer_sextet_params() -> dict[str, float]:
     """Create parameters for testing the Mössbauer sextet model.
 
     Returns:
@@ -97,7 +96,7 @@ def moessbauer_sextet_params() -> Dict[str, float]:
 
 
 @pytest.fixture
-def moessbauer_octet_params() -> Dict[str, float]:
+def moessbauer_octet_params() -> dict[str, float]:
     """Create parameters for testing the Mössbauer octet model.
 
     Returns:

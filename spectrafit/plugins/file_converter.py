@@ -6,16 +6,19 @@ import argparse
 import json
 
 from pathlib import Path
+from typing import TYPE_CHECKING
 from typing import Any
 from typing import ClassVar
-from typing import Dict
-from typing import MutableMapping
 
 import tomli_w
 import yaml
 
 from spectrafit.plugins.converter import Converter
 from spectrafit.tools import read_input_file
+
+
+if TYPE_CHECKING:
+    from collections.abc import MutableMapping
 
 
 class FileConverter(Converter):
@@ -36,7 +39,7 @@ class FileConverter(Converter):
 
     choices: ClassVar[set[str]] = {"json", "yaml", "yml", "toml", "lock"}
 
-    def get_args(self) -> Dict[str, Any]:
+    def get_args(self) -> dict[str, Any]:
         """Get the arguments from the command line.
 
         Returns:

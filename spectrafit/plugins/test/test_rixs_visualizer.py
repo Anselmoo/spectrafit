@@ -6,7 +6,6 @@ import sys
 
 from typing import TYPE_CHECKING
 from typing import Any
-from typing import Tuple
 
 import numpy as np
 import plotly.graph_objects as go
@@ -26,7 +25,7 @@ if TYPE_CHECKING:
 
 @pytest.mark.skipif(sys.version_info < (3, 9), reason="Requires Python 3.9 or higher")
 @pytest.fixture(scope="module", autouse=True, name="test_data")
-def fixture_test_data() -> Tuple[
+def fixture_test_data() -> tuple[
     NDArray[np.float64],
     NDArray[np.float64],
     NDArray[np.float64],
@@ -92,7 +91,7 @@ class TestRIXSApp:
         self,
         file_format: str,
         tmp_path: Path,
-        test_data: Tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]],
+        test_data: tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]],
     ) -> None:
         """Test the loading of data."""
         data = {

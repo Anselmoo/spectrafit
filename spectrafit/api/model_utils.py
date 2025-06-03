@@ -6,9 +6,7 @@ ensuring type compatibility with mypy.
 
 from __future__ import annotations
 
-from typing import Dict
 from typing import Optional
-from typing import Union
 from typing import cast
 
 from spectrafit.api.moessbauer_model import AmplitudeAPI
@@ -20,7 +18,7 @@ from spectrafit.api.moessbauer_model import QuadrupoleSplittingAPI
 
 
 def create_amplitude_api(
-    data: Dict[str, Union[float, bool, None]],
+    data: dict[str, float | bool | None],
 ) -> AmplitudeAPI:
     """Create an AmplitudeAPI instance from a dictionary.
 
@@ -51,7 +49,7 @@ def create_amplitude_api(
 
 
 def create_isomershift_api(
-    data: Dict[str, Union[float, bool, None]],
+    data: dict[str, float | bool | None],
 ) -> IsomerShiftAPI:
     """Create an IsomerShiftAPI instance from a dictionary.
 
@@ -82,7 +80,7 @@ def create_isomershift_api(
 
 
 def create_fwhml_api(
-    data: Dict[str, Union[float, bool, None]],
+    data: dict[str, float | bool | None],
 ) -> FwhmlAPI:
     """Create a FwhmlAPI instance from a dictionary.
 
@@ -113,7 +111,7 @@ def create_fwhml_api(
 
 
 def create_background_api(
-    data: Dict[str, Union[float, bool, None]],
+    data: dict[str, float | bool | None],
 ) -> BackgroundAPI:
     """Create a BackgroundAPI instance from a dictionary.
 
@@ -144,7 +142,7 @@ def create_background_api(
 
 
 def create_quadrupolesplitting_api(
-    data: Dict[str, Union[float, bool, None]],
+    data: dict[str, float | bool | None],
 ) -> QuadrupoleSplittingAPI:
     """Create a QuadrupoleSplittingAPI instance from a dictionary.
 
@@ -175,7 +173,7 @@ def create_quadrupolesplitting_api(
 
 
 def create_hyperfinefield_api(
-    data: Dict[str, Union[float, bool, None]],
+    data: dict[str, float | bool | None],
 ) -> HyperfineFieldAPI:
     """Create a HyperfineFieldAPI instance from a dictionary.
 

@@ -10,10 +10,6 @@ from math import sqrt
 from typing import TYPE_CHECKING
 from typing import Any
 from typing import ClassVar
-from typing import Dict
-from typing import Optional
-from typing import Tuple
-from typing import Union
 
 import numpy as np
 
@@ -165,7 +161,7 @@ class DistributionModels:
         x: NDArray[np.float64],
         center: float = 0.0,
         fwhmv: float = 1.0,
-        gamma: Optional[float] = None,
+        gamma: float | None = None,
     ) -> NDArray[np.float64]:
         r"""Return a 1-dimensional Voigt distribution.
 
@@ -833,7 +829,7 @@ class DistributionModels:
         quadrupoleshift: float = 0.0,
         center: float = 0.0,
         background: float = 0.0,
-        anglethetaphi: Optional[Dict[str, float]] = None,
+        anglethetaphi: dict[str, float] | None = None,
     ) -> NDArray[np.float64]:
         """Compute a Mössbauer sextet via six Lorentzians plus background.
 
@@ -875,7 +871,7 @@ class DistributionModels:
         center: float = 0.0,
         efg_vzz: float = 1e21,
         efg_eta: float = 0.0,
-        anglethetaphi: Optional[Dict[str, float]] = None,
+        anglethetaphi: dict[str, float] | None = None,
         temperature: float = 300.0,
         sodshift: float = 0.0,
         sitefraction: float = 1.0,
@@ -983,7 +979,7 @@ class ReferenceKeys:
             msg = f"{model} is not supported for auto detection! Use one of {self.__automodels__}"
             raise KeyError(msg)
 
-    def detection_check(self, args: Dict[str, Any]) -> None:
+    def detection_check(self, args: dict[str, Any]) -> None:
         """Check if detection is available.
 
         Args:
@@ -1005,7 +1001,7 @@ class AutoPeakDetection:
         self,
         x: NDArray[np.float64],
         data: NDArray[np.float64],
-        args: Dict[str, Any],
+        args: dict[str, Any],
     ) -> None:
         """Initialize the AutoPeakDetection class.
 
@@ -1023,8 +1019,8 @@ class AutoPeakDetection:
     @staticmethod
     def check_key_exists(
         key: str,
-        args: Dict[str, Any],
-        value: Union[float, Tuple[Any, Any]],
+        args: dict[str, Any],
+        value: float | tuple[Any, Any],
     ) -> Any:
         """Check if a key exists in a dictionary.
 
@@ -1048,7 +1044,7 @@ class AutoPeakDetection:
         return args.get(key, value)
 
     @property
-    def estimate_height(self) -> Tuple[float, float]:
+    def estimate_height(self) -> tuple[float, float]:
         r"""Estimate the initial height based on an inverse noise ratio of a signal.
 
         !!! info "About the estimation of the height"
@@ -1073,7 +1069,7 @@ class AutoPeakDetection:
         return 1 - self.data.mean() / self.data.std(), self.data.max()
 
     @property
-    def estimate_threshold(self) -> Tuple[float, float]:
+    def estimate_threshold(self) -> tuple[float, float]:
         """Estimate the threshold value for the peak detection.
 
         Returns:
@@ -1095,7 +1091,7 @@ class AutoPeakDetection:
         return max(min_step, 1.0)
 
     @property
-    def estimate_prominence(self) -> Tuple[float, float]:
+    def estimate_prominence(self) -> tuple[float, float]:
         """Estimate the prominence of a peak.
 
         !!! info "About the estimation of the prominence"
@@ -1116,7 +1112,7 @@ class AutoPeakDetection:
         return self.data.mean(), self.data.max()
 
     @property
-    def estimated_width(self) -> Tuple[float, float]:
+    def estimated_width(self) -> tuple[float, float]:
         """Estimate the width of a peak.
 
         !!! info "About the estimation of the width"
@@ -1175,7 +1171,7 @@ class AutoPeakDetection:
         return wlen if wlen > 1.0 else 1 + 1e-9
 
     @property
-    def estimated_plateau_size(self) -> Tuple[float, float]:
+    def estimated_plateau_size(self) -> tuple[float, float]:
         """Estimate the plateau size for the peak detection.
 
         Returns:
@@ -1276,7 +1272,7 @@ class AutoPeakDetection:
 class ModelParameters(AutoPeakDetection):
     """Class to define the model parameters."""
 
-    def __init__(self, df: pd.DataFrame, args: Dict[str, Any]) -> None:
+    def __init__(self, df: pd.DataFrame, args: dict[str, Any]) -> None:
         """Initialize the model parameters.
 
         Args:
@@ -1318,8 +1314,8 @@ class ModelParameters(AutoPeakDetection):
     def df_to_numvalues(
         self,
         df: pd.DataFrame,
-        args: Dict[str, Any],
-    ) -> Tuple[NDArray[np.float64], NDArray[np.float64]]:
+        args: dict[str, Any],
+    ) -> tuple[NDArray[np.float64], NDArray[np.float64]]:
         """Transform the dataframe to numeric values of `x` and `data`.
 
         !!! note "About the dataframe to numeric values"
@@ -1579,7 +1575,7 @@ class ModelParameters(AutoPeakDetection):
         for key_1, value_1 in self.args["peaks"].items():
             self.define_parameters_loop(key_1=key_1, value_1=value_1)
 
-    def define_parameters_loop(self, key_1: str, value_1: Dict[str, Any]) -> None:
+    def define_parameters_loop(self, key_1: str, value_1: dict[str, Any]) -> None:
         """Loop through the input parameters for a `params`-dictionary.
 
         Args:
@@ -1595,7 +1591,7 @@ class ModelParameters(AutoPeakDetection):
         self,
         key_1: str,
         key_2: str,
-        value_2: Dict[str, Any],
+        value_2: dict[str, Any],
     ) -> None:
         """Loop through the input parameters for a `params`-dictionary.
 
@@ -1619,7 +1615,7 @@ class ModelParameters(AutoPeakDetection):
         key_1: str,
         key_2: str,
         key_3: str,
-        value_3: Dict[str, Any],
+        value_3: dict[str, Any],
     ) -> None:
         """Loop through the input parameters for a `params`-dictionary.
 
@@ -1653,7 +1649,7 @@ class ModelParameters(AutoPeakDetection):
         key_1: str,
         key_2: str,
         key_3: str,
-        value_3: Dict[str, Any],
+        value_3: dict[str, Any],
     ) -> None:
         """Define the input parameters for a `params`-dictionary for global fitting.
 
@@ -1712,7 +1708,7 @@ class SolverModels(ModelParameters):
           the `lmfit` function is used.
     """
 
-    def __init__(self, df: pd.DataFrame, args: Dict[str, Any]) -> None:
+    def __init__(self, df: pd.DataFrame, args: dict[str, Any]) -> None:
         """Initialize the solver modes.
 
         Args:
@@ -1726,7 +1722,7 @@ class SolverModels(ModelParameters):
         self.args_global = GlobalFittingAPI(**args).model_dump()
         self.params = self.return_params
 
-    def __call__(self) -> Tuple[Minimizer, Any]:
+    def __call__(self) -> tuple[Minimizer, Any]:
         """Solve the fitting model.
 
         Returns:
@@ -1756,7 +1752,7 @@ class SolverModels(ModelParameters):
 
     @staticmethod
     def solve_local_fitting(
-        params: Dict[str, Parameters],
+        params: dict[str, Parameters],
         x: NDArray[np.float64],
         data: NDArray[np.float64],
     ) -> NDArray[np.float64]:
@@ -1772,7 +1768,7 @@ class SolverModels(ModelParameters):
 
         """
         val = np.zeros(x.shape)
-        peak_kwargs: Dict[Tuple[str, str], Parameters] = defaultdict(dict)
+        peak_kwargs: dict[tuple[str, str], Parameters] = defaultdict(dict)
         for model_name, param_value in params.items():
             _model = model_name.lower()
             ReferenceKeys().model_check(model=_model)
@@ -1789,7 +1785,7 @@ class SolverModels(ModelParameters):
 
     @staticmethod
     def solve_global_fitting(
-        params: Dict[str, Parameters],
+        params: dict[str, Parameters],
         x: NDArray[np.float64],
         data: NDArray[np.float64],
     ) -> NDArray[np.float64]:
@@ -1819,7 +1815,7 @@ class SolverModels(ModelParameters):
 
         """
         val = np.zeros(data.shape)
-        peak_kwargs: Dict[Tuple[str, str, str], Parameters] = defaultdict(dict)
+        peak_kwargs: dict[tuple[str, str, str], Parameters] = defaultdict(dict)
 
         for model, value in params.items():
             model_lower = model.lower()
@@ -1835,7 +1831,7 @@ class SolverModels(ModelParameters):
 
 
 def calculated_model(
-    params: Dict[str, Parameters],
+    params: dict[str, Parameters],
     x: NDArray[np.float64],
     df: pd.DataFrame,
     global_fit: int,
@@ -1860,7 +1856,7 @@ def calculated_model(
             models.
 
     """
-    peak_kwargs: Dict[Any, Parameters] = defaultdict(dict)
+    peak_kwargs: dict[Any, Parameters] = defaultdict(dict)
 
     for model, value in params.items():
         model_lower = model.lower()

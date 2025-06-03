@@ -3,9 +3,6 @@
 from __future__ import annotations
 
 from math import isclose
-from typing import Tuple
-from typing import Type
-from typing import Union
 
 import pandas as pd
 import pytest
@@ -108,7 +105,7 @@ def test_solver() -> None:
 
 
 @pytest.fixture
-def pptx_data(project_name: str) -> Tuple[PPTXDataAPI, OutputAPI, InputAPI, SolverAPI]:
+def pptx_data(project_name: str) -> tuple[PPTXDataAPI, OutputAPI, InputAPI, SolverAPI]:
     """Return a PPTXData object."""
     method = MethodAPI(global_fitting=True)
     description = DescriptionAPI(project_name=project_name, version="1.0")
@@ -145,7 +142,7 @@ def pptx_data(project_name: str) -> Tuple[PPTXDataAPI, OutputAPI, InputAPI, Solv
 
 
 def test_pptx_data(
-    pptx_data: Tuple[PPTXDataAPI, OutputAPI, InputAPI, SolverAPI],
+    pptx_data: tuple[PPTXDataAPI, OutputAPI, InputAPI, SolverAPI],
 ) -> None:
     """Test the PPTXData class."""
     assert pptx_data[0].output == pptx_data[1]
@@ -156,7 +153,7 @@ def test_pptx_data(
 @pytest.mark.parametrize("format_str", ["16:9", "16:9HDR", "4:3"])
 def test_pptx_layout_init(
     format_str: str,
-    pptx_data: Tuple[PPTXDataAPI, OutputAPI, InputAPI, SolverAPI],
+    pptx_data: tuple[PPTXDataAPI, OutputAPI, InputAPI, SolverAPI],
     project_name: str,
 ) -> None:
     """Test the PPTXLayout class."""
@@ -170,7 +167,7 @@ def test_pptx_layout_init(
 
 def test_pptx_layout_tmp_plot(
     project_name: str,
-    pptx_data: Tuple[PPTXDataAPI, OutputAPI, InputAPI, SolverAPI],
+    pptx_data: tuple[PPTXDataAPI, OutputAPI, InputAPI, SolverAPI],
 ) -> None:
     """Test the PPTXLayout class."""
     layout = PPTXLayoutAPI(project_name, pptx_data[0])
@@ -185,8 +182,8 @@ def test_pptx_layout_tmp_plot(
 )
 def test_get_pptx_layout(
     format_str: str,
-    pptx_data: Tuple[PPTXDataAPI, OutputAPI, InputAPI, SolverAPI],
-    expected_output: Type[Union[Field169API, Field169HDRAPI, Field43API]],
+    pptx_data: tuple[PPTXDataAPI, OutputAPI, InputAPI, SolverAPI],
+    expected_output: type[Field169API | Field169HDRAPI | Field43API],
 ) -> None:
     """Test the PPTXLayout class."""
     layout = PPTXLayoutAPI(format_str, pptx_data[0])
