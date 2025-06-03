@@ -8,10 +8,6 @@ from getpass import getuser
 from hashlib import sha256
 from socket import gethostname
 from typing import Any
-from typing import Dict
-from typing import List
-from typing import Optional
-from typing import Union
 from uuid import uuid4
 
 from pydantic import BaseModel
@@ -38,20 +34,20 @@ class DescriptionAPI(BaseModel):
         alias="projectDetails",
         description="Project details",
     )
-    keywords: List[str] = Field(
+    keywords: list[str] = Field(
         default=["spectra"],
         description="Keywords for the project",
     )
-    authors: List[str] = Field(
+    authors: list[str] = Field(
         default=["authors"],
         description="Authors of the project",
     )
-    references: List[str] = Field(
+    references: list[str] = Field(
         default=["https://github.com/Anselmoo/spectrafit"],
         alias="refs",
         description="References for the project",
     )
-    metadata: Optional[Union[Dict[Any, Any], List[Any]]] = Field(
+    metadata: dict[Any, Any] | list[Any] | None = Field(
         default=None,
         description="Metadata for the project",
     )
@@ -67,7 +63,7 @@ class DescriptionAPI(BaseModel):
 
     @field_validator("references")
     @classmethod
-    def check_references(cls, v: List[str]) -> Optional[List[str]]:
+    def check_references(cls, v: list[str]) -> list[str] | None:
         """Check if the list of references have valid URLs."""
         return [str(HttpUrl(url)) for url in v]
 
@@ -79,18 +75,18 @@ class CMDModelAPI(BaseModel):
     outfile: str = Field(default="spectrafit_results")
     input: str = Field(default="fitting_input.toml")
     oversampling: bool = DataPreProcessingAPI().oversampling
-    energy_start: Optional[float] = DataPreProcessingAPI().energy_start
-    energy_stop: Optional[float] = DataPreProcessingAPI().energy_stop
-    smooth: Optional[int] = DataPreProcessingAPI().smooth
-    shift: Optional[float] = DataPreProcessingAPI().shift
-    column: List[Union[int, str]] = DataPreProcessingAPI().column
+    energy_start: float | None = DataPreProcessingAPI().energy_start
+    energy_stop: float | None = DataPreProcessingAPI().energy_stop
+    smooth: int | None = DataPreProcessingAPI().smooth
+    shift: float | None = DataPreProcessingAPI().shift
+    column: list[int | str] = DataPreProcessingAPI().column
     separator: str = "\t"
     decimal: str = "."
-    header: Optional[int] = None
-    comment: Optional[str] = None
+    header: int | None = None
+    comment: str | None = None
     global_: int = Field(GlobalFittingAPI().global_)
-    autopeak: Union[AutopeakAPI, bool, Any] = False
+    autopeak: AutopeakAPI | bool | Any = False
     noplot: bool = False
     version: bool = False
     verbose: int = Field(default=0, ge=0, le=2)
-    description: Optional[DescriptionAPI] = Field(DescriptionAPI())
+    description: DescriptionAPI | None = Field(DescriptionAPI())

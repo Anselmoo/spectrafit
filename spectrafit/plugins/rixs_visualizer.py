@@ -9,10 +9,6 @@ import logging
 from pathlib import Path
 from typing import TYPE_CHECKING
 from typing import Any
-from typing import Dict
-from typing import List
-from typing import Optional
-from typing import Tuple
 
 import dash
 import dash_bootstrap_components as dbc
@@ -59,10 +55,10 @@ class RIXSFigure:
         incident_energy: NDArray[np.float64],
         emission_energy: NDArray[np.float64],
         rixs_map: NDArray[np.float64],
-        size: Optional[SizeRatioAPI] = None,
-        x_axis: Optional[XAxisAPI] = None,
-        y_axis: Optional[YAxisAPI] = None,
-        z_axis: Optional[ZAxisAPI] = None,
+        size: SizeRatioAPI | None = None,
+        x_axis: XAxisAPI | None = None,
+        y_axis: YAxisAPI | None = None,
+        z_axis: ZAxisAPI | None = None,
     ) -> None:
         """Initialize the RIXS figure.
 
@@ -122,7 +118,7 @@ class RIXSFigure:
         self,
         colorscale: str = "Viridis",
         opacity: float = 0.9,
-        template: Optional[str] = None,
+        template: str | None = None,
     ) -> go.Figure:
         """Create the RIXS figure.
 
@@ -188,7 +184,7 @@ class RIXSFigure:
         self,
         x: NDArray[np.float64],
         y: NDArray[np.float64],
-        template: Optional[str] = None,
+        template: str | None = None,
     ) -> go.Figure:
         """Create the XES figure.
 
@@ -227,7 +223,7 @@ class RIXSFigure:
         self,
         x: NDArray[np.float64],
         y: NDArray[np.float64],
-        template: Optional[str] = None,
+        template: str | None = None,
     ) -> go.Figure:
         """Create the XAS figure.
 
@@ -285,9 +281,9 @@ class RIXSApp(RIXSFigure):  # pragma: no cover
         incident_energy: NDArray[np.float64],
         emission_energy: NDArray[np.float64],
         rixs_map: NDArray[np.float64],
-        size: Optional[SizeRatioAPI] = None,
-        main_title: Optional[MainTitleAPI] = None,
-        fdir: Optional[Path] = None,
+        size: SizeRatioAPI | None = None,
+        main_title: MainTitleAPI | None = None,
+        fdir: Path | None = None,
         mode: str = "server",
         jupyter_dash: bool = False,
         port: int = 8050,
@@ -425,7 +421,7 @@ class RIXSApp(RIXSFigure):  # pragma: no cover
             ),
         )
 
-    def pre_body(self) -> Tuple[html.Div, html.Div, html.Div]:
+    def pre_body(self) -> tuple[html.Div, html.Div, html.Div]:
         """Create the body.
 
         Returns:
@@ -573,12 +569,12 @@ class RIXSApp(RIXSFigure):  # pragma: no cover
             ],
         )
         def update_hover_data(
-            hoverData: Dict[str, List[Dict[str, float]]],
-            clickData: Dict[str, List[Dict[str, float]]],
+            hoverData: dict[str, list[dict[str, float]]],
+            clickData: dict[str, list[dict[str, float]]],
             colorscale: str,
             opacity: float,
             theme: str,
-        ) -> Tuple[go.Figure, go.Figure, go.Figure]:
+        ) -> tuple[go.Figure, go.Figure, go.Figure]:
             if hoverData is None:
                 return (
                     self.create_xas(
@@ -647,7 +643,7 @@ class RIXSApp(RIXSFigure):  # pragma: no cover
 class RIXSVisualizer:
     """RIXS Visualizer. This class is used to visualize RIXS data."""
 
-    def get_args(self) -> Dict[str, Any]:
+    def get_args(self) -> dict[str, Any]:
         """Get the arguments from the command line.
 
         Returns:

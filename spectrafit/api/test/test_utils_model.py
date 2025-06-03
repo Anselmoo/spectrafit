@@ -4,9 +4,6 @@ from __future__ import annotations
 
 from typing import Any
 from typing import Callable
-from typing import Dict
-from typing import Type
-from typing import Union
 
 import numpy as np
 import pytest
@@ -27,7 +24,7 @@ from spectrafit.api.moessbauer_model import QuadrupoleSplittingAPI
 
 def test_create_quadrupolesplitting_api_basic() -> None:
     """Test creating QuadrupoleSplittingAPI with basic parameters."""
-    data: Dict[str, Union[float, bool, None]] = {
+    data: dict[str, float | bool | None] = {
         "value": 0.5,
         "min": -1.0,
         "max": 1.0,
@@ -48,7 +45,7 @@ def test_create_quadrupolesplitting_api_basic() -> None:
 
 def test_create_quadrupolesplitting_api_all_params() -> None:
     """Test creating QuadrupoleSplittingAPI with all parameters."""
-    data: Dict[str, Union[float, bool, None, str]] = {
+    data: dict[str, float | bool | None | str] = {
         "value": 0.3,
         "min": -0.5,
         "max": 0.5,
@@ -71,7 +68,7 @@ def test_create_quadrupolesplitting_api_all_params() -> None:
 
 def test_create_quadrupolesplitting_api_none_values() -> None:
     """Test creating QuadrupoleSplittingAPI with None values."""
-    data: Dict[str, Union[float, bool, None]] = {
+    data: dict[str, float | bool | None] = {
         "value": None,
         "min": None,
         "max": None,
@@ -90,7 +87,7 @@ def test_create_quadrupolesplitting_api_none_values() -> None:
 
 def test_create_quadrupolesplitting_api_empty_dict() -> None:
     """Test creating QuadrupoleSplittingAPI with empty dictionary."""
-    data: Dict[str, Union[float, bool, None]] = {}
+    data: dict[str, float | bool | None] = {}
 
     result = create_quadrupolesplitting_api(data)
 
@@ -104,7 +101,7 @@ def test_create_quadrupolesplitting_api_empty_dict() -> None:
 
 def test_create_hyperfinefield_api_basic() -> None:
     """Test creating HyperfineFieldAPI with basic parameters."""
-    data: Dict[str, Union[float, bool, None]] = {
+    data: dict[str, float | bool | None] = {
         "value": 30.0,
         "min": 0.0,
         "max": 50.0,
@@ -125,7 +122,7 @@ def test_create_hyperfinefield_api_basic() -> None:
 
 def test_create_hyperfinefield_api_all_params() -> None:
     """Test creating HyperfineFieldAPI with all parameters."""
-    data: Dict[str, Union[float, bool, None, str]] = {
+    data: dict[str, float | bool | None | str] = {
         "value": 25.0,
         "min": 10.0,
         "max": 40.0,
@@ -158,8 +155,8 @@ def test_create_hyperfinefield_api_all_params() -> None:
     ],
 )
 def test_factory_functions_consistency(
-    factory_func: Callable[[Dict[str, Union[float, bool, None]]], Any],
-    api_class: Type[Any],
+    factory_func: Callable[[dict[str, float | bool | None]], Any],
+    api_class: type[Any],
     test_value: float,
 ) -> None:
     """Test consistency of factory function behavior across different API models.
@@ -169,7 +166,7 @@ def test_factory_functions_consistency(
         api_class: Expected API class type
         test_value: Test value for parameter
     """
-    data: Dict[str, Union[float, bool, None, str]] = {
+    data: dict[str, float | bool | None | str] = {
         "value": test_value,
         "min": test_value / 2,
         "max": test_value * 2,
@@ -199,8 +196,8 @@ def test_factory_functions_consistency(
     ],
 )
 def test_factory_functions_with_boolean_strings(
-    factory_func: Callable[[Dict[str, Union[float, bool, None]]], Any],
-    api_class: Type[Any],
+    factory_func: Callable[[dict[str, float | bool | None]], Any],
+    api_class: type[Any],
 ) -> None:
     """Test handling of boolean values that might come from serialized data.
 
@@ -209,11 +206,11 @@ def test_factory_functions_with_boolean_strings(
         api_class: Expected API class type
     """
     # Test with boolean values
-    data_true: Dict[str, Union[float, bool, None]] = {"value": 1.0, "vary": True}
+    data_true: dict[str, float | bool | None] = {"value": 1.0, "vary": True}
     result_true = factory_func(data_true)
     assert result_true.vary is True
 
-    data_false: Dict[str, Union[float, bool, None]] = {"value": 1.0, "vary": False}
+    data_false: dict[str, float | bool | None] = {"value": 1.0, "vary": False}
     result_false = factory_func(data_false)
     assert result_false.vary is False
 
@@ -221,7 +218,7 @@ def test_factory_functions_with_boolean_strings(
 def test_create_api_with_mixed_types() -> None:
     """Test creating API models with mixed data types for vary parameter."""
     # Test with integer 0 (should convert to False)
-    data: Dict[str, Union[float, bool, None]] = {
+    data: dict[str, float | bool | None] = {
         "value": 0.5,
         "vary": 0,
     }

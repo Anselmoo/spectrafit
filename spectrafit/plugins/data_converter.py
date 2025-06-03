@@ -7,11 +7,8 @@ import re
 
 from dataclasses import dataclass
 from pathlib import Path
+from typing import TYPE_CHECKING
 from typing import Any
-from typing import Dict
-from typing import List
-from typing import MutableMapping
-from typing import Optional
 
 import pandas as pd
 
@@ -19,7 +16,11 @@ from spectrafit.api.file_model import DataFileAPI
 from spectrafit.plugins.converter import Converter
 
 
-def get_athena_column(fname: Path, comment: str = "#") -> Optional[List[str]]:
+if TYPE_CHECKING:
+    from collections.abc import MutableMapping
+
+
+def get_athena_column(fname: Path, comment: str = "#") -> list[str] | None:
     """Get the header of the file.
 
     Args:
@@ -92,7 +93,7 @@ class DataConverter(Converter):
         `DataConverter` class can be also used in the Jupyter notebook.
     """
 
-    def get_args(self) -> Dict[str, Any]:
+    def get_args(self) -> dict[str, Any]:
         """Get the arguments from the command line.
 
         Returns:

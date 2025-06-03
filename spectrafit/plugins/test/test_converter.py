@@ -11,9 +11,7 @@ import sys
 from pathlib import Path
 from typing import TYPE_CHECKING
 from typing import Any
-from typing import Dict
 from typing import Literal
-from typing import Tuple
 
 import numpy as np
 import pandas as pd
@@ -415,7 +413,7 @@ class TestDataConverter:
 
 
 @pytest.fixture(autouse=True, name="tmp_file_dict")
-def tmp_file_dict() -> Dict[str, Dict[str, NDArray[Any]]]:
+def tmp_file_dict() -> dict[str, dict[str, NDArray[Any]]]:
     """Create temporary file with pickle data."""
     return {
         "level_1": {
@@ -434,7 +432,7 @@ def tmp_file_dict() -> Dict[str, Dict[str, NDArray[Any]]]:
 
 
 @pytest.fixture(autouse=True, name="tmp_file_nested_dict")
-def tmp_file_nested_dict() -> Dict[str, Dict[str, Any]]:
+def tmp_file_nested_dict() -> dict[str, dict[str, Any]]:
     """Create temporary file with nested pickle data."""
     return {
         "level_4": {
@@ -457,7 +455,7 @@ def tmp_file_nested_dict() -> Dict[str, Dict[str, Any]]:
 @pytest.fixture(autouse=True, name="tmp_pkl_gz_file")
 def tmp_pkl_gz_file(
     tmp_path: Path,
-    tmp_file_dict: Dict[str, Dict[str, NDArray[np.float64]]],
+    tmp_file_dict: dict[str, dict[str, NDArray[np.float64]]],
 ) -> Path:
     """Create temporary file with pickle data.
 
@@ -478,7 +476,7 @@ def tmp_pkl_gz_file(
 @pytest.fixture(autouse=True, name="tmp_file_pkl")
 def tmp_file_pkl(
     tmp_path: Path,
-    tmp_file_dict: Dict[str, Dict[str, NDArray[np.float64]]],
+    tmp_file_dict: dict[str, dict[str, NDArray[np.float64]]],
 ) -> Path:
     """Create temporary file with pickle data.
 
@@ -499,7 +497,7 @@ def tmp_file_pkl(
 @pytest.fixture(autouse=True, name="tmp_file_pkl_gz")
 def tmp_file_pkl_gz(
     tmp_path: Path,
-    tmp_file_dict: Dict[str, Dict[str, NDArray[np.float64]]],
+    tmp_file_dict: dict[str, dict[str, NDArray[np.float64]]],
 ) -> Path:
     """Create temporary file with pickle data.
 
@@ -520,7 +518,7 @@ def tmp_file_pkl_gz(
 @pytest.fixture(autouse=True, name="tmp_file_pkl_nested")
 def tmp_file_pkl_nested(
     tmp_path: Path,
-    tmp_file_nested_dict: Dict[str, Dict[str, Any]],
+    tmp_file_nested_dict: dict[str, dict[str, Any]],
 ) -> Path:
     """Create temporary file with nested pickle data.
 
@@ -549,7 +547,7 @@ class TestPklConverter:
     def test_export_data(
         self,
         tmp_path: Path,
-        tmp_file_dict: Dict[str, Dict[str, NDArray[np.float64]]],
+        tmp_file_dict: dict[str, dict[str, NDArray[np.float64]]],
         export_format: str,
     ) -> None:
         """Test export data.
@@ -593,7 +591,7 @@ class TestPklConverter:
 
     def test_numpy2list(
         self,
-        tmp_file_dict: Dict[str, Dict[str, NDArray[np.float64]]],
+        tmp_file_dict: dict[str, dict[str, NDArray[np.float64]]],
     ) -> None:
         """Test numpy2list.
 
@@ -660,7 +658,7 @@ class TestPklConverter:
     def test_pkl_converter_nested(
         self,
         tmp_path: Path,
-        tmp_file_nested_dict: Dict[str, Any],
+        tmp_file_nested_dict: dict[str, Any],
     ) -> None:
         """Test pickle converter for nested dictionaries.
 
@@ -810,7 +808,7 @@ class TestPklAsGraph:
 @pytest.fixture(autouse=True, name="tmp_list_dict_rixs")
 def fixture_tmp_list_dict_rixs(
     tmp_path: Path,
-) -> Tuple[Path, Tuple[str, str, str]]:
+) -> tuple[Path, tuple[str, str, str]]:
     """Fixture for temporary list of dictionaries.
 
     Args:
@@ -845,7 +843,7 @@ class TestRixsConverter:
 
     def test_convertet(
         self,
-        tmp_list_dict_rixs: Tuple[Path, Tuple[str, str, str]],
+        tmp_list_dict_rixs: tuple[Path, tuple[str, str, str]],
     ) -> None:
         """Test the converter.
 
@@ -866,7 +864,7 @@ class TestRixsConverter:
     @pytest.mark.parametrize("export_format", ["json", "toml", "lock", "npy", "npz"])
     def test_save(
         self,
-        tmp_list_dict_rixs: Tuple[Path, Tuple[str, str, str]],
+        tmp_list_dict_rixs: tuple[Path, tuple[str, str, str]],
         export_format: str,
     ) -> None:
         """Test the save function for various export formats.
@@ -908,7 +906,7 @@ class TestRixsConverter:
 
     def test_raise_error_save(
         self,
-        tmp_list_dict_rixs: Tuple[Path, Tuple[str, str, str]],
+        tmp_list_dict_rixs: tuple[Path, tuple[str, str, str]],
     ) -> None:
         """Test the raise error.
 
@@ -927,7 +925,7 @@ class TestRixsConverter:
     @pytest.mark.parametrize("mode", ["sum", "mean"])
     def test_create_rixs(
         self,
-        tmp_list_dict_rixs: Tuple[Path, Tuple[str, str, str]],
+        tmp_list_dict_rixs: tuple[Path, tuple[str, str, str]],
         mode: str,
     ) -> None:
         """Test the create rixs.
@@ -951,7 +949,7 @@ class TestRixsConverter:
 
     def test_create_rixs_fail_1(
         self,
-        tmp_list_dict_rixs: Tuple[Path, Tuple[str, str, str]],
+        tmp_list_dict_rixs: tuple[Path, tuple[str, str, str]],
     ) -> None:
         """Test the create rixs fail.
 
@@ -978,8 +976,8 @@ class TestRixsConverter:
     )
     def test_create_rixs_fail_2(
         self,
-        tmp_list_dict_rixs: Tuple[Path, Tuple[str, str, str]],
-        keys: Tuple[str, str, str],
+        tmp_list_dict_rixs: tuple[Path, tuple[str, str, str]],
+        keys: tuple[str, str, str],
     ) -> None:
         """Test the create rixs fail.
 
@@ -1005,7 +1003,7 @@ class TestRixsConverter:
     def test_cmd_pkl_converter(
         self,
         script_runner: Any,
-        tmp_list_dict_rixs: Tuple[Path, Tuple[str, str, str]],
+        tmp_list_dict_rixs: tuple[Path, tuple[str, str, str]],
         export_format: str,
     ) -> None:
         """Test the data converter plugin.

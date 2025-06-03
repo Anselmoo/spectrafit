@@ -12,8 +12,6 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 from typing import Any
-from typing import Dict
-from typing import Optional
 
 import matplotlib.font_manager
 import matplotlib.pyplot as plt
@@ -37,7 +35,7 @@ color = sns.color_palette("Paired")
 class PlotSpectra:
     """Plotting of the fit results."""
 
-    def __init__(self, df: pd.DataFrame, args: Optional[Dict[str, Any]] = None) -> None:
+    def __init__(self, df: pd.DataFrame, args: dict[str, Any] | None = None) -> None:
         """Initialize the PlotSpectra class.
 
         Args:
