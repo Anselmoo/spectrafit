@@ -3,10 +3,6 @@
 from __future__ import annotations
 
 from typing import Any
-from typing import Dict
-from typing import List
-from typing import Optional
-from typing import Union
 
 from pydantic import BaseModel
 from pydantic import ConfigDict
@@ -24,15 +20,15 @@ class AutopeakAPI(BaseModel):
     )
     """
 
-    modeltype: Optional[str] = None
-    height: Optional[List[float]] = None
-    threshold: Optional[List[float]] = None
-    distance: Optional[int] = None
-    prominence: Optional[List[float]] = None
-    width: Optional[List[float]] = None
-    wlen: Optional[int] = None
-    rel_height: Optional[float] = None
-    plateau_size: Optional[float] = None
+    modeltype: str | None = None
+    height: list[float] | None = None
+    threshold: list[float] | None = None
+    distance: int | None = None
+    prominence: list[float] | None = None
+    width: list[float] | None = None
+    wlen: int | None = None
+    rel_height: float | None = None
+    plateau_size: float | None = None
     model_config = ConfigDict(extra="forbid", validate_assignment=True)
 
 
@@ -43,11 +39,11 @@ class DataPreProcessingAPI(BaseModel):
         default=False,
         description="Oversampling the spectra by using factor of 5; default to False.",
     )
-    energy_start: Optional[float] = Field(
+    energy_start: float | None = Field(
         default=None,
         description="Start energy of the spectra; default to None.",
     )
-    energy_stop: Optional[float] = Field(
+    energy_stop: float | None = Field(
         default=None,
         description="Stop energy of the spectra; default to None.",
     )
@@ -60,7 +56,7 @@ class DataPreProcessingAPI(BaseModel):
         default=0,
         description="Shift the energy axis; default to 0.",
     )
-    column: List[Union[int, str]] = Field(
+    column: list[int | str] = Field(
         min_length=1,
         default=[0, 1],
         description="Column of the data.",
@@ -76,11 +72,11 @@ class GlobalFittingAPI(BaseModel):
 class SolverModelsAPI(BaseModel):
     """Definition of the solver of SpectraFit."""
 
-    minimizer: Dict[str, Any] = Field(
+    minimizer: dict[str, Any] = Field(
         default={"nan_policy": "propagate", "calc_covar": True},
         description="Minimizer options",
     )
-    optimizer: Dict[str, Any] = Field(
+    optimizer: dict[str, Any] = Field(
         default={"max_nfev": None, "method": "leastsq"},
         description="Optimzer options",
     )
@@ -96,8 +92,8 @@ class GeneralSolverModelsAPI(BaseModel):
     """
 
     global_: int = GlobalFittingAPI().global_
-    minimizer: Dict[str, Any] = SolverModelsAPI().minimizer
-    optimizer: Dict[str, Any] = SolverModelsAPI().optimizer
+    minimizer: dict[str, Any] = SolverModelsAPI().minimizer
+    optimizer: dict[str, Any] = SolverModelsAPI().optimizer
 
 
 class ColumnNamesAPI(BaseModel):

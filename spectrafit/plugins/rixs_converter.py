@@ -6,9 +6,8 @@ import argparse
 import json
 
 from pathlib import Path
+from typing import TYPE_CHECKING
 from typing import Any
-from typing import Dict
-from typing import MutableMapping
 
 import numpy as np
 import tomli_w
@@ -19,6 +18,8 @@ from spectrafit.tools import pkl2any
 from spectrafit.tools import pure_fname
 
 
+if TYPE_CHECKING:
+    from collections.abc import MutableMapping
 choices_fformat = {"latin1", "utf-8", "utf-16", "utf-32"}
 choices_export = {"json", "toml", "lock", "npy", "npz"}
 choices_mode = {"sum", "mean"}
@@ -27,7 +28,7 @@ choices_mode = {"sum", "mean"}
 class RIXSConverter(Converter):
     """Convert raw pickle data into JSON, TOML, or numpy formats."""
 
-    def get_args(self) -> Dict[str, Any]:
+    def get_args(self) -> dict[str, Any]:
         """Retrieve command-line arguments.
 
         Returns:

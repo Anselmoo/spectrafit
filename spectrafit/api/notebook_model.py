@@ -2,11 +2,6 @@
 
 from __future__ import annotations
 
-from typing import List
-from typing import Optional
-from typing import Tuple
-from typing import Union
-
 from _plotly_utils.colors.carto import Burg
 from _plotly_utils.colors.carto import Purp_r
 from _plotly_utils.colors.carto import Teal_r
@@ -20,7 +15,7 @@ class XAxisAPI(BaseModel):
     """Defintion of the X-Axis of the plotly figure."""
 
     name: str = Field(default="Energy", description="Name of the x-axis of the plot.")
-    unit: Optional[str] = Field(
+    unit: str | None = Field(
         default="eV",
         description="Name of the x-axis units of the plot.",
     )
@@ -33,7 +28,7 @@ class YAxisAPI(BaseModel):
         default="Intensity",
         description="Name of the y-axis of the plot.",
     )
-    unit: Optional[str] = Field(
+    unit: str | None = Field(
         default="a.u.",
         description="Name of the y-axis units of the plot.",
     )
@@ -51,7 +46,7 @@ class ResidualAPI(BaseModel):
         default="Residuals",
         description="Name of the residual-axis of the plot.",
     )
-    unit: Optional[str] = Field(
+    unit: str | None = Field(
         default="a.u.",
         description="Name of the residual-axis units of the plot.",
     )
@@ -64,7 +59,7 @@ class MetricAPI(BaseModel):
         default="Metrics",
         description="Name of the first metrics-axis of the plot.",
     )
-    unit_0: Optional[str] = Field(
+    unit_0: str | None = Field(
         default="a.u.",
         description="Name of the first metrics-axis units of the plot.",
     )
@@ -72,7 +67,7 @@ class MetricAPI(BaseModel):
         default="Metrics",
         description="Name of the second metrics-axis of the plot.",
     )
-    unit_1: Optional[str] = Field(
+    unit_1: str | None = Field(
         default="a.u.",
         description="Name of the second metrics-axis units of the plot.",
     )
@@ -82,7 +77,7 @@ class RunAPI(BaseModel):
     """Definition of the residual plot (Y-Axis) of the plotly figure."""
 
     name: str = Field(default="Run", description="Name of the Run-axis of the plot.")
-    unit: Optional[str] = Field(
+    unit: str | None = Field(
         default="#",
         description="Name of the run-axis units of the plot.",
     )
@@ -133,11 +128,11 @@ class ColorAPI(BaseModel):
         default=PlotlyColors[6],
         description="Color of the components, mainly peaks.",
     )
-    bars: List[str] = Field(
+    bars: list[str] = Field(
         default=[i for j in zip(Teal_r, Purp_r) for i in j],
         description="Color of the bar plot of the metrics.",
     )
-    lines: List[str] = Field(
+    lines: list[str] = Field(
         default=Burg,
         description="Color of the lines of the plot.",
     )
@@ -178,11 +173,11 @@ class PlotAPI(BaseModel):
     """Definition of the plotly figure."""
 
     x: str = Field(..., description="Name of the x column to plot.")
-    y: Union[str, List[str]] = Field(
+    y: str | list[str] = Field(
         ...,
         description="List of the names of the y columns to plot.",
     )
-    title: Optional[str] = Field(None, description="Title of the plot.")
+    title: str | None = Field(None, description="Title of the plot.")
     xaxis_title: XAxisAPI = XAxisAPI()
     yaxis_title: YAxisAPI = YAxisAPI()
     residual_title: ResidualAPI = ResidualAPI()
@@ -195,7 +190,7 @@ class PlotAPI(BaseModel):
     minor_ticks: bool = Field(default=True, description="Show minor ticks.")
     color: ColorAPI = ColorAPI()
     grid: GridAPI = GridAPI()
-    size: Tuple[int, Tuple[int, int]] = Field(
+    size: tuple[int, tuple[int, int]] = Field(
         default=(800, (600, 300)),
         description="Size of the fit- and metric-plot.",
     )
@@ -206,8 +201,8 @@ class FnameAPI(BaseModel):
 
     fname: str = Field(..., description="Name of the file to save.")
     suffix: str = Field(..., description="Suffix of the file to save.")
-    prefix: Optional[str] = Field(
+    prefix: str | None = Field(
         default=None,
         description="Prefix of the file to save.",
     )
-    folder: Optional[str] = Field(default=None, description="Folder to save the file.")
+    folder: str | None = Field(default=None, description="Folder to save the file.")

@@ -7,11 +7,6 @@ import tempfile
 
 from pathlib import Path
 from typing import ClassVar
-from typing import Dict
-from typing import List
-from typing import Tuple
-from typing import Type
-from typing import Union
 
 import pandas as pd
 import pkg_resources
@@ -50,7 +45,7 @@ class InputAPI(BaseModel):
 class OutputAPI(BaseModel):
     """Dataframe class for PPTXData output."""
 
-    df_fit: Dict[str, List[float]]
+    df_fit: dict[str, list[float]]
 
 
 class GoodnessOfFitAPI(BaseModel):
@@ -65,13 +60,13 @@ class GoodnessOfFitAPI(BaseModel):
 class RegressionMetricsAPI(BaseModel):
     """RegressionMetrics class."""
 
-    index: List[str]
-    columns: List[int]
-    data: List[List[float]]
+    index: list[str]
+    columns: list[int]
+    data: list[list[float]]
 
     @field_validator("index")
     @classmethod
-    def short_metrics(cls, v: List[str]) -> List[str]:
+    def short_metrics(cls, v: list[str]) -> list[str]:
         """Shorten the metrics names.
 
         Args:
@@ -82,7 +77,7 @@ class RegressionMetricsAPI(BaseModel):
 
         """
         pattern = r"(?<!\d)[a-zA-Z0-9]{2,}(?!\d)"
-        abbreviations: Dict[str, str] = {}
+        abbreviations: dict[str, str] = {}
         min_abbrev_length = 2
         for metric in v:
             abbreviation = "".join(re.findall(pattern, metric)).lower()[
@@ -104,14 +99,14 @@ class SolverAPI(BaseModel):
 
     goodness_of_fit: GoodnessOfFitAPI
     regression_metrics: RegressionMetricsAPI
-    variables: Dict[str, Dict[str, float]]
+    variables: dict[str, dict[str, float]]
 
     @field_validator("variables")
     @classmethod
     def short_variables(
         cls,
-        v: Dict[str, Dict[str, float]],
-    ) -> Dict[str, Dict[str, float]]:
+        v: dict[str, dict[str, float]],
+    ) -> dict[str, dict[str, float]]:
         """Shorten the variables names.
 
         Args:
@@ -370,9 +365,9 @@ class PPTXLayoutAPI:
     """
 
     pptx_formats: ClassVar[
-        Dict[
+        dict[
             str,
-            Tuple[Type[Union[Field169API, Field169HDRAPI, Field43API]], Dict[str, int]],
+            tuple[type[Field169API | Field169HDRAPI | Field43API], dict[str, int]],
         ]
     ] = {
         "16:9": (Field169API, {"width": 1280, "height": 720}),
@@ -641,7 +636,7 @@ class PPTXLayoutAPI:
             fname=PPTXBasicTitleAPI().credit_logo,
         )
 
-    def get_pptx_layout(self) -> Union[Field169API, Field169HDRAPI, Field43API]:
+    def get_pptx_layout(self) -> Field169API | Field169HDRAPI | Field43API:
         """Get the powerpoint presentation layout.
 
         Returns:

@@ -8,8 +8,6 @@ import json
 from pathlib import Path
 from typing import Any
 from typing import ClassVar
-from typing import Dict
-from typing import Union
 
 import matplotlib.pyplot as plt
 import networkx as nx
@@ -32,7 +30,7 @@ class PklVisualizer(Converter):
     choices_fformat: ClassVar[set[str]] = {"latin1", "utf-8", "utf-16", "utf-32"}
     choices_export: ClassVar[set[str]] = {"png", "pdf", "jpg", "jpeg"}
 
-    def get_args(self) -> Dict[str, Any]:
+    def get_args(self) -> dict[str, Any]:
         """Get the arguments from the command line.
 
         Returns:
@@ -70,7 +68,7 @@ class PklVisualizer(Converter):
         return vars(parser.parse_args())
 
     @staticmethod
-    def convert(infile: Path, file_format: str) -> Dict[str, Any]:
+    def convert(infile: Path, file_format: str) -> dict[str, Any]:
         """Convert the input file to the output file.
 
         Args:
@@ -127,7 +125,7 @@ class PklVisualizer(Converter):
         with pure_fname(fname).with_suffix(".json").open("w+", encoding="utf-8") as f:
             json.dump(data, f, indent=4)
 
-    def get_type(self, value: Any) -> Union[Dict[str, Any], str]:
+    def get_type(self, value: Any) -> dict[str, Any] | str:
         """Get the type of the value.
 
         Args:
@@ -143,7 +141,7 @@ class PklVisualizer(Converter):
             return f"{type(value)} of shape {value.shape}"
         return str(type(value))
 
-    def add_nodes(self, graph: nx.DiGraph, data_dict: Dict[str, Any]) -> None:
+    def add_nodes(self, graph: nx.DiGraph, data_dict: dict[str, Any]) -> None:
         """Add nodes to the graph.
 
         Args:
@@ -170,7 +168,7 @@ class PklVisualizer(Converter):
                 graph.add_node(value)
                 graph.add_edge(key, value)
 
-    def create_graph(self, fname: Path, data_dict: Dict[str, Any]) -> nx.DiGraph:
+    def create_graph(self, fname: Path, data_dict: dict[str, Any]) -> nx.DiGraph:
         """Create the graph.
 
         Args:

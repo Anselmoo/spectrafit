@@ -45,3 +45,9 @@ repos:
     hooks:
       - id: pydocstyle
         additional_dependencies: [toml>=0.10.2]
+  # pyupgrade for Python 3.9+
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v3.2.0
+    hooks:
+      - id: pyupgrade
+        args: [--py39-plus, --keep-percent-format]

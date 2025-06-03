@@ -2,9 +2,6 @@
 
 from __future__ import annotations
 
-from typing import Tuple
-from typing import Type
-
 import pytest
 
 from spectrafit.api.notebook_model import ColorAPI
@@ -60,7 +57,7 @@ def test_dracula_font() -> None:
         (ColorBlindColor, ColorBlindFont),
     ],
 )
-def test_color_schemas(color_font: Tuple[Type[ColorAPI], Type[FontAPI]]) -> None:
+def test_color_schemas(color_font: tuple[type[ColorAPI], type[FontAPI]]) -> None:
     """Test the color schemas."""
     color_schema, font_schema = color_font
     color = color_schema()
