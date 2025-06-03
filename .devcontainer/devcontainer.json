@@ -11,7 +11,7 @@
     "ghcr.io/va-h/devcontainers-features/uv:1": {},
     "ghcr.io/devcontainers-extra/features/bash-command:1": {},
     "ghcr.io/devcontainers-extra/features/prettier:1": {}
-  
+
   },
 
   // Features to add to the dev container. More info: https://containers.dev/features.
