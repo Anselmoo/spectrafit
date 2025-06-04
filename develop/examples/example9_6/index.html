@@ -428,7 +428,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class=kn>from</span><span class=w> </span><span class=nn>spectrafit.plugins</span><span class=w> </span><span class=kn>import</span> <span class=n>notebook</span> <span class=k>as</span> <span class=n>nb</span>
 </pre></div> <div class=clipboard-copy-txt id=cell-1>from __future__ import annotations import pandas as pd from spectrafit.plugins import notebook as nb</div> </div> </div> </div> </div> <div class=jp-Cell-outputWrapper> <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser"> </div> <div class="jp-OutputArea jp-Cell-outputArea"> <div class=jp-OutputArea-child> <div class="jp-OutputPrompt jp-OutputArea-prompt"></div> <div class="jp-RenderedText jp-OutputArea-output" data-mime-type=application/vnd.jupyter.stderr tabindex=0> <pre>/home/runner/work/spectrafit/spectrafit/.venv/lib/python3.10/site-packages/dtale/utils.py:18: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools&lt;81.
   from pkg_resources import parse_version
-</pre> </div> </div> <div class=jp-OutputArea-child> <div class="jp-OutputPrompt jp-OutputArea-prompt"></div> <div class="jp-RenderedText jp-OutputArea-output" data-mime-type=application/vnd.jupyter.stderr tabindex=0> <pre>/home/runner/work/spectrafit/spectrafit/spectrafit/models/builtin.py:29: UserWarning:
+</pre> </div> </div> <div class=jp-OutputArea-child> <div class="jp-OutputPrompt jp-OutputArea-prompt"></div> <div class="jp-RenderedText jp-OutputArea-output" data-mime-type=application/vnd.jupyter.stderr tabindex=0> <pre>/home/runner/work/spectrafit/spectrafit/spectrafit/models/builtin.py:25: UserWarning:
 
 Mössbauer models are experimental features and still need scientific validation.
 
@@ -484,7 +484,7 @@ Mössbauer models are experimental features and still need scientific validation
     <span class=p>},</span>
 <span class=p>]</span>
 <span class=n>spn</span><span class=o>.</span><span class=n>solver_model</span><span class=p>(</span><span class=n>initial_model</span><span class=o>=</span><span class=n>initial_model</span><span class=p>,</span> <span class=n>show_plot</span><span class=o>=</span><span class=kc>True</span><span class=p>,</span> <span class=n>show_metric</span><span class=o>=</span><span class=kc>False</span><span class=p>)</span>
-</pre></div> <div class=clipboard-copy-txt id=cell-4>initial_model = [ { "pseudovoigt": { "amplitude": {"max": 2, "min": 0, "vary": True, "value": 1}, "center": {"max": 2, "min": -2, "vary": True, "value": 0}, "fwhmg": {"max": 0.3, "min": 0.02, "vary": True, "value": 0.1}, "fwhml": {"max": 0.2, "min": 0.01, "vary": True, "value": 0.1}, }, }, { "gaussian": { "amplitude": {"max": 2, "min": 0, "vary": True, "value": 0.3}, "center": {"max": 2.0, "min": 0, "vary": True, "value": 2}, "fwhmg": {"max": 0.3, "min": 0.02, "vary": True, "value": 0.1}, }, }, { "gaussian": { "amplitude": {"max": 2, "min": 0, "vary": True, "value": 0.3}, "center": {"max": 3.5, "min": 1.5, "vary": True, "value": 2.5}, "fwhmg": {"max": 0.4, "min": 0.02, "vary": True, "value": 0.2}, }, }, { "gaussian": { "amplitude": {"max": 2, "min": 0, "vary": True, "value": 0.3}, "center": {"max": 3.5, "min": 2, "vary": True, "value": 2.5}, "fwhmg": {"max": 0.4, "min": 0.02, "vary": True, "value": 0.3}, }, }, { "gaussian": { "amplitude": {"max": 2, "min": 0, "vary": True, "value": 0.3}, "center": {"max": 4.5, "min": 3, "vary": True, "value": 2.5}, "fwhmg": {"max": 0.4, "min": 0.02, "vary": True, "value": 0.3}, }, }, { "gaussian": { "amplitude": {"max": 2, "min": 0, "vary": True, "value": 0.3}, "center": {"max": 4.7, "min": 3.7, "vary": True, "value": 3.8}, "fwhmg": {"max": 0.4, "min": 0.02, "vary": True, "value": 0.3}, }, }, ] spn.solver_model(initial_model=initial_model, show_plot=True, show_metric=False)</div> </div> </div> </div> </div> <div class=jp-Cell-outputWrapper> <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser"> </div> <div class="jp-OutputArea jp-Cell-outputArea"> <div class=jp-OutputArea-child> <div class="jp-OutputPrompt jp-OutputArea-prompt"></div> <div class="jp-RenderedText jp-OutputArea-output" data-mime-type=application/vnd.jupyter.stderr tabindex=0> <pre>/home/runner/work/spectrafit/spectrafit/spectrafit/report.py:241: UserWarning:
+</pre></div> <div class=clipboard-copy-txt id=cell-4>initial_model = [ { "pseudovoigt": { "amplitude": {"max": 2, "min": 0, "vary": True, "value": 1}, "center": {"max": 2, "min": -2, "vary": True, "value": 0}, "fwhmg": {"max": 0.3, "min": 0.02, "vary": True, "value": 0.1}, "fwhml": {"max": 0.2, "min": 0.01, "vary": True, "value": 0.1}, }, }, { "gaussian": { "amplitude": {"max": 2, "min": 0, "vary": True, "value": 0.3}, "center": {"max": 2.0, "min": 0, "vary": True, "value": 2}, "fwhmg": {"max": 0.3, "min": 0.02, "vary": True, "value": 0.1}, }, }, { "gaussian": { "amplitude": {"max": 2, "min": 0, "vary": True, "value": 0.3}, "center": {"max": 3.5, "min": 1.5, "vary": True, "value": 2.5}, "fwhmg": {"max": 0.4, "min": 0.02, "vary": True, "value": 0.2}, }, }, { "gaussian": { "amplitude": {"max": 2, "min": 0, "vary": True, "value": 0.3}, "center": {"max": 3.5, "min": 2, "vary": True, "value": 2.5}, "fwhmg": {"max": 0.4, "min": 0.02, "vary": True, "value": 0.3}, }, }, { "gaussian": { "amplitude": {"max": 2, "min": 0, "vary": True, "value": 0.3}, "center": {"max": 4.5, "min": 3, "vary": True, "value": 2.5}, "fwhmg": {"max": 0.4, "min": 0.02, "vary": True, "value": 0.3}, }, }, { "gaussian": { "amplitude": {"max": 2, "min": 0, "vary": True, "value": 0.3}, "center": {"max": 4.7, "min": 3.7, "vary": True, "value": 3.8}, "fwhmg": {"max": 0.4, "min": 0.02, "vary": True, "value": 0.3}, }, }, ] spn.solver_model(initial_model=initial_model, show_plot=True, show_metric=False)</div> </div> </div> </div> </div> <div class=jp-Cell-outputWrapper> <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser"> </div> <div class="jp-OutputArea jp-Cell-outputArea"> <div class=jp-OutputArea-child> <div class="jp-OutputPrompt jp-OutputArea-prompt"></div> <div class="jp-RenderedText jp-OutputArea-output" data-mime-type=application/vnd.jupyter.stderr tabindex=0> <pre>/home/runner/work/spectrafit/spectrafit/spectrafit/report.py:237: UserWarning:
 
 
 
@@ -493,7 +493,7 @@ Uncertainties could not be estimated
 ####################################
 
 
-/home/runner/work/spectrafit/spectrafit/spectrafit/report.py:241: UserWarning:
+/home/runner/work/spectrafit/spectrafit/spectrafit/report.py:237: UserWarning:
 
 
 
@@ -502,7 +502,7 @@ The parameter 'pseudovoigt_amplitude_1_1' is at its boundary and uncertainties c
 ###################################################################################################
 
 
-/home/runner/work/spectrafit/spectrafit/spectrafit/report.py:241: UserWarning:
+/home/runner/work/spectrafit/spectrafit/spectrafit/report.py:237: UserWarning:
 
 
 
@@ -511,7 +511,7 @@ The parameter 'pseudovoigt_fwhmg_1_1' is at its boundary and uncertainties canno
 ###############################################################################################
 
 
-/home/runner/work/spectrafit/spectrafit/spectrafit/report.py:241: UserWarning:
+/home/runner/work/spectrafit/spectrafit/spectrafit/report.py:237: UserWarning:
 
 
 
@@ -520,7 +520,7 @@ The parameter 'pseudovoigt_fwhml_1_1' is at its boundary and uncertainties canno
 ###############################################################################################
 
 
-/home/runner/work/spectrafit/spectrafit/spectrafit/report.py:241: UserWarning:
+/home/runner/work/spectrafit/spectrafit/spectrafit/report.py:237: UserWarning:
 
 
 
@@ -529,7 +529,7 @@ The parameter 'gaussian_fwhmg_2_1' is at its boundary and uncertainties cannot b
 ############################################################################################
 
 
-/home/runner/work/spectrafit/spectrafit/spectrafit/report.py:241: UserWarning:
+/home/runner/work/spectrafit/spectrafit/spectrafit/report.py:237: UserWarning:
 
 
 
@@ -538,7 +538,7 @@ The parameter 'gaussian_fwhmg_3_1' is at its boundary and uncertainties cannot b
 ############################################################################################
 
 
-/home/runner/work/spectrafit/spectrafit/spectrafit/report.py:241: UserWarning:
+/home/runner/work/spectrafit/spectrafit/spectrafit/report.py:237: UserWarning:
 
 
 
@@ -547,7 +547,7 @@ The parameter 'gaussian_center_4_1' is at its boundary and uncertainties cannot 
 #############################################################################################
 
 
-/home/runner/work/spectrafit/spectrafit/spectrafit/report.py:241: UserWarning:
+/home/runner/work/spectrafit/spectrafit/spectrafit/report.py:237: UserWarning:
 
 
 
@@ -556,7 +556,7 @@ The parameter 'gaussian_fwhmg_4_1' is at its boundary and uncertainties cannot b
 ############################################################################################
 
 
-/home/runner/work/spectrafit/spectrafit/spectrafit/report.py:241: UserWarning:
+/home/runner/work/spectrafit/spectrafit/spectrafit/report.py:237: UserWarning:
 
 
 
@@ -565,7 +565,7 @@ The parameter 'gaussian_fwhmg_5_1' is at its boundary and uncertainties cannot b
 ############################################################################################
 
 
-/home/runner/work/spectrafit/spectrafit/spectrafit/report.py:241: UserWarning:
+/home/runner/work/spectrafit/spectrafit/spectrafit/report.py:237: UserWarning:
 
 
 
@@ -574,7 +574,7 @@ The parameter 'gaussian_center_6_1' is at its boundary and uncertainties cannot 
 #############################################################################################
 
 
-/home/runner/work/spectrafit/spectrafit/spectrafit/report.py:241: UserWarning:
+/home/runner/work/spectrafit/spectrafit/spectrafit/report.py:237: UserWarning:
 
 
 
@@ -583,7 +583,7 @@ The parameter 'gaussian_fwhmg_6_1' is at its boundary and uncertainties cannot b
 ############################################################################################
 
 
-/home/runner/work/spectrafit/spectrafit/spectrafit/report.py:241: UserWarning:
+/home/runner/work/spectrafit/spectrafit/spectrafit/report.py:237: UserWarning:
 
 
 
@@ -592,7 +592,7 @@ The parameter 'pseudovoigt_amplitude_1_2' is at its boundary and uncertainties c
 ###################################################################################################
 
 
-/home/runner/work/spectrafit/spectrafit/spectrafit/report.py:241: UserWarning:
+/home/runner/work/spectrafit/spectrafit/spectrafit/report.py:237: UserWarning:
 
 
 
