@@ -2,6 +2,115 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.4.0 🌈 - 2025-06-08
+
+### :compass: What's Changed
+
+* chore(deps): ⬆️ update python docker tag to v3.13 (#1907) @[renovate[bot]](https://github.com/apps/renovate)
+
+#### :rocket: New
+
+* feat: :recycle: Refactor type hints to use built-in generic types (#1917) @Anselmoo
+* feat: :arrow_up: Change to support of python `>=3.9` (#1915)[^1](%5Bstatus-of-python-versions%5D(https://devguide.python.org/versions/#status-of-python-versions)) @Anselmoo
+* feat: :star: Add y-axis inversion option and clean up reference keys (#1903) @Anselmoo
+* feat: :sparkles: add Mössbauer spectroscopy models and functionality (#1900) @Anselmoo
+* feat: :sparkles: Add Orca Gaussian distribution model and update documentation (#1886) @Anselmoo
+
+#### :computer: Codesspaces
+
+* feat: :recycle: Refactor type hints to use built-in generic types (#1917) @Anselmoo
+
+#### :toolbox: Maintenance
+
+* [pre-commit.ci] pre-commit autoupdate (#1916) @[pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci)
+* feat: :recycle: Refactor type hints to use built-in generic types (#1917) @Anselmoo
+* feat: :arrow_up: Change to support of python `>=3.9` (#1915) @Anselmoo
+* chore: ⬆️  pre-commit autoupdate (#1910) @[pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci)
+* ci: 🔧 Sync insiders branch with main updates (#1906) @Anselmoo
+* chore: :construction_worker: Update CI configuration to prevent Codecov from running if cancelled and modify pytest options for coverage reporting (#1904) @Anselmoo
+* feat: :star: Add y-axis inversion option and clean up reference keys (#1903) @Anselmoo
+* feat: :sparkles: add Mössbauer spectroscopy models and functionality (#1900) @Anselmoo
+* release: :bookmark: Bump version to 1.4.0 (#1895) @Anselmoo
+* build: :bookmark: Minor Release for fixing issues with `index.md` (#1893) @Anselmoo
+* [pre-commit.ci] pre-commit autoupdate (#1889) @[pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci)
+* chore: :recycle: Updated version from 1.3.0 to 1.4.0. (#1888) @Anselmoo
+
+#### :snake: Python
+
+* feat: :recycle: Refactor type hints to use built-in generic types (#1917) @Anselmoo
+* feat: :arrow_up: Change to support of python `>=3.9` (#1915) @Anselmoo
+* feat: :star: Add y-axis inversion option and clean up reference keys (#1903) @Anselmoo
+* feat: :sparkles: add Mössbauer spectroscopy models and functionality (#1900) @Anselmoo
+* release: :bookmark: Bump version to 1.4.0 (#1895) @Anselmoo
+* build: :bookmark: Minor Release for fixing issues with `index.md` (#1893) @Anselmoo
+* chore: :recycle: Updated version from 1.3.0 to 1.4.0. (#1888) @Anselmoo
+* feat: :sparkles: Add Orca Gaussian distribution model and update documentation (#1886) @Anselmoo
+
+#### :octocat: Github Actions
+
+* feat: :arrow_up: Change to support of python `>=3.9` (#1915) @Anselmoo
+* chore(deps): update docker/build-push-action action to v6.18.0 (#1912) @[renovate[bot]](https://github.com/apps/renovate)
+* feat: :green_heart: add support for GitHub mirror branches with current commit hash (#1911) @Anselmoo
+* chore(deps): update pypa/gh-action-pypi-publish digest to e9ccbe5 (#1908) @[renovate[bot]](https://github.com/apps/renovate)
+* ci: 🔧 Sync insiders branch with main updates (#1906) @Anselmoo
+* chore: :construction_worker: Add repository condition to CI workflows… (#1905) @Anselmoo
+* chore: :construction_worker: Update CI configuration to prevent Codecov from running if cancelled and modify pytest options for coverage reporting (#1904) @Anselmoo
+* feat: :sparkles: add Mössbauer spectroscopy models and functionality (#1900) @Anselmoo
+* chore(deps): update conda-incubator/setup-miniconda action to v3 (#1894) @[renovate[bot]](https://github.com/apps/renovate)
+* build(deps): bump conda-incubator/setup-miniconda from 2 to 3 (#1896) @[dependabot[bot]](https://github.com/apps/dependabot)
+* build: :bookmark: Minor Release for fixing issues with `index.md` (#1893) @Anselmoo
+* doc: ✏️ Update index pages (#1890) @Anselmoo
+
+#### :card_index_dividers: Documentation
+
+* feat: :star: Add y-axis inversion option and clean up reference keys (#1903) @Anselmoo
+* feat: :sparkles: add Mössbauer spectroscopy models and functionality (#1900) @Anselmoo
+* doc: ✏️ Update index pages (#1890) @Anselmoo
+* feat: :sparkles: Add Orca Gaussian distribution model and update documentation (#1886) @Anselmoo
+
+#### :link: Dependency Updates
+
+* chore(deps): :arrows_counterclockwise: update dependencies 202506080014 (#1918) @Anselmoo
+* feat: :recycle: Refactor type hints to use built-in generic types (#1917) @Anselmoo
+* feat: :arrow_up: Change to support of python `>=3.9` (#1915) @Anselmoo
+* chore(deps): :arrows_counterclockwise: update dependencies 202506010016 (#1914) @Anselmoo
+* chore(deps): :arrows_counterclockwise: update dependencies 202505250014 (#1909) @Anselmoo
+* feat: :sparkles: add Mössbauer spectroscopy models and functionality (#1900) @Anselmoo
+* build(deps): bump conda-incubator/setup-miniconda from 2 to 3 (#1896) @[dependabot[bot]](https://github.com/apps/dependabot)
+* release: :bookmark: Bump version to 1.4.0 (#1895) @Anselmoo
+* build: :bookmark: Minor Release for fixing issues with `index.md` (#1893) @Anselmoo
+* chore(deps): :arrows_counterclockwise: update dependencies 202505110001 (#1892) @Anselmoo
+* chore: :recycle: Updated version from 1.3.0 to 1.4.0. (#1888) @Anselmoo
+* chore(deps): :arrows_counterclockwise: update dependencies 202505040001 (#1887) @Anselmoo
+* feat: :sparkles: Add Orca Gaussian distribution model and update documentation (#1886) @Anselmoo
+
+#### :microscope: Testing & Coverage
+
+* feat: :recycle: Refactor type hints to use built-in generic types (#1917) @Anselmoo
+* feat: :arrow_up: Change to support of python `>=3.9` (#1915) @Anselmoo
+* feat: :star: Add y-axis inversion option and clean up reference keys (#1903) @Anselmoo
+* feat: :sparkles: add Mössbauer spectroscopy models and functionality (#1900) @Anselmoo
+* release: :bookmark: Bump version to 1.4.0 (#1895) @Anselmoo
+* build: :bookmark: Minor Release for fixing issues with `index.md` (#1893) @Anselmoo
+* chore: :recycle: Updated version from 1.3.0 to 1.4.0. (#1888) @Anselmoo
+* feat: :sparkles: Add Orca Gaussian distribution model and update documentation (#1886) @Anselmoo
+
+#### :memo: Changelog
+
+* docs: :card_index_dividers: Changlog update for v1.3.0 (#1885) @Anselmoo
+
+#### :whale: Docker
+
+* feat: :recycle: Refactor type hints to use built-in generic types (#1917) @Anselmoo
+
+### :package: Full Changelog
+
+**Full Changelog**: https://github.com/Anselmoo/spectrafit/compare/v1.3.0...v1.4.0
+
+### :gear: Who Contributes
+
+@Anselmoo, @github-actions[bot], @renovate[bot], GitLab CI Bot and [renovate[bot]](https://github.com/apps/renovate)
+
 ## v1.3.0 🌈 - 2025-05-01
 
 ### :compass: What's Changed
