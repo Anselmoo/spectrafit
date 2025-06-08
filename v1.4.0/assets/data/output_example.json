@@ -1,0 +1,212 @@
+{
+  "fit_report": {
+    "model": "ModelResult(spectrafit_model)",
+    "success": true,
+    "message": "Fit succeeded.",
+    "params": {
+      "pseudovoigt_amplitude_1": {
+        "value": 0.8754,
+        "min": 0.0,
+        "max": 2.0,
+        "vary": true,
+        "expr": null,
+        "stderr": 0.0212,
+        "correl": {}
+      },
+      "pseudovoigt_center_1": {
+        "value": 0.1523,
+        "min": -2.0,
+        "max": 2.0,
+        "vary": true,
+        "expr": null,
+        "stderr": 0.0034,
+        "correl": {
+          "pseudovoigt_amplitude_1": 0.0823
+        }
+      },
+      "pseudovoigt_fwhmg_1": {
+        "value": 0.1243,
+        "min": 0.02,
+        "max": 0.74,
+        "vary": true,
+        "expr": null,
+        "stderr": 0.0062,
+        "correl": {
+          "pseudovoigt_amplitude_1": 0.1234,
+          "pseudovoigt_center_1": 0.0321
+        }
+      },
+      "pseudovoigt_fwhml_1": {
+        "value": 0.2301,
+        "min": 0.01,
+        "max": 0.74,
+        "vary": true,
+        "expr": null,
+        "stderr": 0.0078,
+        "correl": {
+          "pseudovoigt_amplitude_1": 0.1765,
+          "pseudovoigt_center_1": 0.0412,
+          "pseudovoigt_fwhmg_1": 0.3245
+        }
+      },
+      "gaussian_amplitude_2": {
+        "value": 0.4532,
+        "min": 0.0,
+        "max": 2.0,
+        "vary": true,
+        "expr": null,
+        "stderr": 0.0156,
+        "correl": {
+          "pseudovoigt_amplitude_1": 0.0765,
+          "pseudovoigt_center_1": 0.0254,
+          "pseudovoigt_fwhmg_1": 0.1432,
+          "pseudovoigt_fwhml_1": 0.1234
+        }
+      },
+      "gaussian_center_2": {
+        "value": 1.5243,
+        "min": -2.0,
+        "max": 2.0,
+        "vary": true,
+        "expr": null,
+        "stderr": 0.0023,
+        "correl": {
+          "pseudovoigt_amplitude_1": 0.0512,
+          "pseudovoigt_center_1": 0.0754,
+          "pseudovoigt_fwhmg_1": 0.0546,
+          "pseudovoigt_fwhml_1": 0.0632,
+          "gaussian_amplitude_2": 0.0954
+        }
+      },
+      "gaussian_fwhmg_2": {
+        "value": 0.2154,
+        "min": 0.02,
+        "max": 0.4,
+        "vary": true,
+        "expr": null,
+        "stderr": 0.0045,
+        "correl": {
+          "pseudovoigt_amplitude_1": 0.0421,
+          "pseudovoigt_center_1": 0.0312,
+          "pseudovoigt_fwhmg_1": 0.0876,
+          "pseudovoigt_fwhml_1": 0.0765,
+          "gaussian_amplitude_2": 0.2534,
+          "gaussian_center_2": 0.0456
+        }
+      },
+      "constant_amplitude_3": {
+        "value": 0.1243,
+        "min": 0.01,
+        "max": 2.0,
+        "vary": true,
+        "expr": null,
+        "stderr": 0.0021,
+        "correl": {
+          "pseudovoigt_amplitude_1": 0.4312,
+          "pseudovoigt_center_1": 0.0243,
+          "pseudovoigt_fwhmg_1": 0.0345,
+          "pseudovoigt_fwhml_1": 0.0567,
+          "gaussian_amplitude_2": 0.3214,
+          "gaussian_center_2": 0.0213,
+          "gaussian_fwhmg_2": 0.1054
+        }
+      }
+    },
+    "ndata": 1000,
+    "nfree": 993,
+    "chisqr": 0.0243,
+    "redchi": 0.0000245,
+    "aic": -10542.3254,
+    "bic": -10502.7645,
+    "var_names": [
+      "pseudovoigt_amplitude_1",
+      "pseudovoigt_center_1",
+      "pseudovoigt_fwhmg_1",
+      "pseudovoigt_fwhml_1",
+      "gaussian_amplitude_2",
+      "gaussian_center_2",
+      "gaussian_fwhmg_2",
+      "constant_amplitude_3"
+    ],
+    "covar": [
+      [0.00045, 0.00002, 0.00004, 0.00005, 0.00002, 0.00001, 0.00001, 0.00003],
+      [0.00002, 0.00001, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+      [0.00004, 0.0, 0.00004, 0.00002, 0.00001, 0.0, 0.0, 0.0],
+      [0.00005, 0.0, 0.00002, 0.00006, 0.00001, 0.0, 0.0, 0.0],
+      [0.00002, 0.0, 0.00001, 0.00001, 0.00024, 0.0, 0.00001, 0.00002],
+      [0.00001, 0.0, 0.0, 0.0, 0.0, 0.00001, 0.0, 0.0],
+      [0.00001, 0.0, 0.0, 0.0, 0.00001, 0.0, 0.00002, 0.0],
+      [0.00003, 0.0, 0.0, 0.0, 0.00002, 0.0, 0.0, 0.0]
+    ],
+    "rsquared": 0.9987
+  },
+  "peak_components": {
+    "independent_variable": {
+      "name": "Energy",
+      "unit": "eV",
+      "data": [-2.0, -1.99, -1.98, "...", 1.98, 1.99, 2.0]
+    },
+    "dependent_variable": {
+      "name": "Intensity",
+      "unit": "a.u.",
+      "data": [0.1245, 0.1254, 0.1267, "...", 0.1312, 0.1287, 0.1243]
+    },
+    "fit_result": {
+      "name": "Fit",
+      "data": [0.1243, 0.1249, 0.1258, "...", 0.1305, 0.1291, 0.1243]
+    },
+    "components": {
+      "pseudovoigt_1": {
+        "name": "Peak 1 (Pseudo-Voigt)",
+        "data": [0.0023, 0.0025, 0.0028, "...", 0.0074, 0.0062, 0.0042]
+      },
+      "gaussian_2": {
+        "name": "Peak 2 (Gaussian)",
+        "data": [0.0001, 0.0001, 0.0001, "...", 0.0011, 0.0008, 0.0005]
+      },
+      "constant_3": {
+        "name": "Background",
+        "data": [0.1243, 0.1243, 0.1243, "...", 0.1243, 0.1243, 0.1243]
+      }
+    },
+    "residuals": {
+      "name": "Residuals",
+      "data": [0.0002, 0.0005, 0.0009, "...", 0.0007, -0.0004, 0.0]
+    }
+  },
+  "statistics": {
+    "r_squared": 0.9987,
+    "chi_squared": 0.0243,
+    "reduced_chi_squared": 0.0000245,
+    "aic": -10542.3254,
+    "bic": -10502.7645,
+    "data_points": 1000,
+    "degrees_of_freedom": 993
+  },
+  "settings": {
+    "fitting_method": "leastsq",
+    "max_iterations": 1000,
+    "tolerance": 1e-8,
+    "confidence_intervals": {
+      "calculated": true,
+      "confidence_level": 0.95,
+      "sigma": 2
+    },
+    "data_processing": {
+      "smooth": false,
+      "smooth_window": 11,
+      "smooth_order": 3,
+      "shift": 0.0,
+      "normalize": false
+    },
+    "x_range": [-2.0, 2.0]
+  },
+  "project_info": {
+    "project_name": "Example Project",
+    "project_details": "Analysis of spectroscopic data",
+    "keywords": ["spectroscopy", "peak-fitting", "pseudo-voigt", "gaussian"],
+    "timestamp": "2025-04-26T14:30:22",
+    "spectrafit_version": "1.5.2",
+    "input_file": "example_data.csv"
+  }
+}
