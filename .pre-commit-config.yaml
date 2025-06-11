@@ -19,7 +19,7 @@ repos:
         args: [--maxkb=1000]
         exclude: \.ipynb
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.11.12
+    rev: v0.11.13
     hooks:
       - id: ruff
         files: spectrafit/
@@ -47,7 +47,7 @@ repos:
         additional_dependencies: [toml>=0.10.2]
   # pyupgrade for Python 3.9+
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.2.0
+    rev: v3.20.0
     hooks:
       - id: pyupgrade
         args: [--py39-plus, --keep-percent-format]
