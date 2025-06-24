@@ -37,7 +37,7 @@ jobs:
           fetch-depth: 1
 
       - name: 📦 Install Cosign
-        uses: sigstore/cosign-installer@v3.8.2
+        uses: sigstore/cosign-installer@v3.9.1
         # with:
         #   cosign-release: \'v2.2.4\' # optional
 
@@ -45,7 +45,7 @@ jobs:
         uses: docker/setup-qemu-action@v3.6.0
 
       - name: 🐳 Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3.10.0
+        uses: docker/setup-buildx-action@v3.11.1
 
       - name: 🔑 Login to GitHub Container Registry
         uses: docker/login-action@v3.4.0
