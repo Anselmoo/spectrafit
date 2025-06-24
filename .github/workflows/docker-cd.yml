@@ -37,7 +37,7 @@ jobs:
           fetch-depth: 1
 
       - name: 📦 Install Cosign
-        uses: sigstore/cosign-installer@v3.9.0
+        uses: sigstore/cosign-installer@v3.9.1
         # with:
         #   cosign-release: \'v2.2.4\' # optional
 
