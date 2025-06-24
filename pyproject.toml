@@ -196,6 +196,7 @@ extend-ignore = [
 "spectrafit/**/test_*.py" = [
   "S101",
   "PLR2004",
+  "PLC0415", # allow in line import of modules
   "D102",
   "D101",
   "ANN201",
