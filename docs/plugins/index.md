@@ -32,6 +32,7 @@ Plugins enhance **SpectraFit** by adding support for different file formats, spe
 - :material-format-rotate-90: **[RIXS-Converter](rixs_converter.md)** - Process and transform RIXS datasets.
 - :material-package-variant-closed: **[PKL-Converter and Visualizer](pkl_converter_visualization.md)** - Work with pickle files for data persistence.
 - :material-presentation: **[PPTX-Converter](pptx_converter.md)** - Export results directly to PowerPoint presentations.
+- :material-robot: **[MCP-Server](mcp_server.md)** - GitHub Copilot integration through Model Context Protocol for natural language spectral analysis.
 
 </div>
 
