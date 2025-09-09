@@ -19,8 +19,27 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🏷️ Set image tag
+        id: set_image_tag
+        run: |
+          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            echo "image_tag=latest" >> $GITHUB_OUTPUT
+          else
+            echo "image_tag=${{ github.sha }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 🚀 Set image push option
+        id: set_image_push_option
+        run: |
+          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            echo "image_push_option=always" >> $GITHUB_OUTPUT
+          else
+            echo "image_push_option=never" >> $GITHUB_OUTPUT
+          fi
+
       - name: 🐳 Build devcontainer
-        uses: devcontainers/ci@v0.3
+        uses: devcontainers/ci@v0.4
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BUILD_NUMBER: ${{ github.run_id  }}
