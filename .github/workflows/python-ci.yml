@@ -61,7 +61,7 @@ jobs:
         run: uv run --group dev --all-extras pytest spectrafit/
       - name: 📊 Codecov
         if: ${{ success() && !cancelled() }}
-        uses: codecov/codecov-action@v5.5.0
+        uses: codecov/codecov-action@v5.5.1
         with:
           name: codecov-umbrella
           flags: unittests

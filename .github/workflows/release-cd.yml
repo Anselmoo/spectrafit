@@ -23,7 +23,7 @@ jobs:
       - uses: actions/checkout@v5
         name: 🛎️ Checkout repository
       - name: 🐍 Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.13"
       - name: 📦 Install dependencies
@@ -33,7 +33,7 @@ jobs:
       - name: 🏗️ Build package
         run: python -m build
       - name: 🚀 Publish package
-        uses: pypa/gh-action-pypi-publish@d417ba7e7683fa9104c42abe611c1f2c93c0727d
+        uses: pypa/gh-action-pypi-publish@ed0c53931b1dc9bd32cbe73a98c7f6766f8a527e
         with:
           user: __token__
           password: ${{ secrets.TWINE_TOKEN }}
