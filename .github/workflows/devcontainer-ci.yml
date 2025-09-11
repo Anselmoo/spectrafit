@@ -39,7 +39,7 @@ jobs:
           fi
 
       - name: 🐳 Build devcontainer
-        uses: devcontainers/ci@v0.4
+        uses: devcontainers/ci@v0.3.1900000417
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BUILD_NUMBER: ${{ github.run_id  }}
