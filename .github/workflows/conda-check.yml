@@ -20,7 +20,7 @@ jobs:
       - name: 🛎️ Checkout repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
       - name: 🐍 Set up Conda
-        uses: conda-incubator/setup-miniconda@e5457fe695e3787d415a42160e580fd154de1899 # v3
+        uses: conda-incubator/setup-miniconda@505e6394dae86d6a5c7fbb6e3fb8938e3e863830 # v3
         with:
           auto-update-conda: true
           python-version: "3.12"
