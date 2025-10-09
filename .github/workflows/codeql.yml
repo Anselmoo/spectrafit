@@ -44,11 +44,11 @@ jobs:
 
     steps:
       - name: 🛎️ Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
 
       # Initializes the CodeQL tools for scanning.
       - name: 🛠️ Initialize CodeQL
-        uses: github/codeql-action/init@v3
+        uses: github/codeql-action/init@b97083e1835df46b2227bae5c4fc6e43569531c1 # v3
         with:
           languages: ${{ matrix.language }}
           # If you wish to specify custom queries, you can do so here or in a config file.
@@ -61,7 +61,7 @@ jobs:
       # Autobuild attempts to build any compiled languages (C/C++, C#, Go, Java, or Swift).
       # If this step fails, then you should remove it and run the build manually (see below)
       - name: 🏗️ Autobuild
-        uses: github/codeql-action/autobuild@v3
+        uses: github/codeql-action/autobuild@b97083e1835df46b2227bae5c4fc6e43569531c1 # v3
 
       # ℹ️ Command-line programs to run using the OS shell.
       # 📚 See https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun
@@ -74,6 +74,6 @@ jobs:
       #     ./location_of_script_within_repo/buildscript.sh
 
       - name: 🔎 Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
+        uses: github/codeql-action/analyze@b97083e1835df46b2227bae5c4fc6e43569531c1 # v3
         with:
           category: "/language:${{matrix.language}}"
