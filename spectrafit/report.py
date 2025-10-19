@@ -642,7 +642,7 @@ class FitReport:
         if self.result is not None:
             return pd.DataFrame(
                 {
-                    "fitting method": [self.result.method],  # type: ignore
+                    "fitting method": [self.result.method],
                     "function evals": [getfloat_attr(self.result, "nfev")],
                     "data points": [getfloat_attr(self.result, "ndata")],
                     "variables": [getfloat_attr(self.result, "nvarys")],

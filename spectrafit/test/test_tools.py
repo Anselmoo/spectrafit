@@ -495,7 +495,7 @@ class TestPickle:
             "outfile": tmp_path / "test_pkl2any_fail.fail",
         }
         # read test file as pickle file
-        with pytest.raises(ValueError, match="File format '.fail'"):
+        with pytest.raises(ValueError, match=r"File format '\.fail'"):
             pkl2any(args["outfile"])
 
 
