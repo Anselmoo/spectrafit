@@ -129,7 +129,7 @@ class ColorAPI(BaseModel):
         description="Color of the components, mainly peaks.",
     )
     bars: list[str] = Field(
-        default=[i for j in zip(Teal_r, Purp_r) for i in j],
+        default=[i for j in zip(Teal_r, Purp_r, strict=False) for i in j],
         description="Color of the bar plot of the metrics.",
     )
     lines: list[str] = Field(
