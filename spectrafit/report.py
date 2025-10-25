@@ -6,7 +6,6 @@ import pprint
 
 from typing import TYPE_CHECKING
 from typing import Any
-from typing import Callable
 from warnings import warn
 
 import numpy as np
@@ -39,6 +38,7 @@ VERBOSE_REGULAR = 1  # Regular output mode
 VERBOSE_DETAILED = 2  # Detailed/verbose output mode
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
     from collections.abc import Hashable
 
     from numpy.typing import NDArray
@@ -170,7 +170,7 @@ class RegressionMetrics:
         metric_dict: dict[Hashable, Any] = {}
         for fnc in metrics_fnc:
             metric_dict[fnc.__name__] = []
-            for y_true, y_pred in zip(self.y_true.T, self.y_pred.T):
+            for y_true, y_pred in zip(self.y_true.T, self.y_pred.T, strict=False):
                 try:
                     metric_dict[fnc.__name__].append(fnc(y_true, y_pred))
                 except ValueError as err:

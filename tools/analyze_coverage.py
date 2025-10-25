@@ -7,7 +7,6 @@ with no or minimal coverage.
 
 from __future__ import annotations
 
-
 import json
 import logging
 import subprocess
@@ -78,8 +77,8 @@ def run_coverage_test() -> None:
         logger.info("%s", result.stdout)
     except subprocess.CalledProcessError as e:
         logger.exception("Error running pytest")
-        logger.error("stdout: %s", e.stdout)
-        logger.error("stderr: %s", e.stderr)
+        logger.exception("stdout: %s", e.stdout)
+        logger.exception("stderr: %s", e.stderr)
         sys.exit(1)
 
 
