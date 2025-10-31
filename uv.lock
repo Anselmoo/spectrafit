@@ -5714,6 +5714,7 @@ dependencies = [
     { name = "tomli" },
     { name = "tomli-w" },
     { name = "tqdm" },
+    { name = "typer" },
 ]
 
 [package.optional-dependencies]
@@ -5835,6 +5836,7 @@ requires-dist = [
     { name = "tomli", specifier = ">=2.2.1" },
     { name = "tomli-w", specifier = ">=1.0.0" },
     { name = "tqdm", specifier = ">=4.67.1" },
+    { name = "typer", specifier = ">=0.20.0" },
 ]
 provides-extras = ["jupyter", "jupyter-dash", "graph", "all"]
 
