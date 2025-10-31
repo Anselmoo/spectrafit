@@ -167,7 +167,9 @@ class RIXSConverter(Converter):
 
 @app.command()
 def cli_main(
-    infile: Annotated[Path, typer.Argument(help="Path to the pickle file to be converted.")],
+    infile: Annotated[
+        Path, typer.Argument(help="Path to the pickle file to be converted.")
+    ],
     file_format: Annotated[
         str,
         typer.Option(
@@ -185,7 +187,7 @@ def cli_main(
         ),
     ] = "json",
     incident_energy: Annotated[
-        Optional[str],
+        str | None,
         typer.Option(
             "-ie",
             "--incident-energy",
@@ -193,7 +195,7 @@ def cli_main(
         ),
     ] = None,
     emission_energy: Annotated[
-        Optional[str],
+        str | None,
         typer.Option(
             "-ee",
             "--emission-energy",
@@ -201,7 +203,7 @@ def cli_main(
         ),
     ] = None,
     rixs_map: Annotated[
-        Optional[str],
+        str | None,
         typer.Option(
             "-rm",
             "--rixs-map",
@@ -240,7 +242,7 @@ def cli_main(
             err=True,
         )
         raise typer.Exit(1)
-    
+
     # Create converter instance and run conversion
     converter = RIXSConverter()
     try:

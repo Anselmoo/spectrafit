@@ -222,7 +222,9 @@ class PklConverter(Converter):
 
 @app.command()
 def cli_main(
-    infile: Annotated[Path, typer.Argument(help="Filename of the pkl file to convert.")],
+    infile: Annotated[
+        Path, typer.Argument(help="Filename of the pkl file to convert.")
+    ],
     file_format: Annotated[
         str,
         typer.Option(
@@ -244,7 +246,7 @@ def cli_main(
     # Validate choices
     choices_fformat = PklConverter.choices_fformat
     choices_export = PklConverter.choices_export
-    
+
     if file_format not in choices_fformat:
         typer.echo(
             f"Error: Invalid file format '{file_format}'. "
@@ -252,7 +254,7 @@ def cli_main(
             err=True,
         )
         raise typer.Exit(1)
-    
+
     if export_format.lower() not in choices_export:
         typer.echo(
             f"Error: Invalid export format '{export_format}'. "
@@ -260,7 +262,7 @@ def cli_main(
             err=True,
         )
         raise typer.Exit(1)
-    
+
     # Create converter instance and run conversion
     converter = PklConverter()
     try:

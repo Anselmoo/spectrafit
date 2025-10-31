@@ -436,7 +436,12 @@ class PPTXConverter(Converter):
 
 @app.command()
 def cli_main(
-    infile: Annotated[Path, typer.Argument(help="Filename of the *.lock file to convert to a powerpoint presentation.")],
+    infile: Annotated[
+        Path,
+        typer.Argument(
+            help="Filename of the *.lock file to convert to a powerpoint presentation."
+        ),
+    ],
     file_format: Annotated[
         str,
         typer.Option(
@@ -456,7 +461,7 @@ def cli_main(
             err=True,
         )
         raise typer.Exit(1)
-    
+
     # Create converter instance and run conversion
     converter = PPTXConverter()
     try:

@@ -8,7 +8,6 @@ import logging
 from pathlib import Path
 from typing import TYPE_CHECKING
 from typing import Annotated
-from typing import Any
 
 import dash
 import dash_bootstrap_components as dbc
@@ -690,7 +689,12 @@ class RIXSVisualizer:
 
 @app_cli.command()
 def cli_main(
-    infile: Annotated[Path, typer.Argument(help="The input file. This can be a json, toml, npy, or npz file.")],
+    infile: Annotated[
+        Path,
+        typer.Argument(
+            help="The input file. This can be a json, toml, npy, or npz file."
+        ),
+    ],
 ) -> None:
     """Run the RIXS Visualizer."""
     # Load data and run visualizer

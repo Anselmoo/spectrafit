@@ -152,9 +152,11 @@ class DataConverter(Converter):
 
 @app.command()
 def cli_main(
-    infile: Annotated[Path, typer.Argument(help="Filename of the data file to convert.")],
+    infile: Annotated[
+        Path, typer.Argument(help="Filename of the data file to convert.")
+    ],
     file_format: Annotated[
-        Optional[str],
+        str | None,
         typer.Option(
             "-f",
             "--file-format",
@@ -179,7 +181,7 @@ def cli_main(
             err=True,
         )
         raise typer.Exit(1)
-    
+
     if export_format.lower() not in choices_export:
         typer.echo(
             f"Error: Invalid export format '{export_format}'. "
@@ -187,7 +189,7 @@ def cli_main(
             err=True,
         )
         raise typer.Exit(1)
-    
+
     # Create converter instance and run conversion
     converter = DataConverter()
     try:

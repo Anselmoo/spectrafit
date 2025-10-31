@@ -75,7 +75,7 @@ def cli_main(
         ),
     ] = False,
     energy_start: Annotated[
-        Optional[float],
+        float | None,
         typer.Option(
             "-e0",
             "--energy-start",
@@ -83,7 +83,7 @@ def cli_main(
         ),
     ] = None,
     energy_stop: Annotated[
-        Optional[float],
+        float | None,
         typer.Option(
             "-e1",
             "--energy-stop",
@@ -107,7 +107,7 @@ def cli_main(
         ),
     ] = 0,
     column: Annotated[
-        Optional[list[str]],
+        list[str] | None,
         typer.Option(
             "-c",
             "--column",
@@ -136,7 +136,7 @@ def cli_main(
         ),
     ] = ".",
     header: Annotated[
-        Optional[int],
+        int | None,
         typer.Option(
             "-hd",
             "--header",
@@ -144,7 +144,7 @@ def cli_main(
         ),
     ] = None,
     comment: Annotated[
-        Optional[str],
+        str | None,
         typer.Option(
             "-cm",
             "--comment",
@@ -197,7 +197,7 @@ def cli_main(
         ),
     ] = 1,
     version: Annotated[
-        Optional[bool],
+        bool | None,
         typer.Option(
             "-v",
             "--version",
@@ -214,24 +214,24 @@ def cli_main(
     else:
         # Try to convert to int if possible
         column = [int(c) if c.isdigit() else c for c in column]
-    
+
     # Validate choices
     if separator not in ["\t", ",", ";", ":", "|", " ", "s+"]:
         typer.echo(f"Error: Invalid separator '{separator}'", err=True)
         raise typer.Exit(1)
-    
+
     if decimal not in [".", ","]:
         typer.echo(f"Error: Invalid decimal '{decimal}'", err=True)
         raise typer.Exit(1)
-    
+
     if global_ not in [0, 1, 2]:
         typer.echo(f"Error: Invalid global value '{global_}'", err=True)
         raise typer.Exit(1)
-    
+
     if verbose not in [0, 1, 2]:
         typer.echo(f"Error: Invalid verbose value '{verbose}'", err=True)
         raise typer.Exit(1)
-    
+
     # Build args dictionary
     args_dict = {
         "infile": infile,
@@ -252,7 +252,7 @@ def cli_main(
         "noplot": noplot,
         "verbose": verbose,
     }
-    
+
     # Run the fitting routine with the interactive loop
     run_fitting_workflow(args=args_dict)
 
@@ -271,7 +271,7 @@ def run_fitting_workflow(args: dict[str, Any]) -> None:
 
         # Process arguments with input file
         processed_args = extracted_from_command_line_runner_with_args(args)
-        
+
         df_result, processed_args = fitting_routine(args=processed_args)
         PlotSpectra(df=df_result, args=processed_args)()
         SaveResult(df=df_result, args=processed_args)()

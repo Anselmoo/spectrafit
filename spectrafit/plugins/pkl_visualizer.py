@@ -18,6 +18,7 @@ from spectrafit.plugins.converter import Converter
 from spectrafit.tools import pkl2any
 from spectrafit.tools import pure_fname
 
+
 # Create Typer app
 app = typer.Typer(
     help="Converter for 'SpectraFit' from pkl files to a graph.",
@@ -160,7 +161,9 @@ class PklVisualizer(Converter):
 
 @app.command()
 def cli_main(
-    infile: Annotated[Path, typer.Argument(help="Filename of the pkl file to convert to graph.")],
+    infile: Annotated[
+        Path, typer.Argument(help="Filename of the pkl file to convert to graph.")
+    ],
     file_format: Annotated[
         str,
         typer.Option(
@@ -182,7 +185,7 @@ def cli_main(
     # Validate choices
     choices_fformat = PklVisualizer.choices_fformat
     choices_export = PklVisualizer.choices_export
-    
+
     if file_format not in choices_fformat:
         typer.echo(
             f"Error: Invalid file format '{file_format}'. "
@@ -190,7 +193,7 @@ def cli_main(
             err=True,
         )
         raise typer.Exit(1)
-    
+
     if export_format.lower() not in choices_export:
         typer.echo(
             f"Error: Invalid export format '{export_format}'. "
@@ -198,7 +201,7 @@ def cli_main(
             err=True,
         )
         raise typer.Exit(1)
-    
+
     # Create visualizer instance and run conversion
     visualizer = PklVisualizer()
     try:

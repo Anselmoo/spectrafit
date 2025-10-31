@@ -116,9 +116,11 @@ class FileConverter(Converter):
 
 @app.command()
 def cli_main(
-    infile: Annotated[Path, typer.Argument(help="Filename of the 'SpectraFit' input or output file.")],
+    infile: Annotated[
+        Path, typer.Argument(help="Filename of the 'SpectraFit' input or output file.")
+    ],
     file_format: Annotated[
-        Optional[str],
+        str | None,
         typer.Option(
             "-f",
             "--file-format",
@@ -137,7 +139,7 @@ def cli_main(
     """Convert 'SpectraFit' input and output files between different formats."""
     # Validate file format choices
     choices = FileConverter.choices
-    
+
     if file_format and file_format not in choices:
         typer.echo(
             f"Error: Invalid file format '{file_format}'. "
@@ -145,7 +147,7 @@ def cli_main(
             err=True,
         )
         raise typer.Exit(1)
-    
+
     if export_format not in choices:
         typer.echo(
             f"Error: Invalid export format '{export_format}'. "
@@ -153,7 +155,7 @@ def cli_main(
             err=True,
         )
         raise typer.Exit(1)
-    
+
     # Create converter instance and run conversion
     converter = FileConverter()
     try:
