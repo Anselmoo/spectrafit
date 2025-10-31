@@ -2,15 +2,17 @@
 
 from __future__ import annotations
 
-import argparse
 import json
 
 from pathlib import Path
 from typing import TYPE_CHECKING
+from typing import Annotated
 from typing import Any
 from typing import ClassVar
+from typing import Optional
 
 import tomli_w
+import typer
 import yaml
 
 from spectrafit.plugins.converter import Converter
@@ -19,6 +21,12 @@ from spectrafit.tools import read_input_file
 
 if TYPE_CHECKING:
     from collections.abc import MutableMapping
+
+# Create Typer app
+app = typer.Typer(
+    help="Converter for 'SpectraFit' input and output files.",
+    add_completion=False,
+)
 
 
 class FileConverter(Converter):
@@ -38,40 +46,6 @@ class FileConverter(Converter):
     """
 
     choices: ClassVar[set[str]] = {"json", "yaml", "yml", "toml", "lock"}
-
-    def get_args(self) -> dict[str, Any]:
-        """Get the arguments from the command line.
-
-        Returns:
-            Dict[str, Any]: Return the input file arguments as a dictionary without
-                additional information beyond the command line arguments.
-
-        """
-        parser = argparse.ArgumentParser(
-            description="Converter for 'SpectraFit' input and output files.",
-            usage="%(prog)s [options] infile",
-        )
-        parser.add_argument(
-            "infile",
-            type=Path,
-            help="Filename of the 'SpectraFit' input or output file.",
-        )
-        parser.add_argument(
-            "-f",
-            "--file-format",
-            help="File format for the conversion.",
-            type=str,
-            choices=self.choices,
-        )
-        parser.add_argument(
-            "-e",
-            "--export-format",
-            help="File format for the export.",
-            type=str,
-            default="json",
-            choices=self.choices,
-        )
-        return vars(parser.parse_args())
 
     @staticmethod
     def convert(infile: Path, file_format: str) -> MutableMapping[str, Any]:
@@ -139,16 +113,58 @@ class FileConverter(Converter):
             with fname.with_suffix(f".{export_format}").open("wb+") as f:
                 tomli_w.dump(dict(**data), f)
 
-    def __call__(self) -> None:
-        """Run the converter via cmd commands."""
-        args = self.get_args()
-        self.save(
-            data=self.convert(infile=args["infile"], file_format=args["file_format"]),
-            fname=args["infile"],
-            export_format=args["export_format"],
+
+@app.command()
+def cli_main(
+    infile: Annotated[Path, typer.Argument(help="Filename of the 'SpectraFit' input or output file.")],
+    file_format: Annotated[
+        Optional[str],
+        typer.Option(
+            "-f",
+            "--file-format",
+            help="File format for the conversion.",
+        ),
+    ] = None,
+    export_format: Annotated[
+        str,
+        typer.Option(
+            "-e",
+            "--export-format",
+            help="File format for the export.",
+        ),
+    ] = "json",
+) -> None:
+    """Convert 'SpectraFit' input and output files between different formats."""
+    # Validate file format choices
+    choices = FileConverter.choices
+    
+    if file_format and file_format not in choices:
+        typer.echo(
+            f"Error: Invalid file format '{file_format}'. "
+            f"Choose from: {', '.join(sorted(choices))}",
+            err=True,
         )
+        raise typer.Exit(1)
+    
+    if export_format not in choices:
+        typer.echo(
+            f"Error: Invalid export format '{export_format}'. "
+            f"Choose from: {', '.join(sorted(choices))}",
+            err=True,
+        )
+        raise typer.Exit(1)
+    
+    # Create converter instance and run conversion
+    converter = FileConverter()
+    try:
+        data = converter.convert(infile=infile, file_format=file_format)
+        converter.save(data=data, fname=infile, export_format=export_format)
+        typer.echo(f"Successfully converted {infile} to {export_format} format")
+    except ValueError as e:
+        typer.echo(f"Error: {e}", err=True)
+        raise typer.Exit(1)
 
 
 def command_line_runner() -> None:
-    """Run the converter from the command line."""
-    FileConverter()()
+    """Entry point for the file converter CLI."""
+    app()

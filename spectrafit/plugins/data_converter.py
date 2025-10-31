@@ -2,15 +2,17 @@
 
 from __future__ import annotations
 
-import argparse
 import re
 
 from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING
+from typing import Annotated
 from typing import Any
+from typing import Optional
 
 import pandas as pd
+import typer
 
 from spectrafit.api.file_model import DataFileAPI
 from spectrafit.plugins.converter import Converter
@@ -18,6 +20,12 @@ from spectrafit.plugins.converter import Converter
 
 if TYPE_CHECKING:
     from collections.abc import MutableMapping
+
+# Create Typer app
+app = typer.Typer(
+    help="Converter for 'SpectraFit' from data files to CSV files.",
+    add_completion=False,
+)
 
 
 def get_athena_column(fname: Path, comment: str = "#") -> list[str] | None:
@@ -93,40 +101,6 @@ class DataConverter(Converter):
         `DataConverter` class can be also used in the Jupyter notebook.
     """
 
-    def get_args(self) -> dict[str, Any]:
-        """Get the arguments from the command line.
-
-        Returns:
-            Dict[str, Any]: Return the input file arguments as a dictionary without
-                additional information beyond the command line arguments.
-
-        """
-        parser = argparse.ArgumentParser(
-            description="Converter for 'SpectraFit' from data files to CSV files.",
-            usage="%(prog)s [options] infile",
-        )
-        parser.add_argument(
-            "infile",
-            type=Path,
-            help="Filename of the data file to convert.",
-        )
-        parser.add_argument(
-            "-f",
-            "--file-format",
-            help="File format for the conversion.",
-            type=str,
-            choices=choices,
-        )
-        parser.add_argument(
-            "-e",
-            "--export-format",
-            help="File format for the export.",
-            type=str,
-            default="csv",
-            choices=choices_export,
-        )
-        return vars(parser.parse_args())
-
     @staticmethod
     def convert(infile: Path, file_format: str) -> MutableMapping[str, Any]:
         """Convert the input file to the target file format.
@@ -175,19 +149,56 @@ class DataConverter(Converter):
             raise ValueError(msg)
         data.to_csv(fname.with_suffix(f".{export_format}"), index=False)
 
-    def __call__(self) -> None:
-        """Run the converter."""
-        args = self.get_args()
-        self.save(
-            data=self.convert(
-                args["infile"],
-                args["file_format"],
-            ),
-            fname=args["infile"],
-            export_format=args["export_format"],
+
+@app.command()
+def cli_main(
+    infile: Annotated[Path, typer.Argument(help="Filename of the data file to convert.")],
+    file_format: Annotated[
+        Optional[str],
+        typer.Option(
+            "-f",
+            "--file-format",
+            help="File format for the conversion.",
+        ),
+    ] = None,
+    export_format: Annotated[
+        str,
+        typer.Option(
+            "-e",
+            "--export-format",
+            help="File format for the export.",
+        ),
+    ] = "csv",
+) -> None:
+    """Convert data files to CSV format."""
+    # Validate file format choices
+    if file_format and file_format.upper() not in choices:
+        typer.echo(
+            f"Error: Invalid file format '{file_format}'. "
+            f"Choose from: {', '.join(sorted(choices))}",
+            err=True,
         )
+        raise typer.Exit(1)
+    
+    if export_format.lower() not in choices_export:
+        typer.echo(
+            f"Error: Invalid export format '{export_format}'. "
+            f"Choose from: {', '.join(sorted(choices_export))}",
+            err=True,
+        )
+        raise typer.Exit(1)
+    
+    # Create converter instance and run conversion
+    converter = DataConverter()
+    try:
+        data = converter.convert(infile, file_format)
+        converter.save(data=data, fname=infile, export_format=export_format)
+        typer.echo(f"Successfully converted {infile} to {export_format} format")
+    except ValueError as e:
+        typer.echo(f"Error: {e}", err=True)
+        raise typer.Exit(1)
 
 
 def command_line_runner() -> None:
-    """Run the converter from the command line."""
-    DataConverter()()
+    """Entry point for the data converter CLI."""
+    app()

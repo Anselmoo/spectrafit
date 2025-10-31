@@ -2,20 +2,27 @@
 
 from __future__ import annotations
 
-import argparse
 import json
 
 from pathlib import Path
+from typing import Annotated
 from typing import Any
 from typing import ClassVar
 
 import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
+import typer
 
 from spectrafit.plugins.converter import Converter
 from spectrafit.tools import pkl2any
 from spectrafit.tools import pure_fname
+
+# Create Typer app
+app = typer.Typer(
+    help="Converter for 'SpectraFit' from pkl files to a graph.",
+    add_completion=False,
+)
 
 
 class PklVisualizer(Converter):
@@ -29,43 +36,6 @@ class PklVisualizer(Converter):
 
     choices_fformat: ClassVar[set[str]] = {"latin1", "utf-8", "utf-16", "utf-32"}
     choices_export: ClassVar[set[str]] = {"png", "pdf", "jpg", "jpeg"}
-
-    def get_args(self) -> dict[str, Any]:
-        """Get the arguments from the command line.
-
-        Returns:
-            Dict[str, Any]: Return the input file arguments as a dictionary without
-                additional information beyond the command line arguments.
-
-        """
-        parser = argparse.ArgumentParser(
-            description="Converter for 'SpectraFit' from pkl files to a graph.",
-            usage="%(prog)s [options] infile",
-        )
-        parser.add_argument(
-            "infile",
-            type=Path,
-            help="Filename of the pkl file to convert to graph.",
-        )
-        parser.add_argument(
-            "-f",
-            "--file-format",
-            help="File format for the optional encoding of the pickle file."
-            " Default is 'latin1'.",
-            type=str,
-            default="latin1",
-            choices=self.choices_fformat,
-        )
-        parser.add_argument(
-            "-e",
-            "--export-format",
-            help="File extension for the graph export.",
-            type=str,
-            default="pdf",
-            choices=self.choices_export,
-        )
-
-        return vars(parser.parse_args())
 
     @staticmethod
     def convert(infile: Path, file_format: str) -> dict[str, Any]:
@@ -187,17 +157,60 @@ class PklVisualizer(Converter):
         self.add_nodes(graph=graph, data_dict=data_dict)
         return graph
 
-    def __call__(self) -> None:
-        """Create the graph and save it as a PDF file."""
-        args = self.get_args()
-        self.save(
-            data=self.convert(args["infile"], args["file_format"]),
-            fname=args["infile"],
-            export_format=args["export_format"],
+
+@app.command()
+def cli_main(
+    infile: Annotated[Path, typer.Argument(help="Filename of the pkl file to convert to graph.")],
+    file_format: Annotated[
+        str,
+        typer.Option(
+            "-f",
+            "--file-format",
+            help="File format for the optional encoding of the pickle file. Default is 'latin1'.",
+        ),
+    ] = "latin1",
+    export_format: Annotated[
+        str,
+        typer.Option(
+            "-e",
+            "--export-format",
+            help="File extension for the graph export.",
+        ),
+    ] = "pdf",
+) -> None:
+    """Convert pkl files to a visual graph."""
+    # Validate choices
+    choices_fformat = PklVisualizer.choices_fformat
+    choices_export = PklVisualizer.choices_export
+    
+    if file_format not in choices_fformat:
+        typer.echo(
+            f"Error: Invalid file format '{file_format}'. "
+            f"Choose from: {', '.join(sorted(choices_fformat))}",
+            err=True,
         )
+        raise typer.Exit(1)
+    
+    if export_format.lower() not in choices_export:
+        typer.echo(
+            f"Error: Invalid export format '{export_format}'. "
+            f"Choose from: {', '.join(sorted(choices_export))}",
+            err=True,
+        )
+        raise typer.Exit(1)
+    
+    # Create visualizer instance and run conversion
+    visualizer = PklVisualizer()
+    try:
+        data = visualizer.convert(infile, file_format)
+        visualizer.save(data=data, fname=infile, export_format=export_format)
         plt.show()
+        typer.echo(f"Successfully visualized {infile}")
+    except (TypeError, ValueError) as e:
+        typer.echo(f"Error: {e}", err=True)
+        raise typer.Exit(1)
 
 
 def command_line_runner() -> None:
-    """Run the converter from the command line."""
-    PklVisualizer()()
+    """Entry point for the pkl visualizer CLI."""
+    app()
