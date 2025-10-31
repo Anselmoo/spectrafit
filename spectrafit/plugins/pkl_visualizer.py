@@ -53,11 +53,11 @@ class PklVisualizer(Converter):
             Dict[str, Any]: The data as a dictionary, which can be a nested dictionary.
 
         """
-        data = PklVisualizer().get_type(pkl2any(infile, encoding=file_format))
+        data = PklVisualizer().get_type(pkl2any(infile, encoding=file_format))  # type: ignore[abstract]
         if not isinstance(data, dict):
             msg = f"Data is not a dictionary: {data}"
             raise TypeError(msg)
-        graph = PklVisualizer().create_graph(fname=infile, data_dict=data)
+        graph = PklVisualizer().create_graph(fname=infile, data_dict=data)  # type: ignore[abstract]
 
         pos = nx.kamada_kawai_layout(graph, scale=2)
         nx.draw_networkx_nodes(
@@ -203,7 +203,7 @@ def cli_main(
         raise typer.Exit(1)
 
     # Create visualizer instance and run conversion
-    visualizer = PklVisualizer()
+    visualizer = PklVisualizer()  # type: ignore[abstract]
     try:
         data = visualizer.convert(infile, file_format)
         visualizer.save(data=data, fname=infile, export_format=export_format)

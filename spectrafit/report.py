@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import pprint
 
-from collections.abc import Callable
 from typing import TYPE_CHECKING
 from typing import Any
 from warnings import warn
@@ -28,6 +27,10 @@ from sklearn.metrics import mean_absolute_percentage_error
 from sklearn.metrics import mean_poisson_deviance
 from sklearn.metrics import mean_squared_error
 from sklearn.metrics import mean_squared_log_error
+
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 from sklearn.metrics import median_absolute_error
 from sklearn.metrics import r2_score
 
@@ -170,7 +173,7 @@ class RegressionMetrics:
         metric_dict: dict[Hashable, Any] = {}
         for fnc in metrics_fnc:
             metric_dict[fnc.__name__] = []
-            for y_true, y_pred in zip(self.y_true.T, self.y_pred.T):
+            for y_true, y_pred in zip(self.y_true.T, self.y_pred.T, strict=True):
                 try:
                     metric_dict[fnc.__name__].append(fnc(y_true, y_pred))
                 except ValueError as err:

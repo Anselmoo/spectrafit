@@ -264,7 +264,7 @@ def cli_main(
         raise typer.Exit(1)
 
     # Create converter instance and run conversion
-    converter = PklConverter()
+    converter = PklConverter()  # type: ignore[abstract]
     try:
         data = converter.convert(infile, file_format)
         converter.save(data, infile, export_format)

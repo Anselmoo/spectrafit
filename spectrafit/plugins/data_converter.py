@@ -190,9 +190,9 @@ def cli_main(
         raise typer.Exit(1)
 
     # Create converter instance and run conversion
-    converter = DataConverter()
+    converter = DataConverter()  # type: ignore[abstract]
     try:
-        data = converter.convert(infile, file_format)
+        data = converter.convert(infile, file_format)  # type: ignore[arg-type]
         converter.save(data=data, fname=infile, export_format=export_format)
         typer.echo(f"Successfully converted {infile} to {export_format} format")
     except ValueError as e:

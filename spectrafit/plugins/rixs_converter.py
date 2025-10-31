@@ -243,14 +243,14 @@ def cli_main(
         raise typer.Exit(1)
 
     # Create converter instance and run conversion
-    converter = RIXSConverter()
+    converter = RIXSConverter()  # type: ignore[abstract]
     try:
         data = converter.convert(infile, file_format)
         rixs_data = converter.create_rixs(
             data=data,
-            incident_energy=incident_energy,
-            emission_energy=emission_energy,
-            rixs_map=rixs_map,
+            incident_energy=incident_energy,  # type: ignore[arg-type]
+            emission_energy=emission_energy,  # type: ignore[arg-type]
+            rixs_map=rixs_map,  # type: ignore[arg-type]
             mode=mode,
         )
         converter.save(

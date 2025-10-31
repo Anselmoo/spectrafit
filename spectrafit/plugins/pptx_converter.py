@@ -463,7 +463,7 @@ def cli_main(
         raise typer.Exit(1)
 
     # Create converter instance and run conversion
-    converter = PPTXConverter()
+    converter = PPTXConverter()  # type: ignore[abstract]
     try:
         data = converter.convert(infile, file_format)
         converter.save(data, infile, file_format)
