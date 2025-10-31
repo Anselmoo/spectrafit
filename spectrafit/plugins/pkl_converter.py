@@ -2,15 +2,16 @@
 
 from __future__ import annotations
 
-import argparse
 import gzip
 import pickle
 
 from pathlib import Path
+from typing import Annotated
 from typing import Any
 from typing import ClassVar
 
 import numpy as np
+import typer
 
 from spectrafit.plugins.converter import Converter
 from spectrafit.tools import pkl2any
@@ -18,6 +19,12 @@ from spectrafit.tools import pure_fname
 
 
 pkl_gz = "pkl.gz"
+
+# Create Typer app
+app = typer.Typer(
+    help="Converter for 'SpectraFit' from pkl files to CSV files.",
+    add_completion=False,
+)
 
 
 class ExportData:
@@ -135,42 +142,6 @@ class PklConverter(Converter):
     choices_fformat: ClassVar[set[str]] = {"latin1", "utf-8", "utf-16", "utf-32"}
     choices_export: ClassVar[set[str]] = {"npy", "npz", "pkl", "pkl.gz"}
 
-    def get_args(self) -> dict[str, Any]:
-        """Get the arguments from the command line.
-
-        Returns:
-            Dict[str, Any]: Return the input file arguments as a dictionary without
-                additional information beyond the command line arguments.
-
-        """
-        parser = argparse.ArgumentParser(
-            description="Converter for 'SpectraFit' from pkl files to CSV files.",
-            usage="%(prog)s [options] infile",
-        )
-        parser.add_argument(
-            "infile",
-            type=Path,
-            help="Filename of the pkl file to convert.",
-        )
-        parser.add_argument(
-            "-f",
-            "--file-format",
-            help="File format for the optional encoding of the pickle file."
-            " Default is 'latin1'.",
-            type=str,
-            default="latin1",
-            choices=self.choices_fformat,
-        )
-        parser.add_argument(
-            "-e",
-            "--export-format",
-            help="File format for export of the output file. Default is 'pkl'.",
-            type=str,
-            default="pkl",
-            choices=self.choices_export,
-        )
-        return vars(parser.parse_args())
-
     @staticmethod
     def convert(infile: Path, file_format: str) -> dict[str, Any]:
         """Convert the input file to the output file.
@@ -248,13 +219,59 @@ class PklConverter(Converter):
             _fname = Path(f"{fname}_{key}").with_suffix(f".{export_format}")
             ExportData(data=value, fname=_fname, export_format=export_format)()
 
-    def __call__(self) -> None:
-        """Run the converter."""
-        args = self.get_args()
-        data = self.convert(args["infile"], args["file_format"])
-        self.save(data, args["infile"], args["export_format"])
+
+@app.command()
+def cli_main(
+    infile: Annotated[Path, typer.Argument(help="Filename of the pkl file to convert.")],
+    file_format: Annotated[
+        str,
+        typer.Option(
+            "-f",
+            "--file-format",
+            help="File format for the optional encoding of the pickle file. Default is 'latin1'.",
+        ),
+    ] = "latin1",
+    export_format: Annotated[
+        str,
+        typer.Option(
+            "-e",
+            "--export-format",
+            help="File format for export of the output file. Default is 'pkl'.",
+        ),
+    ] = "pkl",
+) -> None:
+    """Convert pkl files to various output formats."""
+    # Validate choices
+    choices_fformat = PklConverter.choices_fformat
+    choices_export = PklConverter.choices_export
+    
+    if file_format not in choices_fformat:
+        typer.echo(
+            f"Error: Invalid file format '{file_format}'. "
+            f"Choose from: {', '.join(sorted(choices_fformat))}",
+            err=True,
+        )
+        raise typer.Exit(1)
+    
+    if export_format.lower() not in choices_export:
+        typer.echo(
+            f"Error: Invalid export format '{export_format}'. "
+            f"Choose from: {', '.join(sorted(choices_export))}",
+            err=True,
+        )
+        raise typer.Exit(1)
+    
+    # Create converter instance and run conversion
+    converter = PklConverter()
+    try:
+        data = converter.convert(infile, file_format)
+        converter.save(data, infile, export_format)
+        typer.echo(f"Successfully converted {infile}")
+    except ValueError as e:
+        typer.echo(f"Error: {e}", err=True)
+        raise typer.Exit(1)
 
 
 def command_line_runner() -> None:
-    """Run the command line script."""
-    PklConverter()()
+    """Entry point for the pkl converter CLI."""
+    app()

@@ -2,13 +2,13 @@
 
 from __future__ import annotations
 
-import argparse
-
 from pathlib import Path
 from typing import TYPE_CHECKING
+from typing import Annotated
 from typing import Any
 
 import tomli
+import typer
 
 from pptx import Presentation
 from pptx.util import Pt
@@ -25,6 +25,12 @@ if TYPE_CHECKING:
     from collections.abc import MutableMapping
 
     import pandas as pd
+
+# Create Typer app
+app = typer.Typer(
+    help="Converter for 'SpectraFit' from *.lock output to a PowerPoint presentation.",
+    add_completion=False,
+)
 
 
 class PPTXElements:
@@ -382,34 +388,6 @@ class PPTXConverter(Converter):
 
     pixel_size = PPTXLayoutAPI.pptx_formats.keys()
 
-    def get_args(self) -> dict[str, Any]:
-        """Get the arguments from the command line.
-
-        Returns:
-            Dict[str, Any]: Return the input file arguments as a dictionary without
-                additional information beyond the command line arguments.
-
-        """
-        parse = argparse.ArgumentParser(
-            description="Converter for 'SpectraFit' from *.lock output to a "
-            "PowerPoint presentation.",
-            usage="%(prog)s [options] infile",
-        )
-        parse.add_argument(
-            "infile",
-            type=Path,
-            help="Filename of the *.lock file to convert to a powerpoint presentation.",
-        )
-        parse.add_argument(
-            "-f",
-            "--file-format",
-            help="File format of the PowerPoint presentation. Default is '16:9'.",
-            type=str,
-            default="16:9",
-            choices=self.pixel_size,
-        )
-        return vars(parse.parse_args())
-
     @staticmethod
     def convert(infile: Path, file_format: str) -> MutableMapping[str, Any]:
         """Convert the lock file to a powerpoint presentation.
@@ -455,13 +433,42 @@ class PPTXConverter(Converter):
             fname=Path(f"{fname.stem}_{export_format.replace(':', '_')}.pptx"),
         )()
 
-    def __call__(self) -> None:
-        """Convert the lock file to a powerpoint presentation."""
-        args = self.get_args()
-        data = self.convert(args["infile"], args["file_format"])
-        self.save(data, args["infile"], args["file_format"])
+
+@app.command()
+def cli_main(
+    infile: Annotated[Path, typer.Argument(help="Filename of the *.lock file to convert to a powerpoint presentation.")],
+    file_format: Annotated[
+        str,
+        typer.Option(
+            "-f",
+            "--file-format",
+            help="File format of the PowerPoint presentation. Default is '16:9'.",
+        ),
+    ] = "16:9",
+) -> None:
+    """Convert *.lock files to PowerPoint presentations."""
+    # Validate file format
+    pixel_size = PPTXConverter.pixel_size
+    
+    if file_format not in pixel_size:
+        typer.echo(
+            f"Error: Invalid file format '{file_format}'. "
+            f"Choose from: {', '.join(sorted(pixel_size))}",
+            err=True,
+        )
+        raise typer.Exit(1)
+    
+    # Create converter instance and run conversion
+    converter = PPTXConverter()
+    try:
+        data = converter.convert(infile, file_format)
+        converter.save(data, infile, file_format)
+        typer.echo(f"Successfully converted {infile} to PowerPoint")
+    except ValueError as e:
+        typer.echo(f"Error: {e}", err=True)
+        raise typer.Exit(1)
 
 
 def command_line_runner() -> None:
-    """Command line interface for the converter plugin."""
-    PPTXConverter()()
+    """Entry point for the PPTX converter CLI."""
+    app()

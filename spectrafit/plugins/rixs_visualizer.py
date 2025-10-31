@@ -2,12 +2,12 @@
 
 from __future__ import annotations
 
-import argparse
 import json
 import logging
 
 from pathlib import Path
 from typing import TYPE_CHECKING
+from typing import Annotated
 from typing import Any
 
 import dash
@@ -17,6 +17,7 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import tomli
+import typer
 
 from dash import dcc
 from dash import html
@@ -35,6 +36,12 @@ from spectrafit.plugins.notebook import DataFramePlot
 
 if TYPE_CHECKING:
     from numpy.typing import NDArray
+
+# Create Typer app
+app_cli = typer.Typer(
+    help="`RIXS-Visualizer` is a simple RIXS plane viewer, which allows to visualize RIXS data in a 2D plane.",
+    add_completion=False,
+)
 
 
 class RIXSFigure:
@@ -643,25 +650,6 @@ class RIXSApp(RIXSFigure):  # pragma: no cover
 class RIXSVisualizer:
     """RIXS Visualizer. This class is used to visualize RIXS data."""
 
-    def get_args(self) -> dict[str, Any]:
-        """Get the arguments from the command line.
-
-        Returns:
-            Dict[str, Any]: Return the input file arguments as a dictionary without
-                additional information beyond the command line arguments.
-
-        """
-        parser = argparse.ArgumentParser(
-            description="`RIXS-Visualizer` is a simple RIXS plane viewer, which "
-            "allows to visualize RIXS data in a 2D plane.",
-        )
-        parser.add_argument(
-            "infile",
-            type=Path,
-            help="The input file. This can be a json, toml, npy, or npz file.",
-        )
-        return vars(parser.parse_args())
-
     @staticmethod
     def load_data(infile: Path) -> RIXSModelAPI:
         """Load the data from the input file.
@@ -699,12 +687,22 @@ class RIXSVisualizer:
             rixs_map=np.array(data["rixs_map"]),
         )
 
-    def __call__(self) -> None:  # pragma: no cover
-        """Run the RIXS Visualizer."""
-        app = RIXSApp(**self.load_data(self.get_args()["infile"]).model_dump())
+
+@app_cli.command()
+def cli_main(
+    infile: Annotated[Path, typer.Argument(help="The input file. This can be a json, toml, npy, or npz file.")],
+) -> None:
+    """Run the RIXS Visualizer."""
+    # Load data and run visualizer
+    try:
+        data = RIXSVisualizer.load_data(infile)
+        app = RIXSApp(**data.model_dump())
         app.app_run()
+    except ValueError as e:
+        typer.echo(f"Error: {e}", err=True)
+        raise typer.Exit(1)
 
 
 def command_line_runner() -> None:
-    """Run the RIXS Visualizer from the command line."""
-    RIXSVisualizer()()
+    """Entry point for the RIXS Visualizer CLI."""
+    app_cli()

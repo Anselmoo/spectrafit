@@ -2,15 +2,17 @@
 
 from __future__ import annotations
 
-import argparse
 import json
 
 from pathlib import Path
 from typing import TYPE_CHECKING
+from typing import Annotated
 from typing import Any
+from typing import Optional
 
 import numpy as np
 import tomli_w
+import typer
 
 from spectrafit.api.rixs_model import RIXSModelAPI
 from spectrafit.plugins.converter import Converter
@@ -20,74 +22,20 @@ from spectrafit.tools import pure_fname
 
 if TYPE_CHECKING:
     from collections.abc import MutableMapping
+    
 choices_fformat = {"latin1", "utf-8", "utf-16", "utf-32"}
 choices_export = {"json", "toml", "lock", "npy", "npz"}
 choices_mode = {"sum", "mean"}
 
+# Create Typer app
+app = typer.Typer(
+    help="Convert 'SpectraFit' pickle files to JSON, TOML, or numpy formats for RIXS-Visualizer.",
+    add_completion=False,
+)
+
 
 class RIXSConverter(Converter):
     """Convert raw pickle data into JSON, TOML, or numpy formats."""
-
-    def get_args(self) -> dict[str, Any]:
-        """Retrieve command-line arguments.
-
-        Returns:
-            Dict[str, Any]: Dictionary of input file arguments.
-
-        """
-        parser = argparse.ArgumentParser(
-            description="Convert 'SpectraFit' pickle files to JSON, "
-            "TOML, or numpy formats for RIXS-Visualizer.",
-            usage="%(prog)s [options] input_file",
-        )
-        parser.add_argument(
-            "infile",
-            type=Path,
-            help="Path to the pickle file to be converted.",
-        )
-        parser.add_argument(
-            "-f",
-            "--file-format",
-            help="Encoding format of the pickle file (default: 'latin1').",
-            type=str,
-            default="latin1",
-            choices=choices_fformat,
-        )
-        parser.add_argument(
-            "-e",
-            "--export-format",
-            help="Desired export file format (default: 'json').",
-            type=str,
-            default="json",
-            choices=choices_export,
-        )
-        parser.add_argument(
-            "-ie",
-            "--incident-energy",
-            help="Label for the incident energy.",
-            type=str,
-        )
-        parser.add_argument(
-            "-ee",
-            "--emission-energy",
-            help="Label for the emitted energy.",
-            type=str,
-        )
-        parser.add_argument(
-            "-rm",
-            "--rixs-map",
-            help="Label for the RIXS map.",
-            type=str,
-        )
-        parser.add_argument(
-            "-m",
-            "--mode",
-            help="Post-processing mode for the RIXS map (default: 'sum').",
-            type=str,
-            default="sum",
-            choices=choices_mode,
-        )
-        return vars(parser.parse_args())
 
     @staticmethod
     def convert(infile: Path, file_format: str) -> MutableMapping[str, Any]:
@@ -216,22 +164,107 @@ class RIXSConverter(Converter):
         """
         return {k: v.tolist() for k, v in data.items()}
 
-    def __call__(self) -> None:
-        """Run the converter."""
-        args = self.get_args()
-        self.save(
-            data=self.create_rixs(
-                data=self.convert(args["infile"], args["file_format"]),
-                incident_energy=args["incident_energy"],
-                emission_energy=args["emission_energy"],
-                rixs_map=args["rixs_map"],
-                mode=args["mode"],
-            ).model_dump(),
-            fname=args["infile"],
-            export_format=args["export_format"],
+
+@app.command()
+def cli_main(
+    infile: Annotated[Path, typer.Argument(help="Path to the pickle file to be converted.")],
+    file_format: Annotated[
+        str,
+        typer.Option(
+            "-f",
+            "--file-format",
+            help="Encoding format of the pickle file (default: 'latin1').",
+        ),
+    ] = "latin1",
+    export_format: Annotated[
+        str,
+        typer.Option(
+            "-e",
+            "--export-format",
+            help="Desired export file format (default: 'json').",
+        ),
+    ] = "json",
+    incident_energy: Annotated[
+        Optional[str],
+        typer.Option(
+            "-ie",
+            "--incident-energy",
+            help="Label for the incident energy.",
+        ),
+    ] = None,
+    emission_energy: Annotated[
+        Optional[str],
+        typer.Option(
+            "-ee",
+            "--emission-energy",
+            help="Label for the emitted energy.",
+        ),
+    ] = None,
+    rixs_map: Annotated[
+        Optional[str],
+        typer.Option(
+            "-rm",
+            "--rixs-map",
+            help="Label for the RIXS map.",
+        ),
+    ] = None,
+    mode: Annotated[
+        str,
+        typer.Option(
+            "-m",
+            "--mode",
+            help="Post-processing mode for the RIXS map (default: 'sum').",
+        ),
+    ] = "sum",
+) -> None:
+    """Convert pickle files to JSON, TOML, or numpy formats for RIXS."""
+    # Validate choices
+    if file_format not in choices_fformat:
+        typer.echo(
+            f"Error: Invalid file format '{file_format}'. "
+            f"Choose from: {', '.join(sorted(choices_fformat))}",
+            err=True,
         )
+        raise typer.Exit(1)
+    
+    if export_format not in choices_export:
+        typer.echo(
+            f"Error: Invalid export format '{export_format}'. "
+            f"Choose from: {', '.join(sorted(choices_export))}",
+            err=True,
+        )
+        raise typer.Exit(1)
+    
+    if mode not in choices_mode:
+        typer.echo(
+            f"Error: Invalid mode '{mode}'. "
+            f"Choose from: {', '.join(sorted(choices_mode))}",
+            err=True,
+        )
+        raise typer.Exit(1)
+    
+    # Create converter instance and run conversion
+    converter = RIXSConverter()
+    try:
+        data = converter.convert(infile, file_format)
+        rixs_data = converter.create_rixs(
+            data=data,
+            incident_energy=incident_energy,
+            emission_energy=emission_energy,
+            rixs_map=rixs_map,
+            mode=mode,
+        )
+        converter.save(
+            data=rixs_data.model_dump(),
+            fname=infile,
+            export_format=export_format,
+        )
+        typer.echo(f"Successfully converted {infile}")
+    except (ValueError, TypeError) as e:
+        typer.echo(f"Error: {e}", err=True)
+        raise typer.Exit(1)
 
 
 def command_line_runner() -> None:
-    """Run the command line script."""
-    RIXSConverter()()
+    """Entry point for the RIXS converter CLI."""
+    app()
