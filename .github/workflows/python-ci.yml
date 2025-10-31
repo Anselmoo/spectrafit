@@ -40,7 +40,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.9", "3.10", "3.11", "3.12"]
+        python-version: ["3.11", "3.12", "3.13"]
         os: [ubuntu-latest, windows-latest, macOS-latest]
         arch: [x64]
     defaults:
@@ -82,7 +82,7 @@ jobs:
         with:
           enable-cache: true
           cache-dependency-glob: uv.lock
-          python-version: "3.10"
+          python-version: "3.11"
       - name: 📦 Install the project
         run: |
           uv sync --all-extras
@@ -100,7 +100,7 @@ jobs:
         with:
           enable-cache: true
           cache-dependency-glob: uv.lock
-          python-version: "3.10"
+          python-version: "3.11"
       - name: 🏗️ Setup the project
         run: |
           uv sync --all-extras
@@ -124,7 +124,7 @@ jobs:
         with:
           enable-cache: true
           cache-dependency-glob: uv.lock
-          python-version: "3.10"
+          python-version: "3.11"
       - name: 📦 Install the project
         run: uv sync --all-extras --group docs
       - name: 🛠️ Set git config
