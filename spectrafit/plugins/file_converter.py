@@ -9,7 +9,6 @@ from typing import TYPE_CHECKING
 from typing import Annotated
 from typing import Any
 from typing import ClassVar
-from typing import Optional
 
 import tomli_w
 import typer

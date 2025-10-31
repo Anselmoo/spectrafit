@@ -8,7 +8,6 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 from typing import Annotated
 from typing import Any
-from typing import Optional
 
 import numpy as np
 import tomli_w
