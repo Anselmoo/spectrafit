@@ -22,7 +22,7 @@ from spectrafit.tools import pure_fname
 
 if TYPE_CHECKING:
     from collections.abc import MutableMapping
-    
+
 choices_fformat = {"latin1", "utf-8", "utf-16", "utf-32"}
 choices_export = {"json", "toml", "lock", "npy", "npz"}
 choices_mode = {"sum", "mean"}
@@ -226,7 +226,6 @@ def cli_main(
             err=True,
         )
         raise typer.Exit(1)
-    
     if export_format not in choices_export:
         typer.echo(
             f"Error: Invalid export format '{export_format}'. "
@@ -234,7 +233,6 @@ def cli_main(
             err=True,
         )
         raise typer.Exit(1)
-    
     if mode not in choices_mode:
         typer.echo(
             f"Error: Invalid mode '{mode}'. "

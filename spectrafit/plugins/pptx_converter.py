@@ -449,7 +449,6 @@ def cli_main(
     """Convert *.lock files to PowerPoint presentations."""
     # Validate file format
     pixel_size = PPTXConverter.pixel_size
-    
     if file_format not in pixel_size:
         typer.echo(
             f"Error: Invalid file format '{file_format}'. "
