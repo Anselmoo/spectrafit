@@ -268,7 +268,7 @@ disallow_untyped_defs = true
 pretty = true
 show_error_context = true
 show_error_codes = true
-exclude = "**/test/test_*.py"
+exclude = "(?x)(^spectrafit/test/test_.*\\.py$|^spectrafit/.*/test/test_.*\\.py$)"
 
 [tool.pydantic-mypy]
 init_forbid_extra = true
