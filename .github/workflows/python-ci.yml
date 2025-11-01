@@ -4,7 +4,7 @@ on:
   push:
     branches: [main, feature/*, release/*, hotfix/*]
   pull_request:
-    branches: [main, develop]
+    # Run on all pull requests to support version 2 parallel stream
   repository_dispatch:
     types: [create-pull-request]
 
