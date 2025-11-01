@@ -2,6 +2,109 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.4.1 🌈 - 2025-11-01
+
+### :compass: What's Changed
+
+#### :computer: Codesspaces
+
+* fix: 🐛 resolve devcontainer build failures due to moby package incompatibility (#1965) @[copilot-swe-agent[bot]](https://github.com/apps/copilot-swe-agent)
+
+#### :toolbox: Maintenance
+
+* chore: 🔖 Bump version to 1.4.1 (#2003) @[copilot-swe-agent[bot]](https://github.com/apps/copilot-swe-agent)
+* test: ✅ escape regex metacharacters in pytest.raises(match) and remove unused mypy ignore (#1998) @[copilot-swe-agent[bot]](https://github.com/apps/copilot-swe-agent)
+* Delete .github/dependabot.yml (#1982) @Anselmoo
+* [pre-commit.ci] pre-commit autoupdate (#1948) @[pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci)
+* [pre-commit.ci] pre-commit autoupdate (#1934) @[pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci)
+* fix: 🚑 Exclude `PLC0415` for tests (#1930) @Anselmoo
+* [pre-commit.ci] pre-commit autoupdate (#1929) @[pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci)
+* fix(deps): update dependency kaleido to v1 (#1924) @[renovate[bot]](https://github.com/apps/renovate)
+* [pre-commit.ci] pre-commit autoupdate (#1920) @[pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci)
+
+#### :snake: Python
+
+* chore: 🔖 Bump version to 1.4.1 (#2003) @[copilot-swe-agent[bot]](https://github.com/apps/copilot-swe-agent)
+* test: ✅ escape regex metacharacters in pytest.raises(match) and remove unused mypy ignore (#1998) @[copilot-swe-agent[bot]](https://github.com/apps/copilot-swe-agent)
+
+#### :octocat: Github Actions
+
+* chore(deps): update actions/dependency-review-action digest to 4552948 (#1991) @[renovate[bot]](https://github.com/apps/renovate)
+* chore(deps): update github/codeql-action digest to d198d2f (#1990) @[renovate[bot]](https://github.com/apps/renovate)
+* chore(deps): update stefanzweifel/git-auto-commit-action action to v7 (#1993) @[renovate[bot]](https://github.com/apps/renovate)
+* chore(deps): update sigstore/cosign-installer action to v4 (#1996) @[renovate[bot]](https://github.com/apps/renovate)
+* chore(deps): update astral-sh/setup-uv digest to d0cc045 (#1986) @[renovate[bot]](https://github.com/apps/renovate)
+* chore(deps): update actions/dependency-review-action digest to 56339e5 (#1985) @[renovate[bot]](https://github.com/apps/renovate)
+* chore(deps): update github/codeql-action digest to a8d1ac4 (#1989) @[renovate[bot]](https://github.com/apps/renovate)
+* chore(deps): update codecov/codecov-action digest to 5a10915 (#1987) @[renovate[bot]](https://github.com/apps/renovate)
+* chore(deps): update conda-incubator/setup-miniconda digest to 505e639 (#1988) @[renovate[bot]](https://github.com/apps/renovate)
+* chore: 🔧 convert GitHub Actions from version pinning to SHA pinning (#1984) @[copilot-swe-agent[bot]](https://github.com/apps/copilot-swe-agent)
+* chore(deps): update actions/first-interaction action to v3.1.0 (#1976) @[renovate[bot]](https://github.com/apps/renovate)
+* build(deps): bump sigstore/cosign-installer from 3.9.2 to 3.10.0 (#1971) @[dependabot[bot]](https://github.com/apps/dependabot)
+* chore(deps): update pypa/gh-action-pypi-publish digest to ab69e43 (#1968) @[renovate[bot]](https://github.com/apps/renovate)
+* ci: downgrade devcontainers/ci action version (#1966) @Anselmoo
+* fix: 🐛 resolve devcontainer build failures due to moby package incompatibility (#1965) @[copilot-swe-agent[bot]](https://github.com/apps/copilot-swe-agent)
+* chore(deps): update pypa/gh-action-pypi-publish digest to ed0c539 (#1955) @[renovate[bot]](https://github.com/apps/renovate)
+* build(deps): bump pypa/gh-action-pypi-publish from d417ba7e7683fa9104c42abe611c1f2c93c0727d to ed0c53931b1dc9bd32cbe73a98c7f6766f8a527e (#1962) @[dependabot[bot]](https://github.com/apps/dependabot)
+* build(deps): bump actions/setup-python from 5 to 6 (#1963) @[dependabot[bot]](https://github.com/apps/dependabot)
+* build(deps): bump codecov/codecov-action from 5.5.0 to 5.5.1 (#1960) @[dependabot[bot]](https://github.com/apps/dependabot)
+* chore(deps): update codecov/codecov-action action to v5.5.0 (#1952) @[renovate[bot]](https://github.com/apps/renovate)
+* chore(deps): update actions/checkout action to v5 (#1949) @[renovate[bot]](https://github.com/apps/renovate)
+* chore(deps): update actions/first-interaction action to v3 (#1950) @[renovate[bot]](https://github.com/apps/renovate)
+* build(deps): bump pypa/gh-action-pypi-publish from e9ccbe5a211ba3e8363f472cae362b56b104e796 to d417ba7e7683fa9104c42abe611c1f2c93c0727d (#1944) @[dependabot[bot]](https://github.com/apps/dependabot)
+* chore(deps): update docker/login-action action to v3.5.0 (#1945) @[renovate[bot]](https://github.com/apps/renovate)
+* chore(deps): update docker/metadata-action action to v5.8.0 (#1943) @[renovate[bot]](https://github.com/apps/renovate)
+* build(deps): bump actions/first-interaction from 1.3.0 to 2.0.0 (#1940) @[dependabot[bot]](https://github.com/apps/dependabot)
+* chore(deps): update sigstore/cosign-installer action to v3.9.2 (#1938) @[renovate[bot]](https://github.com/apps/renovate)
+* chore(deps): update sigstore/cosign-installer action to v3.9.1 (#1923) @[renovate[bot]](https://github.com/apps/renovate)
+* build(deps): bump sigstore/cosign-installer from 3.8.2 to 3.9.0 (#1927) @[dependabot[bot]](https://github.com/apps/dependabot)
+* build(deps): bump docker/setup-buildx-action from 3.10.0 to 3.11.1 (#1928) @[dependabot[bot]](https://github.com/apps/dependabot)
+* chore(deps): update stefanzweifel/git-auto-commit-action action to v6 (#1921) @[renovate[bot]](https://github.com/apps/renovate)
+
+#### :link: Dependency Updates
+
+* chore: 🔖 Bump version to 1.4.1 (#2003) @[copilot-swe-agent[bot]](https://github.com/apps/copilot-swe-agent)
+* chore(deps): :arrows_counterclockwise: update dependencies 202510260014 (#1999) @Anselmoo
+* chore(deps): :arrows_counterclockwise: update dependencies 202510120013 (#1992) @Anselmoo
+* chore(deps): :arrows_counterclockwise: update dependencies 202509210013 (#1974) @Anselmoo
+* build(deps): bump sigstore/cosign-installer from 3.9.2 to 3.10.0 (#1971) @[dependabot[bot]](https://github.com/apps/dependabot)
+* chore(deps): :arrows_counterclockwise: update dependencies 202509140013 (#1970) @Anselmoo
+* build(deps): bump pypa/gh-action-pypi-publish from d417ba7e7683fa9104c42abe611c1f2c93c0727d to ed0c53931b1dc9bd32cbe73a98c7f6766f8a527e (#1962) @[dependabot[bot]](https://github.com/apps/dependabot)
+* build(deps): bump actions/setup-python from 5 to 6 (#1963) @[dependabot[bot]](https://github.com/apps/dependabot)
+* build(deps): bump codecov/codecov-action from 5.5.0 to 5.5.1 (#1960) @[dependabot[bot]](https://github.com/apps/dependabot)
+* chore(deps): :arrows_counterclockwise: update dependencies 202509070013 (#1959) @Anselmoo
+* chore(deps): :arrows_counterclockwise: update dependencies 202508310014 (#1954) @Anselmoo
+* chore(deps): :arrows_counterclockwise: update dependencies 202508170014 (#1951) @Anselmoo
+* chore(deps): :arrows_counterclockwise: update dependencies 202508100015 (#1946) @Anselmoo
+* build(deps): bump pypa/gh-action-pypi-publish from e9ccbe5a211ba3e8363f472cae362b56b104e796 to d417ba7e7683fa9104c42abe611c1f2c93c0727d (#1944) @[dependabot[bot]](https://github.com/apps/dependabot)
+* chore(deps): :arrows_counterclockwise: update dependencies 202507270015 (#1941) @Anselmoo
+* build(deps): bump actions/first-interaction from 1.3.0 to 2.0.0 (#1940) @[dependabot[bot]](https://github.com/apps/dependabot)
+* chore(deps): :arrows_counterclockwise: update dependencies 202507200015 (#1939) @Anselmoo
+* chore(deps): :arrows_counterclockwise: update dependencies 202507130015 (#1936) @Anselmoo
+* chore(deps): :arrows_counterclockwise: update dependencies 202507060014 (#1935) @Anselmoo
+* chore(deps): :arrows_counterclockwise: update dependencies 202506290015 (#1931) @Anselmoo
+* build(deps): bump sigstore/cosign-installer from 3.8.2 to 3.9.0 (#1927) @[dependabot[bot]](https://github.com/apps/dependabot)
+* build(deps): bump docker/setup-buildx-action from 3.10.0 to 3.11.1 (#1928) @[dependabot[bot]](https://github.com/apps/dependabot)
+* fix(deps): update dependency kaleido to v1 (#1924) @[renovate[bot]](https://github.com/apps/renovate)
+* chore(deps): :arrows_counterclockwise: update dependencies 202506220014 (#1925) @Anselmoo
+
+#### :microscope: Testing & Coverage
+
+* chore: 🔖 Bump version to 1.4.1 (#2003) @[copilot-swe-agent[bot]](https://github.com/apps/copilot-swe-agent)
+* test: ✅ escape regex metacharacters in pytest.raises(match) and remove unused mypy ignore (#1998) @[copilot-swe-agent[bot]](https://github.com/apps/copilot-swe-agent)
+
+#### :memo: Changelog
+
+* docs: :card_index_dividers: Changlog update for v1.4.0 (#1919) @Anselmoo
+
+### :package: Full Changelog
+
+**Full Changelog**: https://github.com/Anselmoo/spectrafit/compare/v1.4.0...v1.4.1
+
+### :gear: Who Contributes
+
+@Anselmoo, @Copilot, @github-actions[bot], @renovate[bot], [copilot-swe-agent[bot]](https://github.com/apps/copilot-swe-agent) and [renovate[bot]](https://github.com/apps/renovate)
+
 ## v1.4.0 🌈 - 2025-06-08
 
 ### :compass: What's Changed
