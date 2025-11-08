@@ -53,11 +53,11 @@ class PklVisualizer(Converter):
             Dict[str, Any]: The data as a dictionary, which can be a nested dictionary.
 
         """
-        data = PklVisualizer().get_type(pkl2any(infile, encoding=file_format))  # type: ignore[abstract]
+        data = PklVisualizer().get_type(pkl2any(infile, encoding=file_format))
         if not isinstance(data, dict):
             msg = f"Data is not a dictionary: {data}"
             raise TypeError(msg)
-        graph = PklVisualizer().create_graph(fname=infile, data_dict=data)  # type: ignore[abstract]
+        graph = PklVisualizer().create_graph(fname=infile, data_dict=data)
 
         pos = nx.kamada_kawai_layout(graph, scale=2)
         nx.draw_networkx_nodes(
@@ -158,6 +158,26 @@ class PklVisualizer(Converter):
         self.add_nodes(graph=graph, data_dict=data_dict)
         return graph
 
+    def get_args(self) -> dict[str, Any]:
+        """Get the arguments from the command line.
+
+        Returns:
+            dict[str, Any]: Empty dictionary as this converter uses Typer CLI.
+
+        """
+        return {}
+
+    def __call__(self) -> None:
+        """Call the converter plugin.
+
+        Raises:
+            NotImplementedError: This method is not used in the current implementation.
+                Use the CLI interface instead.
+
+        """
+        msg = "Use the CLI interface (cli_main) instead of calling the converter directly."
+        raise NotImplementedError(msg)
+
 
 @app.command()
 def cli_main(
@@ -203,7 +223,7 @@ def cli_main(
         raise typer.Exit(1)
 
     # Create visualizer instance and run conversion
-    visualizer = PklVisualizer()  # type: ignore[abstract]
+    visualizer = PklVisualizer()
     try:
         data = visualizer.convert(infile, file_format)
         visualizer.save(data=data, fname=infile, export_format=export_format)
