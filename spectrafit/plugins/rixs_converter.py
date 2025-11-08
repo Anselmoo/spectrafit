@@ -163,6 +163,26 @@ class RIXSConverter(Converter):
         """
         return {k: v.tolist() for k, v in data.items()}
 
+    def get_args(self) -> dict[str, Any]:
+        """Get the arguments from the command line.
+
+        Returns:
+            dict[str, Any]: Empty dictionary as this converter uses Typer CLI.
+
+        """
+        return {}
+
+    def __call__(self) -> None:
+        """Call the converter plugin.
+
+        Raises:
+            NotImplementedError: This method is not used in the current implementation.
+                Use the CLI interface instead.
+
+        """
+        msg = "Use the CLI interface (cli_main) instead of calling the converter directly."
+        raise NotImplementedError(msg)
+
 
 @app.command()
 def cli_main(
@@ -248,9 +268,9 @@ def cli_main(
         data = converter.convert(infile, file_format)
         rixs_data = converter.create_rixs(
             data=data,
-            incident_energy=incident_energy,
-            emission_energy=emission_energy,
-            rixs_map=rixs_map,
+            incident_energy=incident_energy,  # type: ignore[arg-type]
+            emission_energy=emission_energy,  # type: ignore[arg-type]
+            rixs_map=rixs_map,  # type: ignore[arg-type]
             mode=mode,
         )
         converter.save(

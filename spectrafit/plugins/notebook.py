@@ -772,6 +772,7 @@ class SolverResults:
             for key, val in zip(
                 self.get_regression_metrics["index"],
                 self.get_regression_metrics["data"],
+                strict=True,
             )
         }
         metric = {**gof, **reg}

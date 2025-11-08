@@ -40,7 +40,7 @@ def version_callback(value: bool) -> None:
     """Display version information."""
     if value:
         typer.echo(__status__.version())
-        raise typer.Exit()
+        raise typer.Exit
 
 
 @app.command()
@@ -54,7 +54,7 @@ def cli_main(
             help="Filename for the export, default to set to 'spectrafit_results'.",
         ),
     ] = "spectrafit_results",
-    input: Annotated[
+    input_file: Annotated[
         str,
         typer.Option(
             "-i",
@@ -208,11 +208,11 @@ def cli_main(
 ) -> None:
     """Run spectrafit from the command line."""
     # Convert column to proper format
-    if column is None:
-        column = [0, 1]
-    else:
-        # Try to convert to int if possible
-        column = [int(c) if c.isdigit() else c for c in column]
+    column = (
+        ["0", "1"]
+        if column is None
+        else [str(int(c)) if c.isdigit() else c for c in column]
+    )
 
     # Validate choices
     if separator not in ["\t", ",", ";", ":", "|", " ", "s+"]:
@@ -235,7 +235,7 @@ def cli_main(
     args_dict = {
         "infile": infile,
         "outfile": outfile,
-        "input": input,
+        "input": input_file,
         "oversampling": oversampling,
         "energy_start": energy_start,
         "energy_stop": energy_stop,
@@ -374,10 +374,11 @@ def extracted_from_command_line_runner() -> dict[str, Any]:
              information beyond the command line arguments.
 
     """
-    raise RuntimeError(
+    msg = (
         "extracted_from_command_line_runner() is deprecated. "
         "The Typer CLI handles argument parsing automatically."
     )
+    raise RuntimeError(msg)
 
 
 def fitting_routine(args: dict[str, Any]) -> tuple[pd.DataFrame, dict[str, Any]]:

@@ -6,7 +6,6 @@ ensuring type compatibility with mypy.
 
 from __future__ import annotations
 
-from typing import Optional
 from typing import cast
 
 from spectrafit.api.moessbauer_model import AmplitudeAPI
@@ -37,7 +36,7 @@ def create_amplitude_api(
 
     if "expr" in data:
         expr_value = data.get("expr")
-        expr = cast("Optional[str]", expr_value)
+        expr = cast("str | None", expr_value)
 
     return AmplitudeAPI(
         max=data.get("max"),
@@ -68,7 +67,7 @@ def create_isomershift_api(
 
     if "expr" in data:
         expr_value = data.get("expr")
-        expr = cast("Optional[str]", expr_value)
+        expr = cast("str | None", expr_value)
 
     return IsomerShiftAPI(
         max=data.get("max"),
@@ -99,7 +98,7 @@ def create_fwhml_api(
 
     if "expr" in data:
         expr_value = data.get("expr")
-        expr = cast("Optional[str]", expr_value)
+        expr = cast("str | None", expr_value)
 
     return FwhmlAPI(
         max=data.get("max"),
@@ -130,7 +129,7 @@ def create_background_api(
 
     if "expr" in data:
         expr_value = data.get("expr")
-        expr = cast("Optional[str]", expr_value)
+        expr = cast("str | None", expr_value)
 
     return BackgroundAPI(
         max=data.get("max"),
@@ -161,7 +160,7 @@ def create_quadrupolesplitting_api(
 
     if "expr" in data:
         expr_value = data.get("expr")
-        expr = cast("Optional[str]", expr_value)
+        expr = cast("str | None", expr_value)
 
     return QuadrupoleSplittingAPI(
         max=data.get("max"),
@@ -192,7 +191,7 @@ def create_hyperfinefield_api(
 
     if "expr" in data:
         expr_value = data.get("expr")
-        expr = cast("Optional[str]", expr_value)
+        expr = cast("str | None", expr_value)
 
     return HyperfineFieldAPI(
         max=data.get("max"),
