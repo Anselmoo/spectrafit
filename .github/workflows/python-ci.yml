@@ -2,9 +2,9 @@ name: 🐍 CI - Python Package
 
 on:
   push:
-    branches: [main, feature/*, release/*, hotfix/*]
+    branches: [main, feature/*, release/*, hotfix/*, copilot/*]
   pull_request:
-    branches: [main, develop]
+    branches: [main, develop, v2.0.0]
   repository_dispatch:
     types: [create-pull-request]
 
