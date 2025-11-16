@@ -2,12 +2,12 @@
 
 from __future__ import annotations
 
-import argparse
 import json
 import logging
 
 from pathlib import Path
 from typing import TYPE_CHECKING
+from typing import Annotated
 from typing import Any
 
 import dash
@@ -17,6 +17,7 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import tomli
+import typer
 
 from dash import dcc
 from dash import html
@@ -35,6 +36,15 @@ from spectrafit.plugins.notebook import DataFramePlot
 
 if TYPE_CHECKING:
     from numpy.typing import NDArray
+
+# Create Typer app
+app_cli = typer.Typer(
+    help=(
+        "`RIXS-Visualizer` is a simple RIXS plane viewer that allows visualizing "
+        "RIXS data in a 2D plane."
+    ),
+    add_completion=False,
+)
 
 
 class RIXSFigure:
@@ -531,7 +541,8 @@ class RIXSApp(RIXSFigure):  # pragma: no cover
         dbc_css = (
             "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.min.css"
         )
-        external_stylesheets = [dbc.themes.COSMO, dbc_css]
+        # Annotate as list[str | dict] to satisfy type checkers: dash accepts both.
+        external_stylesheets: list[str | dict[str, Any]] = [dbc.themes.COSMO, dbc_css]
         if self.jupyter_dash:
             app = JupyterDash(__name__, external_stylesheets=external_stylesheets)
         else:
@@ -575,22 +586,31 @@ class RIXSApp(RIXSFigure):  # pragma: no cover
             opacity: float,
             theme: str,
         ) -> tuple[go.Figure, go.Figure, go.Figure]:
+            template_res = template_from_url(theme)
+            if isinstance(template_res, (bytes, bytearray)):
+                # Convert bytes to str to match create_* template signature.
+                template_str = template_res.decode("utf-8")
+            elif isinstance(template_res, memoryview):
+                # Convert memoryview to bytes then decode.
+                template_str = bytes(template_res).decode("utf-8")
+            else:
+                template_str = template_res
             if hoverData is None:
                 return (
                     self.create_xas(
                         x=self.incident_energy,
                         y=self.rixs_map[:, int(self.emission_energy.size / 2)],
-                        template=template_from_url(theme),
+                        template=template_str,
                     ),
                     self.create_xes(
                         x=self.emission_energy,
                         y=self.rixs_map[int(self.incident_energy.size / 2), :],
-                        template=template_from_url(theme),
+                        template=template_str,
                     ),
                     self.create_rixs(
                         colorscale=colorscale,
                         opacity=opacity,
-                        template=template_from_url(theme),
+                        template=template_str,
                     ),
                 )
             x = hoverData["points"][0]["x"]
@@ -598,17 +618,17 @@ class RIXSApp(RIXSFigure):  # pragma: no cover
             xes_fig = self.create_xas(
                 x=self.incident_energy,
                 y=self.rixs_map[:, int(x)],
-                template=template_from_url(theme),
+                template=template_str,
             )
             xas_fig = self.create_xes(
                 x=self.emission_energy,
                 y=self.rixs_map[int(y), :],
-                template=template_from_url(theme),
+                template=template_str,
             )
             rixs_fig = self.create_rixs(
                 colorscale=colorscale,
                 opacity=opacity,
-                template=template_from_url(theme),
+                template=template_str,
             )
             if clickData is None:
                 return xes_fig, xas_fig, rixs_fig
@@ -642,25 +662,6 @@ class RIXSApp(RIXSFigure):  # pragma: no cover
 
 class RIXSVisualizer:
     """RIXS Visualizer. This class is used to visualize RIXS data."""
-
-    def get_args(self) -> dict[str, Any]:
-        """Get the arguments from the command line.
-
-        Returns:
-            Dict[str, Any]: Return the input file arguments as a dictionary without
-                additional information beyond the command line arguments.
-
-        """
-        parser = argparse.ArgumentParser(
-            description="`RIXS-Visualizer` is a simple RIXS plane viewer, which "
-            "allows to visualize RIXS data in a 2D plane.",
-        )
-        parser.add_argument(
-            "infile",
-            type=Path,
-            help="The input file. This can be a json, toml, npy, or npz file.",
-        )
-        return vars(parser.parse_args())
 
     @staticmethod
     def load_data(infile: Path) -> RIXSModelAPI:
@@ -699,12 +700,27 @@ class RIXSVisualizer:
             rixs_map=np.array(data["rixs_map"]),
         )
 
-    def __call__(self) -> None:  # pragma: no cover
-        """Run the RIXS Visualizer."""
-        app = RIXSApp(**self.load_data(self.get_args()["infile"]).model_dump())
+
+@app_cli.command()
+def cli_main(
+    infile: Annotated[
+        Path,
+        typer.Argument(
+            help="The input file. This can be a json, toml, npy, or npz file."
+        ),
+    ],
+) -> None:
+    """Run the RIXS Visualizer."""
+    # Load data and run visualizer
+    try:
+        data = RIXSVisualizer.load_data(infile)
+        app = RIXSApp(**data.model_dump())
         app.app_run()
+    except ValueError as e:
+        typer.echo(f"Error: {e}", err=True)
+        raise typer.Exit(1) from e
 
 
 def command_line_runner() -> None:
-    """Run the RIXS Visualizer from the command line."""
-    RIXSVisualizer()()
+    """Entry point for the RIXS Visualizer CLI."""
+    app_cli()

@@ -53,10 +53,6 @@ The **SpectraFit** API is organized into several modules, each providing specifi
 
   Data structures and schemas used throughout the package.
 
-- :material-file-swap: **[Converters & Visualizer](converter_api.md)**
-
-  File format conversion and specialized visualization tools.
-
 </div>
 
 ## API Usage Examples
@@ -106,5 +102,5 @@ fitted_curve = result.best_fit
 After exploring the API, you may want to:
 
 - Check the [Examples](../examples/index.md) for practical applications
-- Learn about [Plugins](../plugins/file_converter.md) to extend functionality
+- Learn about [Plugins](../plugins/index.md) to extend functionality
 - Understand the [implementation details](../doc/index.md) of the algorithms

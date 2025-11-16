@@ -1,0 +1,4 @@
+attributes,pseudovoigt_amplitude_1,pseudovoigt_center_1,pseudovoigt_fwhmg_1,pseudovoigt_fwhml_1,pseudovoigt_amplitude_2,pseudovoigt_center_2,pseudovoigt_fwhmg_2,pseudovoigt_fwhml_2
+init_value,1.0,0.0,0.02,0.01,1.0,0.0,0.02,0.01
+model_value,1.0000099999999998,0.0,0.02,0.01,1.0,0.0,0.02,0.01
+best_value,1.0000099999999998,0.0,0.02,0.01,1.0,0.0,0.02,0.01

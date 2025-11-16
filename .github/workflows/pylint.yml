@@ -1,6 +1,10 @@
 name: 🔧 CI - Pylint
 
-on: [push]
+on:
+  push:
+    branches: [main, feature/*, release/*, hotfix/*, copilot/*]
+  pull_request:
+    branches: [main, develop, v2.0.0]
 
 jobs:
   build:

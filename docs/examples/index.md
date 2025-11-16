@@ -45,7 +45,6 @@ Jupyter notebooks provide an interactive environment for **SpectraFit**, allowin
 - :material-palette: **[Themes](example9_2.ipynb)** - Customize the appearance of your plots.
 - :material-file-export: **[Export Results](example9_3.ipynb)** - Save and export your fitting results in various formats.
 - :material-map: **[RIXS Map Visualization](example9_4.ipynb)** - Generate 2D maps from RIXS spectroscopy data.
-- :material-code-json: **[Using Converters as Module](example9_5.ipynb)** - Convert between different file formats programmatically.
 - :material-earth: **[RIXS Global-Fitting in Jupyter](example9_6.ipynb)** - Apply global fitting approaches to RIXS datasets.
 
 - :material-atom: **[Mössbauer Spectroscopy](example10_1.ipynb)**

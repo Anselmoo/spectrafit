@@ -1,0 +1,6 @@
+attributes,pseudovoigt_amplitude_1,pseudovoigt_center_1,pseudovoigt_fwhml_1,pseudovoigt_fwhmg_1,gaussian_amplitude_2,gaussian_center_2,gaussian_fwhmg_2
+init_value,0.25,0.0,0.02,0.01,0.25,0.0,0.01
+model_value,0.2007783303682697,0.0,0.02,0.01,0.20034676910276272,0.0,0.01
+best_value,0.2007783303682697,0.0,0.02,0.01,0.20034676910276272,0.0,0.01
+error_relative,0.001098556435593409,,,,0.0005038917596388581,,
+error_absolute,0.5471489047540268,,,,0.25150980067984013,,
