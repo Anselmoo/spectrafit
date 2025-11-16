@@ -7,6 +7,7 @@ import sys
 
 from typing import TYPE_CHECKING
 from typing import Any
+from typing import cast
 
 import numpy as np
 import plotly.graph_objects as go
@@ -95,17 +96,25 @@ class TestRIXSApp:
         test_data: tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]],
     ) -> None:
         """Test the loading of data."""
+        incident_energy, emission_energy, rixs_map = test_data
         arrays = {
-            "incident_energy": test_data[0],
-            "emission_energy": test_data[1],
-            "rixs_map": test_data[2],
+            "incident_energy": incident_energy,
+            "emission_energy": emission_energy,
+            "rixs_map": rixs_map,
         }
         outfile = tmp_path / f"test.{file_format}"
 
         if file_format == "npy":
-            np.save(str(outfile), arrays, allow_pickle=True)
+            # Save dict as pickled object in .npy file; cast to "Any" (string)
+            # to satisfy typing linter and numpy type stubs.
+            np.save(str(outfile), cast("Any", arrays), allow_pickle=True)
         elif file_format == "npz":
-            np.savez(str(outfile), **arrays)
+            np.savez(
+                str(outfile),
+                incident_energy=incident_energy,
+                emission_energy=emission_energy,
+                rixs_map=rixs_map,
+            )
         else:
             serializable = {key: value.tolist() for key, value in arrays.items()}
             if file_format == "json":

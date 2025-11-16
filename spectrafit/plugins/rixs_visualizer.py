@@ -8,6 +8,7 @@ import logging
 from pathlib import Path
 from typing import TYPE_CHECKING
 from typing import Annotated
+from typing import Any
 
 import dash
 import dash_bootstrap_components as dbc
@@ -38,7 +39,10 @@ if TYPE_CHECKING:
 
 # Create Typer app
 app_cli = typer.Typer(
-    help="`RIXS-Visualizer` is a simple RIXS plane viewer, which allows to visualize RIXS data in a 2D plane.",
+    help=(
+        "`RIXS-Visualizer` is a simple RIXS plane viewer that allows visualizing "
+        "RIXS data in a 2D plane."
+    ),
     add_completion=False,
 )
 
@@ -537,7 +541,8 @@ class RIXSApp(RIXSFigure):  # pragma: no cover
         dbc_css = (
             "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.min.css"
         )
-        external_stylesheets = [dbc.themes.COSMO, dbc_css]
+        # Annotate as list[str | dict] to satisfy type checkers: dash accepts both.
+        external_stylesheets: list[str | dict[str, Any]] = [dbc.themes.COSMO, dbc_css]
         if self.jupyter_dash:
             app = JupyterDash(__name__, external_stylesheets=external_stylesheets)
         else:
@@ -581,22 +586,31 @@ class RIXSApp(RIXSFigure):  # pragma: no cover
             opacity: float,
             theme: str,
         ) -> tuple[go.Figure, go.Figure, go.Figure]:
+            template_res = template_from_url(theme)
+            if isinstance(template_res, (bytes, bytearray)):
+                # Convert bytes to str to match create_* template signature.
+                template_str = template_res.decode("utf-8")
+            elif isinstance(template_res, memoryview):
+                # Convert memoryview to bytes then decode.
+                template_str = bytes(template_res).decode("utf-8")
+            else:
+                template_str = template_res
             if hoverData is None:
                 return (
                     self.create_xas(
                         x=self.incident_energy,
                         y=self.rixs_map[:, int(self.emission_energy.size / 2)],
-                        template=template_from_url(theme),
+                        template=template_str,
                     ),
                     self.create_xes(
                         x=self.emission_energy,
                         y=self.rixs_map[int(self.incident_energy.size / 2), :],
-                        template=template_from_url(theme),
+                        template=template_str,
                     ),
                     self.create_rixs(
                         colorscale=colorscale,
                         opacity=opacity,
-                        template=template_from_url(theme),
+                        template=template_str,
                     ),
                 )
             x = hoverData["points"][0]["x"]
@@ -604,17 +618,17 @@ class RIXSApp(RIXSFigure):  # pragma: no cover
             xes_fig = self.create_xas(
                 x=self.incident_energy,
                 y=self.rixs_map[:, int(x)],
-                template=template_from_url(theme),
+                template=template_str,
             )
             xas_fig = self.create_xes(
                 x=self.emission_energy,
                 y=self.rixs_map[int(y), :],
-                template=template_from_url(theme),
+                template=template_str,
             )
             rixs_fig = self.create_rixs(
                 colorscale=colorscale,
                 opacity=opacity,
-                template=template_from_url(theme),
+                template=template_str,
             )
             if clickData is None:
                 return xes_fig, xas_fig, rixs_fig
@@ -704,7 +718,7 @@ def cli_main(
         app.app_run()
     except ValueError as e:
         typer.echo(f"Error: {e}", err=True)
-        raise typer.Exit(1)
+        raise typer.Exit(1) from e
 
 
 def command_line_runner() -> None:

@@ -40,7 +40,7 @@ def version_callback(value: bool) -> None:
     """Display version information."""
     if value:
         typer.echo(__status__.version())
-        raise typer.Exit()
+        raise typer.Exit
 
 
 @app.command()
@@ -54,7 +54,7 @@ def cli_main(
             help="Filename for the export, default to set to 'spectrafit_results'.",
         ),
     ] = "spectrafit_results",
-    input: Annotated[
+    input_: Annotated[
         str,
         typer.Option(
             "-i",
@@ -106,7 +106,7 @@ def cli_main(
         ),
     ] = 0,
     column: Annotated[
-        list[str] | None,
+        list[str | int] | None,
         typer.Option(
             "-c",
             "--column",
@@ -209,10 +209,12 @@ def cli_main(
     """Run spectrafit from the command line."""
     # Convert column to proper format
     if column is None:
-        column = [0, 1]
+        # Typing expects list[str]; keep defaults as strings so conversion logic
+        # below can safely parse numeric column indices with str.isdigit().
+        column = ["0", "1"]
     else:
-        # Try to convert to int if possible
-        column = [int(c) if c.isdigit() else c for c in column]
+        # Try to convert to int if possible (only call isdigit on strings)
+        column = [int(c) if (isinstance(c, str) and c.isdigit()) else c for c in column]
 
     # Validate choices
     if separator not in ["\t", ",", ";", ":", "|", " ", "s+"]:
@@ -235,7 +237,7 @@ def cli_main(
     args_dict = {
         "infile": infile,
         "outfile": outfile,
-        "input": input,
+        "input": input_,
         "oversampling": oversampling,
         "energy_start": energy_start,
         "energy_stop": energy_stop,
@@ -374,10 +376,11 @@ def extracted_from_command_line_runner() -> dict[str, Any]:
              information beyond the command line arguments.
 
     """
-    raise RuntimeError(
+    _msg = (
         "extracted_from_command_line_runner() is deprecated. "
         "The Typer CLI handles argument parsing automatically."
     )
+    raise RuntimeError(_msg)
 
 
 def fitting_routine(args: dict[str, Any]) -> tuple[pd.DataFrame, dict[str, Any]]:
