@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import sys
 
 from typing import TYPE_CHECKING
@@ -10,8 +11,8 @@ from typing import Any
 import numpy as np
 import plotly.graph_objects as go
 import pytest
+import tomli_w
 
-from spectrafit.plugins.rixs_converter import RIXSConverter
 from spectrafit.plugins.rixs_visualizer import RIXSApp
 from spectrafit.plugins.rixs_visualizer import RIXSFigure
 from spectrafit.plugins.rixs_visualizer import RIXSVisualizer
@@ -94,19 +95,29 @@ class TestRIXSApp:
         test_data: tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]],
     ) -> None:
         """Test the loading of data."""
-        data = {
+        arrays = {
             "incident_energy": test_data[0],
             "emission_energy": test_data[1],
             "rixs_map": test_data[2],
         }
+        outfile = tmp_path / f"test.{file_format}"
 
-        RIXSConverter().save(
-            data=data,
-            fname=tmp_path / f"test.{file_format}",
-            export_format=file_format,
-        )
+        if file_format == "npy":
+            np.save(str(outfile), arrays, allow_pickle=True)
+        elif file_format == "npz":
+            np.savez(str(outfile), **arrays)
+        else:
+            serializable = {key: value.tolist() for key, value in arrays.items()}
+            if file_format == "json":
+                with outfile.open("w", encoding="utf-8") as f:
+                    json.dump(serializable, f)
+            elif file_format in {"toml", "lock"}:
+                with outfile.open("wb") as f:
+                    tomli_w.dump(serializable, f)
+            else:
+                pytest.fail(f"Unsupported test format: {file_format}")
 
-        _model = RIXSVisualizer().load_data(infile=tmp_path / f"test.{file_format}")
+        _model = RIXSVisualizer().load_data(infile=outfile)
         assert _model.incident_energy.shape == (100,)
         assert _model.emission_energy.shape == (100,)
         assert _model.rixs_map.shape == (100, 100)

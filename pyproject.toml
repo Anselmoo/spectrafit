@@ -95,14 +95,8 @@ Issues = "https://github.com/Anselmoo/spectrafit/issues"
 
 [project.scripts]
 spectrafit = "spectrafit.spectrafit:command_line_runner"
-spectrafit-file-converter = "spectrafit.plugins.file_converter:command_line_runner"
-spectrafit-data-converter = "spectrafit.plugins.data_converter:command_line_runner"
-spectrafit-pkl-visualizer = "spectrafit.plugins.pkl_visualizer:command_line_runner"
-spectrafit-pkl-converter = "spectrafit.plugins.pkl_converter:command_line_runner"
-spectrafit-rixs-converter = "spectrafit.plugins.rixs_converter:command_line_runner"
 spectrafit-rixs-visualizer = "spectrafit.plugins.rixs_visualizer:command_line_runner"
 spectrafit-jupyter = "spectrafit.app.app:jupyter"
-spectrafit-pptx-converter = "spectrafit.plugins.pptx_converter:command_line_runner"
 
 [dependency-groups]
 dev = [
