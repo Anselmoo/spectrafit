@@ -15,7 +15,7 @@ This section documents the plugins available for **SpectraFit**, which extend it
 
 ## Overview
 
-Plugins enhance **SpectraFit** by adding support for different file formats, specialized data processing, and advanced visualization capabilities. These modular components can be used separately or in combination with the core functionality.
+Plugins enhance **SpectraFit** by adding specialized workflows (for example, custom notebooks and advanced visualizations) that complement the core fitting engine.
 
 !!! tip "Plugin Usage"
 
@@ -25,15 +25,14 @@ Plugins enhance **SpectraFit** by adding support for different file formats, spe
 
 <div class="grid cards" markdown>
 
-- :material-file-replace: **[File-Format-Conversion](file_converter.md)** - Convert between different spectroscopic file formats.
-- :material-database-sync: **[Data-Format-Conversion](data_converter.md)** - Transform data structures for compatibility with other tools.
 - :material-notebook: **[Jupyter-Notebook-Integration](jupyter_interface.md)** - Enhanced features for interactive analysis in Jupyter.
 - :material-chart-scatter-plot-hexbin: **[RIXS-Visualization](rixs_visualization.md)** - Specialized plotting tools for RIXS spectroscopy.
-- :material-format-rotate-90: **[RIXS-Converter](rixs_converter.md)** - Process and transform RIXS datasets.
-- :material-package-variant-closed: **[PKL-Converter and Visualizer](pkl_converter_visualization.md)** - Work with pickle files for data persistence.
-- :material-presentation: **[PPTX-Converter](pptx_converter.md)** - Export results directly to PowerPoint presentations.
 
 </div>
+
+!!! note "Legacy converters"
+
+    Historical converter plugins (file, data, PKL, PPTX, and RIXS converters) have been removed from SpectraFit v2 to simplify maintenance. Use the core CLI or build bespoke tooling on top of the public APIs if you need similar workflows.
 
 ## Plugin Benefits
 
@@ -61,5 +60,5 @@ For detailed instructions on plugin development, see the [Contributing](../contr
 After exploring the plugins, you may want to:
 
 - Check the [Examples](../examples/index.md) for practical applications
-- Review the [API Reference](../api/converter_api.md) for programmatic access
+- Review the [API Reference](../api/index.md) for programmatic access
 - Learn about [integration with other tools](../doc/index.md) in your workflow
