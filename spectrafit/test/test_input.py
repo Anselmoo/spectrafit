@@ -186,8 +186,8 @@ class TestFileFormatOutput:
             "-i",
             "spectrafit/test/scripts/test_input_2.json",
         )
-        assert len(list(Path().glob("spectrafit/test/export/fit_results*.json"))) == 1
-        assert len(list(Path().glob("spectrafit/test/export/fit_results*.csv"))) == 3
+        assert len(list(Path().glob("spectrafit/test/export/fit_results*.json"))) == 2
+        assert len(list(Path().glob("spectrafit/test/export/fit_results*.csv"))) == 6
 
 
 class TestMoreFeatures:
