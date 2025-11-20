@@ -106,7 +106,7 @@ def cli_main(
         ),
     ] = 0,
     column: Annotated[
-        list[str] | None,
+        list[int | str] | None,
         typer.Option(
             "-c",
             "--column",
