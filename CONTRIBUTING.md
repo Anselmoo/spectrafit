@@ -31,21 +31,32 @@ Here are some important resources:
 
 `SpectraFit` is using [uv][4] as python package management system and
 [pre-commit][5] for managing git hooks. For fixing bugs or developing new
-features, we recommend to use both tools. The python version should be `3.8.1`
-or higher and can be optional managed via [pyenv][6].
+features, we recommend to use both tools. The python version should be `3.9`
+or higher (up to `3.13`) and can be optionally managed via [pyenv][6].
+
+### Option 1: Using Dev Container (Recommended)
+
+The easiest way to get started is using our pre-configured development container:
+
+1. Install [Docker](https://www.docker.com/products/docker-desktop) and [VS Code](https://code.visualstudio.com/)
+2. Install the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+3. Open the repository in VS Code
+4. Click "Reopen in Container" when prompted (or use Command Palette: `Dev Containers: Reopen in Container`)
+
+The devcontainer automatically sets up Python 3.12, uv, all dependencies, and pre-commit hooks. See [`.devcontainer/README.md`](.devcontainer/README.md) for details.
+
+### Option 2: Local Setup
 
 ```bash
 # Setting up your Python environment
-pyenv local 3.10.0
+pyenv local 3.12.0
 
-# Install dependencies with uv
-uv pip install -e .
-
-# Install development dependencies
-uv pip install -e ".[dev]"
+# Create virtual environment and install dependencies
+uv venv --python 3.12
+uv sync --all-extras --all-groups
 
 # Install pre-commit hooks
-pre-commit install --install-hooks
+uv run pre-commit install
 ```
 
 Even if we have no git hook for code style in `markdown`, `json`, and `yaml`
