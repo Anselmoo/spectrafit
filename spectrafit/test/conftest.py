@@ -33,6 +33,7 @@ def filter_moessbauer_stderr(stderr: str) -> str:
     - Mössbauer experimental feature warnings
     - lmfit confidence interval warnings
     - pandas FutureWarnings
+    - spectrafit report warnings about uncertainties
     - Other expected warnings from the fitting process
     
     Args:
@@ -55,10 +56,26 @@ def filter_moessbauer_stderr(stderr: str) -> str:
             re.search(r'warn\(errmsg\)', line),
             re.search(r'Bound reached with prob\(', line),
             re.search(r'spectrafit/report\.py.*FutureWarning', line),
+            re.search(r'spectrafit/report\.py.*UserWarning', line),
             re.search(r'Downcasting object dtype arrays', line),
             re.search(r'return correl_matrix\.fillna', line),
             re.search(r'Error:.*No confidence interval could be calculated', line),
             re.search(r'self\.print_confidence_interval\(\)', line),
+            re.search(r'result, buffer, params = _extracted_gof_from_results\(', line),
+            re.search(r'## WARNING', line),
+            re.search(r'##+$', line),  # Lines with only # characters
+            re.search(r'Uncertainties could not be estimated', line),
+            re.search(r'The parameter.*is at its (initial value|boundary)', line),
+            re.search(r'uncertainties cannot be estimated!', line),
+            re.search(r'spectrafit/models/regular\.py.*RuntimeWarning', line),
+            re.search(r'invalid value encountered in', line),
+            re.search(r'divide by zero encountered in', line),
+            re.search(r'z = \(x - center', line),
+            re.search(r'spectrafit/tools\.py.*UserWarning', line),
+            re.search(r'Regression metric.*could not.*be calculated', line),
+            re.search(r'self\.args\["regression_metrics"\]', line),
+            re.search(r'Input contains NaN', line),
+            re.search(r'return np\.array\(', line),
             line.strip() == '+',  # Filter out leading '+' markers
         ]):
             continue

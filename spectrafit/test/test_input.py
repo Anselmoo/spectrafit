@@ -35,6 +35,7 @@ class TestCommandLineRunner:
             "-i",
             "spectrafit/test/scripts/test_input_1.json",
             "--version",
+            stdin=create_stdin("n\n"),
         )
 
         assert ret.success
@@ -73,6 +74,7 @@ class TestCommandLineRunner:
             "_",
             "-i",
             "spectrafit/test/scripts/test_input_7.json",
+            stdin=create_stdin("n\n"),
         )
         assert ret.success
         filtered_stderr = filter_moessbauer_stderr(ret.stderr)
@@ -89,7 +91,6 @@ class TestFileFormat:
     )
     def test_json_input(
         self,
-        monkeypatch: Any,
         script_runner: Any,
         tmp_path: Path,
     ) -> None:
@@ -104,6 +105,7 @@ class TestFileFormat:
             "spectrafit/test/scripts/test_input_3.json",
             "-o",
             f"{tmp_path}/result_json",
+            stdin=create_stdin("n\n"),
         )
         assert ret.success
         filtered_stderr = filter_moessbauer_stderr(ret.stderr)
@@ -118,7 +120,6 @@ class TestFileFormat:
     )
     def test_yml_input(
         self,
-        monkeypatch: Any,
         script_runner: Any,
         tmp_path: Path,
     ) -> None:
@@ -133,6 +134,7 @@ class TestFileFormat:
             "spectrafit/test/scripts/test_input_3.yml",
             "-o",
             f"{tmp_path}/result_yml",
+            stdin=create_stdin("n\n"),
         )
         assert ret.success
         filtered_stderr = filter_moessbauer_stderr(ret.stderr)
@@ -147,7 +149,6 @@ class TestFileFormat:
     )
     def test_yaml_input(
         self,
-        monkeypatch: Any,
         script_runner: Any,
         tmp_path: Path,
     ) -> None:
@@ -162,6 +163,7 @@ class TestFileFormat:
             "spectrafit/test/scripts/test_input_3.yaml",
             "-o",
             f"{tmp_path}/result_yaml",
+            stdin=create_stdin("n\n"),
         )
         assert ret.success
         filtered_stderr = filter_moessbauer_stderr(ret.stderr)
@@ -176,7 +178,6 @@ class TestFileFormat:
     )
     def test_toml_input(
         self,
-        monkeypatch: Any,
         script_runner: Any,
         tmp_path: Path,
     ) -> None:
@@ -191,6 +192,7 @@ class TestFileFormat:
             "spectrafit/test/scripts/test_input_3.toml",
             "-o",
             f"{tmp_path}/result_toml",
+            stdin=create_stdin("n\n"),
         )
         assert ret.success
         filtered_stderr = filter_moessbauer_stderr(ret.stderr)
@@ -204,12 +206,14 @@ class TestFileFormatOutput:
 
     def test_outputs(self, script_runner: Any) -> None:
         """Testing correct number of outputs."""
-        monkeypatch.setattr(BUILTINS_INPUT, lambda _: "n")
+        from spectrafit.test.conftest import create_stdin
+        
         _ = script_runner.run(
             "spectrafit",
             "_",
             "-i",
             "spectrafit/test/scripts/test_input_2.json",
+            stdin=create_stdin("n\n"),
         )
         assert len(list(Path().glob("spectrafit/test/export/fit_results*.json"))) == 2
         assert len(list(Path().glob("spectrafit/test/export/fit_results*.csv"))) == 6
@@ -228,6 +232,7 @@ class TestMoreFeatures:
             "_",
             "-i",
             "spectrafit/test/scripts/test_input_4.json",
+            stdin=create_stdin("n\n"),
         )
         assert ret.success
         filtered_stderr = filter_moessbauer_stderr(ret.stderr)
@@ -235,7 +240,6 @@ class TestMoreFeatures:
 
     def test_energyrange_e0(
         self,
-        monkeypatch: Any,
         script_runner: Any,
         tmp_path: Path,
     ) -> None:
@@ -252,6 +256,7 @@ class TestMoreFeatures:
             f"{tmp_path}/e0_result",
             "-e0",
             "0.0",
+            stdin=create_stdin("n\n"),
         )
         assert ret.success
         filtered_stderr = filter_moessbauer_stderr(ret.stderr)
@@ -262,7 +267,6 @@ class TestMoreFeatures:
 
     def test_energyrange_e1(
         self,
-        monkeypatch: Any,
         script_runner: Any,
         tmp_path: Path,
     ) -> None:
@@ -280,6 +284,7 @@ class TestMoreFeatures:
             "--oversampling",
             "-e1",
             "5.0",
+            stdin=create_stdin("n\n"),
         )
         assert ret.success
         filtered_stderr = filter_moessbauer_stderr(ret.stderr)
@@ -290,7 +295,6 @@ class TestMoreFeatures:
 
     def test_energyrange_e0e1(
         self,
-        monkeypatch: Any,
         script_runner: Any,
         tmp_path: Path,
     ) -> None:
@@ -310,6 +314,7 @@ class TestMoreFeatures:
             "0",
             "-e1",
             "5.0",
+            stdin=create_stdin("n\n"),
         )
         assert ret.success
         filtered_stderr = filter_moessbauer_stderr(ret.stderr)
@@ -334,6 +339,7 @@ class TestMoreFeatures:
             "_",
             "-i",
             "spectrafit/test/scripts/test_input_all_models.toml",
+            stdin=create_stdin("n\n"),
         )
         assert ret.success
         filtered_stderr = filter_moessbauer_stderr(ret.stderr)
@@ -341,13 +347,15 @@ class TestMoreFeatures:
 
     def test_not_allowed_input_1(self, script_runner: Any) -> None:
         """Testing test all models of spectrafit."""
-        monkeypatch.setattr(BUILTINS_INPUT, lambda _: "n")
+        from spectrafit.test.conftest import create_stdin
+        
         fname = "spectrafit/test/scripts/test_wrong.pp"
         ret = script_runner.run(
             "spectrafit",
             "spectrafit/test/import/test_data.csv",
             "-i",
             fname,
+            stdin=create_stdin("n\n"),
         )
         assert not ret.success
 
@@ -361,6 +369,7 @@ class TestMoreFeatures:
             "_",
             "-i",
             "spectrafit/test/scripts/test_missing_parameters_1.json",
+            stdin=create_stdin("n\n"),
         )
         assert not ret.success
 
@@ -374,6 +383,7 @@ class TestMoreFeatures:
             "_",
             "-i",
             "spectrafit/test/scripts/test_missing_parameters_2.json",
+            stdin=create_stdin("n\n"),
         )
         assert not ret.success
 
@@ -387,12 +397,12 @@ class TestMoreFeatures:
             "spectrafit/test/test_data.csv",
             "-i",
             "spectrafit/test/no_input.pp",
+            stdin=create_stdin("n\n"),
         )
         assert not ret.success
 
     def test_conf_interval(
         self,
-        monkeypatch: Any,
         script_runner: Any,
         tmp_path: Path,
     ) -> None:
@@ -407,6 +417,7 @@ class TestMoreFeatures:
             "spectrafit/test/scripts/test_input_6.json",
             "-o",
             f"{tmp_path}/conf_interval_result",
+            stdin=create_stdin("n\n"),
         )
         assert ret.success
         filtered_stderr = filter_moessbauer_stderr(ret.stderr)
@@ -423,6 +434,7 @@ class TestMoreFeatures:
             "_",
             "-i",
             "spectrafit/test/scripts/test_input_8.json",
+            stdin=create_stdin("n\n"),
         )
         assert ret.success
 
@@ -438,6 +450,7 @@ class TestMoreFeatures:
             "spectrafit/test/scripts/test_input_8.json",
             "-g",
             "0",
+            stdin=create_stdin("n\n"),
         )
         assert ret.success
 
@@ -451,6 +464,7 @@ class TestMoreFeatures:
             "_",
             "-i",
             "spectrafit/test/scripts/test_input_9.json",
+            stdin=create_stdin("n\n"),
         )
         assert not ret.success
 
@@ -468,6 +482,7 @@ class TestGlobalFitting:
             "_",
             "-i",
             "spectrafit/test/scripts/test_input_global_0.json",
+            stdin=create_stdin("n\n"),
         )
         assert ret.success
         filtered_stderr = filter_moessbauer_stderr(ret.stderr)
@@ -497,6 +512,7 @@ class TestGlobalFitting:
             "_",
             "-i",
             "spectrafit/test/scripts/test_input_global_1.json",
+            stdin=create_stdin("n\n"),
         )
         assert ret.success
         filtered_stderr = filter_moessbauer_stderr(ret.stderr)
