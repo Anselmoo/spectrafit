@@ -49,7 +49,15 @@ jobs:
           imageName: ghcr.io/anselmoo/spectrafit-devcontainer
           imageTag: ${{ steps.set_image_tag.outputs.image_tag }}
           runCmd: |
+            echo "🐍 Python version:"
             python --version
+            echo "📦 Checking uv installation:"
+            uv --version
+            echo "✅ Verifying virtual environment:"
+            ls -la .venv/
+            echo "🧪 Verifying dependencies:"
+            uv run python -c "import spectrafit; print(f'SpectraFit version: {spectrafit.__version__}')"
+            echo "✅ Devcontainer validation complete!"
           push: ${{ steps.set_image_push_option.outputs.image_push_option }}
           eventFilterForPush: |
             push
