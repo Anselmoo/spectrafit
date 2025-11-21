@@ -24,11 +24,8 @@ class TestCommandLineRunner:
     def test_version(self, script_runner: Any) -> None:
         """Testing the version command."""
         from spectrafit import __version__
-
         from spectrafit.test.conftest import create_stdin
 
-
-        
         ret = script_runner.run(
             "spectrafit",
             "_",
@@ -47,7 +44,7 @@ class TestCommandLineRunner:
     def test_extended(self, script_runner: Any) -> None:
         """Testing the extended command."""
         from spectrafit.test.conftest import create_stdin
-        
+
         ret = script_runner.run(
             "spectrafit",
             "_",
@@ -68,7 +65,6 @@ class TestCommandLineRunner:
         """Testing the extended with verbose command."""
         from spectrafit.test.conftest import create_stdin
 
-        
         ret = script_runner.run(
             "spectrafit",
             "_",
@@ -97,7 +93,6 @@ class TestFileFormat:
         """Testing json support."""
         from spectrafit.test.conftest import create_stdin
 
-        
         ret = script_runner.run(
             "spectrafit",
             "_",
@@ -126,7 +121,6 @@ class TestFileFormat:
         """Testing yml support."""
         from spectrafit.test.conftest import create_stdin
 
-        
         ret = script_runner.run(
             "spectrafit",
             "_",
@@ -155,7 +149,6 @@ class TestFileFormat:
         """Testing yaml support."""
         from spectrafit.test.conftest import create_stdin
 
-        
         ret = script_runner.run(
             "spectrafit",
             "_",
@@ -184,7 +177,6 @@ class TestFileFormat:
         """Testing toml support."""
         from spectrafit.test.conftest import create_stdin
 
-        
         ret = script_runner.run(
             "spectrafit",
             "_",
@@ -207,7 +199,7 @@ class TestFileFormatOutput:
     def test_outputs(self, script_runner: Any) -> None:
         """Testing correct number of outputs."""
         from spectrafit.test.conftest import create_stdin
-        
+
         _ = script_runner.run(
             "spectrafit",
             "_",
@@ -226,7 +218,6 @@ class TestMoreFeatures:
         """Testing verbose support."""
         from spectrafit.test.conftest import create_stdin
 
-        
         ret = script_runner.run(
             "spectrafit",
             "_",
@@ -246,7 +237,6 @@ class TestMoreFeatures:
         """Testing lower energy range cut."""
         from spectrafit.test.conftest import create_stdin
 
-        
         ret = script_runner.run(
             "spectrafit",
             "_",
@@ -273,7 +263,6 @@ class TestMoreFeatures:
         """Testing upper energy range cut."""
         from spectrafit.test.conftest import create_stdin
 
-        
         ret = script_runner.run(
             "spectrafit",
             "_",
@@ -301,7 +290,6 @@ class TestMoreFeatures:
         """Testing lower and upper energy range cut."""
         from spectrafit.test.conftest import create_stdin
 
-        
         ret = script_runner.run(
             "spectrafit",
             "_",
@@ -333,7 +321,6 @@ class TestMoreFeatures:
         """Testing test all models of spectrafit."""
         from spectrafit.test.conftest import create_stdin
 
-        
         ret = script_runner.run(
             "spectrafit",
             "_",
@@ -348,7 +335,7 @@ class TestMoreFeatures:
     def test_not_allowed_input_1(self, script_runner: Any) -> None:
         """Testing test all models of spectrafit."""
         from spectrafit.test.conftest import create_stdin
-        
+
         fname = "spectrafit/test/scripts/test_wrong.pp"
         ret = script_runner.run(
             "spectrafit",
@@ -363,7 +350,6 @@ class TestMoreFeatures:
         """Testing missing mininizmer parameter in input."""
         from spectrafit.test.conftest import create_stdin
 
-        
         ret = script_runner.run(
             "spectrafit",
             "_",
@@ -377,7 +363,6 @@ class TestMoreFeatures:
         """Testing missing optimizer parameter in input."""
         from spectrafit.test.conftest import create_stdin
 
-        
         ret = script_runner.run(
             "spectrafit",
             "_",
@@ -391,7 +376,6 @@ class TestMoreFeatures:
         """Testing no provided input for spectrafit."""
         from spectrafit.test.conftest import create_stdin
 
-        
         ret = script_runner.run(
             "spectrafit",
             "spectrafit/test/test_data.csv",
@@ -409,7 +393,6 @@ class TestMoreFeatures:
         """Testing upper energy range cut."""
         from spectrafit.test.conftest import create_stdin
 
-        
         ret = script_runner.run(
             "spectrafit",
             "_",
@@ -428,7 +411,6 @@ class TestMoreFeatures:
         """Testing for no errorbars for spectrafit."""
         from spectrafit.test.conftest import create_stdin
 
-        
         ret = script_runner.run(
             "spectrafit",
             "_",
@@ -442,7 +424,6 @@ class TestMoreFeatures:
         """Testing for no errorbars for spectrafit."""
         from spectrafit.test.conftest import create_stdin
 
-        
         ret = script_runner.run(
             "spectrafit",
             "_",
@@ -458,7 +439,6 @@ class TestMoreFeatures:
         """Testing missing mininizmer parameter in input."""
         from spectrafit.test.conftest import create_stdin
 
-        
         ret = script_runner.run(
             "spectrafit",
             "_",
@@ -476,7 +456,6 @@ class TestGlobalFitting:
         """Testing global fitting."""
         from spectrafit.test.conftest import create_stdin
 
-        
         ret = script_runner.run(
             "spectrafit",
             "_",
@@ -506,7 +485,6 @@ class TestGlobalFitting:
         """Testing global fitting."""
         from spectrafit.test.conftest import create_stdin
 
-        
         ret = script_runner.run(
             "spectrafit",
             "_",

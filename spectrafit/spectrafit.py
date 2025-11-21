@@ -213,8 +213,12 @@ def cli_main(
         # below can safely parse numeric column indices with str.isdigit().
         column = ["0", "1"]
     else:
-        # Try to convert to int if possible (only call isdigit on strings)
-        column = [int(c) if (isinstance(c, str) and c.isdigit()) else c for c in column]
+        # Convert to list of strings, parsing integers where applicable
+        # This maintains type consistency for mypy while preserving the logic
+        column = [
+            str(int(c)) if (isinstance(c, str) and c.isdigit()) else str(c)
+            for c in column
+        ]
 
     # Validate choices
     if separator not in ["\t", ",", ";", ":", "|", " ", "s+"]:
