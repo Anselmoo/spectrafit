@@ -3,7 +3,7 @@ name = "SpectraFit"
 version = "1.4.1"
 description = "Fast fitting of 2D- and 3D-Spectra with established routines"
 authors = [{ name = "Anselm Hahn", email = "anselm.hahn@gmail.com" }]
-requires-python = ">=3.9,<3.14"
+requires-python = ">=3.10,<3.14"
 readme = "README.md"
 license = "BSD-3-Clause"
 maintainers = [{ name = "Anselm Hahn", email = "anselm.hahn@gmail.com" }]
@@ -156,7 +156,7 @@ build-backend = "hatchling.build"
 fix = true
 include = ["*.py"]
 src = ["spectrafit"]
-target-version = "py39"
+target-version = "py310"
 
 [tool.ruff.lint]
 select = ["ALL"]
@@ -261,7 +261,7 @@ skip_covered = true
 show_missing = true
 
 [tool.mypy]
-plugins = ["pydantic.mypy", "numpy.typing.mypy_plugin"]
+plugins = ["pydantic.mypy"]
 follow_imports = "silent"
 warn_redundant_casts = true
 warn_unused_ignores = true

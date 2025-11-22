@@ -142,6 +142,5 @@ class TestRIXSApp:
         ret = script_runner.run(
             "spectrafit-rixs-visualizer",
             "--help",
-            expect_error=True,
         )
         assert ret.success

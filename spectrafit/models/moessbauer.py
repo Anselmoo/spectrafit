@@ -218,7 +218,7 @@ def moessbauer_sextet(
 
     # Calculate each line and sum them
     spectrum = np.zeros_like(x, dtype=np.float64)
-    for pos, amp in zip(positions, relative_amplitudes):
+    for pos, amp in zip(positions, relative_amplitudes, strict=False):
         line_center = center + isomer_shift + pos
         # For test compatibility - use positive amplitude (absorption peaks)
         # instead of negative (transmission dips)
