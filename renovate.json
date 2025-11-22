@@ -54,12 +54,13 @@
       "pinDigests": true
     },
     {
-      "description": "Group Docker updates",
+      "description": "Group Docker and DevContainer updates",
       "matchManagers": [
         "docker-compose",
-        "dockerfile"
+        "dockerfile",
+        "devcontainer"
       ],
-      "groupName": "Docker",
+      "groupName": "Docker and DevContainer",
       "schedule": [
         "before 5am on Monday"
       ]
