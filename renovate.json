@@ -16,7 +16,8 @@
         "pip_requirements",
         "pip_setup",
         "pipenv",
-        "poetry"
+        "poetry",
+        "pep621"
       ],
       "groupName": "Python dependencies",
       "schedule": [
