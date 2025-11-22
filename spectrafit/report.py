@@ -4,9 +4,9 @@ from __future__ import annotations
 
 import pprint
 
+from collections.abc import Callable
 from typing import TYPE_CHECKING
 from typing import Any
-from typing import Callable
 from warnings import warn
 
 import numpy as np
@@ -170,7 +170,7 @@ class RegressionMetrics:
         metric_dict: dict[Hashable, Any] = {}
         for fnc in metrics_fnc:
             metric_dict[fnc.__name__] = []
-            for y_true, y_pred in zip(self.y_true.T, self.y_pred.T):
+            for y_true, y_pred in zip(self.y_true.T, self.y_pred.T, strict=False):
                 try:
                     metric_dict[fnc.__name__].append(fnc(y_true, y_pred))
                 except ValueError as err:

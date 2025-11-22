@@ -1404,6 +1404,7 @@ class ModelParameters(AutoPeakDetection):
                     self.x[positions],
                     properties["peak_heights"],
                     properties["widths"],
+                    strict=False,
                 ),
                 start=1,
             ):
@@ -1434,6 +1435,7 @@ class ModelParameters(AutoPeakDetection):
                     self.x[positions],
                     properties["peak_heights"],
                     properties["widths"],
+                    strict=False,
                 ),
                 start=1,
             ):
@@ -1464,6 +1466,7 @@ class ModelParameters(AutoPeakDetection):
                     self.x[positions],
                     properties["peak_heights"],
                     properties["widths"],
+                    strict=False,
                 ),
                 start=1,
             ):
@@ -1494,6 +1497,7 @@ class ModelParameters(AutoPeakDetection):
                     self.x[positions],
                     properties["peak_heights"],
                     properties["widths"],
+                    strict=False,
                 ),
                 start=1,
             ):
@@ -1524,6 +1528,7 @@ class ModelParameters(AutoPeakDetection):
                     self.x[positions],
                     properties["peak_heights"],
                     properties["widths"],
+                    strict=False,
                 ),
                 start=1,
             ):

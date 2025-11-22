@@ -4,27 +4,6 @@ from __future__ import annotations
 
 import io
 import re
-import warnings
-
-from typing import Any
-
-import pytest
-
-
-@pytest.fixture(autouse=True)
-def suppress_moessbauer_warnings() -> Any:
-    """Suppress Mössbauer experimental feature warnings during tests.
-
-    This fixture automatically suppresses the UserWarning about Mössbauer models
-    being experimental features for all tests in this module.
-    """
-    with warnings.catch_warnings():
-        warnings.filterwarnings(
-            "ignore",
-            message="Mössbauer models are experimental features.*",
-            category=UserWarning,
-        )
-        yield
 
 
 def filter_moessbauer_stderr(stderr: str) -> str:
@@ -102,19 +81,3 @@ def create_stdin(input_text: str) -> io.StringIO:
         io.StringIO: A StringIO object containing the input text
     """
     return io.StringIO(input_text)
-
-
-@pytest.fixture
-def assert_no_errors_in_stderr() -> Any:
-    """Fixture that provides a helper function to check stderr excluding known warnings.
-
-    Returns:
-        Callable that checks if stderr contains only known warnings
-    """
-
-    def _check_stderr(stderr: str) -> bool:
-        """Check if stderr contains only known warnings."""
-        filtered = filter_moessbauer_stderr(stderr)
-        return filtered in {"", "\n"}
-
-    return _check_stderr
