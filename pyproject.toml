@@ -119,6 +119,7 @@ dev = [
   "pytest-plt>=1.1.1",
   "pytest-xdist>=3.6.1",
   "ruff>=0.9.10",
+  "setuptools<81",
   "types-mock>=5.1.0.20240425",
   "types-pyyaml>=6.0.12.20241230",
   "types-setuptools>=75.8.0.20250110",
