@@ -23,7 +23,6 @@ if TYPE_CHECKING:
     from numpy.typing import NDArray
 
 
-@pytest.mark.skipif(sys.version_info < (3, 9), reason="Requires Python 3.9 or higher")
 @pytest.fixture(scope="module", autouse=True, name="test_data")
 def fixture_test_data() -> tuple[
     NDArray[np.float64],
@@ -37,7 +36,7 @@ def fixture_test_data() -> tuple[
 
 
 # Write test  RIXSFigure
-@pytest.mark.skipif(sys.version_info < (3, 9), reason="Requires Python 3.9 or higher")
+
 class TestRixsFigure:
     """Test of the RIXS Figure."""
 
@@ -69,7 +68,6 @@ class TestRixsFigure:
         assert isinstance(fig_xas, go.Figure)
 
 
-@pytest.mark.skipif(sys.version_info < (3, 9), reason="Requires Python 3.9 or higher")
 class TestRIXSApp:
     """Test of the App."""
 
@@ -106,7 +104,8 @@ class TestRIXSApp:
             export_format=file_format,
         )
 
-        _model = RIXSVisualizer().load_data(infile=tmp_path / f"test.{file_format}")
+        _model = RIXSVisualizer().load_data(
+            infile=tmp_path / f"test.{file_format}")
         assert _model.incident_energy.shape == (100,)
         assert _model.emission_energy.shape == (100,)
         assert _model.rixs_map.shape == (100, 100)

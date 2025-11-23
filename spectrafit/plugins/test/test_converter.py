@@ -36,7 +36,6 @@ if TYPE_CHECKING:
     from pytest_console_scripts import ScriptRunner
 
 
-@pytest.mark.skipif(sys.version_info < (3, 9), reason="Requires Python 3.9 or higher")
 class TestFileConverter:
     """Test the file converter plugin."""
 
@@ -78,7 +77,8 @@ class TestFileConverter:
                 infile=Path("tests/data/input/input.yaml"),
                 file_format="illegal",
             )
-        assert "The input file format 'illegal' is not supported." in str(excinfo.value)
+        assert "The input file format 'illegal' is not supported." in str(
+            excinfo.value)
 
     def test_raise_no_guilty_output(self, tmp_path: Path) -> None:
         infile = tmp_path / "input_1.yaml"
@@ -312,7 +312,6 @@ def reference_dataframe() -> pd.DataFrame:
     )
 
 
-@pytest.mark.skipif(sys.version_info < (3, 9), reason="Requires Python 3.9 or higher")
 class TestDataConverter:
     """Test DataConverter class."""
 
@@ -334,7 +333,8 @@ class TestDataConverter:
         assert isinstance(df, pd.DataFrame)
         pd.testing.assert_frame_equal(df, reference_dataframe)
 
-        dc.save(data=df, fname=tmp_file_nor.with_suffix(".csv"), export_format="csv")
+        dc.save(data=df, fname=tmp_file_nor.with_suffix(
+            ".csv"), export_format="csv")
         assert tmp_file_nor.with_suffix(".csv").exists()
 
     def test_txt_to_csv(
@@ -354,7 +354,8 @@ class TestDataConverter:
 
         assert isinstance(df, pd.DataFrame)
         pd.testing.assert_frame_equal(df, reference_dataframe)
-        dc.save(data=df, fname=tmp_file_txt.with_suffix(".csv"), export_format="csv")
+        dc.save(data=df, fname=tmp_file_txt.with_suffix(
+            ".csv"), export_format="csv")
         assert tmp_file_txt.with_suffix(".csv").exists()
 
     def test_fail_convert(self, tmp_file_txt: Path) -> None:
@@ -364,7 +365,8 @@ class TestDataConverter:
         ) as excinfo:
             DataConverter.convert(tmp_file_txt, file_format)
         assert isinstance(excinfo.value, ValueError)
-        assert f"File format '{file_format}' is not supported." in str(excinfo.value)
+        assert f"File format '{file_format}' is not supported." in str(
+            excinfo.value)
 
     def test_fail_convert_export(
         self, reference_dataframe: pd.DataFrame, tmp_file_txt: Path
@@ -536,7 +538,6 @@ def tmp_file_pkl_nested(
     return tmp_file
 
 
-@pytest.mark.skipif(sys.version_info < (3, 9), reason="Requires Python 3.9 or higher")
 class TestPklConverter:
     """Test PklConverter."""
 
@@ -569,7 +570,8 @@ class TestPklConverter:
         if export_format == "pkl.gz":
             with gzip.open(tmp_file.with_suffix(f".{export_format}"), "rb") as f:
                 data = pickle.load(f)
-                assert np.array_equal(data["level_1"]["sub_level_1"], np.arange(10))
+                assert np.array_equal(
+                    data["level_1"]["sub_level_1"], np.arange(10))
                 assert np.array_equal(
                     data["level_1"]["sub_level_2"],
                     np.linspace(0, 20, 200),
@@ -577,14 +579,16 @@ class TestPklConverter:
         if export_format == "pkl":
             with tmp_file.with_suffix(f".{export_format}").open("rb") as f:
                 data = pickle.load(f)
-                assert np.array_equal(data["level_1"]["sub_level_1"], np.arange(10))
+                assert np.array_equal(
+                    data["level_1"]["sub_level_1"], np.arange(10))
                 assert np.array_equal(
                     data["level_1"]["sub_level_2"],
                     np.linspace(0, 20, 200),
                 )
 
         if export_format == "npz":
-            data = np.load(tmp_file.with_suffix(f".{export_format}"), allow_pickle=True)
+            data = np.load(tmp_file.with_suffix(
+                f".{export_format}"), allow_pickle=True)
             assert isinstance(data, np.lib.npyio.NpzFile)
             assert data.get("data") is not None
             assert isinstance(data.get("data"), np.ndarray)
@@ -627,7 +631,8 @@ class TestPklConverter:
         assert np.array_equal(data["level_1"][0]["sub_level_1"], np.arange(10))
         assert data.keys() == {"level_1", "level_2", "level_3"}
         assert (
-            len(list(Path(tmp_file_pkl.parent).glob(f"*level_*.{export_format}"))) == 3
+            len(list(Path(tmp_file_pkl.parent).glob(
+                f"*level_*.{export_format}"))) == 3
         )
 
     @pytest.mark.parametrize(
@@ -651,7 +656,8 @@ class TestPklConverter:
         assert isinstance(data, dict)
         assert np.array_equal(data["level_1"][0]["sub_level_1"], np.arange(10))
         assert (
-            len(list(Path(tmp_file_pkl_gz.parent).glob(f"*level_*.{export_format}")))
+            len(list(Path(tmp_file_pkl_gz.parent).glob(
+                f"*level_*.{export_format}")))
             == 3
         )
 
@@ -722,11 +728,11 @@ class TestPklConverter:
         assert ret.stdout == ""
         assert ret.stderr == ""
         assert (
-            len(list(Path(tmp_file_pkl.parent).glob(f"*level_*.{export_format}"))) == 3
+            len(list(Path(tmp_file_pkl.parent).glob(
+                f"*level_*.{export_format}"))) == 3
         )
 
 
-@pytest.mark.skipif(sys.version_info < (3, 9), reason="Requires Python 3.9 or higher")
 class TestPklAsGraph:
     """Test the pkl visualizer."""
 
@@ -837,7 +843,6 @@ def fixture_tmp_list_dict_rixs(
     return fname, keys
 
 
-@pytest.mark.skipif(sys.version_info < (3, 9), reason="Requires Python 3.9 or higher")
 class TestRixsConverter:
     """Test the rixs converter."""
 
@@ -895,12 +900,14 @@ class TestRixsConverter:
             assert np.allclose(data_toml[keys[0]], data[keys[0]])
 
         if export_format == "npy":
-            data_npy = np.load(fname.parent / f"{fname.stem}.npy", allow_pickle=True)
+            data_npy = np.load(
+                fname.parent / f"{fname.stem}.npy", allow_pickle=True)
             assert isinstance(data_npy, np.ndarray)
             assert np.allclose(data_npy.item()[keys[0]], data[keys[0]])
 
         if export_format == "npz":
-            data_npz = np.load(fname.parent / f"{fname.stem}.npz", allow_pickle=True)
+            data_npz = np.load(
+                fname.parent / f"{fname.stem}.npz", allow_pickle=True)
             assert isinstance(data_npz, np.lib.npyio.NpzFile)
             assert np.allclose(data_npz[keys[0]], data[keys[0]])
 
@@ -943,7 +950,8 @@ class TestRixsConverter:
 
         assert isinstance(rixs_map["rixs_map"], np.ndarray)
         if mode == "mean":
-            assert np.allclose(rixs_map["rixs_map"], data[keys[2]].mean(axis=0))
+            assert np.allclose(rixs_map["rixs_map"],
+                               data[keys[2]].mean(axis=0))
         elif mode == "sum":
             assert np.allclose(rixs_map["rixs_map"], data[keys[2]].sum(axis=0))
 
@@ -1086,7 +1094,6 @@ gaussian_1 = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8]
 """
 
 
-@pytest.mark.skipif(sys.version_info < (3, 9), reason="Requires Python 3.9 or higher")
 class TestPPTXConverter:
     """Test the pptx converter."""
 
@@ -1163,5 +1170,6 @@ class TestPPTXConverter:
         """
         converter = PPTXConverter()
         with pytest.raises(ValueError, match=r"File format") as excinfo:
-            converter.convert(tmp_toml_data.parent / "tmp_file.json", file_format="4:3")
+            converter.convert(tmp_toml_data.parent /
+                              "tmp_file.json", file_format="4:3")
         assert "File format" in str(excinfo.value)
