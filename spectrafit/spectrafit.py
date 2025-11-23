@@ -215,7 +215,10 @@ def command_line_runner(args: dict[str, Any] | None = None) -> None:
         __status__.end()
 
         # Skip interactive prompt in CI environment
-        if os.environ.get("CI"):
+        if any(
+            os.environ.get(var)
+            for var in ["CI", "GITHUB_ACTIONS", "TRAVIS", "JENKINS_URL", "CIRCLECI"]
+        ):
             __status__.thanks()
             __status__.credits()
             return
