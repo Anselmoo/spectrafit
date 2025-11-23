@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import argparse
+import os
+import sys
 
 from typing import TYPE_CHECKING
 from typing import Any
@@ -212,6 +214,12 @@ def command_line_runner(args: dict[str, Any] | None = None) -> None:
         args = None
 
         __status__.end()
+
+        # Skip interactive prompt in CI or non-interactive environments
+        if os.environ.get("CI") or not sys.stdin.isatty():
+            __status__.thanks()
+            __status__.credits()
+            return
 
         again = input("Would you like to fit again ...? Enter y/n: ").lower()
         if again == "n":
