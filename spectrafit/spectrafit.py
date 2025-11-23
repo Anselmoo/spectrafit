@@ -28,6 +28,9 @@ if TYPE_CHECKING:
 
 __status__ = PrintingStatus()
 
+# CI environment variables used to detect if running in CI/CD
+CI_ENVIRONMENT_VARS = ["CI", "GITHUB_ACTIONS", "TRAVIS", "JENKINS_URL", "CIRCLECI"]
+
 
 def get_args() -> dict[str, Any]:
     """Get the arguments from the command line.
@@ -215,10 +218,7 @@ def command_line_runner(args: dict[str, Any] | None = None) -> None:
         __status__.end()
 
         # Skip interactive prompt in CI environment
-        if any(
-            os.environ.get(var)
-            for var in ["CI", "GITHUB_ACTIONS", "TRAVIS", "JENKINS_URL", "CIRCLECI"]
-        ):
+        if any(os.environ.get(var) for var in CI_ENVIRONMENT_VARS):
             __status__.thanks()
             __status__.credits()
             return
