@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import pprint
 
-from collections.abc import Callable
 from typing import TYPE_CHECKING
 from typing import Any
 from warnings import warn
@@ -33,6 +32,9 @@ from sklearn.metrics import r2_score
 
 from spectrafit import __version__
 
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 # Constants for verbosity levels
 VERBOSE_REGULAR = 1  # Regular output mode
