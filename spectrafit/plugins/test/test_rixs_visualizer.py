@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-import sys
-
 from typing import TYPE_CHECKING
 from typing import Any
 
@@ -36,6 +34,7 @@ def fixture_test_data() -> tuple[
 
 
 # Write test  RIXSFigure
+
 
 class TestRixsFigure:
     """Test of the RIXS Figure."""
@@ -104,8 +103,7 @@ class TestRIXSApp:
             export_format=file_format,
         )
 
-        _model = RIXSVisualizer().load_data(
-            infile=tmp_path / f"test.{file_format}")
+        _model = RIXSVisualizer().load_data(infile=tmp_path / f"test.{file_format}")
         assert _model.incident_energy.shape == (100,)
         assert _model.emission_energy.shape == (100,)
         assert _model.rixs_map.shape == (100, 100)
