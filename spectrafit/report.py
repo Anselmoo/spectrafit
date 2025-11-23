@@ -739,7 +739,7 @@ class FitReport:
                         correl_matrix.loc[name2, name] = par.correl[
                             name2
                         ]  # mirror the value
-        return correl_matrix.fillna(1)  # fill diagonal with 1s
+        return correl_matrix.fillna(1).infer_objects(copy=False)  # fill diagonal with 1s
 
     def generate_report(self) -> dict[str, pd.DataFrame]:
         """Generate a report.

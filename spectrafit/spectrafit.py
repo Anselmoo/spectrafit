@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 
 from typing import TYPE_CHECKING
 from typing import Any
@@ -26,6 +27,9 @@ if TYPE_CHECKING:
 
 
 __status__ = PrintingStatus()
+
+# CI environment variables used to detect if running in CI/CD
+CI_ENVIRONMENT_VARS = ["CI", "GITHUB_ACTIONS", "TRAVIS", "JENKINS_URL", "CIRCLECI"]
 
 
 def get_args() -> dict[str, Any]:
@@ -212,6 +216,12 @@ def command_line_runner(args: dict[str, Any] | None = None) -> None:
         args = None
 
         __status__.end()
+
+        # Skip interactive prompt in CI environment
+        if any(os.environ.get(var) for var in CI_ENVIRONMENT_VARS):
+            __status__.thanks()
+            __status__.credits()
+            return
 
         again = input("Would you like to fit again ...? Enter y/n: ").lower()
         if again == "n":
