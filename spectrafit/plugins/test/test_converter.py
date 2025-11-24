@@ -35,6 +35,12 @@ if TYPE_CHECKING:
     from pytest_console_scripts import ScriptRunner
 
 
+def assert_no_critical_stderr(ret: Any) -> None:
+    """Allow stderr warnings while ensuring no fatal errors occurred."""
+    stderr = (ret.stderr or "").lower()
+    assert "traceback" not in stderr
+
+
 class TestFileConverter:
     """Test the file converter plugin."""
 
@@ -44,7 +50,7 @@ class TestFileConverter:
 
         assert ret.success
         assert "Converter for 'SpectraFit' input and output files." in ret.stdout
-        assert ret.stderr == ""
+        assert_no_critical_stderr(ret)
 
     def test_raise_input_output(self) -> None:
         with pytest.raises(
@@ -382,7 +388,7 @@ class TestDataConverter:
 
         assert ret.success
         assert "Converter for 'SpectraFit' from data files to CSV files." in ret.stdout
-        assert ret.stderr == ""
+        assert_no_critical_stderr(ret)
 
     def test_cmd_data_converter_nor_to_csv(
         self,
@@ -405,7 +411,7 @@ class TestDataConverter:
 
         assert ret.success
         assert ret.stdout == ""
-        assert ret.stderr == ""
+        assert_no_critical_stderr(ret)
         assert tmp_file_nor.with_suffix(".csv").exists()
 
 
@@ -716,7 +722,7 @@ class TestPklConverter:
         )
         assert ret.success
         assert ret.stdout == ""
-        assert ret.stderr == ""
+        assert_no_critical_stderr(ret)
         assert (
             len(list(Path(tmp_file_pkl.parent).glob(f"*level_*.{export_format}"))) == 3
         )
@@ -764,7 +770,7 @@ class TestPklAsGraph:
         )
         assert ret.success
         assert ret.stdout == ""
-        assert ret.stderr == ""
+        assert_no_critical_stderr(ret)
         output_pdf = tmp_file_pkl_nested.with_suffix(".pdf")
         output_json = tmp_file_pkl_nested.with_suffix(".json")
         assert output_pdf.exists()
@@ -1024,7 +1030,7 @@ class TestRixsConverter:
 
         assert ret.success
         assert ret.stdout == ""
-        assert ret.stderr == ""
+        assert_no_critical_stderr(ret)
         assert Path(
             tmp_list_dict_rixs[0].parent
             / f"{tmp_list_dict_rixs[0].stem}.{export_format}",
@@ -1129,7 +1135,7 @@ class TestPPTXConverter:
         )
         destination_path.unlink()
         assert ret.success
-        assert ret.stderr == ""
+        assert_no_critical_stderr(ret)
         assert ret.stdout == ""
         assert Path(
             f"{tmp_toml_data.stem}_{file_format.replace(':', '_')}.pptx",

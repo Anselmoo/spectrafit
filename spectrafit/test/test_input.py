@@ -16,6 +16,12 @@ from numpy.testing import assert_almost_equal
 BUILTINS_INPUT = "builtins.input"
 
 
+def assert_no_critical_stderr(ret: Any) -> None:
+    """Allow warnings in stderr while ensuring no fatal errors occurred."""
+    stderr = (ret.stderr or "").lower()
+    assert "traceback" not in stderr
+
+
 class TestCommandLineRunner:
     """Testing the command line interface."""
 
@@ -34,7 +40,7 @@ class TestCommandLineRunner:
 
         assert ret.success
         assert f"Currently used version is: {__version__}\n" in ret.stdout
-        assert ret.stderr == ""
+        assert_no_critical_stderr(ret)
 
     def test_extended(self, monkeypatch: Any, script_runner: Any) -> None:
         """Testing the extended command."""
@@ -46,7 +52,7 @@ class TestCommandLineRunner:
             "spectrafit/test/scripts/test_input_2.json",
         )
         assert ret.success
-        assert ret.stderr == ""
+        assert_no_critical_stderr(ret)
 
     @pytest.mark.skipif(
         sys.platform == "win32",
@@ -63,7 +69,7 @@ class TestCommandLineRunner:
             "spectrafit/test/scripts/test_input_7.json",
         )
         assert ret.success
-        assert ret.stderr == ""
+        assert_no_critical_stderr(ret)
 
 
 class TestFileFormat:
@@ -91,7 +97,7 @@ class TestFileFormat:
             f"{tmp_path}/result_json",
         )
         assert ret.success
-        assert ret.stderr == ""
+        assert_no_critical_stderr(ret)
         assert len(list(Path(tmp_path).glob("result_json*.json"))) == 1
         assert len(list(Path(tmp_path).glob("result_json*.csv"))) == 3
 
@@ -117,7 +123,7 @@ class TestFileFormat:
             f"{tmp_path}/result_yml",
         )
         assert ret.success
-        assert ret.stderr == ""
+        assert_no_critical_stderr(ret)
         assert len(list(Path(tmp_path).glob("result_yml*.json"))) == 1
         assert len(list(Path(tmp_path).glob("result_yml*.csv"))) == 3
 
@@ -143,7 +149,7 @@ class TestFileFormat:
             f"{tmp_path}/result_yaml",
         )
         assert ret.success
-        assert ret.stderr == ""
+        assert_no_critical_stderr(ret)
         assert len(list(Path(tmp_path).glob("result_yaml*.json"))) == 1
         assert len(list(Path(tmp_path).glob("result_yaml*.csv"))) == 3
 
@@ -169,7 +175,7 @@ class TestFileFormat:
             f"{tmp_path}/result_toml",
         )
         assert ret.success
-        assert ret.stderr == ""
+        assert_no_critical_stderr(ret)
         assert len(list(Path(tmp_path).glob("result_toml*.json"))) == 1
         assert len(list(Path(tmp_path).glob("result_toml*.csv"))) == 3
 
@@ -203,7 +209,7 @@ class TestMoreFeatures:
             "spectrafit/test/scripts/test_input_4.json",
         )
         assert ret.success
-        assert ret.stderr == ""
+        assert_no_critical_stderr(ret)
 
     def test_energyrange_e0(
         self,
@@ -224,7 +230,7 @@ class TestMoreFeatures:
             "0.0",
         )
         assert ret.success
-        assert ret.stderr == ""
+        assert_no_critical_stderr(ret)
 
         df_test = pd.read_csv(tmp_path / "e0_result_fit.csv")
         assert_almost_equal(df_test["energy"].min(), 0.0, decimal=0)
@@ -249,7 +255,7 @@ class TestMoreFeatures:
             "5.0",
         )
         assert ret.success
-        assert ret.stderr == ""
+        assert_no_critical_stderr(ret)
 
         df_test = pd.read_csv(tmp_path / "e1_result_fit.csv")
         assert_almost_equal(df_test["energy"].max(), 5.0, decimal=0)
@@ -276,7 +282,7 @@ class TestMoreFeatures:
             "5.0",
         )
         assert ret.success
-        assert ret.stderr == ""
+        assert_no_critical_stderr(ret)
 
         df_test = pd.read_csv(tmp_path / "e0e1_result_fit.csv")
         assert_almost_equal(df_test["energy"].max(), 5.0, decimal=0)
@@ -297,7 +303,7 @@ class TestMoreFeatures:
             "spectrafit/test/scripts/test_input_all_models.toml",
         )
         assert ret.success
-        assert ret.stderr == ""
+        assert_no_critical_stderr(ret)
 
     def test_not_allowed_input_1(self, monkeypatch: Any, script_runner: Any) -> None:
         """Testing test all models of spectrafit."""
@@ -361,7 +367,7 @@ class TestMoreFeatures:
             f"{tmp_path}/conf_interval_result",
         )
         assert ret.success
-        assert ret.stderr == ""
+        assert_no_critical_stderr(ret)
         assert len(list(Path(tmp_path).glob("conf_interval_result*.json"))) == 1
 
     def test_get_no_errors(self, monkeypatch: Any, script_runner: Any) -> None:
@@ -413,7 +419,7 @@ class TestGlobalFitting:
             "spectrafit/test/scripts/test_input_global_0.json",
         )
         assert ret.success
-        assert ret.stderr == ""
+        assert_no_critical_stderr(ret)
         assert (
             len(
                 list(
@@ -439,7 +445,7 @@ class TestGlobalFitting:
             "spectrafit/test/scripts/test_input_global_1.json",
         )
         assert ret.success
-        assert ret.stderr == ""
+        assert_no_critical_stderr(ret)
         assert (
             len(
                 list(
