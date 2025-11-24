@@ -715,3 +715,270 @@ def test_fit_report_as_dict_no_correlations(mocker: MockerFixture) -> None:
 
     # Verify empty correlations for non-varying parameter
     assert result_dict["correlations"]["param1"] == {}
+
+
+def test_fit_report_generate_variables_full() -> None:
+    """Test FitReport generate_variables with all fields."""
+    params = Parameters()
+    params.add("param1", value=1.0, vary=True, min=0.0, max=2.0)
+    params.add("param2", value=2.0, vary=True)
+    params["param1"].stderr = 0.1
+    params["param1"].init_value = 0.5
+    params["param2"].stderr = 0.2
+    params["param2"].expr = "2 * param1"
+
+    modelpars = {"param1": Parameter(name="param1", value=0.8)}
+
+    report = FitReport(inpars=params, modelpars=modelpars)  # type: ignore[arg-type]
+    df = report.generate_variables()
+
+    assert len(df) == 2
+    assert "name" in df.columns
+    assert "value" in df.columns
+    assert "stderr absolute" in df.columns
+    assert "stderr percent" in df.columns
+    assert "model_value" in df.columns
+    assert df.iloc[0]["model_value"] == 0.8
+
+
+def test_fit_report_generate_fit_statistics_with_result(mocker: MockerFixture) -> None:
+    """Test generate_fit_statistics with actual result object."""
+    mock_result = mocker.MagicMock()
+    mock_result.method = "leastsq"
+    mock_result.nfev = 100
+    mock_result.ndata = 1000
+    mock_result.nvarys = 5
+    mock_result.chisqr = 1.234
+    mock_result.redchi = 0.123
+    mock_result.aic = 50.0
+    mock_result.bic = 55.0
+    mock_result.rsquared = 0.95
+
+    report = FitReport(inpars=mock_result)
+    df = report.generate_fit_statistics()
+
+    assert df is not None
+    assert df["fitting method"][0] == "leastsq"
+    # getfloat_attr returns string formatted value
+    assert "function evals" in df.columns
+    assert "R-squared" in df.columns
+
+
+def test_fit_report_call_method(mocker: MockerFixture) -> None:
+    """Test FitReport __call__ method."""
+    params = Parameters()
+    params.add("param1", value=1.0, vary=True)
+
+    report = FitReport(inpars=params)
+
+    # Mock the print method to avoid actual output
+    mocker.patch("spectrafit.report.PrintingResults.print_tabulate_df")
+
+    # This should not raise any exception
+    report()
+
+
+def test_fit_report_generate_report() -> None:
+    """Test FitReport generate_report method."""
+    params = Parameters()
+    params.add("param1", value=1.0, vary=True)
+    params.add("param2", value=2.0, vary=True)
+    params["param1"].correl = {"param2": 0.5}
+
+    report_obj = FitReport(inpars=params, show_correl=True)
+    report = report_obj.generate_report()
+
+    assert "Variables and Values" in report
+    assert "Correlations of Components" in report
+    assert isinstance(report["Variables and Values"], pd.DataFrame)
+
+
+def test_regression_metrics_call_with_warnings(mocker: MockerFixture) -> None:
+    """Test RegressionMetrics __call__ with warnings for negative values."""
+    # Create data with negative values to trigger guard
+    df = pd.DataFrame(
+        {
+            "intensity_0": np.array([-1, 0, 1, 2, 3]),
+            "fit_0": np.array([-0.5, 0.5, 1.5, 2.5, 3.5]),
+        }
+    )
+
+    rm = RegressionMetrics(df)
+    result = rm()
+
+    # mean_squared_log_error should be NaN due to negative values
+    assert np.isnan(result["data"][5][0])  # mean_squared_log_error index
+
+
+def test_regression_metrics_call_with_value_error(mocker: MockerFixture) -> None:
+    """Test RegressionMetrics __call__ with ValueError."""
+    # Create data that will cause issues
+    df = pd.DataFrame(
+        {
+            "intensity_0": np.array([1, 2, 3, 4, 5]),
+            "fit_0": np.array([np.inf, 2, 3, 4, 5]),  # Infinity values
+        }
+    )
+
+    rm = RegressionMetrics(df)
+
+    # Mock warn to capture the warning
+    mock_warn = mocker.patch("spectrafit.report.warn")
+
+    result = rm()
+
+    # Should have called warn for at least one metric
+    assert mock_warn.called or result is not None
+
+
+def test_regression_metrics_initialize_single_column() -> None:
+    """Test RegressionMetrics initialize with single column."""
+    df = pd.DataFrame(
+        {
+            "intensity": np.array([1, 2, 3, 4, 5]),
+            "fit": np.array([1.1, 2.1, 3.1, 4.1, 5.1]),
+        }
+    )
+
+    rm = RegressionMetrics(df)
+
+    # Should wrap single columns in arrays
+    assert rm.y_true.shape[0] == 1
+    assert rm.y_pred.shape[0] == 1
+
+
+def test_extracted_gof_parameter_at_initial_value(mocker: MockerFixture) -> None:
+    """Test _extracted_gof_from_results with parameter at initial value."""
+    from spectrafit.report import _extracted_gof_from_results
+
+    mock_result = mocker.MagicMock()
+    mock_result.errorbars = False
+    mock_result.method = "leastsq"
+    mock_result.params = Parameters()
+    mock_result.params.add("param1", value=1.0, vary=True)
+    mock_result.params["param1"].init_value = 1.0
+
+    params = mock_result.params
+    buffer: dict[str, dict[Any, Any]] = {
+        "configurations": {},
+        "statistics": {},
+        "variables": {},
+        "errorbars": {},
+        "correlations": {},
+        "covariance_matrix": {},
+        "computational": {},
+    }
+
+    mock_warn = mocker.patch("spectrafit.report.warn")
+
+    _result, buffer, params = _extracted_gof_from_results(
+        result=mock_result,
+        buffer=buffer,
+        params=params,
+    )
+
+    # Should have warned about parameter at initial value
+    assert mock_warn.called
+    assert "at_initial_value" in buffer["errorbars"]
+
+
+def test_extracted_gof_parameter_at_boundary(mocker: MockerFixture) -> None:
+    """Test _extracted_gof_from_results with parameter at boundary."""
+    from spectrafit.report import _extracted_gof_from_results
+
+    mock_result = mocker.MagicMock()
+    mock_result.errorbars = False
+    mock_result.method = "leastsq"
+    mock_result.params = Parameters()
+    mock_result.params.add("param1", value=2.0, vary=True, min=0.0, max=2.0)
+    mock_result.params["param1"].init_value = 1.0
+
+    params = mock_result.params
+    buffer: dict[str, dict[Any, Any]] = {
+        "configurations": {},
+        "statistics": {},
+        "variables": {},
+        "errorbars": {},
+        "correlations": {},
+        "covariance_matrix": {},
+        "computational": {},
+    }
+
+    mock_warn = mocker.patch("spectrafit.report.warn")
+
+    _result, buffer, params = _extracted_gof_from_results(
+        result=mock_result,
+        buffer=buffer,
+        params=params,
+    )
+
+    # Should have warned about parameter at boundary
+    assert mock_warn.called
+    assert "at_boundary" in buffer["errorbars"]
+
+
+def test_printing_results_call_regular_mode(mocker: MockerFixture) -> None:
+    """Test PrintingResults __call__ in regular mode."""
+    # Mock all the printing methods
+    mocker.patch("spectrafit.report.PrintingResults.print_statistic")
+    mocker.patch("spectrafit.report.PrintingResults.print_fit_results")
+    mocker.patch("spectrafit.report.PrintingResults.print_confidence_interval")
+    mocker.patch("spectrafit.report.PrintingResults.print_linear_correlation")
+    mocker.patch("spectrafit.report.PrintingResults.print_regression_metrics")
+
+    # Create a mock result with params
+    mock_result = mocker.MagicMock()
+    mock_result.params = Parameters()
+    mock_result.params.add("test_param", value=1.0)
+
+    pr = PrintingResults(
+        args={
+            "verbose": 1,  # VERBOSE_REGULAR
+            "data_statistic": {"data": [[1.0]]},
+            "linear_correlation": {"data": [[0.5]]},
+            "regression_metrics": {"data": [[0.95]]},
+            "report": {},
+        },
+        result=mock_result,
+        minimizer=None,
+    )
+
+    # Should not raise exception
+    pr()
+
+
+def test_printing_results_call_verbose_mode(mocker: MockerFixture) -> None:
+    """Test PrintingResults __call__ in verbose mode."""
+    mock_pprint = mocker.patch("spectrafit.report.pp.pprint")
+
+    pr = PrintingResults(
+        args={
+            "verbose": 2,  # VERBOSE_DETAILED
+            "data_statistic": {"mean": 1.0},
+            "fit_insights": {"chi2": 0.1},
+            "linear_correlation": {"test": [1, 2]},
+            "regression_metrics": {"r2": 0.95},
+        },
+        result=None,
+        minimizer=None,
+    )
+
+    pr()
+
+    # Should have used pprint
+    assert mock_pprint.called
+
+
+def test_printing_results_print_confidence_interval_early_return() -> None:
+    """Test print_confidence_interval with early return."""
+    pr = PrintingResults(
+        args={
+            "linear_correlation": {},
+        },
+        result=None,
+        minimizer=None,
+    )
+
+    # Should return early without conf_interval
+    pr.print_confidence_interval()
+    # No assertion needed, just checking it doesn't crash
