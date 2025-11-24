@@ -841,9 +841,7 @@ class PrintingResults:
             if ci_data and isinstance(ci_data[0], dict) and ci_data[0]:
                 return ci_data[0]
             return None
-        if isinstance(ci_data, dict) and ci_data:
-            return ci_data
-        return None
+        return ci_data if isinstance(ci_data, dict) and ci_data else None
 
     def _reset_confidence_interval(self) -> None:
         """Ensure the confidence interval entry is an empty dictionary."""
