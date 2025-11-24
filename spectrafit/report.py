@@ -3,10 +3,12 @@
 from __future__ import annotations
 
 import pprint
+import sys
 
 from typing import TYPE_CHECKING
 from typing import Any
 from typing import Callable
+from typing import ClassVar
 from warnings import warn
 
 import numpy as np
@@ -43,6 +45,9 @@ if TYPE_CHECKING:
 
     from numpy.typing import NDArray
 
+
+if sys.version_info < (3, 10):
+    pd.set_option("future.no_silent_downcasting", True)
 
 CORREL_HEAD = "[[Correlations]] (unreported correlations are < %.3f)"
 pp = pprint.PrettyPrinter(indent=4)
@@ -82,6 +87,15 @@ class RegressionMetrics:
          `sklearn` versions >= 1.1.2 and will be later implemented if the
          __End of support (2023-06-27)__ is reached for the `Python3.7`.
     """
+
+    _metric_guards: ClassVar[
+        dict[str, tuple[Callable[[np.ndarray, np.ndarray], bool], str]]
+    ] = {
+        "mean_squared_log_error": (
+            lambda y_true, y_pred: bool(np.all(y_true > -1) and np.all(y_pred > -1)),
+            "requires all targets and predictions to be greater than -1",
+        ),
+    }
 
     def __init__(
         self,
@@ -170,7 +184,20 @@ class RegressionMetrics:
         metric_dict: dict[Hashable, Any] = {}
         for fnc in metrics_fnc:
             metric_dict[fnc.__name__] = []
+            guard = self._metric_guards.get(fnc.__name__)
             for y_true, y_pred in zip(self.y_true.T, self.y_pred.T):
+                if guard and not guard[0](y_true, y_pred):
+                    warn(
+                        warn_meassage(
+                            msg=(
+                                f"Regression metric '{fnc.__name__}' skipped because it "
+                                f"{guard[1]}."
+                            ),
+                        ),
+                        stacklevel=2,
+                    )
+                    metric_dict[fnc.__name__].append(np.nan)
+                    continue
                 try:
                     metric_dict[fnc.__name__].append(fnc(y_true, y_pred))
                 except ValueError as err:
@@ -807,6 +834,21 @@ class PrintingResults:
         self.minimizer = minimizer
         self.correlation = pd.DataFrame.from_dict(args["linear_correlation"])
 
+    def _extract_confidence_interval(self) -> dict[str, Any] | None:
+        """Return the first confidence interval payload if present."""
+        ci_data = self.args.get("confidence_interval")
+        if isinstance(ci_data, list):
+            if ci_data and isinstance(ci_data[0], dict) and ci_data[0]:
+                return ci_data[0]
+            return None
+        if isinstance(ci_data, dict) and ci_data:
+            return ci_data
+        return None
+
+    def _reset_confidence_interval(self) -> None:
+        """Ensure the confidence interval entry is an empty dictionary."""
+        self.args["confidence_interval"] = {}
+
     def __call__(self) -> None:
         """Print the results of the fitting process."""
         if self.args["verbose"] == VERBOSE_REGULAR:
@@ -855,15 +897,20 @@ class PrintingResults:
 
     def print_confidence_interval(self) -> None:
         """Print the confidence interval."""
-        if self.args["conf_interval"]:
-            try:
-                CIReport(self.args["confidence_interval"][0])()
-            except (MinimizerException, ValueError, KeyError, TypeError) as exc:
-                warn(
-                    f"Error: {exc} -> No confidence interval could be calculated!",
-                    stacklevel=2,
-                )
-                self.args["confidence_interval"] = {}
+        if not self.args.get("conf_interval"):
+            return
+        ci_payload = self._extract_confidence_interval()
+        if ci_payload is None:
+            self._reset_confidence_interval()
+            return
+        try:
+            CIReport(ci_payload)()
+        except (MinimizerException, ValueError, KeyError, TypeError) as exc:
+            warn(
+                f"Error: {exc} -> No confidence interval could be calculated!",
+                stacklevel=2,
+            )
+            self._reset_confidence_interval()
 
     def print_linear_correlation(self) -> None:
         """Print the linear correlation."""
@@ -896,8 +943,11 @@ class PrintingResults:
 
     def print_confidence_interval_verbose(self) -> None:
         """Print confidence interval in verbose mode."""
-        if self.args["conf_interval"]:
-            pp.pprint(self.args["confidence_interval"])
+        if not self.args.get("conf_interval"):
+            return
+        if not self.args.get("confidence_interval"):
+            return
+        pp.pprint(self.args["confidence_interval"])
 
     def print_linear_correlation_verbose(self) -> None:
         """Print overall linear-correlation in verbose mode."""
