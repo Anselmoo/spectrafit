@@ -2,6 +2,55 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.4.2 🌈 - 2025-11-25
+
+### :compass: What's Changed
+
+#### :computer: Codesspaces
+
+* feat: ✨ modernize .devcontainer configuration for Python 3.12 and current tooling (#2021) @[copilot-swe-agent[bot]](https://github.com/apps/copilot-swe-agent)
+
+#### :toolbox: Maintenance
+
+* release: `v1.4.2` (#2022) @Anselmoo
+* feat: ✨ modernize .devcontainer configuration for Python 3.12 and current tooling (#2021) @[copilot-swe-agent[bot]](https://github.com/apps/copilot-swe-agent)
+
+#### :snake: Python
+
+* refactor: ♻️ Replace floating-point equality checks with isclose() (#2028) @[copilot-swe-agent[bot]](https://github.com/apps/copilot-swe-agent)
+* release: `v1.4.2` (#2022) @Anselmoo
+
+#### :octocat: Github Actions
+
+* chore(deps): update pypa/gh-action-pypi-publish digest to 3317ede (#2011) @[renovate[bot]](https://github.com/apps/renovate)
+* chore(deps): update actions/checkout action to v6 (#2019) @[renovate[bot]](https://github.com/apps/renovate)
+* feat: ✨ modernize .devcontainer configuration for Python 3.12 and current tooling (#2021) @[copilot-swe-agent[bot]](https://github.com/apps/copilot-swe-agent)
+* chore(deps): update actions/checkout action to v5.0.1 (#2015) @[renovate[bot]](https://github.com/apps/renovate)
+* chore(deps): update actions/checkout digest to 93cb6ef (#2016) @[renovate[bot]](https://github.com/apps/renovate)
+* fix: 🐛 correct parameter names in greetings workflow (#2017) @[copilot-swe-agent[bot]](https://github.com/apps/copilot-swe-agent)
+* chore(deps): update docker/metadata-action action to v5.9.0 (#2007) @[renovate[bot]](https://github.com/apps/renovate)
+
+#### :link: Dependency Updates
+
+* release: `v1.4.2` (#2022) @Anselmoo
+
+#### :microscope: Testing & Coverage
+
+* refactor: ♻️ Replace floating-point equality checks with isclose() (#2028) @[copilot-swe-agent[bot]](https://github.com/apps/copilot-swe-agent)
+* release: `v1.4.2` (#2022) @Anselmoo
+
+#### :whale: Docker
+
+* feat: ✨ modernize .devcontainer configuration for Python 3.12 and current tooling (#2021) @[copilot-swe-agent[bot]](https://github.com/apps/copilot-swe-agent)
+
+### :package: Full Changelog
+
+**Full Changelog**: https://github.com/Anselmoo/spectrafit/compare/v1.4.1...v1.4.2
+
+### :gear: Who Contributes
+
+@Anselmoo, @Copilot, @renovate[bot], [copilot-swe-agent[bot]](https://github.com/apps/copilot-swe-agent) and [renovate[bot]](https://github.com/apps/renovate)
+
 ## v1.4.0 🌈 - 2025-06-08
 
 ### :compass: What's Changed
