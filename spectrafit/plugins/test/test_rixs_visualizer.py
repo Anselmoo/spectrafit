@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-import sys
-
 from typing import TYPE_CHECKING
 from typing import Any
 
@@ -23,7 +21,6 @@ if TYPE_CHECKING:
     from numpy.typing import NDArray
 
 
-@pytest.mark.skipif(sys.version_info < (3, 9), reason="Requires Python 3.9 or higher")
 @pytest.fixture(scope="module", autouse=True, name="test_data")
 def fixture_test_data() -> tuple[
     NDArray[np.float64],
@@ -37,7 +34,8 @@ def fixture_test_data() -> tuple[
 
 
 # Write test  RIXSFigure
-@pytest.mark.skipif(sys.version_info < (3, 9), reason="Requires Python 3.9 or higher")
+
+
 class TestRixsFigure:
     """Test of the RIXS Figure."""
 
@@ -69,7 +67,6 @@ class TestRixsFigure:
         assert isinstance(fig_xas, go.Figure)
 
 
-@pytest.mark.skipif(sys.version_info < (3, 9), reason="Requires Python 3.9 or higher")
 class TestRIXSApp:
     """Test of the App."""
 
@@ -124,6 +121,5 @@ class TestRIXSApp:
         ret = script_runner.run(
             "spectrafit-rixs-visualizer",
             "--help",
-            expect_error=True,
         )
         assert ret.success

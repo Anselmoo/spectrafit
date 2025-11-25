@@ -1,6 +1,6 @@
 [project]
 name = "SpectraFit"
-version = "1.4.1"
+version = "1.4.2"
 description = "Fast fitting of 2D- and 3D-Spectra with established routines"
 authors = [{ name = "Anselm Hahn", email = "anselm.hahn@gmail.com" }]
 requires-python = ">=3.9,<3.14"
@@ -119,6 +119,7 @@ dev = [
   "pytest-plt>=1.1.1",
   "pytest-xdist>=3.6.1",
   "ruff>=0.9.10",
+  "setuptools<81",
   "types-mock>=5.1.0.20240425",
   "types-pyyaml>=6.0.12.20241230",
   "types-setuptools>=75.8.0.20250110",
@@ -230,10 +231,17 @@ convention = "google"
 
 [tool.pytest]
 script_launch_mode = "subprocess"
-
-[tool.pytest.ini_options]
 minversion = "7.0"
-addopts = "--cov --cov-report=xml:coverage.xml --junitxml=junit.xml -o junit_family=legacy --diff-symbols --plots -vv"
+addopts = [
+  "--cov",
+  "--cov-report=xml:coverage.xml",
+  "--junitxml=junit.xml",
+  "-o",
+  "junit_family=legacy",
+  "--diff-symbols",
+  "--plots",
+  "-vv",
+]
 testpaths = ["spectrafit"]
 markers = [
   "moessbauer: tests for Mössbauer spectroscopy models",

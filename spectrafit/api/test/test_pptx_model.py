@@ -81,6 +81,19 @@ def test_regression_metrics() -> None:
     assert regression_metrics.data == [[1.0, 2.0], [3.0, 4.0]]
 
 
+def test_regression_metrics_collision() -> None:
+    """Test RegressionMetrics with abbreviation collision."""
+    # Test metrics that would create abbreviation collisions
+    regression_metrics = RegressionMetricsAPI(
+        index=["mean_absolute_error", "mean_absolute_percentage_error", "max_error"],
+        columns=[1, 2, 3],
+        data=[[1.0, 2.0, 3.0]],
+    )
+    # Should create unique abbreviations despite similar names
+    assert len(regression_metrics.index) == 3
+    assert len(set(regression_metrics.index)) == 3  # All unique
+
+
 def test_solver() -> None:
     """Test the Solver class."""
     goodness_of_fit = GoodnessOfFitAPI(

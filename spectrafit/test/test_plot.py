@@ -163,3 +163,94 @@ def test_empty(plt: Figure) -> None:
     args = {"noplot": False, "global_": False}
     PlotSpectra(df=df, args=args)()
     plt.show()
+
+
+def test_global_plotting(plt: Figure) -> None:
+    """Test that PlotSpectra class succeeds for global plotting."""
+    df = pd.DataFrame(
+        {
+            "energy": [
+                0.016666666666660834,
+                0.03333333333332744,
+                0.04999999999999405,
+                0.06666666666666066,
+                0.08333333333332726,
+            ],
+            "intensity_1": [
+                1.0,
+                0.9729729729729932,
+                0.9000684869288876,
+                0.8003319898391893,
+                0.6926622009062817,
+            ],
+            "intensity_2": [
+                0.9,
+                0.8729729729729932,
+                0.8000684869288876,
+                0.7003319898391893,
+                0.5926622009062817,
+            ],
+            "intensity_3": [
+                0.85,
+                0.8229729729729932,
+                0.7500684869288876,
+                0.6503319898391893,
+                0.5426622009062817,
+            ],
+            "residual_1": [4.29, 0.39, -0.28, -0.45, -0.46],
+            "residual_2": [3.29, 0.29, -0.18, -0.35, -0.36],
+            "residual_3": [2.29, 0.19, -0.08, -0.25, -0.26],
+            "fit_1": [5.29, 1.36, 0.61, 0.34, 0.22],
+            "fit_2": [4.19, 1.16, 0.58, 0.35, 0.19],
+            "fit_3": [3.14, 1.01, 0.67, 0.40, 0.28],
+            "peak1_1": [2.5, 0.68, 0.3, 0.17, 0.11],
+            "peak2_1": [2.79, 0.68, 0.31, 0.17, 0.11],
+            "peak1_2": [2.0, 0.58, 0.29, 0.18, 0.095],
+            "peak2_2": [2.19, 0.58, 0.29, 0.17, 0.095],
+            "peak1_3": [1.5, 0.50, 0.33, 0.20, 0.14],
+            "peak2_3": [1.64, 0.51, 0.34, 0.20, 0.14],
+        },
+    )
+    args = {
+        "noplot": False,
+        "global_": True,
+        "data_statistic": {"spec1": {}, "spec2": {}, "spec3": {}},
+    }
+    PlotSpectra(df=df, args=args)()
+    plt.show()
+
+
+def test_noplot_global(plt: Figure) -> None:
+    """Test PlotSpectra with noplot flag for global fitting."""
+    df = pd.DataFrame(
+        {
+            "energy": [0.01, 0.02, 0.03],
+            "intensity_1": [1.0, 0.9, 0.8],
+            "intensity_2": [0.95, 0.85, 0.75],
+            "residual_1": [0.1, 0.05, -0.1],
+            "residual_2": [0.15, 0.1, -0.05],
+            "fit_1": [1.1, 0.95, 0.7],
+            "fit_2": [1.1, 0.95, 0.7],
+        },
+    )
+    args = {
+        "noplot": True,
+        "global_": True,
+        "data_statistic": {"spec1": {}, "spec2": {}},
+    }
+    PlotSpectra(df=df, args=args)()
+    plt.show()
+
+
+def test_plot_none_args(plt: Figure) -> None:
+    """Test PlotSpectra with None args."""
+    df = pd.DataFrame(
+        {
+            "energy": [0.01, 0.02, 0.03],
+            "intensity": [1.0, 0.9, 0.8],
+            "residual": [0.1, 0.05, -0.1],
+            "fit": [1.1, 0.95, 0.7],
+        },
+    )
+    PlotSpectra(df=df, args=None)()
+    plt.show()

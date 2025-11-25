@@ -1,4 +1,90 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended"]
+  "extends": [
+    "config:best-practices"
+  ],
+  "schedule": [
+    "after 10pm every weekday",
+    "before 5am every weekday",
+    "every weekend"
+  ],
+  "timezone": "America/New_York",
+  "packageRules": [
+    {
+      "description": "Group all Python dependencies together",
+      "matchManagers": [
+        "pip_requirements",
+        "pip_setup",
+        "pipenv",
+        "poetry",
+        "pep621"
+      ],
+      "groupName": "Python dependencies",
+      "schedule": [
+        "before 5am on Monday"
+      ]
+    },
+    {
+      "description": "Group development dependencies separately with auto-merge for patches",
+      "matchDepTypes": [
+        "dev"
+      ],
+      "groupName": "Development dependencies",
+      "automerge": true,
+      "matchUpdateTypes": [
+        "patch",
+        "minor"
+      ]
+    },
+    {
+      "description": "Group and schedule pre-commit hooks monthly",
+      "matchManagers": [
+        "pre-commit"
+      ],
+      "groupName": "pre-commit hooks",
+      "schedule": [
+        "before 5am on the first day of the month"
+      ]
+    },
+    {
+      "description": "Group GitHub Actions with digest pinning",
+      "matchManagers": [
+        "github-actions"
+      ],
+      "groupName": "GitHub Actions",
+      "pinDigests": true
+    },
+    {
+      "description": "Group Docker and DevContainer updates",
+      "matchManagers": [
+        "docker-compose",
+        "dockerfile",
+        "devcontainer"
+      ],
+      "groupName": "Docker and DevContainer",
+      "schedule": [
+        "before 5am on Monday"
+      ]
+    },
+    {
+      "description": "Auto-merge patch updates for testing dependencies",
+      "matchPackageNames": [
+        "pytest**",
+        "mock**",
+        "coverage**"
+      ],
+      "automerge": true,
+      "matchUpdateTypes": [
+        "patch"
+      ]
+    }
+  ],
+  "prConcurrentLimit": 5,
+  "prHourlyLimit": 2,
+  "labels": [
+    "dependencies",
+    "renovate"
+  ],
+  "commitMessagePrefix": "chore: 🔨",
+  "semanticCommits": "enabled"
 }

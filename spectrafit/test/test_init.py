@@ -16,8 +16,10 @@ from spectrafit import __version__
 
 
 def test_version() -> None:
-    """Test the version string."""
-    assert __version__ == "1.4.1"
+    """Test that the package __version__ matches the installed distribution version."""
+    from importlib.metadata import version as pkg_version
+
+    assert __version__ == pkg_version("spectrafit")
 
 
 def test_python_end_of_life_warning(monkeypatch: pytest.MonkeyPatch) -> None:
