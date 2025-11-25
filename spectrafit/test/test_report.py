@@ -170,6 +170,7 @@ def test_printing_results_with_empty_list_ci() -> None:
 
 def test_printing_results_ci_exception() -> None:
     """Test printing results with confidence interval exception."""
+    # Test 1: Invalid type (string instead of list)
     pr = PrintingResults(
         args={
             "conf_interval": True,
@@ -185,6 +186,25 @@ def test_printing_results_ci_exception() -> None:
     # This should not raise an exception, but handle it gracefully
     pr.print_confidence_interval()
     assert pr.args["confidence_interval"] == {}
+
+    # Test 2: Invalid tuple structure (not length 2)
+    pr2 = PrintingResults(
+        args={
+            "conf_interval": True,
+            "confidence_interval": {
+                "param1": [(0.0, 1.0, 2.0)]
+            },  # 3-tuple instead of 2
+            "linear_correlation": {},
+            "regression_metrics": {},
+            "report": {},
+            "data_statistic": {},
+        },
+        result=None,
+        minimizer=None,
+    )
+    # This should also not raise an exception, but handle it gracefully
+    pr2.print_confidence_interval()
+    assert pr2.args["confidence_interval"] == {}
 
 
 def test_printing_results_verbose_mode(mocker: MockerFixture) -> None:
