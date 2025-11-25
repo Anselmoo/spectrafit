@@ -41,7 +41,7 @@ def test_pandas_option_setting_for_old_python() -> None:
         importlib.reload(spectrafit.report)
         # Check that pandas option is set (will be set in module reload)
         # Note: We can't directly verify this, but we ensure no error occurs
-        assert True
+        assert spectrafit.report is not None
 
 
 class TestRegressionMetrics:
@@ -359,8 +359,8 @@ def test_fit_report_generate_correlations_with_nan() -> None:
 
     # The matrix should have been filled with 1s for diagonal and NaN for others
     assert isinstance(correl_matrix, pd.DataFrame)
-    assert correl_matrix.loc["a", "b"] == 0.8
-    assert correl_matrix.loc["b", "a"] == 0.8
+    assert isclose(correl_matrix.loc["a", "b"], 0.8)
+    assert isclose(correl_matrix.loc["b", "a"], 0.8)
 
 
 @pytest.fixture(
@@ -684,7 +684,7 @@ def test_fit_report_as_dict_with_modelpars(mocker: MockerFixture) -> None:
 
     # Verify model_value is included
     assert "model_value" in result_dict["variables"]["param1"]
-    assert result_dict["variables"]["param1"]["model_value"] == 1.5
+    assert isclose(result_dict["variables"]["param1"]["model_value"], 1.5)
 
 
 def test_fit_report_as_dict_no_stderr(mocker: MockerFixture) -> None:
@@ -758,7 +758,7 @@ def test_fit_report_generate_variables_full() -> None:
     assert "stderr absolute" in df.columns
     assert "stderr percent" in df.columns
     assert "model_value" in df.columns
-    assert df.iloc[0]["model_value"] == 0.8
+    assert isclose(df.iloc[0]["model_value"], 0.8)
 
 
 def test_fit_report_generate_fit_statistics_with_result(mocker: MockerFixture) -> None:
