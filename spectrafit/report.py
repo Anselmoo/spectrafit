@@ -95,6 +95,10 @@ class RegressionMetrics:
             lambda y_true, y_pred: bool(np.all(y_true > -1) and np.all(y_pred > -1)),
             "requires all targets and predictions to be greater than -1",
         ),
+        "mean_poisson_deviance": (
+            lambda y_true, y_pred: bool(np.all(y_true >= 0) and np.all(y_pred > 0)),
+            "requires all targets to be non-negative and predictions to be strictly positive",
+        ),
     }
 
     def __init__(
@@ -553,7 +557,24 @@ class CIReport:
     def __call__(self) -> None:
         """Generate the Confidence report as a table."""
         self.report: dict[str, dict[str, float]] = {}
+        expected_tuple_length = 2
         for name, row in self.ci.items():
+            # Validate that row is a list of tuples with proper structure
+            if not isinstance(row, list):
+                msg = (
+                    f"Confidence interval for '{name}' must be a list, got {type(row)}"
+                )
+                raise TypeError(msg)
+            if not all(
+                isinstance(item, tuple) and len(item) == expected_tuple_length
+                for item in row
+            ):
+                msg = (
+                    f"Confidence interval for '{name}' must contain tuples "
+                    f"of length {expected_tuple_length}"
+                )
+                raise ValueError(msg)
+
             offset = self.calculate_offset(row)
             self.create_report_row(name, row, offset)
 

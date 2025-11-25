@@ -1271,6 +1271,13 @@ class TestPPTXConverter:
             mocker (Any): Pytest mocker fixture.
 
         """
+        # Ensure the credit logo exists before running the converter
+        source_path = Path("spectrafit/plugins/img/SpectraFit.png")
+        destination_path: Path = PPTXBasicTitleAPI().credit_logo
+        destination_path.parent.mkdir(parents=True, exist_ok=True)
+        if not destination_path.exists() and source_path.exists():
+            shutil.copy(source_path, destination_path)
+
         # Mock sys.argv to simulate command line
         mocker.patch("sys.argv", ["script", str(tmp_toml_data), "-f", "16:9"])
 
