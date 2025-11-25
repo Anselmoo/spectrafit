@@ -20,6 +20,8 @@ import tomli_w
 import yaml
 
 from spectrafit.api.pptx_model import PPTXBasicTitleAPI
+from spectrafit.api.pptx_model import PPTXLayoutAPI
+from spectrafit.api.pptx_model import PPTXPositionAPI
 from spectrafit.plugins.data_converter import DataConverter
 from spectrafit.plugins.file_converter import FileConverter
 from spectrafit.plugins.pkl_converter import ExportData
@@ -1164,3 +1166,202 @@ class TestPPTXConverter:
         with pytest.raises(ValueError, match=r"File format") as excinfo:
             converter.convert(tmp_toml_data.parent / "tmp_file.json", file_format="4:3")
         assert "File format" in str(excinfo.value)
+
+    def test_pptx_layout_direct(self, tmp_toml_data: Path) -> None:
+        """Test PPTXLayout class directly.
+
+        Args:
+            tmp_toml_data (Path): Path to temporary file.
+
+        """
+        from spectrafit.plugins.pptx_converter import PPTXLayout
+
+        # Ensure the credit logo exists
+        source_path = Path("spectrafit/plugins/img/SpectraFit.png")
+        destination_path: Path = PPTXBasicTitleAPI().credit_logo
+        destination_path.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy(source_path, destination_path)
+
+        # Load data and create layout
+        converter = PPTXConverter()
+        data = converter.convert(tmp_toml_data, file_format="16:9")
+        pptx_layout_api = PPTXLayoutAPI("16:9", data=data["16:9"])
+        pptx_layout = pptx_layout_api.get_pptx_layout()
+
+        # Create PPTXLayout instance
+        fname = tmp_toml_data.parent / "test_direct.pptx"
+        layout = PPTXLayout(
+            ratio=pptx_layout.ratio,
+            structure=pptx_layout.structure,
+            fname=fname,
+        )
+
+        # Test all methods
+        assert layout.ratio == pptx_layout.ratio
+        assert layout.structure == pptx_layout.structure
+        assert layout.prs is not None
+        assert layout.slide is not None
+
+        # Call individual elements
+        layout.top_element()
+        layout.lefr_element()
+        layout.right_element()
+        layout.save()
+
+        assert fname.exists()
+        destination_path.unlink()
+
+    def test_pptx_elements_methods(self, tmp_toml_data: Path, tmp_path: Path) -> None:
+        """Test PPTXElements individual methods.
+
+        Args:
+            tmp_toml_data (Path): Path to temporary file.
+            tmp_path (Path): Temporary path.
+
+        """
+        from pptx.util import Pt
+
+        from spectrafit.plugins.pptx_converter import PPTXLayout
+
+        # Ensure the credit logo exists
+        source_path = Path("spectrafit/plugins/img/SpectraFit.png")
+        destination_path: Path = PPTXBasicTitleAPI().credit_logo
+        destination_path.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy(source_path, destination_path)
+
+        converter = PPTXConverter()
+        data = converter.convert(tmp_toml_data, file_format="16:9")
+        pptx_layout_api = PPTXLayoutAPI("16:9", data=data["16:9"])
+        pptx_layout = pptx_layout_api.get_pptx_layout()
+
+        fname = tmp_path / "test_elements.pptx"
+        layout = PPTXLayout(
+            ratio=pptx_layout.ratio,
+            structure=pptx_layout.structure,
+            fname=fname,
+        )
+
+        # Test create_title
+        position = PPTXPositionAPI(left=Pt(0), top=Pt(0), width=Pt(100), height=Pt(50))
+        layout.create_title("Test Title", position)
+        assert layout.slide.shapes.title.text == "Test Title"
+
+        # Test create_subtitle
+        position2 = PPTXPositionAPI(
+            left=Pt(0), top=Pt(50), width=Pt(100), height=Pt(30)
+        )
+        layout.create_subtitle("Test Subtitle", position2, index=1)
+        assert layout.slide.placeholders[1].text == "Test Subtitle"
+
+        # Test create_textbox
+        position3 = PPTXPositionAPI(
+            left=Pt(100), top=Pt(100), width=Pt(200), height=Pt(50)
+        )
+        layout.create_textbox("Test Text", position3, font_size=Pt(12))
+
+        layout.save()
+        assert fname.exists()
+        destination_path.unlink()
+
+    def test_pptx_converter_call(self, tmp_toml_data: Path, mocker: Any) -> None:
+        """Test PPTXConverter __call__ method.
+
+        Args:
+            tmp_toml_data (Path): Path to temporary file.
+            mocker (Any): Pytest mocker fixture.
+
+        """
+        # Mock sys.argv to simulate command line
+        mocker.patch("sys.argv", ["script", str(tmp_toml_data), "-f", "16:9"])
+
+        converter = PPTXConverter()
+        converter()
+
+        # Check that the file was created
+        expected_file = Path(f"{tmp_toml_data.stem}_16_9.pptx")
+        assert expected_file.exists()
+        expected_file.unlink()
+
+    def test_command_line_runner(self, tmp_toml_data: Path, mocker: Any) -> None:
+        """Test command_line_runner function.
+
+        Args:
+            tmp_toml_data (Path): Path to temporary file.
+            mocker (Any): Pytest mocker fixture.
+
+        """
+        from spectrafit.plugins.pptx_converter import command_line_runner
+
+        # Ensure the credit logo exists
+        source_path = Path("spectrafit/plugins/img/SpectraFit.png")
+        destination_path: Path = PPTXBasicTitleAPI().credit_logo
+        destination_path.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy(source_path, destination_path)
+
+        # Mock sys.argv
+        mocker.patch("sys.argv", ["script", str(tmp_toml_data), "-f", "4:3"])
+
+        command_line_runner()
+
+        expected_file = Path(f"{tmp_toml_data.stem}_4_3.pptx")
+        assert expected_file.exists()
+        expected_file.unlink()
+        destination_path.unlink()
+
+    def test_pptx_converter_save_directly(self, tmp_toml_data: Path) -> None:
+        """Test PPTXConverter save method directly.
+
+        Args:
+            tmp_toml_data (Path): Path to temporary file.
+
+        """
+        # Ensure the credit logo exists
+        source_path = Path("spectrafit/plugins/img/SpectraFit.png")
+        destination_path: Path = PPTXBasicTitleAPI().credit_logo
+        destination_path.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy(source_path, destination_path)
+
+        converter = PPTXConverter()
+        data = converter.convert(tmp_toml_data, file_format="16:9HDR")
+
+        # Test save method
+        converter.save(data, tmp_toml_data, export_format="16:9HDR")
+
+        expected_file = Path(f"{tmp_toml_data.stem}_16_9HDR.pptx")
+        assert expected_file.exists()
+        expected_file.unlink()
+        destination_path.unlink()
+
+    def test_pptx_layout_call_directly(self, tmp_toml_data: Path) -> None:
+        """Test PPTXLayout __call__ method directly.
+
+        Args:
+            tmp_toml_data (Path): Path to temporary file.
+
+        """
+        from spectrafit.plugins.pptx_converter import PPTXLayout
+
+        # Ensure the credit logo exists
+        source_path = Path("spectrafit/plugins/img/SpectraFit.png")
+        destination_path: Path = PPTXBasicTitleAPI().credit_logo
+        destination_path.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy(source_path, destination_path)
+
+        converter = PPTXConverter()
+        data = converter.convert(tmp_toml_data, file_format="4:3")
+        pptx_layout_api = PPTXLayoutAPI("4:3", data=data["4:3"])
+        pptx_layout = pptx_layout_api.get_pptx_layout()
+
+        fname = tmp_toml_data.parent / "test_call.pptx"
+        layout = PPTXLayout(
+            ratio=pptx_layout.ratio,
+            structure=pptx_layout.structure,
+            fname=fname,
+        )
+
+        # Call the layout (should run top, left, right, save)
+        layout()
+
+        assert fname.exists()
+        fname.unlink()
+        destination_path.unlink()
