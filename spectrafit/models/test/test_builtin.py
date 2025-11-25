@@ -948,6 +948,19 @@ class TestAutoPeakDetection:
         # Verify exception type
         assert pytest_wrapped_e.type == KeyError
 
+    def test_estimated_rel_height_with_zeros(self) -> None:
+        """Test estimated_rel_height fallback to mean when hmean fails with zeros."""
+        args = {"autopeak": True, "global_": 0}
+        x = np.arange(10, dtype=np.float64)
+        data = np.array([0.0, 0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0])
+
+        auto = AutoPeakDetection(x=x, data=data, args=args)
+        rel_height = auto.estimated_rel_height
+
+        # Should fall back to mean when hmean fails with zeros
+        assert isinstance(rel_height, float)
+        assert rel_height >= 0.0
+
 
 class TestModel:
     """Test the distribution class and its models."""
@@ -1508,3 +1521,47 @@ class TestMoessbauerModels:
         )
         assert isinstance(octet, np.ndarray)
         assert len(octet) == len(x_data)
+
+
+class TestCalculatedModel:
+    """Test the calculated_model function."""
+
+    def test_calculated_model_global_fit(self) -> None:
+        """Test calculated_model with global fitting mode."""
+        from spectrafit.models.builtin import calculated_model
+
+        x = np.linspace(0, 10, 100)
+        df = pd.DataFrame({"Energy": x})
+
+        # Create parameters for global fit (with dataset suffix)
+        params = Parameters()
+        params.add("gaussian_amplitude_1_0", value=1.0)
+        params.add("gaussian_center_1_0", value=5.0)
+        params.add("gaussian_fwhmg_1_0", value=1.0)
+        params.add("lorentzian_amplitude_2_0", value=0.5)
+        params.add("lorentzian_center_2_0", value=7.0)
+        params.add("lorentzian_fwhml_2_0", value=0.5)
+
+        result = calculated_model(df=df, params=params, x=x, global_fit=True)
+
+        assert "gaussian_1_0" in result.columns
+        assert "lorentzian_2_0" in result.columns
+        assert len(result) == len(x)
+
+    def test_calculated_model_local_fit(self) -> None:
+        """Test calculated_model with local fitting mode."""
+        from spectrafit.models.builtin import calculated_model
+
+        x = np.linspace(0, 10, 100)
+        df = pd.DataFrame({"Energy": x})
+
+        # Create parameters for local fit (without dataset suffix)
+        params = Parameters()
+        params.add("gaussian_amplitude_1", value=1.0)
+        params.add("gaussian_center_1", value=5.0)
+        params.add("gaussian_fwhmg_1", value=1.0)
+
+        result = calculated_model(df=df, params=params, x=x, global_fit=False)
+
+        assert "gaussian_1" in result.columns
+        assert len(result) == len(x)
