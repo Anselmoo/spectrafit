@@ -62,4 +62,4 @@ After understanding the technical foundations, you may want to explore:
 
 - [Examples](../examples/example1.md) of applying these methods
 - [API Reference](../api/modelling_api.md) for programmatic access to models
-- [Plugins](../plugins/file_converter.md) for extending functionality
+- [Plugins](../plugins/index.md) for extending functionality

@@ -3,7 +3,7 @@ name = "SpectraFit"
 version = "1.4.1"
 description = "Fast fitting of 2D- and 3D-Spectra with established routines"
 authors = [{ name = "Anselm Hahn", email = "anselm.hahn@gmail.com" }]
-requires-python = ">=3.9,<3.14"
+requires-python = ">=3.10,<3.14"
 readme = "README.md"
 license = "BSD-3-Clause"
 maintainers = [{ name = "Anselm Hahn", email = "anselm.hahn@gmail.com" }]
@@ -52,6 +52,7 @@ dependencies = [
   "tomli>=2.2.1",
   "tomli-w>=1.0.0",
   "tqdm>=4.67.1",
+  "typer>=0.20.0",
 ]
 
 [project.optional-dependencies]
@@ -94,14 +95,8 @@ Issues = "https://github.com/Anselmoo/spectrafit/issues"
 
 [project.scripts]
 spectrafit = "spectrafit.spectrafit:command_line_runner"
-spectrafit-file-converter = "spectrafit.plugins.file_converter:command_line_runner"
-spectrafit-data-converter = "spectrafit.plugins.data_converter:command_line_runner"
-spectrafit-pkl-visualizer = "spectrafit.plugins.pkl_visualizer:command_line_runner"
-spectrafit-pkl-converter = "spectrafit.plugins.pkl_converter:command_line_runner"
-spectrafit-rixs-converter = "spectrafit.plugins.rixs_converter:command_line_runner"
 spectrafit-rixs-visualizer = "spectrafit.plugins.rixs_visualizer:command_line_runner"
 spectrafit-jupyter = "spectrafit.app.app:jupyter"
-spectrafit-pptx-converter = "spectrafit.plugins.pptx_converter:command_line_runner"
 
 [dependency-groups]
 dev = [
@@ -161,7 +156,7 @@ build-backend = "hatchling.build"
 fix = true
 include = ["*.py"]
 src = ["spectrafit"]
-target-version = "py39"
+target-version = "py310"
 
 [tool.ruff.lint]
 select = ["ALL"]
@@ -230,10 +225,17 @@ convention = "google"
 
 [tool.pytest]
 script_launch_mode = "subprocess"
-
-[tool.pytest.ini_options]
 minversion = "7.0"
-addopts = "--cov --cov-report=xml:coverage.xml --junitxml=junit.xml -o junit_family=legacy --diff-symbols --plots -vv"
+addopts = [
+  "--cov",
+  "--cov-report=xml:coverage.xml",
+  "--junitxml=junit.xml",
+  "-o",
+  "junit_family=legacy",
+  "--diff-symbols",
+  "--plots",
+  "-vv",
+]
 testpaths = ["spectrafit"]
 markers = [
   "moessbauer: tests for Mössbauer spectroscopy models",
@@ -259,7 +261,7 @@ skip_covered = true
 show_missing = true
 
 [tool.mypy]
-plugins = ["pydantic.mypy", "numpy.typing.mypy_plugin"]
+plugins = ["pydantic.mypy"]
 follow_imports = "silent"
 warn_redundant_casts = true
 warn_unused_ignores = true
