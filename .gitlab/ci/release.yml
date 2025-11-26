@@ -21,7 +21,7 @@ release_job:
   stage: release
   tags:
     - shared
-  image: registry.gitlab.com/gitlab-org/release-cli
+  image: registry.gitlab.com/gitlab-org/release-cli@sha256:3f52d526f48e8d10625c722fa6d6423ee82aadeae1b1aa91f07b62551d96dacf
   needs:
     - job: prepare_job
       artifacts: true
