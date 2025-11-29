@@ -302,11 +302,10 @@ class TestPreProcessing:
             "smooth": None,
             "column": ["Energy", "intensity"],
         }
-        with pytest.raises(SystemExit) as pytest_wrapped_e:
+        with pytest.raises(KeyError) as pytest_wrapped_e:
             PreProcessing(random_dataframe, args)()
 
-        assert pytest_wrapped_e.type == SystemExit
-        assert pytest_wrapped_e.value.code == 1
+        assert "Missing required preprocessing key" in str(pytest_wrapped_e.value)
 
     def test_keyword_not_fail(self) -> None:
         """Testing consistency between cmd and input keywords."""

@@ -890,7 +890,7 @@ class ExportReport(SolverResults):
             from the dictionary, which are hidden in the nested dictionaries.
 
         Returns:
-            Dict[str, Any]: Report as dictionary by using the `.dict()` option of
+            Dict[str, Any]: Report as dictionary by using the `.model_dump()` option of
                  pydantic. `None` is excluded.
 
         """
@@ -1300,7 +1300,9 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
                 ConfIntervalAPI().model_dump() if conf_interval is True else False
             )
         elif isinstance(conf_interval, dict):
-            conf_interval = ConfIntervalAPI(**conf_interval).dict(exclude_none=True)
+            conf_interval = ConfIntervalAPI(**conf_interval).model_dump(
+                exclude_none=True
+            )
 
         if solver_settings is not None and isinstance(solver_settings, dict):
             self.settings_solver_models = SolverModelsAPI(**solver_settings)

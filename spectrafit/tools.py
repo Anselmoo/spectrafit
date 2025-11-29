@@ -5,7 +5,6 @@ from __future__ import annotations
 import gzip
 import json
 import pickle
-import sys
 
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -78,8 +77,9 @@ class PreProcessing:
                 df_copy = self.oversampling(df_copy, self.args)
             if self.args["smooth"]:
                 df_copy = self.smooth_signal(df_copy, self.args)
-        except KeyError:
-            sys.exit(1)
+        except KeyError as e:
+            msg = f"Missing required preprocessing key: {e}"
+            raise KeyError(msg) from e
         return (df_copy, self.args)
 
     @staticmethod
@@ -625,8 +625,9 @@ def load_data(args: dict[str, str]) -> pd.DataFrame:
             decimal=args["decimal"],
             comment=args["comment"],
         )
-    except ValueError:
-        sys.exit(1)
+    except ValueError as e:
+        msg = f"Failed to load data from '{args.get('infile', 'unknown')}': {e}"
+        raise ValueError(msg) from e
 
 
 def check_keywords_consistency(

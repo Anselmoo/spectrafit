@@ -283,14 +283,11 @@ def run_fitting_workflow(args: dict[str, Any]) -> None:
 
         __status__.end()
 
-        again = input("Would you like to fit again ...? Enter y/n: ").lower()
-        if again == "n":
+        again = typer.confirm("Would you like to fit again?", default=False)
+        if not again:
             __status__.thanks()
             __status__.credits()
             return
-        if again == "y":
-            continue
-        __status__.yes_no()
 
 
 def command_line_runner(args: dict[str, Any] | None = None) -> None:
@@ -364,27 +361,6 @@ def extracted_from_command_line_runner_with_args(
     if "peaks" in _args["fitting"]:
         args["peaks"] = _args["fitting"]["peaks"]
     return args
-
-
-def extracted_from_command_line_runner() -> dict[str, Any]:
-    """Extract the input commands from the terminal.
-
-    This function is deprecated and kept only for backward compatibility.
-    It should not be called when using Typer.
-
-    Raises:
-        RuntimeError: This function should not be called with Typer.
-
-    Returns:
-        Dict[str, Any]: The input file arguments as a dictionary with additional
-             information beyond the command line arguments.
-
-    """
-    _msg = (
-        "extracted_from_command_line_runner() is deprecated. "
-        "The Typer CLI handles argument parsing automatically."
-    )
-    raise RuntimeError(_msg)
 
 
 def fitting_routine(args: dict[str, Any]) -> tuple[pd.DataFrame, dict[str, Any]]:
