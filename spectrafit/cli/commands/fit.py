@@ -1,8 +1,7 @@
-"""SpectraFit, the command line tool for fitting."""
+"""Fit command for SpectraFit CLI."""
 
 from __future__ import annotations
 
-from enum import Enum
 from typing import TYPE_CHECKING
 from typing import Annotated
 from typing import Any
@@ -10,6 +9,10 @@ from typing import Any
 import typer
 
 from spectrafit.api.cmd_model import CMDModelAPI
+from spectrafit.cli._types import DecimalEnum
+from spectrafit.cli._types import GlobalFitEnum
+from spectrafit.cli._types import SeparatorEnum
+from spectrafit.cli._types import VerboseEnum
 from spectrafit.models.builtin import SolverModels
 from spectrafit.plotting import PlotSpectra
 from spectrafit.report import PrintingResults
@@ -27,61 +30,10 @@ if TYPE_CHECKING:
     import pandas as pd
 
 
-class SeparatorEnum(str, Enum):
-    """Enum for separator choices."""
-
-    TAB = "\t"
-    COMMA = ","
-    SEMICOLON = ";"
-    COLON = ":"
-    PIPE = "|"
-    SPACE = " "
-    REGEX = "s+"
-
-
-class DecimalEnum(str, Enum):
-    """Enum for decimal separator choices."""
-
-    DOT = "."
-    COMMA = ","
-
-
-class GlobalFitEnum(int, Enum):
-    """Enum for global fitting mode choices."""
-
-    CLASSIC = 0
-    AUTO = 1
-    CUSTOM = 2
-
-
-class VerboseEnum(int, Enum):
-    """Enum for verbose level choices."""
-
-    SILENT = 0
-    TABLE = 1
-    DICT = 2
-
-
 __status__ = PrintingStatus()
 
-# Create Typer app
-app = typer.Typer(
-    help="Fast Fitting Program for ascii txt files.",
-    epilog="For more information, visit https://anselmoo.github.io/spectrafit/",
-    add_completion=False,
-    context_settings={"help_option_names": ["-h", "--help"]},
-)
 
-
-def version_callback(value: bool) -> None:
-    """Display version information."""
-    if value:
-        typer.echo(__status__.version())
-        raise typer.Exit
-
-
-@app.command()
-def cli_main(
+def fit(
     infile: Annotated[str, typer.Argument(help="Filename of the spectra data")],
     outfile: Annotated[
         str,
@@ -232,26 +184,16 @@ def cli_main(
             ),
         ),
     ] = VerboseEnum.TABLE,
-    version: Annotated[
-        bool | None,
-        typer.Option(
-            "-v",
-            "--version",
-            callback=version_callback,
-            is_eager=True,
-            help="Display the current version of `SpectraFit`.",
-        ),
-    ] = None,
 ) -> None:
-    """Run spectrafit from the command line."""
+    """Fit spectra data using SpectraFit.
+
+    This command performs spectral fitting on the provided data file using the
+    parameters specified in the input configuration file.
+    """
     # Convert column to proper format
     if column is None:
-        # Typing expects list[str]; keep defaults as strings so conversion logic
-        # below can safely parse numeric column indices with str.isdigit().
         column = ["0", "1"]
     else:
-        # Convert to list of strings, parsing integers where applicable
-        # This maintains type consistency for mypy while preserving the logic
         column = [
             str(int(c)) if (isinstance(c, str) and c.isdigit()) else str(c)
             for c in column
@@ -279,25 +221,23 @@ def cli_main(
     }
 
     # Run the fitting routine with the interactive loop
-    run_fitting_workflow(args=args_dict)
+    _run_fitting_workflow(args=args_dict)
 
 
-def run_fitting_workflow(args: dict[str, Any]) -> None:
+def _run_fitting_workflow(args: dict[str, Any]) -> None:
     """Run the interactive fitting workflow.
 
     Args:
-        args (Dict[str, Any]): The input file arguments as a dictionary with
-             additional information beyond the command line arguments.
-
+        args: The input file arguments as a dictionary.
     """
     __status__.welcome()
     while True:
         __status__.start()
 
         # Process arguments with input file
-        processed_args = extracted_from_command_line_runner_with_args(args)
+        processed_args = _extract_args_from_input(args)
 
-        df_result, processed_args = fitting_routine(args=processed_args)
+        df_result, processed_args = _fitting_routine(args=processed_args)
         PlotSpectra(df=df_result, args=processed_args)()
         SaveResult(df=df_result, args=processed_args)()
 
@@ -310,41 +250,18 @@ def run_fitting_workflow(args: dict[str, Any]) -> None:
             return
 
 
-def command_line_runner(args: dict[str, Any] | None = None) -> None:
-    """Entry point for spectrafit CLI.
-
-    This function maintains backward compatibility and serves as the entry point
-    configured in pyproject.toml. It delegates to the Typer app.
-
-    Args:
-        args (Dict[str, Any], optional): The input file arguments as a
-             dictionary with additional information beyond the command line arguments.
-             Defaults to None. If provided, runs in programmatic mode.
-
-    """
-    if args is not None:
-        # Programmatic mode: args provided directly
-        run_fitting_workflow(args=args)
-    else:
-        # CLI mode: let Typer handle argument parsing
-        app()
-
-
-def extracted_from_command_line_runner_with_args(
-    args: dict[str, Any],
-) -> dict[str, Any]:
+def _extract_args_from_input(args: dict[str, Any]) -> dict[str, Any]:
     """Extract and merge command line arguments with input file settings.
 
     Args:
-        args (Dict[str, Any]): The command line arguments.
+        args: The command line arguments.
 
     Raises:
         KeyError: Missing key `minimizer` in `parameters`.
         KeyError: Missing key `optimizer` in `parameters`.
 
     Returns:
-        Dict[str, Any]: The merged arguments dictionary.
-
+        The merged arguments dictionary.
     """
     _args: MutableMapping[str, Any] = read_input_file(args["input"])
 
@@ -383,21 +300,14 @@ def extracted_from_command_line_runner_with_args(
     return args
 
 
-def fitting_routine(args: dict[str, Any]) -> tuple[pd.DataFrame, dict[str, Any]]:
+def _fitting_routine(args: dict[str, Any]) -> tuple[pd.DataFrame, dict[str, Any]]:
     """Run the fitting algorithm.
 
     Args:
-        args (Dict[str, Any]): The input file arguments as a dictionary with
-             additional information beyond the command line arguments.
+        args: The input file arguments as a dictionary.
 
     Returns:
-        Tuple[pd.DataFrame, Dict[str, Any]]: Returns a DataFrame and a dictionary,
-             which is containing the input data (`x` and `data`), as well as the best
-             fit, single contributions of each peak and the corresponding residuum. The
-             dictionary contains the raw input data, the best fit, the single
-             contributions and the corresponding residuum. Furthermore, the dictionary
-             is extended by advanced statistical information of the fit.
-
+        A tuple of DataFrame and dictionary containing fit results.
     """
     df: pd.DataFrame = load_data(args)
     df, args = PreProcessing(df=df, args=args)()
@@ -406,11 +316,3 @@ def fitting_routine(args: dict[str, Any]) -> tuple[pd.DataFrame, dict[str, Any]]
     PrintingResults(args=args, minimizer=minimizer, result=result)()
 
     return df, args
-
-
-# Re-export CLI app for backward compatibility
-# The new CLI with subcommands is available in spectrafit.cli.main
-try:
-    from spectrafit.cli.main import app as cli_app
-except ImportError:
-    cli_app = app  # Fall back to original app if cli module not available

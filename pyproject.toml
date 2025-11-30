@@ -94,7 +94,7 @@ Changelog = "https://github.com/Anselmoo/spectrafit/blob/main/CHANGELOG.md"
 Issues = "https://github.com/Anselmoo/spectrafit/issues"
 
 [project.scripts]
-spectrafit = "spectrafit.spectrafit:command_line_runner"
+spectrafit = "spectrafit.cli.main:run"
 spectrafit-rixs-visualizer = "spectrafit.plugins.rixs_visualizer:command_line_runner"
 spectrafit-jupyter = "spectrafit.app.app:jupyter"
 
@@ -204,6 +204,7 @@ extend-ignore = [
 "spectrafit/plugins/rixs_visualizer.py" = ["N803"]
 "spectrafit/plugins/color_schemas.py" = ["RUF012"]
 "spectrafit/plugins/test/test_notebook.py" = ["SLF001"]
+"spectrafit/cli/commands/*.py" = ["TC003", "TRY301", "PLC0415", "C901", "PLR0915"]
 
 
 [tool.ruff.lint.isort]
