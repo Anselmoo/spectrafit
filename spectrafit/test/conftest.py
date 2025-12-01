@@ -38,6 +38,8 @@ def filter_moessbauer_stderr(stderr: str) -> str:
                 re.search(r"Bound reached with prob\(", line),
                 re.search(r"spectrafit/report\.py.*FutureWarning", line),
                 re.search(r"spectrafit/report\.py.*UserWarning", line),
+                re.search(r"spectrafit/report/.*\.py.*UserWarning", line),  # Split report modules
+                re.search(r"spectrafit/core/.*\.py.*UserWarning", line),  # Split core modules
                 re.search(r"Downcasting object dtype arrays", line),
                 re.search(r"return correl_matrix\.fillna", line),
                 re.search(r"Error:.*No confidence interval could be calculated", line),
