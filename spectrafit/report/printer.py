@@ -88,7 +88,7 @@ class PrintingResults:
             This method is intentionally a no-op placeholder. The actual printing
             functionality was not implemented in the original codebase.
         """
-        pass  # Intentionally empty - matches original implementation
+        # Intentionally empty - matches original implementation
 
     def printing_regular_mode(self) -> None:
         """Print the fitting results in the regular mode."""
