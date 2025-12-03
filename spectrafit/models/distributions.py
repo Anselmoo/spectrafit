@@ -824,7 +824,7 @@ class DistributionModels:
                 Defaults to 0.0.
             center (float, optional): Global spectrum offset in mm/s. Defaults to 0.0.
             background (float, optional): Constant background level. Defaults to 0.0.
-            anglethetaphi (Dict[str, float], optional): Orientation angles. Defaults to None.
+            anglethetaphi (dict[str, float], optional): Orientation angles. Defaults to None.
 
         Returns:
             NDArray[np.float64]: Computed intensity array.
@@ -873,7 +873,7 @@ class DistributionModels:
             center (float, optional): Global spectrum offset in mm/s. Defaults to 0.0.
             efg_vzz (float, optional): Principal component of EFG tensor. Defaults to 1e21.
             efg_eta (float, optional): EFG asymmetry parameter. Defaults to 0.0.
-            anglethetaphi (Dict[str, float], optional): Orientation angles. Defaults to None.
+            anglethetaphi (dict[str, float], optional): Orientation angles. Defaults to None.
             temperature (float, optional): Temperature in K. Defaults to 300.0.
             sodshift (float, optional): Second-order Doppler shift in mm/s. Defaults to 0.0.
             sitefraction (float, optional): Site fraction. Defaults to 1.0.

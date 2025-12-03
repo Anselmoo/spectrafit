@@ -44,7 +44,7 @@ class PrintingResults:
         """Initialize the PrintingResults class.
 
         Args:
-            args (Dict[str,Any]): The input file arguments as a dictionary with
+            args (dict[str,Any]): The input file arguments as a dictionary with
                 additional information beyond the command line arguments.
             result (Any): The lmfit `results` as a kind of result based class.
             minimizer (Minimizer): The lmfit `Minimizer`-class as a general
@@ -68,7 +68,7 @@ class PrintingResults:
         """Print the results of the fitting process.
 
         Args:
-            args (Dict[str, Any]): The args to be printed as a dictionary.
+            args (dict[str, Any]): The args to be printed as a dictionary.
 
         """
         PrintingResults.print_tabulate_df(

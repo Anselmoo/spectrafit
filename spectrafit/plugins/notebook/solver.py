@@ -19,7 +19,7 @@ class SolverResults:
         """Initialize the SolverResults class.
 
         Args:
-            args_out (Dict[str, Any]): Dictionary of SpectraFit settings and results.
+            args_out (dict[str, Any]): Dictionary of SpectraFit settings and results.
 
         """
         self.args_out = args_out
@@ -39,7 +39,7 @@ class SolverResults:
         """Configure settings.
 
         Returns:
-            Dict[str, Any]: Configuration settings.
+            dict[str, Any]: Configuration settings.
 
         """
         return self.args_out["fit_insights"]["configurations"]
@@ -49,7 +49,7 @@ class SolverResults:
         """Get the goodness of fit values.
 
         Returns:
-            Dict[str, float]: Goodness of fit values as dictionary.
+            dict[str, float]: Goodness of fit values as dictionary.
 
         """
         return self.args_out["fit_insights"]["statistics"]
@@ -59,7 +59,7 @@ class SolverResults:
         """Get the variables of the fit.
 
         Returns:
-            Dict[str, Dict[str, float]]: Variables of the fit.
+            dict[str, Dict[str, float]]: Variables of the fit.
 
         """
         return self.args_out["fit_insights"]["variables"]
@@ -69,7 +69,7 @@ class SolverResults:
         """Get the comments about the error bars of fit values.
 
         Returns:
-            Dict[str, float]: Comments about the error bars as dictionary or dataframe.
+            dict[str, float]: Comments about the error bars as dictionary or dataframe.
 
         """
         return self.args_out["fit_insights"]["errorbars"]
@@ -79,7 +79,7 @@ class SolverResults:
         """Get the linear correlation of the components.
 
         Returns:
-            Dict[str, Any]: Linear correlation of the components as dictionary.
+            dict[str, Any]: Linear correlation of the components as dictionary.
 
         """
         return self.args_out["fit_insights"]["correlations"]
@@ -89,7 +89,7 @@ class SolverResults:
         """Get the covariance matrix.
 
         Returns:
-            Dict[str, Any]: Covariance matrix as dictionary.
+            dict[str, Any]: Covariance matrix as dictionary.
 
         """
         return self.args_out["fit_insights"]["covariance_matrix"]
@@ -99,7 +99,7 @@ class SolverResults:
         """Get the regression metrics.
 
         Returns:
-            Dict[str, Any]: Regression metrics as dictionary.
+            dict[str, Any]: Regression metrics as dictionary.
 
         """
         return self.args_out["regression_metrics"]
@@ -109,7 +109,7 @@ class SolverResults:
         """Get the descriptive statistic.
 
         Returns:
-            Dict[str, Any]: Descriptive statistic as dictionary of the spectra, fit, and
+            dict[str, Any]: Descriptive statistic as dictionary of the spectra, fit, and
                  components as dictionary.
 
         """
@@ -120,7 +120,7 @@ class SolverResults:
         """Get the linear correlation.
 
         Returns:
-            Dict[str, Any]: Linear correlation of the spectra, fit, and components
+            dict[str, Any]: Linear correlation of the spectra, fit, and components
                  as dictionary.
 
         """
@@ -131,7 +131,7 @@ class SolverResults:
         """Get the computational time.
 
         Returns:
-            Dict[str, Any]: Computational time as dictionary.
+            dict[str, Any]: Computational time as dictionary.
 
         """
         return self.args_out["fit_insights"]["computational"]
@@ -141,7 +141,7 @@ class SolverResults:
         """Confidence interval settings.
 
         Returns:
-            Union[bool, Dict[str, Any]]: Confidence interval settings.
+            Union[bool, dict[str, Any]]: Confidence interval settings.
 
         """
         if isinstance(self.args_out["conf_interval"], dict):
@@ -156,7 +156,7 @@ class SolverResults:
         """Get the confidence interval.
 
         Returns:
-            Dict[Any, Any]: Confidence interval as dictionary with or without the
+            dict[Any, Any]: Confidence interval as dictionary with or without the
                     confidence interval results.
 
         """

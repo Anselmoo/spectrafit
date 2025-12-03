@@ -73,7 +73,7 @@ def load_data(args: dict[str, str]) -> pd.DataFrame:
         columns are considered as data.
 
     Args:
-        args (Dict[str,str]): The input file arguments as a dictionary with additional
+        args (dict[str,str]): The input file arguments as a dictionary with additional
              information beyond the command line arguments.
 
     Returns:
@@ -117,7 +117,7 @@ def check_keywords_consistency(
 
     Args:
         check_args (MutableMapping[str, Any]): First dictionary to be checked.
-        ref_args (Dict[str,Any]): Second dictionary to be checked.
+        ref_args (dict[str,Any]): Second dictionary to be checked.
 
     Raises:
         KeyError: If the keywords are not consistent.

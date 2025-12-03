@@ -95,7 +95,7 @@ class ReferenceKeys:
         """Check if detection is available.
 
         Args:
-            args (Dict[str, Any]): The input file arguments as a dictionary with
+            args (dict[str, Any]): The input file arguments as a dictionary with
                  additional information beyond the command line arguments.
 
         Raises:
@@ -120,7 +120,7 @@ class AutoPeakDetection:
         Args:
             x (NDArray[np.float64]): `x`-values of the data.
             data (NDArray[np.float64]): `y`-values of the data as 1d-array.
-            args (Dict[str, Any]): The input file arguments as a dictionary with
+            args (dict[str, Any]): The input file arguments as a dictionary with
                  additional information beyond the command line arguments.
 
         """
@@ -144,7 +144,7 @@ class AutoPeakDetection:
 
         Args:
             key (str): Reference key of `scipy.signal.find_peaks`.
-            args (Dict[str, Any]): Reference values of `scipy.signal.find_peaks`, if not
+            args (dict[str, Any]): Reference values of `scipy.signal.find_peaks`, if not
                  defined will be set to estimated default values.
             value (Union[float, Tuple[float,float]]): Default value for the reference
                  key.
@@ -389,7 +389,7 @@ class ModelParameters(AutoPeakDetection):
 
         Args:
             df (pd.DataFrame): DataFrame containing the input data (`x` and `data`).
-            args (Dict[str, Any]):
+            args (dict[str, Any]):
                  Nested arguments dictionary for the model based on **one** or **two**
                  `int` keys depending if global fitting parameters, will explicit
                  defined or not.
@@ -400,7 +400,7 @@ class ModelParameters(AutoPeakDetection):
             nested dictionary structure is as follows:
 
             ```python
-            args: Dict[str, Dict[int, Dict[str, Dict[str, Union[str, int, float]]]]]
+            args: dict[str, Dict[int, Dict[str, Dict[str, Union[str, int, float]]]]]
             ```
 
         !!! info "About the fitting options"
@@ -440,7 +440,7 @@ class ModelParameters(AutoPeakDetection):
 
         Args:
             df (pd.DataFrame): DataFrame containing the input data (`x` and `data`).
-            args (Dict[str, Any]): The input file arguments as a dictionary with
+            args (dict[str, Any]): The input file arguments as a dictionary with
                  additional information beyond the command line arguments.
 
         Returns:
@@ -697,7 +697,7 @@ class ModelParameters(AutoPeakDetection):
 
         Args:
             key_1 (str): The key of the first level of the input dictionary.
-            value_1 (Dict[str, Any]): The value of the first level of the input
+            value_1 (dict[str, Any]): The value of the first level of the input
                  dictionary.
 
         """
@@ -715,7 +715,7 @@ class ModelParameters(AutoPeakDetection):
         Args:
             key_1 (str): The key of the first level of the input dictionary.
             key_2 (str): The key of the second level of the input dictionary.
-            value_2 (Dict[str, Any]): The value of the first level of the input
+            value_2 (dict[str, Any]): The value of the first level of the input
                  dictionary.
 
         """
@@ -740,7 +740,7 @@ class ModelParameters(AutoPeakDetection):
             key_1 (str): The key of the first level of the input dictionary.
             key_2 (str): The key of the second level of the input dictionary.
             key_3 (str): The key of the third level of the input dictionary.
-            value_3 (Dict[str, Any]): The value of the third level of the input
+            value_3 (dict[str, Any]): The value of the third level of the input
                  dictionary.
 
         """
@@ -775,7 +775,7 @@ class ModelParameters(AutoPeakDetection):
             key_1 (str): The key of the first level of the input dictionary.
             key_2 (str): The key of the second level of the input dictionary.
             key_3 (str): The key of the third level of the input dictionary.
-            value_3 (Dict[str, Any]): The value of the third level of the input
+            value_3 (dict[str, Any]): The value of the third level of the input
                  dictionary.
 
         """

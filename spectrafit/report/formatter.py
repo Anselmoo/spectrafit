@@ -48,11 +48,11 @@ def fit_report_as_dict(  # noqa: C901
         settings (Minimizer): The lmfit `Minimizer`-class as a general minimizer
                 for curve fitting and optimization. It is required to extract the
                 initial settings of the fit.
-        modelpars (Dict[str,  Any], optional): Known Model Parameters.
+        modelpars (dict[str,  Any], optional): Known Model Parameters.
             Defaults to None.
 
     Returns:
-         Dict[str, Dict[Any, Any]]: The report as a dictionary.
+         dict[str, Dict[Any, Any]]: The report as a dictionary.
 
     """
     result = inpars
@@ -157,10 +157,10 @@ def _extracted_computational_from_results(
         settings (Minimizer): The lmfit `Minimizer`-class as a general minimizer
                 for curve fitting and optimization. It is required to extract the
                 initial settings of the fit.
-        buffer (Dict[str, Any]): The buffer to store the results.
+        buffer (dict[str, Any]): The buffer to store the results.
 
     Returns:
-        Dict[str, Any]: The buffer with updated results.
+        dict[str, Any]: The buffer with updated results.
 
     """
     buffer["computational"]["success"] = result.success
@@ -185,12 +185,12 @@ def _extracted_gof_from_results(
 
     Args:
         result (minimize): Input Parameters from a fit or the  Minimizer results
-        buffer (Dict[str, Any]): The buffer to store the results.
+        buffer (dict[str, Any]): The buffer to store the results.
         params (Parameters): The parameters of the fit.
 
     Returns:
         minimize: The results.
-        Dict[str, Any]: The buffer with updated results.
+        dict[str, Any]: The buffer with updated results.
         Parameters: The parameters.
 
     """

@@ -54,7 +54,7 @@ class CIReport:
         """Initialize the Report object.
 
         Args:
-            ci (Dict[str, List[Tuple[float, float]]]): The confidence intervals for
+            ci (dict[str, List[Tuple[float, float]]]): The confidence intervals for
                 the parameters.
             with_offset (bool): Whether to include an offset in the report.
                 Defaults to True.
@@ -349,7 +349,7 @@ class FitReport:
             components (if enabled), and variables and values.
 
         Returns:
-            report (Dict[str, pd.DataFrame]): A dictionary containing
+            report (dict[str, pd.DataFrame]): A dictionary containing
                 the generated report.
 
         """

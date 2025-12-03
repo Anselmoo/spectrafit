@@ -226,7 +226,7 @@ def test_fit_report_init(
         sort_pars (bool): The input value for the sort_pars parameter.
         show_correl (bool): The input value for the show_correl parameter.
         min_correl (float): The input value for the min_correl parameter.
-        modelpars (Union[None, Dict[str, Parameters]]): The input value for the
+        modelpars (Union[None, dict[str, Parameters]]): The input value for the
             modelpars parameter.
         expected_parnames (List[str]): The expected parnames attribute of the
             FitReport class.

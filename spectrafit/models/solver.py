@@ -49,7 +49,7 @@ class SolverModels(ModelParameters):
 
         Args:
             df (pd.DataFrame): DataFrame containing the input data (`x` and `data`).
-            args (Dict[str, Any]): The input file arguments as a dictionary with
+            args (dict[str, Any]): The input file arguments as a dictionary with
                  additional information beyond the command line arguments.
 
         """
@@ -95,7 +95,7 @@ class SolverModels(ModelParameters):
         """Solving the fitting problem.
 
         Args:
-            params (Dict[str, Parameters]): The best optimized parameters of the fit.
+            params (dict[str, Parameters]): The best optimized parameters of the fit.
             x (NDArray[np.float64]): `x`-values of the data.
             data (NDArray[np.float64]): `y`-values of the data as 1d-array.
 
@@ -142,7 +142,7 @@ class SolverModels(ModelParameters):
 
 
         Args:
-            params (Dict[str, Parameters]): The best optimized parameters of the fit.
+            params (dict[str, Parameters]): The best optimized parameters of the fit.
             x (NDArray[np.float64]): `x`-values of the data.
             data (NDArray[np.float64]): `y`-values of the data as 2D-array.
 
@@ -180,7 +180,7 @@ def calculated_model(
         the model. Currently, `lmfit` provides only a single model, so the best-fit.
 
     Args:
-        params (Dict[str, Parameters]): The best optimized parameters of the fit.
+        params (dict[str, Parameters]): The best optimized parameters of the fit.
         x (NDArray[np.float64]): `x`-values of the data.
         df (pd.DataFrame): DataFrame containing the input data (`x` and `data`),
              as well as the best fit and the corresponding residuum. Hence, it will be

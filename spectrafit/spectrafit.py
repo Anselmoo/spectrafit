@@ -289,7 +289,7 @@ def run_fitting_workflow(
     """Run the interactive fitting workflow.
 
     Args:
-        args (Dict[str, Any]): The input file arguments as a dictionary with
+        args (dict[str, Any]): The input file arguments as a dictionary with
              additional information beyond the command line arguments.
         status (PrintingStatus, optional): Status printer for output messages.
              If None, creates a new instance. Defaults to None.
@@ -325,7 +325,7 @@ def command_line_runner(args: dict[str, Any] | None = None) -> None:
     configured in pyproject.toml. It delegates to the Typer app.
 
     Args:
-        args (Dict[str, Any], optional): The input file arguments as a
+        args (dict[str, Any], optional): The input file arguments as a
              dictionary with additional information beyond the command line arguments.
              Defaults to None. If provided, runs in programmatic mode.
 
@@ -344,14 +344,14 @@ def extracted_from_command_line_runner_with_args(
     """Extract and merge command line arguments with input file settings.
 
     Args:
-        args (Dict[str, Any]): The command line arguments.
+        args (dict[str, Any]): The command line arguments.
 
     Raises:
         KeyError: Missing key `minimizer` in `parameters`.
         KeyError: Missing key `optimizer` in `parameters`.
 
     Returns:
-        Dict[str, Any]: The merged arguments dictionary.
+        dict[str, Any]: The merged arguments dictionary.
 
     """
     _args: MutableMapping[str, Any] = read_input_file(args["input"])
@@ -398,13 +398,13 @@ def fitting_routine(
     """Run the fitting algorithm.
 
     Args:
-        args (Dict[str, Any]): The input file arguments as a dictionary with
+        args (dict[str, Any]): The input file arguments as a dictionary with
              additional information beyond the command line arguments.
         use_pipeline (bool): If True, use the new pipeline pattern. If False,
              use the legacy sequential approach. Defaults to True.
 
     Returns:
-        Tuple[pd.DataFrame, Dict[str, Any]]: Returns a DataFrame and a dictionary,
+        Tuple[pd.DataFrame, dict[str, Any]]: Returns a DataFrame and a dictionary,
              which is containing the input data (`x` and `data`), as well as the best
              fit, single contributions of each peak and the corresponding residuum. The
              dictionary contains the raw input data, the best fit, the single

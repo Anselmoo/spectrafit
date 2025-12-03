@@ -398,7 +398,7 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
         """Solves the fit problem based on the proposed model.
 
         Args:
-            initial_model (List[Dict[str, Dict[str, Dict[str, Any]]]]): List of
+            initial_model (List[dict[str, Dict[str, Dict[str, Any]]]]): List of
                  dictionary with the initial model and its fitting parameters and
                  options for the components.
             show_plot (bool, optional): Show current fit results as plot.
@@ -407,7 +407,7 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
             show_df (bool, optional): Show current fit results as dataframe. Defaults
                  to False.
             show_peaks (bool, optional): Show the peaks of fit. Defaults to False.
-            conf_interval (Union[bool,Dict[str, Any]], optional): Bool or dictionary for
+            conf_interval (Union[bool,dict[str, Any]], optional): Bool or dictionary for
                  the parameter with the parameter for calculating the confidence
                  interval. Using `conf_interval=False` turns of the calculation of
                  the confidence interval and accelerate its. Defaults to False.
@@ -417,7 +417,7 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
             line_criteria (Optional[Union[str, List[str]]], optional): Criteria for
                 the line plot. It is recommended to use attributes from
                 `regression metric` module. Defaults to None.
-            solver_settings (Optional[Dict[str, Any]], optional): Settings for
+            solver_settings (Optional[dict[str, Any]], optional): Settings for
                 the solver models, which is split into settings for `minimizer` and
                 `optimizer`.  Defaults to None.
 
