@@ -42,7 +42,7 @@ class DataFileAPI(BaseModel):
         description="File suffixes to use.",
     )
 
-    @field_validator("delimiter")
+    @field_validator("delimiter", mode="after")
     @classmethod
     def check_delimiter(cls, v: str) -> str | None:
         """Check if the delimiter is valid."""
@@ -51,7 +51,7 @@ class DataFileAPI(BaseModel):
         msg = f" {v} is not a valid delimiter."
         raise ValueError(msg)
 
-    @field_validator("comment")
+    @field_validator("comment", mode="after")
     @classmethod
     def check_comment(cls, v: str) -> str | None:
         """Check if the comment marker is valid."""

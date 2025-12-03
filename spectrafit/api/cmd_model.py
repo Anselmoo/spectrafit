@@ -61,7 +61,7 @@ class DescriptionAPI(BaseModel):
         description="Unique ID of the project",
     )
 
-    @field_validator("references")
+    @field_validator("references", mode="after")
     @classmethod
     def check_references(cls, v: list[str]) -> list[str] | None:
         """Check if the list of references have valid URLs."""

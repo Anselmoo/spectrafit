@@ -64,7 +64,7 @@ class RegressionMetricsAPI(BaseModel):
     columns: list[int]
     data: list[list[float]]
 
-    @field_validator("index")
+    @field_validator("index", mode="after")
     @classmethod
     def short_metrics(cls, v: list[str]) -> list[str]:
         """Shorten the metrics names.
@@ -101,7 +101,7 @@ class SolverAPI(BaseModel):
     regression_metrics: RegressionMetricsAPI
     variables: dict[str, dict[str, float]]
 
-    @field_validator("variables")
+    @field_validator("variables", mode="after")
     @classmethod
     def short_variables(
         cls,
