@@ -10,6 +10,7 @@ from typing import Any
 import typer
 
 from spectrafit.api.cmd_model import CMDModelAPI
+from spectrafit.core.pipeline import fitting_routine_pipeline
 from spectrafit.models.builtin import SolverModels
 from spectrafit.plotting import PlotSpectra
 from spectrafit.report import PrintingResults
@@ -296,7 +297,7 @@ def run_fitting_workflow(
     """
     if status is None:
         status = PrintingStatus()
-    
+
     status.welcome()
     while True:
         status.start()
@@ -390,12 +391,17 @@ def extracted_from_command_line_runner_with_args(
     return args
 
 
-def fitting_routine(args: dict[str, Any]) -> tuple[pd.DataFrame, dict[str, Any]]:
+def fitting_routine(
+    args: dict[str, Any],
+    use_pipeline: bool = True,
+) -> tuple[pd.DataFrame, dict[str, Any]]:
     """Run the fitting algorithm.
 
     Args:
         args (Dict[str, Any]): The input file arguments as a dictionary with
              additional information beyond the command line arguments.
+        use_pipeline (bool): If True, use the new pipeline pattern. If False,
+             use the legacy sequential approach. Defaults to True.
 
     Returns:
         Tuple[pd.DataFrame, Dict[str, Any]]: Returns a DataFrame and a dictionary,
@@ -406,6 +412,11 @@ def fitting_routine(args: dict[str, Any]) -> tuple[pd.DataFrame, dict[str, Any]]
              is extended by advanced statistical information of the fit.
 
     """
+    if use_pipeline:
+        # Use the new pipeline pattern
+        return fitting_routine_pipeline(args)
+
+    # Legacy approach (backward compatibility)
     df: pd.DataFrame = load_data(args)
     df, args = PreProcessing(df=df, args=args)()
     minimizer, result = SolverModels(df=df, args=args)()
