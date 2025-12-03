@@ -10,6 +10,7 @@ from typing import Any
 import typer
 
 from spectrafit.api.cmd_model import CMDModelAPI
+from spectrafit.core.pipeline import fitting_routine_pipeline
 from spectrafit.models.builtin import SolverModels
 from spectrafit.plotting import PlotSpectra
 from spectrafit.report import PrintingResults
@@ -62,8 +63,6 @@ class VerboseEnum(int, Enum):
     DICT = 2
 
 
-__status__ = PrintingStatus()
-
 # Create Typer app
 app = typer.Typer(
     help="Fast Fitting Program for ascii txt files.",
@@ -76,7 +75,8 @@ app = typer.Typer(
 def version_callback(value: bool) -> None:
     """Display version information."""
     if value:
-        typer.echo(__status__.version())
+        status = PrintingStatus()
+        typer.echo(status.version())
         raise typer.Exit
 
 
@@ -282,17 +282,25 @@ def cli_main(
     run_fitting_workflow(args=args_dict)
 
 
-def run_fitting_workflow(args: dict[str, Any]) -> None:
+def run_fitting_workflow(
+    args: dict[str, Any],
+    status: PrintingStatus | None = None,
+) -> None:
     """Run the interactive fitting workflow.
 
     Args:
         args (Dict[str, Any]): The input file arguments as a dictionary with
              additional information beyond the command line arguments.
+        status (PrintingStatus, optional): Status printer for output messages.
+             If None, creates a new instance. Defaults to None.
 
     """
-    __status__.welcome()
+    if status is None:
+        status = PrintingStatus()
+
+    status.welcome()
     while True:
-        __status__.start()
+        status.start()
 
         # Process arguments with input file
         processed_args = extracted_from_command_line_runner_with_args(args)
@@ -301,12 +309,12 @@ def run_fitting_workflow(args: dict[str, Any]) -> None:
         PlotSpectra(df=df_result, args=processed_args)()
         SaveResult(df=df_result, args=processed_args)()
 
-        __status__.end()
+        status.end()
 
         again = typer.confirm("Would you like to fit again?", default=False)
         if not again:
-            __status__.thanks()
-            __status__.credits()
+            status.thanks()
+            status.credits()
             return
 
 
@@ -383,12 +391,17 @@ def extracted_from_command_line_runner_with_args(
     return args
 
 
-def fitting_routine(args: dict[str, Any]) -> tuple[pd.DataFrame, dict[str, Any]]:
+def fitting_routine(
+    args: dict[str, Any],
+    use_pipeline: bool = True,
+) -> tuple[pd.DataFrame, dict[str, Any]]:
     """Run the fitting algorithm.
 
     Args:
         args (Dict[str, Any]): The input file arguments as a dictionary with
              additional information beyond the command line arguments.
+        use_pipeline (bool): If True, use the new pipeline pattern. If False,
+             use the legacy sequential approach. Defaults to True.
 
     Returns:
         Tuple[pd.DataFrame, Dict[str, Any]]: Returns a DataFrame and a dictionary,
@@ -399,6 +412,11 @@ def fitting_routine(args: dict[str, Any]) -> tuple[pd.DataFrame, dict[str, Any]]
              is extended by advanced statistical information of the fit.
 
     """
+    if use_pipeline:
+        # Use the new pipeline pattern
+        return fitting_routine_pipeline(args)
+
+    # Legacy approach (backward compatibility)
     df: pd.DataFrame = load_data(args)
     df, args = PreProcessing(df=df, args=args)()
     minimizer, result = SolverModels(df=df, args=args)()

@@ -290,7 +290,13 @@ class TestPreProcessing:
             "smooth": None,
             "column": ["energy", "intensity"],
         }
-        assert PreProcessing(random_dataframe, args)()[1] == args
+        _, returned_args = PreProcessing(random_dataframe, args)()
+        # Check that original args are unchanged (immutability)
+        assert "data_statistic" not in args
+        # Check that returned args contain original keys plus data_statistic
+        assert all(k in returned_args for k in args)
+        assert "data_statistic" in returned_args
+        assert returned_args["data_statistic"] is not None
 
     def test_keyword_fail(self, random_dataframe: pd.DataFrame) -> None:
         """Testing energy range for no range."""

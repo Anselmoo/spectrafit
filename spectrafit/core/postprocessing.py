@@ -46,7 +46,7 @@ class PostProcessing:
             result (Any): The result of the minimization of the best fit.
 
         """
-        self.args = args
+        self.args = args.copy()  # Work with a copy to avoid side effects
         self.df = self.rename_columns(df=df)
         self.minimizer = minimizer
         self.result = result

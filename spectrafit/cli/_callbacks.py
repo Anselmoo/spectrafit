@@ -7,11 +7,9 @@ import typer
 from spectrafit.report import PrintingStatus
 
 
-__status__ = PrintingStatus()
-
-
 def version_callback(value: bool) -> None:
     """Display version information."""
     if value:
-        typer.echo(__status__.version())
+        status = PrintingStatus()
+        typer.echo(status.version())
         raise typer.Exit
