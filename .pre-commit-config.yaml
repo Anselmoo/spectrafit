@@ -29,6 +29,7 @@ repos:
     rev: v1.18.2
     hooks:
       - id: mypy
+        exclude: ".*/test/test_.*\\.py$"
         additional_dependencies:
           [
             types-toml>=0.10.8.7,
