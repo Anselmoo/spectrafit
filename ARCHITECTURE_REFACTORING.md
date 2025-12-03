@@ -15,7 +15,7 @@ All Phase 2 objectives have been successfully completed:
 
 ### 1.1 `models/builtin.py` → Split into Specialized Modules
 
-**Before:** 1899 lines in a single file  
+**Before:** 1899 lines in a single file
 **After:** Organized into focused modules (now just 36 lines as re-export facade)
 
 - **`models/distributions.py`** (783 lines)
@@ -39,7 +39,7 @@ All Phase 2 objectives have been successfully completed:
 
 ### 1.2 `report.py` → Split into Reporting Modules
 
-**Before:** 937 lines in a single file  
+**Before:** 937 lines in a single file
 **After:** Organized into specialized reporting modules
 
 - **`report/metrics.py`** (182 lines)
@@ -61,7 +61,7 @@ All Phase 2 objectives have been successfully completed:
 
 ### 1.3 `tools.py` → Split into Core Utilities
 
-**Before:** 769 lines in a single file  
+**Before:** 769 lines in a single file
 **After:** Organized into core functionality modules (now just 39 lines as re-export facade)
 
 - **`core/data_loader.py`** (199 lines)
@@ -83,7 +83,7 @@ All Phase 2 objectives have been successfully completed:
 
 ### 1.4 `plugins/notebook.py` → Split into Notebook Components
 
-**Before:** 1412 lines in a single file  
+**Before:** 1412 lines in a single file
 **After:** Organized into specialized notebook modules
 
 - **`plugins/notebook/display.py`** (114 lines)

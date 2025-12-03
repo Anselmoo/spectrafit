@@ -174,7 +174,9 @@ class FittingPipeline:
         return postprocessor()
 
 
-def fitting_routine_pipeline(args: dict[str, Any]) -> tuple[pd.DataFrame, dict[str, Any]]:
+def fitting_routine_pipeline(
+    args: dict[str, Any],
+) -> tuple[pd.DataFrame, dict[str, Any]]:
     """Run the fitting algorithm using the pipeline pattern.
 
     This is a convenience function that creates and runs a FittingPipeline.

@@ -189,7 +189,7 @@ class ConfigLoader:
             dict[str, Any]: Configuration dictionary from environment.
 
         """
-        config = {}
+        config: dict[str, Any] = {}
         for key, value in os.environ.items():
             if key.startswith(prefix):
                 # Remove prefix and convert to lowercase
