@@ -199,21 +199,22 @@ class TestFileFormatOutput:
 
     def test_outputs(self, script_runner: Any, tmp_path: Path) -> None:
         """Testing correct number of outputs (isolated temp output)."""
-        from spectrafit.test.conftest import create_stdin
         import json
-        
+
+        from spectrafit.test.conftest import create_stdin
+
         # Create output directory
         export_dir = tmp_path / "export"
         export_dir.mkdir(parents=True, exist_ok=True)
-        
+
         # Create a temporary copy of the input file with the output path modified
-        with open("spectrafit/test/scripts/test_input_2.json") as f:
+        with Path("spectrafit/test/scripts/test_input_2.json").open() as f:
             input_data = json.load(f)
-        
+
         input_data["settings"]["outfile"] = f"{export_dir}/fit_results"
-        
+
         temp_input = tmp_path / "test_input_2_temp.json"
-        with open(temp_input, "w") as f:
+        with temp_input.open("w") as f:
             json.dump(input_data, f)
 
         _ = script_runner.run(
