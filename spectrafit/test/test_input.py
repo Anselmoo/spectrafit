@@ -197,20 +197,38 @@ class TestFileFormat:
 class TestFileFormatOutput:
     """Testing the output files and formats."""
 
-    def test_outputs(self, script_runner: Any) -> None:
-        """Testing correct number of outputs."""
+    def test_outputs(self, script_runner: Any, tmp_path: Path) -> None:
+        """Testing correct number of outputs (isolated temp output)."""
+        import json
+
         from spectrafit.test.conftest import create_stdin
+
+        # Create output directory
+        export_dir = tmp_path / "export"
+        export_dir.mkdir(parents=True, exist_ok=True)
+
+        # Create a temporary copy of the input file with the output path modified
+        with Path("spectrafit/test/scripts/test_input_2.json").open() as f:
+            input_data = json.load(f)
+
+        input_data["settings"]["outfile"] = f"{export_dir}/fit_results"
+
+        temp_input = tmp_path / "test_input_2_temp.json"
+        with temp_input.open("w") as f:
+            json.dump(input_data, f)
 
         _ = script_runner.run(
             "spectrafit",
             "fit",
             "_",
             "-i",
-            "spectrafit/test/scripts/test_input_2.json",
+            str(temp_input),
             stdin=create_stdin("n\n"),
         )
-        assert len(list(Path().glob("spectrafit/test/export/fit_results*.json"))) == 2
-        assert len(list(Path().glob("spectrafit/test/export/fit_results*.csv"))) == 6
+        # Look inside the dedicated temp output folder
+        # test_input_2.json generates 1 JSON summary file and 3 CSV files
+        assert len(list(export_dir.glob("fit_results*.json"))) == 1
+        assert len(list(export_dir.glob("fit_results*.csv"))) == 3
 
 
 class TestMoreFeatures:

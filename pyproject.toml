@@ -200,7 +200,12 @@ extend-ignore = [
 ]
 "spectrafit/models/moessbauer.py" = ["N813", "PLR0913"]
 "spectrafit/models/builtin.py" = ["PLR0913"]
+"spectrafit/models/solver.py" = ["PLR0913"]
+"spectrafit/models/distributions.py" = ["PLR0913"]
 "spectrafit/api/*_model.py" = ["TC001", "TC003"]
+"spectrafit/core/*.py" = ["TC001", "TC002"]
+"spectrafit/report/*.py" = ["TC001", "TC002"]
+"spectrafit/plugins/notebook/*.py" = ["TC001", "TC002"]
 "spectrafit/plugins/rixs_visualizer.py" = ["N803"]
 "spectrafit/plugins/color_schemas.py" = ["RUF012"]
 "spectrafit/plugins/test/test_notebook.py" = ["SLF001"]
@@ -273,7 +278,7 @@ disallow_untyped_defs = true
 pretty = true
 show_error_context = true
 show_error_codes = true
-exclude = "**/test/test_*.py"
+exclude = ".*/test/test_.*\\.py$"
 
 [tool.pydantic-mypy]
 init_forbid_extra = true
