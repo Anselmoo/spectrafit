@@ -43,7 +43,9 @@ class PreProcessing:
 
         """
         df_copy: pd.DataFrame = self.df.copy()
-        self.args["data_statistic"] = df_copy.describe(
+        # Create a new dictionary instead of modifying the original
+        args_copy = self.args.copy()
+        args_copy["data_statistic"] = df_copy.describe(
             percentiles=np.arange(0.1, 1.0, 0.1).tolist(),
         ).to_dict(orient="split")
         try:
@@ -61,7 +63,7 @@ class PreProcessing:
         except KeyError as e:
             msg = f"Missing required preprocessing key: {e}"
             raise KeyError(msg) from e
-        return (df_copy, self.args)
+        return (df_copy, args_copy)
 
     @staticmethod
     def energy_range(df: pd.DataFrame, args: dict[str, Any]) -> pd.DataFrame:
