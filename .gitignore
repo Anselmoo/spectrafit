@@ -233,3 +233,7 @@ spectrafit/plugins/dev_notebook.ipynb
 junit.xml
 bandit-report.html
 .serena/
+
+# Test artifacts
+/fit_results_summary.json
+/plots/*.pdf
