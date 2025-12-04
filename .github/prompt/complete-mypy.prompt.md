@@ -1,5 +1,5 @@
 ---
-mode: "agent"
+agent: agent
 tools: ["githubRepo", "codebase", "new"]
 description: "Complete type checking for the provided Python file using mypy in test driven fashion."
 ---

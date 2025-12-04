@@ -98,6 +98,11 @@ spectrafit = "spectrafit.cli.main:run"
 spectrafit-rixs-visualizer = "spectrafit.plugins.rixs_visualizer:command_line_runner"
 spectrafit-jupyter = "spectrafit.app.app:jupyter"
 
+[project.entry-points."spectrafit.plugins"]
+rixs = "spectrafit.plugins.rixs_plugin:RIXSPlugin"
+jupyter = "spectrafit.plugins.jupyter_plugin:JupyterPlugin"
+moessbauer = "spectrafit.plugins.moessbauer_plugin:MoessbauerPlugin"
+
 [dependency-groups]
 dev = [
   "bandit>=1.7.10",

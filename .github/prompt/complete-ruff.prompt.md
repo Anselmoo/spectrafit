@@ -1,5 +1,5 @@
 ---
-mode: "agent"
+agent: agent
 tools: ["githubRepo", "codebase", "new"]
 description: "Complete linting for the provided Python file using ruff in test driven fashon."
 ---

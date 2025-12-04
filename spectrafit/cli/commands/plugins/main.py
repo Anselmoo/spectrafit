@@ -1,11 +1,20 @@
-"""Main plugins command group for SpectraFit CLI."""
+"""Main plugins command group for SpectraFit CLI.
+
+This module manages the plugin system and registers plugin commands.
+"""
 
 from __future__ import annotations
+
+import logging
 
 from typing import Annotated
 
 import typer
 
+from spectrafit.plugins import get_plugin_registry
+
+
+logger = logging.getLogger(__name__)
 
 # Create plugins Typer app
 plugins_app = typer.Typer(
@@ -14,16 +23,6 @@ plugins_app = typer.Typer(
     context_settings={"help_option_names": ["-h", "--help"]},
     no_args_is_help=True,
 )
-
-
-# Plugin metadata for discovery
-AVAILABLE_PLUGINS: dict[str, dict[str, str]] = {
-    "rixs": {
-        "name": "RIXS Visualizer",
-        "description": "Interactive RIXS plane viewer for 2D/3D visualization",
-        "module": "spectrafit.cli.commands.plugins.rixs",
-    },
-}
 
 
 @plugins_app.command(name="list")
@@ -38,50 +37,54 @@ def list_plugins(
     ] = False,
 ) -> None:
     """List all available SpectraFit plugins."""
+    registry = get_plugin_registry()
+
     typer.echo("\n📦 Available SpectraFit Plugins:\n")
 
-    for plugin_id, info in AVAILABLE_PLUGINS.items():
+    # List built-in plugins
+    builtin_plugins = registry.list_available_builtins()
+    for plugin_name in builtin_plugins:
+        plugin = registry.load_builtin_plugin(plugin_name)
+        if plugin:
+            if verbose:
+                typer.echo(f"  {plugin.name}:")
+                typer.echo(f"    Version: {plugin.version}")
+                typer.echo(f"    Description: {plugin.description}")
+                typer.echo()
+            else:
+                typer.echo(f"  • {plugin.name}: {plugin.description}")
+
+    # Discover and list external plugins
+    for _discovered_count, plugin in enumerate(registry.discover_plugins(), start=1):
         if verbose:
-            typer.echo(f"  {plugin_id}:")
-            typer.echo(f"    Name: {info['name']}")
-            typer.echo(f"    Description: {info['description']}")
-            typer.echo(f"    Module: {info['module']}")
+            typer.echo(f"  {plugin.name} (external):")
+            typer.echo(f"    Version: {plugin.version}")
+            typer.echo(f"    Description: {plugin.description}")
             typer.echo()
         else:
-            typer.echo(f"  • {plugin_id}: {info['name']}")
+            typer.echo(f"  • {plugin.name} (external): {plugin.description}")
 
     if not verbose:
         typer.echo("\n  Use 'spectrafit plugins <plugin> --help' for plugin details.")
         typer.echo("  Use 'spectrafit plugins list -v' for verbose output.")
 
 
-# Import and register RIXS plugin commands
-# This is done lazily to avoid import errors if dependencies are missing
-def _register_rixs_plugin() -> None:
-    """Register RIXS visualizer plugin commands."""
-    try:
-        from spectrafit.cli.commands.plugins.rixs import rixs
+def _register_builtin_plugins() -> None:
+    """Register built-in plugin commands."""
+    registry = get_plugin_registry()
 
-        plugins_app.command(
-            name="rixs",
-            help="Launch the RIXS Visualizer for interactive 2D/3D visualization.",
-        )(rixs)
-    except ImportError as import_error:
-        # Create a placeholder command that shows the import error
-        error_msg = str(import_error)
-
-        @plugins_app.command(name="rixs")
-        def rixs_unavailable() -> None:
-            """RIXS Visualizer (dependencies not installed)."""
-            typer.echo(
-                "❌ RIXS Visualizer is not available. "
-                "Install required dependencies with:",
-                err=True,
-            )
-            typer.echo("   pip install spectrafit[jupyter-dash]", err=True)
-            typer.echo(f"\n   Error: {error_msg}", err=True)
-            raise typer.Exit(1)
+    # Load and register built-in plugins
+    for plugin_name in registry.list_available_builtins():
+        try:
+            plugin = registry.load_builtin_plugin(plugin_name)
+            if plugin:
+                plugin.register_commands(plugins_app)
+                logger.info("Registered plugin: %s", plugin.name)
+        except ImportError as e:
+            logger.warning("Failed to load plugin %s: %s", plugin_name, e)
+        except (TypeError, AttributeError):
+            logger.exception("Error registering plugin %s", plugin_name)
 
 
 # Register plugins on import
-_register_rixs_plugin()
+_register_builtin_plugins()
