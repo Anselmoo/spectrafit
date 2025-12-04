@@ -1,5 +1,5 @@
 ---
-mode: "agent"
+agent: agent
 tools: ["githubRepo", "codebase", "#new"]
 description: "Refactor the provided Python file to apply the Abstract Factory design pattern."
 ---

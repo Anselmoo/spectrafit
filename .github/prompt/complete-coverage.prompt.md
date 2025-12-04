@@ -1,5 +1,5 @@
 ---
-mode: "agent"
+agent: agent
 tools: ["githubRepo", "codebase", "new"]
 description: "Iteratively complete unit-tests for exclusive coverage using pytest and JSON coverage reports."
 ---

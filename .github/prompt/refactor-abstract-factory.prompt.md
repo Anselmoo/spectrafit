@@ -1,5 +1,5 @@
 ---
-mode: "agent"
+agent: agent
 tools: ["githubRepo", "codebase"]
 description: "Refactor the provided Python file to apply the Abstract Factory and Facade design patterns."
 ---
