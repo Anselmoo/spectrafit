@@ -336,7 +336,7 @@ class TestModelParametersSolver:
         """Fixture for args.
 
         Returns:
-            Dict[str, Any]: Add args for testing.
+            dict[str, Any]: Add args for testing.
 
         """
         return {

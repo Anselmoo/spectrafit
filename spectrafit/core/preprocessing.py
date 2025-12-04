@@ -21,7 +21,7 @@ class PreProcessing:
             df (pd.DataFrame): DataFrame containing the input data (`x` and `data`),
                  as well as the best fit and the corresponding residuum. Hence, it will
                  be extended by the single contribution of the model.
-            args (Dict[str,Any]): The input file arguments as a dictionary with
+            args (dict[str,Any]): The input file arguments as a dictionary with
                  additional information beyond the command line arguments.
 
         """
@@ -39,7 +39,7 @@ class PreProcessing:
                     2. shifted
                     3. linear oversampled
                     4. smoothed
-            Dict[str,Any]: Adding a descriptive statistics to the input dictionary.
+            dict[str,Any]: Adding a descriptive statistics to the input dictionary.
 
         """
         df_copy: pd.DataFrame = self.df.copy()
@@ -73,7 +73,7 @@ class PreProcessing:
             df (pd.DataFrame): DataFrame containing the input data (`x` and `data`),
                  as well as the best fit and the corresponding residuum. Hence, it will
                  be extended by the single contribution of the model.
-            args (Dict[str,Any]): The input file arguments as a dictionary with
+            args (dict[str,Any]): The input file arguments as a dictionary with
                  additional information beyond the command line arguments.
 
         Returns:
@@ -107,7 +107,7 @@ class PreProcessing:
             df (pd.DataFrame): DataFrame containing the input data (`x` and `data`),
                  as well as the best fit and the corresponding residuum. Hence, it will
                  be extended by the single contribution of the model.
-            args (Dict[str,Any]): The input file arguments as a dictionary with
+            args (dict[str,Any]): The input file arguments as a dictionary with
                  additional information beyond the command line arguments.
 
         Returns:
@@ -135,7 +135,7 @@ class PreProcessing:
             df (pd.DataFrame): DataFrame containing the input data (`x` and `data`),
                  as well as the best fit and the corresponding residuum. Hence, it will
                  be extended by the single contribution of the model.
-            args (Dict[str,Any]): The input file arguments as a dictionary with
+            args (dict[str,Any]): The input file arguments as a dictionary with
                  additional information beyond the command line arguments.
 
         Returns:
@@ -161,7 +161,7 @@ class PreProcessing:
 
         Args:
             df (pd.DataFrame): DataFrame containing the input data (`x` and `data`).
-            args (Dict[str,Any]): The input file arguments as a dictionary with
+            args (dict[str,Any]): The input file arguments as a dictionary with
                  additional information beyond the command line arguments.
 
         Returns:

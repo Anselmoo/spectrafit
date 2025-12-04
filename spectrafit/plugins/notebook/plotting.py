@@ -390,7 +390,7 @@ class DataFramePlot:
             args_plot (PlotAPI): PlotAPI object for the settings of the plot.
 
         Returns:
-            Dict[str, Union[str, bool]]: Dictionary with the minor axis arguments.
+            dict[str, Union[str, bool]]: Dictionary with the minor axis arguments.
 
         """
         return {

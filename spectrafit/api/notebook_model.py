@@ -153,6 +153,7 @@ class ColorAPI(BaseModel):
         "zero_line",
         "ticks",
         "font",
+        mode="after",
         check_fields=False,
     )
     @classmethod

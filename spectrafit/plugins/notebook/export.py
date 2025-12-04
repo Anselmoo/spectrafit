@@ -52,7 +52,7 @@ class ExportResults:
         """Export the results as toml file.
 
         Args:
-            report (Dict[Any, Any]): Results as dictionary to export.
+            report (dict[Any, Any]): Results as dictionary to export.
             args (FnameAPI): Arguments for the file export including the path, prefix,
                  and suffix.
 
@@ -114,13 +114,13 @@ class ExportReport(SolverResults):
 
         Args:
             description (DescriptionAPI): Description of the fit project.
-            initial_model (List[Dict[str, Dict[str, Dict[str, Any]]]]): Initial model
+            initial_model (List[dict[str, Dict[str, Dict[str, Any]]]]): Initial model
                  for the fit.
             pre_processing (DataPreProcessingAPI): Data pre-processing settings.
             settings_solver_models (SolverModelsAPI): Solver models settings.
             fname (FnameAPI): Filename of the fit project including the path, prefix,
                  and suffix.
-            args_out (Dict[str, Any]): Dictionary of SpectraFit settings and results.
+            args_out (dict[str, Any]): Dictionary of SpectraFit settings and results.
             df_org (pd.DataFrame): Dataframe of the original data for performing
                  the fit.
             df_fit (pd.DataFrame): Dataframe of the final fit data.
@@ -206,7 +206,7 @@ class ExportReport(SolverResults):
             from the dictionary, which are hidden in the nested dictionaries.
 
         Returns:
-            Dict[str, Any]: Report as dictionary by using the `.model_dump()` option of
+            dict[str, Any]: Report as dictionary by using the `.model_dump()` option of
                  pydantic. `None` is excluded.
 
         """

@@ -162,7 +162,7 @@ def moessbauer_sextet(
         fwhml (float): Full width at half maximum (FWHM) in mm/s. Defaults to 0.25.
         amplitude (float): Total amplitude of the sextet. Defaults to 1.0.
         center (float): Global spectrum offset in mm/s. Defaults to 0.0.
-        angle_theta_phi (Dict[str, float]): Orientation angles of the magnetic field
+        angle_theta_phi (dict[str, float]): Orientation angles of the magnetic field
             relative to the gamma ray direction. Defaults to {"theta": 0.0, "phi": 0.0}.
         quadrupole_shift (float): First-order quadrupole shift in mm/s. Defaults to 0.0.
         background (float, optional): Constant background level. Defaults to 0.0.
@@ -272,7 +272,7 @@ def moessbauer_octet(
         efg_vzz (float): Principal component of the electric field gradient tensor
             in V/m². Defaults to 1e21.
         efg_eta (float): EFG asymmetry parameter. Defaults to 0.0.
-        angle_theta_phi (Dict[str, float]): Orientation angles of the magnetic field
+        angle_theta_phi (dict[str, float]): Orientation angles of the magnetic field
             relative to the EFG principal axis system. Defaults to {"theta": 0.0, "phi": 0.0}.
         temperature (float): Temperature in K for second-order Doppler shift
             calculation. Defaults to 300.0.

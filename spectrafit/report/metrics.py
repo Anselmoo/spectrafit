@@ -150,7 +150,7 @@ class RegressionMetrics:
         """Calculate the regression metrics of the Fit(s) for the post analysis.
 
         Returns:
-            Dict[Hashable, Any]: Dictionary containing the regression metrics.
+            dict[Hashable, Any]: Dictionary containing the regression metrics.
 
         """
         metrics_fnc = (

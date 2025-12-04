@@ -74,7 +74,7 @@ class SaveResult:
             df (pd.DataFrame): DataFrame containing the input data (`x` and `data`),
                  as well as the best fit and the corresponding residuum. Hence, it will
                  be extended by the single contribution of the model.
-            args (Dict[str,Any]): The input file arguments as a dictionary with
+            args (dict[str,Any]): The input file arguments as a dictionary with
                  additional information beyond the command line arguments.
 
         """
@@ -127,11 +127,11 @@ def exclude_none_dictionary(value: dict[str, Any]) -> dict[str, Any]:
     """Exclude `None` values from the dictionary.
 
     Args:
-        value (Dict[str, Any]): Dictionary to be processed to
+        value (dict[str, Any]): Dictionary to be processed to
             exclude `None` values.
 
     Returns:
-        Dict[str, Any]: Dictionary without `None` values.
+        dict[str, Any]: Dictionary without `None` values.
 
     """
     if isinstance(value, list):
@@ -147,11 +147,11 @@ def transform_nested_types(value: dict[str, Any]) -> dict[str, Any]:
     """Transform nested types numpy values to python values.
 
     Args:
-        value (Dict[str, Any]): Dictionary to be processed to
+        value (dict[str, Any]): Dictionary to be processed to
             transform numpy values to python values.
 
     Returns:
-        Dict[str, Any]: Dictionary with python values.
+        dict[str, Any]: Dictionary with python values.
 
     """
     if isinstance(value, list):

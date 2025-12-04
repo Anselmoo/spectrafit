@@ -13,11 +13,11 @@ def list2dict(
     """Convert the list of peaks to dictionary.
 
     Args:
-        peak_list (List[Dict[str, Dict[str, Dict[str, Any]]]]): List of dictionary
+        peak_list (List[dict[str, Dict[str, Dict[str, Any]]]]): List of dictionary
              with the initial fitting parameters for the peaks.
 
     Returns:
-        Dict[str, Dict[str, Dict[str, Any]]]: Dictionary with the initial fitting
+        dict[str, Dict[str, Dict[str, Any]]]: Dictionary with the initial fitting
              parameters for the peaks.
 
     """
@@ -38,7 +38,7 @@ def remove_none_type(d: Any) -> dict[str, Any] | list[Any]:
         d (Any): Dictionary to be cleaned.
 
     Returns:
-        Union[Dict[str, Any], List[Any]]: Dictionary without None type.
+        Union[dict[str, Any], List[Any]]: Dictionary without None type.
 
     """
     if isinstance(d, dict):
