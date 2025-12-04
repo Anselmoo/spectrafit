@@ -14,7 +14,7 @@ from spectrafit.plugins.protocol import SpectraFitPlugin
 
 
 __all__ = [
-    "SpectraFitPlugin",
     "PluginRegistry",
+    "SpectraFitPlugin",
     "get_plugin_registry",
 ]

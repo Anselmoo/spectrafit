@@ -5,15 +5,9 @@ This plugin provides Mössbauer spectroscopy models and utilities.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-
 import typer
 
 from spectrafit.plugins.protocol import SpectraFitPlugin
-
-
-if TYPE_CHECKING:
-    pass
 
 
 class MoessbauerPlugin:
@@ -25,7 +19,9 @@ class MoessbauerPlugin:
 
     name = "moessbauer"
     version = "1.0.0"
-    description = "Mössbauer spectroscopy models for singlet, doublet, sextet, and octet patterns"
+    description = (
+        "Mössbauer spectroscopy models for singlet, doublet, sextet, and octet patterns"
+    )
 
     def register_commands(self, parent_app: typer.Typer) -> None:
         """Register Mössbauer-related commands with the parent Typer app.
@@ -44,9 +40,13 @@ class MoessbauerPlugin:
             typer.echo("Available models:")
             typer.echo("  • moessbauer_singlet  - Single absorption line")
             typer.echo("  • moessbauer_doublet  - Two-line quadrupole splitting")
-            typer.echo("  • moessbauer_sextet   - Six-line magnetic hyperfine splitting")
+            typer.echo(
+                "  • moessbauer_sextet   - Six-line magnetic hyperfine splitting"
+            )
             typer.echo("  • moessbauer_octet    - Eight-line complex pattern")
-            typer.echo("\nThese models are available for use in fitting configuration files.")
+            typer.echo(
+                "\nThese models are available for use in fitting configuration files."
+            )
             typer.echo(
                 "\nFor detailed documentation, visit: "
                 "https://anselmoo.github.io/spectrafit/\n"
@@ -66,5 +66,9 @@ class MoessbauerPlugin:
             return []
 
 
-# Ensure this is recognized as a SpectraFitPlugin
-assert isinstance(MoessbauerPlugin(), SpectraFitPlugin)
+# Verify protocol implementation at module load time
+if __name__ != "__main__":
+    _plugin_instance = MoessbauerPlugin()
+    if not isinstance(_plugin_instance, SpectraFitPlugin):
+        msg = "MoessbauerPlugin does not implement SpectraFitPlugin protocol"
+        raise TypeError(msg)

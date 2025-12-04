@@ -2,9 +2,13 @@
 
 from __future__ import annotations
 
-import typer
+from typing import TYPE_CHECKING
 
 from spectrafit.plugins.protocol import SpectraFitPlugin
+
+
+if TYPE_CHECKING:
+    import typer
 
 
 def test_plugin_protocol_attributes():
@@ -23,6 +27,7 @@ def test_plugin_protocol_methods():
 
 def test_plugin_implementation():
     """Test a simple plugin implementation."""
+    import typer  # noqa: PLC0415
 
     class TestPlugin:
         name = "test-plugin"
@@ -32,7 +37,7 @@ def test_plugin_implementation():
         def register_commands(self, parent_app: typer.Typer) -> None:
             @parent_app.command(name="test")
             def test_command() -> None:
-                print("Test command")
+                """Test command."""
 
         def register_models(self) -> list[type]:
             return []

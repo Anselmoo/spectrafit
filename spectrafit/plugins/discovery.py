@@ -11,7 +11,6 @@ import importlib.metadata
 import logging
 
 from typing import TYPE_CHECKING
-from typing import Any
 
 from spectrafit.plugins.protocol import SpectraFitPlugin
 

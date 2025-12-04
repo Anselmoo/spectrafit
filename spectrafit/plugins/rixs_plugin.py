@@ -6,16 +6,11 @@ This plugin provides interactive RIXS plane visualization capabilities.
 from __future__ import annotations
 
 from pathlib import Path
-from typing import TYPE_CHECKING
 from typing import Annotated
 
 import typer
 
 from spectrafit.plugins.protocol import SpectraFitPlugin
-
-
-if TYPE_CHECKING:
-    pass
 
 
 class RIXSPlugin:
@@ -124,13 +119,15 @@ class RIXSPlugin:
             List of RIXS-related Pydantic models.
         """
         try:
-            from spectrafit.api.rixs_model import MainTitleAPI
-            from spectrafit.api.rixs_model import RIXSModelAPI
-            from spectrafit.api.rixs_model import SizeRatioAPI
-            from spectrafit.api.rixs_model import XAxisAPI
-            from spectrafit.api.rixs_model import YAxisAPI
-            from spectrafit.api.rixs_model import ZAxisAPI
-
+            from spectrafit.api.rixs_model import MainTitleAPI  # noqa: PLC0415
+            from spectrafit.api.rixs_model import RIXSModelAPI  # noqa: PLC0415
+            from spectrafit.api.rixs_model import SizeRatioAPI  # noqa: PLC0415
+            from spectrafit.api.rixs_model import XAxisAPI  # noqa: PLC0415
+            from spectrafit.api.rixs_model import YAxisAPI  # noqa: PLC0415
+            from spectrafit.api.rixs_model import ZAxisAPI  # noqa: PLC0415
+        except ImportError:
+            return []
+        else:
             return [
                 RIXSModelAPI,
                 SizeRatioAPI,
@@ -139,9 +136,11 @@ class RIXSPlugin:
                 ZAxisAPI,
                 MainTitleAPI,
             ]
-        except ImportError:
-            return []
 
 
-# Ensure this is recognized as a SpectraFitPlugin
-assert isinstance(RIXSPlugin(), SpectraFitPlugin)
+# Verify protocol implementation at module load time
+if __name__ != "__main__":
+    _plugin_instance = RIXSPlugin()
+    if not isinstance(_plugin_instance, SpectraFitPlugin):
+        msg = "RIXSPlugin does not implement SpectraFitPlugin protocol"
+        raise TypeError(msg)

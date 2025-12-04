@@ -5,15 +5,9 @@ This plugin provides Jupyter notebook integration and visualization capabilities
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-
 import typer
 
 from spectrafit.plugins.protocol import SpectraFitPlugin
-
-
-if TYPE_CHECKING:
-    pass
 
 
 class JupyterPlugin:
@@ -25,7 +19,9 @@ class JupyterPlugin:
 
     name = "jupyter"
     version = "1.0.0"
-    description = "Jupyter notebook integration for interactive fitting and visualization"
+    description = (
+        "Jupyter notebook integration for interactive fitting and visualization"
+    )
 
     def register_commands(self, parent_app: typer.Typer) -> None:
         """Register Jupyter-related commands with the parent Typer app.
@@ -79,5 +75,9 @@ class JupyterPlugin:
             return []
 
 
-# Ensure this is recognized as a SpectraFitPlugin
-assert isinstance(JupyterPlugin(), SpectraFitPlugin)
+# Verify protocol implementation at module load time
+if __name__ != "__main__":
+    _plugin_instance = JupyterPlugin()
+    if not isinstance(_plugin_instance, SpectraFitPlugin):
+        msg = "JupyterPlugin does not implement SpectraFitPlugin protocol"
+        raise TypeError(msg)
