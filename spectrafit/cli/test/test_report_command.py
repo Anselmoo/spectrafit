@@ -346,16 +346,15 @@ class TestReportCommandOutputFormat:
 
     def test_report_json_output_valid(self, sample_results_file):
         """Test that JSON output is valid JSON."""
+        import contextlib
+
         result = runner.invoke(
             app, ["report", str(sample_results_file), "--format", "json"]
         )
         if result.exit_code == 0:
             # Try to parse as JSON
-            try:
+            with contextlib.suppress(json.JSONDecodeError):
                 json.loads(result.output)
-            except json.JSONDecodeError:
-                # If it's not valid JSON, the test should be aware
-                pass
 
     def test_report_file_output_success_message(
         self, sample_results_file, temp_dir

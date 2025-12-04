@@ -300,7 +300,8 @@ class TestConvertCommandErrors:
         )
         assert result.exit_code != 0
         # Will fail with "exists" error since it checks existence first
-        assert "same" in result.output.lower() or "cannot" in result.output.lower() or "exists" in result.output.lower()
+        output_lower = result.output.lower()
+        assert "same" in output_lower or "cannot" in output_lower or "exists" in output_lower
 
 
 class TestConvertCommandForceOption:
