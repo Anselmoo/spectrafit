@@ -473,10 +473,10 @@ Document all breaking changes:
 
 ### Migration Checklist
 
-- [x] All `sys.exit()` calls removed from business logic
-- [x] All argparse code removed ✅
+- [ ] All `sys.exit()` calls removed from business logic
+- [ ] All argparse code removed ✅
 - [ ] All CLI tests use `CliRunner`
-- [x] All `.dict()` calls replaced with `.model_dump()`
+- [ ] All `.dict()` calls replaced with `.model_dump()`
 - [ ] Backward compatibility tested with v1.x input files
 - [ ] Performance benchmarks pass
 - [ ] Documentation updated
