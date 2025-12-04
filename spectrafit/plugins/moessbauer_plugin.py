@@ -59,11 +59,13 @@ class MoessbauerPlugin:
             List of Mössbauer-related Pydantic models.
         """
         try:
-            from spectrafit.api.physical_constants import MoessbauerConstants
-
-            return [MoessbauerConstants]
+            from spectrafit.api.physical_constants import (  # noqa: PLC0415
+                MoessbauerConstants,
+            )
         except ImportError:
             return []
+        else:
+            return [MoessbauerConstants]
 
 
 # Verify protocol implementation at module load time

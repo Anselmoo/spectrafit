@@ -36,15 +36,15 @@ import typer
 
 class SpectraFitPlugin(Protocol):
     """Protocol for SpectraFit plugins."""
-    
+
     name: str
     version: str
     description: str
-    
+
     def register_commands(self, parent_app: typer.Typer) -> None:
         """Register CLI commands with the parent Typer app."""
         ...
-    
+
     def register_models(self) -> list[type]:
         """Return list of Pydantic models this plugin provides."""
         ...
@@ -127,12 +127,12 @@ class MyPlugin:
     name = "my-plugin"
     version = "1.0.0"
     description = "My custom plugin"
-    
+
     def register_commands(self, parent_app: typer.Typer) -> None:
         @parent_app.command(name="mycommand")
         def my_command() -> None:
             print("Hello from my plugin!")
-    
+
     def register_models(self) -> list[type]:
         return [MyModel1, MyModel2]
 ```

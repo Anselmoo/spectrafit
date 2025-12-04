@@ -16,15 +16,15 @@ import typer
 
 class SpectraFitPlugin(Protocol):
     """Protocol for SpectraFit plugins."""
-    
+
     name: str                    # Unique plugin identifier
     version: str                 # Semantic version (e.g., "1.0.0")
     description: str             # Short description
-    
+
     def register_commands(self, parent_app: typer.Typer) -> None:
         """Register CLI commands with the parent Typer app."""
         ...
-    
+
     def register_models(self) -> list[type]:
         """Return list of Pydantic models this plugin provides."""
         ...
@@ -48,14 +48,14 @@ from spectrafit.plugins.protocol import SpectraFitPlugin
 
 class MyPlugin:
     """My custom plugin for SpectraFit."""
-    
+
     name = "my-plugin"
     version = "1.0.0"
     description = "A custom plugin that does amazing things"
-    
+
     def register_commands(self, parent_app: typer.Typer) -> None:
         """Register plugin commands."""
-        
+
         @parent_app.command(name="my-command")
         def my_command(
             input_file: Annotated[
@@ -70,7 +70,7 @@ class MyPlugin:
             """My custom command that processes files."""
             typer.echo(f"Processing {input_file} with option={option}")
             # Your plugin logic here
-    
+
     def register_models(self) -> list[type]:
         """Register Pydantic models used by this plugin."""
         # Return any Pydantic models your plugin provides
@@ -128,11 +128,11 @@ from spectrafit.plugins.protocol import SpectraFitPlugin
 
 class ExportPlugin:
     """Plugin for exporting data to various formats."""
-    
+
     name = "export"
     version = "1.0.0"
     description = "Export fitting results to additional formats"
-    
+
     def register_commands(self, parent_app: typer.Typer) -> None:
         @parent_app.command(name="export-excel")
         def export_excel(
@@ -147,11 +147,11 @@ class ExportPlugin:
         ) -> None:
             """Export fitting results to Excel format."""
             import pandas as pd
-            
+
             df = pd.read_csv(infile)
             df.to_excel(outfile, index=False)
             typer.echo(f"✅ Exported to {outfile}")
-    
+
     def register_models(self) -> list[type]:
         return []
 ```
@@ -173,18 +173,18 @@ from spectrafit.plugins.protocol import SpectraFitPlugin
 
 class CustomValidationModel(BaseModel):
     """Custom validation rules."""
-    
+
     max_peaks: int = Field(ge=1, le=100)
     min_amplitude: float = Field(ge=0.0)
 
 
 class ValidationPlugin:
     """Plugin for custom validation rules."""
-    
+
     name = "custom-validation"
     version = "1.0.0"
     description = "Apply custom validation rules to configurations"
-    
+
     def register_commands(self, parent_app: typer.Typer) -> None:
         @parent_app.command(name="validate-custom")
         def validate_custom(
@@ -198,7 +198,7 @@ class ValidationPlugin:
             typer.echo(f"Validating {config_file}...")
             # Your validation logic here
             typer.echo("✅ Validation passed!")
-    
+
     def register_models(self) -> list[type]:
         return [CustomValidationModel]
 ```
@@ -218,28 +218,28 @@ from spectrafit.plugins.protocol import SpectraFitPlugin
 
 class AnalysisPlugin:
     """Plugin for advanced statistical analysis."""
-    
+
     name = "analysis"
     version = "1.0.0"
     description = "Advanced statistical analysis tools"
-    
+
     def register_commands(self, parent_app: typer.Typer) -> None:
         # Create a subgroup for analysis commands
         analysis_app = typer.Typer(help="Statistical analysis commands")
-        
+
         @analysis_app.command(name="correlation")
         def correlation_analysis() -> None:
             """Perform correlation analysis on fitting results."""
             typer.echo("Running correlation analysis...")
-        
+
         @analysis_app.command(name="residuals")
         def residual_analysis() -> None:
             """Analyze fitting residuals."""
             typer.echo("Analyzing residuals...")
-        
+
         # Register the subgroup
         parent_app.add_typer(analysis_app, name="analysis")
-    
+
     def register_models(self) -> list[type]:
         return []
 ```
@@ -307,7 +307,7 @@ def my_command(
     ],
 ) -> None:
     """Process spectral data with custom algorithm.
-    
+
     This command reads spectral data from a CSV file and applies
     a custom processing algorithm to extract features.
     """

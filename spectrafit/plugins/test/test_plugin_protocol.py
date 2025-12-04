@@ -27,7 +27,6 @@ def test_plugin_protocol_methods():
 
 def test_plugin_implementation():
     """Test a simple plugin implementation."""
-    import typer  # noqa: PLC0415
 
     class TestPlugin:
         name = "test-plugin"

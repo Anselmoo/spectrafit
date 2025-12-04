@@ -5,10 +5,14 @@ This plugin provides interactive RIXS plane visualization capabilities.
 
 from __future__ import annotations
 
-from pathlib import Path
+from typing import TYPE_CHECKING
 from typing import Annotated
 
 import typer
+
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 from spectrafit.plugins.protocol import SpectraFitPlugin
 
@@ -76,8 +80,10 @@ class RIXSPlugin:
             - rixs_map: 2D array of RIXS intensities
             """
             try:
-                from spectrafit.plugins.rixs_visualizer import RIXSApp
-                from spectrafit.plugins.rixs_visualizer import RIXSVisualizer
+                from spectrafit.plugins.rixs_visualizer import RIXSApp  # noqa: PLC0415
+                from spectrafit.plugins.rixs_visualizer import (  # noqa: PLC0415
+                    RIXSVisualizer,
+                )
 
                 typer.echo(f"📊 Loading RIXS data from '{infile}'...")
                 data = RIXSVisualizer.load_data(infile)

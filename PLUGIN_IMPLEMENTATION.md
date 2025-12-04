@@ -171,7 +171,7 @@ class SpectraFitPlugin(Protocol):
     name: str
     version: str
     description: str
-    
+
     def register_commands(self, parent_app: typer.Typer) -> None: ...
     def register_models(self) -> list[type]: ...
 ```
@@ -291,7 +291,7 @@ spectrafit
 - Old standalone commands still work:
   - `spectrafit-rixs-visualizer` ➡️ Still available
   - `spectrafit-jupyter` ➡️ Still available
-  
+
 ✅ **New Way (Preferred):**
   - `spectrafit plugins rixs` ➡️ New unified interface
   - `spectrafit plugins jupyter` ➡️ New unified interface

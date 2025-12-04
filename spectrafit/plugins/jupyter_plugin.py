@@ -5,6 +5,8 @@ This plugin provides Jupyter notebook integration and visualization capabilities
 
 from __future__ import annotations
 
+import importlib.util
+
 import typer
 
 from spectrafit.plugins.protocol import SpectraFitPlugin
@@ -38,7 +40,7 @@ class JupyterPlugin:
             data analysis, fitting, and visualization.
             """
             try:
-                from spectrafit.app.app import jupyter as jupyter_app
+                from spectrafit.app.app import jupyter as jupyter_app  # noqa: PLC0415
 
                 typer.echo("🚀 Launching Jupyter Lab with SpectraFit integration...")
                 typer.echo("   Press Ctrl+C to stop the server.\n")
@@ -67,12 +69,12 @@ class JupyterPlugin:
         """
         try:
             # Import notebook-related models if available
-            from spectrafit.plugins.notebook.core import SpectraFitNotebook
-
-            # Return any Pydantic models used in the notebook interface
-            return []
+            if importlib.util.find_spec("spectrafit.plugins.notebook.core"):
+                # Return any Pydantic models used in the notebook interface
+                return []
         except ImportError:
-            return []
+            pass
+        return []
 
 
 # Verify protocol implementation at module load time

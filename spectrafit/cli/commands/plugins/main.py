@@ -55,9 +55,7 @@ def list_plugins(
                 typer.echo(f"  • {plugin.name}: {plugin.description}")
 
     # Discover and list external plugins
-    discovered_count = 0
-    for plugin in registry.discover_plugins():
-        discovered_count += 1
+    for _discovered_count, plugin in enumerate(registry.discover_plugins(), start=1):
         if verbose:
             typer.echo(f"  {plugin.name} (external):")
             typer.echo(f"    Version: {plugin.version}")
@@ -81,11 +79,11 @@ def _register_builtin_plugins() -> None:
             plugin = registry.load_builtin_plugin(plugin_name)
             if plugin:
                 plugin.register_commands(plugins_app)
-                logger.info(f"Registered plugin: {plugin.name}")
+                logger.info("Registered plugin: %s", plugin.name)
         except ImportError as e:
-            logger.warning(f"Failed to load plugin {plugin_name}: {e}")
-        except Exception as e:
-            logger.error(f"Error registering plugin {plugin_name}: {e}")
+            logger.warning("Failed to load plugin %s: %s", plugin_name, e)
+        except (TypeError, AttributeError):
+            logger.exception("Error registering plugin %s", plugin_name)
 
 
 # Register plugins on import
