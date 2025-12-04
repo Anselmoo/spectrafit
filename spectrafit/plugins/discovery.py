@@ -11,6 +11,7 @@ import importlib.metadata
 import logging
 
 from typing import TYPE_CHECKING
+from typing import Any
 
 from spectrafit.plugins.protocol import SpectraFitPlugin
 
@@ -69,10 +70,13 @@ class PluginRegistry:
         try:
             entry_points = importlib.metadata.entry_points()
             # Handle both Python 3.10+ and older versions
+            plugins_eps: Any
             if hasattr(entry_points, "select"):
                 plugins_eps = entry_points.select(group=entry_point_group)
             else:
-                plugins_eps = entry_points.get(entry_point_group, [])
+                # For older Python versions, entry_points returns dict
+                # Access as dict for backward compatibility
+                plugins_eps = entry_points.get(entry_point_group) or []  # type: ignore[attr-defined]
 
             for entry_point in plugins_eps:
                 try:
@@ -83,13 +87,13 @@ class PluginRegistry:
                         yield plugin
                     else:
                         logger.warning(
-                            f"Plugin {entry_point.name} does not implement "
-                            "SpectraFitPlugin protocol"
+                            "Plugin %s does not implement SpectraFitPlugin protocol",
+                            entry_point.name,
                         )
-                except Exception as e:
-                    logger.error(f"Failed to load plugin {entry_point.name}: {e}")
-        except Exception as e:
-            logger.error(f"Failed to discover plugins: {e}")
+                except (ImportError, AttributeError, TypeError):
+                    logger.exception("Failed to load plugin %s", entry_point.name)
+        except (ImportError, AttributeError):
+            logger.exception("Failed to discover plugins")
 
     def load_builtin_plugin(self, plugin_name: str) -> SpectraFitPlugin | None:
         """Load a built-in plugin by name.
@@ -113,7 +117,7 @@ class PluginRegistry:
 
         module_path = self._builtin_plugins.get(plugin_name)
         if not module_path:
-            logger.error(f"Unknown built-in plugin: {plugin_name}")
+            logger.error("Unknown built-in plugin: %s", plugin_name)
             return None
 
         try:
@@ -131,12 +135,13 @@ class PluginRegistry:
                         if isinstance(plugin, SpectraFitPlugin):
                             self._plugins[plugin.name] = plugin
                             return plugin
-                    except Exception:
+                    except (TypeError, AttributeError):
+                        # Plugin class instantiation failed, try next
                         continue
         except ImportError as e:
-            logger.warning(f"Failed to import plugin {plugin_name}: {e}")
-        except Exception as e:
-            logger.error(f"Failed to load plugin {plugin_name}: {e}")
+            logger.warning("Failed to import plugin %s: %s", plugin_name, e)
+        except (AttributeError, TypeError):
+            logger.exception("Failed to load plugin %s", plugin_name)
 
         return None
 
@@ -178,7 +183,7 @@ def get_plugin_registry() -> PluginRegistry:
     Returns:
         Global PluginRegistry instance (singleton).
     """
-    global _registry
+    global _registry  # noqa: PLW0603
     if _registry is None:
         _registry = PluginRegistry()
     return _registry
