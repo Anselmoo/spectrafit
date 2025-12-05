@@ -1,5 +1,5 @@
 ---
-mode: "agent"
+agent: agent
 tools: ["githubRepo", "codebase", "new"]
 description: "Complete unit-tests via pytest including coverage"
 ---

@@ -24,15 +24,10 @@ class TestCommandLineRunner:
     def test_version(self, script_runner: Any) -> None:
         """Testing the version command."""
         from spectrafit import __version__
-        from spectrafit.test.conftest import create_stdin
 
         ret = script_runner.run(
             "spectrafit",
-            "_",
-            "-i",
-            "spectrafit/test/scripts/test_input_1.json",
             "--version",
-            stdin=create_stdin("n\n"),
         )
 
         assert ret.success
@@ -47,6 +42,7 @@ class TestCommandLineRunner:
 
         ret = script_runner.run(
             "spectrafit",
+            "fit",
             "_",
             "-i",
             "spectrafit/test/scripts/test_input_2.json",
@@ -67,6 +63,7 @@ class TestCommandLineRunner:
 
         ret = script_runner.run(
             "spectrafit",
+            "fit",
             "_",
             "-i",
             "spectrafit/test/scripts/test_input_7.json",
@@ -95,6 +92,7 @@ class TestFileFormat:
 
         ret = script_runner.run(
             "spectrafit",
+            "fit",
             "_",
             "-i",
             "spectrafit/test/scripts/test_input_3.json",
@@ -123,6 +121,7 @@ class TestFileFormat:
 
         ret = script_runner.run(
             "spectrafit",
+            "fit",
             "_",
             "-i",
             "spectrafit/test/scripts/test_input_3.yml",
@@ -151,6 +150,7 @@ class TestFileFormat:
 
         ret = script_runner.run(
             "spectrafit",
+            "fit",
             "_",
             "-i",
             "spectrafit/test/scripts/test_input_3.yaml",
@@ -179,6 +179,7 @@ class TestFileFormat:
 
         ret = script_runner.run(
             "spectrafit",
+            "fit",
             "_",
             "-i",
             "spectrafit/test/scripts/test_input_3.toml",
@@ -196,19 +197,38 @@ class TestFileFormat:
 class TestFileFormatOutput:
     """Testing the output files and formats."""
 
-    def test_outputs(self, script_runner: Any) -> None:
-        """Testing correct number of outputs."""
+    def test_outputs(self, script_runner: Any, tmp_path: Path) -> None:
+        """Testing correct number of outputs (isolated temp output)."""
+        import json
+
         from spectrafit.test.conftest import create_stdin
+
+        # Create output directory
+        export_dir = tmp_path / "export"
+        export_dir.mkdir(parents=True, exist_ok=True)
+
+        # Create a temporary copy of the input file with the output path modified
+        with Path("spectrafit/test/scripts/test_input_2.json").open() as f:
+            input_data = json.load(f)
+
+        input_data["settings"]["outfile"] = f"{export_dir}/fit_results"
+
+        temp_input = tmp_path / "test_input_2_temp.json"
+        with temp_input.open("w") as f:
+            json.dump(input_data, f)
 
         _ = script_runner.run(
             "spectrafit",
+            "fit",
             "_",
             "-i",
-            "spectrafit/test/scripts/test_input_2.json",
+            str(temp_input),
             stdin=create_stdin("n\n"),
         )
-        assert len(list(Path().glob("spectrafit/test/export/fit_results*.json"))) == 2
-        assert len(list(Path().glob("spectrafit/test/export/fit_results*.csv"))) == 6
+        # Look inside the dedicated temp output folder
+        # test_input_2.json generates 1 JSON summary file and 3 CSV files
+        assert len(list(export_dir.glob("fit_results*.json"))) == 1
+        assert len(list(export_dir.glob("fit_results*.csv"))) == 3
 
 
 class TestMoreFeatures:
@@ -220,6 +240,7 @@ class TestMoreFeatures:
 
         ret = script_runner.run(
             "spectrafit",
+            "fit",
             "_",
             "-i",
             "spectrafit/test/scripts/test_input_4.json",
@@ -239,6 +260,7 @@ class TestMoreFeatures:
 
         ret = script_runner.run(
             "spectrafit",
+            "fit",
             "_",
             "-i",
             "spectrafit/test/scripts/test_input_5.json",
@@ -265,6 +287,7 @@ class TestMoreFeatures:
 
         ret = script_runner.run(
             "spectrafit",
+            "fit",
             "_",
             "-i",
             "spectrafit/test/scripts/test_input_5.json",
@@ -292,6 +315,7 @@ class TestMoreFeatures:
 
         ret = script_runner.run(
             "spectrafit",
+            "fit",
             "_",
             "-i",
             "spectrafit/test/scripts/test_input_5.json",
@@ -323,6 +347,7 @@ class TestMoreFeatures:
 
         ret = script_runner.run(
             "spectrafit",
+            "fit",
             "_",
             "-i",
             "spectrafit/test/scripts/test_input_all_models.toml",
@@ -339,6 +364,7 @@ class TestMoreFeatures:
         fname = "spectrafit/test/scripts/test_wrong.pp"
         ret = script_runner.run(
             "spectrafit",
+            "fit",
             "spectrafit/test/import/test_data.csv",
             "-i",
             fname,
@@ -352,6 +378,7 @@ class TestMoreFeatures:
 
         ret = script_runner.run(
             "spectrafit",
+            "fit",
             "_",
             "-i",
             "spectrafit/test/scripts/test_missing_parameters_1.json",
@@ -365,6 +392,7 @@ class TestMoreFeatures:
 
         ret = script_runner.run(
             "spectrafit",
+            "fit",
             "_",
             "-i",
             "spectrafit/test/scripts/test_missing_parameters_2.json",
@@ -378,6 +406,7 @@ class TestMoreFeatures:
 
         ret = script_runner.run(
             "spectrafit",
+            "fit",
             "spectrafit/test/test_data.csv",
             "-i",
             "spectrafit/test/no_input.pp",
@@ -395,6 +424,7 @@ class TestMoreFeatures:
 
         ret = script_runner.run(
             "spectrafit",
+            "fit",
             "_",
             "-i",
             "spectrafit/test/scripts/test_input_6.json",
@@ -413,6 +443,7 @@ class TestMoreFeatures:
 
         ret = script_runner.run(
             "spectrafit",
+            "fit",
             "_",
             "-i",
             "spectrafit/test/scripts/test_input_8.json",
@@ -426,6 +457,7 @@ class TestMoreFeatures:
 
         ret = script_runner.run(
             "spectrafit",
+            "fit",
             "_",
             "-i",
             "spectrafit/test/scripts/test_input_8.json",
@@ -441,6 +473,7 @@ class TestMoreFeatures:
 
         ret = script_runner.run(
             "spectrafit",
+            "fit",
             "_",
             "-i",
             "spectrafit/test/scripts/test_input_9.json",
@@ -458,6 +491,7 @@ class TestGlobalFitting:
 
         ret = script_runner.run(
             "spectrafit",
+            "fit",
             "_",
             "-i",
             "spectrafit/test/scripts/test_input_global_0.json",
@@ -487,6 +521,7 @@ class TestGlobalFitting:
 
         ret = script_runner.run(
             "spectrafit",
+            "fit",
             "_",
             "-i",
             "spectrafit/test/scripts/test_input_global_1.json",

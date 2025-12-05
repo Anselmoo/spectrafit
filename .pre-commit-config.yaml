@@ -19,16 +19,17 @@ repos:
         args: [--maxkb=1000]
         exclude: \.ipynb
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.0
+    rev: v0.14.8
     hooks:
       - id: ruff
         files: spectrafit/
       - id: ruff-format
         files: spectrafit/
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.18.2
+    rev: v1.19.0
     hooks:
       - id: mypy
+        exclude: ".*/test/test_.*\\.py$"
         additional_dependencies:
           [
             types-toml>=0.10.8.7,
@@ -47,7 +48,7 @@ repos:
         additional_dependencies: [toml>=0.10.2]
   # pyupgrade for Python 3.10+
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.20.0
+    rev: v3.21.2
     hooks:
       - id: pyupgrade
         args: [--py310-plus, --keep-percent-format]

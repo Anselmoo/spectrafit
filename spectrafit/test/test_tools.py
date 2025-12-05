@@ -290,7 +290,13 @@ class TestPreProcessing:
             "smooth": None,
             "column": ["energy", "intensity"],
         }
-        assert PreProcessing(random_dataframe, args)()[1] == args
+        _, returned_args = PreProcessing(random_dataframe, args)()
+        # Check that original args are unchanged (immutability)
+        assert "data_statistic" not in args
+        # Check that returned args contain original keys plus data_statistic
+        assert all(k in returned_args for k in args)
+        assert "data_statistic" in returned_args
+        assert returned_args["data_statistic"] is not None
 
     def test_keyword_fail(self, random_dataframe: pd.DataFrame) -> None:
         """Testing energy range for no range."""
@@ -302,11 +308,10 @@ class TestPreProcessing:
             "smooth": None,
             "column": ["Energy", "intensity"],
         }
-        with pytest.raises(SystemExit) as pytest_wrapped_e:
+        with pytest.raises(KeyError) as pytest_wrapped_e:
             PreProcessing(random_dataframe, args)()
 
-        assert pytest_wrapped_e.type == SystemExit
-        assert pytest_wrapped_e.value.code == 1
+        assert "Missing required preprocessing key" in str(pytest_wrapped_e.value)
 
     def test_keyword_not_fail(self) -> None:
         """Testing consistency between cmd and input keywords."""

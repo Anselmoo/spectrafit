@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from enum import Enum
 from typing import TYPE_CHECKING
 from typing import Annotated
 from typing import Any
@@ -9,6 +10,7 @@ from typing import Any
 import typer
 
 from spectrafit.api.cmd_model import CMDModelAPI
+from spectrafit.core.pipeline import fitting_routine_pipeline
 from spectrafit.models.builtin import SolverModels
 from spectrafit.plotting import PlotSpectra
 from spectrafit.report import PrintingResults
@@ -26,20 +28,55 @@ if TYPE_CHECKING:
     import pandas as pd
 
 
-__status__ = PrintingStatus()
+class SeparatorEnum(str, Enum):
+    """Enum for separator choices."""
+
+    TAB = "\t"
+    COMMA = ","
+    SEMICOLON = ";"
+    COLON = ":"
+    PIPE = "|"
+    SPACE = " "
+    REGEX = "s+"
+
+
+class DecimalEnum(str, Enum):
+    """Enum for decimal separator choices."""
+
+    DOT = "."
+    COMMA = ","
+
+
+class GlobalFitEnum(int, Enum):
+    """Enum for global fitting mode choices."""
+
+    CLASSIC = 0
+    AUTO = 1
+    CUSTOM = 2
+
+
+class VerboseEnum(int, Enum):
+    """Enum for verbose level choices."""
+
+    SILENT = 0
+    TABLE = 1
+    DICT = 2
+
 
 # Create Typer app
 app = typer.Typer(
     help="Fast Fitting Program for ascii txt files.",
     epilog="For more information, visit https://anselmoo.github.io/spectrafit/",
     add_completion=False,
+    context_settings={"help_option_names": ["-h", "--help"]},
 )
 
 
 def version_callback(value: bool) -> None:
     """Display version information."""
     if value:
-        typer.echo(__status__.version())
+        status = PrintingStatus()
+        typer.echo(status.version())
         raise typer.Exit
 
 
@@ -119,21 +156,21 @@ def cli_main(
         ),
     ] = None,
     separator: Annotated[
-        str,
+        SeparatorEnum,
         typer.Option(
             "-sep",
             "--separator",
             help="Redefine the type of separator; default to '\\t'.",
         ),
-    ] = "\t",
+    ] = SeparatorEnum.TAB,
     decimal: Annotated[
-        str,
+        DecimalEnum,
         typer.Option(
             "-dec",
             "--decimal",
             help="Type of decimal separator; default to '.'.",
         ),
-    ] = ".",
+    ] = DecimalEnum.DOT,
     header: Annotated[
         int | None,
         typer.Option(
@@ -151,7 +188,7 @@ def cli_main(
         ),
     ] = None,
     global_: Annotated[
-        int,
+        GlobalFitEnum,
         typer.Option(
             "-g",
             "--global",
@@ -162,7 +199,7 @@ def cli_main(
                 "self-defined global fitting routines."
             ),
         ),
-    ] = 0,
+    ] = GlobalFitEnum.CLASSIC,
     autopeak: Annotated[
         bool,
         typer.Option(
@@ -184,7 +221,7 @@ def cli_main(
         ),
     ] = False,
     verbose: Annotated[
-        int,
+        VerboseEnum,
         typer.Option(
             "-vb",
             "--verbose",
@@ -194,7 +231,7 @@ def cli_main(
                 "is set to 1 for table `printout`."
             ),
         ),
-    ] = 1,
+    ] = VerboseEnum.TABLE,
     version: Annotated[
         bool | None,
         typer.Option(
@@ -220,24 +257,7 @@ def cli_main(
             for c in column
         ]
 
-    # Validate choices
-    if separator not in ["\t", ",", ";", ":", "|", " ", "s+"]:
-        typer.echo(f"Error: Invalid separator '{separator}'", err=True)
-        raise typer.Exit(1)
-
-    if decimal not in [".", ","]:
-        typer.echo(f"Error: Invalid decimal '{decimal}'", err=True)
-        raise typer.Exit(1)
-
-    if global_ not in [0, 1, 2]:
-        typer.echo(f"Error: Invalid global value '{global_}'", err=True)
-        raise typer.Exit(1)
-
-    if verbose not in [0, 1, 2]:
-        typer.echo(f"Error: Invalid verbose value '{verbose}'", err=True)
-        raise typer.Exit(1)
-
-    # Build args dictionary
+    # Build args dictionary with enum values converted to their underlying types
     args_dict = {
         "infile": infile,
         "outfile": outfile,
@@ -248,31 +268,39 @@ def cli_main(
         "smooth": smooth,
         "shift": shift,
         "column": column,
-        "separator": separator,
-        "decimal": decimal,
+        "separator": separator.value,
+        "decimal": decimal.value,
         "header": header,
         "comment": comment,
-        "global_": global_,
+        "global_": global_.value,
         "autopeak": autopeak,
         "noplot": noplot,
-        "verbose": verbose,
+        "verbose": verbose.value,
     }
 
     # Run the fitting routine with the interactive loop
     run_fitting_workflow(args=args_dict)
 
 
-def run_fitting_workflow(args: dict[str, Any]) -> None:
+def run_fitting_workflow(
+    args: dict[str, Any],
+    status: PrintingStatus | None = None,
+) -> None:
     """Run the interactive fitting workflow.
 
     Args:
-        args (Dict[str, Any]): The input file arguments as a dictionary with
+        args (dict[str, Any]): The input file arguments as a dictionary with
              additional information beyond the command line arguments.
+        status (PrintingStatus, optional): Status printer for output messages.
+             If None, creates a new instance. Defaults to None.
 
     """
-    __status__.welcome()
+    if status is None:
+        status = PrintingStatus()
+
+    status.welcome()
     while True:
-        __status__.start()
+        status.start()
 
         # Process arguments with input file
         processed_args = extracted_from_command_line_runner_with_args(args)
@@ -281,16 +309,13 @@ def run_fitting_workflow(args: dict[str, Any]) -> None:
         PlotSpectra(df=df_result, args=processed_args)()
         SaveResult(df=df_result, args=processed_args)()
 
-        __status__.end()
+        status.end()
 
-        again = input("Would you like to fit again ...? Enter y/n: ").lower()
-        if again == "n":
-            __status__.thanks()
-            __status__.credits()
+        again = typer.confirm("Would you like to fit again?", default=False)
+        if not again:
+            status.thanks()
+            status.credits()
             return
-        if again == "y":
-            continue
-        __status__.yes_no()
 
 
 def command_line_runner(args: dict[str, Any] | None = None) -> None:
@@ -300,7 +325,7 @@ def command_line_runner(args: dict[str, Any] | None = None) -> None:
     configured in pyproject.toml. It delegates to the Typer app.
 
     Args:
-        args (Dict[str, Any], optional): The input file arguments as a
+        args (dict[str, Any], optional): The input file arguments as a
              dictionary with additional information beyond the command line arguments.
              Defaults to None. If provided, runs in programmatic mode.
 
@@ -319,14 +344,14 @@ def extracted_from_command_line_runner_with_args(
     """Extract and merge command line arguments with input file settings.
 
     Args:
-        args (Dict[str, Any]): The command line arguments.
+        args (dict[str, Any]): The command line arguments.
 
     Raises:
         KeyError: Missing key `minimizer` in `parameters`.
         KeyError: Missing key `optimizer` in `parameters`.
 
     Returns:
-        Dict[str, Any]: The merged arguments dictionary.
+        dict[str, Any]: The merged arguments dictionary.
 
     """
     _args: MutableMapping[str, Any] = read_input_file(args["input"])
@@ -366,36 +391,20 @@ def extracted_from_command_line_runner_with_args(
     return args
 
 
-def extracted_from_command_line_runner() -> dict[str, Any]:
-    """Extract the input commands from the terminal.
-
-    This function is deprecated and kept only for backward compatibility.
-    It should not be called when using Typer.
-
-    Raises:
-        RuntimeError: This function should not be called with Typer.
-
-    Returns:
-        Dict[str, Any]: The input file arguments as a dictionary with additional
-             information beyond the command line arguments.
-
-    """
-    _msg = (
-        "extracted_from_command_line_runner() is deprecated. "
-        "The Typer CLI handles argument parsing automatically."
-    )
-    raise RuntimeError(_msg)
-
-
-def fitting_routine(args: dict[str, Any]) -> tuple[pd.DataFrame, dict[str, Any]]:
+def fitting_routine(
+    args: dict[str, Any],
+    use_pipeline: bool = True,
+) -> tuple[pd.DataFrame, dict[str, Any]]:
     """Run the fitting algorithm.
 
     Args:
-        args (Dict[str, Any]): The input file arguments as a dictionary with
+        args (dict[str, Any]): The input file arguments as a dictionary with
              additional information beyond the command line arguments.
+        use_pipeline (bool): If True, use the new pipeline pattern. If False,
+             use the legacy sequential approach. Defaults to True.
 
     Returns:
-        Tuple[pd.DataFrame, Dict[str, Any]]: Returns a DataFrame and a dictionary,
+        Tuple[pd.DataFrame, dict[str, Any]]: Returns a DataFrame and a dictionary,
              which is containing the input data (`x` and `data`), as well as the best
              fit, single contributions of each peak and the corresponding residuum. The
              dictionary contains the raw input data, the best fit, the single
@@ -403,6 +412,11 @@ def fitting_routine(args: dict[str, Any]) -> tuple[pd.DataFrame, dict[str, Any]]
              is extended by advanced statistical information of the fit.
 
     """
+    if use_pipeline:
+        # Use the new pipeline pattern
+        return fitting_routine_pipeline(args)
+
+    # Legacy approach (backward compatibility)
     df: pd.DataFrame = load_data(args)
     df, args = PreProcessing(df=df, args=args)()
     minimizer, result = SolverModels(df=df, args=args)()
@@ -410,3 +424,11 @@ def fitting_routine(args: dict[str, Any]) -> tuple[pd.DataFrame, dict[str, Any]]
     PrintingResults(args=args, minimizer=minimizer, result=result)()
 
     return df, args
+
+
+# Re-export CLI app for backward compatibility
+# The new CLI with subcommands is available in spectrafit.cli.main
+try:
+    from spectrafit.cli.main import app as cli_app
+except ImportError:
+    cli_app = app  # Fall back to original app if cli module not available

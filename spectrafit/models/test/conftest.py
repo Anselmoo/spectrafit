@@ -49,7 +49,7 @@ def moessbauer_singlet_params() -> dict[str, float]:
     """Create parameters for testing the Mössbauer singlet model.
 
     Returns:
-        Dict[str, float]: Dictionary of parameter values
+        dict[str, float]: Dictionary of parameter values
     """
     return {
         "amplitude": 1.0,
@@ -65,7 +65,7 @@ def moessbauer_doublet_params() -> dict[str, float]:
     """Create parameters for testing the Mössbauer doublet model.
 
     Returns:
-        Dict[str, float]: Dictionary of parameter values
+        dict[str, float]: Dictionary of parameter values
     """
     return {
         "amplitude": 1.0,
@@ -82,7 +82,7 @@ def moessbauer_sextet_params() -> dict[str, float]:
     """Create parameters for testing the Mössbauer sextet model.
 
     Returns:
-        Dict[str, float]: Dictionary of parameter values
+        dict[str, float]: Dictionary of parameter values
     """
     return {
         "amplitude": 1.0,
@@ -100,7 +100,7 @@ def moessbauer_octet_params() -> dict[str, float]:
     """Create parameters for testing the Mössbauer octet model.
 
     Returns:
-        Dict[str, float]: Dictionary of parameter values
+        dict[str, float]: Dictionary of parameter values
     """
     return {
         "amplitude": 1.0,

@@ -94,9 +94,14 @@ Changelog = "https://github.com/Anselmoo/spectrafit/blob/main/CHANGELOG.md"
 Issues = "https://github.com/Anselmoo/spectrafit/issues"
 
 [project.scripts]
-spectrafit = "spectrafit.spectrafit:command_line_runner"
+spectrafit = "spectrafit.cli.main:run"
 spectrafit-rixs-visualizer = "spectrafit.plugins.rixs_visualizer:command_line_runner"
 spectrafit-jupyter = "spectrafit.app.app:jupyter"
+
+[project.entry-points."spectrafit.plugins"]
+rixs = "spectrafit.plugins.rixs_plugin:RIXSPlugin"
+jupyter = "spectrafit.plugins.jupyter_plugin:JupyterPlugin"
+moessbauer = "spectrafit.plugins.moessbauer_plugin:MoessbauerPlugin"
 
 [dependency-groups]
 dev = [
@@ -200,10 +205,16 @@ extend-ignore = [
 ]
 "spectrafit/models/moessbauer.py" = ["N813", "PLR0913"]
 "spectrafit/models/builtin.py" = ["PLR0913"]
+"spectrafit/models/solver.py" = ["PLR0913"]
+"spectrafit/models/distributions.py" = ["PLR0913"]
 "spectrafit/api/*_model.py" = ["TC001", "TC003"]
+"spectrafit/core/*.py" = ["TC001", "TC002"]
+"spectrafit/report/*.py" = ["TC001", "TC002"]
+"spectrafit/plugins/notebook/*.py" = ["TC001", "TC002"]
 "spectrafit/plugins/rixs_visualizer.py" = ["N803"]
 "spectrafit/plugins/color_schemas.py" = ["RUF012"]
 "spectrafit/plugins/test/test_notebook.py" = ["SLF001"]
+"spectrafit/cli/commands/*.py" = ["TC003", "TRY301", "PLC0415", "C901", "PLR0915"]
 
 
 [tool.ruff.lint.isort]
@@ -272,7 +283,7 @@ disallow_untyped_defs = true
 pretty = true
 show_error_context = true
 show_error_codes = true
-exclude = "**/test/test_*.py"
+exclude = ".*/test/test_.*\\.py$"
 
 [tool.pydantic-mypy]
 init_forbid_extra = true

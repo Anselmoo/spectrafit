@@ -15,7 +15,7 @@ def reference_dict() -> dict[str, dict[str, Any]]:
     """Check reference dictionary.
 
     Returns:
-        Dict[str, Dict[str, Any]]: Reference dictionary of two peaks.
+        dict[str, Dict[str, Any]]: Reference dictionary of two peaks.
 
     """
     return {
@@ -45,7 +45,7 @@ def reference_list() -> list[dict[str, Any]]:
     """Check reference list dictionary.
 
     Returns:
-        Dict[str, Dict[str, Any]]: Reference list of dictionaries of two peaks.
+        dict[str, Dict[str, Any]]: Reference list of dictionaries of two peaks.
 
     """
     return [
@@ -75,9 +75,9 @@ def test_converter(
     """Test of the converter from list to dict.
 
     Args:
-        reference_list (List[Dict[str, Any]]): Reference list of dictionaries of
+        reference_list (List[dict[str, Any]]): Reference list of dictionaries of
              two peaks.
-        reference_dict (Dict[str, Dict[str, Any]]): Reference dictionary of two peaks.
+        reference_dict (dict[str, Dict[str, Any]]): Reference dictionary of two peaks.
 
     """
     assert list2dict(reference_list) == reference_dict
