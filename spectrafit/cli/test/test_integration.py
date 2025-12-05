@@ -280,7 +280,10 @@ class TestPluginsWorkflow:
         """Test Mössbauer info command."""
         result = runner.invoke(app, ["plugins", "moessbauer-info"])
         assert result.exit_code == 0
-        assert "moessbauer" in result.output.lower() or "mössbauer" in result.output.lower()
+        assert (
+            "moessbauer" in result.output.lower()
+            or "mössbauer" in result.output.lower()
+        )
 
 
 @pytest.mark.integration
@@ -454,9 +457,7 @@ class TestErrorHandlingWorkflow:
         assert result.exit_code != 0
 
         # Convert non-existent file should fail
-        result = runner.invoke(
-            app, ["convert", "nonexistent.json", "--format", "toml"]
-        )
+        result = runner.invoke(app, ["convert", "nonexistent.json", "--format", "toml"])
         assert result.exit_code != 0
 
         # Report non-existent file should fail

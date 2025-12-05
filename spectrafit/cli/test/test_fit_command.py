@@ -27,9 +27,7 @@ def temp_dir():
 def sample_data_file(temp_dir):
     """Create a sample data CSV file."""
     data_file = temp_dir / "test_data.csv"
-    data_file.write_text(
-        "energy,intensity\n0.0,1.0\n0.1,1.1\n0.2,1.2\n0.3,1.0\n"
-    )
+    data_file.write_text("energy,intensity\n0.0,1.0\n0.1,1.1\n0.2,1.2\n0.3,1.0\n")
     return data_file
 
 

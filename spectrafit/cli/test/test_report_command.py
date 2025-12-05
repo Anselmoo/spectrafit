@@ -356,9 +356,7 @@ class TestReportCommandOutputFormat:
             with contextlib.suppress(json.JSONDecodeError):
                 json.loads(result.output)
 
-    def test_report_file_output_success_message(
-        self, sample_results_file, temp_dir
-    ):
+    def test_report_file_output_success_message(self, sample_results_file, temp_dir):
         """Test that file output shows success message."""
         output_file = temp_dir / "report.txt"
         result = runner.invoke(

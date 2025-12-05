@@ -308,7 +308,10 @@ class TestValidateCommandOutputFormat:
         result = runner.invoke(app, ["validate", str(valid_toml_file)])
         assert result.exit_code == 0
         # Output should mention the file being validated
-        assert str(valid_toml_file.name) in result.output or "valid" in result.output.lower()
+        assert (
+            str(valid_toml_file.name) in result.output
+            or "valid" in result.output.lower()
+        )
 
     def test_validate_error_output_contains_details(self, invalid_missing_fitting):
         """Test that error output contains useful details."""
@@ -324,7 +327,10 @@ class TestValidateCommandOutputFormat:
         # Verbose should show more than non-verbose
         result_normal = runner.invoke(app, ["validate", str(valid_toml_file)])
         # Verbose output should contain additional information
-        assert len(result.output) >= len(result_normal.output) or "peak" in result.output.lower()
+        assert (
+            len(result.output) >= len(result_normal.output)
+            or "peak" in result.output.lower()
+        )
 
 
 class TestValidateCommandFileTypes:
