@@ -38,7 +38,6 @@ spectrafit
 ├── report             # Generate fitting reports
 └── plugins            # Plugin management and commands
     ├── list          # List available plugins
-    ├── rixs          # RIXS visualizer
     ├── jupyter       # Jupyter integration
     └── moessbauer-info  # Mössbauer information
 ```
@@ -108,7 +107,7 @@ Common options use consistent names:
 spectrafit --help                    # Main help
 spectrafit fit --help                # Fit command help
 spectrafit plugins --help            # Plugins help
-spectrafit plugins rixs --help       # RIXS plugin help
+spectrafit plugins jupyter --help    # Jupyter plugin help
 ```
 
 ### 4. Exit Codes
@@ -147,9 +146,6 @@ spectrafit convert input.json -o output.toml
 # List available plugins
 spectrafit plugins list
 
-# Use RIXS visualizer
-spectrafit plugins rixs data.npz -p 8080
-
 # Show Mössbauer info
 spectrafit plugins moessbauer-info
 ```
@@ -158,11 +154,7 @@ spectrafit plugins moessbauer-info
 
 To ease migration, we maintain compatibility:
 
-1. **Legacy Entry Points**: Old standalone commands still work
-   ```bash
-   spectrafit-rixs-visualizer data.npz  # Still works
-   spectrafit plugins rixs data.npz     # New way
-   ```
+1. **Legacy Entry Points**: Old standalone commands work where still supported
 
 2. **Migration Guide**: Documentation for updating scripts
 
@@ -233,7 +225,7 @@ def test_fit_command():
 def test_plugins_list():
     result = runner.invoke(app, ["plugins", "list"])
     assert result.exit_code == 0
-    assert "rixs" in result.output
+    assert "jupyter" in result.output or "moessbauer" in result.output
 ```
 
 ## Related Decisions

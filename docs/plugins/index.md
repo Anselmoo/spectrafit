@@ -26,7 +26,6 @@ Plugins enhance **SpectraFit** by adding specialized workflows (for example, cus
 <div class="grid cards" markdown>
 
 - :material-notebook: **[Jupyter-Notebook-Integration](jupyter_interface.md)** - Enhanced features for interactive analysis in Jupyter.
-- :material-chart-scatter-plot-hexbin: **[RIXS-Visualization](rixs_visualization.md)** - Specialized plotting tools for RIXS spectroscopy.
 
 </div>
 

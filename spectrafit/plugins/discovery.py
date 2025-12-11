@@ -42,7 +42,6 @@ class PluginRegistry:
         """Initialize the plugin registry."""
         self._plugins: dict[str, SpectraFitPlugin] = {}
         self._builtin_plugins: dict[str, str] = {
-            "rixs": "spectrafit.plugins.rixs_plugin",
             "jupyter": "spectrafit.plugins.jupyter_plugin",
             "moessbauer": "spectrafit.plugins.moessbauer_plugin",
         }
@@ -108,9 +107,9 @@ class PluginRegistry:
         Example:
             ```python
             registry = PluginRegistry()
-            rixs_plugin = registry.load_builtin_plugin("rixs")
-            if rixs_plugin:
-                print(f"Loaded {rixs_plugin.name}")
+            jupyter_plugin = registry.load_builtin_plugin("jupyter")
+            if jupyter_plugin:
+                print(f"Loaded {jupyter_plugin.name}")
             ```
         """
         if plugin_name in self._plugins:
