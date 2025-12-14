@@ -31,6 +31,7 @@ Plugins enhance **SpectraFit** by adding support for different file formats, spe
 - :material-chart-scatter-plot-hexbin: **[RIXS-Visualization](rixs_visualization.md)** - Specialized plotting tools for RIXS spectroscopy.
 - :material-format-rotate-90: **[RIXS-Converter](rixs_converter.md)** - Process and transform RIXS datasets.
 - :material-package-variant-closed: **[PKL-Converter and Visualizer](pkl_converter_visualization.md)** - Work with pickle files for data persistence.
+- :material-presentation: **[PPTX-Converter](pptx_converter.md)** - Export results directly to PowerPoint presentations.
 
 </div>
 
