@@ -61,7 +61,6 @@ jupyter = [
   "jupyterlab>=4.3.6",
   "kaleido==1.0.0",
   "plotly>=6.0.1",
-  "python-pptx>=1.0.2",
 ]
 jupyter-dash = [
   "dash-bootstrap-components>=1.6.0",
@@ -82,7 +81,6 @@ all = [
   "networkx>=3.1",
   "plotly>=6.0.1",
   "pydot>=3.0.4",
-  "python-pptx>=1.0.2",
 ]
 
 [project.urls]
@@ -101,7 +99,6 @@ spectrafit-pkl-converter = "spectrafit.plugins.pkl_converter:command_line_runner
 spectrafit-rixs-converter = "spectrafit.plugins.rixs_converter:command_line_runner"
 spectrafit-rixs-visualizer = "spectrafit.plugins.rixs_visualizer:command_line_runner"
 spectrafit-jupyter = "spectrafit.app.app:jupyter"
-spectrafit-pptx-converter = "spectrafit.plugins.pptx_converter:command_line_runner"
 
 [dependency-groups]
 dev = [

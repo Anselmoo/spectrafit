@@ -274,7 +274,6 @@ nav:
       - RIXS-Visualization: plugins/rixs_visualization.md
       - RIXS-Converter: plugins/rixs_converter.md
       - PKL-Converter and Visualizer: plugins/pkl_converter_visualization.md
-      - PPTX-Converter: plugins/pptx_converter.md
   - API:
       - Overview: api/index.md
       - SpectraFit: api/spectrafit_api.md

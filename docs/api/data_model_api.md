@@ -37,7 +37,3 @@
 ### File Model API
 
 ::: spectrafit.api.file_model
-
-### PPTX Model API
-
-::: spectrafit.api.pptx_model
