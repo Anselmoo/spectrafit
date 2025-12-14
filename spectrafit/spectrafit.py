@@ -39,10 +39,10 @@ def command_line_runner(args: dict[str, Any] | None = None) -> None:
     if args is not None:
         # Programmatic mode: delegate to fitting workflow
         # Import here to avoid circular dependencies
+        from spectrafit.core import SaveResult  # noqa: PLC0415
         from spectrafit.core.pipeline import fitting_routine_pipeline  # noqa: PLC0415
         from spectrafit.plotting import PlotSpectra  # noqa: PLC0415
         from spectrafit.report import PrintingStatus  # noqa: PLC0415
-        from spectrafit.core import SaveResult  # noqa: PLC0415
 
         status = PrintingStatus()
         status.welcome()

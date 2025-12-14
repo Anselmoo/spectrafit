@@ -21,9 +21,9 @@ from spectrafit.api.report_model import ReportAPI
 from spectrafit.api.report_model import SolverAPI
 from spectrafit.api.tools_model import DataPreProcessingAPI
 from spectrafit.api.tools_model import SolverModelsAPI
-from spectrafit.plugins.notebook.solver import SolverResults
 from spectrafit.core import exclude_none_dictionary
 from spectrafit.core import transform_nested_types
+from spectrafit.plugins.notebook.solver import SolverResults
 
 
 class ExportResults:

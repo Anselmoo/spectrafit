@@ -14,8 +14,6 @@ import pytest
 
 from pandas._testing import assert_frame_equal
 
-from spectrafit.models.builtin import DistributionModels
-from spectrafit.models.builtin import SolverModels
 from spectrafit.core import PostProcessing
 from spectrafit.core import PreProcessing
 from spectrafit.core import SaveResult
@@ -25,6 +23,8 @@ from spectrafit.core import pkl2any
 from spectrafit.core import pure_fname
 from spectrafit.core import transform_nested_types
 from spectrafit.core import unicode_check
+from spectrafit.models.builtin import DistributionModels
+from spectrafit.models.builtin import SolverModels
 
 
 @pytest.fixture(name="random_dataframe")

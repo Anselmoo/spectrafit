@@ -13,15 +13,15 @@ from spectrafit.cli._types import DecimalEnum
 from spectrafit.cli._types import GlobalFitEnum
 from spectrafit.cli._types import SeparatorEnum
 from spectrafit.cli._types import VerboseEnum
-from spectrafit.models.builtin import SolverModels
-from spectrafit.plotting import PlotSpectra
-from spectrafit.report import PrintingResults
-from spectrafit.report import PrintingStatus
 from spectrafit.core import PostProcessing
 from spectrafit.core import PreProcessing
 from spectrafit.core import SaveResult
 from spectrafit.core import load_data
 from spectrafit.core import read_input_file
+from spectrafit.models.builtin import SolverModels
+from spectrafit.plotting import PlotSpectra
+from spectrafit.report import PrintingResults
+from spectrafit.report import PrintingStatus
 
 
 if TYPE_CHECKING:
