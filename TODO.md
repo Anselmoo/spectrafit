@@ -65,7 +65,6 @@ This document tracks the migration tasks for SpectraFit from v1.x to v2.0.0, foc
 | `report.py` | 937 | Multiple responsibilities | Split into reporter classes |
 | `tools.py` | 769 | Mixed concerns | Split: data loading, preprocessing, export |
 | `plugins/notebook.py` | 1412 | Monolithic class | Split into smaller components |
-| `plugins/rixs_visualizer.py` | 727 | Own Typer app | Integrate as plugin |
 
 #### 6. Code Hygiene Score: 83/100
 
@@ -120,8 +119,6 @@ This document tracks the migration tasks for SpectraFit from v1.x to v2.0.0, foc
 ### 1.4 Plugin CLI Integration ✅ (Completed)
 
 - [x] Create `spectrafit plugins` subcommand group
-- [x] Migrate RIXS visualizer: `spectrafit plugins rixs`
-- [ ] Refactor `rixs_visualizer.py` (727 lines) - remove separate `app_cli` Typer instance (kept for backward compatibility)
 - [x] Add plugin discovery mechanism
 - [x] Implement `spectrafit plugins list` command
 
@@ -271,9 +268,8 @@ class FittingPipeline:
 ### 4.1 Plugin System Design 🟡 (Medium Priority)
 
 Current issues:
-- `plugins/rixs_visualizer.py` has its own `app_cli = typer.Typer()` (line 40)
-- No plugin interface/protocol
-- No dynamic plugin discovery
+- No plugin interface/protocol (✅ Resolved: Protocol added)
+- No dynamic plugin discovery (✅ Resolved: Discovery system implemented)
 
 - [ ] Research plugin patterns:
   - [ ] Entry points (`[project.entry-points]`)
@@ -303,11 +299,10 @@ Current issues:
 
 ### 4.2 Built-in Plugins
 
-- [ ] Convert RIXS visualizer to plugin architecture
-  - [ ] Remove standalone `app_cli` Typer app from `rixs_visualizer.py`
-  - [ ] Implement `RIXSPlugin` class following `SpectraFitPlugin` protocol
-- [ ] Convert Jupyter integration to plugin
-  - [ ] Split `notebook.py` (1412 lines) into modular plugin
+- [x] Convert Jupyter integration to plugin
+  - [x] Implement `JupyterPlugin` class following `SpectraFitPlugin` protocol
+- [x] Convert Mössbauer functionality to plugin
+  - [x] Implement `MoessbauerPlugin` class following `SpectraFitPlugin` protocol
 - [ ] Create Mössbauer plugin from existing models
 
 ### 4.3 Plugin Documentation
@@ -397,7 +392,6 @@ Document all breaking changes:
 |--------|------|--------|-----------|
 | CLI structure | `spectrafit file.csv` | `spectrafit fit file.csv` | Add `fit` subcommand |
 | Interactive mode | `input()` prompts | `typer.confirm()` | Automatic |
-| Plugin CLI | `rixs-visualizer` | `spectrafit plugins rixs` | Update scripts |
 | Config format | Mixed | Unified TOML | Converter provided |
 
 - [ ] Document all breaking changes in CHANGELOG

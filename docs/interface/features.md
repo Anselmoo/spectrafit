@@ -321,7 +321,7 @@ different types of output files will be generated
     the complexity of the fitting procedure.
     ```json
     {
-      "infile": "spectrafit/test/rixs_fecl4.txt",
+      "infile": "Examples/data.txt",
       "outfile": "fit_results",
       "input": "spectrafit/test/fitting_input.json",
       "oversampling": false,
