@@ -45,9 +45,9 @@ The **SpectraFit** API is organized into several modules, each providing specifi
 
   Tools for generating reports and exporting results.
 
-- :material-tools: **[Tools](tools_api.md)**
+- :material-cog: **[Core](core_api.md)**
 
-  Utility functions for data preprocessing and manipulation.
+  Core utilities for data loading, preprocessing, postprocessing, and export.
 
 - :material-database: **[Data Model](data_model_api.md)**
 

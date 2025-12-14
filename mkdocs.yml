@@ -273,7 +273,7 @@ nav:
       - Jupyter-Notebook: api/notebook_api.md
       - Modelling: api/modelling_api.md
       - Reporting: api/reporting_api.md
-      - Tools: api/tools_api.md
+      - Core: api/core_api.md
       - Data Model: api/data_model_api.md
   - Support:
       - Contact: contact.md
