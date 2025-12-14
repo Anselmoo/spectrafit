@@ -17,11 +17,11 @@ from spectrafit.models.builtin import SolverModels
 from spectrafit.plotting import PlotSpectra
 from spectrafit.report import PrintingResults
 from spectrafit.report import PrintingStatus
-from spectrafit.tools import PostProcessing
-from spectrafit.tools import PreProcessing
-from spectrafit.tools import SaveResult
-from spectrafit.tools import load_data
-from spectrafit.tools import read_input_file
+from spectrafit.core import PostProcessing
+from spectrafit.core import PreProcessing
+from spectrafit.core import SaveResult
+from spectrafit.core import load_data
+from spectrafit.core import read_input_file
 
 
 if TYPE_CHECKING:

@@ -7,7 +7,7 @@ from typing import Annotated
 
 import typer
 
-from spectrafit.tools import read_input_file
+from spectrafit.core import read_input_file
 
 
 def validate(
