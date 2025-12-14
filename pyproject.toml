@@ -172,7 +172,6 @@ extend-ignore = [
   "UP007",
   "PLR0913",
   "S301",
-  "PD901",
   "COM812",
   "FBT001",  # Boolean type hint positional argument
   "FBT002",  # Boolean default value positional argument
