@@ -255,8 +255,6 @@ nav:
           - Default Plot: examples/example9_1.ipynb
           - Themes: examples/example9_2.ipynb
           - Export Results: examples/example9_3.ipynb
-          - RIXS Map Visualization: examples/example9_4.ipynb
-          - RIXS Global-Fitting in Jupyter: examples/example9_6.ipynb
           - Mössbauer Fitting: examples/example10_1.ipynb
   - Documentation:
       - Overview: doc/index.md
@@ -268,7 +266,6 @@ nav:
   - Plugins:
       - Overview: plugins/index.md
       - Jupyter-Notebook-Integration: plugins/jupyter_interface.md
-      - RIXS-Visualization: plugins/rixs_visualization.md
   - API:
       - Overview: api/index.md
       - SpectraFit: api/spectrafit_api.md

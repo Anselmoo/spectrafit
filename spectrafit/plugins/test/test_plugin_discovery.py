@@ -24,19 +24,9 @@ def test_list_available_builtins():
     registry = PluginRegistry()
     builtins = registry.list_available_builtins()
     assert isinstance(builtins, list)
-    assert "rixs" in builtins
     assert "jupyter" in builtins
     assert "moessbauer" in builtins
-
-
-def test_load_builtin_rixs():
-    """Test loading RIXS built-in plugin."""
-    registry = PluginRegistry()
-    plugin = registry.load_builtin_plugin("rixs")
-    assert plugin is not None
-    assert plugin.name == "rixs"
-    assert plugin.version == "1.0.0"
-    assert "RIXS" in plugin.description or "rixs" in plugin.description
+    assert "rixs" not in builtins
 
 
 def test_load_builtin_jupyter():
@@ -67,10 +57,10 @@ def test_load_nonexistent_plugin():
 def test_get_plugin():
     """Test getting a loaded plugin."""
     registry = PluginRegistry()
-    plugin = registry.load_builtin_plugin("rixs")
+    plugin = registry.load_builtin_plugin("jupyter")
     assert plugin is not None
 
-    retrieved = registry.get_plugin("rixs")
+    retrieved = registry.get_plugin("jupyter")
     assert retrieved is plugin
 
 
@@ -79,9 +69,9 @@ def test_list_plugins():
     registry = PluginRegistry()
     initial_count = len(registry.list_plugins())
 
-    plugin = registry.load_builtin_plugin("rixs")
+    plugin = registry.load_builtin_plugin("jupyter")
     assert plugin is not None
 
     plugins = registry.list_plugins()
     assert len(plugins) == initial_count + 1
-    assert "rixs" in plugins
+    assert "jupyter" in plugins

@@ -15,7 +15,8 @@ def test_plugins_list():
     result = runner.invoke(app, ["plugins", "list"])
     assert result.exit_code == 0
     assert "Available SpectraFit Plugins" in result.output
-    assert "rixs" in result.output
+    # Should have jupyter and moessbauer plugins
+    assert "jupyter" in result.output or "moessbauer" in result.output
 
 
 def test_plugins_list_verbose():
@@ -32,20 +33,6 @@ def test_plugins_list_verbose_long():
     result = runner.invoke(app, ["plugins", "list", "--verbose"])
     assert result.exit_code == 0
     assert "Available SpectraFit Plugins" in result.output
-
-
-def test_rixs_help():
-    """Test RIXS plugin help."""
-    result = runner.invoke(app, ["plugins", "rixs", "--help"])
-    assert result.exit_code == 0
-    assert "rixs" in result.output.lower()
-    assert "visualizer" in result.output.lower() or "RIXS" in result.output
-
-
-def test_rixs_missing_file():
-    """Test RIXS plugin without input file."""
-    result = runner.invoke(app, ["plugins", "rixs"])
-    assert result.exit_code != 0
 
 
 def test_jupyter_help():

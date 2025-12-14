@@ -6,7 +6,7 @@
 
 ## Context
 
-SpectraFit has several specialized features (RIXS visualization, Jupyter integration, Mössbauer models) that:
+SpectraFit has several specialized features (Jupyter integration, Mössbauer models) that:
 
 1. Have optional dependencies
 2. May not be needed by all users
@@ -14,7 +14,7 @@ SpectraFit has several specialized features (RIXS visualization, Jupyter integra
 4. Need clear extension points
 
 The original implementation had:
-- Standalone CLI apps (e.g., `spectrafit-rixs-visualizer`)
+- Standalone CLI apps
 - Tightly coupled code in main application
 - No clear plugin interface
 - No discovery mechanism
@@ -56,7 +56,6 @@ Plugins are discovered via entry points in `pyproject.toml`:
 
 ```toml
 [project.entry-points."spectrafit.plugins"]
-rixs = "spectrafit.plugins.rixs_plugin:RIXSPlugin"
 jupyter = "spectrafit.plugins.jupyter_plugin:JupyterPlugin"
 moessbauer = "spectrafit.plugins.moessbauer_plugin:MoessbauerPlugin"
 ```
@@ -96,19 +95,13 @@ for plugin in registry.discover_plugins():
 
 ## Built-in Plugins
 
-### 1. RIXS Plugin
-
-**Purpose**: Interactive RIXS plane visualization
-**Dependencies**: `dash`, `dash-bootstrap-components`, `jupyter-dash`
-**Commands**: `spectrafit plugins rixs <infile>`
-
-### 2. Jupyter Plugin
+### 1. Jupyter Plugin
 
 **Purpose**: Jupyter Lab integration
 **Dependencies**: `jupyterlab`, `plotly`, `dtale`
 **Commands**: `spectrafit plugins jupyter`
 
-### 3. Mössbauer Plugin
+### 2. Mössbauer Plugin
 
 **Purpose**: Mössbauer spectroscopy models
 **Dependencies**: None (uses core models)

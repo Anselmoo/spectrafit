@@ -13,7 +13,6 @@ jobs:
           - spectrafit
           - spectrafit-jupyter
           - spectrafit-all
-          - spectrafit-rixs
       max-parallel: 5
 
     steps:

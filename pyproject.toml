@@ -95,11 +95,9 @@ Issues = "https://github.com/Anselmoo/spectrafit/issues"
 
 [project.scripts]
 spectrafit = "spectrafit.cli.main:run"
-spectrafit-rixs-visualizer = "spectrafit.plugins.rixs_visualizer:command_line_runner"
 spectrafit-jupyter = "spectrafit.app.app:jupyter"
 
 [project.entry-points."spectrafit.plugins"]
-rixs = "spectrafit.plugins.rixs_plugin:RIXSPlugin"
 jupyter = "spectrafit.plugins.jupyter_plugin:JupyterPlugin"
 moessbauer = "spectrafit.plugins.moessbauer_plugin:MoessbauerPlugin"
 
@@ -211,7 +209,6 @@ extend-ignore = [
 "spectrafit/core/*.py" = ["TC001", "TC002"]
 "spectrafit/report/*.py" = ["TC001", "TC002"]
 "spectrafit/plugins/notebook/*.py" = ["TC001", "TC002"]
-"spectrafit/plugins/rixs_visualizer.py" = ["N803"]
 "spectrafit/plugins/color_schemas.py" = ["RUF012"]
 "spectrafit/plugins/test/test_notebook.py" = ["SLF001"]
 "spectrafit/cli/commands/*.py" = ["TC003", "TRY301", "PLC0415", "C901", "PLR0915"]

@@ -267,7 +267,7 @@ class TestPluginsWorkflow:
         """Test listing plugins."""
         result = runner.invoke(app, ["plugins", "list"])
         assert result.exit_code == 0
-        assert "rixs" in result.output.lower() or "plugin" in result.output.lower()
+        assert "plugin" in result.output.lower()
 
     def test_plugins_list_verbose_workflow(self):
         """Test listing plugins with verbose output."""
