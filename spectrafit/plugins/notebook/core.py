@@ -25,14 +25,14 @@ from spectrafit.api.notebook_model import XAxisAPI
 from spectrafit.api.notebook_model import YAxisAPI
 from spectrafit.api.tools_model import DataPreProcessingAPI
 from spectrafit.api.tools_model import SolverModelsAPI
+from spectrafit.core import PostProcessing
+from spectrafit.core import PreProcessing
 from spectrafit.models.builtin import SolverModels
 from spectrafit.plugins.notebook.display import DataFrameDisplay
 from spectrafit.plugins.notebook.export import ExportReport
 from spectrafit.plugins.notebook.export import ExportResults
 from spectrafit.plugins.notebook.plotting import DataFramePlot
 from spectrafit.plugins.notebook.solver import SolverResults
-from spectrafit.tools import PostProcessing
-from spectrafit.tools import PreProcessing
 from spectrafit.utilities.transformer import list2dict
 
 

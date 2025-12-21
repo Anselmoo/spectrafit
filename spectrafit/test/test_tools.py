@@ -14,17 +14,17 @@ import pytest
 
 from pandas._testing import assert_frame_equal
 
+from spectrafit.core import PostProcessing
+from spectrafit.core import PreProcessing
+from spectrafit.core import SaveResult
+from spectrafit.core import check_keywords_consistency
+from spectrafit.core import exclude_none_dictionary
+from spectrafit.core import pkl2any
+from spectrafit.core import pure_fname
+from spectrafit.core import transform_nested_types
+from spectrafit.core import unicode_check
 from spectrafit.models.builtin import DistributionModels
 from spectrafit.models.builtin import SolverModels
-from spectrafit.tools import PostProcessing
-from spectrafit.tools import PreProcessing
-from spectrafit.tools import SaveResult
-from spectrafit.tools import check_keywords_consistency
-from spectrafit.tools import exclude_none_dictionary
-from spectrafit.tools import pkl2any
-from spectrafit.tools import pure_fname
-from spectrafit.tools import transform_nested_types
-from spectrafit.tools import unicode_check
 
 
 @pytest.fixture(name="random_dataframe")
