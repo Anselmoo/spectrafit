@@ -3,7 +3,7 @@ name = "SpectraFit"
 version = "1.4.2"
 description = "Fast fitting of 2D- and 3D-Spectra with established routines"
 authors = [{ name = "Anselm Hahn", email = "anselm.hahn@gmail.com" }]
-requires-python = ">=3.9,<3.14"
+requires-python = ">=3.14,<3.15"
 readme = "README.md"
 license = "BSD-3-Clause"
 maintainers = [{ name = "Anselm Hahn", email = "anselm.hahn@gmail.com" }]
@@ -59,7 +59,7 @@ jupyter = [
   "dtale>=3.17.0",
   "itables>=2.3.0",
   "jupyterlab>=4.3.6",
-  "kaleido==1.0.0",
+  "kaleido==1.2.0",
   "plotly>=6.0.1",
   "python-pptx>=1.0.2",
 ]
