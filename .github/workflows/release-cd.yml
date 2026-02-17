@@ -20,10 +20,10 @@ jobs:
     name: 🐍 Publish on PyPi
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         name: 🛎️ Checkout repository
       - name: 🐍 Set up Python
-        uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548 # v6
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6
         with:
           python-version: "3.13"
       - name: 📦 Install dependencies
@@ -33,7 +33,7 @@ jobs:
       - name: 🏗️ Build package
         run: python -m build
       - name: 🚀 Publish package
-        uses: pypa/gh-action-pypi-publish@03f86fee9ac21f854951f5c6e2a02c2a1324aec7
+        uses: pypa/gh-action-pypi-publish@e2bab26859796ee5c3bf97b8f394ce1e6570e906
         with:
           user: __token__
           password: ${{ secrets.TWINE_TOKEN }}
