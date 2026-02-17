@@ -954,7 +954,7 @@ class ReferenceKeys:
             NotImplementedError: If the model is not implemented.
 
         """
-        model_prefix = model.split("_")[0]
+        model_prefix = model.split("_", maxsplit=1)[0]
 
         # Check in main models list
         if (
