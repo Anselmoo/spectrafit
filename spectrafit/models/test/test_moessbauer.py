@@ -478,8 +478,10 @@ def patch_dependencies(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(
         moessbauer_mod,
         "lorentzian",
-        lambda x, center, fwhml, amplitude: np.ones_like(x, dtype=np.float64)  # noqa: ARG005
-        * amplitude,
+        lambda x, center, fwhml, amplitude: (
+            np.ones_like(x, dtype=np.float64)  # noqa: ARG005
+            * amplitude
+        ),
     )
     # Patch constants
     monkeypatch.setattr(moessbauer_mod, "MIN_EFG_THRESHOLD", 1e-5)
