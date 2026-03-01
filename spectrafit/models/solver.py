@@ -12,7 +12,6 @@ from math import log
 from math import pi
 from math import sqrt
 from typing import TYPE_CHECKING
-from typing import Any
 from typing import ClassVar
 
 import numpy as np
@@ -22,6 +21,7 @@ from lmfit import Parameters
 
 from spectrafit.api.tools_model import GlobalFittingAPI
 from spectrafit.api.tools_model import SolverModelsAPI
+from spectrafit.models.autopeak import FittingArgs
 from spectrafit.models.autopeak import ModelParameters
 from spectrafit.models.autopeak import ReferenceKeys
 from spectrafit.models.registry import REGISTRY
@@ -30,6 +30,8 @@ from spectrafit.models.registry import REGISTRY
 if TYPE_CHECKING:
     import pandas as pd
 
+    from lmfit import Parameter
+    from lmfit.minimizer import MinimizerResult
     from numpy.typing import NDArray
 
 
@@ -44,12 +46,12 @@ class SolverModels(ModelParameters):
           the `lmfit` function is used.
     """
 
-    def __init__(self, df: pd.DataFrame, args: dict[str, Any]) -> None:
+    def __init__(self, df: pd.DataFrame, args: FittingArgs) -> None:
         """Initialize the solver modes.
 
         Args:
             df (pd.DataFrame): DataFrame containing the input data (`x` and `data`).
-            args (dict[str, Any]): The input file arguments as a dictionary with
+            args (FittingArgs): The input file arguments as a dictionary with
                  additional information beyond the command line arguments.
 
         """
@@ -58,11 +60,11 @@ class SolverModels(ModelParameters):
         self.args_global = GlobalFittingAPI(**args).model_dump()
         self.params = self.return_params
 
-    def __call__(self) -> tuple[Minimizer, Any]:
+    def __call__(self) -> tuple[Minimizer, MinimizerResult]:
         """Solve the fitting model.
 
         Returns:
-            Tuple[Minimizer, Any]: Minimizer class and the fitting results.
+            Tuple[Minimizer, MinimizerResult]: Minimizer class and the fitting results.
 
         """
         if self.args_global["global_"]:
@@ -88,14 +90,14 @@ class SolverModels(ModelParameters):
 
     @staticmethod
     def solve_local_fitting(
-        params: dict[str, Parameters],
+        params: Parameters,
         x: NDArray[np.float64],
         data: NDArray[np.float64],
     ) -> NDArray[np.float64]:
         """Solving the fitting problem.
 
         Args:
-            params (dict[str, Parameters]): The best optimized parameters of the fit.
+            params (Parameters): The best optimized parameters of the fit.
             x (NDArray[np.float64]): `x`-values of the data.
             data (NDArray[np.float64]): `y`-values of the data as 1d-array.
 
@@ -104,7 +106,7 @@ class SolverModels(ModelParameters):
 
         """
         val = np.zeros(x.shape)
-        peak_kwargs: dict[tuple[str, str], Parameters] = defaultdict(dict)
+        peak_kwargs: dict[tuple[str, str], dict[str, Parameter]] = defaultdict(dict)
         for model_name, param_value in params.items():
             _model = model_name.lower()
             ReferenceKeys().model_check(model=_model)
@@ -121,7 +123,7 @@ class SolverModels(ModelParameters):
 
     @staticmethod
     def solve_global_fitting(
-        params: dict[str, Parameters],
+        params: Parameters,
         x: NDArray[np.float64],
         data: NDArray[np.float64],
     ) -> NDArray[np.float64]:
@@ -142,7 +144,7 @@ class SolverModels(ModelParameters):
 
 
         Args:
-            params (dict[str, Parameters]): The best optimized parameters of the fit.
+            params (Parameters): The best optimized parameters of the fit.
             x (NDArray[np.float64]): `x`-values of the data.
             data (NDArray[np.float64]): `y`-values of the data as 2D-array.
 
@@ -151,7 +153,9 @@ class SolverModels(ModelParameters):
 
         """
         val = np.zeros(data.shape)
-        peak_kwargs: dict[tuple[str, str, str], Parameters] = defaultdict(dict)
+        peak_kwargs: dict[tuple[str, str, str], dict[str, Parameter]] = defaultdict(
+            dict
+        )
 
         for model, value in params.items():
             model_lower = model.lower()
@@ -167,7 +171,7 @@ class SolverModels(ModelParameters):
 
 
 def calculated_model(
-    params: dict[str, Parameters],
+    params: Parameters,
     x: NDArray[np.float64],
     df: pd.DataFrame,
     global_fit: int,
@@ -180,7 +184,7 @@ def calculated_model(
         the model. Currently, `lmfit` provides only a single model, so the best-fit.
 
     Args:
-        params (dict[str, Parameters]): The best optimized parameters of the fit.
+        params (Parameters): The best optimized parameters of the fit.
         x (NDArray[np.float64]): `x`-values of the data.
         df (pd.DataFrame): DataFrame containing the input data (`x` and `data`),
              as well as the best fit and the corresponding residuum. Hence, it will be
@@ -192,7 +196,9 @@ def calculated_model(
             models.
 
     """
-    peak_kwargs: dict[Any, Parameters] = defaultdict(dict)
+    peak_kwargs: dict[tuple[str, str] | tuple[str, str, str], dict[str, Parameter]] = (
+        defaultdict(dict)
+    )
 
     for model, value in params.items():
         model_lower = model.lower()
@@ -205,7 +211,7 @@ def calculated_model(
 
     _df = df.copy()
     for key, _kwarg in peak_kwargs.items():
-        c_name = f"{key[0]}_{key[1]}_{key[2]}" if global_fit else f"{key[0]}_{key[1]}"
+        c_name = "_".join(key)
         _df[c_name] = REGISTRY.get(key[0]).function(x, **_kwarg)
 
     return _df

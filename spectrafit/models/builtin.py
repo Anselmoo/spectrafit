@@ -12,7 +12,12 @@ from __future__ import annotations
 from spectrafit.models.autopeak import GLOBAL_NONE
 from spectrafit.models.autopeak import GLOBAL_STANDARD
 from spectrafit.models.autopeak import GLOBAL_WITH_PRE
+from spectrafit.models.autopeak import FittingArgs
+from spectrafit.models.autopeak import ModelParameterSpec
 from spectrafit.models.autopeak import ModelParameters
+from spectrafit.models.autopeak import ParameterConstraint
+from spectrafit.models.autopeak import PeakModelSpec
+from spectrafit.models.autopeak import PeaksDict
 from spectrafit.models.autopeak import ReferenceKeys
 from spectrafit.models.distributions import DistributionModels
 from spectrafit.models.solver import Constants
@@ -26,7 +31,12 @@ __all__ = [
     "GLOBAL_WITH_PRE",
     "Constants",
     "DistributionModels",
+    "FittingArgs",
+    "ModelParameterSpec",
     "ModelParameters",
+    "ParameterConstraint",
+    "PeakModelSpec",
+    "PeaksDict",
     "ReferenceKeys",
     "SolverModels",
     "calculated_model",

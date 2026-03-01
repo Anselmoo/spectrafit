@@ -10,6 +10,7 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING
 from typing import Any
 from typing import ClassVar
+from typing import TypeAlias
 
 from lmfit import Parameters
 
@@ -26,6 +27,22 @@ if TYPE_CHECKING:
 GLOBAL_NONE = 0  # No global fitting
 GLOBAL_STANDARD = 1  # Standard global fitting
 GLOBAL_WITH_PRE = 2  # Global fitting with pre-processing
+
+# Type aliases for the nested peak parameter structure
+ParameterConstraint: TypeAlias = dict[str, float | bool | str | None]
+"""Single lmfit parameter constraint, e.g. ``{"min": 0, "max": 2, "vary": True, "value": 1}``."""
+
+ModelParameterSpec: TypeAlias = dict[str, ParameterConstraint]
+"""Maps parameter names to constraints, e.g. ``{"amplitude": {...}, "center": {...}}``."""
+
+PeakModelSpec: TypeAlias = dict[str, ModelParameterSpec]
+"""Maps model names to parameter specs, e.g. ``{"pseudovoigt": {...}}``."""
+
+PeaksDict: TypeAlias = dict[str, PeakModelSpec]
+"""All peaks for standard fitting: ``{"1": {"pseudovoigt": {...}}, "2": {...}}``."""
+
+FittingArgs: TypeAlias = dict[str, Any]
+"""Main fitting arguments dict with peaks, minimizer, optimizer, column, global_ keys."""
 
 
 @dataclass(frozen=True)
@@ -80,12 +97,12 @@ class ReferenceKeys:
 class ModelParameters:
     """Class to define the model parameters."""
 
-    def __init__(self, df: pd.DataFrame, args: dict[str, Any]) -> None:
+    def __init__(self, df: pd.DataFrame, args: FittingArgs) -> None:
         """Initialize the model parameters.
 
         Args:
             df (pd.DataFrame): DataFrame containing the input data (`x` and `data`).
-            args (dict[str, Any]):
+            args (FittingArgs):
                  Nested arguments dictionary for the model based on **one** or **two**
                  `int` keys depending if global fitting parameters, will explicit
                  defined or not.
@@ -99,13 +116,13 @@ class ModelParameters:
     def df_to_numvalues(
         self,
         df: pd.DataFrame,
-        args: dict[str, Any],
+        args: FittingArgs,
     ) -> tuple[NDArray[np.float64], NDArray[np.float64]]:
         """Transform the dataframe to numeric values of `x` and `data`.
 
         Args:
             df (pd.DataFrame): DataFrame containing the input data (`x` and `data`).
-            args (dict[str, Any]): The input file arguments as a dictionary with
+            args (FittingArgs): The input file arguments as a dictionary with
                  additional information beyond the command line arguments.
 
         Returns:
@@ -155,12 +172,12 @@ class ModelParameters:
         for key_1, value_1 in self.args["peaks"].items():
             self.define_parameters_loop(key_1=key_1, value_1=value_1)
 
-    def define_parameters_loop(self, key_1: str, value_1: dict[str, Any]) -> None:
+    def define_parameters_loop(self, key_1: str, value_1: PeakModelSpec) -> None:
         """Loop through the input parameters for a `params`-dictionary.
 
         Args:
             key_1 (str): The key of the first level of the input dictionary.
-            value_1 (dict[str, Any]): The value of the first level of the input
+            value_1 (PeakModelSpec): The value of the first level of the input
                  dictionary.
 
         """
@@ -171,14 +188,14 @@ class ModelParameters:
         self,
         key_1: str,
         key_2: str,
-        value_2: dict[str, Any],
+        value_2: ModelParameterSpec,
     ) -> None:
         """Loop through the input parameters for a `params`-dictionary.
 
         Args:
             key_1 (str): The key of the first level of the input dictionary.
             key_2 (str): The key of the second level of the input dictionary.
-            value_2 (dict[str, Any]): The value of the first level of the input
+            value_2 (ModelParameterSpec): The value of the first level of the input
                  dictionary.
 
         """
@@ -195,7 +212,7 @@ class ModelParameters:
         key_1: str,
         key_2: str,
         key_3: str,
-        value_3: dict[str, Any],
+        value_3: ParameterConstraint,
     ) -> None:
         """Loop through the input parameters for a `params`-dictionary.
 
@@ -203,7 +220,7 @@ class ModelParameters:
             key_1 (str): The key of the first level of the input dictionary.
             key_2 (str): The key of the second level of the input dictionary.
             key_3 (str): The key of the third level of the input dictionary.
-            value_3 (dict[str, Any]): The value of the third level of the input
+            value_3 (ParameterConstraint): The value of the third level of the input
                  dictionary.
 
         """
@@ -229,7 +246,7 @@ class ModelParameters:
         key_1: str,
         key_2: str,
         key_3: str,
-        value_3: dict[str, Any],
+        value_3: ParameterConstraint,
     ) -> None:
         """Define the input parameters for a `params`-dictionary for global fitting.
 
@@ -238,7 +255,7 @@ class ModelParameters:
             key_1 (str): The key of the first level of the input dictionary.
             key_2 (str): The key of the second level of the input dictionary.
             key_3 (str): The key of the third level of the input dictionary.
-            value_3 (dict[str, Any]): The value of the third level of the input
+            value_3 (ParameterConstraint): The value of the third level of the input
                  dictionary.
 
         """
