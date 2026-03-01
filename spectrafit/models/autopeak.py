@@ -23,10 +23,14 @@ if TYPE_CHECKING:
 
     from numpy.typing import NDArray
 
+    from spectrafit.models.global_fitting import GlobalFittingConfig
+
 # Constants for global fitting modes
 GLOBAL_NONE = 0  # No global fitting
 GLOBAL_STANDARD = 1  # Standard global fitting
 GLOBAL_WITH_PRE = 2  # Global fitting with pre-processing
+
+_MIN_DATASETS_FOR_SHARING = 2  # Minimum datasets needed to share a parameter
 
 # Type aliases for the nested peak parameter structure
 ParameterConstraint: TypeAlias = dict[str, float | bool | str | None]
@@ -226,6 +230,16 @@ class ModelParameters:
         """
         self.params.add(f"{key_2}_{key_3}_{key_1}", **value_3)
 
+    @property
+    def global_fitting_config(self) -> GlobalFittingConfig | None:
+        """Return the ``GlobalFittingConfig`` if one was supplied in args.
+
+        Returns:
+            GlobalFittingConfig | None: Config object, or *None* when the
+                caller used the legacy dict-only interface.
+        """
+        return self.args.get("global_fitting_config")
+
     def define_parameters_global(self) -> None:
         """Define the input parameters for a `params`-dictionary for global fitting."""
         for col_i in range(self.col_len):
@@ -239,6 +253,7 @@ class ModelParameters:
                             key_3=key_3,
                             value_3=value_3,
                         )
+        self._apply_shared_parameters()
 
     def _define_parameter(
         self,
@@ -273,6 +288,36 @@ class ModelParameters:
 
         else:
             self.params.add(f"{key_2}_{key_3}_{key_1}_1", **value_3)
+
+    def _apply_shared_parameters(self) -> None:
+        """Apply shared-parameter constraints from ``GlobalFittingConfig``.
+
+        When a ``GlobalFittingConfig`` is present in *args* its
+        ``shared_parameters`` override the default linking behaviour so
+        that callers can specify exactly *which* parameters are shared and
+        across *which* datasets.
+        """
+        cfg = self.global_fitting_config
+        if cfg is None:
+            return
+
+        for sp in cfg.shared_parameters:
+            target_datasets = (
+                sp.datasets if sp.datasets else list(range(cfg.n_datasets))
+            )
+            if len(target_datasets) < _MIN_DATASETS_FOR_SHARING:
+                continue
+
+            first_ds = target_datasets[0]
+            source_name = f"{sp.name}_{first_ds + 1}"
+            if source_name not in self.params:
+                continue
+
+            expr = sp.constraint_expr or source_name
+            for ds_idx in target_datasets[1:]:
+                dest_name = f"{sp.name}_{ds_idx + 1}"
+                if dest_name in self.params:
+                    self.params[dest_name].set(expr=expr, vary=False)
 
     def define_parameters_global_pre(self) -> None:
         """Define the input parameters for a `params`-dictionary for global fitting.

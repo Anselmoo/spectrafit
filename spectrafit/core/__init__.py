@@ -9,6 +9,8 @@ from __future__ import annotations
 from spectrafit.core.config import ConfigLoader
 from spectrafit.core.config import FittingConfig
 from spectrafit.core.config import load_config
+from spectrafit.core.fitting_config import ColumnConfig
+from spectrafit.core.fitting_config import UnifiedFittingConfig
 from spectrafit.core.data_loader import check_keywords_consistency
 from spectrafit.core.data_loader import load_data
 from spectrafit.core.data_loader import pkl2any
@@ -28,6 +30,7 @@ from spectrafit.core.preprocessing import PreProcessingArgs
 
 
 __all__ = [
+    "ColumnConfig",
     "ConfigLoader",
     "FitStatistics",
     "FittingConfig",
@@ -37,6 +40,7 @@ __all__ = [
     "PreProcessing",
     "PreProcessingArgs",
     "SaveResult",
+    "UnifiedFittingConfig",
     "check_keywords_consistency",
     "exclude_none_dictionary",
     "fitting_routine_pipeline",

@@ -34,6 +34,8 @@ if TYPE_CHECKING:
     from lmfit.minimizer import MinimizerResult
     from numpy.typing import NDArray
 
+    from spectrafit.models.global_fitting import GlobalFittingConfig
+
 
 class SolverModels(ModelParameters):
     """Solving models for 2D and 3D data sets.
@@ -68,10 +70,11 @@ class SolverModels(ModelParameters):
 
         """
         if self.args_global["global_"]:
+            cfg: GlobalFittingConfig | None = self.global_fitting_config
             minimizer = Minimizer(
                 self.solve_global_fitting,
                 params=self.params,
-                fcn_args=(self.x, self.data),
+                fcn_args=(self.x, self.data, cfg),
                 **self.args_solver["minimizer"],
             )
         else:
@@ -126,6 +129,7 @@ class SolverModels(ModelParameters):
         params: Parameters,
         x: NDArray[np.float64],
         data: NDArray[np.float64],
+        config: GlobalFittingConfig | None = None,
     ) -> NDArray[np.float64]:
         r"""Solving the fitting for global problem.
 
@@ -147,6 +151,8 @@ class SolverModels(ModelParameters):
             params (Parameters): The best optimized parameters of the fit.
             x (NDArray[np.float64]): `x`-values of the data.
             data (NDArray[np.float64]): `y`-values of the data as 2D-array.
+            config (GlobalFittingConfig | None): Optional global fitting
+                configuration with per-dataset weights.
 
         Returns:
             NDArray[np.float64]: The best-fitted data based on the proposed model.
@@ -166,8 +172,13 @@ class SolverModels(ModelParameters):
             i = int(key[2]) - 1
             val[:, i] += REGISTRY.get(key[0]).function(x, **_kwarg)
 
-        val -= data
-        return val.flatten()
+        residual = val - data
+
+        if config is not None and config.weights is not None:
+            weights_arr = np.array(config.weights, dtype=np.float64)
+            residual = residual * weights_arr[np.newaxis, :]
+
+        return residual.flatten()
 
 
 def calculated_model(
