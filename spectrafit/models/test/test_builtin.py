@@ -30,6 +30,8 @@ from spectrafit.test.fixtures import PeakSpec
 if TYPE_CHECKING:
     from numpy.typing import NDArray
 
+pytestmark = pytest.mark.unit
+
 
 def assert_solver_models(mp: tuple[Minimizer, Any]) -> None:
     """Assert SolverModels."""
@@ -421,9 +423,7 @@ class TestModelParametersSolver:
         return {
             "minimizer": {"nan_policy": "propagate", "calc_covar": False},
             "optimizer": {"max_nfev": 10, "method": "leastsq"},
-            "peaks": {
-                str(i): peak.to_dict() for i, peak in enumerate(_peaks, start=1)
-            },
+            "peaks": {str(i): peak.to_dict() for i, peak in enumerate(_peaks, start=1)},
         }
 
     def test_all_model_local(

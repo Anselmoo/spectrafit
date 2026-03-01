@@ -16,6 +16,9 @@ from spectrafit.models.global_fitting import GlobalFittingResult
 from spectrafit.models.global_fitting import SharedParameter
 
 
+pytestmark = pytest.mark.unit
+
+
 # ---------------------------------------------------------------------------
 # SharedParameter model tests
 # ---------------------------------------------------------------------------
@@ -177,6 +180,7 @@ class TestGlobalFittingResult:
 # ---------------------------------------------------------------------------
 
 
+@pytest.mark.integration
 class TestSharedParameterLinking:
     """Test that shared parameters correctly constrain lmfit Parameters."""
 
@@ -280,6 +284,7 @@ class TestSharedParameterLinking:
 # ---------------------------------------------------------------------------
 
 
+@pytest.mark.integration
 class TestPerDatasetWeighting:
     """Test that per-dataset weights are applied in global fitting residuals."""
 

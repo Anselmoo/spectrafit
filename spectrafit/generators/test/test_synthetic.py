@@ -13,6 +13,9 @@ from spectrafit.generators.synthetic import PeakDefinition
 from spectrafit.generators.synthetic import SyntheticSpectrum
 
 
+pytestmark = pytest.mark.unit
+
+
 class TestPeakDefinition:
     """Tests for the PeakDefinition model."""
 

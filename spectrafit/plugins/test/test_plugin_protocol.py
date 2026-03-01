@@ -10,6 +10,11 @@ from spectrafit.plugins.protocol import SpectraFitPlugin
 if TYPE_CHECKING:
     import typer
 
+import pytest
+
+
+pytestmark = pytest.mark.unit
+
 
 def test_plugin_protocol_attributes():
     """Test that SpectraFitPlugin protocol has required attributes."""

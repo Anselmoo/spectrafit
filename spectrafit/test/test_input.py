@@ -15,10 +15,12 @@ from numpy.testing import assert_almost_equal
 from spectrafit.test.conftest import create_stdin
 
 
+pytestmark = [pytest.mark.e2e, pytest.mark.slow]
+
+
 BUILTINS_INPUT = "builtins.input"
 
 
-@pytest.mark.slow
 class TestCommandLineRunner:
     """Testing the command line interface."""
 
@@ -64,7 +66,6 @@ class TestCommandLineRunner:
         assert ret.success
 
 
-@pytest.mark.slow
 class TestFileFormat:
     """Testing the file formats."""
 
@@ -169,7 +170,6 @@ class TestFileFormat:
         assert len(list(Path(tmp_path).glob("result_toml*.csv"))) == 3
 
 
-@pytest.mark.slow
 class TestFileFormatOutput:
     """Testing the output files and formats."""
 
@@ -205,7 +205,6 @@ class TestFileFormatOutput:
         assert len(list(export_dir.glob("fit_results*.csv"))) == 3
 
 
-@pytest.mark.slow
 class TestMoreFeatures:
     """Testing more features."""
 
@@ -419,7 +418,6 @@ class TestMoreFeatures:
         assert not ret.success
 
 
-@pytest.mark.slow
 class TestGlobalFitting:
     """Test class for global fitting."""
 

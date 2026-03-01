@@ -12,6 +12,11 @@ from spectrafit.models.builtin import DistributionModels
 if TYPE_CHECKING:
     from numpy.typing import NDArray
 
+import pytest
+
+
+pytestmark = pytest.mark.unit
+
 
 def test_velocity_data(velocity_data: NDArray[np.float64]) -> None:
     """Test that velocity_data fixture returns expected array.

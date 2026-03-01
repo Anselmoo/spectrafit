@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from math import isclose
 
+import pytest
+
 from _plotly_utils.colors.qualitative import Plotly as PlotlyColors
 
 from spectrafit.api.notebook_model import ColorAPI
@@ -17,6 +19,9 @@ from spectrafit.api.notebook_model import ResidualAPI
 from spectrafit.api.notebook_model import RunAPI
 from spectrafit.api.notebook_model import XAxisAPI
 from spectrafit.api.notebook_model import YAxisAPI
+
+
+pytestmark = pytest.mark.unit
 
 
 def test_xaxis_model() -> None:

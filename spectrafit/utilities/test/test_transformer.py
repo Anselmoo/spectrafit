@@ -10,6 +10,9 @@ from spectrafit.utilities.transformer import list2dict
 from spectrafit.utilities.transformer import remove_none_type
 
 
+pytestmark = pytest.mark.unit
+
+
 @pytest.fixture
 def reference_dict() -> dict[str, dict[str, Any]]:
     """Check reference dictionary.

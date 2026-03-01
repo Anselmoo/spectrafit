@@ -21,6 +21,8 @@ if TYPE_CHECKING:
 
     from spectrafit.models.builtin import DistributionModels
 
+pytestmark = pytest.mark.unit
+
 
 @pytest.mark.models
 @pytest.mark.parametrize(

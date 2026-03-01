@@ -12,6 +12,11 @@ from spectrafit.plotting import PlotSpectra
 if TYPE_CHECKING:
     from matplotlib.figure import Figure
 
+import pytest
+
+
+pytestmark = pytest.mark.unit
+
 
 def test_succeeds(plt: Figure) -> None:
     """Test that PlotSpectra class succeeds for 2D-plotting."""

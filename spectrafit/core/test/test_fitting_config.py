@@ -4,16 +4,21 @@ from __future__ import annotations
 
 import json
 
-from pathlib import Path
+from typing import TYPE_CHECKING
 from typing import Any
+
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 import pytest
 import yaml
 
-from spectrafit.api.tools_model import MinimizerConfig
-from spectrafit.api.tools_model import OptimizerConfig
 from spectrafit.core.fitting_config import ColumnConfig
 from spectrafit.core.fitting_config import UnifiedFittingConfig
+
+
+pytestmark = pytest.mark.unit
 
 
 # ---------------------------------------------------------------------------
@@ -32,13 +37,13 @@ MINIMAL_PEAKS: dict[str, Any] = {
 }
 
 
-@pytest.fixture()
+@pytest.fixture
 def minimal_dict() -> dict[str, Any]:
     """Return a minimal valid configuration dictionary."""
     return {"peaks": MINIMAL_PEAKS}
 
 
-@pytest.fixture()
+@pytest.fixture
 def full_dict() -> dict[str, Any]:
     """Return a full configuration dictionary with all fields."""
     return {
@@ -124,9 +129,7 @@ class TestUnifiedFittingConfigFull:
 
     def test_global_alias(self) -> None:
         """The 'global' alias populates global_ correctly."""
-        cfg = UnifiedFittingConfig.model_validate(
-            {"peaks": MINIMAL_PEAKS, "global": 2}
-        )
+        cfg = UnifiedFittingConfig.model_validate({"peaks": MINIMAL_PEAKS, "global": 2})
         assert cfg.global_ == 2
 
     def test_global_underscore(self) -> None:
@@ -261,23 +264,19 @@ class TestValidationErrors:
     """Tests for expected validation failures."""
 
     def test_missing_peaks(self) -> None:
-        """peaks is a required field."""
-        with pytest.raises(Exception):
+        """Peaks is a required field."""
+        with pytest.raises(ValueError):
             UnifiedFittingConfig.model_validate({})
 
     def test_invalid_global_too_high(self) -> None:
         """global_ > 2 is rejected."""
-        with pytest.raises(Exception):
-            UnifiedFittingConfig.model_validate(
-                {"peaks": MINIMAL_PEAKS, "global": 5}
-            )
+        with pytest.raises(ValueError):
+            UnifiedFittingConfig.model_validate({"peaks": MINIMAL_PEAKS, "global": 5})
 
     def test_invalid_global_negative(self) -> None:
         """global_ < 0 is rejected."""
-        with pytest.raises(Exception):
-            UnifiedFittingConfig.model_validate(
-                {"peaks": MINIMAL_PEAKS, "global": -1}
-            )
+        with pytest.raises(ValueError):
+            UnifiedFittingConfig.model_validate({"peaks": MINIMAL_PEAKS, "global": -1})
 
 
 # ---------------------------------------------------------------------------

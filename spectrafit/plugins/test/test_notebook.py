@@ -26,6 +26,9 @@ from spectrafit.plugins.notebook import ExportResults
 from spectrafit.plugins.notebook import SpectraFitNotebook
 
 
+pytestmark = pytest.mark.integration
+
+
 __plotly_io_show__ = "plotly.io.show"
 
 

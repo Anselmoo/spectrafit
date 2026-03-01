@@ -12,6 +12,9 @@ from spectrafit.models.registry import ModelInfo
 from spectrafit.models.registry import ModelRegistry
 
 
+pytestmark = pytest.mark.unit
+
+
 ALL_MODEL_NAMES = [
     "gaussian",
     "orcagaussian",

@@ -13,6 +13,9 @@ from spectrafit.models.diagnostics import compute_diagnostics
 from spectrafit.models.diagnostics import validate_result
 
 
+pytestmark = pytest.mark.unit
+
+
 def _make_mock_result(
     *,
     success: bool = True,

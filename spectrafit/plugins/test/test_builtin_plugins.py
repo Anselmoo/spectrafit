@@ -2,10 +2,14 @@
 
 from __future__ import annotations
 
+import pytest
 import typer
 
 from spectrafit.plugins.jupyter_plugin import JupyterPlugin
 from spectrafit.plugins.protocol import SpectraFitPlugin
+
+
+pytestmark = pytest.mark.integration
 
 
 def test_jupyter_plugin_attributes():

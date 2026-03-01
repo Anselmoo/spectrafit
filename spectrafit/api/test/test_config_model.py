@@ -11,6 +11,9 @@ from spectrafit.api.config_model import OutputConfig
 from spectrafit.api.config_model import PipelineConfig
 
 
+pytestmark = pytest.mark.unit
+
+
 class TestOutputConfig:
     """Tests for OutputConfig model."""
 

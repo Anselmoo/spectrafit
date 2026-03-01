@@ -7,6 +7,9 @@ import pytest
 from spectrafit.api.file_model import DataFileAPI
 
 
+pytestmark = pytest.mark.unit
+
+
 def test_delimiter_space() -> None:
     """Test the delimiter validator."""
     data_file = DataFileAPI(

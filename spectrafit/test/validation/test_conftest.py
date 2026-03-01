@@ -11,6 +11,9 @@ from typing import ClassVar
 import pytest
 
 
+pytestmark = pytest.mark.unit
+
+
 pytest_plugins = ["pytester"]
 
 

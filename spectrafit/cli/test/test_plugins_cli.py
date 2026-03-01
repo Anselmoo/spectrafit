@@ -2,9 +2,14 @@
 
 from __future__ import annotations
 
+import pytest
+
 from typer.testing import CliRunner
 
 from spectrafit.cli.main import app
+
+
+pytestmark = pytest.mark.integration
 
 
 runner = CliRunner()

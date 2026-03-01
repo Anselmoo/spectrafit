@@ -13,6 +13,9 @@ from typer.testing import CliRunner
 from spectrafit.cli.main import app
 
 
+pytestmark = pytest.mark.integration
+
+
 runner = CliRunner()
 
 

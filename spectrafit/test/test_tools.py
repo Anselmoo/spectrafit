@@ -30,6 +30,9 @@ from spectrafit.test.fixtures import ParameterSpec
 from spectrafit.test.fixtures import PeakSpec
 
 
+pytestmark = pytest.mark.integration
+
+
 # ---------------------------------------------------------------------------
 # Reusable PeakSpec definitions shared across fitting-arg fixtures
 # ---------------------------------------------------------------------------

@@ -16,6 +16,9 @@ from spectrafit.api.validation_model import ReferenceBenchmark
 from spectrafit.api.validation_model import ValidationReport
 
 
+pytestmark = pytest.mark.unit
+
+
 @pytest.fixture
 def sample_expectation() -> FitExpectation:
     """Create a sample FitExpectation for testing."""

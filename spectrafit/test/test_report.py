@@ -25,6 +25,8 @@ from spectrafit.report import get_init_value
 if TYPE_CHECKING:
     from pytest_mock.plugin import MockerFixture
 
+pytestmark = pytest.mark.unit
+
 
 class TestRegressionMetrics:
     """Test of the regression metrics module."""

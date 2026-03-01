@@ -14,6 +14,9 @@ from typer.testing import CliRunner
 from spectrafit.cli.main import app
 
 
+pytestmark = pytest.mark.integration
+
+
 runner = CliRunner()
 
 
@@ -66,7 +69,6 @@ def example_results_json(example_dir):
     pytest.skip("Example results file not found")
 
 
-@pytest.mark.integration
 class TestConvertWorkflow:
     """Integration tests for convert workflow."""
 
@@ -173,7 +175,6 @@ class TestConvertWorkflow:
         assert json_file.exists()
 
 
-@pytest.mark.integration
 class TestValidateWorkflow:
     """Integration tests for validate workflow."""
 
@@ -204,7 +205,6 @@ class TestValidateWorkflow:
         assert len(result.output) > 0
 
 
-@pytest.mark.integration
 class TestReportWorkflow:
     """Integration tests for report workflow."""
 
@@ -259,7 +259,6 @@ class TestReportWorkflow:
         assert json_output.exists()
 
 
-@pytest.mark.integration
 class TestPluginsWorkflow:
     """Integration tests for plugins workflow."""
 
@@ -277,7 +276,6 @@ class TestPluginsWorkflow:
         assert len(result.output) > 0
 
 
-@pytest.mark.integration
 class TestConfigurationPrecedence:
     """Test configuration precedence: CLI > file > defaults."""
 
@@ -348,7 +346,6 @@ vary = true
         assert result.exit_code in (0, 1)
 
 
-@pytest.mark.integration
 class TestCompleteWorkflow:
     """Test complete end-to-end workflows."""
 
@@ -426,7 +423,6 @@ class TestCompleteWorkflow:
         assert result3.exit_code == 0
 
 
-@pytest.mark.integration
 class TestErrorHandlingWorkflow:
     """Test error handling in workflows."""
 
@@ -456,7 +452,6 @@ class TestErrorHandlingWorkflow:
         assert result.exit_code != 0
 
 
-@pytest.mark.integration
 class TestBackwardCompatibility:
     """Test backward compatibility with v1.x patterns."""
 

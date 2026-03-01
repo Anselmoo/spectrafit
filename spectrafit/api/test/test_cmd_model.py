@@ -14,6 +14,9 @@ from spectrafit.api.cmd_model import CMDModelAPI
 from spectrafit.api.cmd_model import DescriptionAPI
 
 
+pytestmark = pytest.mark.unit
+
+
 def test_default_cmd() -> None:
     """Test for default settings of CMD Model."""
     result = CMDModelAPI(infile="").model_dump()

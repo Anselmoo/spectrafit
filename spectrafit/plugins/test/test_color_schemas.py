@@ -18,6 +18,9 @@ from spectrafit.plugins.color_schemas import MoonAkiColor
 from spectrafit.plugins.color_schemas import MoonAkiFont
 
 
+pytestmark = pytest.mark.unit
+
+
 def test_dracula_color() -> None:
     """Test the dracula color schema."""
     color = DraculaColor()

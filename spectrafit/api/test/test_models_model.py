@@ -7,6 +7,9 @@ import pytest
 from spectrafit.api.models_model import DistributionModelAPI
 
 
+pytestmark = pytest.mark.unit
+
+
 @pytest.mark.parametrize(
     "distribution_model",
     [

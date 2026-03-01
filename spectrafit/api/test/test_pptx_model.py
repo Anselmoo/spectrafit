@@ -21,6 +21,9 @@ from spectrafit.api.pptx_model import RegressionMetricsAPI
 from spectrafit.api.pptx_model import SolverAPI
 
 
+pytestmark = pytest.mark.unit
+
+
 @pytest.fixture
 def project_name() -> str:
     """Return a project name."""

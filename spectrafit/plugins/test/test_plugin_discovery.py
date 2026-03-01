@@ -2,8 +2,13 @@
 
 from __future__ import annotations
 
+import pytest
+
 from spectrafit.plugins import PluginRegistry
 from spectrafit.plugins import get_plugin_registry
+
+
+pytestmark = pytest.mark.unit
 
 
 def test_plugin_registry_creation():

@@ -10,15 +10,12 @@ import pandas as pd
 import pytest
 
 from spectrafit.models.solver import SolverModels
-from spectrafit.test.fixtures import (
-    FittingFixture,
-    ParameterSpec,
-    PeakSpec,
-    double_gaussian,
-    gaussian_with_background,
-    single_gaussian,
-    single_lorentzian,
-)
+from spectrafit.test.fixtures import ParameterSpec
+from spectrafit.test.fixtures import PeakSpec
+from spectrafit.test.fixtures import double_gaussian
+from spectrafit.test.fixtures import gaussian_with_background
+from spectrafit.test.fixtures import single_gaussian
+from spectrafit.test.fixtures import single_lorentzian
 
 
 # ---------------------------------------------------------------------------
@@ -26,6 +23,7 @@ from spectrafit.test.fixtures import (
 # ---------------------------------------------------------------------------
 
 
+@pytest.mark.unit
 class TestParameterSpec:
     """Tests for ParameterSpec creation and serialisation."""
 
@@ -60,6 +58,7 @@ class TestParameterSpec:
 # ---------------------------------------------------------------------------
 
 
+@pytest.mark.unit
 class TestPeakSpec:
     """Tests for PeakSpec nested dict conversion."""
 
@@ -98,6 +97,7 @@ class TestPeakSpec:
 # ---------------------------------------------------------------------------
 
 
+@pytest.mark.unit
 class TestFittingFixture:
     """Tests for the complete FittingFixture model."""
 
@@ -131,7 +131,7 @@ class TestFittingFixture:
         assert y.shape == (fix.num_points,)
 
     def test_generate_data_range(self) -> None:
-        """x data spans the configured range."""
+        """X data spans the configured range."""
         fix = single_gaussian()
         x, _ = fix.generate_data()
         np.testing.assert_allclose(x[0], fix.x_range[0])
@@ -161,6 +161,7 @@ class TestFittingFixture:
 # ---------------------------------------------------------------------------
 
 
+@pytest.mark.unit
 class TestFactoryFunctions:
     """Tests for the convenience factory functions."""
 
@@ -213,6 +214,7 @@ class TestFactoryFunctions:
 # ---------------------------------------------------------------------------
 
 
+@pytest.mark.integration
 class TestSolverIntegration:
     """Verify that fixtures can be consumed by the existing solver."""
 

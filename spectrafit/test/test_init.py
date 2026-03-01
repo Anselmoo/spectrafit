@@ -7,12 +7,15 @@ import sys
 import warnings
 
 # Need to import pytest for runtime usage with MonkeyPatch
-import pytest  # noqa: TC002 (needed at runtime for MonkeyPatch)
+import pytest
 
 import spectrafit
 
 from spectrafit import PYTHON_END_OF_LIFE
 from spectrafit import __version__
+
+
+pytestmark = pytest.mark.unit
 
 
 def test_version() -> None:

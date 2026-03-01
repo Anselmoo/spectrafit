@@ -16,6 +16,9 @@ from spectrafit.cli.main import app
 from spectrafit.models.registry import REGISTRY
 
 
+pytestmark = pytest.mark.integration
+
+
 runner = CliRunner()
 
 
