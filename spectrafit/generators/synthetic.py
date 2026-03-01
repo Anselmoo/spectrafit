@@ -22,28 +22,7 @@ from pydantic import BaseModel
 from pydantic import Field
 from pydantic import model_validator
 
-from spectrafit.models.regular import atan_step
-from spectrafit.models.regular import cgaussian
-from spectrafit.models.regular import clorentzian
-from spectrafit.models.regular import constant
-from spectrafit.models.regular import cvoigt
-from spectrafit.models.regular import erf_step
-from spectrafit.models.regular import exponential
-from spectrafit.models.regular import gaussian
-from spectrafit.models.regular import heaviside
-from spectrafit.models.regular import linear
-from spectrafit.models.regular import log_step
-from spectrafit.models.regular import lorentzian
-from spectrafit.models.regular import orcagaussian
-from spectrafit.models.regular import pearson1
-from spectrafit.models.regular import pearson2
-from spectrafit.models.regular import pearson3
-from spectrafit.models.regular import pearson4
-from spectrafit.models.regular import polynom2
-from spectrafit.models.regular import polynom3
-from spectrafit.models.regular import power
-from spectrafit.models.regular import pseudovoigt
-from spectrafit.models.regular import voigt
+from spectrafit.models.registry import REGISTRY
 
 
 if TYPE_CHECKING:
@@ -52,39 +31,9 @@ if TYPE_CHECKING:
     from numpy.typing import NDArray
 
 
-# Model name → (function, parameter names)
+# Model name → (function, parameter names) — derived from central registry
 _MODEL_REGISTRY: dict[str, tuple[Any, list[str]]] = {
-    "gaussian": (gaussian, ["amplitude", "center", "fwhmg"]),
-    "orcagaussian": (orcagaussian, ["amplitude", "center", "width"]),
-    "lorentzian": (lorentzian, ["amplitude", "center", "fwhml"]),
-    "voigt": (voigt, ["center", "fwhmv", "gamma"]),
-    "pseudovoigt": (pseudovoigt, ["amplitude", "center", "fwhmg", "fwhml"]),
-    "exponential": (exponential, ["amplitude", "decay", "intercept"]),
-    "power": (power, ["amplitude", "exponent", "intercept"]),
-    "linear": (linear, ["slope", "intercept"]),
-    "constant": (constant, ["amplitude"]),
-    "erf": (erf_step, ["amplitude", "center", "sigma"]),
-    "heaviside": (heaviside, ["amplitude", "center", "sigma"]),
-    "atan": (atan_step, ["amplitude", "center", "sigma"]),
-    "log": (log_step, ["amplitude", "center", "sigma"]),
-    "cgaussian": (cgaussian, ["amplitude", "center", "fwhmg"]),
-    "clorentzian": (clorentzian, ["amplitude", "center", "fwhml"]),
-    "cvoigt": (cvoigt, ["amplitude", "center", "fwhmv", "gamma"]),
-    "polynom2": (polynom2, ["coefficient0", "coefficient1", "coefficient2"]),
-    "polynom3": (
-        polynom3,
-        ["coefficient0", "coefficient1", "coefficient2", "coefficient3"],
-    ),
-    "pearson1": (pearson1, ["amplitude", "center", "sigma", "exponent"]),
-    "pearson2": (pearson2, ["amplitude", "center", "sigma", "exponent"]),
-    "pearson3": (
-        pearson3,
-        ["amplitude", "center", "sigma", "exponent", "skewness"],
-    ),
-    "pearson4": (
-        pearson4,
-        ["amplitude", "center", "sigma", "exponent", "skewness", "kurtosis"],
-    ),
+    info.name: (info.function, info.parameters) for info in REGISTRY.list_models()
 }
 
 ModelName = Literal[

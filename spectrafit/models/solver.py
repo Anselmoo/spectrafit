@@ -24,7 +24,7 @@ from spectrafit.api.tools_model import GlobalFittingAPI
 from spectrafit.api.tools_model import SolverModelsAPI
 from spectrafit.models.autopeak import ModelParameters
 from spectrafit.models.autopeak import ReferenceKeys
-from spectrafit.models.distributions import DistributionModels
+from spectrafit.models.registry import REGISTRY
 
 
 if TYPE_CHECKING:
@@ -116,7 +116,7 @@ class SolverModels(ModelParameters):
             peak_kwargs[(model_key, peak_id)][param_name] = param_value
 
         for key, _kwarg in peak_kwargs.items():
-            val += getattr(DistributionModels(), key[0])(x, **_kwarg)
+            val += REGISTRY.get(key[0]).function(x, **_kwarg)
         return np.array(val - data, dtype=np.float64)
 
     @staticmethod
@@ -160,7 +160,7 @@ class SolverModels(ModelParameters):
             peak_kwargs[(c_name[0], c_name[2], c_name[3])][c_name[1]] = value
         for key, _kwarg in peak_kwargs.items():
             i = int(key[2]) - 1
-            val[:, i] += getattr(DistributionModels(), key[0])(x, **_kwarg)
+            val[:, i] += REGISTRY.get(key[0]).function(x, **_kwarg)
 
         val -= data
         return val.flatten()
@@ -206,7 +206,7 @@ def calculated_model(
     _df = df.copy()
     for key, _kwarg in peak_kwargs.items():
         c_name = f"{key[0]}_{key[1]}_{key[2]}" if global_fit else f"{key[0]}_{key[1]}"
-        _df[c_name] = getattr(DistributionModels(), key[0])(x, **_kwarg)
+        _df[c_name] = REGISTRY.get(key[0]).function(x, **_kwarg)
 
     return _df
 
