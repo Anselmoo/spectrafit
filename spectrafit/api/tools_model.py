@@ -2,9 +2,8 @@
 
 from __future__ import annotations
 
-from typing import Any
-
 from pydantic import BaseModel
+from pydantic import ConfigDict
 from pydantic import Field
 
 
@@ -45,16 +44,56 @@ class GlobalFittingAPI(BaseModel):
     global_: int = Field(default=0, ge=0, le=2, description="Global fitting routine.")
 
 
+class MinimizerConfig(BaseModel):
+    """Configuration for the lmfit minimizer.
+
+    Attributes:
+        nan_policy: Policy for handling NaN values during fitting.
+        calc_covar: Whether to calculate the covariance matrix.
+    """
+
+    model_config = ConfigDict(extra="allow")
+
+    nan_policy: str = Field(
+        default="propagate",
+        description="Policy for handling NaN values (propagate, raise, omit)",
+    )
+    calc_covar: bool = Field(
+        default=True,
+        description="Whether to calculate the covariance matrix",
+    )
+
+
+class OptimizerConfig(BaseModel):
+    """Configuration for the lmfit optimizer.
+
+    Attributes:
+        max_nfev: Maximum number of function evaluations.
+        method: Optimization method (e.g., leastsq, least_squares, nelder).
+    """
+
+    model_config = ConfigDict(extra="allow")
+
+    max_nfev: int | None = Field(
+        default=None,
+        description="Maximum number of function evaluations",
+    )
+    method: str = Field(
+        default="leastsq",
+        description="Optimization method",
+    )
+
+
 class SolverModelsAPI(BaseModel):
     """Definition of the solver of SpectraFit."""
 
-    minimizer: dict[str, Any] = Field(
-        default={"nan_policy": "propagate", "calc_covar": True},
+    minimizer: MinimizerConfig = Field(
+        default_factory=MinimizerConfig,
         description="Minimizer options",
     )
-    optimizer: dict[str, Any] = Field(
-        default={"max_nfev": None, "method": "leastsq"},
-        description="Optimzer options",
+    optimizer: OptimizerConfig = Field(
+        default_factory=OptimizerConfig,
+        description="Optimizer options",
     )
 
 
@@ -68,8 +107,8 @@ class GeneralSolverModelsAPI(BaseModel):
     """
 
     global_: int = GlobalFittingAPI().global_
-    minimizer: dict[str, Any] = SolverModelsAPI().minimizer
-    optimizer: dict[str, Any] = SolverModelsAPI().optimizer
+    minimizer: MinimizerConfig = Field(default_factory=MinimizerConfig)
+    optimizer: OptimizerConfig = Field(default_factory=OptimizerConfig)
 
 
 class ColumnNamesAPI(BaseModel):

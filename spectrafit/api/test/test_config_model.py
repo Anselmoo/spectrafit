@@ -121,7 +121,7 @@ class TestPipelineConfig:
         assert config.outfile == "spectrafit_results"
         assert config.preprocessing == {}
         assert config.fitting == {}
-        assert config.output == {}
+        assert isinstance(config.output, OutputConfig)
         assert config.description is None
 
     def test_full_config(self) -> None:
@@ -140,7 +140,9 @@ class TestPipelineConfig:
         assert config.outfile == "results"
         assert config.preprocessing == {"smooth": 5, "shift": 0.1}
         assert config.fitting == {"method": "leastsq", "max_nfev": 1000}
-        assert config.output == {"formats": ["csv", "json"], "verbose": 2}
+        assert isinstance(config.output, OutputConfig)
+        assert config.output.formats == ["csv", "json"]
+        assert config.output.verbose == 2
         assert config.description == {"project": "test", "author": "user"}
 
     def test_output_config_integration(self) -> None:

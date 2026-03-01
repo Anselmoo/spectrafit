@@ -175,9 +175,9 @@ class PipelineConfig(BaseModel):
         ),
     ]
     output: Annotated[
-        dict[str, Any] | OutputConfig,
+        OutputConfig,
         Field(
-            default_factory=dict,
+            default_factory=OutputConfig,
             description="Output and visualization settings",
         ),
     ]
