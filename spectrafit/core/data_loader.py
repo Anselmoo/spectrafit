@@ -117,7 +117,7 @@ def check_keywords_consistency(
 
     Args:
         check_args (MutableMapping[str, Any]): First dictionary to be checked.
-        ref_args (dict[str,Any]): Second dictionary to be checked.
+        ref_args (FittingArgs): Second dictionary to be checked.
 
     Raises:
         KeyError: If the keywords are not consistent.

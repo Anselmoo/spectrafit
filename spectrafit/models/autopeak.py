@@ -126,7 +126,7 @@ class ModelParameters:
                  additional information beyond the command line arguments.
 
         Returns:
-            Tuple[NDArray[np.float64], NDArray[np.float64]]: Tuple of `x` and
+            tuple[NDArray[np.float64], NDArray[np.float64]]: Tuple of `x` and
                  `data` as numpy arrays.
 
         """

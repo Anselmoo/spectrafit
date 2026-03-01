@@ -244,7 +244,7 @@ class ConfigLoader:
         """Validate configuration using Pydantic model.
 
         Args:
-            config (dict[str, Any]): Configuration dictionary to validate.
+            config (FittingArgs): Configuration dictionary to validate.
 
         Returns:
             FittingConfig: Validated configuration object.
@@ -263,13 +263,13 @@ def load_config(
     """Load and merge configuration from all sources.
 
     Args:
-        args (dict[str, Any] | None): Direct configuration arguments.
+        args (FittingArgs | None): Direct configuration arguments.
              Defaults to None.
         use_env (bool): Whether to load from environment variables.
              Defaults to True.
 
     Returns:
-        dict[str, Any]: Merged configuration dictionary.
+        FittingArgs: Merged configuration dictionary.
 
     """
     loader = ConfigLoader()

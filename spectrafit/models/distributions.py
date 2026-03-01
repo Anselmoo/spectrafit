@@ -128,7 +128,7 @@ class DistributionModels:
                 distribution. Defaults to 1.0.
 
         Returns:
-            Union[NDArray[np.float64], float]: Lorentzian distribution of `x` given.
+            NDArray[np.float64] | float: Lorentzian distribution of `x` given.
 
         """
         return _lorentzian(x=x, amplitude=amplitude, center=center, fwhml=fwhml)

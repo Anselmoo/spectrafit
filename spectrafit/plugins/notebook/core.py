@@ -27,6 +27,8 @@ from spectrafit.api.tools_model import DataPreProcessingAPI
 from spectrafit.api.tools_model import SolverModelsAPI
 from spectrafit.core import PostProcessing
 from spectrafit.core import PreProcessing
+from spectrafit.models.autopeak import FittingArgs
+from spectrafit.models.autopeak import PeakModelSpec
 from spectrafit.models.builtin import SolverModels
 from spectrafit.plugins.notebook.display import DataFrameDisplay
 from spectrafit.plugins.notebook.export import ExportReport
@@ -43,13 +45,13 @@ MIN_DATAFRAME_COLUMNS = 2  # Minimum number of columns required in a dataframe
 class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
     """Jupyter Notebook plugin for SpectraFit."""
 
-    args: dict[str, Any]
+    args: FittingArgs
     global_: bool | int = False
     df_fit: pd.DataFrame
     df_pre: pd.DataFrame = pd.DataFrame()
     df_metric: pd.DataFrame = pd.DataFrame()
     df_peaks: pd.DataFrame = pd.DataFrame()
-    initial_model: list[dict[str, dict[str, dict[str, Any]]]]
+    initial_model: list[PeakModelSpec]
 
     def __init__(  # noqa: C901
         self,
@@ -229,7 +231,7 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
         self.export_args_out = FnameAPI(fname=fname, folder=folder, suffix="lock")
 
         self.settings_solver_models: SolverModelsAPI = SolverModelsAPI()
-        self.pre_statistic: dict[str, Any] = {}
+        self.pre_statistic: dict[str, float | int] = {}
 
     @property
     def pre_process(self) -> None:
@@ -242,7 +244,7 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
         self.df_pre = self.df.copy()
 
     @property
-    def return_pre_statistic(self) -> dict[str, Any]:
+    def return_pre_statistic(self) -> dict[str, float | int]:
         """Return the pre-processing statistic."""
         return self.pre_statistic
 
@@ -383,7 +385,7 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
 
     def solver_model(
         self,
-        initial_model: list[dict[str, dict[str, dict[str, Any]]]],
+        initial_model: list[PeakModelSpec],
         *,
         show_plot: bool = True,
         show_metric: bool = True,
@@ -397,7 +399,7 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
         """Solves the fit problem based on the proposed model.
 
         Args:
-            initial_model (List[dict[str, Dict[str, Dict[str, Any]]]]): List of
+            initial_model (list[PeakModelSpec]): List of
                  dictionary with the initial model and its fitting parameters and
                  options for the components.
             show_plot (bool, optional): Show current fit results as plot.
@@ -406,7 +408,7 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
             show_df (bool, optional): Show current fit results as dataframe. Defaults
                  to False.
             show_peaks (bool, optional): Show the peaks of fit. Defaults to False.
-            conf_interval (Union[bool,dict[str, Any]], optional): Bool or dictionary for
+            conf_interval (Union[bool, dict[str, Any]], optional): Bool or dictionary for
                  the parameter with the parameter for calculating the confidence
                  interval. Using `conf_interval=False` turns of the calculation of
                  the confidence interval and accelerate its. Defaults to False.
@@ -416,7 +418,7 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
             line_criteria (Optional[Union[str, List[str]]], optional): Criteria for
                 the line plot. It is recommended to use attributes from
                 `regression metric` module. Defaults to None.
-            solver_settings (Optional[dict[str, Any]], optional): Settings for
+            solver_settings (Optional[FittingArgs], optional): Settings for
                 the solver models, which is split into settings for `minimizer` and
                 `optimizer`.  Defaults to None.
 

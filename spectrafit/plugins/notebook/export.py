@@ -23,6 +23,8 @@ from spectrafit.api.tools_model import DataPreProcessingAPI
 from spectrafit.api.tools_model import SolverModelsAPI
 from spectrafit.core import exclude_none_dictionary
 from spectrafit.core import transform_nested_types
+from spectrafit.models.autopeak import FittingArgs
+from spectrafit.models.autopeak import PeakModelSpec
 from spectrafit.plugins.notebook.solver import SolverResults
 
 
@@ -101,11 +103,11 @@ class ExportReport(SolverResults):
     def __init__(
         self,
         description: DescriptionAPI,
-        initial_model: list[dict[str, dict[str, dict[str, Any]]]],
+        initial_model: list[PeakModelSpec],
         pre_processing: DataPreProcessingAPI,
         settings_solver_models: SolverModelsAPI,
         fname: FnameAPI,
-        args_out: dict[str, Any],
+        args_out: FittingArgs,
         df_org: pd.DataFrame,
         df_fit: pd.DataFrame,
         df_pre: pd.DataFrame | None = None,
@@ -114,13 +116,13 @@ class ExportReport(SolverResults):
 
         Args:
             description (DescriptionAPI): Description of the fit project.
-            initial_model (List[dict[str, Dict[str, Dict[str, Any]]]]): Initial model
+            initial_model (list[PeakModelSpec]): Initial model
                  for the fit.
             pre_processing (DataPreProcessingAPI): Data pre-processing settings.
             settings_solver_models (SolverModelsAPI): Solver models settings.
             fname (FnameAPI): Filename of the fit project including the path, prefix,
                  and suffix.
-            args_out (dict[str, Any]): Dictionary of SpectraFit settings and results.
+            args_out (FittingArgs): Dictionary of SpectraFit settings and results.
             df_org (pd.DataFrame): Dataframe of the original data for performing
                  the fit.
             df_fit (pd.DataFrame): Dataframe of the final fit data.
@@ -194,7 +196,7 @@ class ExportReport(SolverResults):
         """
         return OutputAPI(df_org=self.df_org, df_fit=self.df_fit, df_pre=self.df_pre)
 
-    def __call__(self) -> dict[str, Any]:
+    def __call__(self) -> FittingArgs:
         """Get the complete report as dictionary.
 
         !!! info "About the report and `exclude_none_dictionary`"
@@ -206,7 +208,7 @@ class ExportReport(SolverResults):
             from the dictionary, which are hidden in the nested dictionaries.
 
         Returns:
-            dict[str, Any]: Report as dictionary by using the `.model_dump()` option of
+            FittingArgs: Report as dictionary by using the `.model_dump()` option of
                  pydantic. `None` is excluded.
 
         """

@@ -266,8 +266,8 @@ class DataFramePlot:
         Args:
             args_plot (PlotAPI): PlotAPI object for the settings of the plot.
             df_metric (pd.DataFrame): Metric dataframe to plot.
-            bar_criteria (Union[str, List[str]]): Criteria to plot as bars.
-            line_criteria (Union[str, List[str]]): Criteria to plot as lines.
+            bar_criteria (str | list[str]): Criteria to plot as bars.
+            line_criteria (str | list[str]): Criteria to plot as lines.
 
         """
         fig = make_subplots(specs=[[{"secondary_y": True}]])
@@ -390,7 +390,7 @@ class DataFramePlot:
             args_plot (PlotAPI): PlotAPI object for the settings of the plot.
 
         Returns:
-            dict[str, Union[str, bool]]: Dictionary with the minor axis arguments.
+            dict[str, str | bool]: Dictionary with the minor axis arguments.
 
         """
         return {

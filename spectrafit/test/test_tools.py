@@ -25,6 +25,34 @@ from spectrafit.core import transform_nested_types
 from spectrafit.core import unicode_check
 from spectrafit.models.builtin import DistributionModels
 from spectrafit.models.builtin import SolverModels
+from spectrafit.test.fixtures import FittingFixture
+from spectrafit.test.fixtures import ParameterSpec
+from spectrafit.test.fixtures import PeakSpec
+
+
+# ---------------------------------------------------------------------------
+# Reusable PeakSpec definitions shared across fitting-arg fixtures
+# ---------------------------------------------------------------------------
+
+_PSEUDOVOIGT_PEAK_A = PeakSpec(
+    model_name="pseudovoigt",
+    parameters={
+        "amplitude": ParameterSpec(value=1, min=0, max=200),
+        "center": ParameterSpec(value=0, min=-200, max=200),
+        "fwhmg": ParameterSpec(value=0.1, min=0.00002, max=2.5),
+        "fwhml": ParameterSpec(value=1, min=0.00001, max=2.5),
+    },
+)
+
+_PSEUDOVOIGT_PEAK_B = PeakSpec(
+    model_name="pseudovoigt",
+    parameters={
+        "amplitude": ParameterSpec(value=5, min=1, max=100),
+        "center": ParameterSpec(value=0.0, min=-20, max=20),
+        "fwhmg": ParameterSpec(value=1.0, min=0.00002, max=2.51),
+        "fwhml": ParameterSpec(value=0.01, min=0.001, max=2.52),
+    },
+)
 
 
 @pytest.fixture(name="random_dataframe")
@@ -54,114 +82,91 @@ def df_large() -> pd.DataFrame:
 
 @pytest.fixture(name="args_0")
 def args_0() -> dict[str, Any]:
-    """Args fixture."""
-    return {
-        "global_": 0,
-        "column": ["Energy", "Intensity_1"],
-        "minimizer": {"nan_policy": "propagate", "calc_covar": False},
-        "optimizer": {"max_nfev": 10, "method": "leastsq"},
-        "conf_interval": None,
-        "peaks": {
-            "1": {
-                "pseudovoigt": {
-                    "amplitude": {"max": 200, "min": 0, "vary": True, "value": 1},
-                    "center": {"max": 200, "min": -200, "vary": True, "value": 0},
-                    "fwhmg": {"max": 2.5, "min": 0.00002, "vary": True, "value": 0.1},
-                    "fwhml": {"max": 2.5, "min": 0.00001, "vary": True, "value": 1},
-                },
-            },
-            "2": {
-                "pseudovoigt": {
-                    "amplitude": {"max": 100, "min": 1, "vary": True, "value": 5},
-                    "center": {"max": 20, "min": -20, "vary": True, "value": 0.0},
-                    "fwhmg": {"max": 2.51, "min": 0.00002, "vary": True, "value": 1.0},
-                    "fwhml": {"max": 2.52, "min": 0.001, "vary": True, "value": 0.01},
-                },
-            },
-        },
-    }
+    """Args fixture built from Pydantic fixture models."""
+    fixture = FittingFixture(
+        peaks=[_PSEUDOVOIGT_PEAK_A, _PSEUDOVOIGT_PEAK_B],
+        minimizer={"nan_policy": "propagate", "calc_covar": False},
+        optimizer={"max_nfev": 10, "method": "leastsq"},
+    )
+    result = fixture.to_input_dict()
+    result["column"] = ["Energy", "Intensity_1"]
+    result["conf_interval"] = None
+    return result
 
 
 @pytest.fixture(name="args_1")
 def args_1() -> dict[str, Any]:
-    """Args fixture."""
-    return {
-        "global_": 1,
-        "column": ["Energy"],
-        "minimizer": {"nan_policy": "propagate", "calc_covar": False},
-        "optimizer": {"max_nfev": 10, "method": "leastsq"},
-        "conf_interval": {
-            "trace": True,
-            "maxiter": 20,
-            "verbose": 1,
-            "prob_func": None,
-            "min_rel_change": 10e-6,
-        },
-        "peaks": {
-            "1": {
-                "pseudovoigt": {
-                    "amplitude": {"max": 200, "min": 0, "vary": True, "value": 1},
-                    "center": {"max": 200, "min": -200, "vary": True, "value": 0},
-                    "fwhmg": {"max": 2.5, "min": 0.00002, "vary": True, "value": 0.1},
-                    "fwhml": {"max": 2.5, "min": 0.00001, "vary": True, "value": 1},
-                },
-            },
-        },
+    """Args fixture built from Pydantic fixture models."""
+    fixture = FittingFixture(
+        peaks=[_PSEUDOVOIGT_PEAK_A],
+        minimizer={"nan_policy": "propagate", "calc_covar": False},
+        optimizer={"max_nfev": 10, "method": "leastsq"},
+    )
+    result = fixture.to_input_dict()
+    result["global_"] = 1
+    result["column"] = ["Energy"]
+    result["conf_interval"] = {
+        "trace": True,
+        "maxiter": 20,
+        "verbose": 1,
+        "prob_func": None,
+        "min_rel_change": 10e-6,
     }
+    return result
 
 
 @pytest.fixture(name="args_conf_interval_fail")
 def args_2() -> dict[str, Any]:
-    """Args fixture."""
-    return {
-        "global_": 0,
-        "column": ["energy", "intensity"],
-        "minimizer": {"nan_policy": "propagate", "calc_covar": False},
-        "optimizer": {"max_nfev": 10, "method": "leastsq"},
-        "conf_interval": {
-            "p_names": ["pseudovoigt_amplitude_1"],
-            "sigmas": 0.001,
-            "trace": True,
-            "maxiter": 1,
-            "verbose": 0,
-            "prob_func": None,
+    """Args fixture built from Pydantic fixture models."""
+    _constant_peak = PeakSpec(
+        model_name="constant",
+        parameters={
+            "amplitude": ParameterSpec(value=1, min=10, max=200, vary=False),
         },
-        "peaks": {
-            "1": {
-                "constant": {
-                    "amplitude": {"max": 200, "min": 10, "vary": False, "value": 1},
-                },
-            },
-        },
+    )
+    fixture = FittingFixture(
+        peaks=[_constant_peak],
+        minimizer={"nan_policy": "propagate", "calc_covar": False},
+        optimizer={"max_nfev": 10, "method": "leastsq"},
+    )
+    result = fixture.to_input_dict()
+    result["conf_interval"] = {
+        "p_names": ["pseudovoigt_amplitude_1"],
+        "sigmas": 0.001,
+        "trace": True,
+        "maxiter": 1,
+        "verbose": 0,
+        "prob_func": None,
     }
+    return result
 
 
 @pytest.fixture(name="args__min_rel_change")
 def args_3() -> dict[str, Any]:
-    """Args fixture."""
-    return {
-        "global_": 0,
-        "column": ["energy", "intensity"],
-        "minimizer": {"nan_policy": "propagate", "calc_covar": False},
-        "optimizer": {"max_nfev": 100, "method": "leastsq"},
-        "conf_interval": {
-            "p_names": None,
-            "sigmas": None,
-            "maxiter": 100,
-            "verbose": 0,
-            "prob_func": None,
-            "min_rel_change": 0.001,
+    """Args fixture built from Pydantic fixture models."""
+    _gaussian_peak = PeakSpec(
+        model_name="gaussian",
+        parameters={
+            "center": ParameterSpec(value=1),
+            "fwhmg": ParameterSpec(value=1),
+            "amplitude": ParameterSpec(value=1),
         },
-        "peaks": {
-            "1": {
-                "gaussian": {
-                    "center": {"vary": True, "value": 1},
-                    "fwhmg": {"vary": True, "value": 1},
-                    "amplitude": {"vary": True, "value": 1},
-                },
-            },
-        },
+    )
+    fixture = FittingFixture(
+        peaks=[_gaussian_peak],
+        minimizer={"nan_policy": "propagate", "calc_covar": False},
+        optimizer={"max_nfev": 100, "method": "leastsq"},
+    )
+    result = fixture.to_input_dict()
+    result["conf_interval"] = {
+        "p_names": None,
+        "sigmas": None,
+        "maxiter": 100,
+        "verbose": 0,
+        "prob_func": None,
+        "min_rel_change": 0.001,
     }
+    return result
 
 
 class TestPreProcessing:

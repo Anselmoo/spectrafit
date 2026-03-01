@@ -64,7 +64,7 @@ class SolverModels(ModelParameters):
         """Solve the fitting model.
 
         Returns:
-            Tuple[Minimizer, MinimizerResult]: Minimizer class and the fitting results.
+            tuple[Minimizer, MinimizerResult]: Minimizer class and the fitting results.
 
         """
         if self.args_global["global_"]:

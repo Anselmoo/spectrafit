@@ -126,7 +126,7 @@ class RegressionMetrics:
                 and fit data.
 
         Returns:
-            Tuple[NDArray[np.float64], NDArray[np.float64]]: Tuple of true and predicted
+            tuple[NDArray[np.float64], NDArray[np.float64]]: Tuple of true and predicted
                 (fit) intensities.
 
         """

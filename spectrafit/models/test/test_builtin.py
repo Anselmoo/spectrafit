@@ -22,6 +22,9 @@ from spectrafit.models.builtin import DistributionModels
 from spectrafit.models.builtin import ModelParameters
 from spectrafit.models.builtin import SolverModels
 from spectrafit.models.builtin import calculated_model
+from spectrafit.test.fixtures import FittingFixture
+from spectrafit.test.fixtures import ParameterSpec
+from spectrafit.test.fixtures import PeakSpec
 
 
 if TYPE_CHECKING:
@@ -88,22 +91,21 @@ class TestNotSupported:
     """Test of not supported models."""
 
     # Using ClassVar per Ruff RUF012 even though mypy complains
-    args: ClassVar[dict[str, Any]] = {
-        "column": ["energy", "intensity"],
-        "global_": 0,
-        "minimizer": {"method": "Nelder-Mead", "tol": 1e-6},
-        "optimizer": {"method": "Nelder-Mead", "tol": 1e-6},
-        "peaks": {
-            "1": {
-                "dummy": {
-                    "amplitude": {"max": 200, "min": 0, "vary": True, "value": 1},
-                    "center": {"max": 200, "min": -200, "vary": True, "value": 0},
-                    "fwhmg": {"max": 2.5, "min": 0.00002, "vary": True, "value": 0.1},
-                    "fwhml": {"max": 2.5, "min": 0.00001, "vary": True, "value": 1},
+    args: ClassVar[dict[str, Any]] = FittingFixture(
+        peaks=[
+            PeakSpec(
+                model_name="dummy",
+                parameters={
+                    "amplitude": ParameterSpec(value=1, min=0, max=200),
+                    "center": ParameterSpec(value=0, min=-200, max=200),
+                    "fwhmg": ParameterSpec(value=0.1, min=0.00002, max=2.5),
+                    "fwhml": ParameterSpec(value=1, min=0.00001, max=2.5),
                 },
-            },
-        },
-    }
+            ),
+        ],
+        minimizer={"method": "Nelder-Mead", "tol": 1e-6},
+        optimizer={"method": "Nelder-Mead", "tol": 1e-6},
+    ).to_input_dict()
     df = pd.DataFrame(
         {
             "energy": np.arange(10),
@@ -154,60 +156,61 @@ class TestModelParametersSolver:
     """Test of model parameters."""
 
     # Using ClassVar per Ruff RUF012 even though mypy complains
-    args: ClassVar[dict[str, Any]] = {
-        "global_": 0,
-        "column": ["Energy", "Intensity"],
-        "minimizer": {"nan_policy": "propagate", "calc_covar": False},
-        "optimizer": {"max_nfev": 10, "method": "leastsq"},
-        "peaks": {
-            "1": {
-                "pseudovoigt": {
-                    "amplitude": {"max": 200, "min": 0, "vary": True, "value": 1},
-                    "center": {"max": 200, "min": -200, "vary": True, "value": 0},
-                    "fwhmg": {"max": 2.5, "min": 0.00002, "vary": True, "value": 0.1},
+    args: ClassVar[dict[str, Any]] = FittingFixture(
+        peaks=[
+            PeakSpec(
+                model_name="pseudovoigt",
+                parameters={
+                    "amplitude": ParameterSpec(value=1, min=0, max=200),
+                    "center": ParameterSpec(value=0, min=-200, max=200),
+                    "fwhmg": ParameterSpec(value=0.1, min=0.00002, max=2.5),
                 },
-            },
-            "2": {
-                "pseudovoigt": {
-                    "amplitude": {"max": 200, "min": 0, "vary": True, "value": 1},
-                    "center": {"max": 200, "min": -200, "vary": True, "value": 0},
-                    "fwhmg": {"max": 2.5, "min": 0.00002, "vary": True, "value": 1.0},
-                    "fwhml": {"max": 2.5, "min": 0.0001, "vary": True, "value": 0.01},
+            ),
+            PeakSpec(
+                model_name="pseudovoigt",
+                parameters={
+                    "amplitude": ParameterSpec(value=1, min=0, max=200),
+                    "center": ParameterSpec(value=0, min=-200, max=200),
+                    "fwhmg": ParameterSpec(value=1.0, min=0.00002, max=2.5),
+                    "fwhml": ParameterSpec(value=0.01, min=0.0001, max=2.5),
                 },
-            },
-            "3": {
-                "gaussian": {
-                    "amplitude": {"max": 200, "min": 0, "vary": True, "value": 1},
-                    "center": {"max": 200, "min": -200, "vary": True, "value": 0},
-                    "fwhmg": {"max": 2.5, "min": 0.00002, "vary": True, "value": 1.0},
+            ),
+            PeakSpec(
+                model_name="gaussian",
+                parameters={
+                    "amplitude": ParameterSpec(value=1, min=0, max=200),
+                    "center": ParameterSpec(value=0, min=-200, max=200),
+                    "fwhmg": ParameterSpec(value=1.0, min=0.00002, max=2.5),
                 },
-            },
-        },
-    }
-    args_global_1: ClassVar[dict[str, Any]] = {
-        "global_": 1,
-        "column": ["Energy"],
-        "minimizer": {"nan_policy": "propagate", "calc_covar": False},
-        "optimizer": {"max_nfev": 10, "method": "leastsq"},
-        "peaks": {
-            "1": {
-                "pseudovoigt": {
-                    "amplitude": {"max": 200, "min": 0, "vary": True, "value": 1},
-                    "center": {"max": 200, "min": -200, "vary": True, "value": 0},
-                    "fwhmg": {"max": 2.5, "min": 0.00002, "vary": True, "value": 0.1},
-                    "fwhml": {"max": 2.5, "min": 0.00001, "vary": True, "value": 1},
+            ),
+        ],
+        minimizer={"nan_policy": "propagate", "calc_covar": False},
+        optimizer={"max_nfev": 10, "method": "leastsq"},
+    ).to_input_dict() | {"column": ["Energy", "Intensity"]}
+    args_global_1: ClassVar[dict[str, Any]] = FittingFixture(
+        peaks=[
+            PeakSpec(
+                model_name="pseudovoigt",
+                parameters={
+                    "amplitude": ParameterSpec(value=1, min=0, max=200),
+                    "center": ParameterSpec(value=0, min=-200, max=200),
+                    "fwhmg": ParameterSpec(value=0.1, min=0.00002, max=2.5),
+                    "fwhml": ParameterSpec(value=1, min=0.00001, max=2.5),
                 },
-            },
-            "2": {
-                "pseudovoigt": {
-                    "amplitude": {"max": 200, "min": 0, "vary": True, "value": 1},
-                    "center": {"max": 200, "min": -200, "vary": True, "value": 0},
-                    "fwhmg": {"max": 2.5, "min": 0.00002, "vary": True, "value": 1.0},
-                    "fwhml": {"max": 2.5, "min": 0.0001, "vary": True, "value": 0.01},
+            ),
+            PeakSpec(
+                model_name="pseudovoigt",
+                parameters={
+                    "amplitude": ParameterSpec(value=1, min=0, max=200),
+                    "center": ParameterSpec(value=0, min=-200, max=200),
+                    "fwhmg": ParameterSpec(value=1.0, min=0.00002, max=2.5),
+                    "fwhml": ParameterSpec(value=0.01, min=0.0001, max=2.5),
                 },
-            },
-        },
-    }
+            ),
+        ],
+        minimizer={"nan_policy": "propagate", "calc_covar": False},
+        optimizer={"max_nfev": 10, "method": "leastsq"},
+    ).to_input_dict() | {"global_": 1, "column": ["Energy"]}
     args_global_2: ClassVar[dict[str, Any]] = {
         "global_": 2,
         "column": ["Energy"],
@@ -306,284 +309,120 @@ class TestModelParametersSolver:
 
     @pytest.fixture
     def args_setting(self) -> dict[str, Any]:
-        """Fixture for args.
+        """Fixture for args built from Pydantic fixture models.
 
         Returns:
-            dict[str, Any]: Add args for testing.
+            dict[str, Any]: Minimizer, optimizer, and peaks for testing.
 
         """
+        _peaks = [
+            PeakSpec(
+                model_name="pseudovoigt",
+                parameters={
+                    "amplitude": ParameterSpec(value=1, min=0, max=200),
+                    "center": ParameterSpec(value=0, min=-200, max=200),
+                    "fwhmg": ParameterSpec(value=1.0, min=0.00002, max=2.5),
+                    "fwhml": ParameterSpec(value=0.01, min=0.0001, max=2.5),
+                },
+            ),
+            PeakSpec(
+                model_name="gaussian",
+                parameters={
+                    "amplitude": ParameterSpec(value=1, min=0, max=200),
+                    "center": ParameterSpec(value=0, min=-200, max=200),
+                    "fwhmg": ParameterSpec(value=1.0, min=0.00002, max=2.5),
+                },
+            ),
+            PeakSpec(
+                model_name="lorentzian",
+                parameters={
+                    "amplitude": ParameterSpec(value=1, min=0, max=200),
+                    "center": ParameterSpec(value=0, min=-200, max=200),
+                    "fwhml": ParameterSpec(value=1.0, min=0.00002, max=2.5),
+                },
+            ),
+            PeakSpec(
+                model_name="exponential",
+                parameters={
+                    "amplitude": ParameterSpec(value=1, min=0, max=200),
+                    "decay": ParameterSpec(value=0, min=-200, max=200),
+                    "intercept": ParameterSpec(value=1.0, min=0.00002, max=2.5),
+                },
+            ),
+            PeakSpec(
+                model_name="power",
+                parameters={
+                    "amplitude": ParameterSpec(value=1, min=0, max=200),
+                    "exponent": ParameterSpec(value=0, min=-200, max=200),
+                    "intercept": ParameterSpec(value=1.0, min=0.00002, max=2.5),
+                },
+            ),
+            PeakSpec(
+                model_name="linear",
+                parameters={
+                    "slope": ParameterSpec(value=1, min=0, max=200),
+                    "intercept": ParameterSpec(value=1, min=0, max=200),
+                },
+            ),
+            PeakSpec(
+                model_name="constant",
+                parameters={
+                    "amplitude": ParameterSpec(value=1, min=0, max=200),
+                },
+            ),
+            PeakSpec(
+                model_name="erf",
+                parameters={
+                    "amplitude": ParameterSpec(value=1, min=0, max=200),
+                    "center": ParameterSpec(value=0, min=-200, max=200),
+                    "sigma": ParameterSpec(value=1.0, min=0.00002, max=2.5),
+                },
+            ),
+            PeakSpec(
+                model_name="atan",
+                parameters={
+                    "amplitude": ParameterSpec(value=1, min=0, max=200),
+                    "center": ParameterSpec(value=0, min=-200, max=200),
+                    "sigma": ParameterSpec(value=1.0, min=0.00002, max=2.5),
+                },
+            ),
+            PeakSpec(
+                model_name="log",
+                parameters={
+                    "amplitude": ParameterSpec(value=1, min=0, max=200),
+                    "center": ParameterSpec(value=0, min=-200, max=200),
+                    "sigma": ParameterSpec(value=1.0, min=0.00002, max=2.5),
+                },
+            ),
+            PeakSpec(
+                model_name="heaviside",
+                parameters={
+                    "amplitude": ParameterSpec(value=1, min=0, max=200),
+                    "center": ParameterSpec(value=0, min=-200, max=200),
+                    "sigma": ParameterSpec(value=1.0, min=0.00002, max=2.5),
+                },
+            ),
+            PeakSpec(
+                model_name="voigt",
+                parameters={
+                    "center": ParameterSpec(value=0, min=-200, max=200),
+                    "fwhmv": ParameterSpec(value=1.0, min=0.00002, max=2.5),
+                    "gamma": ParameterSpec(value=1.0, min=0.00002, max=2.5),
+                },
+            ),
+            PeakSpec(
+                model_name="voigt",
+                parameters={
+                    "center": ParameterSpec(value=0, min=-200, max=200),
+                    "fwhmv": ParameterSpec(value=1.0, min=0.00002, max=2.5),
+                },
+            ),
+        ]
         return {
             "minimizer": {"nan_policy": "propagate", "calc_covar": False},
             "optimizer": {"max_nfev": 10, "method": "leastsq"},
             "peaks": {
-                "1": {
-                    "pseudovoigt": {
-                        "amplitude": {
-                            "max": 200,
-                            "min": 0,
-                            "vary": True,
-                            "value": 1,
-                        },
-                        "center": {
-                            "max": 200,
-                            "min": -200,
-                            "vary": True,
-                            "value": 0,
-                        },
-                        "fwhmg": {
-                            "max": 2.5,
-                            "min": 0.00002,
-                            "vary": True,
-                            "value": 1.0,
-                        },
-                        "fwhml": {
-                            "max": 2.5,
-                            "min": 0.0001,
-                            "vary": True,
-                            "value": 0.01,
-                        },
-                    },
-                },
-                "2": {
-                    "gaussian": {
-                        "amplitude": {
-                            "max": 200,
-                            "min": 0,
-                            "vary": True,
-                            "value": 1,
-                        },
-                        "center": {
-                            "max": 200,
-                            "min": -200,
-                            "vary": True,
-                            "value": 0,
-                        },
-                        "fwhmg": {
-                            "max": 2.5,
-                            "min": 0.00002,
-                            "vary": True,
-                            "value": 1.0,
-                        },
-                    },
-                },
-                "3": {
-                    "lorentzian": {
-                        "amplitude": {
-                            "max": 200,
-                            "min": 0,
-                            "vary": True,
-                            "value": 1,
-                        },
-                        "center": {
-                            "max": 200,
-                            "min": -200,
-                            "vary": True,
-                            "value": 0,
-                        },
-                        "fwhml": {
-                            "max": 2.5,
-                            "min": 0.00002,
-                            "vary": True,
-                            "value": 1.0,
-                        },
-                    },
-                },
-                "4": {
-                    "exponential": {
-                        "amplitude": {
-                            "max": 200,
-                            "min": 0,
-                            "vary": True,
-                            "value": 1,
-                        },
-                        "decay": {
-                            "max": 200,
-                            "min": -200,
-                            "vary": True,
-                            "value": 0,
-                        },
-                        "intercept": {
-                            "max": 2.5,
-                            "min": 0.00002,
-                            "vary": True,
-                            "value": 1.0,
-                        },
-                    },
-                },
-                "5": {
-                    "power": {
-                        "amplitude": {
-                            "max": 200,
-                            "min": 0,
-                            "vary": True,
-                            "value": 1,
-                        },
-                        "exponent": {
-                            "max": 200,
-                            "min": -200,
-                            "vary": True,
-                            "value": 0,
-                        },
-                        "intercept": {
-                            "max": 2.5,
-                            "min": 0.00002,
-                            "vary": True,
-                            "value": 1.0,
-                        },
-                    },
-                },
-                "6": {
-                    "linear": {
-                        "slope": {
-                            "max": 200,
-                            "min": 0,
-                            "vary": True,
-                            "value": 1,
-                        },
-                        "intercept": {
-                            "max": 200,
-                            "min": 0,
-                            "vary": True,
-                            "value": 1,
-                        },
-                    },
-                },
-                "7": {
-                    "constant": {
-                        "amplitude": {
-                            "max": 200,
-                            "min": 0,
-                            "vary": True,
-                            "value": 1,
-                        },
-                    },
-                },
-                "8": {
-                    "erf": {
-                        "amplitude": {
-                            "max": 200,
-                            "min": 0,
-                            "vary": True,
-                            "value": 1,
-                        },
-                        "center": {
-                            "max": 200,
-                            "min": -200,
-                            "vary": True,
-                            "value": 0,
-                        },
-                        "sigma": {
-                            "max": 2.5,
-                            "min": 0.00002,
-                            "vary": True,
-                            "value": 1.0,
-                        },
-                    },
-                },
-                "9": {
-                    "atan": {
-                        "amplitude": {
-                            "max": 200,
-                            "min": 0,
-                            "vary": True,
-                            "value": 1,
-                        },
-                        "center": {
-                            "max": 200,
-                            "min": -200,
-                            "vary": True,
-                            "value": 0,
-                        },
-                        "sigma": {
-                            "max": 2.5,
-                            "min": 0.00002,
-                            "vary": True,
-                            "value": 1.0,
-                        },
-                    },
-                },
-                "10": {
-                    "log": {
-                        "amplitude": {
-                            "max": 200,
-                            "min": 0,
-                            "vary": True,
-                            "value": 1,
-                        },
-                        "center": {
-                            "max": 200,
-                            "min": -200,
-                            "vary": True,
-                            "value": 0,
-                        },
-                        "sigma": {
-                            "max": 2.5,
-                            "min": 0.00002,
-                            "vary": True,
-                            "value": 1.0,
-                        },
-                    },
-                },
-                "11": {
-                    "heaviside": {
-                        "amplitude": {
-                            "max": 200,
-                            "min": 0,
-                            "vary": True,
-                            "value": 1,
-                        },
-                        "center": {
-                            "max": 200,
-                            "min": -200,
-                            "vary": True,
-                            "value": 0,
-                        },
-                        "sigma": {
-                            "max": 2.5,
-                            "min": 0.00002,
-                            "vary": True,
-                            "value": 1.0,
-                        },
-                    },
-                },
-                "12": {
-                    "voigt": {
-                        "center": {
-                            "max": 200,
-                            "min": -200,
-                            "vary": True,
-                            "value": 0,
-                        },
-                        "fwhmv": {
-                            "max": 2.5,
-                            "min": 0.00002,
-                            "vary": True,
-                            "value": 1.0,
-                        },
-                        "gamma": {
-                            "max": 2.5,
-                            "min": 0.00002,
-                            "vary": True,
-                            "value": 1.0,
-                        },
-                    },
-                },
-                "13": {
-                    "voigt": {
-                        "center": {
-                            "max": 200,
-                            "min": -200,
-                            "vary": True,
-                            "value": 0,
-                        },
-                        "fwhmv": {
-                            "max": 2.5,
-                            "min": 0.00002,
-                            "vary": True,
-                            "value": 1.0,
-                        },
-                    },
-                },
+                str(i): peak.to_dict() for i, peak in enumerate(_peaks, start=1)
             },
         }
 

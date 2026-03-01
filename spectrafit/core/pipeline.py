@@ -114,7 +114,7 @@ class FittingPipeline:
     data loading, preprocessing, solving, and postprocessing steps.
 
     Attributes:
-        config (dict[str, Any]): Configuration dictionary for the pipeline.
+        config (FittingArgs): Configuration dictionary for the pipeline.
 
     """
 
@@ -122,7 +122,7 @@ class FittingPipeline:
         """Initialize FittingPipeline.
 
         Args:
-            config (dict[str, Any]): Configuration dictionary containing
+            config (FittingArgs): Configuration dictionary containing
                  all necessary parameters for the fitting workflow.
 
         """
@@ -171,7 +171,7 @@ class FittingPipeline:
             df (pd.DataFrame): Input DataFrame.
 
         Returns:
-            tuple[pd.DataFrame, dict[str, Any]]: Preprocessed DataFrame and
+            tuple[pd.DataFrame, FittingArgs]: Preprocessed DataFrame and
                  updated configuration.
 
         """
@@ -187,7 +187,7 @@ class FittingPipeline:
 
         Args:
             df (pd.DataFrame): Preprocessed DataFrame.
-            args (dict[str, Any]): Configuration with preprocessing results.
+            args (FittingArgs): Configuration with preprocessing results.
 
         Returns:
             tuple[Minimizer, MinimizerResult]: Minimizer and fitting result.
@@ -207,12 +207,12 @@ class FittingPipeline:
 
         Args:
             df (pd.DataFrame): DataFrame with fit data.
-            args (dict[str, Any]): Configuration dictionary.
+            args (FittingArgs): Configuration dictionary.
             minimizer (Minimizer): The minimizer used.
             result (MinimizerResult): The fitting result.
 
         Returns:
-            tuple[pd.DataFrame, dict[str, Any]]: Postprocessed DataFrame and
+            tuple[pd.DataFrame, FittingArgs]: Postprocessed DataFrame and
                  updated configuration.
 
         """
@@ -233,11 +233,11 @@ def fitting_routine_pipeline(
     This is a convenience function that creates and runs a FittingPipeline.
 
     Args:
-        args (dict[str, Any]): The input file arguments as a dictionary with
+        args (FittingArgs): The input file arguments as a dictionary with
              additional information beyond the command line arguments.
 
     Returns:
-        tuple[pd.DataFrame, dict[str, Any]]: Returns a DataFrame and a dictionary,
+        tuple[pd.DataFrame, FittingArgs]: Returns a DataFrame and a dictionary,
              which is containing the input data (`x` and `data`), as well as the best
              fit, single contributions of each peak and the corresponding residuum. The
              dictionary contains the raw input data, the best fit, the single
