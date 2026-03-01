@@ -6,10 +6,14 @@ separating concerns and making the code more maintainable.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
 from typing import Any
 
 import pandas as pd
+
+from lmfit import Minimizer
+from lmfit.minimizer import MinimizerResult
+from pydantic import BaseModel
+from pydantic import ConfigDict
 
 from spectrafit.core.data_loader import load_data
 from spectrafit.core.postprocessing import PostProcessing
@@ -18,42 +22,63 @@ from spectrafit.models.builtin import SolverModels
 from spectrafit.report import PrintingResults
 
 
-if TYPE_CHECKING:
-    from lmfit import Minimizer
-    from lmfit.minimizer import MinimizerResult
-
-
-class FittingResult:
+class FittingResult(BaseModel):
     """Container for fitting results.
 
     Attributes:
-        df (pd.DataFrame): DataFrame containing the results.
-        args (dict[str, Any]): Arguments dictionary with fit information.
-        minimizer (Minimizer): The minimizer used for fitting.
-        result (MinimizerResult): The minimization result.
+        df: DataFrame containing the results.
+        args: Arguments dictionary with fit information.
+        minimizer: The minimizer used for fitting.
+        result: The minimization result.
 
     """
 
-    def __init__(
-        self,
-        df: pd.DataFrame,
-        args: dict[str, Any],
-        minimizer: Minimizer,
-        result: MinimizerResult,
-    ) -> None:
-        """Initialize FittingResult.
+    model_config = ConfigDict(arbitrary_types_allowed=True)
 
-        Args:
-            df (pd.DataFrame): DataFrame containing the results.
-            args (dict[str, Any]): Arguments dictionary with fit information.
-            minimizer (Minimizer): The minimizer used for fitting.
-            result (MinimizerResult): The minimization result.
+    df: pd.DataFrame
+    args: dict[str, Any]
+    minimizer: Minimizer
+    result: MinimizerResult
+
+    @property
+    def chi_squared(self) -> float:
+        """Return the chi-squared statistic from the fit result."""
+        return float(self.result.chisqr)
+
+    @property
+    def reduced_chi_squared(self) -> float:
+        """Return the reduced chi-squared statistic from the fit result."""
+        return float(self.result.redchi)
+
+    @property
+    def num_variables(self) -> int:
+        """Return the number of variables in the fit."""
+        return int(self.result.nvarys)
+
+    @property
+    def success(self) -> bool:
+        """Return whether the fit was successful."""
+        return bool(self.result.success)
+
+    def to_json(self) -> dict[str, Any]:
+        """Export serializable fit metadata.
+
+        Returns:
+            dict[str, Any]: Dictionary containing serializable fit statistics
+                and metadata. Does not include the DataFrame or minimizer
+                objects as they are not JSON-serializable.
 
         """
-        self.df = df
-        self.args = args
-        self.minimizer = minimizer
-        self.result = result
+        return {
+            "chi_squared": self.chi_squared,
+            "reduced_chi_squared": self.reduced_chi_squared,
+            "num_variables": self.num_variables,
+            "success": self.success,
+            "message": self.result.message,
+            "nfev": self.result.nfev,
+            "ndata": self.result.ndata,
+            "nfree": self.result.nfree,
+        }
 
 
 class FittingPipeline:
@@ -102,7 +127,7 @@ class FittingPipeline:
         # Step 4: Postprocess
         df, args = self._postprocess(df, args, minimizer, result)
 
-        return FittingResult(df, args, minimizer, result)
+        return FittingResult(df=df, args=args, minimizer=minimizer, result=result)
 
     def _load_data(self) -> pd.DataFrame:
         """Load data from input file.
