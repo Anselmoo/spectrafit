@@ -50,11 +50,11 @@ class ExportResults:
             index=False,
         )
 
-    def export_report(self, report: dict[Any, Any], args: FnameAPI) -> None:
+    def export_report(self, report: dict[str, Any], args: FnameAPI) -> None:
         """Export the results as toml file.
 
         Args:
-            report (dict[Any, Any]): Results as dictionary to export.
+            report (dict[str, Any]): Results as dictionary to export.
             args (FnameAPI): Arguments for the file export including the path, prefix,
                  and suffix.
 

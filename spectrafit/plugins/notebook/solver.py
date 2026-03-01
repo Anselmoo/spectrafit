@@ -138,11 +138,14 @@ class SolverResults:
         return self.args_out["fit_insights"]["computational"]
 
     @property
-    def settings_conf_interval(self) -> bool | dict[str, Any]:
+    def settings_conf_interval(
+        self,
+    ) -> bool | dict[str, list[str] | bool | int | None]:
         """Confidence interval settings.
 
         Returns:
-            bool | dict[str, Any]: Confidence interval settings.
+            bool | dict[str, list[str] | bool | int | None]: Confidence interval
+                settings from ConfIntervalAPI.
 
         """
         if isinstance(self.args_out["conf_interval"], dict):
@@ -153,11 +156,11 @@ class SolverResults:
         return self.args_out["conf_interval"]
 
     @property
-    def get_confidence_interval(self) -> dict[Any, Any]:
+    def get_confidence_interval(self) -> dict[str, Any]:
         """Get the confidence interval.
 
         Returns:
-            dict[Any, Any]: Confidence interval as dictionary with or without the
+            dict[str, Any]: Confidence interval as dictionary with or without the
                     confidence interval results.
 
         """

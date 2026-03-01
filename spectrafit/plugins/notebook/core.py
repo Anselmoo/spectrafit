@@ -27,6 +27,8 @@ from spectrafit.api.tools_model import DataPreProcessingAPI
 from spectrafit.api.tools_model import SolverModelsAPI
 from spectrafit.core import PostProcessing
 from spectrafit.core import PreProcessing
+from spectrafit.core.fitting_config import ColumnConfig
+from spectrafit.core.fitting_config import UnifiedFittingConfig
 from spectrafit.models.autopeak import FittingArgs
 from spectrafit.models.autopeak import PeakModelSpec
 from spectrafit.models.builtin import SolverModels
@@ -233,6 +235,73 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
         self.settings_solver_models: SolverModelsAPI = SolverModelsAPI()
         self.pre_statistic: dict[str, float | int] = {}
 
+    @classmethod
+    def from_config(
+        cls,
+        df: pd.DataFrame,
+        config: UnifiedFittingConfig,
+        **kwargs: Any,
+    ) -> SpectraFitNotebook:
+        """Create a SpectraFitNotebook from a UnifiedFittingConfig.
+
+        This factory method extracts column names and solver settings from the
+        unified configuration, allowing a single config object to drive
+        notebook construction.
+
+        Args:
+            df (pd.DataFrame): Dataframe with the data to fit.
+            config (UnifiedFittingConfig): Unified fitting configuration
+                containing column mapping, solver settings, and global
+                fitting mode.
+            **kwargs (Any): Additional keyword arguments forwarded to
+                ``SpectraFitNotebook.__init__`` (e.g. ``title``, ``fname``).
+
+        Returns:
+            SpectraFitNotebook: Configured notebook instance.
+
+        """
+        nb = cls(
+            df=df,
+            x_column=config.column.x,
+            y_column=config.column.y,
+            **kwargs,
+        )
+        nb.settings_solver_models = SolverModelsAPI(
+            minimizer=config.minimizer,
+            optimizer=config.optimizer,
+        )
+        nb.global_ = config.global_
+        return nb
+
+    def args_to_config(self) -> UnifiedFittingConfig:
+        """Convert the current notebook state to a UnifiedFittingConfig.
+
+        This enables round-tripping between the notebook's internal dict-based
+        state and the validated Pydantic configuration model used by the CLI
+        and pipeline interfaces.
+
+        Returns:
+            UnifiedFittingConfig: Validated configuration reflecting the
+                notebook's current peaks, solver settings, and global mode.
+
+        """
+        peaks_dict = list2dict(peak_list=self.initial_model)
+        x_col = self.x_column
+        y_col = self.y_column if isinstance(self.y_column, str) else self.y_column[0]
+
+        conf_interval: bool | dict[str, Any] = False
+        if hasattr(self, "args") and isinstance(self.args, dict):
+            conf_interval = self.args.get("conf_interval", False)
+
+        return UnifiedFittingConfig(
+            peaks=peaks_dict.get("peaks", {}),
+            minimizer=self.settings_solver_models.minimizer,
+            optimizer=self.settings_solver_models.optimizer,
+            column=ColumnConfig(x=x_col, y=y_col),
+            global_=int(self.global_),
+            conf_interval=conf_interval,
+        )
+
     @property
     def pre_process(self) -> None:
         """Pre-processing class."""
@@ -383,6 +452,44 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
             args=self.export_args_out,
         )
 
+    @staticmethod
+    def _normalize_conf_interval(
+        conf_interval: bool | ConfIntervalAPI | dict[str, Any],
+    ) -> bool | dict[str, Any]:
+        """Normalize confidence interval to a bool or dict for the solver.
+
+        Args:
+            conf_interval (bool | ConfIntervalAPI | dict[str, Any]): Raw
+                confidence interval input.
+
+        Returns:
+            bool | dict[str, Any]: Normalized confidence interval setting.
+
+        """
+        if isinstance(conf_interval, ConfIntervalAPI):
+            return conf_interval.model_dump(exclude_none=True)
+        if isinstance(conf_interval, bool):
+            return ConfIntervalAPI().model_dump() if conf_interval is True else False
+        return ConfIntervalAPI(**conf_interval).model_dump(exclude_none=True)
+
+    def _apply_solver_settings(
+        self,
+        solver_settings: SolverModelsAPI | dict[str, Any] | None,
+    ) -> None:
+        """Apply solver settings from a model or dict.
+
+        Args:
+            solver_settings (SolverModelsAPI | dict[str, Any] | None): Solver
+                model settings to apply.
+
+        """
+        if solver_settings is None:
+            return
+        if isinstance(solver_settings, SolverModelsAPI):
+            self.settings_solver_models = solver_settings
+        elif isinstance(solver_settings, dict):
+            self.settings_solver_models = SolverModelsAPI(**solver_settings)
+
     def solver_model(
         self,
         initial_model: list[PeakModelSpec],
@@ -391,10 +498,11 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
         show_metric: bool = True,
         show_df: bool = False,
         show_peaks: bool = False,
-        conf_interval: bool | dict[str, Any] = False,
+        conf_interval: bool | ConfIntervalAPI | dict[str, Any] = False,
         bar_criteria: str | list[str] | None = None,
         line_criteria: str | list[str] | None = None,
-        solver_settings: dict[str, Any] | None = None,
+        solver_settings: SolverModelsAPI | dict[str, Any] | None = None,
+        config: UnifiedFittingConfig | None = None,
     ) -> None:
         """Solves the fit problem based on the proposed model.
 
@@ -408,19 +516,25 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
             show_df (bool, optional): Show current fit results as dataframe. Defaults
                  to False.
             show_peaks (bool, optional): Show the peaks of fit. Defaults to False.
-            conf_interval (Union[bool, dict[str, Any]], optional): Bool or dictionary for
-                 the parameter with the parameter for calculating the confidence
-                 interval. Using `conf_interval=False` turns of the calculation of
-                 the confidence interval and accelerate its. Defaults to False.
+            conf_interval (bool | ConfIntervalAPI | dict[str, Any], optional): Bool,
+                 ConfIntervalAPI model, or dictionary for the parameter with the
+                 parameter for calculating the confidence interval. Using
+                 ``conf_interval=False`` turns off the calculation of the confidence
+                 interval and accelerates the fit. Defaults to False.
             bar_criteria (Optional[Union[str, List[str]]], optional): Criteria for the
                 bar plot. It is recommended to use attributes from `goodness of fit`
                 module. Defaults to None.
             line_criteria (Optional[Union[str, List[str]]], optional): Criteria for
                 the line plot. It is recommended to use attributes from
                 `regression metric` module. Defaults to None.
-            solver_settings (Optional[FittingArgs], optional): Settings for
-                the solver models, which is split into settings for `minimizer` and
-                `optimizer`.  Defaults to None.
+            solver_settings (SolverModelsAPI | dict[str, Any] | None, optional):
+                Settings for the solver models, which is split into settings for
+                ``minimizer`` and ``optimizer``. Accepts a ``SolverModelsAPI`` model
+                or a plain dictionary. Defaults to None.
+            config (UnifiedFittingConfig | None, optional): Unified fitting
+                configuration that provides ``conf_interval`` and solver settings.
+                When provided, its values override the ``conf_interval`` and
+                ``solver_settings`` parameters. Defaults to None.
 
         !!! info: "About criteria"
 
@@ -433,23 +547,22 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
         """
         self.initial_model = initial_model
 
-        if isinstance(conf_interval, bool):
-            conf_interval = (
-                ConfIntervalAPI().model_dump() if conf_interval is True else False
-            )
-        elif isinstance(conf_interval, dict):
-            conf_interval = ConfIntervalAPI(**conf_interval).model_dump(
-                exclude_none=True
+        # Apply overrides from UnifiedFittingConfig when provided
+        if config is not None:
+            conf_interval = config.conf_interval
+            solver_settings = SolverModelsAPI(
+                minimizer=config.minimizer,
+                optimizer=config.optimizer,
             )
 
-        if solver_settings is not None and isinstance(solver_settings, dict):
-            self.settings_solver_models = SolverModelsAPI(**solver_settings)
+        resolved_ci = self._normalize_conf_interval(conf_interval)
+        self._apply_solver_settings(solver_settings)
 
         self.df_fit, self.args = PostProcessing(
             self.df,
             {
                 "global_": self.global_,
-                "conf_interval": conf_interval,
+                "conf_interval": resolved_ci,
             },
             *SolverModels(
                 df=self.df,
