@@ -240,6 +240,8 @@ addopts = [
   "--diff-symbols",
   "--plots",
   "-vv",
+  "-m",
+  "not slow",
 ]
 testpaths = ["spectrafit"]
 markers = [
