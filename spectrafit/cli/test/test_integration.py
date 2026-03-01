@@ -276,15 +276,6 @@ class TestPluginsWorkflow:
         # Verbose should show more details
         assert len(result.output) > 0
 
-    def test_moessbauer_info_workflow(self):
-        """Test Mössbauer info command."""
-        result = runner.invoke(app, ["plugins", "moessbauer-info"])
-        assert result.exit_code == 0
-        assert (
-            "moessbauer" in result.output.lower()
-            or "mössbauer" in result.output.lower()
-        )
-
 
 @pytest.mark.integration
 class TestConfigurationPrecedence:

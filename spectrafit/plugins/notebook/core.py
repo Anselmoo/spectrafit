@@ -45,7 +45,6 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
 
     args: dict[str, Any]
     global_: bool | int = False
-    autopeak: bool = False
     df_fit: pd.DataFrame
     df_pre: pd.DataFrame = pd.DataFrame()
     df_metric: pd.DataFrame = pd.DataFrame()
@@ -455,7 +454,6 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
                 args={
                     "global_": self.global_,
                     "column": list(self.df.columns),
-                    "autopeak": self.autopeak,
                     **list2dict(peak_list=self.initial_model),
                     **self.settings_solver_models.model_dump(),
                 },

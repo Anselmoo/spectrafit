@@ -3,7 +3,7 @@
 This module provides the plugin architecture for SpectraFit, including:
 - Plugin protocol definition
 - Plugin discovery and loading
-- Built-in plugins (Jupyter, Mössbauer)
+- Built-in plugins (Jupyter)
 """
 
 from __future__ import annotations

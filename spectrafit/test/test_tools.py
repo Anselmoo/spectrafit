@@ -56,7 +56,6 @@ def df_large() -> pd.DataFrame:
 def args_0() -> dict[str, Any]:
     """Args fixture."""
     return {
-        "autopeak": False,
         "global_": 0,
         "column": ["Energy", "Intensity_1"],
         "minimizer": {"nan_policy": "propagate", "calc_covar": False},
@@ -87,7 +86,6 @@ def args_0() -> dict[str, Any]:
 def args_1() -> dict[str, Any]:
     """Args fixture."""
     return {
-        "autopeak": False,
         "global_": 1,
         "column": ["Energy"],
         "minimizer": {"nan_policy": "propagate", "calc_covar": False},
@@ -116,7 +114,6 @@ def args_1() -> dict[str, Any]:
 def args_2() -> dict[str, Any]:
     """Args fixture."""
     return {
-        "autopeak": False,
         "global_": 0,
         "column": ["energy", "intensity"],
         "minimizer": {"nan_policy": "propagate", "calc_covar": False},
@@ -143,7 +140,6 @@ def args_2() -> dict[str, Any]:
 def args_3() -> dict[str, Any]:
     """Args fixture."""
     return {
-        "autopeak": False,
         "global_": 0,
         "column": ["energy", "intensity"],
         "minimizer": {"nan_policy": "propagate", "calc_covar": False},

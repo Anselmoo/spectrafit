@@ -152,18 +152,6 @@ def fit(
             ),
         ),
     ] = GlobalFitEnum.CLASSIC,
-    autopeak: Annotated[
-        bool,
-        typer.Option(
-            "-auto",
-            "--autopeak",
-            help=(
-                "Auto detection of peaks in the spectra based on `SciPy`. The position, "
-                "height, and width are used as estimation for the `Gaussian` models. "
-                "The default option is 'False' for manual peak definition."
-            ),
-        ),
-    ] = False,
     noplot: Annotated[
         bool,
         typer.Option(
@@ -215,7 +203,6 @@ def fit(
         "header": header,
         "comment": comment,
         "global_": global_.value,
-        "autopeak": autopeak,
         "noplot": noplot,
         "verbose": verbose.value,
     }

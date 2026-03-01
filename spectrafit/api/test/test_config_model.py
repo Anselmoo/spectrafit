@@ -123,7 +123,6 @@ class TestPipelineConfig:
         assert config.fitting == {}
         assert config.output == {}
         assert config.description is None
-        assert config.autopeak is False
 
     def test_full_config(self) -> None:
         """Test PipelineConfig with all fields."""
@@ -135,7 +134,6 @@ class TestPipelineConfig:
             fitting={"method": "leastsq", "max_nfev": 1000},
             output={"formats": ["csv", "json"], "verbose": 2},
             description={"project": "test", "author": "user"},
-            autopeak={"height": [0.1, 0.5]},
         )
         assert config.infile == "data.txt"
         assert config.input == "params.json"
@@ -144,7 +142,6 @@ class TestPipelineConfig:
         assert config.fitting == {"method": "leastsq", "max_nfev": 1000}
         assert config.output == {"formats": ["csv", "json"], "verbose": 2}
         assert config.description == {"project": "test", "author": "user"}
-        assert config.autopeak == {"height": [0.1, 0.5]}
 
     def test_output_config_integration(self) -> None:
         """Test PipelineConfig with OutputConfig instance."""
@@ -183,7 +180,6 @@ class TestCLIConfig:
         assert config.header is None
         assert config.comment is None
         assert config.global_ == 0
-        assert config.autopeak is False
         assert config.noplot is False
         assert config.verbose == 0
         assert config.description is None
@@ -205,7 +201,6 @@ class TestCLIConfig:
             header=0,
             comment="#",
             global_=1,
-            autopeak={"height": [0.1]},
             noplot=True,
             verbose=2,
             description={"project": "test"},
@@ -224,7 +219,6 @@ class TestCLIConfig:
         assert config.header == 0
         assert config.comment == "#"
         assert config.global_ == 1
-        assert config.autopeak == {"height": [0.1]}
         assert config.noplot is True
         assert config.verbose == 2
         assert config.description == {"project": "test"}

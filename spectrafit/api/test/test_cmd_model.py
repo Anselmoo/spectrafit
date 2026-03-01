@@ -28,7 +28,6 @@ def test_default_cmd() -> None:
     assert result["column"] == [0, 1]
     assert result["separator"] == "\t"
     assert result["decimal"] == "."
-    assert result["autopeak"] is False
 
 
 def test_overwrite_cmd() -> None:
@@ -43,15 +42,6 @@ def test_overwrite_cmd() -> None:
         shift=1,
         column=["col_1", "col_2"],
         separator="s+",
-        autopeak={
-            "modeltype": "ga",
-            "height": [1],
-            "threshold": [0.1],
-            "distance": 10,
-            "prominence": [1],
-            "width": [1],
-            "wlen": 1,
-        },
     ).model_dump()
     assert result["infile"] == ""
     assert result["outfile"] == "test"
@@ -64,13 +54,6 @@ def test_overwrite_cmd() -> None:
     assert result["column"] == ["col_1", "col_2"]
     assert result["separator"] == "s+"
     assert result["decimal"] == "."
-    assert result["autopeak"]["modeltype"] == "ga"
-    assert result["autopeak"]["height"] == [1]
-    assert result["autopeak"]["threshold"] == [0.1]
-    assert result["autopeak"]["distance"] == 10
-    assert result["autopeak"]["prominence"] == [1]
-    assert result["autopeak"]["width"] == [1]
-    assert result["autopeak"]["wlen"] == 1
 
 
 def test_global_fit() -> None:

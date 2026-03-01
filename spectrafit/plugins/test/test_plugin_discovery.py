@@ -25,7 +25,6 @@ def test_list_available_builtins():
     builtins = registry.list_available_builtins()
     assert isinstance(builtins, list)
     assert "jupyter" in builtins
-    assert "moessbauer" in builtins
     assert "rixs" not in builtins
 
 
@@ -35,15 +34,6 @@ def test_load_builtin_jupyter():
     plugin = registry.load_builtin_plugin("jupyter")
     assert plugin is not None
     assert plugin.name == "jupyter"
-    assert plugin.version == "1.0.0"
-
-
-def test_load_builtin_moessbauer():
-    """Test loading Mössbauer built-in plugin."""
-    registry = PluginRegistry()
-    plugin = registry.load_builtin_plugin("moessbauer")
-    assert plugin is not None
-    assert plugin.name == "moessbauer"
     assert plugin.version == "1.0.0"
 
 

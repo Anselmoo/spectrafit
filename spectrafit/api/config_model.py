@@ -131,7 +131,6 @@ class PipelineConfig(BaseModel):
         fitting: Fitting algorithm and optimization settings.
         output: Output and visualization settings.
         description: Project metadata and description.
-        autopeak: Auto-peak detection settings or False to disable.
 
     """
 
@@ -187,13 +186,6 @@ class PipelineConfig(BaseModel):
         Field(
             default=None,
             description="Project metadata and description",
-        ),
-    ]
-    autopeak: Annotated[
-        dict[str, Any] | bool,
-        Field(
-            default=False,
-            description="Auto-peak detection settings",
         ),
     ]
 
@@ -323,14 +315,6 @@ class CLIConfig(BaseModel):
             description="Global fitting mode",
         ),
     ]
-    autopeak: Annotated[
-        dict[str, Any] | bool,
-        Field(
-            default=False,
-            description="Auto detection of peaks",
-        ),
-    ]
-
     # Output settings
     noplot: Annotated[
         bool,

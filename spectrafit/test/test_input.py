@@ -12,7 +12,7 @@ import pytest
 
 from numpy.testing import assert_almost_equal
 
-from spectrafit.test.conftest import filter_moessbauer_stderr
+from spectrafit.test.conftest import create_stdin
 
 
 BUILTINS_INPUT = "builtins.input"
@@ -32,14 +32,9 @@ class TestCommandLineRunner:
 
         assert ret.success
         assert f"Currently used version is: {__version__}\n" in ret.stdout
-        # Filter out known warnings from stderr
-        filtered_stderr = filter_moessbauer_stderr(ret.stderr)
-        assert filtered_stderr == ""
 
     def test_extended(self, script_runner: Any) -> None:
         """Testing the extended command."""
-        from spectrafit.test.conftest import create_stdin
-
         ret = script_runner.run(
             "spectrafit",
             "fit",
@@ -49,8 +44,6 @@ class TestCommandLineRunner:
             stdin=create_stdin("n\n"),
         )
         assert ret.success
-        filtered_stderr = filter_moessbauer_stderr(ret.stderr)
-        assert filtered_stderr == ""
 
     @pytest.mark.skipif(
         sys.platform == "win32",
@@ -59,8 +52,6 @@ class TestCommandLineRunner:
     )
     def test_extended_verbose(self, script_runner: Any) -> None:
         """Testing the extended with verbose command."""
-        from spectrafit.test.conftest import create_stdin
-
         ret = script_runner.run(
             "spectrafit",
             "fit",
@@ -70,8 +61,6 @@ class TestCommandLineRunner:
             stdin=create_stdin("n\n"),
         )
         assert ret.success
-        filtered_stderr = filter_moessbauer_stderr(ret.stderr)
-        assert filtered_stderr == ""
 
 
 class TestFileFormat:
@@ -88,8 +77,6 @@ class TestFileFormat:
         tmp_path: Path,
     ) -> None:
         """Testing json support."""
-        from spectrafit.test.conftest import create_stdin
-
         ret = script_runner.run(
             "spectrafit",
             "fit",
@@ -101,8 +88,6 @@ class TestFileFormat:
             stdin=create_stdin("n\n"),
         )
         assert ret.success
-        filtered_stderr = filter_moessbauer_stderr(ret.stderr)
-        assert filtered_stderr == ""
         assert len(list(Path(tmp_path).glob("result_json*.json"))) == 1
         assert len(list(Path(tmp_path).glob("result_json*.csv"))) == 3
 
@@ -117,8 +102,6 @@ class TestFileFormat:
         tmp_path: Path,
     ) -> None:
         """Testing yml support."""
-        from spectrafit.test.conftest import create_stdin
-
         ret = script_runner.run(
             "spectrafit",
             "fit",
@@ -130,8 +113,6 @@ class TestFileFormat:
             stdin=create_stdin("n\n"),
         )
         assert ret.success
-        filtered_stderr = filter_moessbauer_stderr(ret.stderr)
-        assert filtered_stderr == ""
         assert len(list(Path(tmp_path).glob("result_yml*.json"))) == 1
         assert len(list(Path(tmp_path).glob("result_yml*.csv"))) == 3
 
@@ -146,8 +127,6 @@ class TestFileFormat:
         tmp_path: Path,
     ) -> None:
         """Testing yaml support."""
-        from spectrafit.test.conftest import create_stdin
-
         ret = script_runner.run(
             "spectrafit",
             "fit",
@@ -159,8 +138,6 @@ class TestFileFormat:
             stdin=create_stdin("n\n"),
         )
         assert ret.success
-        filtered_stderr = filter_moessbauer_stderr(ret.stderr)
-        assert filtered_stderr == ""
         assert len(list(Path(tmp_path).glob("result_yaml*.json"))) == 1
         assert len(list(Path(tmp_path).glob("result_yaml*.csv"))) == 3
 
@@ -175,8 +152,6 @@ class TestFileFormat:
         tmp_path: Path,
     ) -> None:
         """Testing toml support."""
-        from spectrafit.test.conftest import create_stdin
-
         ret = script_runner.run(
             "spectrafit",
             "fit",
@@ -188,8 +163,6 @@ class TestFileFormat:
             stdin=create_stdin("n\n"),
         )
         assert ret.success
-        filtered_stderr = filter_moessbauer_stderr(ret.stderr)
-        assert filtered_stderr == ""
         assert len(list(Path(tmp_path).glob("result_toml*.json"))) == 1
         assert len(list(Path(tmp_path).glob("result_toml*.csv"))) == 3
 
@@ -200,8 +173,6 @@ class TestFileFormatOutput:
     def test_outputs(self, script_runner: Any, tmp_path: Path) -> None:
         """Testing correct number of outputs (isolated temp output)."""
         import json
-
-        from spectrafit.test.conftest import create_stdin
 
         # Create output directory
         export_dir = tmp_path / "export"
@@ -236,8 +207,6 @@ class TestMoreFeatures:
 
     def test_default_options(self, script_runner: Any) -> None:
         """Testing verbose support."""
-        from spectrafit.test.conftest import create_stdin
-
         ret = script_runner.run(
             "spectrafit",
             "fit",
@@ -247,8 +216,6 @@ class TestMoreFeatures:
             stdin=create_stdin("n\n"),
         )
         assert ret.success
-        filtered_stderr = filter_moessbauer_stderr(ret.stderr)
-        assert filtered_stderr == ""
 
     def test_energyrange_e0(
         self,
@@ -256,8 +223,6 @@ class TestMoreFeatures:
         tmp_path: Path,
     ) -> None:
         """Testing lower energy range cut."""
-        from spectrafit.test.conftest import create_stdin
-
         ret = script_runner.run(
             "spectrafit",
             "fit",
@@ -271,8 +236,6 @@ class TestMoreFeatures:
             stdin=create_stdin("n\n"),
         )
         assert ret.success
-        filtered_stderr = filter_moessbauer_stderr(ret.stderr)
-        assert filtered_stderr == ""
 
         df_test = pd.read_csv(tmp_path / "e0_result_fit.csv")
         assert_almost_equal(df_test["energy"].min(), 0.0, decimal=0)
@@ -283,8 +246,6 @@ class TestMoreFeatures:
         tmp_path: Path,
     ) -> None:
         """Testing upper energy range cut."""
-        from spectrafit.test.conftest import create_stdin
-
         ret = script_runner.run(
             "spectrafit",
             "fit",
@@ -299,8 +260,6 @@ class TestMoreFeatures:
             stdin=create_stdin("n\n"),
         )
         assert ret.success
-        filtered_stderr = filter_moessbauer_stderr(ret.stderr)
-        assert filtered_stderr == ""
 
         df_test = pd.read_csv(tmp_path / "e1_result_fit.csv")
         assert_almost_equal(df_test["energy"].max(), 5.0, decimal=0)
@@ -311,8 +270,6 @@ class TestMoreFeatures:
         tmp_path: Path,
     ) -> None:
         """Testing lower and upper energy range cut."""
-        from spectrafit.test.conftest import create_stdin
-
         ret = script_runner.run(
             "spectrafit",
             "fit",
@@ -329,8 +286,6 @@ class TestMoreFeatures:
             stdin=create_stdin("n\n"),
         )
         assert ret.success
-        filtered_stderr = filter_moessbauer_stderr(ret.stderr)
-        assert filtered_stderr == ""
 
         df_test = pd.read_csv(tmp_path / "e0e1_result_fit.csv")
         assert_almost_equal(df_test["energy"].max(), 5.0, decimal=0)
@@ -343,8 +298,6 @@ class TestMoreFeatures:
     )
     def test_all_models(self, script_runner: Any) -> None:
         """Testing test all models of spectrafit."""
-        from spectrafit.test.conftest import create_stdin
-
         ret = script_runner.run(
             "spectrafit",
             "fit",
@@ -354,13 +307,9 @@ class TestMoreFeatures:
             stdin=create_stdin("n\n"),
         )
         assert ret.success
-        filtered_stderr = filter_moessbauer_stderr(ret.stderr)
-        assert filtered_stderr == ""
 
     def test_not_allowed_input_1(self, script_runner: Any) -> None:
         """Testing test all models of spectrafit."""
-        from spectrafit.test.conftest import create_stdin
-
         fname = "spectrafit/test/scripts/test_wrong.pp"
         ret = script_runner.run(
             "spectrafit",
@@ -374,8 +323,6 @@ class TestMoreFeatures:
 
     def test_not_allowed_input_2(self, script_runner: Any) -> None:
         """Testing missing mininizmer parameter in input."""
-        from spectrafit.test.conftest import create_stdin
-
         ret = script_runner.run(
             "spectrafit",
             "fit",
@@ -388,8 +335,6 @@ class TestMoreFeatures:
 
     def test_not_allowed_input_3(self, script_runner: Any) -> None:
         """Testing missing optimizer parameter in input."""
-        from spectrafit.test.conftest import create_stdin
-
         ret = script_runner.run(
             "spectrafit",
             "fit",
@@ -402,8 +347,6 @@ class TestMoreFeatures:
 
     def test_no_input(self, script_runner: Any) -> None:
         """Testing no provided input for spectrafit."""
-        from spectrafit.test.conftest import create_stdin
-
         ret = script_runner.run(
             "spectrafit",
             "fit",
@@ -420,8 +363,6 @@ class TestMoreFeatures:
         tmp_path: Path,
     ) -> None:
         """Testing upper energy range cut."""
-        from spectrafit.test.conftest import create_stdin
-
         ret = script_runner.run(
             "spectrafit",
             "fit",
@@ -433,14 +374,10 @@ class TestMoreFeatures:
             stdin=create_stdin("n\n"),
         )
         assert ret.success
-        filtered_stderr = filter_moessbauer_stderr(ret.stderr)
-        assert filtered_stderr == ""
         assert len(list(Path(tmp_path).glob("conf_interval_result*.json"))) == 1
 
     def test_get_no_errors(self, script_runner: Any) -> None:
         """Testing for no errorbars for spectrafit."""
-        from spectrafit.test.conftest import create_stdin
-
         ret = script_runner.run(
             "spectrafit",
             "fit",
@@ -453,8 +390,6 @@ class TestMoreFeatures:
 
     def test_load_noglobal(self, script_runner: Any) -> None:
         """Testing for no errorbars for spectrafit."""
-        from spectrafit.test.conftest import create_stdin
-
         ret = script_runner.run(
             "spectrafit",
             "fit",
@@ -469,8 +404,6 @@ class TestMoreFeatures:
 
     def test_non_numeric_data(self, script_runner: Any) -> None:
         """Testing missing mininizmer parameter in input."""
-        from spectrafit.test.conftest import create_stdin
-
         ret = script_runner.run(
             "spectrafit",
             "fit",
@@ -487,8 +420,6 @@ class TestGlobalFitting:
 
     def test_global_fitting_0(self, script_runner: Any) -> None:
         """Testing global fitting."""
-        from spectrafit.test.conftest import create_stdin
-
         ret = script_runner.run(
             "spectrafit",
             "fit",
@@ -498,8 +429,6 @@ class TestGlobalFitting:
             stdin=create_stdin("n\n"),
         )
         assert ret.success
-        filtered_stderr = filter_moessbauer_stderr(ret.stderr)
-        assert filtered_stderr == ""
         assert (
             len(
                 list(
@@ -517,8 +446,6 @@ class TestGlobalFitting:
 
     def test_global_fitting_1(self, script_runner: Any) -> None:
         """Testing global fitting."""
-        from spectrafit.test.conftest import create_stdin
-
         ret = script_runner.run(
             "spectrafit",
             "fit",
@@ -528,8 +455,6 @@ class TestGlobalFitting:
             stdin=create_stdin("n\n"),
         )
         assert ret.success
-        filtered_stderr = filter_moessbauer_stderr(ret.stderr)
-        assert filtered_stderr == ""
         assert (
             len(
                 list(

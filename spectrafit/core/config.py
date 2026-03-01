@@ -37,7 +37,6 @@ class FittingConfig(BaseModel):
         header (int | None): Header row index.
         comment (str | None): Comment character for skipping lines.
         global_ (int): Global fitting mode (0=classic, 1=auto, 2=custom).
-        autopeak (bool): Enable auto-peak detection.
         noplot (bool): Disable plotting.
         verbose (int): Verbosity level (0=silent, 1=table, 2=dict).
 
@@ -106,10 +105,6 @@ class FittingConfig(BaseModel):
         ge=0,
         le=2,
         description="Global fitting mode",
-    )
-    autopeak: bool = Field(
-        default=False,
-        description="Auto detection of peaks",
     )
     noplot: bool = Field(
         default=False,

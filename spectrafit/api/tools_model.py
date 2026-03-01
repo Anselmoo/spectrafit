@@ -5,31 +5,7 @@ from __future__ import annotations
 from typing import Any
 
 from pydantic import BaseModel
-from pydantic import ConfigDict
 from pydantic import Field
-
-
-class AutopeakAPI(BaseModel):
-    """Definition of the auto detection of peak command line argument.
-
-    The auto detection of peaks is performed by the SpectraFit tools. Here is listed the
-    set of parameters that are used to control the auto detection of peaks according to
-    the following `scipy.signal.find_peaks` -module; source:
-    [https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.find_peaks.html](
-    https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.find_peaks.html
-    )
-    """
-
-    modeltype: str | None = None
-    height: list[float] | None = None
-    threshold: list[float] | None = None
-    distance: int | None = None
-    prominence: list[float] | None = None
-    width: list[float] | None = None
-    wlen: int | None = None
-    rel_height: float | None = None
-    plateau_size: float | None = None
-    model_config = ConfigDict(extra="forbid", validate_assignment=True)
 
 
 class DataPreProcessingAPI(BaseModel):

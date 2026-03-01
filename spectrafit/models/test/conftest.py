@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 
 @pytest.fixture
 def velocity_data() -> NDArray[np.float64]:
-    """Create test velocity data for Mössbauer model testing.
+    """Create test velocity data for model testing.
 
     Returns:
         np.ndarray: Array of velocity values in mm/s, ranging from -10 to 10.
@@ -42,74 +42,3 @@ def distribution_model_instance() -> DistributionModels:
         DistributionModels: Instance of the DistributionModels class
     """
     return DistributionModels()
-
-
-@pytest.fixture
-def moessbauer_singlet_params() -> dict[str, float]:
-    """Create parameters for testing the Mössbauer singlet model.
-
-    Returns:
-        dict[str, float]: Dictionary of parameter values
-    """
-    return {
-        "amplitude": 1.0,
-        "center": 0.0,
-        "fwhml": 0.2,
-        "background": 0.1,
-        "isomer_shift": 0.0,
-    }
-
-
-@pytest.fixture
-def moessbauer_doublet_params() -> dict[str, float]:
-    """Create parameters for testing the Mössbauer doublet model.
-
-    Returns:
-        dict[str, float]: Dictionary of parameter values
-    """
-    return {
-        "amplitude": 1.0,
-        "center": 0.0,
-        "fwhml": 0.25,
-        "background": 0.1,
-        "isomer_shift": 0.3,
-        "quadrupole_splitting": 1.0,
-    }
-
-
-@pytest.fixture
-def moessbauer_sextet_params() -> dict[str, float]:
-    """Create parameters for testing the Mössbauer sextet model.
-
-    Returns:
-        dict[str, float]: Dictionary of parameter values
-    """
-    return {
-        "amplitude": 1.0,
-        "center": 0.0,
-        "fwhml": 0.25,
-        "background": 0.1,
-        "isomer_shift": 0.0,
-        "magnetic_field": 33.0,
-        "quadrupole_shift": 0.0,
-    }
-
-
-@pytest.fixture
-def moessbauer_octet_params() -> dict[str, float]:
-    """Create parameters for testing the Mössbauer octet model.
-
-    Returns:
-        dict[str, float]: Dictionary of parameter values
-    """
-    return {
-        "amplitude": 1.0,
-        "center": 0.0,
-        "fwhml": 0.25,
-        "background": 0.1,
-        "isomer_shift": 0.0,
-        "magnetic_field": 33.0,
-        "quadrupole_shift": 0.0,
-        "efg_vzz": 1e22,
-        "efg_eta": 0.0,
-    }
