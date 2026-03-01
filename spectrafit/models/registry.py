@@ -7,13 +7,9 @@ lookup mechanism.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from collections.abc import Callable  # noqa: TC003
 from typing import Any
 from typing import Literal
-
-
-if TYPE_CHECKING:
-    from collections.abc import Callable
 
 from pydantic import BaseModel
 from pydantic import ConfigDict
