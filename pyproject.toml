@@ -246,7 +246,11 @@ markers = [
   "api: tests for API models",
   "models: tests for model implementations",
   "performance: tests that check performance characteristics",
-  "integration: tests that check integration between components",
+  "integration: tests with subprocess/IO",
+  "unit: fast unit tests",
+  "e2e: end-to-end workflow tests",
+  "slow: tests taking >10s",
+  "validation: scientific validation tests",
 ]
 
 [tool.coverage.report]
