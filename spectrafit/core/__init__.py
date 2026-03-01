@@ -18,20 +18,24 @@ from spectrafit.core.data_loader import unicode_check
 from spectrafit.core.export import SaveResult
 from spectrafit.core.export import exclude_none_dictionary
 from spectrafit.core.export import transform_nested_types
+from spectrafit.core.pipeline import FitStatistics
 from spectrafit.core.pipeline import FittingPipeline
 from spectrafit.core.pipeline import FittingResult
 from spectrafit.core.pipeline import fitting_routine_pipeline
 from spectrafit.core.postprocessing import PostProcessing
 from spectrafit.core.preprocessing import PreProcessing
+from spectrafit.core.preprocessing import PreProcessingArgs
 
 
 __all__ = [
     "ConfigLoader",
+    "FitStatistics",
     "FittingConfig",
     "FittingPipeline",
     "FittingResult",
     "PostProcessing",
     "PreProcessing",
+    "PreProcessingArgs",
     "SaveResult",
     "check_keywords_consistency",
     "exclude_none_dictionary",

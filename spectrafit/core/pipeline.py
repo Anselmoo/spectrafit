@@ -14,12 +14,38 @@ from lmfit import Minimizer
 from lmfit.minimizer import MinimizerResult
 from pydantic import BaseModel
 from pydantic import ConfigDict
+from pydantic import Field
 
 from spectrafit.core.data_loader import load_data
 from spectrafit.core.postprocessing import PostProcessing
 from spectrafit.core.preprocessing import PreProcessing
 from spectrafit.models.builtin import SolverModels
 from spectrafit.report import PrintingResults
+
+
+class FitStatistics(BaseModel):
+    """Serializable fit statistics from a minimization result.
+
+    Attributes:
+        chi_squared: Chi-squared statistic of the fit.
+        reduced_chi_squared: Reduced chi-squared statistic.
+        num_variables: Number of free variables in the fit.
+        success: Whether the fit converged successfully.
+        message: Status message from the minimizer.
+        nfev: Number of function evaluations.
+        ndata: Number of data points.
+        nfree: Degrees of freedom (ndata - nvarys).
+
+    """
+
+    chi_squared: float = Field(description="Chi-squared statistic")
+    reduced_chi_squared: float = Field(description="Reduced chi-squared statistic")
+    num_variables: int = Field(description="Number of free variables")
+    success: bool = Field(description="Whether fit converged")
+    message: str = Field(description="Minimizer status message")
+    nfev: int = Field(description="Number of function evaluations")
+    ndata: int = Field(description="Number of data points")
+    nfree: int = Field(description="Degrees of freedom")
 
 
 class FittingResult(BaseModel):
@@ -60,25 +86,25 @@ class FittingResult(BaseModel):
         """Return whether the fit was successful."""
         return bool(self.result.success)
 
-    def to_json(self) -> dict[str, Any]:
+    def to_json(self) -> FitStatistics:
         """Export serializable fit metadata.
 
         Returns:
-            dict[str, Any]: Dictionary containing serializable fit statistics
-                and metadata. Does not include the DataFrame or minimizer
-                objects as they are not JSON-serializable.
+            FitStatistics: Pydantic model containing serializable fit
+                statistics and metadata. Call ``.model_dump()`` to get a
+                plain dictionary representation.
 
         """
-        return {
-            "chi_squared": self.chi_squared,
-            "reduced_chi_squared": self.reduced_chi_squared,
-            "num_variables": self.num_variables,
-            "success": self.success,
-            "message": self.result.message,
-            "nfev": self.result.nfev,
-            "ndata": self.result.ndata,
-            "nfree": self.result.nfree,
-        }
+        return FitStatistics(
+            chi_squared=self.chi_squared,
+            reduced_chi_squared=self.reduced_chi_squared,
+            num_variables=self.num_variables,
+            success=self.success,
+            message=self.result.message,
+            nfev=self.result.nfev,
+            ndata=self.result.ndata,
+            nfree=self.result.nfree,
+        )
 
 
 class FittingPipeline:

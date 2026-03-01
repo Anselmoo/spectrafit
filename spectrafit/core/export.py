@@ -123,15 +123,18 @@ class SaveResult:
             raise FileNotFoundError(msg)
 
 
-def exclude_none_dictionary(value: dict[str, Any]) -> dict[str, Any]:
+def exclude_none_dictionary(value: Any) -> Any:
     """Exclude `None` values from the dictionary.
 
+    Recursively processes dicts, lists, and other values to remove ``None``
+    entries. Non-dict/list values are returned unchanged.
+
     Args:
-        value (dict[str, Any]): Dictionary to be processed to
-            exclude `None` values.
+        value (Any): Value to be processed. Typically a dict or list,
+            but any type is accepted and returned as-is if not a container.
 
     Returns:
-        dict[str, Any]: Dictionary without `None` values.
+        Any: Cleaned value without ``None`` entries.
 
     """
     if isinstance(value, list):
@@ -143,15 +146,18 @@ def exclude_none_dictionary(value: dict[str, Any]) -> dict[str, Any]:
     return value
 
 
-def transform_nested_types(value: dict[str, Any]) -> dict[str, Any]:
-    """Transform nested types numpy values to python values.
+def transform_nested_types(value: Any) -> Any:
+    """Transform nested numpy types to native Python values.
+
+    Recursively converts numpy scalars and arrays within dicts, lists, and
+    tuples to their native Python equivalents for JSON serialization.
 
     Args:
-        value (dict[str, Any]): Dictionary to be processed to
-            transform numpy values to python values.
+        value (Any): Value to be processed. Supports dicts, lists,
+            tuples, numpy arrays, and numpy scalar types.
 
     Returns:
-        dict[str, Any]: Dictionary with python values.
+        Any: Value with all numpy types converted to native Python types.
 
     """
     if isinstance(value, list):

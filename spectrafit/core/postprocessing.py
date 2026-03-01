@@ -13,6 +13,7 @@ import pandas as pd
 
 from lmfit.confidence import ConfidenceInterval
 from lmfit.minimizer import MinimizerException
+from lmfit.minimizer import MinimizerResult
 
 from spectrafit.api.tools_model import ColumnNamesAPI
 from spectrafit.models.builtin import calculated_model
@@ -32,7 +33,7 @@ class PostProcessing:
         df: pd.DataFrame,
         args: dict[str, Any],
         minimizer: Minimizer,
-        result: Any,
+        result: MinimizerResult,
     ) -> None:
         """Initialize PostProcessing class.
 
@@ -43,7 +44,7 @@ class PostProcessing:
             args (dict[str, Any]): The input file arguments as a dictionary with
                  additional information beyond the command line arguments.
             minimizer (Minimizer): The minimizer class.
-            result (Any): The result of the minimization of the best fit.
+            result (MinimizerResult): The result of the minimization of the best fit.
 
         """
         self.args = args.copy()  # Work with a copy to avoid side effects

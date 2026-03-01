@@ -173,7 +173,9 @@ class ConfigLoader:
         config_dir.mkdir(parents=True, exist_ok=True)
         return config_dir
 
-    def load_from_env(self, prefix: str = "SPECTRAFIT_") -> dict[str, Any]:
+    def load_from_env(
+        self, prefix: str = "SPECTRAFIT_"
+    ) -> dict[str, str | int | float | bool]:
         """Load configuration from environment variables.
 
         Args:
@@ -181,10 +183,11 @@ class ConfigLoader:
                  Defaults to "SPECTRAFIT_".
 
         Returns:
-            dict[str, Any]: Configuration dictionary from environment.
+            dict[str, str | int | float | bool]: Configuration dictionary
+                from environment variables with parsed value types.
 
         """
-        config: dict[str, Any] = {}
+        config: dict[str, str | int | float | bool] = {}
         for key, value in os.environ.items():
             if key.startswith(prefix):
                 # Remove prefix and convert to lowercase
