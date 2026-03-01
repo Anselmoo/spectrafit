@@ -11,6 +11,8 @@ from spectrafit.cli.commands.convert import convert
 from spectrafit.cli.commands.fit import fit
 from spectrafit.cli.commands.plugins import plugins_app
 from spectrafit.cli.commands.report import report
+from spectrafit.cli.commands.scaffolding import init
+from spectrafit.cli.commands.scaffolding import new_config
 from spectrafit.cli.commands.validate import validate
 
 
@@ -51,6 +53,8 @@ app.command(name="convert", help="Convert configuration files between formats.")
     convert
 )
 app.command(name="report", help="Generate reports from fitting results.")(report)
+app.command(name="init", help="Scaffold a new fitting project.")(init)
+app.command(name="new-config", help="Generate a configuration file.")(new_config)
 
 # Register plugins subcommand group
 app.add_typer(plugins_app, name="plugins", help="Additional tools and visualizers.")
