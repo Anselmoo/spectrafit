@@ -165,9 +165,7 @@ class FittingFixture(BaseModel):
         peak_defs = [
             PeakDefinition(
                 model=peak.model_name,  # type: ignore[arg-type]
-                params={
-                    name: spec.value for name, spec in peak.parameters.items()
-                },
+                params={name: spec.value for name, spec in peak.parameters.items()},
             )
             for peak in self.peaks
         ]
@@ -211,7 +209,9 @@ def single_gaussian(
                     "amplitude": ParameterSpec(
                         value=amplitude, min=0.0, max=amplitude * 3
                     ),
-                    "center": ParameterSpec(value=center, min=center - 5, max=center + 5),
+                    "center": ParameterSpec(
+                        value=center, min=center - 5, max=center + 5
+                    ),
                     "fwhmg": ParameterSpec(value=fwhmg, min=0.01, max=fwhmg * 5),
                 },
             ),
@@ -242,7 +242,9 @@ def single_lorentzian(
                     "amplitude": ParameterSpec(
                         value=amplitude, min=0.0, max=amplitude * 3
                     ),
-                    "center": ParameterSpec(value=center, min=center - 5, max=center + 5),
+                    "center": ParameterSpec(
+                        value=center, min=center - 5, max=center + 5
+                    ),
                     "fwhml": ParameterSpec(value=fwhml, min=0.01, max=fwhml * 5),
                 },
             ),
