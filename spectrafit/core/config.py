@@ -131,9 +131,7 @@ class FittingConfig(BaseModel):
         """
         if v is None:
             return ["0", "1"]
-        if isinstance(v, list):
-            return [str(c) for c in v]
-        return [str(v)]
+        return [str(c) for c in v] if isinstance(v, list) else [str(v)]
 
 
 class ConfigLoader:
@@ -225,7 +223,7 @@ class ConfigLoader:
         merged = {}
         for config in configs:
             if config:
-                merged.update(config)
+                merged |= config
         return merged
 
     def get_config_file_path(self, filename: str = "config.toml") -> Path:
@@ -278,10 +276,8 @@ def load_config(
     configs = []
 
     # Load from environment if enabled
-    if use_env:
-        env_config = loader.load_from_env()
-        if env_config:
-            configs.append(env_config)
+    if use_env and (env_config := loader.load_from_env()):
+        configs.append(env_config)
 
     # Add direct args (highest precedence)
     if args:

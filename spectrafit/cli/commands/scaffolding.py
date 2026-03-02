@@ -16,6 +16,7 @@ import typer
 import yaml
 
 from spectrafit.cli._types import OutputFormatEnum
+from spectrafit.cli._types import reset_keyboard_protocol
 from spectrafit.models.registry import REGISTRY
 
 
@@ -84,10 +85,7 @@ def _build_config(peaks: list[tuple[int, str]]) -> dict[str, Any]:
     Returns:
         Complete configuration dict ready for serialisation.
     """
-    peaks_dict: dict[str, Any] = {}
-    for num, model in peaks:
-        peaks_dict[str(num)] = _build_peak(model)
-
+    peaks_dict: dict[str, Any] = {str(num): _build_peak(model) for num, model in peaks}
     return {
         "fitting": {
             "description": {"project_name": "SpectraFit Project"},
@@ -179,6 +177,7 @@ def init(
     project_path = Path(project_name)
 
     if project_path.exists():
+        reset_keyboard_protocol()
         overwrite = typer.confirm(
             f"Directory '{project_name}' already exists. Continue?",
             default=False,

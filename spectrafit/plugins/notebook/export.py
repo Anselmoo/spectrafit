@@ -23,8 +23,8 @@ from spectrafit.api.tools_model import DataPreProcessingAPI
 from spectrafit.api.tools_model import SolverModelsAPI
 from spectrafit.core import exclude_none_dictionary
 from spectrafit.core import transform_nested_types
-from spectrafit.models.autopeak import FittingArgs
-from spectrafit.models.autopeak import PeakModelSpec
+from spectrafit.models.types import FittingArgs
+from spectrafit.models.types import PeakModelSpec
 from spectrafit.plugins.notebook.solver import SolverResults
 
 
@@ -153,15 +153,13 @@ class ExportReport(SolverResults):
         """
         return InputAPI(
             description=self.description,
-            initial_model=self.initial_model,
+            initial_model=self.initial_model,  # type: ignore[arg-type]
             pre_processing=self.pre_processing,
             method=FitMethodAPI(
                 global_fitting=self.settings_global_fitting,
-                confidence_interval=self.settings_conf_interval,
+                confidence_interval=self.settings_conf_interval,  # type: ignore[arg-type]
                 configurations=self.settings_configurations,
-                settings_solver_models=self.settings_solver_models.model_dump(
-                    exclude_none=True,
-                ),
+                settings_solver_models=self.settings_solver_models,
             ),
         )
 
@@ -181,9 +179,9 @@ class ExportReport(SolverResults):
             component_correlation=self.get_component_correlation,
             confidence_interval=self.get_confidence_interval,
             covariance_matrix=self.get_covariance_matrix,
-            variables=self.get_variables,
+            variables=self.get_variables,  # type: ignore[arg-type]
             errorbars=self.get_errorbars,
-            computational=self.get_computational,
+            computational=self.get_computational,  # type: ignore[arg-type]
         )
 
     @property

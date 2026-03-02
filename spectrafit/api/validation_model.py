@@ -135,9 +135,7 @@ class ValidationReport(BaseModel):
         all_checks: list[bool] = [c.passed for c in self.analytical_checks]
         all_checks.extend(b.passed for b in self.reference_benchmarks)
         all_checks.extend(e.passed for e in self.expectation_results)
-        if not all_checks:
-            return True
-        return all(all_checks)
+        return all(all_checks) if all_checks else True
 
     @property
     def summary(self) -> str:
@@ -199,16 +197,16 @@ class ValidationReport(BaseModel):
                 f"<td>{_esc(e.details)}</td></tr>\n"
             )
 
-        metrics_rows = ""
-        for label, value in [
-            ("Chi-squared", self.chi_squared),
-            ("Reduced Chi-squared", self.reduced_chi_squared),
-            ("R-squared", self.r_squared),
-            ("Residual RMS", self.residual_rms),
-        ]:
-            if value is not None:
-                metrics_rows += f"<tr><td>{label}</td><td>{value}</td></tr>\n"
-
+        metrics_rows = "".join(
+            f"<tr><td>{label}</td><td>{value}</td></tr>\n"
+            for label, value in [
+                ("Chi-squared", self.chi_squared),
+                ("Reduced Chi-squared", self.reduced_chi_squared),
+                ("R-squared", self.r_squared),
+                ("Residual RMS", self.residual_rms),
+            ]
+            if value is not None
+        )
         data = json.loads(self.model_dump_json())
         ts = data.get("timestamp", str(self.timestamp))
 

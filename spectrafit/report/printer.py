@@ -18,7 +18,7 @@ from art import tprint
 from lmfit.minimizer import MinimizerException
 
 from spectrafit import __version__
-from spectrafit.models.autopeak import FittingArgs
+from spectrafit.models.types import FittingArgs
 
 
 if TYPE_CHECKING:
@@ -59,9 +59,10 @@ class PrintingResults:
 
     def __call__(self) -> None:
         """Print the results of the fitting process."""
-        if self.args["verbose"] == VERBOSE_REGULAR:
+        verbose = self.args.get("verbose", 0)
+        if verbose == VERBOSE_REGULAR:
             self.printing_regular_mode()
-        elif self.args["verbose"] == VERBOSE_DETAILED:
+        elif verbose == VERBOSE_DETAILED:
             self.printing_verbose_mode()
 
     @staticmethod

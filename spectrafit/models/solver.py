@@ -21,9 +21,8 @@ from lmfit import Parameters
 
 from spectrafit.api.tools_model import GlobalFittingAPI
 from spectrafit.api.tools_model import SolverModelsAPI
-from spectrafit.models.autopeak import FittingArgs
-from spectrafit.models.autopeak import ModelParameters
-from spectrafit.models.autopeak import ReferenceKeys
+from spectrafit.models.model_parameters import ModelParameters
+from spectrafit.models.model_parameters import ReferenceKeys
 from spectrafit.models.registry import REGISTRY
 
 
@@ -34,6 +33,8 @@ if TYPE_CHECKING:
     from lmfit.minimizer import MinimizerResult
     from numpy.typing import NDArray
 
+    from spectrafit.core.fitting_config import UnifiedFittingConfig
+    from spectrafit.models.bundle import CompositeModelBundle
     from spectrafit.models.global_fitting import GlobalFittingConfig
 
 
@@ -48,18 +49,20 @@ class SolverModels(ModelParameters):
           the `lmfit` function is used.
     """
 
-    def __init__(self, df: pd.DataFrame, args: FittingArgs) -> None:
+    def __init__(self, df: pd.DataFrame, config: UnifiedFittingConfig) -> None:
         """Initialize the solver modes.
 
         Args:
             df (pd.DataFrame): DataFrame containing the input data (`x` and `data`).
-            args (FittingArgs): The input file arguments as a dictionary with
-                 additional information beyond the command line arguments.
+            config (UnifiedFittingConfig): Validated fitting configuration.
 
         """
-        super().__init__(df=df, args=args)
-        self.args_solver = SolverModelsAPI(**args).model_dump()
-        self.args_global = GlobalFittingAPI(**args).model_dump()
+        super().__init__(df=df, config=config)
+        self.args_solver = SolverModelsAPI(
+            minimizer=config.minimizer,
+            optimizer=config.optimizer,
+        ).model_dump()
+        self.args_global = GlobalFittingAPI(global_=int(config.global_)).model_dump()
         self.params = self.return_params
 
     def __call__(self) -> tuple[Minimizer, MinimizerResult]:
@@ -79,7 +82,7 @@ class SolverModels(ModelParameters):
             )
         else:
             minimizer = Minimizer(
-                self.solve_local_fitting,
+                self._local_residual,
                 params=self.params,
                 fcn_args=(self.x, self.data),
                 **self.args_solver["minimizer"],
@@ -91,38 +94,27 @@ class SolverModels(ModelParameters):
         self.args_solver["optimizer"]["max_nfev"] = minimizer.max_nfev
         return minimizer, result
 
-    @staticmethod
-    def solve_local_fitting(
+    def _local_residual(
+        self,
         params: Parameters,
         x: NDArray[np.float64],
         data: NDArray[np.float64],
     ) -> NDArray[np.float64]:
-        """Solving the fitting problem.
+        """Compute residual for local (single-dataset) fitting using the composite bundle.
 
         Args:
-            params (Parameters): The best optimized parameters of the fit.
-            x (NDArray[np.float64]): `x`-values of the data.
-            data (NDArray[np.float64]): `y`-values of the data as 1d-array.
+            params (Parameters): Current parameter values from the minimizer.
+            x (NDArray[np.float64]): x-values of the data.
+            data (NDArray[np.float64]): y-values of the data as 1d-array.
 
         Returns:
-            NDArray[np.float64]: The best-fitted data based on the proposed model.
+            NDArray[np.float64]: Residual (model - data).
 
         """
-        val = np.zeros(x.shape)
-        peak_kwargs: dict[tuple[str, str], dict[str, Parameter]] = defaultdict(dict)
-        for model_name, param_value in params.items():
-            _model = model_name.lower()
-            ReferenceKeys().model_check(model=_model)
-            c_name = _model.split("_")
-
-            model_key = c_name[0]
-            param_name = c_name[1]
-            peak_id = c_name[2]
-            peak_kwargs[(model_key, peak_id)][param_name] = param_value
-
-        for key, _kwarg in peak_kwargs.items():
-            val += REGISTRY.get(key[0]).function(x, **_kwarg)
-        return np.array(val - data, dtype=np.float64)
+        assert self._bundle is not None, "CompositeModelBundle not initialized"  # noqa: S101
+        return np.array(
+            self._bundle.composite.eval(params, x=x) - data, dtype=np.float64
+        )
 
     @staticmethod
     def solve_global_fitting(
@@ -186,6 +178,7 @@ def calculated_model(
     x: NDArray[np.float64],
     df: pd.DataFrame,
     global_fit: int,
+    bundle: CompositeModelBundle | None = None,
 ) -> pd.DataFrame:
     r"""Calculate the single contributions of the models and add them to the dataframe.
 
@@ -201,12 +194,22 @@ def calculated_model(
              as well as the best fit and the corresponding residuum. Hence, it will be
              extended by the single contribution of the model.
         global_fit (int): If 1 or 2, the model is calculated for the global fit.
+        bundle (CompositeModelBundle | None): Optional composite model bundle for
+            v2 local fits. When provided and ``global_fit`` is 0, decomposition uses
+            ``bundle.decompose()`` instead of the legacy string-split approach.
 
     Returns:
         pd.DataFrame: Extended dataframe containing the single contributions of the
             models.
 
     """
+    _df = df.copy()
+
+    if bundle is not None and not global_fit:
+        for comp_id, curve in bundle.decompose(params, x).items():
+            _df[comp_id] = curve
+        return _df
+
     peak_kwargs: dict[tuple[str, str] | tuple[str, str, str], dict[str, Parameter]] = (
         defaultdict(dict)
     )
@@ -220,7 +223,6 @@ def calculated_model(
         else:
             peak_kwargs[(p_name[0], p_name[2])][p_name[1]] = value
 
-    _df = df.copy()
     for key, _kwarg in peak_kwargs.items():
         c_name = "_".join(key)
         _df[c_name] = REGISTRY.get(key[0]).function(x, **_kwarg)

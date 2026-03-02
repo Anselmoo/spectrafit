@@ -107,6 +107,7 @@ dev = [
   "bump-pydantic>=0.8.0",
   "dash[testing]>=2.18.2",
   "mypy>=1.14.1",
+  "poethepoet>=0.42.1",
   "pre-commit>=3.5.0",
   "pytest>=8.3.5",
   "pytest-clarity>=1.0.1",
@@ -116,9 +117,9 @@ dev = [
   "pytest-plt>=1.1.1",
   "pytest-xdist>=3.6.1",
   "ruff>=0.9.10",
+  "ty>=0.0.20",
   "types-mock>=5.1.0.20240425",
   "types-pyyaml>=6.0.12.20241230",
-  "types-setuptools>=75.8.0.20250110",
   "types-tabulate>=0.9.0.20241207",
   "types-toml>=0.10.8.20240310",
 ]
@@ -243,7 +244,7 @@ addopts = [
   "-m",
   "not slow",
 ]
-testpaths = ["spectrafit"]
+testpaths = ["tests"]
 markers = [
   "api: tests for API models",
   "models: tests for model implementations",
@@ -289,3 +290,41 @@ init_forbid_extra = true
 init_typed = true
 warn_required_dynamic_aliases = true
 warn_untyped_fields = true
+
+[tool.ty]
+# ty replaces mypy (Pydantic v2 plugin support pending ty beta graduation)
+# Track: https://github.com/astral-sh/ty
+# Run: uv run ty check spectrafit/
+# Note: run in warn-only mode (--error-on-warning=false) until Pydantic v2 support is stable
+[tool.ty.rules]
+# Suppress Pydantic-model instantiation false positives during beta
+missing-argument = "warn"
+invalid-argument-type = "warn"
+
+[tool.poe]
+
+[tool.poe.tasks]
+test = { cmd = "pytest tests/", help = "Run the full test suite", use_exec = true }
+test-fast = { cmd = "pytest tests/ -m 'not slow' -x", help = "Run tests (skip slow, stop on first fail)", use_exec = true }
+test-cov = { cmd = "pytest tests/ --cov --cov-report=term-missing", help = "Run tests with coverage report", use_exec = true }
+typecheck = { cmd = "ty check spectrafit/", help = "Type-check with ty (advisory, beta)" }
+typecheck-legacy = { cmd = "mypy spectrafit/", help = "Type-check with mypy (stable gate)" }
+docs-build = { cmd = "mkdocs build --clean", help = "Build documentation" }
+docs-serve = { cmd = "mkdocs serve", help = "Serve documentation locally", use_exec = true }
+pre-commit-all = { cmd = "pre-commit run --all-files", help = "Run all pre-commit hooks", use_exec = true }
+
+[tool.poe.tasks.lint]
+shell = "ruff check spectrafit/ && ruff format --check spectrafit/"
+help = "Lint and format-check code with ruff"
+
+[tool.poe.tasks.format]
+shell = "ruff format spectrafit/ && ruff check --fix spectrafit/"
+help = "Auto-format and fix lint issues"
+
+[tool.poe.tasks.ci]
+shell = "ruff check spectrafit/ && ruff format --check spectrafit/ && mypy spectrafit/ && pytest tests/"
+help = "Full CI gate: lint + mypy + tests"
+
+[tool.poe.tasks.clean]
+shell = "find . -name '__pycache__' -type d -exec rm -rf {} + 2>/dev/null; rm -rf dist/ .coverage coverage.xml junit.xml"
+help = "Remove build artifacts and caches"

@@ -13,21 +13,16 @@ from spectrafit.cli._types import DecimalEnum
 from spectrafit.cli._types import GlobalFitEnum
 from spectrafit.cli._types import SeparatorEnum
 from spectrafit.cli._types import VerboseEnum
-from spectrafit.core import PostProcessing
-from spectrafit.core import PreProcessing
+from spectrafit.cli._types import reset_keyboard_protocol
 from spectrafit.core import SaveResult
-from spectrafit.core import load_data
 from spectrafit.core import read_input_file
-from spectrafit.models.builtin import SolverModels
+from spectrafit.core.pipeline import fitting_routine_pipeline
 from spectrafit.plotting import PlotSpectra
-from spectrafit.report import PrintingResults
 from spectrafit.report import PrintingStatus
 
 
 if TYPE_CHECKING:
     from collections.abc import MutableMapping
-
-    import pandas as pd
 
 
 __status__ = PrintingStatus()
@@ -224,12 +219,17 @@ def _run_fitting_workflow(args: dict[str, Any]) -> None:
         # Process arguments with input file
         processed_args = _extract_args_from_input(args)
 
-        df_result, processed_args = _fitting_routine(args=processed_args)
+        try:
+            df_result, processed_args = fitting_routine_pipeline(processed_args)
+        except Exception as exc:
+            typer.echo(f"Error: {exc}", err=True)
+            raise typer.Exit(code=1) from exc
         PlotSpectra(df=df_result, args=processed_args)()
         SaveResult(df=df_result, args=processed_args)()
 
         __status__.end()
 
+        reset_keyboard_protocol()
         again = typer.confirm("Would you like to fit again?", default=False)
         if not again:
             __status__.thanks()
@@ -240,12 +240,14 @@ def _run_fitting_workflow(args: dict[str, Any]) -> None:
 def _extract_args_from_input(args: dict[str, Any]) -> dict[str, Any]:
     """Extract and merge command line arguments with input file settings.
 
+    Supports both v1.x format (with ``"fitting"`` wrapper) and v2 flat format.
+
     Args:
         args: The command line arguments.
 
     Raises:
-        KeyError: Missing key `minimizer` in `parameters`.
-        KeyError: Missing key `optimizer` in `parameters`.
+        KeyError: Missing key `minimizer` in `parameters` (v1 format only).
+        KeyError: Missing key `optimizer` in `parameters` (v1 format only).
 
     Returns:
         The merged arguments dictionary.
@@ -256,50 +258,57 @@ def _extract_args_from_input(args: dict[str, Any]) -> dict[str, Any]:
         for key in _args["settings"]:
             args[key] = _args["settings"][key]
     args = CMDModelAPI(**args).model_dump()
-    if "description" in _args["fitting"]:
-        args["description"] = _args["fitting"]["description"]
-    if "parameters" in _args["fitting"]:
-        if "minimizer" in _args["fitting"]["parameters"]:
-            args["minimizer"] = _args["fitting"]["parameters"]["minimizer"]
-        else:
-            msg = "Missing 'minimizer' in 'parameters'!"
-            raise KeyError(msg)
-        if "optimizer" in _args["fitting"]["parameters"]:
-            args["optimizer"] = _args["fitting"]["parameters"]["optimizer"]
-        else:
-            msg = "Missing key 'optimizer' in 'parameters'!"
-            raise KeyError(msg)
-        if "report" in _args["fitting"]["parameters"]:
-            args["report"] = _args["fitting"]["parameters"]["report"]
-        else:
+
+    if "fitting" in _args:
+        # v1.x format — fitting parameters nested under "fitting.parameters"
+        if "description" in _args["fitting"]:
+            args["description"] = _args["fitting"]["description"]
+        if "parameters" in _args["fitting"]:
+            if "minimizer" in _args["fitting"]["parameters"]:
+                args["minimizer"] = _args["fitting"]["parameters"]["minimizer"]
+            else:
+                msg = "Missing 'minimizer' in 'parameters'!"
+                raise KeyError(msg)
+            if "optimizer" in _args["fitting"]["parameters"]:
+                args["optimizer"] = _args["fitting"]["parameters"]["optimizer"]
+            else:
+                msg = "Missing key 'optimizer' in 'parameters'!"
+                raise KeyError(msg)
+            if "report" in _args["fitting"]["parameters"]:
+                args["report"] = _args["fitting"]["parameters"]["report"]
+            else:
+                args["report"] = {
+                    "show_correl": True,
+                    "min_correl": 0.1,
+                    "sort_pars": False,
+                }
+            if "conf_interval" in _args["fitting"]["parameters"]:
+                args["conf_interval"] = _args["fitting"]["parameters"]["conf_interval"]
+            else:
+                args["conf_interval"] = False
+        if "peaks" in _args["fitting"]:
+            args["peaks"] = _args["fitting"]["peaks"]
+    else:
+        # v2 flat format — keys are at the top level of the config file
+        _v2_keys = (
+            "peaks",
+            "minimizer",
+            "optimizer",
+            "conf_interval",
+            "report",
+            "description",
+            "column",
+        )
+        for key in _v2_keys:
+            if key in _args:
+                args[key] = _args[key]
+        if "report" not in args or args.get("report") is None:
             args["report"] = {
                 "show_correl": True,
                 "min_correl": 0.1,
                 "sort_pars": False,
             }
-        if "conf_interval" in _args["fitting"]["parameters"]:
-            args["conf_interval"] = _args["fitting"]["parameters"]["conf_interval"]
-        else:
-            args["conf_interval"] = None
+        if "conf_interval" not in args:
+            args["conf_interval"] = False
 
-    if "peaks" in _args["fitting"]:
-        args["peaks"] = _args["fitting"]["peaks"]
     return args
-
-
-def _fitting_routine(args: dict[str, Any]) -> tuple[pd.DataFrame, dict[str, Any]]:
-    """Run the fitting algorithm.
-
-    Args:
-        args: The input file arguments as a dictionary.
-
-    Returns:
-        A tuple of DataFrame and dictionary containing fit results.
-    """
-    df: pd.DataFrame = load_data(args)
-    df, args = PreProcessing(df=df, args=args)()
-    minimizer, result = SolverModels(df=df, args=args)()
-    df, args = PostProcessing(df=df, args=args, minimizer=minimizer, result=result)()
-    PrintingResults(args=args, minimizer=minimizer, result=result)()
-
-    return df, args

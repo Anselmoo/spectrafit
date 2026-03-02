@@ -178,17 +178,14 @@ def _dict_to_toml(data: dict[str, Any], prefix: str = "") -> str:
             if value and isinstance(value[0], dict):
                 # Array of tables
                 for item in value:
-                    lines.append(f"\n[[{full_key}]]")
-                    lines.append(_dict_to_toml(item))
+                    lines.extend((f"\n[[{full_key}]]", _dict_to_toml(item)))
             else:
                 lines.append(f"{key} = {_format_toml_value(value)}")
         else:
             lines.append(f"{key} = {_format_toml_value(value)}")
 
     for table_key, table_value in tables:
-        lines.append(f"\n[{table_key}]")
-        lines.append(_dict_to_toml(table_value))
-
+        lines.extend((f"\n[{table_key}]", _dict_to_toml(table_value)))
     return "\n".join(lines)
 
 
@@ -210,6 +207,4 @@ def _format_toml_value(value: Any) -> str:
     if isinstance(value, list):
         items = ", ".join(_format_toml_value(v) for v in value)
         return f"[{items}]"
-    if value is None:
-        return '""'
-    return str(value)
+    return '""' if value is None else str(value)

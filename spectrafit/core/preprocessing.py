@@ -5,51 +5,31 @@ This module contains the PreProcessing class for data pre-processing.
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
 from typing import Any
-from typing import TypedDict
-from typing import cast
 
 import numpy as np
 import pandas as pd
 
 
-class PreProcessingArgs(TypedDict, total=False):
-    """Typed dictionary for preprocessing arguments.
-
-    Attributes:
-        energy_start: Starting energy for fitting range.
-        energy_stop: Ending energy for fitting range.
-        shift: Constant energy shift to apply.
-        oversampling: Whether to oversample the data.
-        smooth: Number of smoothing points.
-        column: Column names for energy and intensity axes.
-
-    """
-
-    energy_start: float | None
-    energy_stop: float | None
-    shift: float
-    oversampling: bool
-    smooth: int
-    column: list[str]
+if TYPE_CHECKING:
+    from spectrafit.core.fitting_config import UnifiedFittingConfig
 
 
 class PreProcessing:
-    """Summarized all pre-processing-filters  together."""
+    """Summarized all pre-processing-filters together."""
 
-    def __init__(self, df: pd.DataFrame, args: dict[str, Any]) -> None:
+    def __init__(self, df: pd.DataFrame, config: UnifiedFittingConfig) -> None:
         """Initialize PreProcessing class.
 
         Args:
-            df (pd.DataFrame): DataFrame containing the input data (`x` and `data`),
-                 as well as the best fit and the corresponding residuum. Hence, it will
-                 be extended by the single contribution of the model.
-            args: The input file arguments as a dictionary with
-                 additional information beyond the command line arguments.
+            df (pd.DataFrame): DataFrame containing the input data (`x` and `data`).
+            config (UnifiedFittingConfig): Validated fitting configuration providing
+                column names, energy range, shift, oversampling, and smoothing settings.
 
         """
         self.df = df
-        self.args = args
+        self.config = config
 
     def __call__(self) -> tuple[pd.DataFrame, dict[str, Any]]:
         """Apply all pre-processing-filters.
@@ -59,92 +39,90 @@ class PreProcessing:
 
                 - DataFrame containing the input data (`x` and `data`), which
                   are optionally shrunk, shifted, oversampled, or smoothed.
-                - Dictionary with descriptive statistics added.
+                - Dictionary with ``data_statistic`` key containing descriptive
+                  statistics of the raw input frame.
 
         """
         df_copy: pd.DataFrame = self.df.copy()
-        # Create a new dictionary instead of modifying the original
-        args_copy = self.args.copy()
-        args_copy["data_statistic"] = df_copy.describe(
-            percentiles=np.arange(0.1, 1.0, 0.1).tolist(),
-        ).to_dict(orient="split")
-        try:
-            pp_args = cast("PreProcessingArgs", self.args)
-            if isinstance(self.args["energy_start"], (int, float)) or isinstance(
-                self.args["energy_stop"],
-                (int, float),
-            ):
-                df_copy = self.energy_range(df_copy, pp_args)
-            if self.args["shift"]:
-                df_copy = self.energy_shift(df_copy, pp_args)
-            if self.args["oversampling"]:
-                df_copy = self.oversampling(df_copy, pp_args)
-            if self.args["smooth"]:
-                df_copy = self.smooth_signal(df_copy, pp_args)
-        except KeyError as e:
-            msg = f"Missing required preprocessing key: {e}"
-            raise KeyError(msg) from e
-        return (df_copy, args_copy)
+        result: dict[str, Any] = {
+            "data_statistic": df_copy.describe(
+                percentiles=np.arange(0.1, 1.0, 0.1).tolist(),
+            ).to_dict(orient="split"),
+        }
+        if isinstance(self.config.energy_start, (int, float)) or isinstance(
+            self.config.energy_stop,
+            (int, float),
+        ):
+            df_copy = self.energy_range(df_copy, self.config)
+        if self.config.shift:
+            df_copy = self.energy_shift(df_copy, self.config)
+        if self.config.oversampling:
+            df_copy = self.oversampling(df_copy, self.config)
+        if self.config.smooth:
+            df_copy = self.smooth_signal(df_copy, self.config)
+        return (df_copy, result)
 
     @staticmethod
-    def energy_range(df: pd.DataFrame, args: PreProcessingArgs) -> pd.DataFrame:
+    def energy_range(
+        df: pd.DataFrame,
+        config: UnifiedFittingConfig,
+    ) -> pd.DataFrame:
         """Select the energy range for fitting.
 
         Args:
-            df (pd.DataFrame): DataFrame containing the input data (`x` and `data`),
-                 as well as the best fit and the corresponding residuum. Hence, it will
-                 be extended by the single contribution of the model.
-            args (PreProcessingArgs): Preprocessing arguments containing
-                 ``energy_start``, ``energy_stop``, and ``column`` keys.
+            df (pd.DataFrame): DataFrame containing the input data (`x` and `data`).
+            config (UnifiedFittingConfig): Fitting configuration with
+                ``energy_start``, ``energy_stop``, and ``column`` fields.
 
         Returns:
-            pd.DataFrame: DataFrame containing the `optimized` input data
-                 (`x` and `data`), which are shrinked according to the energy range.
+            pd.DataFrame: DataFrame shrunk to the requested energy range.
 
         """
-        energy_start: int | float | None = args["energy_start"]
-        energy_stop: int | float | None = args["energy_stop"]
+        energy_start = config.energy_start
+        energy_stop = config.energy_stop
+        x_col = config.column.x
 
         df_copy = df.copy()
-        if isinstance(energy_start, (int, float)) and isinstance(
-            energy_stop,
-            (int, float),
-        ):
-            return df_copy.loc[
-                (df[args["column"][0]] >= energy_start)
-                & (df[args["column"][0]] <= energy_stop)
-            ]
         if isinstance(energy_start, (int, float)):
-            return df_copy.loc[df[args["column"][0]] >= energy_start]
+            if isinstance(
+                energy_stop,
+                (int, float),
+            ):
+                return df_copy.loc[
+                    (df[x_col] >= energy_start) & (df[x_col] <= energy_stop)
+                ]
+            return df_copy.loc[df[x_col] >= energy_start]
         if isinstance(energy_stop, (int, float)):
-            return df_copy.loc[df[args["column"][0]] <= energy_stop]
+            return df_copy.loc[df[x_col] <= energy_stop]
         return None  # pragma: no cover
 
     @staticmethod
-    def energy_shift(df: pd.DataFrame, args: PreProcessingArgs) -> pd.DataFrame:
+    def energy_shift(
+        df: pd.DataFrame,
+        config: UnifiedFittingConfig,
+    ) -> pd.DataFrame:
         """Shift the energy axis by a given value.
 
         Args:
-            df (pd.DataFrame): DataFrame containing the input data (`x` and `data`),
-                 as well as the best fit and the corresponding residuum. Hence, it will
-                 be extended by the single contribution of the model.
-            args (PreProcessingArgs): Preprocessing arguments containing
-                 ``column`` and ``shift`` keys.
+            df (pd.DataFrame): DataFrame containing the input data.
+            config (UnifiedFittingConfig): Fitting configuration with
+                ``column`` and ``shift`` fields.
 
         Returns:
-            pd.DataFrame: DataFrame containing the `optimized` input data
-                 (`x` and `data`), which are energy-shifted by the given value.
+            pd.DataFrame: DataFrame with energy axis shifted by ``config.shift``.
 
         """
         df_copy: pd.DataFrame = df.copy()
-        df_copy.loc[:, args["column"][0]] = (
-            df[args["column"][0]].to_numpy() + args["shift"]
-        )
+        x_col = config.column.x
+        df_copy.loc[:, x_col] = df[x_col].to_numpy() + config.shift
         return df_copy
 
     @staticmethod
-    def oversampling(df: pd.DataFrame, args: PreProcessingArgs) -> pd.DataFrame:
-        """Oversampling the data to increase the resolution of the data.
+    def oversampling(
+        df: pd.DataFrame,
+        config: UnifiedFittingConfig,
+    ) -> pd.DataFrame:
+        """Oversample the data to increase the resolution of the data.
 
         !!! note "About Oversampling"
             In this implementation of oversampling, the data is oversampled by the
@@ -153,47 +131,50 @@ class PreProcessing:
              oversampling based on a simple linear regression.
 
         Args:
-            df (pd.DataFrame): DataFrame containing the input data (`x` and `data`),
-                 as well as the best fit and the corresponding residuum. Hence, it will
-                 be extended by the single contribution of the model.
-            args (PreProcessingArgs): Preprocessing arguments containing
-                 ``column`` key with energy and intensity column names.
+            df (pd.DataFrame): DataFrame containing the input data.
+            config (UnifiedFittingConfig): Fitting configuration with
+                ``column`` field providing x and y column names.
 
         Returns:
-            pd.DataFrame: DataFrame containing the `optimized` input data
-                 (`x` and `data`), which are oversampled by the factor of 5.
+            pd.DataFrame: DataFrame oversampled by a factor of 5.
 
         """
+        x_col = config.column.x
+        y_col = config.column.y
         x_values = np.linspace(
-            df[args["column"][0]].min(),
-            df[args["column"][0]].max(),
+            df[x_col].min(),
+            df[x_col].max(),
             5 * df.shape[0],
         )
         y_values = np.interp(
             x_values,
-            df[args["column"][0]].to_numpy(),
-            df[args["column"][1]].to_numpy(),
+            df[x_col].to_numpy(),
+            df[y_col].to_numpy(),
         )
-        return pd.DataFrame({args["column"][0]: x_values, args["column"][1]: y_values})
+        return pd.DataFrame({x_col: x_values, y_col: y_values})
 
     @staticmethod
-    def smooth_signal(df: pd.DataFrame, args: PreProcessingArgs) -> pd.DataFrame:
+    def smooth_signal(
+        df: pd.DataFrame,
+        config: UnifiedFittingConfig,
+    ) -> pd.DataFrame:
         """Smooth the intensity values.
 
         Args:
-            df (pd.DataFrame): DataFrame containing the input data (`x` and `data`).
-            args (PreProcessingArgs): Preprocessing arguments containing
-                 ``smooth`` and ``column`` keys.
+            df (pd.DataFrame): DataFrame containing the input data.
+            config (UnifiedFittingConfig): Fitting configuration with
+                ``smooth`` and ``column`` fields.
 
         Returns:
-            pd.DataFrame: DataFrame containing the `optimized` input data
-                 (`x` and `data`), which are smoothed by the given value.
+            pd.DataFrame: DataFrame with intensity values smoothed by a
+                box-car filter of width ``config.smooth``.
 
         """
-        box = np.ones(args["smooth"]) / args["smooth"]
+        box = np.ones(config.smooth) / config.smooth
+        y_col = config.column.y
         df_copy: pd.DataFrame = df.copy()
-        df_copy.loc[:, args["column"][1]] = np.convolve(
-            df[args["column"][1]].to_numpy(),
+        df_copy.loc[:, y_col] = np.convolve(
+            df[y_col].to_numpy(),
             box,
             mode="same",
         )

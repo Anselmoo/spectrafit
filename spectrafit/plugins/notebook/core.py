@@ -29,9 +29,9 @@ from spectrafit.core import PostProcessing
 from spectrafit.core import PreProcessing
 from spectrafit.core.fitting_config import ColumnConfig
 from spectrafit.core.fitting_config import UnifiedFittingConfig
-from spectrafit.models.autopeak import FittingArgs
-from spectrafit.models.autopeak import PeakModelSpec
 from spectrafit.models.builtin import SolverModels
+from spectrafit.models.types import FittingArgs
+from spectrafit.models.types import PeakModelSpec
 from spectrafit.plugins.notebook.display import DataFrameDisplay
 from spectrafit.plugins.notebook.export import ExportReport
 from spectrafit.plugins.notebook.export import ExportResults
@@ -298,16 +298,30 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
             minimizer=self.settings_solver_models.minimizer,
             optimizer=self.settings_solver_models.optimizer,
             column=ColumnConfig(x=x_col, y=y_col),
-            global_=int(self.global_),
+            global_=int(self.global_),  # type: ignore[arg-type]
             conf_interval=conf_interval,
         )
 
     @property
     def pre_process(self) -> None:
         """Pre-processing class."""
+        pre_config = UnifiedFittingConfig(
+            peaks={},
+            column=ColumnConfig(
+                x=str(self.args_pre.column[0]),
+                y=str(self.args_pre.column[1])
+                if len(self.args_pre.column) > 1
+                else str(self.args_pre.column[0]),
+            ),
+            energy_start=self.args_pre.energy_start,
+            energy_stop=self.args_pre.energy_stop,
+            shift=self.args_pre.shift,
+            oversampling=self.args_pre.oversampling,
+            smooth=self.args_pre.smooth,
+        )
         self.df, _pre_statistic = PreProcessing(
             df=self.df,
-            args=self.args_pre.model_dump(),
+            config=pre_config,
         )()
         self.pre_statistic = _pre_statistic["data_statistic"]
         self.df_pre = self.df.copy()
@@ -564,7 +578,7 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
                 "global_": self.global_,
                 "conf_interval": resolved_ci,
             },
-            *SolverModels(
+            *SolverModels(  # type: ignore[call-arg]
                 df=self.df,
                 args={
                     "global_": self.global_,

@@ -112,15 +112,14 @@ class SaveResult:
 
     def save_as_json(self) -> None:
         """Save the fitting result as json file."""
-        if self.args["outfile"]:
-            with Path(f"{self.args['outfile']}_summary.json").open(
-                "w",
-                encoding="utf-8",
-            ) as f:
-                json.dump(transform_nested_types(self.args), f, indent=4)
-        else:
+        if not self.args["outfile"]:
             msg = "No output file provided!"
             raise FileNotFoundError(msg)
+        with Path(f"{self.args['outfile']}_summary.json").open(
+            "w",
+            encoding="utf-8",
+        ) as f:
+            json.dump(transform_nested_types(self.args), f, indent=4)
 
 
 def exclude_none_dictionary(value: Any) -> Any:

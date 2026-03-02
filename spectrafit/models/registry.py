@@ -11,6 +11,8 @@ from collections.abc import Callable  # noqa: TC003
 from typing import Any
 from typing import Literal
 
+import lmfit
+
 from pydantic import BaseModel
 from pydantic import ConfigDict
 
@@ -61,6 +63,29 @@ class ModelInfo(BaseModel):
     function: Callable[..., Any]
     parameters: list[str]
     description: str
+
+    def make_lmfit_model(self, prefix: str) -> lmfit.Model:
+        """Create an lmfit.Model instance wrapping this model's numpy function.
+
+        The model uses :attr:`function` (from ``regular.py``) as the
+        underlying callable so that parameter names match SpectraFit's
+        conventions exactly (e.g. ``fwhmg``, not ``sigma``).
+
+        Args:
+            prefix: lmfit parameter prefix, typically ``f"{component_id}_"``.
+                Must start with a letter (see
+                :func:`~spectrafit.models.naming.sanitize_component_id`).
+
+        Returns:
+            lmfit.Model instance with ``independent_vars=["x"]``.
+
+        Examples:
+            >>> from spectrafit.models.registry import REGISTRY
+            >>> m = REGISTRY.get("gaussian").make_lmfit_model("p1_")
+            >>> sorted(m.make_params().keys())
+            ['p1_amplitude', 'p1_center', 'p1_fwhmg']
+        """
+        return lmfit.Model(self.function, prefix=prefix, independent_vars=["x"])
 
 
 class ModelRegistry:

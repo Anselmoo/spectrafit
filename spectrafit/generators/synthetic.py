@@ -89,15 +89,13 @@ class PeakDefinition(BaseModel):
             msg = f"Unknown model '{self.model}'. Available: {sorted(_MODEL_REGISTRY)}"
             raise ValueError(msg)
         _, expected_params = _MODEL_REGISTRY[self.model]
-        missing = set(expected_params) - set(self.params)
-        if missing:
+        if missing := set(expected_params) - set(self.params):
             msg = (
                 f"Model '{self.model}' missing required params: {sorted(missing)}. "
                 f"Expected: {expected_params}"
             )
             raise ValueError(msg)
-        extra = set(self.params) - set(expected_params)
-        if extra:
+        if extra := set(self.params) - set(expected_params):
             msg = (
                 f"Model '{self.model}' got unexpected params: {sorted(extra)}. "
                 f"Expected: {expected_params}"
@@ -258,14 +256,19 @@ class SyntheticSpectrum(BaseModel):
         """
         peaks_config: dict[str, dict[str, dict[str, dict[str, Any]]]] = {}
         for i, peak in enumerate(self.peaks, start=1):
-            param_config: dict[str, dict[str, Any]] = {}
-            for param_name, param_value in peak.params.items():
-                param_config[param_name] = {
+            param_config: dict[str, dict[str, Any]] = {
+                param_name: {
                     "value": param_value,
                     "vary": True,
-                    "min": param_value * 0.5 if param_value > 0 else param_value * 1.5,
-                    "max": param_value * 1.5 if param_value > 0 else param_value * 0.5,
+                    "min": (
+                        param_value * 0.5 if param_value > 0 else param_value * 1.5
+                    ),
+                    "max": (
+                        param_value * 1.5 if param_value > 0 else param_value * 0.5
+                    ),
                 }
+                for param_name, param_value in peak.params.items()
+            }
             peaks_config[str(i)] = {peak.model: param_config}
 
         return {"peaks": peaks_config}

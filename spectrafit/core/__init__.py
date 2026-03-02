@@ -26,7 +26,6 @@ from spectrafit.core.pipeline import FittingResult
 from spectrafit.core.pipeline import fitting_routine_pipeline
 from spectrafit.core.postprocessing import PostProcessing
 from spectrafit.core.preprocessing import PreProcessing
-from spectrafit.core.preprocessing import PreProcessingArgs
 
 
 __all__ = [
@@ -38,7 +37,6 @@ __all__ = [
     "FittingResult",
     "PostProcessing",
     "PreProcessing",
-    "PreProcessingArgs",
     "SaveResult",
     "UnifiedFittingConfig",
     "check_keywords_consistency",

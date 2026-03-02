@@ -143,11 +143,14 @@ class PostProcessing:
         )
         if self.args["conf_interval"]:
             try:
-                _min_rel_change = self.args["conf_interval"].pop("min_rel_change", None)
+                _ci_args = dict(
+                    self.args["conf_interval"]
+                )  # copy — avoid mutating input
+                _min_rel_change = _ci_args.pop("min_rel_change", None)
                 ci = ConfidenceInterval(
                     self.minimizer,
                     self.result,
-                    **self.args["conf_interval"],
+                    **_ci_args,
                 )
                 if _min_rel_change is not None:
                     ci.min_rel_change = _min_rel_change
@@ -210,11 +213,13 @@ class PostProcessing:
         !!! info "About Fit Contributions"
             The fit contributions are made independently of the local or global fitting.
         """
+        bundle = self.args.pop("_bundle", None)
         self.df = calculated_model(
             params=self.result.params,
             x=self.df.iloc[:, 0].to_numpy(),
             df=self.df,
             global_fit=self.args["global_"],
+            bundle=bundle,
         )
 
     def export_correlation2args(self) -> None:

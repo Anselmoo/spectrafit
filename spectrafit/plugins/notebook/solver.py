@@ -11,7 +11,7 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-from spectrafit.models.autopeak import FittingArgs
+from spectrafit.models.types import FittingArgs
 
 
 class SolverResults:
@@ -192,5 +192,5 @@ class SolverResults:
                 strict=False,
             )
         }
-        metric = {**gof, **reg}
+        metric = gof | reg
         return pd.DataFrame(metric)
