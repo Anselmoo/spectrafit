@@ -1,0 +1,47 @@
+# SpectraFit v2 — Basic Example Input
+# ─────────────────────────────────────────────────────────────────────────────
+# Schema v2.0:  flat [[components]] + [solver] + [data] sections.
+# Parameter bounds use  bounds = [min, max].
+# ─────────────────────────────────────────────────────────────────────────────
+
+schema_version = "2.0"
+config_type    = "peak_fit"
+
+# ── Metadata ──────────────────────────────────────────────────────────────────
+[meta]
+description = "Single Gaussian peak with flat linear background"
+
+# ── Data source ───────────────────────────────────────────────────────────────
+[data]
+infile     = "data.csv"
+x_col      = "energy"
+y_col      = "intensity"
+separator  = ","
+
+# ── Solver ────────────────────────────────────────────────────────────────────
+[solver]
+method     = "leastsq"
+max_nfev   = 500
+nan_policy = "propagate"
+calc_covar = true
+
+# ══════════════════════════════════════════════════════════════════════════════
+# Components
+# ══════════════════════════════════════════════════════════════════════════════
+
+[[components]]
+id    = "peak1"
+model = "gaussian"
+
+[components.parameters]
+amplitude = { value = 1.0,  bounds = [0.0, 3.0],   vary = true }
+center    = { value = 0.0,  bounds = [-1.0, 1.0],  vary = true }
+fwhmg     = { value = 0.4,  bounds = [0.05, 1.5],  vary = true }
+
+[[components]]
+id    = "bg"
+model = "linear"
+
+[components.parameters]
+slope     = { value = 0.0,  bounds = [-0.2, 0.2],  vary = false }
+intercept = { value = 0.02, bounds = [0.0, 0.5],   vary = true }

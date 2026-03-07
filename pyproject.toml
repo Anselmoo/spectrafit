@@ -211,6 +211,7 @@ extend-ignore = [
   "ARG002",
   "TC003",
 ]
+"scripts/*.py" = ["INP001"]
 "spectrafit/models/builtin.py" = ["PLR0913"]
 "spectrafit/models/solver.py" = ["PLR0913"]
 "spectrafit/models/distributions.py" = ["PLR0913"]
@@ -349,3 +350,11 @@ help = "Remove build artifacts and caches"
 [tool.poe.tasks.migrate-v1]
 cmd = "python scripts/migrate_v1_to_v2.py"
 help = "Migrate a v1.x input file to v2 TOML format: poe migrate-v1 old.json -o new.toml"
+
+[tool.poe.tasks.generate-examples]
+cmd = "python scripts/generate_examples.py"
+help = "Regenerate synthetic CSV data for all examples/ directories"
+
+[tool.poe.tasks.validate-examples]
+cmd = "pytest tests/integration/test_examples.py -v"
+help = "Smoke-test all examples/*/input.toml via FittingPipeline"
