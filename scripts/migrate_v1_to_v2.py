@@ -37,20 +37,14 @@ v2-compatible TOML file.
 from __future__ import annotations
 
 import json
-import sys
 
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 import tomli
 import tomli_w
 import typer
 
 from spectrafit.models.migration import migrate_v1_format
-
-
-if TYPE_CHECKING:
-    pass
 
 
 app = typer.Typer(
@@ -223,7 +217,7 @@ def migrate(
         "-o",
         help="Output .toml path.  Defaults to <infile stem>_v2.toml in the same directory.",
     ),
-    dry_run: bool = typer.Option(  # noqa: B008
+    dry_run: bool = typer.Option(
         False,
         "--dry-run",
         help="Print the output TOML to stdout without writing a file.",
@@ -247,7 +241,7 @@ def migrate(
     # --- Step 3: serialise to TOML ---
     try:
         toml_bytes = tomli_w.dumps(v2_dict)
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         typer.echo(typer.style(f"✗ TOML serialisation failed: {exc}", fg=typer.colors.RED))
         raise typer.Exit(1) from exc
 
@@ -262,7 +256,7 @@ def migrate(
     typer.echo(
         typer.style(
             "\nNext step: validate with\n"
-            f"  uv run python -c \""
+            f'  uv run python -c "'
             f"from spectrafit.core.fitting_config import UnifiedFittingConfig; "
             f"print(UnifiedFittingConfig.from_file('{outfile}'))\"",
             fg=typer.colors.BRIGHT_BLACK,
