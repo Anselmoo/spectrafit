@@ -70,10 +70,42 @@ def fit(
 
         $ spectrafit fit my_xps.toml --outfile xps_results --verbose 2
     """
+    import re
+    import warnings
+
     from rich.console import Console
+    from rich.panel import Panel
     from rich.status import Status
+    from rich.text import Text
 
     console = Console()
+    _original_showwarning = warnings.showwarning
+
+    def _rich_showwarning(
+        message: warnings.WarningMessage | Warning | str,
+        category: type[Warning],
+        filename: str,
+        lineno: int,
+        file: object = None,
+        line: str | None = None,
+    ) -> None:
+        # Strip the legacy ASCII-art borders produced by report/metrics.py warn_meassage()
+        raw = str(message)
+        cleaned = re.sub(r"^[#\s]+$", "", raw, flags=re.MULTILINE)
+        cleaned = re.sub(r"^##\s*WARNING\s*#+", "", cleaned, flags=re.MULTILINE)
+        cleaned = cleaned.strip()
+        console.print(
+            Panel(
+                Text(cleaned, style="yellow"),
+                title=f"[bold yellow]⚠  {category.__name__}[/bold yellow]",
+                title_align="left",
+                border_style="yellow",
+                expand=False,
+                padding=(0, 1),
+            )
+        )
+
+    warnings.showwarning = _rich_showwarning
 
     while True:
         __status__.start()
@@ -81,9 +113,15 @@ def fit(
         try:
             cfg = UnifiedFittingConfig.from_file(config)
         except Exception as exc:
-            typer.echo(
-                typer.style(f"Configuration error: {exc}", fg=typer.colors.RED),
-                err=True,
+            console.print(
+                Panel(
+                    Text(str(exc), style="red"),
+                    title="[bold red]✗  Configuration error[/bold red]",
+                    title_align="left",
+                    border_style="red",
+                    expand=False,
+                    padding=(0, 1),
+                )
             )
             raise typer.Exit(code=1) from exc
 
@@ -99,9 +137,15 @@ def fit(
                     args=cfg, output=output
                 )
         except Exception as exc:
-            typer.echo(
-                typer.style(f"Fitting error: {exc}", fg=typer.colors.RED),
-                err=True,
+            console.print(
+                Panel(
+                    Text(str(exc), style="red"),
+                    title="[bold red]✗  Fitting error[/bold red]",
+                    title_align="left",
+                    border_style="red",
+                    expand=False,
+                    padding=(0, 1),
+                )
             )
             raise typer.Exit(code=1) from exc
 
@@ -115,10 +159,12 @@ def fit(
         __status__.end()
 
         if noplot:
+            warnings.showwarning = _original_showwarning
             return
 
         from spectrafit.cli._types import reset_keyboard_protocol
 
         reset_keyboard_protocol()
         if not typer.confirm("Would you like to fit again?", default=False):
+            warnings.showwarning = _original_showwarning
             return
