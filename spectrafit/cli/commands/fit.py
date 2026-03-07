@@ -64,7 +64,7 @@ def fit(
         $ spectrafit fit fitting_input.toml
         $ spectrafit fit my_xps.toml --outfile xps_results --verbose 2
     """
-    __status__.welcome()
+    __status__.start()
 
     while True:
         __status__.start()
@@ -94,10 +94,11 @@ def fit(
 
         __status__.end()
 
+        if noplot:
+            return
+
         from spectrafit.cli._types import reset_keyboard_protocol
 
         reset_keyboard_protocol()
         if not typer.confirm("Would you like to fit again?", default=False):
-            __status__.thanks()
-            __status__.credits()
             return

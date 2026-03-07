@@ -500,6 +500,15 @@ class UnifiedFittingConfig(BaseModel):
             )
             raise OSError(msg)
 
+        # Rebase relative infile against the config file's directory so that
+        # `spectrafit fit path/to/input.toml` works regardless of CWD.
+        if isinstance(raw, dict):
+            data_section = raw.get("data")
+            if isinstance(data_section, dict):
+                infile_val = data_section.get("infile")
+                if isinstance(infile_val, str) and not Path(infile_val).is_absolute():
+                    data_section["infile"] = str((path.parent / infile_val).resolve())
+
         return cls.model_validate(raw)
 
     @classmethod

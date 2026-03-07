@@ -16,16 +16,15 @@ annotated `input.toml`.
 ### Regenerate synthetic data
 
 ```bash
-uv run python scripts/generate_examples.py          # default seed=42
-uv run python scripts/generate_examples.py --seed 7 # reproducible alternative
+uv run poe generate-examples              # default seed=42
+uv run poe generate-examples -- --seed 7  # reproducible alternative
 ```
 
 ### Run a fit
 
 ```bash
-uv run spectrafit examples/basic/data.csv -i examples/basic/input.toml
-uv run spectrafit examples/two-peak-constrained/data.csv \
-    -i examples/two-peak-constrained/input.toml
+uv run spectrafit fit examples/basic/input.toml --noplot
+uv run spectrafit fit examples/two-peak-constrained/input.toml --noplot
 ```
 
 ### Validate all examples (integration test)

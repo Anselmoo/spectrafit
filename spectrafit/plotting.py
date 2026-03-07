@@ -52,12 +52,11 @@ class PlotSpectra:
 
     def __call__(self) -> None:
         """Plot the data and the fit."""
-        if self.args is not None:
-            if not self.args["noplot"]:
-                if self.args["global_"]:
-                    self.plot_global_spectra()
-                else:
-                    self.plot_local_spectra()
+        if self.args is not None and not self.args["noplot"]:
+            if self.args["global_"]:
+                self.plot_global_spectra()
+            else:
+                self.plot_local_spectra()
             plt.show()
 
     def plot_global_spectra(self) -> None:

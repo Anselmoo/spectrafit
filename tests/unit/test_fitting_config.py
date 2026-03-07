@@ -6,10 +6,12 @@ Covers:
 - to_solver_args() output contract
 - Pydantic validation errors for missing/malformed peaks
 - String-integer peak key validation — Phase 3
+- from_file() relative infile path rebasing — Phase X
 """
 
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Any
 
 import pytest
@@ -139,3 +141,73 @@ class TestPeakKeyValidation:
         }
         config = UnifiedFittingConfig.from_dict(data)
         assert len(config.peaks) == 3
+
+
+# ---------------------------------------------------------------------------
+# X3 — from_file() path rebasing tests
+# ---------------------------------------------------------------------------
+
+_MINIMAL_TOML = """\
+[data]
+infile = "data.csv"
+separator = ","
+
+[column]
+x = "energy"
+y = "intensity"
+
+[minimizer]
+nan_policy = "propagate"
+calc_covar = true
+
+[optimizer]
+max_nfev = 1000
+method = "leastsq"
+
+global_ = 0
+
+[[components]]
+id = "p1"
+model = "gaussian"
+
+[components.amplitude]
+value = 1.0
+vary = true
+
+[components.center]
+value = 0.0
+vary = true
+
+[components.fwhmg]
+value = 0.5
+vary = true
+"""
+
+
+@pytest.mark.unit
+class TestFromFilePaths:
+    """from_file() must rebase a relative infile against the config file's directory."""
+
+    def test_relative_infile_rebased_to_config_dir(self, tmp_path: Path) -> None:
+        toml_file = tmp_path / "input.toml"
+        toml_file.write_text(_MINIMAL_TOML, encoding="utf-8")
+        cfg = UnifiedFittingConfig.from_file(toml_file)
+        expected = (tmp_path / "data.csv").resolve()
+        assert Path(str(cfg.data.infile)).resolve() == expected
+
+    def test_absolute_infile_not_changed(self, tmp_path: Path) -> None:
+        abs_path = (tmp_path / "data.csv").resolve()
+        toml_content = _MINIMAL_TOML.replace('infile = "data.csv"', f'infile = "{abs_path}"')
+        toml_file = tmp_path / "input.toml"
+        toml_file.write_text(toml_content, encoding="utf-8")
+        cfg = UnifiedFittingConfig.from_file(toml_file)
+        assert Path(str(cfg.data.infile)).resolve() == abs_path
+
+    def test_infile_in_subdir_rebased(self, tmp_path: Path) -> None:
+        (tmp_path / "data").mkdir()
+        toml_content = _MINIMAL_TOML.replace('infile = "data.csv"', 'infile = "data/spectrum.csv"')
+        toml_file = tmp_path / "input.toml"
+        toml_file.write_text(toml_content, encoding="utf-8")
+        cfg = UnifiedFittingConfig.from_file(toml_file)
+        expected = (tmp_path / "data" / "spectrum.csv").resolve()
+        assert Path(str(cfg.data.infile)).resolve() == expected

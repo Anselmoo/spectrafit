@@ -57,14 +57,13 @@ Gaussian noise with `scale=0.02` and `seed=42` was added to the clean signal.
 **Step 1 — (re-)generate the synthetic data:**
 
 ```bash
-uv run python scripts/generate_examples.py
+uv run poe generate-examples
 ```
 
 **Step 2 — run the fit:**
 
 ```bash
-uv run spectrafit examples/two-peak-constrained/data.csv \
-    -i examples/two-peak-constrained/input.toml
+uv run spectrafit fit examples/two-peak-constrained/input.toml --noplot
 ```
 
 ## Files
