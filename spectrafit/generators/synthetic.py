@@ -13,8 +13,8 @@ example data and enables:
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
-from typing import Any
 from typing import Literal
+from typing import cast
 
 import numpy as np
 
@@ -26,13 +26,15 @@ from spectrafit.models.registry import REGISTRY
 
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     import pandas as pd
 
     from numpy.typing import NDArray
 
 
 # Model name → (function, parameter names) — derived from central registry
-_MODEL_REGISTRY: dict[str, tuple[Any, list[str]]] = {
+_MODEL_REGISTRY: dict[str, tuple[Callable[..., object], list[str]]] = {
     info.name: (info.function, info.parameters) for info in REGISTRY.list_models()
 }
 
@@ -157,7 +159,7 @@ class SyntheticSpectrum(BaseModel):
 
     def generate(
         self,
-    ) -> tuple[NDArray[np.float64], NDArray[np.float64], dict[str, Any]]:
+    ) -> tuple[NDArray[np.float64], NDArray[np.float64], dict[str, object]]:
         """Generate synthetic spectrum data.
 
         Returns:
@@ -171,17 +173,20 @@ class SyntheticSpectrum(BaseModel):
 
         # Compute each peak contribution
         components: list[NDArray[np.float64]] = []
-        peak_info: list[dict[str, Any]] = []
+        peak_info: list[dict[str, object]] = []
         for i, peak in enumerate(self.peaks):
             func, _ = _MODEL_REGISTRY[peak.model]
-            y_component = func(x, **peak.params)
+            y_component = cast("NDArray[np.float64]", func(x, **peak.params))
             components.append(y_component)
             peak_info.append(
-                {
-                    "index": i,
-                    "model": peak.model,
-                    "params": dict(peak.params),
-                },
+                cast(
+                    "dict[str, object]",
+                    {
+                        "index": i,
+                        "model": peak.model,
+                        "params": dict(peak.params),
+                    },
+                ),
             )
 
         # Sum all components
@@ -202,7 +207,7 @@ class SyntheticSpectrum(BaseModel):
 
         y = y_clean + noise
 
-        ground_truth: dict[str, Any] = {
+        ground_truth: dict[str, object] = {
             "y_clean": y_clean,
             "noise": noise,
             "components": components,
@@ -234,7 +239,7 @@ class SyntheticSpectrum(BaseModel):
         x, y, _ = self.generate()
         return pd.DataFrame({energy_col: x, intensity_col: y})
 
-    def to_spectrafit_input(self) -> dict[str, Any]:
+    def to_spectrafit_input(self) -> dict[str, object]:
         """Generate a SpectraFit-compatible input configuration.
 
         Returns:
@@ -255,9 +260,9 @@ class SyntheticSpectrum(BaseModel):
             >>> config["peaks"]["1"]["gaussian"]["amplitude"]["value"]
             1.0
         """
-        peaks_config: dict[str, dict[str, dict[str, dict[str, Any]]]] = {}
+        peaks_config: dict[str, dict[str, dict[str, dict[str, object]]]] = {}
         for i, peak in enumerate(self.peaks, start=1):
-            param_config: dict[str, dict[str, Any]] = {
+            param_config: dict[str, dict[str, object]] = {
                 param_name: {
                     "value": param_value,
                     "vary": True,

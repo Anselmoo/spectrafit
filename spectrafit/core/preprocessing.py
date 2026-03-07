@@ -6,7 +6,6 @@ This module contains the PreProcessing class for data pre-processing.
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
-from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -31,7 +30,7 @@ class PreProcessing:
         self.df = df
         self.config = config
 
-    def __call__(self) -> tuple[pd.DataFrame, dict[str, Any]]:
+    def __call__(self) -> tuple[pd.DataFrame, dict[str, object]]:
         """Apply all pre-processing-filters.
 
         Returns:
@@ -44,7 +43,7 @@ class PreProcessing:
 
         """
         df_copy: pd.DataFrame = self.df.copy()
-        result: dict[str, Any] = {
+        result: dict[str, object] = {
             "data_statistic": df_copy.describe(
                 percentiles=np.arange(0.1, 1.0, 0.1).tolist(),
             ).to_dict(orient="split"),

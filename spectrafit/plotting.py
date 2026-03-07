@@ -11,7 +11,7 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
-from typing import Any
+from typing import cast
 
 import matplotlib.font_manager
 import matplotlib.pyplot as plt
@@ -35,7 +35,7 @@ color = sns.color_palette("Paired")
 class PlotSpectra:
     """Plotting of the fit results."""
 
-    def __init__(self, df: pd.DataFrame, args: dict[str, Any] | None = None) -> None:
+    def __init__(self, df: pd.DataFrame, args: dict[str, object] | None = None) -> None:
         """Initialize the PlotSpectra class.
 
         Args:
@@ -70,7 +70,11 @@ class PlotSpectra:
             row of the grid plot contains the residuals of each single fit, the
             second row the best fit of the model with single peak contributions.
         """
-        n_spec: int = len(list(self.args["data_statistic"])) - 1 if self.args else 1
+        if self.args is not None:
+            ds = cast("dict[str, object]", self.args["data_statistic"])
+            n_spec: int = len(list(ds)) - 1
+        else:
+            n_spec = 1
         _, axs = plt.subplots(
             nrows=2,
             ncols=n_spec,
