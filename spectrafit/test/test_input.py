@@ -25,7 +25,7 @@ def assert_no_critical_stderr(ret: Any) -> None:
 class TestCommandLineRunner:
     """Testing the command line interface."""
 
-    @pytest.mark.skip(reason="deactivated test")
+    @pytest.mark.skip(reason="deactivated flaky subprocess version test for CI stability")
     def test_version(self, monkeypatch: Any, script_runner: Any) -> None:
         """Testing the version command."""
         from spectrafit import __version__
