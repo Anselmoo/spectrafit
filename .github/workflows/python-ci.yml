@@ -2,7 +2,7 @@ name: 🐍 CI - Python Package
 
 on:
   push:
-    branches: [main, feature/*, feat/*, release/*, hotfix/*, copilot/*]
+    branches: [main, v2.0.0, feature/*, feat/*, release/*, hotfix/*, copilot/*]
   pull_request:
     branches: [main, develop, v2.0.0]
   repository_dispatch:
@@ -40,7 +40,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.10", "3.11", "3.12"]
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
         os: [ubuntu-latest, windows-latest, macOS-latest]
         arch: [x64]
     defaults:
@@ -157,7 +157,7 @@ jobs:
       - name: 📦 Install the project
         run: uv sync --all-extras --dev
       - name: 🔬 Run validation tests
-        run: uv run --group dev --all-extras pytest tests/validation/ -m validation --validation-report=validation-report -v
+        run: uv run --group dev --all-extras pytest tests/validation/ -m validation --json-report --json-report-file=validation-report.json -v
       - name: 📤 Upload validation reports
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4

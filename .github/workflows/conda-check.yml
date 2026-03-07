@@ -1,6 +1,9 @@
 name: 🐍 CI - Conda
 
-on: [push]
+on:
+  workflow_dispatch:
+    # Manually triggered only — conda-forge feedstock not yet updated for v2.0.0.
+    # Re-enable push trigger once spectrafit v2.0.0 is published to conda-forge.
 
 jobs:
   build-linux:
