@@ -74,7 +74,7 @@ class SaveResult:
             df (pd.DataFrame): DataFrame containing the input data (`x` and `data`),
                  as well as the best fit and the corresponding residuum. Hence, it will
                  be extended by the single contribution of the model.
-            args (dict[str,Any]): The input file arguments as a dictionary with
+            args (FittingArgs): The input file arguments as a dictionary with
                  additional information beyond the command line arguments.
 
         """
@@ -112,26 +112,28 @@ class SaveResult:
 
     def save_as_json(self) -> None:
         """Save the fitting result as json file."""
-        if self.args["outfile"]:
-            with Path(f"{self.args['outfile']}_summary.json").open(
-                "w",
-                encoding="utf-8",
-            ) as f:
-                json.dump(transform_nested_types(self.args), f, indent=4)
-        else:
+        if not self.args["outfile"]:
             msg = "No output file provided!"
             raise FileNotFoundError(msg)
+        with Path(f"{self.args['outfile']}_summary.json").open(
+            "w",
+            encoding="utf-8",
+        ) as f:
+            json.dump(transform_nested_types(self.args), f, indent=4)
 
 
-def exclude_none_dictionary(value: dict[str, Any]) -> dict[str, Any]:
+def exclude_none_dictionary(value: Any) -> Any:
     """Exclude `None` values from the dictionary.
 
+    Recursively processes dicts, lists, and other values to remove ``None``
+    entries. Non-dict/list values are returned unchanged.
+
     Args:
-        value (dict[str, Any]): Dictionary to be processed to
-            exclude `None` values.
+        value (Any): Value to be processed. Typically a dict or list,
+            but any type is accepted and returned as-is if not a container.
 
     Returns:
-        dict[str, Any]: Dictionary without `None` values.
+        Any: Cleaned value without ``None`` entries.
 
     """
     if isinstance(value, list):
@@ -143,15 +145,18 @@ def exclude_none_dictionary(value: dict[str, Any]) -> dict[str, Any]:
     return value
 
 
-def transform_nested_types(value: dict[str, Any]) -> dict[str, Any]:
-    """Transform nested types numpy values to python values.
+def transform_nested_types(value: Any) -> Any:
+    """Transform nested numpy types to native Python values.
+
+    Recursively converts numpy scalars and arrays within dicts, lists, and
+    tuples to their native Python equivalents for JSON serialization.
 
     Args:
-        value (dict[str, Any]): Dictionary to be processed to
-            transform numpy values to python values.
+        value (Any): Value to be processed. Supports dicts, lists,
+            tuples, numpy arrays, and numpy scalar types.
 
     Returns:
-        dict[str, Any]: Dictionary with python values.
+        Any: Value with all numpy types converted to native Python types.
 
     """
     if isinstance(value, list):

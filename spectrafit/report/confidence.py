@@ -54,7 +54,7 @@ class CIReport:
         """Initialize the Report object.
 
         Args:
-            ci (dict[str, List[Tuple[float, float]]]): The confidence intervals for
+            ci (dict[str, list[tuple[float, float]]]): The confidence intervals for
                 the parameters.
             with_offset (bool): Whether to include an offset in the report.
                 Defaults to True.
@@ -75,7 +75,7 @@ class CIReport:
         """Convert the confidence interval to a string.
 
         Args:
-            x (Tuple[float, float]): The confidence interval.
+            x (tuple[float, float]): The confidence interval.
             bound_type (str): The type of the bound.
 
         Returns:
@@ -90,7 +90,7 @@ class CIReport:
         """Calculate the offset for a row.
 
         Args:
-            row (List[Tuple[float, float]]): The row to calculate the offset for.
+            row (list[tuple[float, float]]): The row to calculate the offset for.
 
         Returns:
             float: The offset for the row.
@@ -113,7 +113,7 @@ class CIReport:
 
         Args:
             name (str): The name of the row.
-            row (List[Tuple[float, float]]): The row to create the report for.
+            row (list[tuple[float, float]]): The row to create the report for.
             offset (float): The offset for the row.
 
         """
@@ -185,7 +185,7 @@ class FitReport:
         Args:
             inpars (Parameters or object): The input parameters or
                 object.
-            sort_pars (Union[bool, Callable[[str], Any]], optional): Whether to sort the parameters.
+            sort_pars (bool | Callable[[str], Any], optional): Whether to sort the parameters.
                 Defaults to True.
             show_correl (bool, optional): Whether to show correlations.
                 Defaults to True.
@@ -213,7 +213,7 @@ class FitReport:
         """Get parameter names, sorted if required.
 
         Returns:
-            List[str]: List of parameter names.
+            list[str]: List of parameter names.
 
         """
         if not self.sort_pars:
@@ -225,7 +225,7 @@ class FitReport:
         """Generate fit statistics based on the result of the fitting process.
 
         Returns:
-            Optional[pd.DataFrame]: A pandas DataFrame containing the
+            pd.DataFrame | None: A pandas DataFrame containing the
             fit statistics, including:
                 - fitting method
                 - function evals

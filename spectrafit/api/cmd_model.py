@@ -16,7 +16,6 @@ from pydantic import HttpUrl
 from pydantic.functional_validators import field_validator
 
 from spectrafit import __version__
-from spectrafit.api.tools_model import AutopeakAPI
 from spectrafit.api.tools_model import DataPreProcessingAPI
 from spectrafit.api.tools_model import GlobalFittingAPI
 
@@ -85,7 +84,6 @@ class CMDModelAPI(BaseModel):
     header: int | None = None
     comment: str | None = None
     global_: int = Field(GlobalFittingAPI().global_)
-    autopeak: AutopeakAPI | bool | Any = False
     noplot: bool = False
     version: bool = False
     verbose: int = Field(default=0, ge=0, le=2)

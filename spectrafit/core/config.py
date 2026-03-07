@@ -37,7 +37,6 @@ class FittingConfig(BaseModel):
         header (int | None): Header row index.
         comment (str | None): Comment character for skipping lines.
         global_ (int): Global fitting mode (0=classic, 1=auto, 2=custom).
-        autopeak (bool): Enable auto-peak detection.
         noplot (bool): Disable plotting.
         verbose (int): Verbosity level (0=silent, 1=table, 2=dict).
 
@@ -107,10 +106,6 @@ class FittingConfig(BaseModel):
         le=2,
         description="Global fitting mode",
     )
-    autopeak: bool = Field(
-        default=False,
-        description="Auto detection of peaks",
-    )
     noplot: bool = Field(
         default=False,
         description="Disable plotting",
@@ -136,9 +131,7 @@ class FittingConfig(BaseModel):
         """
         if v is None:
             return ["0", "1"]
-        if isinstance(v, list):
-            return [str(c) for c in v]
-        return [str(v)]
+        return [str(c) for c in v] if isinstance(v, list) else [str(v)]
 
 
 class ConfigLoader:
@@ -178,7 +171,9 @@ class ConfigLoader:
         config_dir.mkdir(parents=True, exist_ok=True)
         return config_dir
 
-    def load_from_env(self, prefix: str = "SPECTRAFIT_") -> dict[str, Any]:
+    def load_from_env(
+        self, prefix: str = "SPECTRAFIT_"
+    ) -> dict[str, str | int | float | bool]:
         """Load configuration from environment variables.
 
         Args:
@@ -186,10 +181,11 @@ class ConfigLoader:
                  Defaults to "SPECTRAFIT_".
 
         Returns:
-            dict[str, Any]: Configuration dictionary from environment.
+            dict[str, str | int | float | bool]: Configuration dictionary
+                from environment variables with parsed value types.
 
         """
-        config: dict[str, Any] = {}
+        config: dict[str, str | int | float | bool] = {}
         for key, value in os.environ.items():
             if key.startswith(prefix):
                 # Remove prefix and convert to lowercase
@@ -227,7 +223,7 @@ class ConfigLoader:
         merged = {}
         for config in configs:
             if config:
-                merged.update(config)
+                merged |= config
         return merged
 
     def get_config_file_path(self, filename: str = "config.toml") -> Path:
@@ -246,7 +242,7 @@ class ConfigLoader:
         """Validate configuration using Pydantic model.
 
         Args:
-            config (dict[str, Any]): Configuration dictionary to validate.
+            config (FittingArgs): Configuration dictionary to validate.
 
         Returns:
             FittingConfig: Validated configuration object.
@@ -265,13 +261,13 @@ def load_config(
     """Load and merge configuration from all sources.
 
     Args:
-        args (dict[str, Any] | None): Direct configuration arguments.
+        args (FittingArgs | None): Direct configuration arguments.
              Defaults to None.
         use_env (bool): Whether to load from environment variables.
              Defaults to True.
 
     Returns:
-        dict[str, Any]: Merged configuration dictionary.
+        FittingArgs: Merged configuration dictionary.
 
     """
     loader = ConfigLoader()
@@ -280,10 +276,8 @@ def load_config(
     configs = []
 
     # Load from environment if enabled
-    if use_env:
-        env_config = loader.load_from_env()
-        if env_config:
-            configs.append(env_config)
+    if use_env and (env_config := loader.load_from_env()):
+        configs.append(env_config)
 
     # Add direct args (highest precedence)
     if args:

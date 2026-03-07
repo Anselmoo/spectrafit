@@ -43,7 +43,6 @@ class PluginRegistry:
         self._plugins: dict[str, SpectraFitPlugin] = {}
         self._builtin_plugins: dict[str, str] = {
             "jupyter": "spectrafit.plugins.jupyter_plugin",
-            "moessbauer": "spectrafit.plugins.moessbauer_plugin",
         }
 
     def discover_plugins(

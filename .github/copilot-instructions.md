@@ -1,116 +1,103 @@
 # Copilot Instructions for SpectraFit
 
-To ensure consistent, maintainable, and high-quality code suggestions for the SpectraFit project, follow these guidelines:
+> **Version:** v2.0.0 migration in progress on branch `v2.0.0`
+> **Detailed instructions:** see `.github/instructions/` for scoped files loaded automatically.
 
 ---
 
-## Project Structure
+## Project Overview
 
-- Place new code in the most appropriate module or submodule (e.g., `models.py`, `plotting.py`, `report.py`, `tools.py`, `api/`, `plugins/`, `test/`).
-- Keep test code in the `test/` subfolders and use `pytest`.
+SpectraFit fits 1D–3D X-ray absorption / emission spectra using `lmfit` + `scipy`.
+CLI-first (`typer`), also usable as a Python API and Jupyter notebook plugin.
+Package management: `uv`. Build backend: `hatchling`. Python 3.10–3.13.
 
-## Data Handling
-
-- Input files: Support JSON, YAML, and TOML. Input must define initial peak parameters.
-- Output files: Support CSV and JSON.
-- Use the existing data model and serialization patterns.
-
-## Parameter and Model Consistency
-
-- Use the parameter conventions and nested structure as shown in the input files and `/docs/interface/usage.md`.
-- Example peak definition:
-- ```json
-  "peaks": {
-    "1": {
-      "pseudovoigt": {
-        "amplitude": { "max": 2, "min": 0, "vary": true, "value": 1 },
-        "center":    { "max": 2, "min": -2, "vary": true, "value": 0 },
-        "fwhmg":     { "max": 0.1, "min": 0.02, "vary": true, "value": 0.01 },
-        "fwhml":     { "max": 0.1, "min": 0.01, "vary": true, "value": 0.01 }
-      }
-    }
-  }
-  ```
-
-## Minimizer and Optimizer Settings
-
-- Always include and respect `minimizer` and `optimizer` settings in fitting routines.
-- Example:
-  ```json
-  "minimizer": { "nan_policy": "propagate", "calc_covar": true },
-  "optimizer": { "max_nfev": 1000, "method": "leastsq" }
-  ```
-
-## Reporting and Statistics
-
-- Use the existing reporting structure for fit statistics, confidence intervals, and variable analysis.
-- Output should be compatible with pandas DataFrames when possible.
-
-## Error Handling
-
-- Handle NaN and invalid values gracefully, using `np.nan_to_num` or similar.
-- Provide informative error messages.
-
-## Command Line Interface
-
-- CLI arguments must be overridable by input file settings and vice versa, as described in `/docs/interface/usage.md`.
-
-## Documentation
-
-- Add or update docstrings and reference `/docs/` for user-facing documentation.
-- Keep code and documentation in sync.
-
-## General Style
-
-- Follow PEP8.
-- Use type hints.
-- Prefer explicit over implicit code.
-- Use descriptive variable names.
-- Keep functions small and focused.
+**Entry points:**
+- `spectrafit` → `spectrafit.cli.main:run`
+- `spectrafit-jupyter` → `spectrafit.app.app:jupyter`
 
 ---
 
-## Conventional Commits
+## Tech Stack
 
-- Use [Conventional Commits](https://www.conventionalcommits.org/) for all commit messages.
-- Use the [VSCode Conventional Commits](https://github.com/vivaxy/vscode-conventional-commits) emoji, respectively, gitmoji type style for commit messages:
+| Layer | Libraries |
+|-------|-----------|
+| Fitting engine | lmfit, scipy, numpy |
+| Data models | **pydantic v2** (`extra="forbid"` on all input models) |
+| CLI | typer |
+| Data handling | pandas |
+| Reporting | tabulate, seaborn |
+| Package manager | uv |
+| Type checker | mypy (hard-fail) + ty (warn-only beta) |
+| Linter | ruff |
 
-| Type     |            Emoji             | Description                         |
-| -------- | :--------------------------: | ----------------------------------- |
-| feat     |      `:sparkles:` (✨)       | A new feature                       |
-| fix      |         `:bug:` (🐛)         | A bug fix                           |
-| docs     |        `:memo:` (📝)         | Documentation only changes          |
-| style    |      `:lipstick:` (💄)       | Changes that do not affect meaning  |
-| refactor |       `:recycle:` (♻️)       | Code change that is not a fix/feat  |
-| perf     |         `:zap:` (⚡)         | Performance improvement             |
-| test     |  `:white_check_mark:` (✅)   | Adding or correcting tests          |
-| build    | `:construction_worker:` (👷) | Build system or dependencies        |
-| ci       |       `:wrench:` (🔧)        | CI/CD configuration                 |
-| chore    |       `:hammer:` (🔨)        | Other changes that don't modify src |
-| revert   |       `:rewind:` (⏪)        | Reverts a previous commit           |
+---
 
-**Example commit messages:**
+## Architecture Snapshot (v2.0.0)
 
-```text
-feat: ✨ add new peak fitting method
-fix: 🐛 handle NaN values in solver
-docs: 📝 update usage documentation
-test: ✅ add regression test for optimizer
-refactor: ♻️ merge dictionary assignments in report generation
-chore: 🔨 update dependencies
+```
+CLI / Jupyter / API
+  → UnifiedFittingConfig          ← single validated entry point
+  → FittingPipeline
+      → load_data(DataConfig)
+      → SolverModels(df, config)
+          → config.build_composite_model()
+              → build_composite_bundle(components)  ← functools.reduce(+, models)
+      → PostProcessing [FROZEN]
+  → FittingResult
 ```
 
+**Key modules:**
+- `spectrafit/core/fitting_config.py` — `UnifiedFittingConfig` (central model)
+- `spectrafit/models/peak_models.py` — `FitParameter`, `Component`
+- `spectrafit/models/bundle.py` — `CompositeModelBundle`, `build_composite_bundle()`
+- `spectrafit/models/naming.py` — `lmfit_param_name()` (SINGLE source for all param names)
+- `spectrafit/models/fitting_context.py` — `FittingContext`, `FittingMode`
+- `spectrafit/models/data_config.py` — `DataConfig`
+
 ---
 
-## Branching Rules (Trunk-Based Development)
+## Critical Invariants
 
-- All changes should branch from `main`.
-- Use short-lived feature branches named with the pattern:
-  `type/short-description`
-  Examples:
-  - `feat/peak-fitting`
-  - `fix/nan-handling`
-  - `docs/usage-update`
-- Merge to `main` via pull request after review and passing CI.
-- Rebase frequently to keep branches up to date with `main`.
-- Delete feature branches after merge.
+1. **All lmfit parameter names via `lmfit_param_name(id, field)` only.** No inline f-strings.
+2. **`UnifiedFittingConfig` is the sole pipeline entry point.** Never pass raw dicts across modules.
+3. **`extra="forbid"` on all input Pydantic models.**
+4. **`functools.reduce(operator.add, models)` for lmfit model composition.** Never iterate dicts.
+5. **`from __future__ import annotations` in every module.**
+6. **No `sys.exit()` in business logic.** Raise typed exceptions.
+7. **`translate_dot_notation()` at parse time.** User writes `p1.center`; lmfit sees `p1_center`.
+
+---
+
+## CI Gate
+
+```bash
+uv run poe ci   # ruff check + mypy + pytest tests/
+```
+
+All three must be green before merging. The 5 pre-existing mypy errors in
+`fitting_config.py` and `plugins/notebook/core.py` are known — do not fix in
+unrelated tasks.
+
+---
+
+## Prototype Reference
+
+`prototype/` is a clean-room reference with **zero `spectrafit.*` imports**.
+It validates Phases 1–5 of the v2 migration architecture end-to-end.
+Use it as the canonical pattern source when implementing new features.
+
+**Never add `spectrafit.*` imports to `prototype/`.** Copy patterns into `spectrafit/`.
+
+---
+
+## Detailed Instructions
+
+Scoped instruction files are auto-loaded by VS Code Copilot:
+
+| File | Scope |
+|------|-------|
+| `.github/instructions/architecture.instructions.md` | `spectrafit/**/*.py` |
+| `.github/instructions/code-style.instructions.md` | `spectrafit/**/*.py`, `tests/**/*.py`, `prototype/**/*.py` |
+| `.github/instructions/testing.instructions.md` | `tests/**/*.py`, `spectrafit/**/test/**/*.py` |
+| `.github/instructions/prototype-reference.instructions.md` | `spectrafit/**/*.py`, `prototype/**/*.py` |
+| `.github/instructions/state-of-the-art.instructions.md` | `spectrafit/**/*.py`, `docs/**/*.md` |

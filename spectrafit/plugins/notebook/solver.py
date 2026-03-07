@@ -11,15 +11,17 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
+from spectrafit.models.types import FittingArgs
+
 
 class SolverResults:
     """Class for storing the results of the solver."""
 
-    def __init__(self, args_out: dict[str, Any]) -> None:
+    def __init__(self, args_out: FittingArgs) -> None:
         """Initialize the SolverResults class.
 
         Args:
-            args_out (dict[str, Any]): Dictionary of SpectraFit settings and results.
+            args_out (FittingArgs): Dictionary of SpectraFit settings and results.
 
         """
         self.args_out = args_out
@@ -29,17 +31,17 @@ class SolverResults:
         """Global fitting settings.
 
         Returns:
-            Union[bool, int]: Global fitting settings.
+            bool | int: Global fitting settings.
 
         """
         return self.args_out["global_"]
 
     @property
-    def settings_configurations(self) -> dict[str, Any]:
+    def settings_configurations(self) -> dict[str, str | int | list[str]]:
         """Configure settings.
 
         Returns:
-            dict[str, Any]: Configuration settings.
+            dict[str, str | int | list[str]]: Configuration settings from FitMethodAPI.
 
         """
         return self.args_out["fit_insights"]["configurations"]
@@ -55,93 +57,95 @@ class SolverResults:
         return self.args_out["fit_insights"]["statistics"]
 
     @property
-    def get_variables(self) -> dict[str, dict[str, float]]:
+    def get_variables(self) -> dict[str, dict[str, float | str]]:
         """Get the variables of the fit.
 
         Returns:
-            dict[str, Dict[str, float]]: Variables of the fit.
+            dict[str, dict[str, float | str]]: Variables of the fit.
 
         """
         return self.args_out["fit_insights"]["variables"]
 
     @property
-    def get_errorbars(self) -> dict[str, float]:
+    def get_errorbars(self) -> dict[str, str]:
         """Get the comments about the error bars of fit values.
 
         Returns:
-            dict[str, float]: Comments about the error bars as dictionary or dataframe.
+            dict[str, str]: Comments about the error bars as dictionary.
 
         """
         return self.args_out["fit_insights"]["errorbars"]
 
     @property
-    def get_component_correlation(self) -> dict[str, Any]:
+    def get_component_correlation(self) -> dict[str, dict[str, float]]:
         """Get the linear correlation of the components.
 
         Returns:
-            dict[str, Any]: Linear correlation of the components as dictionary.
+            dict[str, dict[str, float]]: Linear correlation of the components as dictionary.
 
         """
         return self.args_out["fit_insights"]["correlations"]
 
     @property
-    def get_covariance_matrix(self) -> dict[str, Any]:
+    def get_covariance_matrix(self) -> dict[str, dict[str, float]]:
         """Get the covariance matrix.
 
         Returns:
-            dict[str, Any]: Covariance matrix as dictionary.
+            dict[str, dict[str, float]]: Covariance matrix as dictionary.
 
         """
         return self.args_out["fit_insights"]["covariance_matrix"]
 
     @property
-    def get_regression_metrics(self) -> dict[str, Any]:
+    def get_regression_metrics(self) -> dict[str, list[Any]]:
         """Get the regression metrics.
 
         Returns:
-            dict[str, Any]: Regression metrics as dictionary.
+            dict[str, list[Any]]: Regression metrics from SolverAPI.
 
         """
         return self.args_out["regression_metrics"]
 
     @property
-    def get_descriptive_statistic(self) -> dict[str, Any]:
+    def get_descriptive_statistic(self) -> dict[str, list[Any]]:
         """Get the descriptive statistic.
 
         Returns:
-            dict[str, Any]: Descriptive statistic as dictionary of the spectra, fit, and
-                 components as dictionary.
+            dict[str, list[Any]]: Descriptive statistic of the spectra, fit, and
+                 components from SolverAPI.
 
         """
         return self.args_out["descriptive_statistic"]
 
     @property
-    def get_linear_correlation(self) -> dict[str, Any]:
+    def get_linear_correlation(self) -> dict[str, list[Any]]:
         """Get the linear correlation.
 
         Returns:
-            dict[str, Any]: Linear correlation of the spectra, fit, and components
-                 as dictionary.
+            dict[str, list[Any]]: Linear correlation of the spectra, fit, and components.
 
         """
         return self.args_out["linear_correlation"]
 
     @property
-    def get_computational(self) -> dict[str, Any]:
+    def get_computational(self) -> dict[str, str | int | float | bool]:
         """Get the computational time.
 
         Returns:
-            dict[str, Any]: Computational time as dictionary.
+            dict[str, str | int | float | bool]: Computational information from ComputationalInfo.
 
         """
         return self.args_out["fit_insights"]["computational"]
 
     @property
-    def settings_conf_interval(self) -> bool | dict[str, Any]:
+    def settings_conf_interval(
+        self,
+    ) -> bool | dict[str, list[str] | bool | int | None]:
         """Confidence interval settings.
 
         Returns:
-            Union[bool, dict[str, Any]]: Confidence interval settings.
+            bool | dict[str, list[str] | bool | int | None]: Confidence interval
+                settings from ConfIntervalAPI.
 
         """
         if isinstance(self.args_out["conf_interval"], dict):
@@ -152,11 +156,11 @@ class SolverResults:
         return self.args_out["conf_interval"]
 
     @property
-    def get_confidence_interval(self) -> dict[Any, Any]:
+    def get_confidence_interval(self) -> dict[str, Any]:
         """Get the confidence interval.
 
         Returns:
-            dict[Any, Any]: Confidence interval as dictionary with or without the
+            dict[str, Any]: Confidence interval as dictionary with or without the
                     confidence interval results.
 
         """
@@ -188,5 +192,5 @@ class SolverResults:
                 strict=False,
             )
         }
-        metric = {**gof, **reg}
+        metric = gof | reg
         return pd.DataFrame(metric)

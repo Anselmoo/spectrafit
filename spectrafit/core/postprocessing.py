@@ -13,6 +13,7 @@ import pandas as pd
 
 from lmfit.confidence import ConfidenceInterval
 from lmfit.minimizer import MinimizerException
+from lmfit.minimizer import MinimizerResult
 
 from spectrafit.api.tools_model import ColumnNamesAPI
 from spectrafit.models.builtin import calculated_model
@@ -32,7 +33,7 @@ class PostProcessing:
         df: pd.DataFrame,
         args: dict[str, Any],
         minimizer: Minimizer,
-        result: Any,
+        result: MinimizerResult,
     ) -> None:
         """Initialize PostProcessing class.
 
@@ -40,10 +41,10 @@ class PostProcessing:
             df (pd.DataFrame): DataFrame containing the input data (`x` and `data`),
                  as well as the best fit and the corresponding residuum. Hence, it will
                  be extended by the single contribution of the model.
-            args (dict[str, Any]): The input file arguments as a dictionary with
+            args (FittingArgs): The input file arguments as a dictionary with
                  additional information beyond the command line arguments.
             minimizer (Minimizer): The minimizer class.
-            result (Any): The result of the minimization of the best fit.
+            result (MinimizerResult): The result of the minimization of the best fit.
 
         """
         self.args = args.copy()  # Work with a copy to avoid side effects
@@ -71,7 +72,7 @@ class PostProcessing:
             contribution of the model.
 
         Returns:
-            Optional[int]: The number of spectra of the global fitting.
+            int | None: The number of spectra of the global fitting.
 
         """
         if self.args["global_"]:
@@ -142,11 +143,14 @@ class PostProcessing:
         )
         if self.args["conf_interval"]:
             try:
-                _min_rel_change = self.args["conf_interval"].pop("min_rel_change", None)
+                _ci_args = dict(
+                    self.args["conf_interval"]
+                )  # copy — avoid mutating input
+                _min_rel_change = _ci_args.pop("min_rel_change", None)
                 ci = ConfidenceInterval(
                     self.minimizer,
                     self.result,
-                    **self.args["conf_interval"],
+                    **_ci_args,
                 )
                 if _min_rel_change is not None:
                     ci.min_rel_change = _min_rel_change
@@ -209,11 +213,13 @@ class PostProcessing:
         !!! info "About Fit Contributions"
             The fit contributions are made independently of the local or global fitting.
         """
+        bundle = self.args.pop("_bundle", None)
         self.df = calculated_model(
             params=self.result.params,
             x=self.df.iloc[:, 0].to_numpy(),
             df=self.df,
             global_fit=self.args["global_"],
+            bundle=bundle,
         )
 
     def export_correlation2args(self) -> None:

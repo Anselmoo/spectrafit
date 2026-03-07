@@ -42,7 +42,7 @@ class PlotSpectra:
             df (pd.DataFrame): DataFrame containing the input data (`x` and `data`),
                  as well as the best fit and the corresponding residuum. Hence, it will
                  be extended by the single contribution of the model.
-            args (dict[str, Any], optional): The input file arguments as a dictionary
+            args (FittingArgs, optional): The input file arguments as a dictionary
                  with additional information beyond the command line arguments. Only
                  needed for global fitting. Defaults to None.
 

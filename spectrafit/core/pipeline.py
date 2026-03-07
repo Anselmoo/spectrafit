@@ -6,54 +6,108 @@ separating concerns and making the code more maintainable.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
 from typing import Any
 
 import pandas as pd
 
+from lmfit import Minimizer
+from lmfit.minimizer import MinimizerResult
+from pydantic import BaseModel
+from pydantic import ConfigDict
+from pydantic import Field
+
 from spectrafit.core.data_loader import load_data
+from spectrafit.core.fitting_config import UnifiedFittingConfig
 from spectrafit.core.postprocessing import PostProcessing
 from spectrafit.core.preprocessing import PreProcessing
 from spectrafit.models.builtin import SolverModels
+from spectrafit.models.bundle import CompositeModelBundle
+from spectrafit.models.data_config import DataConfig
 from spectrafit.report import PrintingResults
 
 
-if TYPE_CHECKING:
-    from lmfit import Minimizer
-    from lmfit.minimizer import MinimizerResult
-
-
-class FittingResult:
-    """Container for fitting results.
+class FitStatistics(BaseModel):
+    """Serializable fit statistics from a minimization result.
 
     Attributes:
-        df (pd.DataFrame): DataFrame containing the results.
-        args (dict[str, Any]): Arguments dictionary with fit information.
-        minimizer (Minimizer): The minimizer used for fitting.
-        result (MinimizerResult): The minimization result.
+        chi_squared: Chi-squared statistic of the fit.
+        reduced_chi_squared: Reduced chi-squared statistic.
+        num_variables: Number of free variables in the fit.
+        success: Whether the fit converged successfully.
+        message: Status message from the minimizer.
+        nfev: Number of function evaluations.
+        ndata: Number of data points.
+        nfree: Degrees of freedom (ndata - nvarys).
 
     """
 
-    def __init__(
-        self,
-        df: pd.DataFrame,
-        args: dict[str, Any],
-        minimizer: Minimizer,
-        result: MinimizerResult,
-    ) -> None:
-        """Initialize FittingResult.
+    chi_squared: float = Field(description="Chi-squared statistic")
+    reduced_chi_squared: float = Field(description="Reduced chi-squared statistic")
+    num_variables: int = Field(description="Number of free variables")
+    success: bool = Field(description="Whether fit converged")
+    message: str = Field(description="Minimizer status message")
+    nfev: int = Field(description="Number of function evaluations")
+    ndata: int = Field(description="Number of data points")
+    nfree: int = Field(description="Degrees of freedom")
 
-        Args:
-            df (pd.DataFrame): DataFrame containing the results.
-            args (dict[str, Any]): Arguments dictionary with fit information.
-            minimizer (Minimizer): The minimizer used for fitting.
-            result (MinimizerResult): The minimization result.
+
+class FittingResult(BaseModel):
+    """Container for fitting results.
+
+    Attributes:
+        df: DataFrame containing the results.
+        args: Arguments dictionary with fit information.
+        minimizer: The minimizer used for fitting.
+        result: The minimization result.
+
+    """
+
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
+    df: pd.DataFrame
+    args: dict[str, Any]
+    minimizer: Minimizer
+    result: MinimizerResult
+
+    @property
+    def chi_squared(self) -> float:
+        """Return the chi-squared statistic from the fit result."""
+        return float(self.result.chisqr)
+
+    @property
+    def reduced_chi_squared(self) -> float:
+        """Return the reduced chi-squared statistic from the fit result."""
+        return float(self.result.redchi)
+
+    @property
+    def num_variables(self) -> int:
+        """Return the number of variables in the fit."""
+        return int(self.result.nvarys)
+
+    @property
+    def success(self) -> bool:
+        """Return whether the fit was successful."""
+        return bool(self.result.success)
+
+    def to_json(self) -> FitStatistics:
+        """Export serializable fit metadata.
+
+        Returns:
+            FitStatistics: Pydantic model containing serializable fit
+                statistics and metadata. Call ``.model_dump()`` to get a
+                plain dictionary representation.
 
         """
-        self.df = df
-        self.args = args
-        self.minimizer = minimizer
-        self.result = result
+        return FitStatistics(
+            chi_squared=self.chi_squared,
+            reduced_chi_squared=self.reduced_chi_squared,
+            num_variables=self.num_variables,
+            success=self.success,
+            message=self.result.message,
+            nfev=self.result.nfev,
+            ndata=self.result.ndata,
+            nfree=self.result.nfree,
+        )
 
 
 class FittingPipeline:
@@ -63,19 +117,22 @@ class FittingPipeline:
     data loading, preprocessing, solving, and postprocessing steps.
 
     Attributes:
-        config (dict[str, Any]): Configuration dictionary for the pipeline.
+        config (UnifiedFittingConfig): Validated configuration for the pipeline.
 
     """
 
-    def __init__(self, config: dict[str, Any]) -> None:
+    def __init__(self, config: UnifiedFittingConfig | dict[str, Any]) -> None:
         """Initialize FittingPipeline.
 
         Args:
-            config (dict[str, Any]): Configuration dictionary containing
-                 all necessary parameters for the fitting workflow.
+            config: Either a validated :class:`UnifiedFittingConfig` or a plain
+                dictionary that will be coerced via
+                :meth:`UnifiedFittingConfig.from_dict`.
 
         """
-        self.config = config
+        if isinstance(config, dict):
+            config = UnifiedFittingConfig.from_dict(config)
+        self.config: UnifiedFittingConfig = config
 
     def run(self) -> FittingResult:
         """Run the complete fitting pipeline.
@@ -97,12 +154,12 @@ class FittingPipeline:
         df, args = self._preprocess(df)
 
         # Step 3: Solve
-        minimizer, result = self._solve(df, args)
+        minimizer, result, bundle = self._solve(df)
 
         # Step 4: Postprocess
-        df, args = self._postprocess(df, args, minimizer, result)
+        df, args = self._postprocess(df, args, minimizer, result, bundle)
 
-        return FittingResult(df, args, minimizer, result)
+        return FittingResult(df=df, args=args, minimizer=minimizer, result=result)
 
     def _load_data(self) -> pd.DataFrame:
         """Load data from input file.
@@ -111,7 +168,7 @@ class FittingPipeline:
             pd.DataFrame: Loaded data.
 
         """
-        return load_data(self.config)
+        return load_data(DataConfig.from_unified(self.config))
 
     def _preprocess(self, df: pd.DataFrame) -> tuple[pd.DataFrame, dict[str, Any]]:
         """Preprocess the data.
@@ -121,29 +178,30 @@ class FittingPipeline:
 
         Returns:
             tuple[pd.DataFrame, dict[str, Any]]: Preprocessed DataFrame and
-                 updated configuration.
+                 ``data_statistic`` result dict.
 
         """
-        preprocessor = PreProcessing(df=df, args=self.config)
+        preprocessor = PreProcessing(df=df, config=self.config)
         return preprocessor()
 
     def _solve(
         self,
         df: pd.DataFrame,
-        args: dict[str, Any],
-    ) -> tuple[Minimizer, MinimizerResult]:
+    ) -> tuple[Minimizer, MinimizerResult, Any]:
         """Solve the fitting problem.
 
         Args:
             df (pd.DataFrame): Preprocessed DataFrame.
-            args (dict[str, Any]): Configuration with preprocessing results.
 
         Returns:
-            tuple[Minimizer, MinimizerResult]: Minimizer and fitting result.
+            tuple[Minimizer, MinimizerResult, CompositeModelBundle | None]:
+                Minimizer, fitting result, and the composite bundle (None for global fits).
 
         """
-        solver = SolverModels(df=df, args=args)
-        return solver()
+        solver = SolverModels(df=df, config=self.config)
+        minimizer, result = solver()
+        bundle: CompositeModelBundle | None = solver.bundle
+        return minimizer, result, bundle
 
     def _postprocess(
         self,
@@ -151,23 +209,38 @@ class FittingPipeline:
         args: dict[str, Any],
         minimizer: Minimizer,
         result: MinimizerResult,
+        bundle: Any = None,
     ) -> tuple[pd.DataFrame, dict[str, Any]]:
         """Postprocess the fitting results.
 
         Args:
             df (pd.DataFrame): DataFrame with fit data.
-            args (dict[str, Any]): Configuration dictionary.
+            args (dict[str, Any]): Configuration dictionary from preprocessing.
             minimizer (Minimizer): The minimizer used.
             result (MinimizerResult): The fitting result.
+            bundle: Optional CompositeModelBundle for local-fit decomposition.
 
         Returns:
             tuple[pd.DataFrame, dict[str, Any]]: Postprocessed DataFrame and
                  updated configuration.
 
         """
+        # Merge config fields into args so PostProcessing (frozen Layer 4) gets
+        # both preprocessing results and the typed config values.
+        # Also pass through any extra fields (e.g. noplot, verbose) stored via extra="allow".
+        extra_fields: dict[str, Any] = self.config.model_extra or {}
+        post_args: dict[str, Any] = {
+            **args,
+            **extra_fields,
+            "global_": int(self.config.global_),
+            "conf_interval": self.config.conf_interval,
+            "peaks": self.config.peaks,
+            "column": [self.config.column.x, self.config.column.y],
+            "_bundle": bundle,
+        }
         postprocessor = PostProcessing(
             df=df,
-            args=args,
+            args=post_args,
             minimizer=minimizer,
             result=result,
         )
@@ -175,15 +248,17 @@ class FittingPipeline:
 
 
 def fitting_routine_pipeline(
-    args: dict[str, Any],
+    args: UnifiedFittingConfig | dict[str, Any],
 ) -> tuple[pd.DataFrame, dict[str, Any]]:
     """Run the fitting algorithm using the pipeline pattern.
 
     This is a convenience function that creates and runs a FittingPipeline.
 
     Args:
-        args (dict[str, Any]): The input file arguments as a dictionary with
-             additional information beyond the command line arguments.
+        args: Either a validated :class:`UnifiedFittingConfig` or a plain
+            dictionary.  Plain dicts are coerced via
+            :meth:`UnifiedFittingConfig.from_dict` inside
+            :class:`FittingPipeline`.
 
     Returns:
         tuple[pd.DataFrame, dict[str, Any]]: Returns a DataFrame and a dictionary,

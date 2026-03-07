@@ -44,8 +44,7 @@ def list_plugins(
     # List built-in plugins
     builtin_plugins = registry.list_available_builtins()
     for plugin_name in builtin_plugins:
-        plugin = registry.load_builtin_plugin(plugin_name)
-        if plugin:
+        if plugin := registry.load_builtin_plugin(plugin_name):
             if verbose:
                 typer.echo(f"  {plugin.name}:")
                 typer.echo(f"    Version: {plugin.version}")
@@ -76,8 +75,7 @@ def _register_builtin_plugins() -> None:
     # Load and register built-in plugins
     for plugin_name in registry.list_available_builtins():
         try:
-            plugin = registry.load_builtin_plugin(plugin_name)
-            if plugin:
+            if plugin := registry.load_builtin_plugin(plugin_name):
                 plugin.register_commands(plugins_app)
                 logger.info("Registered plugin: %s", plugin.name)
         except ImportError as e:

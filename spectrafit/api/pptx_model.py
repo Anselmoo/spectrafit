@@ -70,10 +70,10 @@ class RegressionMetricsAPI(BaseModel):
         """Shorten the metrics names.
 
         Args:
-            v (List[str]): The metrics names.
+            v (list[str]): The metrics names.
 
         Returns:
-            List[str]: The shortened metrics names.
+            list[str]: The shortened metrics names.
 
         """
         pattern = r"(?<!\d)[a-zA-Z0-9]{2,}(?!\d)"
@@ -110,10 +110,10 @@ class SolverAPI(BaseModel):
         """Shorten the variables names.
 
         Args:
-            v (dict[str, Dict[str, float]]): The variables names.
+            v (dict[str, dict[str, float]]): The variables names.
 
         Returns:
-            dict[str, Dict[str, float]]: The shortened variables names.
+            dict[str, dict[str, float]]: The shortened variables names.
 
         """
         new_dict = {}
@@ -357,7 +357,7 @@ class PPTXLayoutAPI:
     """PPTXLayout class for PPTXData input.
 
     Attributes:
-        pptx_formats (dict[str, List[Union[Field169API, Field169HDRAPI, Field43API]]]):
+        pptx_formats (dict[str, list[Union[Field169API, Field169HDRAPI, Field43API]]]):
             The formats of the powerpoint presentation. This includes the ratio of
             `16:9` and `4:3` with pixel width and height of __1280__ and __720__
             respectively for `16:9` and __960__ and __720__ respectively for `4:3`.

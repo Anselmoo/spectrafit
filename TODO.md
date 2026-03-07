@@ -126,88 +126,56 @@ This document tracks the migration tasks for SpectraFit from v1.x to v2.0.0, foc
 
 ## 🏗️ Phase 2: Architecture Refactoring
 
-### 2.1 Module Splitting 🔴 (High Priority)
+### 2.1 Module Splitting ✅ DONE (v2.0.0)
 
 Split large modules into smaller, focused files:
 
 #### `models/builtin.py` (1899 lines) → Split into:
 
-- [ ] `models/distributions.py` - Gaussian, Lorentzian, Voigt, PseudoVoigt
-- [ ] `models/cumulative.py` - Cumulative distribution models
-- [ ] `models/special.py` - Step functions, exponential, polynomial
-- [ ] `models/solver.py` - `SolverModels` class
-- [ ] `models/autopeak.py` - Auto-peak detection logic
+- [x] `models/distributions.py` - Gaussian, Lorentzian, Voigt, PseudoVoigt
+- [x] `models/solver.py` - `SolverModels` class
+- [x] `models/model_parameters.py` - `ModelParameters`, `ReferenceKeys` classes
+- [x] `models/types.py` - TypeAliases (`FittingArgs`, `PeaksDict`, etc.)
+- [x] `models/global_fitting.py` - `GlobalMode(IntEnum)`, `GlobalFittingConfig`
+- [x] `models/autopeak.py` - reduced to DeprecationWarning shim (→ removed in v2.1.0)
 
 #### `report.py` (937 lines) → Split into:
 
-- [ ] `report/metrics.py` - `RegressionMetrics` class
-- [ ] `report/formatter.py` - `fit_report_as_dict` and formatting functions
-- [ ] `report/printer.py` - `PrintingResults`, `PrintingStatus` classes
-- [ ] `report/confidence.py` - Confidence interval calculations
+- [x] `report/metrics.py` - `RegressionMetrics` class
+- [x] `report/formatter.py` - `fit_report_as_dict` and formatting functions
+- [x] `report/printer.py` - `PrintingResults`, `PrintingStatus` classes
+- [x] `report/confidence.py` - Confidence interval calculations
 
 #### `tools.py` (769 lines) → Split into:
 
-- [ ] `core/data_loader.py` - `load_data`, `read_input_file`
-- [ ] `core/preprocessing.py` - `PreProcessing` class
-- [ ] `core/postprocessing.py` - `PostProcessing` class
-- [ ] `core/export.py` - `SaveResult` class
+- [x] `core/data_loader.py` - `load_data`, `read_input_file`
+- [x] `core/preprocessing.py` - `PreProcessing` class
+- [x] `core/postprocessing.py` - `PostProcessing` class
+- [x] `core/export.py` - `SaveResult` class
 
 #### `plugins/notebook.py` (1412 lines) → Split into:
 
-- [ ] `plugins/notebook/display.py` - `DataFrameDisplay` class
-- [ ] `plugins/notebook/plotting.py` - `DataFramePlot` class
-- [ ] `plugins/notebook/export.py` - `ExportResults`, `ExportReport` classes
-- [ ] `plugins/notebook/solver.py` - `SolverResults` class
-- [ ] `plugins/notebook/core.py` - `SpectraFitNotebook` class
+- [x] `plugins/notebook/display.py` - `DataFrameDisplay` class
+- [x] `plugins/notebook/plotting.py` - `DataFramePlot` class
+- [x] `plugins/notebook/export.py` - `ExportResults`, `ExportReport` classes
+- [x] `plugins/notebook/solver.py` - `SolverResults` class
+- [x] `plugins/notebook/core.py` - `SpectraFitNotebook` class
 
-### 2.2 Separation of Concerns 🔴 (High Priority)
+### 2.2 Separation of Concerns ✅ DONE (v2.0.0)
 
-Refactor `fitting_routine()` from monolithic function to pipeline:
+`FittingPipeline` implemented in `spectrafit/core/pipeline.py`:
 
-```python
-# Current (monolithic):
-def fitting_routine(args):
-    df = load_data(args)
-    df, args = PreProcessing(df, args)()
-    minimizer, result = SolverModels(df, args)()
-    df, args = PostProcessing(df, args, minimizer, result)()
-    PrintingResults(args, minimizer, result)()
-    return df, args
+- [x] `UnifiedFittingConfig` — single validated entry point (`spectrafit/core/fitting_config.py`)
+- [x] v1.x backward compat via `@model_validator(mode="before")` `migrate_v1_format`
+- [x] `FittingPipeline` accepts `UnifiedFittingConfig | dict`; wires into existing pipeline stages
+- [x] CLI converged: `spectrafit/cli/commands/fit.py` builds `UnifiedFittingConfig` directly
+- [x] `testpaths = ["tests"]` — new `tests/` tree at repo root; legacy `spectrafit/*/test/` removed
+- [x] CLI fit tests green: 58 passed, 0 xfailed (`tests/integration/test_cli_fit.py`)
 
-# Target (pipeline):
-class FittingPipeline:
-    def __init__(self, config: FittingConfig):
-        self.loader = DataLoader(config.input)
-        self.preprocessor = Preprocessor(config.preprocessing)
-        self.solver = Solver(config.optimizer, config.minimizer)
-        self.reporter = Reporter(config.output)
-
-    def run(self) -> FittingResult:
-        data = self.loader.load()
-        processed = self.preprocessor.process(data)
-        result = self.solver.solve(processed)
-        return self.reporter.format(result)
-```
-
-- [ ] **CLI Layer** (`spectrafit/cli/`):
-  - [ ] Pure argument parsing and validation
-  - [ ] No business logic in CLI handlers
-  - [ ] Delegate to API layer
-
-- [ ] **API Layer** (`spectrafit/api/`):
-  - [ ] Pydantic v2 models for all interfaces
-  - [ ] Input/output data contracts
-  - [ ] Validation logic
-
-- [ ] **Core Layer** (`spectrafit/core/`):
-  - [ ] Fitting algorithms
-  - [ ] Peak models
-  - [ ] Mathematical operations
-
-- [ ] **Reporting Layer** (`spectrafit/report/`):
-  - [ ] Result formatting
-  - [ ] Export functionality
-  - [ ] Visualization coordination
+- [x] **CLI Layer** (`spectrafit/cli/`): pure argument parsing, delegates to `FittingPipeline`
+- [x] **API Layer** (`spectrafit/api/`): Pydantic v2 models for all interfaces
+- [x] **Core Layer** (`spectrafit/core/`): `FittingPipeline`, `UnifiedFittingConfig`, pre/post processing
+- [x] **Reporting Layer** (`spectrafit/report/`): result formatting and export coordination
 
 ### 2.3 Remove Side Effects
 

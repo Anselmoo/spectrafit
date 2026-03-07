@@ -106,24 +106,25 @@ def _generate_text_report(results: dict[str, Any], sections: list[str]) -> str:
 
     if "summary" in sections and "fit_insights" in results:
         insights = results["fit_insights"]
-        lines.append("\n📊 FIT SUMMARY")
-        lines.append("-" * 40)
+        lines.extend(("\n📊 FIT SUMMARY", "-" * 40))
         if "statistics" in insights:
             _append_summary_statistics(insights, lines)
     if "variables" in sections and "fit_insights" in results:
         insights = results["fit_insights"]
         if "variables" in insights:
-            lines.append("\n📈 FIT VARIABLES")
-            lines.append("-" * 40)
+            lines.extend(("\n📈 FIT VARIABLES", "-" * 40))
             variables = insights["variables"]
             for var_name, var_data in variables.items():
                 if isinstance(var_data, dict):
                     value = var_data.get("value", "N/A")
                     stderr = var_data.get("stderr", "N/A")
-                    lines.append(f"  {var_name}:")
-                    lines.append(f"    Value:  {value}")
-                    lines.append(f"    Stderr: {stderr}")
-
+                    lines.extend(
+                        (
+                            f"  {var_name}:",
+                            f"    Value:  {value}",
+                            f"    Stderr: {stderr}",
+                        )
+                    )
     if "statistics" in sections and "regression_metrics" in results:
         metrics = results["regression_metrics"]
         lines.extend(("\n📉 REGRESSION METRICS", "-" * 40))
@@ -131,8 +132,7 @@ def _generate_text_report(results: dict[str, Any], sections: list[str]) -> str:
             lines.append(f"  {key}: {value}")
 
     if "correlation" in sections and "linear_correlation" in results:
-        lines.append("\n🔗 CORRELATION MATRIX")
-        lines.append("-" * 40)
+        lines.extend(("\n🔗 CORRELATION MATRIX", "-" * 40))
         lines.append("  (See full correlation in _correlation.csv file)")
 
     lines.append("\n" + "=" * 60)
@@ -164,26 +164,27 @@ def _generate_markdown_report(results: dict[str, Any], sections: list[str]) -> s
     Returns:
         Formatted Markdown report.
     """
-    lines: list[str] = []
-    lines.append("# SpectraFit Report\n")
-
+    lines: list[str] = ["# SpectraFit Report\n"]
     if "summary" in sections and "fit_insights" in results:
         insights = results["fit_insights"]
         lines.append("## Fit Summary\n")
 
         if "statistics" in insights:
             stats = insights["statistics"]
-            lines.append("| Metric | Value |")
-            lines.append("|--------|-------|")
-            lines.append(f"| Chi-square | {stats.get('chi_square', 'N/A')} |")
-            lines.append(
-                f"| Reduced chi-sq | {stats.get('reduced_chi_square', 'N/A')} |"
+            lines.extend(("| Metric | Value |", "|--------|-------|"))
+            lines.extend(
+                (
+                    f"| Chi-square | {stats.get('chi_square', 'N/A')} |",
+                    f"| Reduced chi-sq | {stats.get('reduced_chi_square', 'N/A')} |",
+                )
             )
-            lines.append(f"| AIC | {stats.get('aic', 'N/A')} |")
-            lines.append(f"| BIC | {stats.get('bic', 'N/A')} |")
-            lines.append(f"| R-squared | {stats.get('rsquared', 'N/A')} |")
-            lines.append("")
-
+            lines.extend(
+                (
+                    f"| AIC | {stats.get('aic', 'N/A')} |",
+                    f"| BIC | {stats.get('bic', 'N/A')} |",
+                )
+            )
+            lines.extend((f"| R-squared | {stats.get('rsquared', 'N/A')} |", ""))
     if "variables" in sections and "fit_insights" in results:
         insights = results["fit_insights"]
         if "variables" in insights:

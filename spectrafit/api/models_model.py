@@ -7,11 +7,6 @@ from collections.abc import Callable
 from pydantic import BaseModel
 from pydantic import Field
 
-from spectrafit.api.moessbauer_model import MoessbauerDoubletAPI
-from spectrafit.api.moessbauer_model import MoessbauerOctetAPI
-from spectrafit.api.moessbauer_model import MoessbauerSextetAPI
-from spectrafit.api.moessbauer_model import MoessbauerSingletAPI
-
 
 __description__ = "Lmfit expression for explicit dependencies."
 
@@ -417,11 +412,6 @@ class DistributionModelAPI(BaseModel):
     pearson2: Pearson2API = Pearson2API()
     pearson3: Pearson3API = Pearson3API()
     pearson4: Pearson4API = Pearson4API()
-    # Add Mössbauer models
-    moessbauersinglet: MoessbauerSingletAPI = MoessbauerSingletAPI()
-    moessbauerdoublet: MoessbauerDoubletAPI = MoessbauerDoubletAPI()
-    moessbauersextet: MoessbauerSextetAPI = MoessbauerSextetAPI()
-    moessbaueroctet: MoessbauerOctetAPI = MoessbauerOctetAPI()
 
 
 class ConfIntervalAPI(BaseModel):

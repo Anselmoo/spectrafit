@@ -137,6 +137,35 @@ jobs:
       - name: 🚀 Deploy documentation develops
         if: contains(github.ref, 'refs/heads/main')
         run: uv run --group docs --all-extras mike deploy --push --update-aliases develop
+  validation:
+    if: github.repository == 'Anselmoo/spectrafit'
+    name: 🔬 Scientific Validation
+    needs: build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: 🛎️ Checkout
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+      - name: 🐍 Set up Python
+        uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e # v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+          python-version: "3.11"
+      - name: 📦 Install the project
+        run: uv sync --all-extras --dev
+      - name: 🔬 Run validation tests
+        run: uv run --group dev --all-extras pytest spectrafit/test/validation/ -m validation --validation-report=validation-report -v
+      - name: 📤 Upload validation reports
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: scientific-validation-report
+          path: |
+            validation-report.json
+            validation-report.html
   devcontainer:
     if: github.repository == 'Anselmoo/spectrafit'
     name: 🐳 Devcontainer

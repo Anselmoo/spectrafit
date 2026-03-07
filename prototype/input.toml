@@ -1,0 +1,64 @@
+# SpectraFit Prototype — canonical input (schema v1.0)
+# ──────────────────────────────────────────────────────────────────────────────
+# Schema: flat [[components]] + [solver]; parameters as inline tables.
+# Parameter bounds use  bounds = [min, max]  instead of separate min/max keys.
+# Constraint expressions use dot-notation:  expr = "p1.center + 1.0"
+# which is automatically translated to lmfit underscore form at load time.
+
+schema_version = "1.0"
+config_type    = "peak_fit"
+
+# ── Metadata ──────────────────────────────────────────────────────────────────
+[meta]
+description = "Two-peak fit (Gaussian + Pseudo-Voigt) with linear background and cross-component constraints"
+
+# ── Data source ───────────────────────────────────────────────────────────────
+[data]
+infile = "synth.csv"
+x_col  = "energy"
+y_col  = "intensity"
+
+# ── Solver (minimizer + optimizer combined) ───────────────────────────────────
+[solver]
+method     = "leastsq"
+max_nfev   = 1000
+nan_policy = "propagate"
+calc_covar = true
+
+# ══════════════════════════════════════════════════════════════════════════════
+# Components  —  flat array of tables, one entry per peak / background.
+# Each [[components]] block introduces a new component.
+# [components.parameters] entries are inline tables: { value, bounds, vary }.
+# ══════════════════════════════════════════════════════════════════════════════
+
+# ── Component 1: Gaussian peak at energy ≈ −0.5  (reference peak) ────────────
+[[components]]
+id    = "p1"
+model = "gaussian"
+
+[components.parameters]
+amplitude = { value = 1.0,  bounds = [0.0, 3.0],   vary = true }
+center    = { value = -0.5, bounds = [-2.0, 0.0],  vary = true }
+fwhmg     = { value = 0.3,  bounds = [0.05, 1.0],  vary = true }
+
+# ── Component 2: Pseudo-Voigt at energy ≈ +0.5  (constrained to p1) ──────────
+# center is pinned:  p1.center + 1.0  — enforces a fixed peak separation of 1.0
+# fwhml  is coupled: p2.fwhmg         — symmetric (equal Gaussian/Lorentzian widths)
+[[components]]
+id    = "p2"
+model = "pseudovoigt"
+
+[components.parameters]
+amplitude = { value = 0.8,  bounds = [0.0, 3.0],   vary = true }
+center    = { value = 0.5,  bounds = [0.0, 2.0],   vary = false, expr = "p1.center + 1.0" }
+fwhmg     = { value = 0.25, bounds = [0.05, 1.0],  vary = true }
+fwhml     = { value = 0.25, bounds = [0.05, 1.0],  vary = false, expr = "p2.fwhmg" }
+
+# ── Component 3: Linear background ───────────────────────────────────────────
+[[components]]
+id    = "bg"
+model = "linear"
+
+[components.parameters]
+slope     = { value = 0.0,  bounds = [-0.5, 0.5],  vary = false }
+intercept = { value = 0.02, bounds = [0.0, 0.2],   vary = true }

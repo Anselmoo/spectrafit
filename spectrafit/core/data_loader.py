@@ -18,6 +18,8 @@ import pandas as pd
 import tomli
 import yaml
 
+from spectrafit.models.data_config import DataConfig
+
 
 if TYPE_CHECKING:
     from collections.abc import MutableMapping
@@ -61,7 +63,7 @@ def read_input_file(fname: Path) -> MutableMapping[str, Any]:
     return args
 
 
-def load_data(args: dict[str, str]) -> pd.DataFrame:
+def load_data(args: DataConfig | dict[str, Any]) -> pd.DataFrame:
     """Load the data from a txt file.
 
     !!! note "About the data format"
@@ -73,8 +75,10 @@ def load_data(args: dict[str, str]) -> pd.DataFrame:
         columns are considered as data.
 
     Args:
-        args (dict[str,str]): The input file arguments as a dictionary with additional
-             information beyond the command line arguments.
+        args: Data loading configuration.  Pass a
+            :class:`~spectrafit.models.data_config.DataConfig` for the typed v2
+            path, or a legacy ``dict[str, Any]`` (the dict is coerced automatically
+            via :meth:`~spectrafit.models.data_config.DataConfig.from_args_dict`).
 
     Returns:
         pd.DataFrame: DataFrame containing the input data (`x` and `data`),
@@ -82,27 +86,29 @@ def load_data(args: dict[str, str]) -> pd.DataFrame:
              extended by the single contribution of the model.
 
     """
+    if not isinstance(args, DataConfig):
+        args = DataConfig.from_args_dict(args)
     try:
-        if args["global_"]:
+        if args.global_:
             return pd.read_csv(
-                args["infile"],
-                sep=args["separator"],
-                header=args["header"],
+                args.infile,
+                sep=args.separator,
+                header=args.header,
                 dtype=np.float64,
-                decimal=args["decimal"],
-                comment=args["comment"],
+                decimal=args.decimal,
+                comment=args.comment,
             )
         return pd.read_csv(
-            args["infile"],
-            sep=args["separator"],
-            header=args["header"],
-            usecols=args["column"],
+            args.infile,
+            sep=args.separator,
+            header=args.header,
+            usecols=args.column,
             dtype=np.float64,
-            decimal=args["decimal"],
-            comment=args["comment"],
+            decimal=args.decimal,
+            comment=args.comment,
         )
     except ValueError as e:
-        msg = f"Failed to load data from '{args.get('infile', 'unknown')}': {e}"
+        msg = f"Failed to load data from '{args.infile}': {e}"
         raise ValueError(msg) from e
 
 
@@ -117,7 +123,7 @@ def check_keywords_consistency(
 
     Args:
         check_args (MutableMapping[str, Any]): First dictionary to be checked.
-        ref_args (dict[str,Any]): Second dictionary to be checked.
+        ref_args (FittingArgs): Second dictionary to be checked.
 
     Raises:
         KeyError: If the keywords are not consistent.

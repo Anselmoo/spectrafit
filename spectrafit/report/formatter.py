@@ -7,6 +7,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 from typing import Any
+from typing import TypeAlias
 from warnings import warn
 
 import numpy as np
@@ -20,12 +21,15 @@ if TYPE_CHECKING:
     from lmfit import Parameters
     from lmfit.minimizer import minimize
 
+FitReportBuffer: TypeAlias = dict[str, dict[str, Any]]
+"""Buffer dict holding fit report sections: configurations, statistics, variables, etc."""
+
 
 def fit_report_as_dict(  # noqa: C901
     inpars: minimize,
     settings: Minimizer,
-    modelpars: dict[str, Any] | None = None,
-) -> dict[str, dict[Any, Any]]:
+    modelpars: Parameters | None = None,
+) -> FitReportBuffer:
     """Generate the best fit report as dictionary.
 
     !!! info "About `fit_report_as_dict`"
@@ -48,11 +52,11 @@ def fit_report_as_dict(  # noqa: C901
         settings (Minimizer): The lmfit `Minimizer`-class as a general minimizer
                 for curve fitting and optimization. It is required to extract the
                 initial settings of the fit.
-        modelpars (dict[str,  Any], optional): Known Model Parameters.
+        modelpars (Parameters, optional): Known Model Parameters.
             Defaults to None.
 
     Returns:
-         dict[str, Dict[Any, Any]]: The report as a dictionary.
+         FitReportBuffer: The report as a dictionary.
 
     """
     result = inpars
@@ -60,7 +64,7 @@ def fit_report_as_dict(  # noqa: C901
 
     parnames: list[str] = list(params.keys())
 
-    buffer: dict[str, dict[Any, Any]] = {
+    buffer: FitReportBuffer = {
         "configurations": {},
         "statistics": {},
         "variables": {},
@@ -132,7 +136,7 @@ def get_init_value(
         modelpars (Parameter, optional): Known Model Parameters. Defaults to None.
 
     Returns:
-        Union[float, str]: The initial value.
+        float | str: The initial value.
 
     """
     if param.init_value is not None:
@@ -147,8 +151,8 @@ def get_init_value(
 def _extracted_computational_from_results(
     result: minimize,
     settings: Minimizer,
-    buffer: dict[str, Any],
-) -> dict[str, Any]:
+    buffer: FitReportBuffer,
+) -> FitReportBuffer:
     """Extract the computational from the results.
 
     Args:
@@ -157,10 +161,10 @@ def _extracted_computational_from_results(
         settings (Minimizer): The lmfit `Minimizer`-class as a general minimizer
                 for curve fitting and optimization. It is required to extract the
                 initial settings of the fit.
-        buffer (dict[str, Any]): The buffer to store the results.
+        buffer (FitReportBuffer): The buffer to store the results.
 
     Returns:
-        dict[str, Any]: The buffer with updated results.
+        FitReportBuffer: The buffer with updated results.
 
     """
     buffer["computational"]["success"] = result.success
@@ -178,19 +182,19 @@ def _extracted_computational_from_results(
 
 def _extracted_gof_from_results(
     result: minimize,
-    buffer: dict[str, Any],
+    buffer: FitReportBuffer,
     params: Parameters,
-) -> tuple[minimize, dict[str, Any], Parameters]:
+) -> tuple[minimize, FitReportBuffer, Parameters]:
     """Extract the goodness of fit from the results.
 
     Args:
         result (minimize): Input Parameters from a fit or the  Minimizer results
-        buffer (dict[str, Any]): The buffer to store the results.
+        buffer (FitReportBuffer): The buffer to store the results.
         params (Parameters): The parameters of the fit.
 
     Returns:
         minimize: The results.
-        dict[str, Any]: The buffer with updated results.
+        FitReportBuffer: The buffer with updated results.
         Parameters: The parameters.
 
     """
