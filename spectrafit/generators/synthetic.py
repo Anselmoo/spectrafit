@@ -181,7 +181,7 @@ class SyntheticSpectrum(BaseModel):
                     "index": i,
                     "model": peak.model,
                     "params": dict(peak.params),
-                }
+                },
             )
 
         # Sum all components
@@ -193,7 +193,8 @@ class SyntheticSpectrum(BaseModel):
                 noise = rng.normal(0, self.noise_level, size=x.shape)
             else:
                 noise = rng.poisson(np.maximum(np.abs(y_clean), 1e-10)) - np.maximum(
-                    np.abs(y_clean), 1e-10
+                    np.abs(y_clean),
+                    1e-10,
                 )
                 noise = noise * self.noise_level
         else:

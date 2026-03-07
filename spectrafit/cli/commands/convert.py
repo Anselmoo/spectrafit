@@ -6,7 +6,6 @@ import json
 
 from pathlib import Path
 from typing import Annotated
-from typing import Any
 
 import tomli
 import typer
@@ -88,7 +87,7 @@ def convert(
 
         typer.echo(f"✅ Successfully converted '{input_file}' → '{output_file}'")
         typer.echo(
-            f"   Format: {input_file.suffix[1:].upper()} → {output_format.value.upper()}"
+            f"   Format: {input_file.suffix[1:].upper()} → {output_format.value.upper()}",
         )
 
     except OSError as e:
@@ -99,7 +98,7 @@ def convert(
         raise typer.Exit(1) from e
 
 
-def _read_config(filepath: Path) -> dict[str, Any]:
+def _read_config(filepath: Path) -> dict[str, object]:
     """Read configuration from file.
 
     Args:
@@ -128,7 +127,9 @@ def _read_config(filepath: Path) -> dict[str, Any]:
 
 
 def _write_config(
-    config: dict[str, Any], filepath: Path, fmt: OutputFormatEnum
+    config: dict[str, object],
+    filepath: Path,
+    fmt: OutputFormatEnum,
 ) -> None:
     """Write configuration to file.
 
@@ -156,7 +157,7 @@ def _write_config(
                 f.write(_dict_to_toml(config))
 
 
-def _dict_to_toml(data: dict[str, Any], prefix: str = "") -> str:
+def _dict_to_toml(data: dict[str, object], prefix: str = "") -> str:
     """Convert dictionary to TOML string (simple implementation).
 
     Args:
@@ -167,7 +168,7 @@ def _dict_to_toml(data: dict[str, Any], prefix: str = "") -> str:
         TOML formatted string.
     """
     lines: list[str] = []
-    tables: list[tuple[str, dict[str, Any]]] = []
+    tables: list[tuple[str, dict[str, object]]] = []
 
     for key, value in data.items():
         full_key = f"{prefix}.{key}" if prefix else key
@@ -189,7 +190,7 @@ def _dict_to_toml(data: dict[str, Any], prefix: str = "") -> str:
     return "\n".join(lines)
 
 
-def _format_toml_value(value: Any) -> str:
+def _format_toml_value(value: object) -> str:
     """Format a value for TOML output.
 
     Args:

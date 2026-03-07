@@ -25,7 +25,7 @@ def fit(
             help=(
                 "Path to the fitting configuration file. "
                 "Supported formats: '*.toml', '*.json', '*.yml', '*.yaml'."
-            )
+            ),
         ),
     ],
     outfile: Annotated[

@@ -27,12 +27,14 @@ def pytest_configure(config: pytest.Config) -> None:
     """
     config.addinivalue_line("markers", "unit: fast unit tests (<1s each)")
     config.addinivalue_line(
-        "markers", "integration: tests that invoke subprocesses or I/O"
+        "markers",
+        "integration: tests that invoke subprocesses or I/O",
     )
     config.addinivalue_line("markers", "e2e: end-to-end workflow tests")
     config.addinivalue_line("markers", "slow: tests taking >10s")
     config.addinivalue_line(
-        "markers", "validation: scientific validation tests (Phase 5)"
+        "markers",
+        "validation: scientific validation tests (Phase 5)",
     )
 
 

@@ -7,7 +7,6 @@ confidence interval and fit reports.
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
-from typing import Any
 
 import pandas as pd
 
@@ -174,24 +173,24 @@ class FitReport:
 
     def __init__(
         self,
-        inpars: Parameters | Callable[..., Any],
-        sort_pars: bool | Callable[[str], Any] = True,
+        inpars: Parameters | Callable[..., object],
+        sort_pars: bool | Callable[[str], str | int] = True,
         show_correl: bool = True,
         min_correl: float = 0.0,
-        modelpars: Callable[..., Any] | None = None,
+        modelpars: Parameters | None = None,
     ) -> None:
         """Initialize the Report object.
 
         Args:
             inpars (Parameters or object): The input parameters or
                 object.
-            sort_pars (bool | Callable[[str], Any], optional): Whether to sort the parameters.
+            sort_pars (bool | Callable[[str], str | int], optional): Whether to sort the parameters.
                 Defaults to True.
             show_correl (bool, optional): Whether to show correlations.
                 Defaults to True.
             min_correl (float, optional): The minimum correlation value.
                 Defaults to 0.0.
-            modelpars (object, optional): The model parameters.
+            modelpars (Parameters, optional): The model parameters.
                 Defaults to None.
 
         """
@@ -285,8 +284,8 @@ class FitReport:
             if par.init_value is not None:
                 inval = par.init_value
             model_val = None
-            if self.modelpars is not None and name in self.modelpars:  # type: ignore
-                model_val = self.modelpars[name].value  # type: ignore
+            if self.modelpars is not None and name in self.modelpars:
+                model_val = self.modelpars[name].value
             try:
                 sval = gformat(par.value)
             except (TypeError, ValueError):  # pragma: no cover

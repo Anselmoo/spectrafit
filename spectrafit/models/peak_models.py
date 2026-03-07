@@ -24,7 +24,6 @@ from __future__ import annotations
 import math
 
 from typing import TYPE_CHECKING
-from typing import Any
 
 from pydantic import BaseModel
 from pydantic import ConfigDict
@@ -75,7 +74,7 @@ class FitParameter(BaseModel):
 
     @model_validator(mode="before")
     @classmethod
-    def expand_bounds(cls, data: Any) -> Any:
+    def expand_bounds(cls, data: object) -> object:
         """Expand ``bounds = [min, max]`` shorthand to ``min``/``max`` fields.
 
         This allows the v2 TOML schema to use compact inline tables::

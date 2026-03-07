@@ -2,14 +2,19 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING
 
 from spectrafit.models.registry import REGISTRY
 
 
+if TYPE_CHECKING:
+    from spectrafit.models.types import PeakModelSpec
+    from spectrafit.models.types import PeaksDict
+
+
 def list2dict(
-    peak_list: list[dict[str, Any]],
-) -> dict[str, Any]:
+    peak_list: list[PeakModelSpec],
+) -> dict[str, PeaksDict]:
     """Convert the list of peaks to dictionary.
 
     Args:
@@ -21,7 +26,7 @@ def list2dict(
             under ``"peaks"`` and indexed by 1-based string ordinals.
 
     """
-    peaks_dict: dict[str, Any] = {"peaks": {}}
+    peaks_dict: dict[str, PeaksDict] = {"peaks": {}}
     for i, peak in enumerate(peak_list, start=1):
         model_name = next(iter(peak))
         if model_name in REGISTRY:

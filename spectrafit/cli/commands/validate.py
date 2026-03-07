@@ -47,15 +47,17 @@ def validate(
             if cfg.preprocessing:
                 typer.echo(
                     f"   ⚙️  Energy range: "
-                    f"{cfg.preprocessing.energy_start} - {cfg.preprocessing.energy_stop}"
+                    f"{cfg.preprocessing.energy_start} - {cfg.preprocessing.energy_stop}",
                 )
     except OSError as e:
         typer.echo(
-            typer.style(f"\n❌ Cannot read file: {e}", fg=typer.colors.RED), err=True
+            typer.style(f"\n❌ Cannot read file: {e}", fg=typer.colors.RED),
+            err=True,
         )
         raise typer.Exit(1) from e
     except Exception as e:
         typer.echo(
-            typer.style(f"\n❌ Validation error: {e}", fg=typer.colors.RED), err=True
+            typer.style(f"\n❌ Validation error: {e}", fg=typer.colors.RED),
+            err=True,
         )
         raise typer.Exit(1) from e

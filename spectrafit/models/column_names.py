@@ -23,10 +23,12 @@ class ColumnNames(BaseModel):
     model_config = ConfigDict(frozen=True)
 
     energy: str = Field(
-        default="energy", description="Independent variable column name"
+        default="energy",
+        description="Independent variable column name",
     )
     intensity: str = Field(
-        default="intensity", description="Observed intensity column name"
+        default="intensity",
+        description="Observed intensity column name",
     )
     residual: str = Field(default="residual", description="Fit residual column name")
     fit: str = Field(default="fit", description="Best-fit curve column name")

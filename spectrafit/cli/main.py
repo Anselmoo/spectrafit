@@ -50,7 +50,7 @@ def main(
 app.command(name="fit", help="Fit spectra data using SpectraFit.")(fit)
 app.command(name="validate", help="Validate input configuration files.")(validate)
 app.command(name="convert", help="Convert configuration files between formats.")(
-    convert
+    convert,
 )
 app.command(name="report", help="Generate reports from fitting results.")(report)
 app.command(name="init", help="Scaffold a new fitting project.")(init)

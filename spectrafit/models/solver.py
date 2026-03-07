@@ -13,6 +13,7 @@ from math import pi
 from math import sqrt
 from typing import TYPE_CHECKING
 from typing import ClassVar
+from typing import cast
 
 import numpy as np
 
@@ -111,9 +112,12 @@ class SolverModels(ModelParameters):
             NDArray[np.float64]: Residual (model - data).
 
         """
-        assert self._bundle is not None, "CompositeModelBundle not initialized"  # noqa: S101
+        if self._bundle is None:
+            msg = "CompositeModelBundle not initialized"
+            raise RuntimeError(msg)
         return np.array(
-            self._bundle.composite.eval(params, x=x) - data, dtype=np.float64
+            self._bundle.composite.eval(params, x=x) - data,
+            dtype=np.float64,
         )
 
     @staticmethod
@@ -152,7 +156,7 @@ class SolverModels(ModelParameters):
         """
         val = np.zeros(data.shape)
         peak_kwargs: dict[tuple[str, str, str], dict[str, Parameter]] = defaultdict(
-            dict
+            dict,
         )
 
         for model, value in params.items():
@@ -162,7 +166,10 @@ class SolverModels(ModelParameters):
             peak_kwargs[(c_name[0], c_name[2], c_name[3])][c_name[1]] = value
         for key, _kwarg in peak_kwargs.items():
             i = int(key[2]) - 1
-            val[:, i] += REGISTRY.get(key[0]).function(x, **_kwarg)
+            val[:, i] += cast(
+                "np.ndarray[tuple[int], np.dtype[np.float64]]",
+                REGISTRY.get(key[0]).function(x, **_kwarg),
+            )
 
         residual = val - data
 

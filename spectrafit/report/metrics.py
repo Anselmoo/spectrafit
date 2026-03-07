@@ -7,7 +7,6 @@ regression metrics of fits for post analysis.
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
-from typing import Any
 from warnings import warn
 
 import numpy as np
@@ -25,8 +24,6 @@ from sklearn.metrics import r2_score
 
 
 if TYPE_CHECKING:
-    from collections.abc import Hashable
-
     from numpy.typing import NDArray
 
 
@@ -146,11 +143,12 @@ class RegressionMetrics:
             (true, pred) if true.shape[1] > 1 else (np.array([true]), np.array([pred]))
         )
 
-    def __call__(self) -> dict[Hashable, Any]:
+    def __call__(self) -> dict[str, list[float | None]]:
         """Calculate the regression metrics of the Fit(s) for the post analysis.
 
         Returns:
-            dict[Hashable, Any]: Dictionary containing the regression metrics.
+            dict[str, list[float | None]]: Dictionary containing the regression metrics
+                in pandas split-orient format (keys: ``data``, ``index``, ``columns``).
 
         """
         metrics_fnc = (
@@ -164,7 +162,7 @@ class RegressionMetrics:
             mean_absolute_percentage_error,
             mean_poisson_deviance,
         )
-        metric_dict: dict[Hashable, Any] = {}
+        metric_dict: dict[str, list[float | None]] = {}
         for fnc in metrics_fnc:
             metric_dict[fnc.__name__] = []
             for y_true, y_pred in zip(self.y_true.T, self.y_pred.T, strict=False):

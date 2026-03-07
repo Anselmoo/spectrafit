@@ -6,7 +6,6 @@ This module contains functions for generating fit reports as dictionaries.
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
-from typing import Any
 from typing import TypeAlias
 from warnings import warn
 
@@ -21,7 +20,7 @@ if TYPE_CHECKING:
     from lmfit import Parameters
     from lmfit.minimizer import minimize
 
-FitReportBuffer: TypeAlias = dict[str, dict[str, Any]]
+FitReportBuffer: TypeAlias = dict[str, dict[str, object]]
 """Buffer dict holding fit report sections: configurations, statistics, variables, etc."""
 
 
@@ -86,26 +85,26 @@ def fit_report_as_dict(  # noqa: C901
     )
     for name in parnames:
         par = params[name]
-        buffer["variables"][name] = {"init_value": get_init_value(param=par)}
+        par_entry: dict[str, object] = {"init_value": get_init_value(param=par)}
+        buffer["variables"][name] = par_entry
 
         if modelpars is not None and name in modelpars:
-            buffer["variables"][name]["model_value"] = modelpars[name].value
+            par_entry["model_value"] = modelpars[name].value
         try:
-            buffer["variables"][name]["best_value"] = par.value
+            par_entry["best_value"] = par.value
         except (TypeError, ValueError):  # pragma: no cover
-            buffer["variables"][name]["init_value"] = "NonNumericValue"
+            par_entry["init_value"] = "NonNumericValue"
         if par.stderr is not None:
-            buffer["variables"][name]["error_relative"] = par.stderr
+            par_entry["error_relative"] = par.stderr
             try:
-                buffer["variables"][name]["error_absolute"] = (
-                    abs(par.stderr / par.value) * 100
-                )
+                par_entry["error_absolute"] = abs(par.stderr / par.value) * 100
             except ZeroDivisionError:  # pragma: no cover
-                buffer["variables"][name]["error_absolute"] = np.inf
+                par_entry["error_absolute"] = np.inf
 
     for i, name_1 in enumerate(parnames):
         par = params[name_1]
-        buffer["correlations"][name_1] = {}
+        correl_entry: dict[str, object] = {}
+        buffer["correlations"][name_1] = correl_entry
         if not par.vary:
             continue
         if hasattr(par, "correl") and par.correl is not None:
@@ -115,7 +114,7 @@ def fit_report_as_dict(  # noqa: C901
                     and name_2 in par.correl
                     and abs(par.correl[name_2]) <= 1.0
                 ):
-                    buffer["correlations"][name_1][name_2] = par.correl[name_2]
+                    correl_entry[name_2] = par.correl[name_2]
 
     if result.covar is not None and result.covar.shape[0] == len(parnames):
         for i, name_1 in enumerate(parnames):

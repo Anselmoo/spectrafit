@@ -10,7 +10,6 @@ import json
 
 from pathlib import Path
 from typing import Annotated
-from typing import Any
 
 import typer
 import yaml
@@ -24,7 +23,7 @@ from spectrafit.models.registry import REGISTRY
 # Default parameter values per common parameter name
 # ---------------------------------------------------------------------------
 
-_PARAM_DEFAULTS: dict[str, dict[str, Any]] = {
+_PARAM_DEFAULTS: dict[str, dict[str, object]] = {
     "amplitude": {"min": 0, "max": 2, "vary": True, "value": 1.0},
     "center": {"min": -2, "max": 2, "vary": True, "value": 0.0},
     "fwhmg": {"min": 0.02, "max": 0.5, "vary": True, "value": 0.1},
@@ -51,7 +50,7 @@ _PARAM_DEFAULTS: dict[str, dict[str, Any]] = {
 # ---------------------------------------------------------------------------
 
 
-def _default_for_param(name: str) -> dict[str, Any]:
+def _default_for_param(name: str) -> dict[str, object]:
     """Return sensible default bounds for a parameter name.
 
     Args:
@@ -63,7 +62,7 @@ def _default_for_param(name: str) -> dict[str, Any]:
     return _PARAM_DEFAULTS.get(name, {"min": -1, "max": 1, "vary": True, "value": 0.0})
 
 
-def _build_peak(model_name: str) -> dict[str, dict[str, Any]]:
+def _build_peak(model_name: str) -> dict[str, dict[str, object]]:
     """Build a single peak entry for a given model.
 
     Args:
@@ -76,7 +75,7 @@ def _build_peak(model_name: str) -> dict[str, dict[str, Any]]:
     return {model_name: {p: _default_for_param(p) for p in info.parameters}}
 
 
-def _build_config(peaks: list[tuple[int, str]]) -> dict[str, Any]:
+def _build_config(peaks: list[tuple[int, str]]) -> dict[str, object]:
     """Build a full SpectraFit configuration dictionary.
 
     Args:
@@ -85,7 +84,9 @@ def _build_config(peaks: list[tuple[int, str]]) -> dict[str, Any]:
     Returns:
         Complete configuration dict ready for serialisation.
     """
-    peaks_dict: dict[str, Any] = {str(num): _build_peak(model) for num, model in peaks}
+    peaks_dict: dict[str, object] = {
+        str(num): _build_peak(model) for num, model in peaks
+    }
     return {
         "fitting": {
             "description": {"project_name": "SpectraFit Project"},
@@ -98,7 +99,7 @@ def _build_config(peaks: list[tuple[int, str]]) -> dict[str, Any]:
     }
 
 
-def _write_config(config: dict[str, Any], path: Path, fmt: OutputFormatEnum) -> None:
+def _write_config(config: dict[str, object], path: Path, fmt: OutputFormatEnum) -> None:
     """Serialise *config* to *path* in the requested format.
 
     Args:
@@ -126,7 +127,7 @@ def _write_config(config: dict[str, Any], path: Path, fmt: OutputFormatEnum) -> 
                 f.write(_dict_to_toml(config))
 
 
-def _config_to_stdout(config: dict[str, Any], fmt: OutputFormatEnum) -> None:
+def _config_to_stdout(config: dict[str, object], fmt: OutputFormatEnum) -> None:
     """Print *config* to stdout in the requested format.
 
     Args:
@@ -137,7 +138,7 @@ def _config_to_stdout(config: dict[str, Any], fmt: OutputFormatEnum) -> None:
         typer.echo(json.dumps(config, indent=2))
     elif fmt == OutputFormatEnum.YAML:
         typer.echo(
-            yaml.dump(config, default_flow_style=False, sort_keys=False).rstrip()
+            yaml.dump(config, default_flow_style=False, sort_keys=False).rstrip(),
         )
     elif fmt == OutputFormatEnum.TOML:
         try:

@@ -117,16 +117,20 @@ class VariableResult(BaseModel):
     model_config = ConfigDict(extra="allow")
 
     init_value: float | None = Field(
-        default=None, description="Initial value before fitting"
+        default=None,
+        description="Initial value before fitting",
     )
     model_value: float | None = Field(
-        default=None, description="Optimized value after fitting"
+        default=None,
+        description="Optimized value after fitting",
     )
     best_value: float | None = Field(
-        default=None, description="Best value found during fitting"
+        default=None,
+        description="Best value found during fitting",
     )
     stderr: float | None = Field(
-        default=None, description="Standard error of the parameter"
+        default=None,
+        description="Standard error of the parameter",
     )
 
 
@@ -150,11 +154,13 @@ class ComputationalInfo(BaseModel):
     nvarys: int | None = Field(default=None, description="Number of varied parameters")
     chisqr: float | None = Field(default=None, description="Chi-squared statistic")
     redchi: float | None = Field(
-        default=None, description="Reduced chi-squared statistic"
+        default=None,
+        description="Reduced chi-squared statistic",
     )
     aic: float | None = Field(default=None, description="Akaike Information Criterion")
     bic: float | None = Field(
-        default=None, description="Bayesian Information Criterion"
+        default=None,
+        description="Bayesian Information Criterion",
     )
 
 

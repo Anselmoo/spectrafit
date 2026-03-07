@@ -8,16 +8,18 @@ from __future__ import annotations
 import json
 
 from pathlib import Path
-from typing import Any
+from typing import cast
 
 import numpy as np
 import pandas as pd
+
+from spectrafit.models.types import DataSplitDict
 
 
 class SaveResult:
     """Saving the result of the fitting process."""
 
-    def __init__(self, df: pd.DataFrame, args: dict[str, Any]) -> None:
+    def __init__(self, df: pd.DataFrame, args: dict[str, object]) -> None:
         """Initialize SaveResult class.
 
         !!! note "About SaveResult"
@@ -79,7 +81,7 @@ class SaveResult:
 
         """
         self.df = df
-        self.args = transform_nested_types(args)
+        self.args = cast("dict[str, object]", transform_nested_types(args))
 
     def __call__(self) -> None:
         """Call the SaveResult class."""
@@ -97,15 +99,19 @@ class SaveResult:
                 2. The `correlation analysis` of the optimization process.
                 3. The `error analysis` of the optimization process.
         """
-        _fname = Path(f"{self.args['outfile']}_fit.csv")
+        _fname = Path(f"{cast('str', self.args['outfile'])}_fit.csv")
         self.df.to_csv(_fname, index=False)
-        pd.DataFrame(**self.args["linear_correlation"]).to_csv(
-            Path(f"{self.args['outfile']}_correlation.csv"),
+        pd.DataFrame(**cast("DataSplitDict", self.args["linear_correlation"])).to_csv(
+            Path(f"{cast('str', self.args['outfile'])}_correlation.csv"),
             index=True,
             index_label="attributes",
         )
-        pd.DataFrame.from_dict(self.args["fit_insights"]["variables"]).to_csv(
-            Path(f"{self.args['outfile']}_components.csv"),
+        pd.DataFrame.from_dict(
+            cast("dict[str, dict[str, object]]", self.args["fit_insights"])[
+                "variables"
+            ],
+        ).to_csv(
+            Path(f"{cast('str', self.args['outfile'])}_components.csv"),
             index=True,
             index_label="attributes",
         )
@@ -115,25 +121,25 @@ class SaveResult:
         if not self.args["outfile"]:
             msg = "No output file provided!"
             raise FileNotFoundError(msg)
-        with Path(f"{self.args['outfile']}_summary.json").open(
+        with Path(f"{cast('str', self.args['outfile'])}_summary.json").open(
             "w",
             encoding="utf-8",
         ) as f:
             json.dump(transform_nested_types(self.args), f, indent=4)
 
 
-def exclude_none_dictionary(value: Any) -> Any:
+def exclude_none_dictionary(value: object) -> object:
     """Exclude `None` values from the dictionary.
 
     Recursively processes dicts, lists, and other values to remove ``None``
     entries. Non-dict/list values are returned unchanged.
 
     Args:
-        value (Any): Value to be processed. Typically a dict or list,
+        value (object): Value to be processed. Typically a dict or list,
             but any type is accepted and returned as-is if not a container.
 
     Returns:
-        Any: Cleaned value without ``None`` entries.
+        object: Cleaned value without ``None`` entries.
 
     """
     if isinstance(value, list):
@@ -145,18 +151,18 @@ def exclude_none_dictionary(value: Any) -> Any:
     return value
 
 
-def transform_nested_types(value: Any) -> Any:
+def transform_nested_types(value: object) -> object:
     """Transform nested numpy types to native Python values.
 
     Recursively converts numpy scalars and arrays within dicts, lists, and
     tuples to their native Python equivalents for JSON serialization.
 
     Args:
-        value (Any): Value to be processed. Supports dicts, lists,
+        value (object): Value to be processed. Supports dicts, lists,
             tuples, numpy arrays, and numpy scalar types.
 
     Returns:
-        Any: Value with all numpy types converted to native Python types.
+        object: Value with all numpy types converted to native Python types.
 
     """
     if isinstance(value, list):

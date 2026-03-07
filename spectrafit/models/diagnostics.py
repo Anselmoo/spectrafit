@@ -160,7 +160,7 @@ def validate_result(diagnostics: FitDiagnostics) -> list[str]:
     if diagnostics.reduced_chi_squared > FitDiagnostics.REDUCED_CHI_SQUARED_THRESHOLD:
         warns.append(
             f"Poor fit: reduced chi-squared = {diagnostics.reduced_chi_squared:.4f} "
-            f"(> 10)"
+            f"(> 10)",
         )
 
     if diagnostics.parameter_at_bound:

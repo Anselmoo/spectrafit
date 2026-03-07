@@ -6,7 +6,7 @@ import json
 
 from pathlib import Path
 from typing import Annotated
-from typing import Any
+from typing import cast
 
 import typer
 
@@ -92,7 +92,7 @@ def report(
         raise typer.Exit(1) from e
 
 
-def _generate_text_report(results: dict[str, Any], sections: list[str]) -> str:
+def _generate_text_report(results: dict[str, object], sections: list[str]) -> str:
     """Generate a plain text report.
 
     Args:
@@ -105,28 +105,29 @@ def _generate_text_report(results: dict[str, Any], sections: list[str]) -> str:
     lines: list[str] = ["=" * 60, "SpectraFit Report", "=" * 60]
 
     if "summary" in sections and "fit_insights" in results:
-        insights = results["fit_insights"]
+        insights = cast("dict[str, object]", results["fit_insights"])
         lines.extend(("\n📊 FIT SUMMARY", "-" * 40))
         if "statistics" in insights:
             _append_summary_statistics(insights, lines)
     if "variables" in sections and "fit_insights" in results:
-        insights = results["fit_insights"]
+        insights = cast("dict[str, object]", results["fit_insights"])
         if "variables" in insights:
             lines.extend(("\n📈 FIT VARIABLES", "-" * 40))
-            variables = insights["variables"]
+            variables = cast("dict[str, object]", insights["variables"])
             for var_name, var_data in variables.items():
                 if isinstance(var_data, dict):
-                    value = var_data.get("value", "N/A")
-                    stderr = var_data.get("stderr", "N/A")
+                    vd = cast("dict[str, object]", var_data)
+                    value = vd.get("value", "N/A")
+                    stderr = vd.get("stderr", "N/A")
                     lines.extend(
                         (
                             f"  {var_name}:",
                             f"    Value:  {value}",
                             f"    Stderr: {stderr}",
-                        )
+                        ),
                     )
     if "statistics" in sections and "regression_metrics" in results:
-        metrics = results["regression_metrics"]
+        metrics = cast("dict[str, object]", results["regression_metrics"])
         lines.extend(("\n📉 REGRESSION METRICS", "-" * 40))
         for key, value in metrics.items():
             lines.append(f"  {key}: {value}")
@@ -139,14 +140,14 @@ def _generate_text_report(results: dict[str, Any], sections: list[str]) -> str:
     return "\n".join(lines)
 
 
-def _append_summary_statistics(insights: dict[str, Any], lines: list[str]) -> None:
+def _append_summary_statistics(insights: dict[str, object], lines: list[str]) -> None:
     """Append summary statistics to the report lines.
 
     Args:
         insights: Fit insights dictionary.
         lines: List of report lines to append to.
     """
-    stats = insights["statistics"]
+    stats = cast("dict[str, object]", insights["statistics"])
     lines.append(f"  Chi-square:      {stats.get('chi_square', 'N/A')}")
     lines.append(f"  Reduced chi-sq:  {stats.get('reduced_chi_square', 'N/A')}")
     lines.append(f"  AIC:             {stats.get('aic', 'N/A')}")
@@ -154,7 +155,7 @@ def _append_summary_statistics(insights: dict[str, Any], lines: list[str]) -> No
     lines.append(f"  R-squared:       {stats.get('rsquared', 'N/A')}")
 
 
-def _generate_markdown_report(results: dict[str, Any], sections: list[str]) -> str:
+def _generate_markdown_report(results: dict[str, object], sections: list[str]) -> str:
     """Generate a Markdown report.
 
     Args:
@@ -166,41 +167,42 @@ def _generate_markdown_report(results: dict[str, Any], sections: list[str]) -> s
     """
     lines: list[str] = ["# SpectraFit Report\n"]
     if "summary" in sections and "fit_insights" in results:
-        insights = results["fit_insights"]
+        insights = cast("dict[str, object]", results["fit_insights"])
         lines.append("## Fit Summary\n")
 
         if "statistics" in insights:
-            stats = insights["statistics"]
+            stats = cast("dict[str, object]", insights["statistics"])
             lines.extend(("| Metric | Value |", "|--------|-------|"))
             lines.extend(
                 (
                     f"| Chi-square | {stats.get('chi_square', 'N/A')} |",
                     f"| Reduced chi-sq | {stats.get('reduced_chi_square', 'N/A')} |",
-                )
+                ),
             )
             lines.extend(
                 (
                     f"| AIC | {stats.get('aic', 'N/A')} |",
                     f"| BIC | {stats.get('bic', 'N/A')} |",
-                )
+                ),
             )
             lines.extend((f"| R-squared | {stats.get('rsquared', 'N/A')} |", ""))
     if "variables" in sections and "fit_insights" in results:
-        insights = results["fit_insights"]
+        insights = cast("dict[str, object]", results["fit_insights"])
         if "variables" in insights:
             lines.append("## Fit Variables\n")
             lines.append("| Parameter | Value | Stderr |")
             lines.append("|-----------|-------|--------|")
-            variables = insights["variables"]
+            variables = cast("dict[str, object]", insights["variables"])
             for var_name, var_data in variables.items():
                 if isinstance(var_data, dict):
-                    value = var_data.get("value", "N/A")
-                    stderr = var_data.get("stderr", "N/A")
+                    vd = cast("dict[str, object]", var_data)
+                    value = vd.get("value", "N/A")
+                    stderr = vd.get("stderr", "N/A")
                     lines.append(f"| {var_name} | {value} | {stderr} |")
             lines.append("")
 
     if "statistics" in sections and "regression_metrics" in results:
-        metrics = results["regression_metrics"]
+        metrics = cast("dict[str, object]", results["regression_metrics"])
         lines.append("## Regression Metrics\n")
         lines.append("| Metric | Value |")
         lines.append("|--------|-------|")
@@ -211,7 +213,7 @@ def _generate_markdown_report(results: dict[str, Any], sections: list[str]) -> s
     return "\n".join(lines)
 
 
-def _generate_json_report(results: dict[str, Any], sections: list[str]) -> str:
+def _generate_json_report(results: dict[str, object], sections: list[str]) -> str:
     """Generate a JSON report with selected sections.
 
     Args:
@@ -221,13 +223,15 @@ def _generate_json_report(results: dict[str, Any], sections: list[str]) -> str:
     Returns:
         JSON formatted report.
     """
-    report_data: dict[str, Any] = {}
+    report_data: dict[str, object] = {}
 
     if "summary" in sections and "fit_insights" in results:
-        report_data["summary"] = results["fit_insights"].get("statistics", {})
+        insights = cast("dict[str, object]", results["fit_insights"])
+        report_data["summary"] = insights.get("statistics", {})
 
     if "variables" in sections and "fit_insights" in results:
-        report_data["variables"] = results["fit_insights"].get("variables", {})
+        insights = cast("dict[str, object]", results["fit_insights"])
+        report_data["variables"] = insights.get("variables", {})
 
     if "statistics" in sections and "regression_metrics" in results:
         report_data["regression_metrics"] = results["regression_metrics"]

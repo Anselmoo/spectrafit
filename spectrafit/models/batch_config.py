@@ -88,9 +88,9 @@ class BatchFittingConfig(BaseModel):
         Raises:
             ValueError: If workers > 64.
         """
-        _MAX_WORKERS = 64  # noqa: N806
-        if v > _MAX_WORKERS:
-            msg = f"workers must be ≤ {_MAX_WORKERS}; got {v}"
+        _max_workers = 64
+        if v > _max_workers:
+            msg = f"workers must be ≤ {_max_workers}; got {v}"
             raise ValueError(msg)
         return v
 

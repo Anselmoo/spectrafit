@@ -127,7 +127,8 @@ class FitResult(BaseModel):
     x: list[float] = Field(default_factory=list, description="x-axis values")
     y_data: list[float] = Field(default_factory=list, description="Observed y-values")
     y_fit: list[float] = Field(
-        default_factory=list, description="Total fitted y (sum of components)"
+        default_factory=list,
+        description="Total fitted y (sum of components)",
     )
 
     def save(self, path: Path | str) -> None:

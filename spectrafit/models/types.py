@@ -9,8 +9,8 @@ shim remains there for backward compatibility until v2.1.0.
 
 from __future__ import annotations
 
-from typing import Any
 from typing import TypeAlias
+from typing import TypedDict
 
 
 ParameterConstraint: TypeAlias = dict[str, float | bool | str | None]
@@ -45,7 +45,29 @@ Example::
     {"1": {"pseudovoigt": {...}}, "2": {"gaussian": {...}}}
 """
 
-FittingArgs: TypeAlias = dict[str, Any]
+
+class DataSplitDict(TypedDict):
+    """Pandas ``DataFrame.to_dict(orient='split')`` output format.
+
+    Used for ``linear_correlation``, ``regression_metrics``,
+    ``descriptive_statistic``, and ``data_statistic`` keys in the
+    pipeline result dict.
+    """
+
+    data: list[list[float | str | None]]
+    index: list[int | str]
+    columns: list[str]
+
+
+class FitReportKwargs(TypedDict, total=False):
+    """Keyword arguments forwarded to :class:`~spectrafit.report.confidence.FitReport`."""
+
+    sort_pars: bool
+    show_correl: bool
+    min_correl: float
+
+
+FittingArgs: TypeAlias = dict[str, object]
 """Top-level fitting arguments dictionary passed through the pipeline.
 
 Keys: ``peaks``, ``column``, ``minimizer``, ``optimizer``, ``global_``,

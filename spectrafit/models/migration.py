@@ -21,12 +21,12 @@ from __future__ import annotations
 
 # Keys that belong in the [data] section of a v2 config.
 DATA_KEYS: frozenset[str] = frozenset(
-    {"infile", "separator", "header", "decimal", "comment"}
+    {"infile", "separator", "header", "decimal", "comment"},
 )
 
 # Keys that belong in the [preprocessing] section of a v2 config.
 PREPROC_KEYS: frozenset[str] = frozenset(
-    {"energy_start", "energy_stop", "smooth", "shift", "oversampling"}
+    {"energy_start", "energy_stop", "smooth", "shift", "oversampling"},
 )
 
 

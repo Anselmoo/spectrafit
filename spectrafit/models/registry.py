@@ -8,7 +8,6 @@ lookup mechanism.
 from __future__ import annotations
 
 from collections.abc import Callable  # noqa: TC003
-from typing import Any
 from typing import Literal
 
 import lmfit
@@ -41,7 +40,12 @@ from spectrafit.models.regular import voigt
 
 
 ModelCategory = Literal[
-    "peak", "step", "cumulative", "polynomial", "background", "pearson"
+    "peak",
+    "step",
+    "cumulative",
+    "polynomial",
+    "background",
+    "pearson",
 ]
 
 
@@ -60,7 +64,7 @@ class ModelInfo(BaseModel):
 
     name: str
     category: ModelCategory
-    function: Callable[..., Any]
+    function: Callable[..., object]
     parameters: list[str]
     description: str
 

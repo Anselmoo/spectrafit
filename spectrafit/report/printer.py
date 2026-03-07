@@ -9,7 +9,7 @@ from __future__ import annotations
 import pprint
 
 from typing import TYPE_CHECKING
-from typing import Any
+from typing import cast
 from warnings import warn
 
 import pandas as pd
@@ -18,11 +18,13 @@ from art import tprint
 from lmfit.minimizer import MinimizerException
 
 from spectrafit import __version__
+from spectrafit.models.types import DataSplitDict
 from spectrafit.models.types import FittingArgs
 
 
 if TYPE_CHECKING:
     from lmfit import Minimizer
+    from lmfit.minimizer import MinimizerResult
 
 
 # Constants for verbosity levels
@@ -39,7 +41,7 @@ class PrintingResults:
     def __init__(
         self,
         args: FittingArgs,
-        result: Any,
+        result: MinimizerResult,
         minimizer: Minimizer,
     ) -> None:
         """Initialize the PrintingResults class.
@@ -47,7 +49,7 @@ class PrintingResults:
         Args:
             args (FittingArgs): The input file arguments as a dictionary with
                 additional information beyond the command line arguments.
-            result (Any): The lmfit `results` as a kind of result based class.
+            result (MinimizerResult): The lmfit minimizer result.
             minimizer (Minimizer): The lmfit `Minimizer`-class as a general
                 minimizer for curve fitting and optimization.
 
@@ -55,22 +57,24 @@ class PrintingResults:
         self.args = args
         self.result = result
         self.minimizer = minimizer
-        self.correlation = pd.DataFrame.from_dict(args["linear_correlation"])
+        self.correlation = pd.DataFrame.from_dict(
+            cast("DataSplitDict", args["linear_correlation"])
+        )
 
     def __call__(self) -> None:
         """Print the results of the fitting process."""
-        verbose = self.args.get("verbose", 0)
+        verbose = cast("int", self.args.get("verbose", 0))
         if verbose == VERBOSE_REGULAR:
             self.printing_regular_mode()
         elif verbose == VERBOSE_DETAILED:
             self.printing_verbose_mode()
 
     @staticmethod
-    def print_tabulate(args: dict[str, list[Any]]) -> None:
+    def print_tabulate(args: DataSplitDict) -> None:
         """Print the results of the fitting process.
 
         Args:
-            args (dict[str, list[Any]]): The args to be printed as a dictionary.
+            args (DataSplitDict): The args to be printed as a split-orient dict.
 
         """
         PrintingResults.print_tabulate_df(
@@ -102,14 +106,16 @@ class PrintingResults:
 
     def print_statistic(self) -> None:
         """Print the statistic."""
-        self.print_tabulate(args=self.args["data_statistic"])
+        self.print_tabulate(args=cast("DataSplitDict", self.args["data_statistic"]))
 
     def print_fit_results(self) -> None:
         """Print the fit results."""
         # Import here to avoid circular import
+        from spectrafit.models.types import FitReportKwargs  # noqa: PLC0415
         from spectrafit.report.confidence import FitReport  # noqa: PLC0415
 
-        FitReport(self.result, modelpars=self.result.params, **self.args["report"])()
+        report_kwargs = cast("FitReportKwargs", self.args["report"])
+        FitReport(self.result, modelpars=self.result.params, **report_kwargs)()
 
     def print_confidence_interval(self) -> None:
         """Print the confidence interval."""
@@ -118,7 +124,11 @@ class PrintingResults:
                 # Import here to avoid circular import
                 from spectrafit.report.confidence import CIReport  # noqa: PLC0415
 
-                CIReport(self.args["confidence_interval"][0])()
+                ci_data = cast(
+                    "tuple[dict[str, list[tuple[float, float]]], dict[str, object]]",
+                    self.args["confidence_interval"],
+                )
+                CIReport(ci_data[0])()
             except (MinimizerException, ValueError, KeyError, TypeError) as exc:
                 warn(
                     f"Error: {exc} -> No confidence interval could be calculated!",
@@ -128,11 +138,11 @@ class PrintingResults:
 
     def print_linear_correlation(self) -> None:
         """Print the linear correlation."""
-        self.print_tabulate(args=self.args["linear_correlation"])
+        self.print_tabulate(args=cast("DataSplitDict", self.args["linear_correlation"]))
 
     def print_regression_metrics(self) -> None:
         """Print the regression metrics."""
-        self.print_tabulate(args=self.args["regression_metrics"])
+        self.print_tabulate(args=cast("DataSplitDict", self.args["regression_metrics"]))
 
     def printing_verbose_mode(self) -> None:
         """Print all results in verbose mode."""
