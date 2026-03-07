@@ -24,7 +24,8 @@ def fit(
         typer.Argument(
             help=(
                 "Path to the fitting configuration file. "
-                "Supported formats: '*.toml', '*.json', '*.yml', '*.yaml'."
+                "Supported formats: [bold]*.toml[/bold], [bold]*.json[/bold], "
+                "[bold]*.yml[/bold], [bold]*.yaml[/bold]."
             ),
         ),
     ],
@@ -33,7 +34,7 @@ def fit(
         typer.Option(
             "-o",
             "--outfile",
-            help="Filename prefix for exported results; default 'spectrafit_results'.",
+            help="Filename prefix for exported results; default [bold]spectrafit_results[/bold].",
         ),
     ] = "spectrafit_results",
     noplot: Annotated[
@@ -51,7 +52,10 @@ def fit(
             "--verbose",
             min=0,
             max=2,
-            help=("Verbosity level: 0=silent, 1=table (default), 2=dict."),
+            help=(
+                "Verbosity level: [bold]0[/bold]=silent, "
+                "[bold]1[/bold]=table (default), [bold]2[/bold]=dict."
+            ),
         ),
     ] = 1,
 ) -> None:
@@ -60,11 +64,16 @@ def fit(
     All fitting parameters (data path, preprocessing, peak components) are
     defined in the configuration file.  The CLI only controls output behaviour.
 
-    Examples:
+    [bold]Examples:[/bold]
+
         $ spectrafit fit fitting_input.toml
+
         $ spectrafit fit my_xps.toml --outfile xps_results --verbose 2
     """
-    __status__.start()
+    from rich.console import Console
+    from rich.status import Status
+
+    console = Console()
 
     while True:
         __status__.start()
@@ -81,13 +90,24 @@ def fit(
         output = OutputConfig(outfile=outfile, noplot=noplot, verbose=verbose)
 
         try:
-            df_result, result_args = fitting_routine_pipeline(args=cfg, output=output)
+            with Status(
+                f"[bold cyan]Fitting[/bold cyan] [green]{config.name}[/green] …",
+                console=console,
+                spinner="dots",
+            ):
+                df_result, result_args = fitting_routine_pipeline(
+                    args=cfg, output=output
+                )
         except Exception as exc:
             typer.echo(
                 typer.style(f"Fitting error: {exc}", fg=typer.colors.RED),
                 err=True,
             )
             raise typer.Exit(code=1) from exc
+
+        console.print(
+            f"[bold green]✓[/bold green] Fit complete: [cyan]{config.name}[/cyan]"
+        )
 
         PlotSpectra(df=df_result, args=result_args)()
         SaveResult(df=df_result, args=result_args)()

@@ -74,12 +74,17 @@ def report(
 
         if output:
             output.write_text(report_content, encoding="utf-8")
-            typer.echo(f"✅ Report saved to '{output}'")
+            typer.echo(
+                typer.style(f"✅ Report saved to '{output}'", fg=typer.colors.GREEN)
+            )
         else:
             typer.echo(report_content)
 
     except Exception as e:
-        typer.echo(f"❌ Error generating report: {e}", err=True)
+        typer.echo(
+            typer.style(f"❌ Error generating report: {e}", fg=typer.colors.RED),
+            err=True,
+        )
         raise typer.Exit(1) from e
 
 

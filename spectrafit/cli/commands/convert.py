@@ -69,7 +69,10 @@ def convert(
         # Check if output file exists
         if output_file.exists() and not force:
             typer.echo(
-                f"❌ Output file '{output_file}' already exists. Use --force to overwrite.",
+                typer.style(
+                    f"❌ Output file '{output_file}' already exists. Use --force to overwrite.",
+                    fg=typer.colors.RED,
+                ),
                 err=True,
             )
             raise typer.Exit(1)
@@ -77,7 +80,10 @@ def convert(
         # Check if input and output are the same
         if input_file.resolve() == output_file.resolve():
             typer.echo(
-                "❌ Input and output files cannot be the same.",
+                typer.style(
+                    "❌ Input and output files cannot be the same.",
+                    fg=typer.colors.RED,
+                ),
                 err=True,
             )
             raise typer.Exit(1)
@@ -85,16 +91,26 @@ def convert(
         # Write output file
         _write_config(config, output_file, output_format)
 
-        typer.echo(f"✅ Successfully converted '{input_file}' → '{output_file}'")
         typer.echo(
-            f"   Format: {input_file.suffix[1:].upper()} → {output_format.value.upper()}",
+            typer.style(
+                f"✅ Successfully converted '{input_file}' → '{output_file}'",
+                fg=typer.colors.GREEN,
+            )
+        )
+        typer.echo(
+            typer.style(
+                f"   Format: {input_file.suffix[1:].upper()} → {output_format.value.upper()}",
+                fg=typer.colors.CYAN,
+            ),
         )
 
     except OSError as e:
-        typer.echo(f"❌ File error: {e}", err=True)
+        typer.echo(typer.style(f"❌ File error: {e}", fg=typer.colors.RED), err=True)
         raise typer.Exit(1) from e
     except Exception as e:
-        typer.echo(f"❌ Conversion error: {e}", err=True)
+        typer.echo(
+            typer.style(f"❌ Conversion error: {e}", fg=typer.colors.RED), err=True
+        )
         raise typer.Exit(1) from e
 
 

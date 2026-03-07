@@ -23,6 +23,9 @@ app = typer.Typer(
     add_completion=False,
     context_settings={"help_option_names": ["-h", "--help"]},
     no_args_is_help=True,
+    rich_markup_mode="rich",
+    pretty_exceptions_enable=True,
+    pretty_exceptions_show_locals=False,
 )
 
 

@@ -197,11 +197,16 @@ def init(
     config_file = project_path / f"config.{fmt.value}"
     _write_config(config, config_file, fmt)
 
-    typer.echo(f"✅ Project '{project_name}' created with structure:")
-    typer.echo(f"   {project_name}/")
-    typer.echo(f"   ├── config.{fmt.value}")
-    typer.echo("   ├── data/")
-    typer.echo("   └── results/")
+    typer.echo(
+        typer.style(
+            f"✅ Project '{project_name}' created with structure:",
+            fg=typer.colors.GREEN,
+        )
+    )
+    typer.echo(typer.style(f"   {project_name}/", fg=typer.colors.CYAN))
+    typer.echo(typer.style(f"   ├── config.{fmt.value}", fg=typer.colors.CYAN))
+    typer.echo(typer.style("   ├── data/", fg=typer.colors.CYAN))
+    typer.echo(typer.style("   └── results/", fg=typer.colors.CYAN))
 
 
 def new_config(
@@ -247,7 +252,13 @@ def new_config(
     # Validate model name
     if model not in REGISTRY:
         available = ", ".join(REGISTRY.names())
-        typer.echo(f"❌ Unknown model '{model}'. Available: {available}", err=True)
+        typer.echo(
+            typer.style(
+                f"❌ Unknown model '{model}'. Available: {available}",
+                fg=typer.colors.RED,
+            ),
+            err=True,
+        )
         raise typer.Exit(1)
 
     peaks = [(i + 1, model) for i in range(num_peaks)]
@@ -255,6 +266,6 @@ def new_config(
 
     if output is not None:
         _write_config(config, output, fmt)
-        typer.echo(f"✅ Config written to {output}")
+        typer.echo(typer.style(f"✅ Config written to {output}", fg=typer.colors.GREEN))
     else:
         _config_to_stdout(config, fmt)
