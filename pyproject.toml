@@ -1,9 +1,9 @@
 [project]
 name = "SpectraFit"
-version = "1.4.1"
+version = "2.0.0.dev0"
 description = "Fast fitting of 2D- and 3D-Spectra with established routines"
 authors = [{ name = "Anselm Hahn", email = "anselm.hahn@gmail.com" }]
-requires-python = ">=3.10,<3.14"
+requires-python = ">=3.11,<3.14"
 readme = "README.md"
 license = "BSD-3-Clause"
 maintainers = [{ name = "Anselm Hahn", email = "anselm.hahn@gmail.com" }]
@@ -23,8 +23,6 @@ classifiers = [
   "Framework :: Matplotlib",
   "Framework :: Jupyter :: JupyterLab",
   "Operating System :: OS Independent",
-  "Programming Language :: Python :: 3.9",
-  "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
@@ -221,7 +219,13 @@ extend-ignore = [
 "spectrafit/plugins/notebook/*.py" = ["TC001", "TC002"]
 "spectrafit/plugins/color_schemas.py" = ["RUF012"]
 "spectrafit/plugins/test/test_notebook.py" = ["SLF001"]
-"spectrafit/cli/commands/*.py" = ["TC003", "TRY301", "PLC0415", "C901", "PLR0915"]
+"spectrafit/cli/commands/*.py" = [
+  "TC003",
+  "TRY301",
+  "PLC0415",
+  "C901",
+  "PLR0915",
+]
 
 
 [tool.ruff.lint.isort]

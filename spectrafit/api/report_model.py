@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Hashable
-from typing import Any
+from collections.abc import Mapping
 
 from dtale import __version__ as dtale_version
 from emcee import __version__ as emcee_version
@@ -55,7 +55,7 @@ class FitMethodAPI(BaseModel):
         ...,
         description="Settings for the confidence interval calculation",
     )
-    configurations: dict[str, Any] = Field(
+    configurations: Mapping[str, object] = Field(
         ...,
         description="Settings for the fitting configuration",
     )
@@ -162,15 +162,15 @@ class SolverAPI(BaseModel):
     """Solver API for the report endpoint."""
 
     goodness_of_fit: dict[str, float] = Field(..., description="Goodness of fit")
-    regression_metrics: dict[str, list[Any]] = Field(
+    regression_metrics: dict[str, list[object]] = Field(
         ...,
         description="Regression metrics",
     )
-    descriptive_statistic: dict[str, list[Any]] = Field(
+    descriptive_statistic: dict[str, list[object]] = Field(
         ...,
         description="Descriptive statistic",
     )
-    linear_correlation: dict[str, list[Any]] = Field(
+    linear_correlation: dict[str, list[object]] = Field(
         ...,
         description="Linear correlation",
     )
@@ -178,7 +178,7 @@ class SolverAPI(BaseModel):
         default={},
         description="Linear correlation of each attribute of components. if possible",
     )
-    confidence_interval: dict[str, Any] = Field(
+    confidence_interval: dict[str, object] = Field(
         default={},
         description="Confidence interval, if possible",
     )
@@ -203,15 +203,15 @@ class SolverAPI(BaseModel):
 class OutputAPI(BaseModel):
     """Output API for the report endpoint."""
 
-    df_org: dict[Hashable, Any] = Field(
+    df_org: dict[Hashable, object] = Field(
         ...,
         description="DataFrame of the original data via 'records' orient",
     )
-    df_fit: dict[Hashable, Any] = Field(
+    df_fit: dict[Hashable, object] = Field(
         ...,
         description="DataFrame of the fitted data via 'records' orient",
     )
-    df_pre: dict[Hashable, Any] = Field(
+    df_pre: dict[Hashable, object] = Field(
         default={},
         description="DataFrame of the pre-processed data via 'records' orient",
     )

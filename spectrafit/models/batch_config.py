@@ -29,8 +29,6 @@ Example::
 
 from __future__ import annotations
 
-from typing import Any
-
 from pydantic import BaseModel
 from pydantic import ConfigDict
 from pydantic import Field
@@ -57,7 +55,7 @@ class BatchFittingConfig(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    configs: list[dict[str, Any]] = Field(
+    configs: list[dict[str, object]] = Field(
         default_factory=list,
         description="List of per-spectrum UnifiedFittingConfig dicts",
         min_length=1,

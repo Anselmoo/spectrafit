@@ -68,7 +68,7 @@ class PluginRegistry:
         # Discover plugins via entry points
         try:
             entry_points = cast("Any", importlib.metadata.entry_points())
-            # Handle both Python 3.10+ and older versions
+            # Handle both Python 3.11+ and older versions
             plugins_eps: Any
             if hasattr(entry_points, "select"):
                 plugins_eps = entry_points.select(group=entry_point_group)

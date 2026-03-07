@@ -22,7 +22,6 @@ from __future__ import annotations
 import json
 
 from pathlib import Path
-from typing import Any
 
 from pydantic import BaseModel
 from pydantic import Field
@@ -109,7 +108,7 @@ class FitResult(BaseModel):
         y_fit: Total fitted y-values (sum of all component curves).
     """
 
-    input_snapshot: dict[str, Any] = Field(
+    input_snapshot: dict[str, object] = Field(
         default_factory=dict,
         description="Original input configuration for reproducibility",
     )
@@ -143,7 +142,7 @@ class FitResult(BaseModel):
         )
 
     @classmethod
-    def from_dict(cls, data: dict[str, Any]) -> FitResult:
+    def from_dict(cls, data: dict[str, object]) -> FitResult:
         """Deserialise a ``FitResult`` from a plain dict or JSON file content.
 
         Args:

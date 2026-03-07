@@ -8,7 +8,6 @@ and per-dataset weighting.
 from __future__ import annotations
 
 from enum import IntEnum
-from typing import Any
 
 from pydantic import BaseModel
 from pydantic import ConfigDict
@@ -143,10 +142,10 @@ class GlobalFittingResult(BaseModel):
     shared_parameter_values: dict[str, float] = Field(default_factory=dict)
     correlation_matrix: dict[str, dict[str, float]] | None = Field(default=None)
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> dict[str, object]:
         """Serialize the result to a plain dictionary.
 
         Returns:
-            dict[str, Any]: JSON-serializable representation.
+            dict[str, object]: JSON-serializable representation.
         """
         return self.model_dump()

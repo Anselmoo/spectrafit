@@ -1,4 +1,7 @@
-"""Start jupyter lab as a app."""
+"""Start JupyterLab as an app.
+
+Entry point registered as ``spectrafit-jupyter`` in ``pyproject.toml``.
+"""
 
 from __future__ import annotations
 
@@ -8,7 +11,11 @@ from jupyterlab.labapp import main
 
 
 def jupyter() -> None:
-    """Run jupyter lab as app in the absence of token."""
+    """Run JupyterLab in token-less server mode.
+
+    Configures JupyterLab with open access settings suitable for a local
+    fitting session and delegates to the standard JupyterLab launcher.
+    """
     sys.argv.extend(
         [
             "--NotebookApp.token=''",
@@ -20,12 +27,3 @@ def jupyter() -> None:
         ],
     )
     sys.exit(main())
-
-
-def __app__() -> None:  # noqa: N807
-    """Run jupyter lab as app if file is run as main."""
-    if __name__ == "__main__":
-        jupyter()
-
-
-__app__()

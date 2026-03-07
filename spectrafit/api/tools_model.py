@@ -1,10 +1,23 @@
-"""Reference model for the API of the SpectraFit tools."""
+"""Backward-compatible re-exports for API tools models.
+
+Canonical definitions for :class:`MinimizerConfig` and :class:`OptimizerConfig`
+have moved to :mod:`spectrafit.models.solver_config`.  These aliases keep the frozen
+notebook plugin working without modification.
+
+:class:`ColumnNamesAPI` is aliased from :mod:`spectrafit.models.column_names`.
+:class:`DataPreProcessingAPI` keeps its original definition here (it has a ``column``
+field that :class:`~spectrafit.models.preprocessing_config.PreprocessingConfig` does
+not expose).
+"""
 
 from __future__ import annotations
 
 from pydantic import BaseModel
-from pydantic import ConfigDict
 from pydantic import Field
+
+from spectrafit.models.column_names import ColumnNames as ColumnNamesAPI
+from spectrafit.models.solver_config import MinimizerConfig
+from spectrafit.models.solver_config import OptimizerConfig
 
 
 class DataPreProcessingAPI(BaseModel):
@@ -44,46 +57,6 @@ class GlobalFittingAPI(BaseModel):
     global_: int = Field(default=0, ge=0, le=2, description="Global fitting routine.")
 
 
-class MinimizerConfig(BaseModel):
-    """Configuration for the lmfit minimizer.
-
-    Attributes:
-        nan_policy: Policy for handling NaN values during fitting.
-        calc_covar: Whether to calculate the covariance matrix.
-    """
-
-    model_config = ConfigDict(extra="allow")
-
-    nan_policy: str = Field(
-        default="propagate",
-        description="Policy for handling NaN values (propagate, raise, omit)",
-    )
-    calc_covar: bool = Field(
-        default=True,
-        description="Whether to calculate the covariance matrix",
-    )
-
-
-class OptimizerConfig(BaseModel):
-    """Configuration for the lmfit optimizer.
-
-    Attributes:
-        max_nfev: Maximum number of function evaluations.
-        method: Optimization method (e.g., leastsq, least_squares, nelder).
-    """
-
-    model_config = ConfigDict(extra="allow")
-
-    max_nfev: int | None = Field(
-        default=None,
-        description="Maximum number of function evaluations",
-    )
-    method: str = Field(
-        default="leastsq",
-        description="Optimization method",
-    )
-
-
 class SolverModelsAPI(BaseModel):
     """Definition of the solver of SpectraFit."""
 
@@ -98,23 +71,19 @@ class SolverModelsAPI(BaseModel):
 
 
 class GeneralSolverModelsAPI(BaseModel):
-    """Definition of the general solver of SpectraFit.
-
-    !!! note "GeneralSolver"
-
-        The General Solver combines the settings for `lmfit` by adding the global
-        fitting settings.
-    """
+    """Definition of the general solver of SpectraFit."""
 
     global_: int = GlobalFittingAPI().global_
     minimizer: MinimizerConfig = Field(default_factory=MinimizerConfig)
     optimizer: OptimizerConfig = Field(default_factory=OptimizerConfig)
 
 
-class ColumnNamesAPI(BaseModel):
-    """Definition of the column names of the exported model."""
-
-    energy: str = "energy"
-    intensity: str = "intensity"
-    residual: str = "residual"
-    fit: str = "fit"
+__all__ = [
+    "ColumnNamesAPI",
+    "DataPreProcessingAPI",
+    "GeneralSolverModelsAPI",
+    "GlobalFittingAPI",
+    "MinimizerConfig",
+    "OptimizerConfig",
+    "SolverModelsAPI",
+]

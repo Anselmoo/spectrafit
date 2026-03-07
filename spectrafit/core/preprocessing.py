@@ -23,9 +23,9 @@ class PreProcessing:
         """Initialize PreProcessing class.
 
         Args:
-            df (pd.DataFrame): DataFrame containing the input data (`x` and `data`).
-            config (UnifiedFittingConfig): Validated fitting configuration providing
-                column names, energy range, shift, oversampling, and smoothing settings.
+            df: DataFrame containing the input data (``x`` and ``data``).
+            config: Validated fitting configuration providing column names,
+                energy range, shift, oversampling, and smoothing settings.
 
         """
         self.df = df
@@ -37,7 +37,7 @@ class PreProcessing:
         Returns:
             tuple: A tuple of (DataFrame, dict) where:
 
-                - DataFrame containing the input data (`x` and `data`), which
+                - DataFrame containing the input data (``x`` and ``data``), which
                   are optionally shrunk, shifted, oversampled, or smoothed.
                 - Dictionary with ``data_statistic`` key containing descriptive
                   statistics of the raw input frame.
@@ -49,10 +49,7 @@ class PreProcessing:
                 percentiles=np.arange(0.1, 1.0, 0.1).tolist(),
             ).to_dict(orient="split"),
         }
-        if isinstance(self.config.energy_start, (int, float)) or isinstance(
-            self.config.energy_stop,
-            (int, float),
-        ):
+        if self.config.energy_start is not None or self.config.energy_stop is not None:
             df_copy = self.energy_range(df_copy, self.config)
         if self.config.shift:
             df_copy = self.energy_shift(df_copy, self.config)
@@ -70,9 +67,9 @@ class PreProcessing:
         """Select the energy range for fitting.
 
         Args:
-            df (pd.DataFrame): DataFrame containing the input data (`x` and `data`).
-            config (UnifiedFittingConfig): Fitting configuration with
-                ``energy_start``, ``energy_stop``, and ``column`` fields.
+            df: DataFrame containing the input data (``x`` and ``data``).
+            config: Fitting configuration with ``energy_start``, ``energy_stop``,
+                and ``column`` fields.
 
         Returns:
             pd.DataFrame: DataFrame shrunk to the requested energy range.
@@ -81,20 +78,15 @@ class PreProcessing:
         energy_start = config.energy_start
         energy_stop = config.energy_stop
         x_col = config.column.x
-
         df_copy = df.copy()
-        if isinstance(energy_start, (int, float)):
-            if isinstance(
-                energy_stop,
-                (int, float),
-            ):
-                return df_copy.loc[
-                    (df[x_col] >= energy_start) & (df[x_col] <= energy_stop)
-                ]
+
+        if energy_start is not None and energy_stop is not None:
+            return df_copy.loc[(df[x_col] >= energy_start) & (df[x_col] <= energy_stop)]
+        if energy_start is not None:
             return df_copy.loc[df[x_col] >= energy_start]
-        if isinstance(energy_stop, (int, float)):
+        if energy_stop is not None:
             return df_copy.loc[df[x_col] <= energy_stop]
-        return None  # pragma: no cover
+        return df_copy
 
     @staticmethod
     def energy_shift(
@@ -104,9 +96,8 @@ class PreProcessing:
         """Shift the energy axis by a given value.
 
         Args:
-            df (pd.DataFrame): DataFrame containing the input data.
-            config (UnifiedFittingConfig): Fitting configuration with
-                ``column`` and ``shift`` fields.
+            df: DataFrame containing the input data.
+            config: Fitting configuration with ``column`` and ``shift`` fields.
 
         Returns:
             pd.DataFrame: DataFrame with energy axis shifted by ``config.shift``.
@@ -131,9 +122,9 @@ class PreProcessing:
              oversampling based on a simple linear regression.
 
         Args:
-            df (pd.DataFrame): DataFrame containing the input data.
-            config (UnifiedFittingConfig): Fitting configuration with
-                ``column`` field providing x and y column names.
+            df: DataFrame containing the input data.
+            config: Fitting configuration with ``column`` field providing x and y
+                column names.
 
         Returns:
             pd.DataFrame: DataFrame oversampled by a factor of 5.
@@ -161,9 +152,8 @@ class PreProcessing:
         """Smooth the intensity values.
 
         Args:
-            df (pd.DataFrame): DataFrame containing the input data.
-            config (UnifiedFittingConfig): Fitting configuration with
-                ``smooth`` and ``column`` fields.
+            df: DataFrame containing the input data.
+            config: Fitting configuration with ``smooth`` and ``column`` fields.
 
         Returns:
             pd.DataFrame: DataFrame with intensity values smoothed by a
