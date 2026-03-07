@@ -344,3 +344,7 @@ help = "Full CI gate: lint + mypy + tests"
 [tool.poe.tasks.clean]
 shell = "find . -name '__pycache__' -type d -exec rm -rf {} + 2>/dev/null; rm -rf dist/ .coverage coverage.xml junit.xml"
 help = "Remove build artifacts and caches"
+
+[tool.poe.tasks.migrate-v1]
+cmd = "python scripts/migrate_v1_to_v2.py"
+help = "Migrate a v1.x input file to v2 TOML format: poe migrate-v1 old.json -o new.toml"
