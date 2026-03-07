@@ -6,9 +6,11 @@ import json
 
 from pathlib import Path
 from typing import Annotated
-from typing import cast
 
 import typer
+
+from spectrafit.models.fit_summary import FitInsightsReport
+from spectrafit.models.fit_summary import FitSummaryReport
 
 
 def report(
@@ -58,45 +60,34 @@ def report(
         spectrafit report results.json -s summary -s variables
     """
     try:
-        # Read results file
-        with results_file.open(encoding="utf-8") as f:
-            results = json.load(f)
+        summary = FitSummaryReport.from_json_file(results_file)
+        active_sections = (
+            sections if sections is not None else ["summary", "variables", "statistics"]
+        )
 
-        # Default sections if none specified
-        if sections is None:
-            sections = ["summary", "variables", "statistics"]
-
-        # Generate report
         if format_ == "json":
-            report_content = _generate_json_report(results, sections)
+            report_content = _generate_json_report(summary, active_sections)
         elif format_ == "markdown":
-            report_content = _generate_markdown_report(results, sections)
+            report_content = _generate_markdown_report(summary, active_sections)
         else:
-            report_content = _generate_text_report(results, sections)
+            report_content = _generate_text_report(summary, active_sections)
 
-        # Output report
         if output:
             output.write_text(report_content, encoding="utf-8")
             typer.echo(f"✅ Report saved to '{output}'")
         else:
             typer.echo(report_content)
 
-    except json.JSONDecodeError as e:
-        typer.echo(f"❌ Invalid JSON file: {e}", err=True)
-        raise typer.Exit(1) from e
-    except KeyError as e:
-        typer.echo(f"❌ Missing expected key in results: {e}", err=True)
-        raise typer.Exit(1) from e
     except Exception as e:
         typer.echo(f"❌ Error generating report: {e}", err=True)
         raise typer.Exit(1) from e
 
 
-def _generate_text_report(results: dict[str, object], sections: list[str]) -> str:
+def _generate_text_report(summary: FitSummaryReport, sections: list[str]) -> str:
     """Generate a plain text report.
 
     Args:
-        results: Fit results dictionary.
+        summary: Validated fit summary model.
         sections: Sections to include.
 
     Returns:
@@ -104,35 +95,30 @@ def _generate_text_report(results: dict[str, object], sections: list[str]) -> st
     """
     lines: list[str] = ["=" * 60, "SpectraFit Report", "=" * 60]
 
-    if "summary" in sections and "fit_insights" in results:
-        insights = cast("dict[str, object]", results["fit_insights"])
+    if "summary" in sections:
         lines.extend(("\n📊 FIT SUMMARY", "-" * 40))
-        if "statistics" in insights:
-            _append_summary_statistics(insights, lines)
-    if "variables" in sections and "fit_insights" in results:
-        insights = cast("dict[str, object]", results["fit_insights"])
-        if "variables" in insights:
-            lines.extend(("\n📈 FIT VARIABLES", "-" * 40))
-            variables = cast("dict[str, object]", insights["variables"])
-            for var_name, var_data in variables.items():
-                if isinstance(var_data, dict):
-                    vd = cast("dict[str, object]", var_data)
-                    value = vd.get("value", "N/A")
-                    stderr = vd.get("stderr", "N/A")
-                    lines.extend(
-                        (
-                            f"  {var_name}:",
-                            f"    Value:  {value}",
-                            f"    Stderr: {stderr}",
-                        ),
-                    )
-    if "statistics" in sections and "regression_metrics" in results:
-        metrics = cast("dict[str, object]", results["regression_metrics"])
-        lines.extend(("\n📉 REGRESSION METRICS", "-" * 40))
-        for key, value in metrics.items():
-            lines.append(f"  {key}: {value}")
+        _append_text_statistics(summary.fit_insights, lines)
 
-    if "correlation" in sections and "linear_correlation" in results:
+    if "variables" in sections:
+        variables = summary.fit_insights.variables
+        if variables:
+            lines.extend(("\n📈 FIT VARIABLES", "-" * 40))
+            for var_name, var in variables.items():
+                lines.extend(
+                    (
+                        f"  {var_name}:",
+                        f"    Best value: {var.best_value}",
+                        f"    Stderr:     {var.stderr}",
+                    )
+                )
+
+    if "statistics" in sections and summary.regression_metrics.columns:
+        metrics = summary.regression_metrics
+        lines.extend(("\n📉 REGRESSION METRICS", "-" * 40))
+        for col, row in zip(metrics.columns, metrics.data, strict=False):
+            lines.append(f"  {col}: {row}")
+
+    if "correlation" in sections and summary.linear_correlation:
         lines.extend(("\n🔗 CORRELATION MATRIX", "-" * 40))
         lines.append("  (See full correlation in _correlation.csv file)")
 
@@ -140,84 +126,78 @@ def _generate_text_report(results: dict[str, object], sections: list[str]) -> st
     return "\n".join(lines)
 
 
-def _append_summary_statistics(insights: dict[str, object], lines: list[str]) -> None:
-    """Append summary statistics to the report lines.
+def _append_text_statistics(insights: FitInsightsReport, lines: list[str]) -> None:
+    """Append goodness-of-fit statistics to report lines.
 
     Args:
-        insights: Fit insights dictionary.
-        lines: List of report lines to append to.
+        insights: Fit insights model.
+        lines: Mutable list of report lines.
     """
-    stats = cast("dict[str, object]", insights["statistics"])
-    lines.append(f"  Chi-square:      {stats.get('chi_square', 'N/A')}")
-    lines.append(f"  Reduced chi-sq:  {stats.get('reduced_chi_square', 'N/A')}")
-    lines.append(f"  AIC:             {stats.get('aic', 'N/A')}")
-    lines.append(f"  BIC:             {stats.get('bic', 'N/A')}")
-    lines.append(f"  R-squared:       {stats.get('rsquared', 'N/A')}")
+    stats = insights.statistics
+    lines.append(f"  Chi-square:      {stats.chi_square}")
+    lines.append(f"  Reduced chi-sq:  {stats.reduced_chi_square}")
+    lines.append(f"  AIC:             {stats.akaike_information}")
+    lines.append(f"  BIC:             {stats.bayesian_information}")
 
 
-def _generate_markdown_report(results: dict[str, object], sections: list[str]) -> str:
+def _generate_markdown_report(summary: FitSummaryReport, sections: list[str]) -> str:
     """Generate a Markdown report.
 
     Args:
-        results: Fit results dictionary.
+        summary: Validated fit summary model.
         sections: Sections to include.
 
     Returns:
         Formatted Markdown report.
     """
+    stats = summary.fit_insights.statistics
     lines: list[str] = ["# SpectraFit Report\n"]
-    if "summary" in sections and "fit_insights" in results:
-        insights = cast("dict[str, object]", results["fit_insights"])
-        lines.append("## Fit Summary\n")
 
-        if "statistics" in insights:
-            stats = cast("dict[str, object]", insights["statistics"])
-            lines.extend(("| Metric | Value |", "|--------|-------|"))
+    if "summary" in sections:
+        lines.extend(
+            (
+                "## Fit Summary\n",
+                "| Metric | Value |",
+                "|--------|-------|",
+                f"| Chi-square | {stats.chi_square} |",
+                f"| Reduced chi-sq | {stats.reduced_chi_square} |",
+                f"| AIC | {stats.akaike_information} |",
+                f"| BIC | {stats.bayesian_information} |",
+                "",
+            )
+        )
+
+    if "variables" in sections:
+        variables = summary.fit_insights.variables
+        if variables:
             lines.extend(
                 (
-                    f"| Chi-square | {stats.get('chi_square', 'N/A')} |",
-                    f"| Reduced chi-sq | {stats.get('reduced_chi_square', 'N/A')} |",
-                ),
+                    "## Fit Variables\n",
+                    "| Parameter | Best Value | Stderr |",
+                    "|-----------|------------|--------|",
+                )
             )
-            lines.extend(
-                (
-                    f"| AIC | {stats.get('aic', 'N/A')} |",
-                    f"| BIC | {stats.get('bic', 'N/A')} |",
-                ),
-            )
-            lines.extend((f"| R-squared | {stats.get('rsquared', 'N/A')} |", ""))
-    if "variables" in sections and "fit_insights" in results:
-        insights = cast("dict[str, object]", results["fit_insights"])
-        if "variables" in insights:
-            lines.append("## Fit Variables\n")
-            lines.append("| Parameter | Value | Stderr |")
-            lines.append("|-----------|-------|--------|")
-            variables = cast("dict[str, object]", insights["variables"])
-            for var_name, var_data in variables.items():
-                if isinstance(var_data, dict):
-                    vd = cast("dict[str, object]", var_data)
-                    value = vd.get("value", "N/A")
-                    stderr = vd.get("stderr", "N/A")
-                    lines.append(f"| {var_name} | {value} | {stderr} |")
+            for var_name, var in variables.items():
+                lines.append(f"| {var_name} | {var.best_value} | {var.stderr} |")
             lines.append("")
 
-    if "statistics" in sections and "regression_metrics" in results:
-        metrics = cast("dict[str, object]", results["regression_metrics"])
-        lines.append("## Regression Metrics\n")
-        lines.append("| Metric | Value |")
-        lines.append("|--------|-------|")
-        for key, value in metrics.items():
-            lines.append(f"| {key} | {value} |")
+    if "statistics" in sections and summary.regression_metrics.columns:
+        metrics = summary.regression_metrics
+        lines.extend(
+            ("## Regression Metrics\n", "| Metric | Value |", "|--------|-------|")
+        )
+        for col, row in zip(metrics.columns, metrics.data, strict=False):
+            lines.append(f"| {col} | {row} |")
         lines.append("")
 
     return "\n".join(lines)
 
 
-def _generate_json_report(results: dict[str, object], sections: list[str]) -> str:
+def _generate_json_report(summary: FitSummaryReport, sections: list[str]) -> str:
     """Generate a JSON report with selected sections.
 
     Args:
-        results: Fit results dictionary.
+        summary: Validated fit summary model.
         sections: Sections to include.
 
     Returns:
@@ -225,18 +205,21 @@ def _generate_json_report(results: dict[str, object], sections: list[str]) -> st
     """
     report_data: dict[str, object] = {}
 
-    if "summary" in sections and "fit_insights" in results:
-        insights = cast("dict[str, object]", results["fit_insights"])
-        report_data["summary"] = insights.get("statistics", {})
+    if "summary" in sections:
+        report_data["summary"] = summary.fit_insights.statistics.model_dump(
+            exclude_none=True
+        )
 
-    if "variables" in sections and "fit_insights" in results:
-        insights = cast("dict[str, object]", results["fit_insights"])
-        report_data["variables"] = insights.get("variables", {})
+    if "variables" in sections:
+        report_data["variables"] = {
+            k: v.model_dump(exclude_none=True)
+            for k, v in summary.fit_insights.variables.items()
+        }
 
-    if "statistics" in sections and "regression_metrics" in results:
-        report_data["regression_metrics"] = results["regression_metrics"]
+    if "statistics" in sections and summary.regression_metrics.columns:
+        report_data["regression_metrics"] = summary.regression_metrics.model_dump()
 
-    if "correlation" in sections and "linear_correlation" in results:
-        report_data["correlation"] = results["linear_correlation"]
+    if "correlation" in sections and summary.linear_correlation.columns:
+        report_data["correlation"] = summary.linear_correlation.model_dump()
 
     return json.dumps(report_data, indent=2)
