@@ -237,7 +237,7 @@ class FittingPipeline:
             **args,
             **extra_fields,
             **self.output.model_dump(),
-            "global_": int(self.config.global_),
+            "global_": self.config.context.global_int,
             "conf_interval": self.config.conf_interval,
             "peaks": self.config.peaks,
             "column": [self.config.column.x, self.config.column.y],

@@ -22,6 +22,7 @@ from lmfit import Parameters
 
 from spectrafit.api.tools_model import GlobalFittingAPI
 from spectrafit.api.tools_model import SolverModelsAPI
+from spectrafit.models.fitting_context import FittingMode
 from spectrafit.models.model_parameters import ModelParameters
 from spectrafit.models.model_parameters import ReferenceKeys
 from spectrafit.models.registry import REGISTRY
@@ -63,7 +64,8 @@ class SolverModels(ModelParameters):
             minimizer=config.minimizer,
             optimizer=config.optimizer,
         ).model_dump()
-        self.args_global = GlobalFittingAPI(global_=int(config.global_)).model_dump()
+        is_global = int(config.global_ == FittingMode.GLOBAL)
+        self.args_global = GlobalFittingAPI(global_=is_global).model_dump()
         self.params = self.return_params
 
     def __call__(self) -> tuple[Minimizer, MinimizerResult]:

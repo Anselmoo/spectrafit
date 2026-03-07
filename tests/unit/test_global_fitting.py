@@ -1,7 +1,7 @@
-"""Unit tests for GlobalFittingConfig and GlobalMode (spectrafit.models.global_fitting).
+"""Unit tests for GlobalFittingConfig and FittingMode coercion.
 
 Covers:
-- GlobalMode enum / integer constants (Phase 1)
+- FittingMode coercion from legacy int values (replaces GlobalMode)
 - GlobalFittingConfig parameter sharing validation
 - Multi-dataset configuration
 """
@@ -10,73 +10,107 @@ from __future__ import annotations
 
 import pytest
 
-
-# GlobalMode will be added to global_fitting.py in Phase 1.
-# Mark tests that depend on it as xfail until then.
-try:
-    from spectrafit.models.global_fitting import GlobalMode  # post-Phase 1
-
-    _GLOBAL_MODE_AVAILABLE = True
-except ImportError:
-    _GLOBAL_MODE_AVAILABLE = False
-
-# Constants sourced from GlobalMode (canonical location: spectrafit.models.global_fitting)
-from spectrafit.models.global_fitting import GlobalMode as _GlobalMode
-
-
-GLOBAL_NONE = int(_GlobalMode.NONE)
-GLOBAL_STANDARD = int(_GlobalMode.STANDARD)
-GLOBAL_WITH_PRE = int(_GlobalMode.WITH_PRE)
+from spectrafit.models.fitting_context import FittingMode
+from spectrafit.models.global_fitting import GlobalFittingConfig
+from spectrafit.models.global_fitting import SharedParameter
 
 
 # ---------------------------------------------------------------------------
-# GlobalMode enum (Phase 1 deliverable)
+# FittingMode coercion from legacy int values (replaces TestGlobalModeEnum)
 # ---------------------------------------------------------------------------
 
 
 @pytest.mark.unit
-@pytest.mark.skipif(
-    not _GLOBAL_MODE_AVAILABLE, reason="GlobalMode not yet added (Phase 1)"
-)
-class TestGlobalModeEnum:
-    """GlobalMode(IntEnum) must replace bare GLOBAL_* int constants."""
+class TestFittingModeCoercion:
+    """UnifiedFittingConfig.global_ must coerce legacy int values to FittingMode."""
 
-    def test_none_value(self) -> None:
-        assert int(GlobalMode.NONE) == 0  # type: ignore[name-defined]
+    @pytest.mark.parametrize(
+        ("int_value", "expected_mode"),
+        [
+            (0, FittingMode.STANDARD),
+            (1, FittingMode.GLOBAL),
+            (2, FittingMode.GLOBAL),
+        ],
+    )
+    def test_int_coercion(self, int_value: int, expected_mode: FittingMode) -> None:
+        """Legacy integers 0/1/2 coerce to the correct FittingMode."""
+        from spectrafit.core.fitting_config import UnifiedFittingConfig
 
-    def test_standard_value(self) -> None:
-        assert int(GlobalMode.STANDARD) == 1  # type: ignore[name-defined]
+        cfg = UnifiedFittingConfig(peaks={"1": {"gaussian": {"amplitude": {"value": 1.0}}}}, **{"global": int_value})
+        assert cfg.global_ == expected_mode
 
-    def test_with_pre_value(self) -> None:
-        assert int(GlobalMode.WITH_PRE) == 2  # type: ignore[name-defined]
+    def test_string_coercion(self) -> None:
+        """String 'global' coerces to FittingMode.GLOBAL."""
+        from spectrafit.core.fitting_config import UnifiedFittingConfig
 
-    def test_backward_compat_with_int_constants(self) -> None:
-        """GlobalMode values must equal the old bare int constants."""
-        assert int(GlobalMode.NONE) == GLOBAL_NONE  # type: ignore[name-defined]
-        assert int(GlobalMode.STANDARD) == GLOBAL_STANDARD  # type: ignore[name-defined]
-        assert int(GlobalMode.WITH_PRE) == GLOBAL_WITH_PRE  # type: ignore[name-defined]
+        cfg = UnifiedFittingConfig(
+            peaks={"1": {"gaussian": {"amplitude": {"value": 1.0}}}},
+            **{"global": "global"},
+        )
+        assert cfg.global_ == FittingMode.GLOBAL
 
-    def test_int_comparison(self) -> None:
-        """IntEnum must compare equal to plain int (pipeline if-branches use == 0/1/2)."""
-        assert GlobalMode.NONE == 0  # type: ignore[name-defined]
-        assert GlobalMode.STANDARD == 1  # type: ignore[name-defined]
-        assert GlobalMode.WITH_PRE == 2  # type: ignore[name-defined]
+    def test_default_is_standard(self) -> None:
+        """Default global_ is FittingMode.STANDARD (replaces GlobalMode.NONE=0)."""
+        from spectrafit.core.fitting_config import UnifiedFittingConfig
+
+        cfg = UnifiedFittingConfig(peaks={"1": {"gaussian": {"amplitude": {"value": 1.0}}}})
+        assert cfg.global_ == FittingMode.STANDARD
+
+    def test_invalid_int_raises(self) -> None:
+        """Integer values outside 0/1/2 raise ValueError."""
+        from spectrafit.core.fitting_config import UnifiedFittingConfig
+
+        with pytest.raises(Exception):
+            UnifiedFittingConfig(
+                peaks={"1": {"gaussian": {"amplitude": {"value": 1.0}}}},
+                **{"global": 99},
+            )
 
 
 # ---------------------------------------------------------------------------
-# Legacy constants  (pre-Phase 1 — must stay passing until GlobalMode exists)
+# Legacy backward-compat constants (still pinned in autopeak/builtin shims)
 # ---------------------------------------------------------------------------
 
 
 @pytest.mark.unit
 class TestLegacyGlobalConstants:
-    """Pin the current int constant values before migrating to GlobalMode."""
+    """Pin the legacy int constants still exported from deprecated shims."""
 
     def test_global_none_is_zero(self) -> None:
+        from spectrafit.models.autopeak import GLOBAL_NONE
+
         assert GLOBAL_NONE == 0
 
     def test_global_standard_is_one(self) -> None:
+        from spectrafit.models.autopeak import GLOBAL_STANDARD
+
         assert GLOBAL_STANDARD == 1
 
     def test_global_with_pre_is_two(self) -> None:
+        from spectrafit.models.autopeak import GLOBAL_WITH_PRE
+
         assert GLOBAL_WITH_PRE == 2
+
+
+# ---------------------------------------------------------------------------
+# GlobalFittingConfig
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.unit
+class TestGlobalFittingConfig:
+    """GlobalFittingConfig parameter sharing validation."""
+
+    def test_shared_parameter_requires_name(self) -> None:
+        """SharedParameter.name must be non-empty."""
+        with pytest.raises(Exception):
+            SharedParameter(name="")
+
+    def test_global_fitting_config_valid(self) -> None:
+        """A valid GlobalFittingConfig with one shared parameter constructs."""
+        gfc = GlobalFittingConfig(
+            n_datasets=2,
+            shared_parameters=[SharedParameter(name="p1_center")],
+        )
+        assert gfc.n_datasets == 2
+        assert len(gfc.shared_parameters) == 1

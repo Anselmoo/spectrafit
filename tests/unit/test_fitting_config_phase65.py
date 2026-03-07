@@ -165,7 +165,11 @@ class TestContextComputedField:
         assert cfg.context.mode == FittingMode.GLOBAL
 
     def test_global_int_roundtrip(self, cfg_single: UnifiedFittingConfig) -> None:
-        assert cfg_single.context.global_int == int(cfg_single.global_)
+        # global_int is 0 for STANDARD, 1 for GLOBAL — no longer an IntEnum
+        from spectrafit.models.fitting_context import FittingMode
+
+        expected = 0 if cfg_single.global_ == FittingMode.STANDARD else 1
+        assert cfg_single.context.global_int == expected
 
 
 # ---------------------------------------------------------------------------

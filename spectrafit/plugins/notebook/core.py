@@ -270,7 +270,7 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
             minimizer=config.minimizer,
             optimizer=config.optimizer,
         )
-        nb.global_ = config.global_
+        nb.global_ = config.context.global_int
         return nb
 
     def args_to_config(self) -> UnifiedFittingConfig:

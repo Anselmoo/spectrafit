@@ -16,12 +16,10 @@ from typing import ClassVar
 from lmfit import Parameters
 
 from spectrafit.api.models_model import DistributionModelAPI
-from spectrafit.models.global_fitting import GlobalMode
+from spectrafit.models.fitting_context import FittingMode
 
 
 if TYPE_CHECKING:
-    from collections.abc import Callable
-
     import numpy as np
     import pandas as pd
 
@@ -101,7 +99,7 @@ class ModelParameters:
                  ``data`` as numpy arrays.
 
         """
-        if config.global_:
+        if config.global_ == FittingMode.GLOBAL:
             return (
                 df[config.column.x].to_numpy(),
                 df.loc[:, df.columns != config.column.x].to_numpy(),
@@ -130,13 +128,13 @@ class ModelParameters:
         return str(self.params)
 
     def __perform__(self) -> None:
-        """Dispatch to the correct parameter-builder based on :class:`GlobalMode`."""
-        dispatch: dict[GlobalMode, Callable[[], None]] = {
-            GlobalMode.NONE: self._build_local,
-            GlobalMode.STANDARD: self.define_parameters_global,
-            GlobalMode.WITH_PRE: self.define_parameters_global_pre,
-        }
-        dispatch[GlobalMode(int(self.config.global_))]()
+        """Dispatch to the correct parameter-builder based on :class:`FittingMode`."""
+        if self.config.global_ == FittingMode.STANDARD:
+            self._build_local()
+        elif self.global_fitting_config is not None:
+            self.define_parameters_global_pre()
+        else:
+            self.define_parameters_global()
 
     @property
     def global_fitting_config(self) -> GlobalFittingConfig | None:

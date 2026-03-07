@@ -7,7 +7,7 @@
    - TypeAliases → :mod:`spectrafit.models.types`
    - :class:`ModelParameters` → :mod:`spectrafit.models.model_parameters`
    - :class:`ReferenceKeys` → :mod:`spectrafit.models.model_parameters`
-   - :class:`GlobalMode` → :mod:`spectrafit.models.global_fitting`
+   - :class:`FittingMode` → :mod:`spectrafit.models.fitting_context`
 
    This shim will be removed in v2.1.0.
 
@@ -18,7 +18,6 @@ from __future__ import annotations
 
 import warnings
 
-from spectrafit.models.global_fitting import GlobalMode as _GlobalMode
 from spectrafit.models.model_parameters import ModelParameters  # noqa: F401
 from spectrafit.models.model_parameters import ReferenceKeys  # noqa: F401
 from spectrafit.models.types import FittingArgs  # noqa: F401
@@ -36,8 +35,8 @@ warnings.warn(
     stacklevel=2,
 )
 
-GLOBAL_NONE = int(_GlobalMode.NONE)
-GLOBAL_STANDARD = int(_GlobalMode.STANDARD)
-GLOBAL_WITH_PRE = int(_GlobalMode.WITH_PRE)
+GLOBAL_NONE = 0  # Formerly GlobalMode.NONE — standard single-dataset fit
+GLOBAL_STANDARD = 1  # Formerly GlobalMode.STANDARD — multi-dataset global fit
+GLOBAL_WITH_PRE = 2  # Formerly GlobalMode.WITH_PRE — global fit with pre-defined params
 
 _MIN_DATASETS_FOR_SHARING = 2

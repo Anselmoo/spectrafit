@@ -139,7 +139,7 @@ class DataConfig(BaseModel):
             header=config.header if header is ... else header,
             decimal=decimal if decimal is not None else config.decimal,
             comment=config.comment if comment is ... else comment,
-            **{"global": int(config.global_)},
+            **{"global": config.context.global_int},
         )
 
     @classmethod

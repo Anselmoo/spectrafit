@@ -7,34 +7,10 @@ and per-dataset weighting.
 
 from __future__ import annotations
 
-from enum import IntEnum
-
 from pydantic import BaseModel
 from pydantic import ConfigDict
 from pydantic import Field
 from pydantic import model_validator
-
-
-class GlobalMode(IntEnum):
-    """Fitting mode selector for standard and global fitting routines.
-
-    Attributes:
-        NONE: No global fitting — single-dataset standard fit (``global_ = 0``).
-        STANDARD: Standard global fitting across multiple datasets (``global_ = 1``).
-        WITH_PRE: Global fitting with pre-defined, fully-specified parameter
-            dictionary (``global_ = 2``).
-
-    Examples:
-        >>> from spectrafit.models.global_fitting import GlobalMode
-        >>> GlobalMode.NONE == 0
-        True
-        >>> GlobalMode.STANDARD == 1
-        True
-    """
-
-    NONE = 0
-    STANDARD = 1
-    WITH_PRE = 2
 
 
 class SharedParameter(BaseModel):
@@ -141,11 +117,3 @@ class GlobalFittingResult(BaseModel):
     dataset_results: list[DatasetResult] = Field(default_factory=list)
     shared_parameter_values: dict[str, float] = Field(default_factory=dict)
     correlation_matrix: dict[str, dict[str, float]] | None = Field(default=None)
-
-    def to_dict(self) -> dict[str, object]:
-        """Serialize the result to a plain dictionary.
-
-        Returns:
-            dict[str, object]: JSON-serializable representation.
-        """
-        return self.model_dump()

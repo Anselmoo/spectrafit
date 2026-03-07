@@ -26,8 +26,8 @@ from spectrafit.models.bundle import CompositeModelBundle
 from spectrafit.models.bundle import build_composite_bundle
 from spectrafit.models.data_config import DataConfig
 from spectrafit.models.fitting_context import FittingContext
+from spectrafit.models.fitting_context import FittingMode
 from spectrafit.models.global_fitting import GlobalFittingConfig
-from spectrafit.models.global_fitting import GlobalMode
 from spectrafit.models.mcmc_config import MCMCConfig
 from spectrafit.models.meta_config import MetaConfig
 from spectrafit.models.migration import migrate_v1_format as _migrate_v1
@@ -79,9 +79,9 @@ class UnifiedFittingConfig(BaseModel):
         optimizer: Optimizer options forwarded to *lmfit*.
         column: Column-name mapping for the input data (compat bridge for
             frozen preprocessing / model_parameters modules).
-        global_: Global fitting mode — ``GlobalMode.NONE`` (0) for standard
-            single-dataset fits; ``GlobalMode.STANDARD`` (1) or
-            ``GlobalMode.WITH_PRE`` (2) for multi-dataset global fitting.
+        global_: Global fitting mode — ``FittingMode.STANDARD`` for single-dataset
+            fits; ``FittingMode.GLOBAL`` for multi-dataset global fitting.
+            Accepts legacy integer values ``0`` (standard), ``1``/``2`` (global).
         conf_interval: Confidence-interval configuration.  ``False`` disables
             CI calculation; a dict is forwarded to *lmfit* ``conf_interval``.
         meta: Optional project metadata (``[meta]`` section in TOML).
@@ -107,10 +107,10 @@ class UnifiedFittingConfig(BaseModel):
         default_factory=ColumnConfig,
         description="Column name mapping — compat bridge for frozen modules",
     )
-    global_: GlobalMode = Field(
-        default=GlobalMode.NONE,
+    global_: FittingMode = Field(
+        default=FittingMode.STANDARD,
         alias="global",
-        description="Global fitting mode (0=none, 1=standard, 2=with-pre)",
+        description="Global fitting mode — STANDARD (default) or GLOBAL for multi-dataset fits",
     )
     conf_interval: bool | dict[str, object] = Field(
         default=False,
@@ -238,7 +238,9 @@ class UnifiedFittingConfig(BaseModel):
             FittingContext: Typed fitting context with mode and n_datasets
                 derived from the legacy integer flag.
         """
-        return FittingContext.from_global_int(int(self.global_))
+        return FittingContext.from_global_int(
+            0 if self.global_ == FittingMode.STANDARD else 1
+        )
 
     @classmethod
     def _migrate_v2_format(cls, data: dict[str, object]) -> dict[str, object]:
@@ -347,6 +349,38 @@ class UnifiedFittingConfig(BaseModel):
             return cls._migrate_v2_format(data)
 
         return _migrate_v1(data)
+
+    @field_validator("global_", mode="before")
+    @classmethod
+    def coerce_global_mode(cls, v: object) -> FittingMode:
+        """Coerce legacy integer global_ values to :class:`FittingMode`.
+
+        Maps ``0`` → :attr:`FittingMode.STANDARD`,
+        ``1``/``2`` → :attr:`FittingMode.GLOBAL`.
+        String values are passed to :class:`FittingMode` directly.
+
+        Args:
+            v: Raw global_ value — integer (legacy) or string/FittingMode.
+
+        Returns:
+            FittingMode: Validated fitting mode.
+
+        Raises:
+            ValueError: If the value is not a recognised integer or FittingMode string.
+        """
+        if isinstance(v, FittingMode):
+            return v
+        if isinstance(v, int):
+            _map = {
+                0: FittingMode.STANDARD,
+                1: FittingMode.GLOBAL,
+                2: FittingMode.GLOBAL,
+            }
+            if v not in _map:
+                msg = f"global_ must be 0, 1, or 2; got {v!r}."
+                raise ValueError(msg)
+            return _map[v]
+        return FittingMode(v)
 
     @field_validator("column", mode="before")
     @classmethod

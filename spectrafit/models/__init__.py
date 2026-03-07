@@ -9,7 +9,6 @@ from spectrafit.models.fit_result import FitResult
 from spectrafit.models.fitting_context import FittingContext
 from spectrafit.models.fitting_context import FittingMode
 from spectrafit.models.global_fitting import GlobalFittingConfig
-from spectrafit.models.global_fitting import GlobalMode
 from spectrafit.models.mcmc_config import MCMCConfig
 from spectrafit.models.meta_config import MetaConfig
 from spectrafit.models.output_config import OutputConfig
@@ -30,7 +29,6 @@ __all__ = [
     "FittingContext",
     "FittingMode",
     "GlobalFittingConfig",
-    "GlobalMode",
     "MCMCConfig",
     "MetaConfig",
     "MinimizerConfig",
