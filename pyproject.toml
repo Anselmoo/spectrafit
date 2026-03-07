@@ -355,6 +355,10 @@ help = "Migrate a v1.x input file to v2 TOML format: poe migrate-v1 old.json -o 
 cmd = "python scripts/generate_examples.py"
 help = "Regenerate synthetic CSV data for all examples/ directories"
 
+[tool.poe.tasks.generate-plots]
+cmd = "python scripts/generate_plots.py"
+help = "Generate fit-validation PNG plots for all examples/ (Agg backend, saved to examples/*/fit_validation.png)"
+
 [tool.poe.tasks.validate-examples]
 cmd = "pytest tests/integration/test_examples.py -v"
 help = "Smoke-test all examples/*/input.toml via FittingPipeline"

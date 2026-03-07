@@ -166,6 +166,31 @@ jobs:
           path: |
             validation-report.json
             validation-report.html
+  validation-plots:
+    if: github.repository == 'Anselmoo/spectrafit'
+    name: 📊 Fit Validation Plots
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+      - name: 🛎️ Checkout
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+      - name: 🐍 Set up uv
+        uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e # v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+          python-version: "3.12"
+      - name: 📦 Install the project
+        run: uv sync --all-extras --dev
+      - name: 📊 Generate fit-validation plots
+        run: uv run python scripts/generate_plots.py
+      - name: 📤 Upload fit-validation plots
+        uses: actions/upload-artifact@v4
+        with:
+          name: fit-validation-plots
+          path: examples/**/fit_validation.png
+          if-no-files-found: error
+          retention-days: 30
   devcontainer:
     if: github.repository == 'Anselmoo/spectrafit'
     name: 🐳 Devcontainer
