@@ -249,6 +249,7 @@ markers = [
   "models: tests for model implementations",
   "performance: tests that check performance characteristics",
   "integration: tests that check integration between components",
+  "obsolete: obsolete or end-of-life tests",
 ]
 
 [tool.coverage.report]
