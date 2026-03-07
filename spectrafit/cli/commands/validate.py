@@ -7,7 +7,7 @@ from typing import Annotated
 
 import typer
 
-from spectrafit.core import read_input_file
+from spectrafit.core.fitting_config import UnifiedFittingConfig
 
 
 def validate(
@@ -32,76 +32,30 @@ def validate(
 ) -> None:
     """Validate a SpectraFit input configuration file.
 
-    This command checks if the input file is valid JSON, YAML, or TOML
-    and contains the required structure for SpectraFit fitting.
+    Parses the file with :class:`~spectrafit.core.fitting_config.UnifiedFittingConfig`
+    and reports any validation errors.  Accepts v2 (``[data]``/``[[components]]``) and
+    v1 legacy (``fitting.peaks`` / flat keys) formats transparently.
     """
     try:
-        config = read_input_file(input_file)
-
-        # Check required sections
-        errors: list[str] = []
-        warnings: list[str] = []
-
-        if "fitting" not in config:
-            errors.append("Missing required section: 'fitting'")
-        else:
-            fitting = config["fitting"]
-
-            if "parameters" not in fitting:
-                errors.append("Missing required section: 'fitting.parameters'")
-            else:
-                params = fitting["parameters"]
-                if "minimizer" not in params:
-                    errors.append(
-                        "Missing required key: 'fitting.parameters.minimizer'"
-                    )
-                if "optimizer" not in params:
-                    errors.append(
-                        "Missing required key: 'fitting.parameters.optimizer'"
-                    )
-
-            if "peaks" not in fitting:
-                warnings.append("No peaks defined in 'fitting.peaks'")
-
-            if "description" not in fitting and verbose:
-                warnings.append("Optional 'fitting.description' section not found")
-
-        if "settings" in config and verbose:
-            settings = config["settings"]
-            typer.echo("\n📋 Settings found:")
-            for key, value in settings.items():
-                typer.echo(f"   {key}: {value}")
-
-        # Report results
-        if errors:
-            typer.echo("\n❌ Validation failed with errors:", err=True)
-            for error in errors:
-                typer.echo(f"   • {error}", err=True)
-            raise typer.Exit(1)
-
-        if warnings and verbose:
-            typer.echo("\n⚠️  Warnings:")
-            for warning in warnings:
-                typer.echo(f"   • {warning}")
-
-        typer.echo(f"\n✅ Input file '{input_file}' is valid!")
-
-        if verbose and "fitting" in config:
-            fitting = config["fitting"]
-            if "peaks" in fitting:
-                peak_count = len(fitting["peaks"])
-                typer.echo(f"   📊 Found {peak_count} peak(s) defined")
-            if "parameters" in fitting:
-                params = fitting["parameters"]
-                if "minimizer" in params:
-                    typer.echo(f"   🔧 Minimizer: {params['minimizer']}")
-                if "optimizer" in params:
-                    method = params["optimizer"].get("method", "not specified")
-                    typer.echo(f"   ⚙️  Optimizer method: {method}")
-
+        cfg = UnifiedFittingConfig.from_file(input_file)
+        component_count = len(cfg.components)
+        typer.echo(typer.style(f"\n✅ '{input_file}' is valid.", fg=typer.colors.GREEN))
+        if verbose:
+            typer.echo(f"   📊 Components: {component_count}")
+            if cfg.data:
+                typer.echo(f"   📂 Data file : {cfg.data.infile}")
+            if cfg.preprocessing:
+                typer.echo(
+                    f"   ⚙️  Energy range: "
+                    f"{cfg.preprocessing.energy_start} - {cfg.preprocessing.energy_stop}"
+                )
     except OSError as e:
-        typer.echo(f"❌ Error reading file: {e}", err=True)
+        typer.echo(
+            typer.style(f"\n❌ Cannot read file: {e}", fg=typer.colors.RED), err=True
+        )
         raise typer.Exit(1) from e
     except Exception as e:
-        typer.echo(f"❌ Validation error: {e}", err=True)
+        typer.echo(
+            typer.style(f"\n❌ Validation error: {e}", fg=typer.colors.RED), err=True
+        )
         raise typer.Exit(1) from e

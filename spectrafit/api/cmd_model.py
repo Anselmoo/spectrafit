@@ -7,7 +7,6 @@ from datetime import timezone
 from getpass import getuser
 from hashlib import sha256
 from socket import gethostname
-from typing import Any
 from uuid import uuid4
 
 from pydantic import BaseModel
@@ -16,8 +15,6 @@ from pydantic import HttpUrl
 from pydantic.functional_validators import field_validator
 
 from spectrafit import __version__
-from spectrafit.api.tools_model import DataPreProcessingAPI
-from spectrafit.api.tools_model import GlobalFittingAPI
 
 
 class DescriptionAPI(BaseModel):
@@ -46,7 +43,7 @@ class DescriptionAPI(BaseModel):
         alias="refs",
         description="References for the project",
     )
-    metadata: dict[Any, Any] | list[Any] | None = Field(
+    metadata: dict[str, object] | list[object] | None = Field(
         default=None,
         description="Metadata for the project",
     )
@@ -65,26 +62,3 @@ class DescriptionAPI(BaseModel):
     def check_references(cls, v: list[str]) -> list[str] | None:
         """Check if the list of references have valid URLs."""
         return [str(HttpUrl(url)) for url in v]
-
-
-class CMDModelAPI(BaseModel):
-    """Model for the model command line argument."""
-
-    infile: str
-    outfile: str = Field(default="spectrafit_results")
-    input: str = Field(default="fitting_input.toml")
-    oversampling: bool = DataPreProcessingAPI().oversampling
-    energy_start: float | None = DataPreProcessingAPI().energy_start
-    energy_stop: float | None = DataPreProcessingAPI().energy_stop
-    smooth: int | None = DataPreProcessingAPI().smooth
-    shift: float | None = DataPreProcessingAPI().shift
-    column: list[int | str] = DataPreProcessingAPI().column
-    separator: str = "\t"
-    decimal: str = "."
-    header: int | None = None
-    comment: str | None = None
-    global_: int = Field(GlobalFittingAPI().global_)
-    noplot: bool = False
-    version: bool = False
-    verbose: int = Field(default=0, ge=0, le=2)
-    description: DescriptionAPI | None = Field(DescriptionAPI())

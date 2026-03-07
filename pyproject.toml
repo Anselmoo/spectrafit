@@ -106,7 +106,6 @@ dev = [
   "black[jupyter]>=24.8.0",
   "bump-pydantic>=0.8.0",
   "dash[testing]>=2.18.2",
-  "mypy>=1.14.1",
   "poethepoet>=0.42.1",
   "pre-commit>=3.5.0",
   "pytest>=8.3.5",
@@ -144,11 +143,11 @@ docs = [
 default-groups = ["dev", "docs"]
 
 [tool.hatch.build.targets.sdist]
-include = ["spectrafit", "examples/", "spectrafit/plugins/img/SpectraFit.png"]
+include = ["spectrafit", "spectrafit/plugins/img/SpectraFit.png"]
 exclude = ["docs/", "tools/", "spectrafit/test/", "spectrafit/**/test/"]
 
 [tool.hatch.build.targets.wheel]
-include = ["spectrafit", "examples/", "spectrafit/plugins/img/SpectraFit.png"]
+include = ["spectrafit", "spectrafit/plugins/img/SpectraFit.png"]
 exclude = ["docs/", "tools/", "spectrafit/test/", "spectrafit/**/test/"]
 
 [build-system]
@@ -199,6 +198,19 @@ extend-ignore = [
   "ANN201",
   "ANN001",
   "ARG001",
+]
+"tests/**/*.py" = [
+  "S101",
+  "PLR2004",
+  "PLC0415",
+  "D102",
+  "D101",
+  "D103",
+  "ANN201",
+  "ANN001",
+  "ARG001",
+  "ARG002",
+  "TC003",
 ]
 "spectrafit/models/builtin.py" = ["PLR0913"]
 "spectrafit/models/solver.py" = ["PLR0913"]

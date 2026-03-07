@@ -58,7 +58,7 @@ jobs:
       - name: 📦 Install the project
         run: uv sync --all-extras --dev
       - name: 🧪 Test SpectraFit
-        run: uv run --group dev --all-extras pytest spectrafit/
+        run: uv run --group dev --all-extras pytest tests/
       - name: 📊 Codecov
         if: ${{ success() && !cancelled() }}
         uses: codecov/codecov-action@5a1091511ad55cbe89839c7260b706298ca349f7 # v5.5.1
@@ -157,7 +157,7 @@ jobs:
       - name: 📦 Install the project
         run: uv sync --all-extras --dev
       - name: 🔬 Run validation tests
-        run: uv run --group dev --all-extras pytest spectrafit/test/validation/ -m validation --validation-report=validation-report -v
+        run: uv run --group dev --all-extras pytest tests/validation/ -m validation --validation-report=validation-report -v
       - name: 📤 Upload validation reports
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4

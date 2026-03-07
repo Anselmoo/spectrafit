@@ -1,6 +1,6 @@
 """DataConfig — typed configuration for the data loading step.
 
-Replaces the raw ``dict[str, str]`` / ``dict[str, Any]`` that was passed to
+Replaces the raw ``dict[str, str]`` that was passed to
 :func:`~spectrafit.core.data_loader.load_data`.  All keys consumed by the
 loader are now validated Pydantic fields with sensible defaults.
 """
@@ -9,7 +9,6 @@ from __future__ import annotations
 
 from pathlib import Path
 from typing import TYPE_CHECKING
-from typing import Any
 
 from pydantic import BaseModel
 from pydantic import ConfigDict
@@ -23,31 +22,51 @@ if TYPE_CHECKING:
 class DataConfig(BaseModel):
     r"""Typed, validated configuration for loading a spectrum data file.
 
+    Maps to the ``[data]`` section in the v2 input TOML::
+
+        [data]
+        infile    = "spectrum.csv"
+        x_col     = "energy"
+        y_col     = "intensity"
+        separator = "\t"
+        decimal   = "."
+        header    = 0
+
     All fields mirror the keys consumed by
     :func:`~spectrafit.core.data_loader.load_data`.
 
     Attributes:
         infile: Path to the input data file (CSV / TXT / similar).
+        x_col: Column name (or index) for the independent variable (energy axis).
+        y_col: Column name (or index) for the dependent variable (intensity).
         separator: Column separator forwarded to :func:`pandas.read_csv`.
         header: Row index to use as column header (``None`` for no header).
         decimal: Decimal point character.
         comment: Character indicating comment lines; ``None`` disables.
-        column: Two column identifiers ``[x_col, y_col]`` used when
-            ``global_`` is falsy (single-dataset mode).
         global_: Forwarded global fitting flag; non-zero means *all* columns
             are loaded (no ``usecols`` restriction).
 
     Examples:
-        >>> cfg = DataConfig(infile="spectrum.txt", column=["energy", "intensity"])
-        >>> cfg.infile
-        PosixPath('spectrum.txt')
+        >>> cfg = DataConfig(infile="spectrum.txt")
+        >>> cfg.x_col
+        'energy'
+        >>> cfg.y_col
+        'intensity'
         >>> cfg.separator
         '\\s+'
     """
 
-    model_config = ConfigDict(populate_by_name=True)
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
 
     infile: Path = Field(..., description="Path to the input data file")
+    x_col: str = Field(
+        default="energy",
+        description="Column name (or index) for the x-axis (energy)",
+    )
+    y_col: str = Field(
+        default="intensity",
+        description="Column name (or index) for the y-axis (intensity)",
+    )
     separator: str = Field(
         default=r"\s+",
         description="Column separator forwarded to pandas.read_csv",
@@ -60,10 +79,6 @@ class DataConfig(BaseModel):
     comment: str | None = Field(
         default=None,
         description="Character marking comment lines; None disables comment parsing",
-    )
-    column: list[str] = Field(
-        default_factory=list,
-        description="[x_col, y_col] column identifiers for single-dataset mode",
     )
     global_: int = Field(
         default=0,
@@ -109,8 +124,8 @@ class DataConfig(BaseModel):
             >>> peaks = {"1": {"gaussian": {"amplitude": {"value": 1.0, "vary": True}}}}
             >>> cfg = UnifiedFittingConfig(peaks=peaks)
             >>> dc = DataConfig.from_unified(cfg, "spectrum.txt")
-            >>> dc.column
-            ['energy', 'intensity']
+            >>> dc.x_col
+            'energy'
         """
         resolved_infile = Path(infile) if infile is not None else config.infile
         if resolved_infile is None:
@@ -118,35 +133,48 @@ class DataConfig(BaseModel):
             raise ValueError(msg)
         return cls(
             infile=resolved_infile,
+            x_col=config.column.x,
+            y_col=config.column.y,
             separator=separator if separator is not None else config.separator,
             header=config.header if header is ... else header,
             decimal=decimal if decimal is not None else config.decimal,
             comment=config.comment if comment is ... else comment,
-            column=[config.column.x, config.column.y],
             **{"global": int(config.global_)},
         )
 
     @classmethod
-    def from_args_dict(cls, args: dict[str, Any]) -> DataConfig:
+    def from_args_dict(cls, args: dict[str, object]) -> DataConfig:
         """Construct a :class:`DataConfig` from a legacy args dictionary.
 
-        This provides a bridge from the ``dict[str, Any]`` interface that
-        :func:`~spectrafit.core.data_loader.load_data` historically accepted.
+        Supports both the old ``column`` list format and the new ``x_col``/``y_col``
+        format so that v1→v2 migration scripts can call this transparently.
 
         Args:
-            args: Legacy argument dictionary with keys ``infile``,
-                ``separator``, ``header``, ``decimal``, ``comment``,
-                ``column``, ``global_``.
+            args: Legacy argument dictionary with keys ``infile``, ``separator``,
+                ``header``, ``decimal``, ``comment``, ``column`` (old) or
+                ``x_col``/``y_col`` (new), ``global_``.
 
         Returns:
             DataConfig: Validated data loading configuration.
         """
+        col = args.get("column", [])
+        x_col = (
+            str(col[0])
+            if isinstance(col, list) and col
+            else str(args.get("x_col", "energy"))
+        )
+        y_col = (
+            str(col[1])
+            if isinstance(col, list) and len(col) > 1
+            else str(args.get("y_col", "intensity"))
+        )
         return cls(
-            infile=Path(args["infile"]),
-            separator=args.get("separator", r"\s+"),
-            header=args.get("header", 0),
-            decimal=args.get("decimal", "."),
-            comment=args.get("comment"),
-            column=list(args.get("column", [])),
-            **{"global": int(args.get("global_", 0))},
+            infile=Path(str(args["infile"])),
+            x_col=x_col,
+            y_col=y_col,
+            separator=str(args.get("separator", r"\s+")),
+            header=int(str(args["header"])) if args.get("header") is not None else None,
+            decimal=str(args.get("decimal", ".")),
+            comment=str(args["comment"]) if args.get("comment") is not None else None,
+            **{"global": int(str(args.get("global_", 0)))},
         )

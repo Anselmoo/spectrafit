@@ -305,7 +305,7 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
     @property
     def pre_process(self) -> None:
         """Pre-processing class."""
-        pre_config = UnifiedFittingConfig(
+        pre_config = UnifiedFittingConfig(  # type: ignore[call-arg]
             peaks={},
             column=ColumnConfig(
                 x=str(self.args_pre.column[0]),

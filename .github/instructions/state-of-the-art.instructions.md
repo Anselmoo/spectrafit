@@ -84,7 +84,7 @@ MCP tool surface is defined in `docs/spikes/api-mcp-server-design-spike.md`.
 | Python | 3.10 | 3.10 – 3.13 |
 | lmfit | 1.3 | latest |
 | pydantic | 2.0 | v2.x |
-| numpy | 1.26 | latest |
+| numpy | 2.0 | latest |
 | pandas | 2.0 | latest |
 | scipy | 1.10 | latest |
 

@@ -6,8 +6,6 @@ separating concerns and making the code more maintainable.
 
 from __future__ import annotations
 
-from typing import Any
-
 import pandas as pd
 
 from lmfit import Minimizer
@@ -23,6 +21,7 @@ from spectrafit.core.preprocessing import PreProcessing
 from spectrafit.models.builtin import SolverModels
 from spectrafit.models.bundle import CompositeModelBundle
 from spectrafit.models.data_config import DataConfig
+from spectrafit.models.output_config import OutputConfig
 from spectrafit.report import PrintingResults
 
 
@@ -65,7 +64,7 @@ class FittingResult(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
     df: pd.DataFrame
-    args: dict[str, Any]
+    args: dict[str, object]
     minimizer: Minimizer
     result: MinimizerResult
 
@@ -118,21 +117,26 @@ class FittingPipeline:
 
     Attributes:
         config (UnifiedFittingConfig): Validated configuration for the pipeline.
+        output (OutputConfig): Runtime output configuration (outfile, noplot, verbose).
 
     """
 
-    def __init__(self, config: UnifiedFittingConfig | dict[str, Any]) -> None:
+    def __init__(
+        self,
+        config: UnifiedFittingConfig,
+        output: OutputConfig | None = None,
+    ) -> None:
         """Initialize FittingPipeline.
 
         Args:
-            config: Either a validated :class:`UnifiedFittingConfig` or a plain
-                dictionary that will be coerced via
-                :meth:`UnifiedFittingConfig.from_dict`.
+            config: Validated :class:`UnifiedFittingConfig` for the fitting run.
+            output: Optional :class:`OutputConfig` controlling result export and
+                display.  Defaults to ``OutputConfig()`` (standard output,
+                plots enabled, table verbosity).
 
         """
-        if isinstance(config, dict):
-            config = UnifiedFittingConfig.from_dict(config)
         self.config: UnifiedFittingConfig = config
+        self.output: OutputConfig = output or OutputConfig()
 
     def run(self) -> FittingResult:
         """Run the complete fitting pipeline.
@@ -170,14 +174,14 @@ class FittingPipeline:
         """
         return load_data(DataConfig.from_unified(self.config))
 
-    def _preprocess(self, df: pd.DataFrame) -> tuple[pd.DataFrame, dict[str, Any]]:
+    def _preprocess(self, df: pd.DataFrame) -> tuple[pd.DataFrame, dict[str, object]]:
         """Preprocess the data.
 
         Args:
             df (pd.DataFrame): Input DataFrame.
 
         Returns:
-            tuple[pd.DataFrame, dict[str, Any]]: Preprocessed DataFrame and
+            tuple[pd.DataFrame, dict[str, object]]: Preprocessed DataFrame and
                  ``data_statistic`` result dict.
 
         """
@@ -187,7 +191,7 @@ class FittingPipeline:
     def _solve(
         self,
         df: pd.DataFrame,
-    ) -> tuple[Minimizer, MinimizerResult, Any]:
+    ) -> tuple[Minimizer, MinimizerResult, CompositeModelBundle | None]:
         """Solve the fitting problem.
 
         Args:
@@ -206,37 +210,41 @@ class FittingPipeline:
     def _postprocess(
         self,
         df: pd.DataFrame,
-        args: dict[str, Any],
+        args: dict[str, object],
         minimizer: Minimizer,
         result: MinimizerResult,
-        bundle: Any = None,
-    ) -> tuple[pd.DataFrame, dict[str, Any]]:
+        bundle: CompositeModelBundle | None = None,
+    ) -> tuple[pd.DataFrame, dict[str, object]]:
         """Postprocess the fitting results.
 
         Args:
             df (pd.DataFrame): DataFrame with fit data.
-            args (dict[str, Any]): Configuration dictionary from preprocessing.
+            args (dict[str, object]): Configuration dictionary from preprocessing.
             minimizer (Minimizer): The minimizer used.
             result (MinimizerResult): The fitting result.
             bundle: Optional CompositeModelBundle for local-fit decomposition.
 
         Returns:
-            tuple[pd.DataFrame, dict[str, Any]]: Postprocessed DataFrame and
+            tuple[pd.DataFrame, dict[str, object]]: Postprocessed DataFrame and
                  updated configuration.
 
         """
         # Merge config fields into args so PostProcessing (frozen Layer 4) gets
         # both preprocessing results and the typed config values.
-        # Also pass through any extra fields (e.g. noplot, verbose) stored via extra="allow".
-        extra_fields: dict[str, Any] = self.config.model_extra or {}
-        post_args: dict[str, Any] = {
+        # OutputConfig provides outfile/noplot/verbose for the export chain.
+        extra_fields: dict[str, object] = self.config.model_extra or {}
+        post_args: dict[str, object] = {
             **args,
             **extra_fields,
+            **self.output.model_dump(),
             "global_": int(self.config.global_),
             "conf_interval": self.config.conf_interval,
             "peaks": self.config.peaks,
             "column": [self.config.column.x, self.config.column.y],
             "_bundle": bundle,
+            # FitReport kwargs (sort_pars, show_correl, min_correl) — empty = use defaults.
+            # printer.py (frozen) expects this key.
+            "report": {},
         }
         postprocessor = PostProcessing(
             df=df,
@@ -248,20 +256,20 @@ class FittingPipeline:
 
 
 def fitting_routine_pipeline(
-    args: UnifiedFittingConfig | dict[str, Any],
-) -> tuple[pd.DataFrame, dict[str, Any]]:
+    args: UnifiedFittingConfig,
+    output: OutputConfig | None = None,
+) -> tuple[pd.DataFrame, dict[str, object]]:
     """Run the fitting algorithm using the pipeline pattern.
 
     This is a convenience function that creates and runs a FittingPipeline.
 
     Args:
-        args: Either a validated :class:`UnifiedFittingConfig` or a plain
-            dictionary.  Plain dicts are coerced via
-            :meth:`UnifiedFittingConfig.from_dict` inside
-            :class:`FittingPipeline`.
+        args: Validated :class:`UnifiedFittingConfig` for the fitting run.
+        output: Optional :class:`OutputConfig` controlling result export and
+            display.  Defaults to ``OutputConfig()`` (standard output).
 
     Returns:
-        tuple[pd.DataFrame, dict[str, Any]]: Returns a DataFrame and a dictionary,
+        tuple[pd.DataFrame, dict[str, object]]: Returns a DataFrame and a dictionary,
              which is containing the input data (`x` and `data`), as well as the best
              fit, single contributions of each peak and the corresponding residuum. The
              dictionary contains the raw input data, the best fit, the single
@@ -269,7 +277,7 @@ def fitting_routine_pipeline(
              is extended by advanced statistical information of the fit.
 
     """
-    pipeline = FittingPipeline(config=args)
+    pipeline = FittingPipeline(config=args, output=output)
     result = pipeline.run()
 
     # Print results

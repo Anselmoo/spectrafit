@@ -11,7 +11,6 @@ from __future__ import annotations
 import json
 
 from pathlib import Path
-from typing import Any
 
 import tomli
 import yaml
@@ -27,12 +26,15 @@ from spectrafit.api.tools_model import MinimizerConfig
 from spectrafit.api.tools_model import OptimizerConfig
 from spectrafit.models.bundle import CompositeModelBundle
 from spectrafit.models.bundle import build_composite_bundle
+from spectrafit.models.data_config import DataConfig
 from spectrafit.models.fitting_context import FittingContext
 from spectrafit.models.global_fitting import GlobalFittingConfig
 from spectrafit.models.global_fitting import GlobalMode
 from spectrafit.models.mcmc_config import MCMCConfig
+from spectrafit.models.meta_config import MetaConfig
 from spectrafit.models.peak_models import Component
 from spectrafit.models.peak_models import FitParameter
+from spectrafit.models.preprocessing_config import PreprocessingConfig
 from spectrafit.models.types import PeaksDict
 
 
@@ -49,7 +51,7 @@ class ColumnConfig(BaseModel):
 
     @field_validator("x", "y", mode="before")
     @classmethod
-    def coerce_to_str(cls, v: Any) -> str:
+    def coerce_to_str(cls, v: object) -> str:
         """Coerce numeric column indices to strings.
 
         Args:
@@ -61,24 +63,40 @@ class ColumnConfig(BaseModel):
         return str(v)
 
 
+# Keys that belong in the [data] section of a v2 TOML.
+_DATA_KEYS: frozenset[str] = frozenset(
+    {"infile", "separator", "header", "decimal", "comment"}
+)
+
+# Keys that belong in the [preprocessing] section of a v2 TOML.
+_PREPROC_KEYS: frozenset[str] = frozenset(
+    {"energy_start", "energy_stop", "smooth", "shift", "oversampling"}
+)
+
+
 class UnifiedFittingConfig(BaseModel):
     """Unified fitting configuration consumed by CLI and notebook.
 
-    This model captures peaks, minimizer/optimizer settings, column mapping,
-    global fitting mode, and confidence-interval options in a single validated
-    structure.
+    The v2 design philosophy: **the structured config file is the user interface.**
+    Fitting parameters, data loading, and pre-processing are all declared in the
+    ``[data]``, ``[preprocessing]``, and ``[[components]]`` sections of a TOML/JSON
+    file.  The CLI is a minimal launcher; no flat per-parameter flags exist.
 
     Attributes:
         peaks: Nested peak parameter definitions keyed by peak index, model
-            name, and parameter constraints.
+            name, and parameter constraints (v1 format, still supported).
         minimizer: Minimizer options forwarded to *lmfit*.
         optimizer: Optimizer options forwarded to *lmfit*.
-        column: Column-name mapping for the input data.
+        column: Column-name mapping for the input data (compat bridge for
+            frozen preprocessing / model_parameters modules).
         global_: Global fitting mode — ``GlobalMode.NONE`` (0) for standard
             single-dataset fits; ``GlobalMode.STANDARD`` (1) or
             ``GlobalMode.WITH_PRE`` (2) for multi-dataset global fitting.
         conf_interval: Confidence-interval configuration.  ``False`` disables
             CI calculation; a dict is forwarded to *lmfit* ``conf_interval``.
+        meta: Optional project metadata (``[meta]`` section in TOML).
+        data: Data-loading configuration (``[data]`` section in TOML).
+        preprocessing: Pre-processing configuration (``[preprocessing]`` section).
     """
 
     model_config = ConfigDict(populate_by_name=True, extra="allow")
@@ -97,14 +115,14 @@ class UnifiedFittingConfig(BaseModel):
     )
     column: ColumnConfig = Field(
         default_factory=ColumnConfig,
-        description="Column name mapping for the input data",
+        description="Column name mapping — compat bridge for frozen modules",
     )
     global_: GlobalMode = Field(
         default=GlobalMode.NONE,
         alias="global",
         description="Global fitting mode (0=none, 1=standard, 2=with-pre)",
     )
-    conf_interval: bool | dict[str, Any] = Field(
+    conf_interval: bool | dict[str, object] = Field(
         default=False,
         description="Confidence interval config; False disables CI calculation",
     )
@@ -121,52 +139,73 @@ class UnifiedFittingConfig(BaseModel):
     )
 
     # ------------------------------------------------------------------
-    # Data-loading fields (consumed by DataConfig / load_data)
+    # v2 structured sub-models
     # ------------------------------------------------------------------
-    infile: Path | None = Field(
+    meta: MetaConfig | None = Field(
         default=None,
-        description="Path to the input data file",
+        description="Project metadata ([meta] section in TOML)",
     )
-    separator: str = Field(
-        default=r"\s+",
-        description="Column separator forwarded to pandas.read_csv",
-    )
-    header: int | None = Field(
-        default=0,
-        description="Row index to use as column header; None means no header",
-    )
-    decimal: str = Field(
-        default=".",
-        description="Decimal point character",
-    )
-    comment: str | None = Field(
+    data: DataConfig | None = Field(
         default=None,
-        description="Character marking comment lines; None disables comment parsing",
+        description="Data-loading configuration ([data] section in TOML)",
+    )
+    preprocessing: PreprocessingConfig | None = Field(
+        default=None,
+        description="Pre-processing configuration ([preprocessing] section in TOML)",
     )
 
-    # ------------------------------------------------------------------
-    # Pre-processing fields (consumed by PreProcessing)
-    # ------------------------------------------------------------------
-    energy_start: float | None = Field(
-        default=None,
-        description="Lower bound of the energy range to fit",
-    )
-    energy_stop: float | None = Field(
-        default=None,
-        description="Upper bound of the energy range to fit",
-    )
-    shift: float = Field(
-        default=0.0,
-        description="Constant energy shift applied before fitting",
-    )
-    oversampling: bool = Field(
-        default=False,
-        description="Whether to 5x oversample the data before fitting",
-    )
-    smooth: int = Field(
-        default=0,
-        description="Box-car smoothing window size (0 = disabled)",
-    )
+    # Backward-compat @property accessors for frozen modules.
+    # None of these appear in model_dump() / model_json_schema().
+
+    @property
+    def infile(self) -> Path | None:
+        """Path to the input data file (delegates to ``data.infile``)."""
+        return self.data.infile if self.data else None
+
+    @property
+    def separator(self) -> str:
+        """CSV column separator character (delegates to ``data.separator``)."""
+        return self.data.separator if self.data else r"\s+"
+
+    @property
+    def header(self) -> int | None:
+        """Header row index (delegates to ``data.header``)."""
+        return self.data.header if self.data else 0
+
+    @property
+    def decimal(self) -> str:
+        """Decimal character (delegates to ``data.decimal``)."""
+        return self.data.decimal if self.data else "."
+
+    @property
+    def comment(self) -> str | None:
+        """Comment character (delegates to ``data.comment``)."""
+        return self.data.comment if self.data else None
+
+    @property
+    def energy_start(self) -> float | None:
+        """Lower energy bound (delegates to ``preprocessing.energy_start``)."""
+        return self.preprocessing.energy_start if self.preprocessing else None
+
+    @property
+    def energy_stop(self) -> float | None:
+        """Upper energy bound (delegates to ``preprocessing.energy_stop``)."""
+        return self.preprocessing.energy_stop if self.preprocessing else None
+
+    @property
+    def smooth(self) -> int:
+        """Smoothing window size (delegates to ``preprocessing.smooth``)."""
+        return self.preprocessing.smooth if self.preprocessing else 0
+
+    @property
+    def shift(self) -> float:
+        """Constant energy offset in eV (delegates to ``preprocessing.shift``)."""
+        return self.preprocessing.shift if self.preprocessing else 0.0
+
+    @property
+    def oversampling(self) -> bool:
+        """Oversampling flag (delegates to ``preprocessing.oversampling``)."""
+        return self.preprocessing.oversampling if self.preprocessing else False
 
     # ------------------------------------------------------------------
     # Computed fields — derived from peaks and global_
@@ -212,7 +251,7 @@ class UnifiedFittingConfig(BaseModel):
         return FittingContext.from_global_int(int(self.global_))
 
     @classmethod
-    def _migrate_v2_format(cls, data: dict[str, Any]) -> dict[str, Any]:
+    def _migrate_v2_format(cls, data: dict[str, object]) -> dict[str, object]:
         """Translate v2 ``[[components]]`` input to internal representation.
 
         Handles the prototype schema::
@@ -243,9 +282,13 @@ class UnifiedFittingConfig(BaseModel):
         data = dict(data)
         data["__v2_components__"] = data.pop("components")
 
-        if "data" in data:
-            d = data.pop("data")
-            data.setdefault("infile", d.get("infile"))
+        # Keep the `data` dict in place — Pydantic will parse it as DataConfig.
+        # We also populate `column` for the frozen-module compat bridge.
+        if isinstance(data.get("data"), dict):
+            d = data["data"]
+            if not isinstance(d, dict):
+                msg = "Expected 'data' to be a dict"
+                raise TypeError(msg)
             data.setdefault(
                 "column",
                 {"x": d.get("x_col", "energy"), "y": d.get("y_col", "intensity")},
@@ -253,6 +296,9 @@ class UnifiedFittingConfig(BaseModel):
 
         if "solver" in data:
             s = data.pop("solver")
+            if not isinstance(s, dict):
+                msg = "Expected 'solver' to be a dict"
+                raise TypeError(msg)
             data.setdefault(
                 "minimizer",
                 {
@@ -265,13 +311,14 @@ class UnifiedFittingConfig(BaseModel):
                 {"method": s.get("method", "leastsq"), "max_nfev": s.get("max_nfev")},
             )
 
-        for key in ("schema_version", "config_type", "meta"):
+        # Drop non-model metadata keys; `meta` stays → Pydantic parses as MetaConfig.
+        for key in ("schema_version", "config_type"):
             data.pop(key, None)
 
         return data
 
     @classmethod
-    def _migrate_v1_full_wrapper(cls, data: dict[str, Any]) -> dict[str, Any]:
+    def _migrate_v1_full_wrapper(cls, data: dict[str, object]) -> dict[str, object]:
         """Unwrap ``{"fitting": {...}, "settings": {...}}`` (v1 Pattern 1).
 
         Args:
@@ -281,22 +328,26 @@ class UnifiedFittingConfig(BaseModel):
             dict: Flattened dict with peaks/minimizer/optimizer at root.
         """
         fitting = data["fitting"]
-        result: dict[str, Any] = {}
+        result: dict[str, object] = {}
         if "settings" in data:
-            result |= data["settings"]
-        if "peaks" in fitting:
-            result["peaks"] = fitting["peaks"]
-        params = fitting.get("parameters", {})
-        for key in ("minimizer", "optimizer"):
-            if key in params:
-                result[key] = params[key]
+            settings = data["settings"]
+            if isinstance(settings, dict):
+                result |= settings
+        if isinstance(fitting, dict):
+            if "peaks" in fitting:
+                result["peaks"] = fitting["peaks"]
+            params = fitting.get("parameters", {})
+            if isinstance(params, dict):
+                for key in ("minimizer", "optimizer"):
+                    if key in params:
+                        result[key] = params[key]
         result.update(
             {k: v for k, v in data.items() if k not in ("fitting", "settings")}
         )
         return result
 
     @classmethod
-    def _migrate_v1_inner(cls, data: dict[str, Any]) -> dict[str, Any]:
+    def _migrate_v1_inner(cls, data: dict[str, object]) -> dict[str, object]:
         """Unwrap ``{"parameters": {...}, "peaks": {...}}`` (v1 Pattern 2).
 
         Args:
@@ -308,14 +359,59 @@ class UnifiedFittingConfig(BaseModel):
         """
         params = data["parameters"]
         result = {k: v for k, v in data.items() if k != "parameters"}
-        for key in ("minimizer", "optimizer"):
-            if key in params:
-                result[key] = params[key]
+        if isinstance(params, dict):
+            for key in ("minimizer", "optimizer"):
+                if key in params:
+                    result[key] = params[key]
         return result
+
+    @classmethod
+    def _coerce_flat_data_keys(cls, data: dict[str, object]) -> dict[str, object]:
+        """Coerce flat data keys into a ``data`` sub-dict.
+
+        Args:
+            data: Mutable normalised dict (v1 or v2 flat form).
+
+        Returns:
+            dict: Updated dict, potentially with a new ``data`` key.
+        """
+        if isinstance(data.get("data"), dict):
+            return data
+        flat_data: dict[str, object] = {}
+        for k in list(data):
+            if k in _DATA_KEYS:
+                flat_data[k] = data.pop(k)
+        if flat_data:
+            col = data.get("column", [])
+            if isinstance(col, list) and len(col) >= 2:  # noqa: PLR2004
+                flat_data.setdefault("x_col", str(col[0]))
+                flat_data.setdefault("y_col", str(col[1]))
+            data["data"] = flat_data
+        return data
+
+    @classmethod
+    def _coerce_flat_preproc_keys(cls, data: dict[str, object]) -> dict[str, object]:
+        """Coerce flat preprocessing keys into a ``preprocessing`` sub-dict.
+
+        Args:
+            data: Mutable normalised dict.
+
+        Returns:
+            dict: Updated dict, potentially with a new ``preprocessing`` key.
+        """
+        if isinstance(data.get("preprocessing"), dict):
+            return data
+        flat_preproc: dict[str, object] = {}
+        for k in list(data):
+            if k in _PREPROC_KEYS:
+                flat_preproc[k] = data.pop(k)
+        if flat_preproc:
+            data["preprocessing"] = flat_preproc
+        return data
 
     @model_validator(mode="before")
     @classmethod
-    def migrate_v1_format(cls, data: Any) -> Any:
+    def migrate_v1_format(cls, data: object) -> object:
         """Unwrap v1.x input file format before field validation.
 
         Handles two legacy patterns:
@@ -342,6 +438,10 @@ class UnifiedFittingConfig(BaseModel):
         at the top level so the ``_raw_args`` contract in ``FittingPipeline``
         still works.
 
+        Flat data / pre-processing keys are then coerced into their respective
+        sub-models (``data`` / ``preprocessing``) so that compat ``@property``
+        accessors work correctly.
+
         Args:
             data: Raw input data before field coercion.
 
@@ -356,16 +456,16 @@ class UnifiedFittingConfig(BaseModel):
             return cls._migrate_v2_format(data)
 
         if "fitting" in data:
-            return cls._migrate_v1_full_wrapper(data)
+            data = cls._migrate_v1_full_wrapper(data)
+        elif "parameters" in data and "peaks" in data and "minimizer" not in data:
+            data = cls._migrate_v1_inner(data)
 
-        if "parameters" in data and "peaks" in data and "minimizer" not in data:
-            return cls._migrate_v1_inner(data)
-
-        return data
+        data = cls._coerce_flat_data_keys(data)
+        return cls._coerce_flat_preproc_keys(data)
 
     @field_validator("column", mode="before")
     @classmethod
-    def coerce_column(cls, v: Any) -> Any:
+    def coerce_column(cls, v: object) -> object:
         """Coerce list/tuple column input to ColumnConfig-compatible dict.
 
         Accepts the legacy ``["x_col", "y_col"]`` list format produced by the
@@ -386,7 +486,7 @@ class UnifiedFittingConfig(BaseModel):
 
     @field_validator("peaks", mode="before")
     @classmethod
-    def validate_peak_keys(cls, v: Any) -> Any:
+    def validate_peak_keys(cls, v: object) -> object:
         """Reject peaks dict entries with non-positive-integer string keys.
 
         Valid keys are decimal digit strings whose integer value is >= 1
@@ -458,13 +558,13 @@ class UnifiedFittingConfig(BaseModel):
 
         if path.suffix == ".toml":
             with path.open("rb") as fb:
-                data = tomli.load(fb)
+                raw: object = tomli.load(fb)
         elif path.suffix == ".json":
             with path.open(encoding="utf-8") as ft:
-                data = json.load(ft)
+                raw = json.load(ft)
         elif path.suffix in {".yaml", ".yml"}:
             with path.open(encoding="utf-8") as ft:
-                data = yaml.load(ft, Loader=yaml.FullLoader)
+                raw = yaml.load(ft, Loader=yaml.FullLoader)
         else:
             msg = (
                 f"Unsupported file format '{path.suffix}'. "
@@ -472,10 +572,10 @@ class UnifiedFittingConfig(BaseModel):
             )
             raise OSError(msg)
 
-        return cls.model_validate(data)
+        return cls.model_validate(raw)
 
     @classmethod
-    def from_dict(cls, data: dict[str, Any]) -> UnifiedFittingConfig:
+    def from_dict(cls, data: dict[str, object]) -> UnifiedFittingConfig:
         """Create a configuration from a plain dictionary.
 
         This provides backward-compatible construction from the legacy dict

@@ -17,7 +17,7 @@ documentation:
   - changed-files:
       - any-glob-to-any-file:
           - docs/**
-          - Examples/**
+          - examples/**
           - mkdocs.yml
           - README.md
           - INSTALLATION.md
@@ -39,7 +39,7 @@ python:
       - any-glob-to-any-file: "spectrafit/**/*.py"
 testing:
   - changed-files:
-      - any-glob-to-any-file: "spectrafit/**/test_*.py"
+      - any-glob-to-any-file: "tests/**/test_*.py"
 docker:
   - changed-files:
       - any-glob-to-any-file:

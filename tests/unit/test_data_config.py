@@ -23,7 +23,8 @@ class TestDataConfigDefaults:
         assert cfg.header == 0
         assert cfg.decimal == "."
         assert cfg.comment is None
-        assert cfg.column == []
+        assert cfg.x_col == "energy"
+        assert cfg.y_col == "intensity"
         assert cfg.global_ == 0
 
     def test_infile_is_coerced_to_path(self, tmp_path: Path) -> None:
@@ -37,13 +38,15 @@ class TestDataConfigDefaults:
             header=1,
             decimal=",",
             comment="#",
-            column=["x", "y"],
+            x_col="x",
+            y_col="y",
             **{"global": 1},
         )
         assert cfg.separator == ","
         assert cfg.decimal == ","
         assert cfg.comment == "#"
-        assert cfg.column == ["x", "y"]
+        assert cfg.x_col == "x"
+        assert cfg.y_col == "y"
         assert cfg.global_ == 1
 
 
@@ -55,7 +58,8 @@ class TestDataConfigDefaults:
 class TestFromArgsDict:
     """DataConfig.from_args_dict bridges the legacy dict interface."""
 
-    def test_full_dict(self, tmp_path: Path) -> None:
+    def test_full_dict_with_column_list(self, tmp_path: Path) -> None:
+        """Old ``column`` list format is transparently converted."""
         infile = tmp_path / "spectrum.txt"
         args = {
             "infile": str(infile),
@@ -69,16 +73,31 @@ class TestFromArgsDict:
         cfg = DataConfig.from_args_dict(args)
         assert cfg.infile == infile
         assert cfg.separator == ","
-        assert cfg.column == ["energy", "intensity"]
+        assert cfg.x_col == "energy"
+        assert cfg.y_col == "intensity"
         assert cfg.global_ == 0
+
+    def test_full_dict_with_x_y_col(self, tmp_path: Path) -> None:
+        """New ``x_col``/``y_col`` format works directly."""
+        infile = tmp_path / "spectrum.txt"
+        args = {
+            "infile": str(infile),
+            "x_col": "wavenumber",
+            "y_col": "absorbance",
+            "global_": 0,
+        }
+        cfg = DataConfig.from_args_dict(args)
+        assert cfg.x_col == "wavenumber"
+        assert cfg.y_col == "absorbance"
 
     def test_minimal_dict_uses_defaults(self, tmp_path: Path) -> None:
         cfg = DataConfig.from_args_dict({"infile": str(tmp_path / "f.txt")})
         assert cfg.separator == r"\s+"
-        assert cfg.header == 0
+        assert cfg.header is None
         assert cfg.decimal == "."
         assert cfg.comment is None
-        assert cfg.column == []
+        assert cfg.x_col == "energy"
+        assert cfg.y_col == "intensity"
         assert cfg.global_ == 0
 
     def test_global_flag_truthy(self, tmp_path: Path) -> None:
@@ -119,7 +138,8 @@ class TestFromUnified:
     def test_column_from_config(self, tmp_path: Path) -> None:
         cfg = self._make_config()
         dc = DataConfig.from_unified(cfg, tmp_path / "data.txt")
-        assert dc.column == ["energy", "intensity"]
+        assert dc.x_col == "energy"
+        assert dc.y_col == "intensity"
 
     def test_infile_is_path(self, tmp_path: Path) -> None:
         cfg = self._make_config()

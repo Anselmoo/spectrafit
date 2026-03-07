@@ -11,7 +11,6 @@ import pickle
 
 from pathlib import Path
 from typing import TYPE_CHECKING
-from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -25,7 +24,7 @@ if TYPE_CHECKING:
     from collections.abc import MutableMapping
 
 
-def read_input_file(fname: Path) -> MutableMapping[str, Any]:
+def read_input_file(fname: Path) -> MutableMapping[str, object]:
     """Read the input file.
 
     Read the input file as `toml`, `json`, or `yaml` files and return as a dictionary.
@@ -63,7 +62,7 @@ def read_input_file(fname: Path) -> MutableMapping[str, Any]:
     return args
 
 
-def load_data(args: DataConfig | dict[str, Any]) -> pd.DataFrame:
+def load_data(args: DataConfig) -> pd.DataFrame:
     """Load the data from a txt file.
 
     !!! note "About the data format"
@@ -75,10 +74,8 @@ def load_data(args: DataConfig | dict[str, Any]) -> pd.DataFrame:
         columns are considered as data.
 
     Args:
-        args: Data loading configuration.  Pass a
-            :class:`~spectrafit.models.data_config.DataConfig` for the typed v2
-            path, or a legacy ``dict[str, Any]`` (the dict is coerced automatically
-            via :meth:`~spectrafit.models.data_config.DataConfig.from_args_dict`).
+        args: Validated :class:`~spectrafit.models.data_config.DataConfig` specifying
+            file path, column names, separator, and global fitting mode.
 
     Returns:
         pd.DataFrame: DataFrame containing the input data (`x` and `data`),
@@ -86,8 +83,6 @@ def load_data(args: DataConfig | dict[str, Any]) -> pd.DataFrame:
              extended by the single contribution of the model.
 
     """
-    if not isinstance(args, DataConfig):
-        args = DataConfig.from_args_dict(args)
     try:
         if args.global_:
             return pd.read_csv(
@@ -102,7 +97,7 @@ def load_data(args: DataConfig | dict[str, Any]) -> pd.DataFrame:
             args.infile,
             sep=args.separator,
             header=args.header,
-            usecols=args.column,
+            usecols=[args.x_col, args.y_col],
             dtype=np.float64,
             decimal=args.decimal,
             comment=args.comment,
@@ -113,8 +108,8 @@ def load_data(args: DataConfig | dict[str, Any]) -> pd.DataFrame:
 
 
 def check_keywords_consistency(
-    check_args: MutableMapping[str, Any],
-    ref_args: dict[str, Any],
+    check_args: MutableMapping[str, object],
+    ref_args: MutableMapping[str, object],
 ) -> None:
     """Check if the keywords are consistent.
 
@@ -122,8 +117,8 @@ def check_keywords_consistency(
     are reference keywords of the `cmd_line_args` and the `args` of the `input_file`.
 
     Args:
-        check_args (MutableMapping[str, Any]): First dictionary to be checked.
-        ref_args (FittingArgs): Second dictionary to be checked.
+        check_args (MutableMapping[str, object]): First dictionary to be checked.
+        ref_args (MutableMapping[str, object]): Second dictionary to be checked.
 
     Raises:
         KeyError: If the keywords are not consistent.
@@ -135,7 +130,7 @@ def check_keywords_consistency(
             raise KeyError(msg)
 
 
-def unicode_check(f: Any, encoding: str = "latin1") -> Any:
+def unicode_check(f: object, encoding: str = "latin1") -> object:
     """Check if the pkl file is encoded in unicode.
 
     Args:
@@ -148,13 +143,13 @@ def unicode_check(f: Any, encoding: str = "latin1") -> Any:
 
     """
     try:
-        data_dict = pickle.load(f)
+        data_dict = pickle.load(f)  # type: ignore[arg-type]
     except UnicodeDecodeError:  # pragma: no cover
-        data_dict = pickle.load(f, encoding=encoding)
+        data_dict = pickle.load(f, encoding=encoding)  # type: ignore[arg-type]
     return data_dict
 
 
-def pkl2any(pkl_fname: Path, encoding: str = "latin1") -> Any:
+def pkl2any(pkl_fname: Path, encoding: str = "latin1") -> object:
     """Load a pkl file and return the data as a any type of data or object.
 
     Args:
