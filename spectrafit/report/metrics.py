@@ -143,11 +143,11 @@ class RegressionMetrics:
             (true, pred) if true.shape[1] > 1 else (np.array([true]), np.array([pred]))
         )
 
-    def __call__(self) -> dict[str, list[float | None]]:
+    def __call__(self) -> dict[str, object]:
         """Calculate the regression metrics of the Fit(s) for the post analysis.
 
         Returns:
-            dict[str, list[float | None]]: Dictionary containing the regression metrics
+            dict[str, object]: Dictionary containing the regression metrics
                 in pandas split-orient format (keys: ``data``, ``index``, ``columns``).
 
         """

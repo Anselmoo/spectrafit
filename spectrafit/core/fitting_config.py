@@ -348,6 +348,15 @@ class UnifiedFittingConfig(BaseModel):
         if isinstance(data.get("components"), list):
             return cls._migrate_v2_format(data)
 
+        import warnings  # noqa: PLC0415
+
+        warnings.warn(
+            "v1.x input format is deprecated and will be removed in v3.0. "
+            "Run `uv run poe migrate-v1 <infile> -o <outfile.toml>` to convert "
+            "to the v2 [[components]] format.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return _migrate_v1(data)
 
     @field_validator("global_", mode="before")
