@@ -980,13 +980,21 @@ class PrintingResults:
 class PrintingStatus:
     """Print the status of the fitting process."""
 
+    def lifecycle_notice(self) -> str:
+        """Return the current lifecycle notice for users."""
+        return (
+            "User information: SpectraFit v2.0 is currently in development. "
+            "SpectraFit v1.x is in end-of-life maintenance mode and will "
+            "receive only critical hotfixes."
+        )
+
     def welcome(self) -> None:
         """Print the welcome message."""
         tprint("SpectraFit", font="3-d")
 
     def version(self) -> str:
         """Print current version of the SpectraFit."""
-        return f"Currently used version is: {__version__}"
+        return f"Currently used version is: {__version__}\n{self.lifecycle_notice()}"
 
     def start(self) -> None:
         """Print the start of the fitting process."""

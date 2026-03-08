@@ -137,13 +137,3 @@ jobs:
       - name: 🚀 Deploy documentation develops
         if: contains(github.ref, 'refs/heads/main')
         run: uv run --group docs --all-extras mike deploy --push --update-aliases develop
-  devcontainer:
-    if: github.repository == 'Anselmoo/spectrafit'
-    name: 🐳 Devcontainer
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: 🛎️ Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-      - name: 🏗️ Build devcontainer
-        uses: devcontainers/ci@8bf61b26e9c3a98f69cb6ce2f88d24ff59b785c6 # v0.3
