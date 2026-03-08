@@ -15,6 +15,11 @@ from numpy.testing import assert_almost_equal
 
 BUILTINS_INPUT = "builtins.input"
 
+pytestmark = pytest.mark.skipif(
+    sys.platform in {"win32", "darwin"},
+    reason="test_input CLI tests are deactivated on Windows and macOS",
+)
+
 
 def assert_no_critical_stderr(ret: Any) -> None:
     """Allow warnings in stderr while ensuring no fatal errors occurred."""
