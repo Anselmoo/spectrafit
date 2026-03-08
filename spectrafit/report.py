@@ -993,7 +993,7 @@ class PrintingStatus:
         tprint("SpectraFit", font="3-d")
 
     def version(self) -> str:
-        """Print current version of the SpectraFit."""
+        """Return the current version together with lifecycle information."""
         return f"Currently used version is: {__version__}\n{self.lifecycle_notice()}"
 
     def start(self) -> None:
