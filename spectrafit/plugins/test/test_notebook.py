@@ -285,6 +285,7 @@ class TestDataFramePlot:
             )
             mock_show.assert_called_once()
 
+    @pytest.mark.skip(reason="deactivated due to flaky external HTTP dependency")
     def test_dataframe_plot_global(self, dataframe_global: pd.DataFrame) -> None:
         """Test global plot."""
         pp = DataFramePlot()
@@ -586,6 +587,7 @@ class TestSpectraFitNotebook:
             mock_show.assert_called_once()
 
     @pytest.mark.skipif(sys.platform == "win32", reason="does not run on windows")
+    @pytest.mark.skip(reason="deactivated due to flaky external HTTP dependency")
     @pytest.mark.webtest
     def test_plot_global(
         self,

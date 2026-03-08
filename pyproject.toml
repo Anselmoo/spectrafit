@@ -175,7 +175,6 @@ extend-ignore = [
   "UP007",
   "PLR0913",
   "S301",
-  "PD901",
   "COM812",
   "FBT001",  # Boolean type hint positional argument
   "FBT002",  # Boolean default value positional argument
@@ -249,6 +248,7 @@ markers = [
   "models: tests for model implementations",
   "performance: tests that check performance characteristics",
   "integration: tests that check integration between components",
+  "obsolete: obsolete or end-of-life tests",
 ]
 
 [tool.coverage.report]

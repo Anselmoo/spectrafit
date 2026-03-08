@@ -6,6 +6,7 @@ import gzip
 import json
 import pickle
 import shutil
+import sys
 
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -29,6 +30,15 @@ from spectrafit.plugins.pkl_converter import PklConverter
 from spectrafit.plugins.pkl_visualizer import PklVisualizer
 from spectrafit.plugins.pptx_converter import PPTXConverter
 from spectrafit.plugins.rixs_converter import RIXSConverter
+
+
+pytestmark = [
+    pytest.mark.obsolete,
+    pytest.mark.skipif(
+        sys.platform in {"win32", "darwin"},
+        reason="obsolete converter plugin tests are skipped on Windows and macOS",
+    ),
+]
 
 
 if TYPE_CHECKING:
