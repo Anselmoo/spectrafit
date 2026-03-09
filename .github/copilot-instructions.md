@@ -27,7 +27,7 @@ Package management: `uv`. Build backend: `hatchling`. Python 3.10–3.13.
 | Data handling | pandas |
 | Reporting | tabulate, seaborn |
 | Package manager | uv |
-| Type checker | mypy (hard-fail) + ty (warn-only beta) |
+| Type checker | ty (hard-fail) |
 | Linter | ruff |
 
 ---
@@ -71,10 +71,10 @@ CLI / Jupyter / API
 ## CI Gate
 
 ```bash
-uv run poe ci   # ruff check + mypy + pytest tests/
+uv run poe ci   # ruff check + ty + pytest tests/
 ```
 
-All three must be green before merging. The 5 pre-existing mypy errors in
+All three must be green before merging. The 5 pre-existing ty errors in
 `fitting_config.py` and `plugins/notebook/core.py` are known — do not fix in
 unrelated tasks.
 
