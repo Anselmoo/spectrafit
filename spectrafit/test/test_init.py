@@ -17,7 +17,13 @@ if TYPE_CHECKING:
 
 
 def reload_spectrafit() -> ModuleType:
-    """Reload the spectrafit package to evaluate import-time warnings."""
+    """Reload or import spectrafit to evaluate import-time warnings.
+
+    Returns:
+        ModuleType: The reloaded module when already imported, otherwise a
+            freshly imported module.
+
+    """
     if "spectrafit" in sys.modules:
         return importlib.reload(sys.modules["spectrafit"])
     return importlib.import_module("spectrafit")
@@ -73,7 +79,7 @@ def test_python_end_of_life_warning(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 def test_no_warning_for_other_versions(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Test that only the lifecycle warning is issued for Python versions above 3.9."""
+    """Test that only the lifecycle warning is issued for Python versions other than 3.9."""
     module = importlib.import_module("spectrafit")
 
     # Set the Python version to 3.10
