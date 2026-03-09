@@ -1,38 +1,27 @@
-"""Unit tests for UnifiedFittingConfig (spectrafit.core.fitting_config).
-
-Covers:
-- from_dict() with v2.0.0 flat structure
-- from_dict() with v1.x nested structure (rixs/config.json compat) — Phase 2
-- to_solver_args() output contract
-- Pydantic validation errors for missing/malformed peaks
-- String-integer peak key validation — Phase 3
-- from_file() relative infile path rebasing — Phase X
-"""
+"""Unit tests for UnifiedFittingConfig (v2 components-only contract)."""
 
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any
+from types import MappingProxyType
 
 import pytest
 
 from spectrafit.core.fitting_config import UnifiedFittingConfig
 
 
-# ---------------------------------------------------------------------------
-# Minimal valid input (v2 flat structure)
-# ---------------------------------------------------------------------------
-
-MINIMAL_V2: dict[str, Any] = {
-    "peaks": {
-        "1": {
-            "gaussian": {
+MINIMAL_V2: dict[str, object] = {
+    "components": [
+        {
+            "id": "p1",
+            "model": "gaussian",
+            "parameters": {
                 "amplitude": {"min": 0, "max": 2, "value": 1.0, "vary": True},
                 "center": {"min": -2, "max": 2, "value": 0.0, "vary": True},
                 "fwhmg": {"min": 0.01, "max": 1.0, "value": 0.5, "vary": True},
-            }
+            },
         }
-    },
+    ],
     "column": {"x": "energy", "y": "intensity"},
     "minimizer": {"nan_policy": "propagate", "calc_covar": True},
     "optimizer": {"max_nfev": 1000, "method": "leastsq"},
@@ -42,110 +31,67 @@ MINIMAL_V2: dict[str, Any] = {
 
 @pytest.mark.unit
 class TestFromDict:
-    """UnifiedFittingConfig.from_dict() — v2 flat input."""
+    """UnifiedFittingConfig.from_dict() — v2 components input."""
 
     def test_minimal_valid(self) -> None:
         config = UnifiedFittingConfig.from_dict(MINIMAL_V2)
         assert config is not None
 
-    def test_peaks_accessible(self) -> None:
+    def test_components_accessible(self) -> None:
         config = UnifiedFittingConfig.from_dict(MINIMAL_V2)
-        assert "1" in config.peaks
+        assert len(config.components) == 1
+        assert config.components[0].id == "p1"
 
-    def test_multiple_peaks(self) -> None:
-        data: dict[str, Any] = {
+    def test_multiple_components(self) -> None:
+        data: dict[str, object] = {
             **MINIMAL_V2,
-            "peaks": {
-                "1": {
-                    "gaussian": {
+            "components": [
+                {
+                    "id": "p1",
+                    "model": "gaussian",
+                    "parameters": {
                         "amplitude": {"value": 1.0},
                         "center": {"value": -1.0},
                         "fwhmg": {"value": 0.5},
-                    }
+                    },
                 },
-                "2": {
-                    "lorentzian": {
+                {
+                    "id": "p2",
+                    "model": "lorentzian",
+                    "parameters": {
                         "amplitude": {"value": 0.8},
                         "center": {"value": 1.0},
                         "fwhml": {"value": 0.6},
-                    }
+                    },
                 },
-            },
+            ],
         }
         config = UnifiedFittingConfig.from_dict(data)
-        assert len(config.peaks) == 2
+        assert len(config.components) == 2
+
+    def test_mapping_payload_supported(self) -> None:
+        config = UnifiedFittingConfig.from_dict(MappingProxyType(MINIMAL_V2))
+        assert len(config.components) == 1
 
 
 @pytest.mark.unit
-class TestPeakKeyValidation:
-    """String-integer peak key enforcement (Phase 3 — validator in UnifiedFittingConfig)."""
+class TestComponentsValidation:
+    """Components are required for fit-capable configs."""
 
-    def test_non_integer_string_key_rejected(self) -> None:
-        data: dict[str, Any] = {
-            **MINIMAL_V2,
-            "peaks": {
-                "peak_one": {  # non-integer key — must be rejected
-                    "gaussian": {
-                        "amplitude": {"value": 1.0},
-                        "center": {"value": 0.0},
-                        "fwhmg": {"value": 0.5},
-                    }
-                }
-            },
-        }
-        with pytest.raises(Exception):  # noqa: B017  # ValidationError expected
-            UnifiedFittingConfig.from_dict(data)
-
-    def test_zero_key_rejected(self) -> None:
-        data: dict[str, Any] = {
-            **MINIMAL_V2,
-            "peaks": {
-                "0": {  # zero — must be rejected (keys start at "1")
-                    "gaussian": {
-                        "amplitude": {"value": 1.0},
-                        "center": {"value": 0.0},
-                        "fwhmg": {"value": 0.5},
-                    }
-                }
-            },
-        }
+    def test_empty_config_rejected(self) -> None:
         with pytest.raises(Exception):  # noqa: B017
-            UnifiedFittingConfig.from_dict(data)
+            UnifiedFittingConfig.from_dict({})
 
-    def test_valid_positive_integer_keys_accepted(self) -> None:
-        data: dict[str, Any] = {
-            **MINIMAL_V2,
-            "peaks": {
-                "1": {
-                    "gaussian": {
-                        "amplitude": {"value": 1.0},
-                        "center": {"value": -1.0},
-                        "fwhmg": {"value": 0.5},
-                    }
-                },
-                "2": {
-                    "gaussian": {
-                        "amplitude": {"value": 1.0},
-                        "center": {"value": 1.0},
-                        "fwhmg": {"value": 0.5},
-                    }
-                },
-                "10": {
-                    "gaussian": {
-                        "amplitude": {"value": 1.0},
-                        "center": {"value": 5.0},
-                        "fwhmg": {"value": 0.5},
-                    }
-                },
-            },
-        }
-        config = UnifiedFittingConfig.from_dict(data)
-        assert len(config.peaks) == 3
+    def test_empty_components_rejected(self) -> None:
+        with pytest.raises(Exception):  # noqa: B017
+            UnifiedFittingConfig.from_dict({"components": []})
 
+    def test_v1_peaks_rejected(self) -> None:
+        with pytest.raises(Exception):  # noqa: B017
+            UnifiedFittingConfig.from_dict(
+                {"peaks": {"1": {"gaussian": {"amplitude": {"value": 1.0}}}}}
+            )
 
-# ---------------------------------------------------------------------------
-# X3 — from_file() path rebasing tests
-# ---------------------------------------------------------------------------
 
 _MINIMAL_TOML = """\
 [data]
@@ -170,17 +116,10 @@ global_ = 0
 id = "p1"
 model = "gaussian"
 
-[components.amplitude]
-value = 1.0
-vary = true
-
-[components.center]
-value = 0.0
-vary = true
-
-[components.fwhmg]
-value = 0.5
-vary = true
+[components.parameters]
+amplitude = { value = 1.0, vary = true }
+center = { value = 0.0, vary = true }
+fwhmg = { value = 0.5, vary = true }
 """
 
 
@@ -197,7 +136,9 @@ class TestFromFilePaths:
 
     def test_absolute_infile_not_changed(self, tmp_path: Path) -> None:
         abs_path = (tmp_path / "data.csv").resolve()
-        toml_content = _MINIMAL_TOML.replace('infile = "data.csv"', f'infile = "{abs_path}"')
+        toml_content = _MINIMAL_TOML.replace(
+            'infile = "data.csv"', f'infile = "{abs_path}"'
+        )
         toml_file = tmp_path / "input.toml"
         toml_file.write_text(toml_content, encoding="utf-8")
         cfg = UnifiedFittingConfig.from_file(toml_file)
@@ -205,7 +146,9 @@ class TestFromFilePaths:
 
     def test_infile_in_subdir_rebased(self, tmp_path: Path) -> None:
         (tmp_path / "data").mkdir()
-        toml_content = _MINIMAL_TOML.replace('infile = "data.csv"', 'infile = "data/spectrum.csv"')
+        toml_content = _MINIMAL_TOML.replace(
+            'infile = "data.csv"', 'infile = "data/spectrum.csv"'
+        )
         toml_file = tmp_path / "input.toml"
         toml_file.write_text(toml_content, encoding="utf-8")
         cfg = UnifiedFittingConfig.from_file(toml_file)

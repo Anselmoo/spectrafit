@@ -10,7 +10,9 @@ from __future__ import annotations
 
 import json
 
+from collections.abc import Mapping
 from pathlib import Path
+from typing import TypeAlias
 
 import tomli
 import yaml
@@ -30,13 +32,11 @@ from spectrafit.models.fitting_context import FittingMode
 from spectrafit.models.global_fitting import GlobalFittingConfig
 from spectrafit.models.mcmc_config import MCMCConfig
 from spectrafit.models.meta_config import MetaConfig
-from spectrafit.models.migration import migrate_v1_format as _migrate_v1
 from spectrafit.models.peak_models import Component
-from spectrafit.models.peak_models import FitParameter
 from spectrafit.models.preprocessing_config import PreprocessingConfig
+from spectrafit.models.solver_config import ConfIntervalConfig
 from spectrafit.models.solver_config import MinimizerConfig
 from spectrafit.models.solver_config import OptimizerConfig
-from spectrafit.models.types import PeaksDict
 
 
 class ColumnConfig(BaseModel):
@@ -64,6 +64,31 @@ class ColumnConfig(BaseModel):
         return str(v)
 
 
+LegacyConfigPayload: TypeAlias = Mapping[str, object]
+"""Read-only mapping accepted by legacy config construction bridges."""
+
+
+class V2DataBlock(BaseModel):
+    """Typed parser for the optional v2 ``[data]`` block."""
+
+    model_config = ConfigDict(populate_by_name=True, extra="allow")
+
+    infile: str | Path | None = None
+    x_col: str = "energy"
+    y_col: str = "intensity"
+
+
+class V2SolverBlock(BaseModel):
+    """Typed parser for the optional v2 ``[solver]`` block."""
+
+    model_config = ConfigDict(extra="allow")
+
+    method: str = "leastsq"
+    max_nfev: int | None = None
+    nan_policy: str = "propagate"
+    calc_covar: bool = True
+
+
 class UnifiedFittingConfig(BaseModel):
     """Unified fitting configuration consumed by CLI and notebook.
 
@@ -73,8 +98,7 @@ class UnifiedFittingConfig(BaseModel):
     file.  The CLI is a minimal launcher; no flat per-parameter flags exist.
 
     Attributes:
-        peaks: Nested peak parameter definitions keyed by peak index, model
-            name, and parameter constraints (v1 format, still supported).
+        components: Typed component definitions (v2 canonical format).
         minimizer: Minimizer options forwarded to *lmfit*.
         optimizer: Optimizer options forwarded to *lmfit*.
         column: Column-name mapping for the input data (compat bridge for
@@ -89,11 +113,11 @@ class UnifiedFittingConfig(BaseModel):
         preprocessing: Pre-processing configuration (``[preprocessing]`` section).
     """
 
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
 
-    peaks: PeaksDict | None = Field(
-        default=None,
-        description="Peak definitions keyed by index, model name, and parameters",
+    components: list[Component] = Field(
+        default_factory=list,
+        description="Typed component definitions (v2 canonical input).",
     )
     minimizer: MinimizerConfig = Field(
         default_factory=MinimizerConfig,
@@ -112,7 +136,7 @@ class UnifiedFittingConfig(BaseModel):
         alias="global",
         description="Global fitting mode — STANDARD (default) or GLOBAL for multi-dataset fits",
     )
-    conf_interval: bool | dict[str, object] = Field(
+    conf_interval: bool | ConfIntervalConfig = Field(
         default=False,
         description="Confidence interval config; False disables CI calculation",
     )
@@ -198,36 +222,8 @@ class UnifiedFittingConfig(BaseModel):
         return self.preprocessing.oversampling if self.preprocessing else False
 
     # ------------------------------------------------------------------
-    # Computed fields — derived from peaks and global_
+    # Computed fields — derived from global_
     # ------------------------------------------------------------------
-
-    @computed_field  # type: ignore[prop-decorator]
-    @property
-    def components(self) -> list[Component]:
-        """Return typed :class:`Component` list.
-
-        Prefers the v2 ``[[components]]`` input format when present
-        (stored in ``model_extra["__v2_components__"]`` by
-        :meth:`migrate_v1_format`); falls back to auto-migrating the legacy
-        ``peaks`` dict.
-
-        Returns:
-            list[Component]: One Component per fitting component.
-        """
-        raw = (self.model_extra or {}).get("__v2_components__")
-        if raw is not None:
-            return [Component.model_validate(c) for c in raw]
-        if not self.peaks:
-            return []
-        comps: list[Component] = []
-        for peak_id, model_spec in self.peaks.items():
-            for model_name, param_spec in model_spec.items():
-                params = {
-                    field_name: FitParameter(**constraint)  # type: ignore[arg-type]
-                    for field_name, constraint in param_spec.items()
-                }
-                comps.append(Component(id=peak_id, model=model_name, parameters=params))
-        return comps
 
     @computed_field  # type: ignore[prop-decorator]
     @property
@@ -243,7 +239,7 @@ class UnifiedFittingConfig(BaseModel):
         )
 
     @classmethod
-    def _migrate_v2_format(cls, data: dict[str, object]) -> dict[str, object]:
+    def _migrate_v2_format(cls, data: LegacyConfigPayload) -> dict[str, object]:
         """Translate v2 ``[[components]]`` input to internal representation.
 
         Handles the prototype schema::
@@ -272,18 +268,28 @@ class UnifiedFittingConfig(BaseModel):
             dict: Normalised dict ready for field validation.
         """
         data = dict(data)
-        data["__v2_components__"] = data.pop("components")
+
+        # Promote a top-level ``infile`` key into the ``data`` sub-dict so it
+        # is parsed by DataConfig rather than rejected as an extra field.
+        if "infile" in data:
+            data_block = data.get("data", {})
+            if isinstance(data_block, dict):
+                data_block.setdefault("infile", data.pop("infile"))
+                data["data"] = data_block
+            else:
+                data.pop("infile")
 
         # Keep the `data` dict in place — Pydantic will parse it as DataConfig.
         # We also populate `column` for the frozen-module compat bridge.
         if isinstance(data.get("data"), dict):
-            d = data["data"]
-            if not isinstance(d, dict):
+            raw_data = data["data"]
+            if not isinstance(raw_data, dict):
                 msg = "Expected 'data' to be a dict"
                 raise TypeError(msg)
+            data_block = V2DataBlock.model_validate(raw_data)
             data.setdefault(
                 "column",
-                {"x": d.get("x_col", "energy"), "y": d.get("y_col", "intensity")},
+                {"x": data_block.x_col, "y": data_block.y_col},
             )
 
         if "solver" in data:
@@ -291,16 +297,17 @@ class UnifiedFittingConfig(BaseModel):
             if not isinstance(s, dict):
                 msg = "Expected 'solver' to be a dict"
                 raise TypeError(msg)
+            solver_block = V2SolverBlock.model_validate(s)
             data.setdefault(
                 "minimizer",
                 {
-                    "nan_policy": s.get("nan_policy", "propagate"),
-                    "calc_covar": s.get("calc_covar", True),
+                    "nan_policy": solver_block.nan_policy,
+                    "calc_covar": solver_block.calc_covar,
                 },
             )
             data.setdefault(
                 "optimizer",
-                {"method": s.get("method", "leastsq"), "max_nfev": s.get("max_nfev")},
+                {"method": solver_block.method, "max_nfev": solver_block.max_nfev},
             )
 
         # Drop non-model metadata keys; `meta` stays → Pydantic parses as MetaConfig.
@@ -311,53 +318,25 @@ class UnifiedFittingConfig(BaseModel):
 
     @model_validator(mode="before")
     @classmethod
-    def migrate_v1_format(cls, data: object) -> object:
-        """Unwrap v1.x input file format before field validation.
-
-        Handles two legacy patterns:
-
-        **Pattern 1 — full file wrapper** (``from_file`` path):
-
-        .. code-block:: json
-
-           {"fitting": {"parameters": {"minimizer": …, "optimizer": …},
-                        "peaks": {"1": {…}}},
-            "settings": {"column": […], "infile": "…", …}}
-
-        **Pattern 2 — inner ``fitting`` dict** (``from_dict`` called with
-        the pre-extracted ``fitting`` section):
-
-        .. code-block:: json
-
-           {"parameters": {"minimizer": …, "optimizer": …},
-            "peaks": {"1": {…}}, "description": {…}}
-
-        v2 canonical format (``[[components]]`` TOML) is handled by
-        :meth:`_migrate_v2_format` before the v1 paths run.
+    def normalize_v2_input(cls, data: object) -> object:
+        """Normalise v2 input before field validation.
 
         Args:
             data: Raw input data before field coercion.
 
         Returns:
-            Any: Normalised dict ready for field validation, or the original
-            value if not a dict (Pydantic handles the type error downstream).
+            object: Normalized dict ready for field validation, or original value
+                if input is not a dict.
         """
         if not isinstance(data, dict):
             return data
 
+        data = dict(data)
+        data.pop("context", None)
+
         if isinstance(data.get("components"), list):
             return cls._migrate_v2_format(data)
-
-        import warnings  # noqa: PLC0415
-
-        warnings.warn(
-            "v1.x input format is deprecated and will be removed in v3.0. "
-            "Run `uv run poe migrate-v1 <infile> -o <outfile.toml>` to convert "
-            "to the v2 [[components]] format.",
-            DeprecationWarning,
-            stacklevel=2,
-        )
-        return _migrate_v1(data)
+        return data
 
     @field_validator("global_", mode="before")
     @classmethod
@@ -412,54 +391,29 @@ class UnifiedFittingConfig(BaseModel):
             return {"x": str(v[0]), "y": str(v[1])}
         return v
 
-    @field_validator("peaks", mode="before")
-    @classmethod
-    def validate_peak_keys(cls, v: object) -> object:
-        """Reject peaks dict entries with non-positive-integer string keys.
-
-        Valid keys are decimal digit strings whose integer value is >= 1
-        (e.g. ``"1"``, ``"2"``, ``"10"``).  Keys like ``"0"``, ``"foo"``,
-        or ``"-1"`` raise ``ValueError``.
-
-        Args:
-            v: Raw peaks value before field coercion.
-
-        Returns:
-            Any: The unchanged value if all keys are valid.
-
-        Raises:
-            ValueError: If any key is not a positive-integer string.
-        """
-        if isinstance(v, dict):
-            for k in v:
-                if not (isinstance(k, str) and k.isdigit() and int(k) >= 1):
-                    msg = (
-                        f"Peak key {k!r} is invalid. "
-                        "Keys must be positive integer strings (e.g. '1', '2', '10')."
-                    )
-                    raise ValueError(msg)
-        return v
-
     @model_validator(mode="after")
-    def validate_peaks_non_empty(self) -> UnifiedFittingConfig:
-        """Validate that at least one component or peak is defined.
-
-        Accepts either:
-        - v2 ``[[components]]`` format (``__v2_components__`` in model_extra)
-        - v1 ``peaks`` dict (non-empty)
+    def validate_components_non_empty(self) -> UnifiedFittingConfig:
+        """Validate that at least one component is defined.
 
         Returns:
             UnifiedFittingConfig: Self if validation passes.
 
         Raises:
-            ValueError: If neither components nor peaks are provided.
+            ValueError: If no components are provided for a fit-capable config.
         """
-        has_v2 = bool((self.model_extra or {}).get("__v2_components__"))
-        if not has_v2 and not self.peaks:
-            msg = (
-                "At least one component must be defined — use 'peaks' (v1) "
-                "or '[[components]]' (v2) format."
-            )
+        if self.components:
+            return self
+
+        is_preprocessing_only = (
+            self.preprocessing is not None
+            and self.minimizer is None
+            and self.optimizer is None
+        )
+        if is_preprocessing_only:
+            return self
+
+        if not self.components:
+            msg = "At least one component must be defined using v2 'components' format."
             raise ValueError(msg)
         return self
 
@@ -512,19 +466,20 @@ class UnifiedFittingConfig(BaseModel):
         return cls.model_validate(raw)
 
     @classmethod
-    def from_dict(cls, data: dict[str, object]) -> UnifiedFittingConfig:
+    def from_dict(cls, data: LegacyConfigPayload) -> UnifiedFittingConfig:
         """Create a configuration from a plain dictionary.
 
         This provides backward-compatible construction from the legacy dict
         format used throughout SpectraFit.
 
         Args:
-            data: Dictionary with fitting configuration keys.
+            data: Mapping with fitting configuration keys.
 
         Returns:
             UnifiedFittingConfig: Validated configuration instance.
         """
-        return cls.model_validate(data)
+        # intentional: legacy callers still provide mapping-like config payloads.
+        return cls.model_validate(dict(data))
 
     # ------------------------------------------------------------------
     # Conversion helpers
@@ -545,12 +500,15 @@ class UnifiedFittingConfig(BaseModel):
 
         Examples:
             >>> from spectrafit.core.fitting_config import UnifiedFittingConfig
-            >>> peaks = {"1": {"gaussian": {
-            ...     "amplitude": {"value": 1.0, "min": 0, "max": 2, "vary": True},
-            ...     "center": {"value": 0.0, "min": -1, "max": 1, "vary": True},
-            ...     "fwhmg": {"value": 0.5, "min": 0.1, "max": 2.0, "vary": True},
-            ... }}}
-            >>> cfg = UnifiedFittingConfig(peaks=peaks)
+            >>> cfg = UnifiedFittingConfig(components=[{
+            ...     "id": "p1",
+            ...     "model": "gaussian",
+            ...     "parameters": {
+            ...         "amplitude": {"value": 1.0, "min": 0, "max": 2, "vary": True},
+            ...         "center": {"value": 0.0, "min": -1, "max": 1, "vary": True},
+            ...         "fwhmg": {"value": 0.5, "min": 0.1, "max": 2.0, "vary": True},
+            ...     },
+            ... }])
             >>> bundle = cfg.build_composite_model()
             >>> "p1_amplitude" in bundle.params
             True

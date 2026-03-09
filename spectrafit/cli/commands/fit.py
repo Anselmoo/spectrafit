@@ -10,7 +10,9 @@ import typer
 from spectrafit.core import SaveResult
 from spectrafit.core.fitting_config import UnifiedFittingConfig
 from spectrafit.core.pipeline import fitting_routine_pipeline
+from spectrafit.models.fitting_context import FittingMode
 from spectrafit.models.output_config import OutputConfig
+from spectrafit.models.plot_config import PlotConfig
 from spectrafit.plotting import PlotSpectra
 from spectrafit.report import PrintingStatus
 
@@ -105,7 +107,7 @@ def fit(
             )
         )
 
-    warnings.showwarning = _rich_showwarning
+    warnings.showwarning = _rich_showwarning  # type: ignore[invalid-assignment]
 
     while True:
         __status__.start()
@@ -133,9 +135,7 @@ def fit(
                 console=console,
                 spinner="dots",
             ):
-                df_result, result_args = fitting_routine_pipeline(
-                    args=cfg, output=output
-                )
+                fit_result = fitting_routine_pipeline(args=cfg, output=output)
         except Exception as exc:
             console.print(
                 Panel(
@@ -153,8 +153,23 @@ def fit(
             f"[bold green]✓[/bold green] Fit complete: [cyan]{config.name}[/cyan]"
         )
 
-        PlotSpectra(df=df_result, args=result_args)()
-        SaveResult(df=df_result, args=result_args)()
+        PlotSpectra(
+            df=fit_result.df,
+            config=PlotConfig(
+                noplot=noplot,
+                global_fitting=(
+                    FittingMode.GLOBAL
+                    if fit_result.config.context.is_global
+                    else FittingMode.STANDARD
+                ),
+                data_statistic=fit_result.data_statistic,
+            ),
+        )()
+        SaveResult(
+            df=fit_result.df,
+            post=fit_result.post,
+            outfile=outfile,
+        )()
 
         __status__.end()
 

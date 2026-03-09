@@ -30,15 +30,21 @@ CLI / Jupyter / API
 | `spectrafit/models/peak_models.py` | `FitParameter`, `Component` — Pydantic v2 models for a single parameter and a single spectral component |
 | `spectrafit/models/bundle.py` | `CompositeModelBundle`, `build_composite_bundle()` — lmfit model composition via `model.__add__` |
 | `spectrafit/models/naming.py` | `lmfit_param_name()`, `sanitize_component_id()`, `translate_dot_notation()` — **single source of truth for all parameter naming** |
-| `spectrafit/models/fitting_context.py` | `FittingContext`, `FittingMode` — replaces legacy `global_: int` code smell |
+| `spectrafit/models/fitting_context.py` | `FittingContext`, `FittingMode`, `EnvironmentMode`, `detect_environment()` — replaces legacy `global_: int` code smell; auto-detects CLI / Notebook / API |
+| `spectrafit/models/fit_result.py` | `FitResult` — **complete output container**; sub-models `FitInsights`, `DataSummary`, `ConfidenceResults`, `VariableFitResult`, `FitConfigurations`; `from_legacy_dict()` bridge |
+| `spectrafit/models/plot_config.py` | `PlotConfig(BaseModel, extra="forbid")` — typed plot configuration |
 | `spectrafit/models/data_config.py` | `DataConfig` — typed data-loading configuration |
 | `spectrafit/models/solver.py` | `SolverModels` — orchestrates fit execution; uses `build_composite_model()` for standard fits |
 | `spectrafit/models/registry.py` | `REGISTRY`, `ModelInfo`, `model_check()` — model name → function mapping |
 | `spectrafit/models/types.py` | `FittingArgs`, `PeaksDict`, `PeakModelSpec` TypeAliases — **being phased out in v2.1.0** |
 | `spectrafit/models/autopeak.py` | **Re-export shim only** — deprecated, scheduled for removal in v2.1.0 |
+| `spectrafit/jupyter/` | Core Jupyter integration — `SpectraFitNotebook`, `SolverResults(BaseModel)`, `ExportReport` |
+| `spectrafit/jupyter/solver.py` | `SolverResults(BaseModel, frozen=True)` — typed Jupyter result view wrapping `FitResult`; replaces dict-access pattern |
+| `spectrafit/cli/banner.py` | `render_startup_panel(console, env)` — Rich startup panel; TTY-gated |
+| `spectrafit/cli/commands/scaffolding.py` | `init` command — `InitConfig(BaseModel)`, `InitEnvironment` enum, Rich wizard, TOML/notebook scaffolding |
 | `spectrafit/core/preprocessing.py` | `PreProcessing` — **FROZEN** (Layer 4, do not refactor until Phase 6+) |
 | `spectrafit/core/postprocessing.py` | `PostProcessing` — **FROZEN** (Layer 4) |
-| `spectrafit/plugins/` | Jupyter plugin — **FROZEN** until Phase 6+ |
+| `spectrafit/plugins/` | Re-export shims only — `plugins/notebook/` re-exports from `spectrafit/jupyter/` |
 
 ## Critical Invariants
 
@@ -52,12 +58,23 @@ CLI / Jupyter / API
 
 3. **`extra="forbid"` on all input Pydantic models.**
    Unknown fields must raise immediately. Use `model_config = ConfigDict(extra="forbid")`.
+   Exception: legacy result containers (`SolverAPI`, `ParameterSpec`, `FitStatisticsAPI`) keep
+   `extra="allow"` with a comment: `# intentional: result container, v2.1 migration target`.
 
 4. **lmfit model composition via `functools.reduce(operator.add, models)`.**
    Never iterate parameter dicts manually to build a composite model.
 
 5. **`apply_hints()` pattern: `model.set_param_hint()` before `composite.make_params()`.**
    Per-component parameter hints are applied on individual models before composition.
+
+6. **`FitResult` is the single authoritative output container.**
+   All consumers (CLI, Jupyter display, export) receive a typed `FitResult` instance.
+   No raw `FittingArgs` dict may cross module boundaries as a pipeline output contract.
+   Bridge path: `FitResult.from_legacy_dict(args)` during the v2 migration period.
+
+7. **`SolverResults` wraps `FitResult` for Jupyter display.**
+   All result access in `spectrafit/jupyter/` goes through `SolverResults.<property>`.
+   No `self.args_out["key"]` dict access anywhere in `spectrafit/jupyter/`.
 
 ## v1 Backward Compatibility
 
@@ -79,11 +96,13 @@ postprocessing chain. **Do not move symbols** to `spectrafit/core/` if they are 
 
 ## Frozen Modules (Phase 6+)
 
-These modules are **not to be refactored until Phases 6+** of the migration plan:
+These modules are **not to be refactored until Phase 6+ / v2.1.0**:
 
-- `spectrafit/core/preprocessing.py`
-- `spectrafit/core/postprocessing.py`
-- `spectrafit/core/export.py`
-- `spectrafit/plugins/` (entire directory)
-- `spectrafit/report/`
-- `spectrafit/api/` (except additive changes)
+| Module | Status |
+|--------|--------|
+| `spectrafit/core/preprocessing.py` | **FROZEN** — Layer 4 |
+| `spectrafit/core/postprocessing.py` | **FROZEN** — Layer 4 |
+| `spectrafit/core/export.py` | **FROZEN** — Layer 4 |
+| `spectrafit/plugins/` | Re-export shims only — `plugins/notebook/` re-exports from `spectrafit/jupyter/`; do not add new code here |
+| `spectrafit/report/`  | **FROZEN** (Layer 4) |
+| `spectrafit/api/`     | Input models: `extra="forbid"`. Result containers: `extra="allow"` with comment. Additive changes only. |

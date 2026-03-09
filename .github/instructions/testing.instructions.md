@@ -15,17 +15,22 @@ tests/
 │   ├── test_naming.py       # lmfit_param_name / sanitize_component_id / translate_dot_notation
 │   ├── test_fitting_config.py   # UnifiedFittingConfig
 │   ├── test_fitting_config_phase65.py  # computed fields: components, context, build_composite_model
-│   ├── test_fitting_context.py  # FittingContext / FittingMode
+│   ├── test_fitting_context.py  # FittingContext / FittingMode / EnvironmentMode / detect_environment
 │   ├── test_data_config.py  # DataConfig
 │   ├── test_bundle.py       # CompositeModelBundle / build_composite_bundle
 │   ├── test_peak_models.py  # FitParameter / Component
 │   ├── test_model_parameters.py  # ModelParameters (post-rehoming)
 │   ├── test_global_fitting.py   # GlobalFittingConfig
-│   └── test_registry.py    # ReferenceKeys.model_check(), ModelInfo
+│   ├── test_registry.py    # ReferenceKeys.model_check(), ModelInfo
+│   ├── test_fit_result_extended.py  # FitInsights, DataSummary, ConfidenceResults, FitResult.from_legacy_dict
+│   ├── test_solver_results.py   # SolverResults.from_fitting_args(), all property delegates
+│   ├── test_init_command.py     # InitConfig, InitEnvironment, _run_init, CLI flag integration
+│   └── test_banner.py           # render_startup_panel TTY-gate, _env_label colours
 ├── integration/             # Pipeline + CLI end-to-end — pytest marker: @pytest.mark.integration
 │   ├── test_pipeline.py     # FittingPipeline with UnifiedFittingConfig
 │   ├── test_cli_fit.py      # CLI fit subcommand
-│   └── test_v1_compat.py   # rixs/config.json backward-compat smoke test
+│   ├── test_v1_compat.py   # rixs/config.json backward-compat smoke test
+│   └── test_init_workflow.py   # spectrafit init e2e: project creation, formats, overwrite
 └── validation/              # Scientific correctness — pytest marker: @pytest.mark.validation
     ├── test_analytical.py
     └── test_numerical_stability.py
@@ -108,13 +113,16 @@ These tests have pre-existing failures and are excluded from CI:
 
 Run with: `uv run pytest spectrafit/ -k "not test_solver and not test_generate_report"` if needed.
 
-## Pre-existing Mypy Errors (Do Not Fix in Unrelated Tasks)
+## Pre-existing ty Suppressions (Do Not Fix in Unrelated Tasks)
 
-5 known errors in 2 files — do not count against new code:
+Known ty warnings in frozen or legacy code — do not count against new code.
+Type checker: **ty** (hard-fail). mypy has been removed.
 
-- `spectrafit/core/fitting_config.py:181` — `FitParameter(**constraint)` **kwargs type mismatch
-- `spectrafit/plugins/notebook/core.py:301` — `global_=int(...)` expects `GlobalMode`
-- `spectrafit/plugins/notebook/core.py:581` — unexpected `args` kwarg in `SolverModels`
+- `spectrafit/core/fitting_config.py` — `FitParameter(**constraint)` kwargs mismatch (`missing-argument = "warn"` in `[tool.ty.rules]`)
+- `spectrafit/plugins/notebook/core.py` — `GlobalMode` / `SolverModels` argument mismatches (frozen until Phase 6+)
+
+New code must be ty-clean. Add `# type: ignore[<code>]` with a justification comment only for
+calls into third-party libraries with incomplete stubs (e.g. lmfit, scipy).
 
 ## Integration Test Pattern
 

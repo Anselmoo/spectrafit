@@ -11,7 +11,6 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
-from typing import cast
 
 import matplotlib.font_manager
 import matplotlib.pyplot as plt
@@ -20,6 +19,8 @@ import seaborn as sns
 from matplotlib.widgets import MultiCursor
 
 from spectrafit.api.tools_model import ColumnNamesAPI
+from spectrafit.models.fitting_context import FittingMode
+from spectrafit.models.plot_config import PlotConfig
 
 
 if TYPE_CHECKING:
@@ -35,25 +36,27 @@ color = sns.color_palette("Paired")
 class PlotSpectra:
     """Plotting of the fit results."""
 
-    def __init__(self, df: pd.DataFrame, args: dict[str, object] | None = None) -> None:
+    def __init__(
+        self,
+        df: pd.DataFrame,
+        config: PlotConfig | None = None,
+    ) -> None:
         """Initialize the PlotSpectra class.
 
         Args:
-            df (pd.DataFrame): DataFrame containing the input data (`x` and `data`),
-                 as well as the best fit and the corresponding residuum. Hence, it will
-                 be extended by the single contribution of the model.
-            args (FittingArgs, optional): The input file arguments as a dictionary
-                 with additional information beyond the command line arguments. Only
-                 needed for global fitting. Defaults to None.
+            df: DataFrame containing the input data (``x`` and ``data``), as well
+                as the best fit and the corresponding residuum. It will be extended
+                by the single contribution of the model.
+            config: Typed plot configuration.  Defaults to :class:`PlotConfig()`.
 
         """
         self.df = df
-        self.args = args
+        self.config = config or PlotConfig()
 
     def __call__(self) -> None:
         """Plot the data and the fit."""
-        if self.args is not None and not self.args["noplot"]:
-            if self.args["global_"]:
+        if not self.config.noplot:
+            if self.config.global_fitting != FittingMode.STANDARD:
                 self.plot_global_spectra()
             else:
                 self.plot_local_spectra()
@@ -69,11 +72,8 @@ class PlotSpectra:
             row of the grid plot contains the residuals of each single fit, the
             second row the best fit of the model with single peak contributions.
         """
-        if self.args is not None:
-            ds = cast("dict[str, object]", self.args["data_statistic"])
-            n_spec: int = len(list(ds)) - 1
-        else:
-            n_spec = 1
+        ds = self.config.data_statistic
+        n_spec: int = max(len(list(ds)) - 1, 1)
         _, axs = plt.subplots(
             nrows=2,
             ncols=n_spec,

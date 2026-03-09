@@ -23,8 +23,8 @@ from pydantic import BaseModel
 from pydantic import ConfigDict
 from pydantic import Field
 
-from spectrafit.models.fit_summary import FitInsightsReport
-from spectrafit.models.fit_summary import SplitOrientFrame
+from spectrafit.models.results.fit_summary import FitInsightsReport
+from spectrafit.models.results.fit_summary import SplitOrientFrame
 
 
 class SaveResultArgs(BaseModel):

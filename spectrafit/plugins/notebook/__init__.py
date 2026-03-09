@@ -1,17 +1,27 @@
-"""Notebook package for SpectraFit.
+"""Notebook package for SpectraFit — deprecated re-export shim.
 
-This package contains utilities for using SpectraFit in Jupyter notebooks.
+.. deprecated:: 2.0.0
+    Import from ``spectrafit.jupyter`` instead.  This shim will be removed in v3.0.0.
 """
 
 from __future__ import annotations
 
-from spectrafit.plugins.notebook.core import SpectraFitNotebook
-from spectrafit.plugins.notebook.display import DataFrameDisplay
-from spectrafit.plugins.notebook.export import ExportReport
-from spectrafit.plugins.notebook.export import ExportResults
-from spectrafit.plugins.notebook.plotting import DataFramePlot
-from spectrafit.plugins.notebook.solver import SolverResults
+import warnings
 
+from spectrafit.jupyter.core import SpectraFitNotebook
+from spectrafit.jupyter.display import DataFrameDisplay
+from spectrafit.jupyter.export import ExportReport
+from spectrafit.jupyter.export import ExportResults
+from spectrafit.jupyter.plotting import DataFramePlot
+from spectrafit.jupyter.solver import SolverResults
+
+
+warnings.warn(
+    "Importing from 'spectrafit.plugins.notebook' is deprecated and will be removed "
+    "in v3.0.0. Use 'spectrafit.jupyter' instead.",
+    DeprecationWarning,
+    stacklevel=2,
+)
 
 __all__ = [
     "DataFrameDisplay",

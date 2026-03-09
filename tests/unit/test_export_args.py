@@ -12,8 +12,8 @@ import pytest
 from pydantic import ValidationError
 
 from spectrafit.models.export_args import SaveResultArgs
-from spectrafit.models.fit_summary import FitInsightsReport
-from spectrafit.models.fit_summary import SplitOrientFrame
+from spectrafit.models.results.fit_summary import FitInsightsReport
+from spectrafit.models.results.fit_summary import SplitOrientFrame
 
 
 _SPLIT_FRAME: dict[str, object] = {

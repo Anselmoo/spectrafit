@@ -1,10 +1,4 @@
-"""Phase 6.5 tests: computed fields (components, context) and build_composite_model.
-
-These tests verify the new Pydantic-first path added to UnifiedFittingConfig:
-- ``components`` computed field: auto-migration from legacy ``peaks`` dict
-- ``context`` computed field: FittingContext derived from ``global_`` flag
-- ``build_composite_model()``: delegates to build_composite_bundle
-"""
+"""Phase 6.5 tests: components/context fields and build_composite_model."""
 
 from __future__ import annotations
 
@@ -21,48 +15,54 @@ from spectrafit.models.peak_models import FitParameter
 # Fixtures
 # ---------------------------------------------------------------------------
 
-MINIMAL_PEAKS: dict = {
-    "1": {
-        "gaussian": {
+MINIMAL_COMPONENTS: list[dict[str, object]] = [
+    {
+        "id": "p1",
+        "model": "gaussian",
+        "parameters": {
             "amplitude": {"min": 0, "max": 2, "value": 1.0, "vary": True},
             "center": {"min": -1, "max": 1, "value": 0.0, "vary": True},
             "fwhmg": {"min": 0.1, "max": 2.0, "value": 0.7, "vary": True},
-        }
+        },
     }
-}
+]
 
-TWO_PEAK_PEAKS: dict = {
-    "1": {
-        "gaussian": {
+TWO_COMPONENTS: list[dict[str, object]] = [
+    {
+        "id": "p1",
+        "model": "gaussian",
+        "parameters": {
             "amplitude": {"value": 1.0, "min": 0, "max": 2, "vary": True},
             "center": {"value": -0.5, "min": -2, "max": 0, "vary": True},
             "fwhmg": {"value": 0.5, "min": 0.1, "max": 2.0, "vary": True},
-        }
+        },
     },
-    "2": {
-        "lorentzian": {
+    {
+        "id": "p2",
+        "model": "lorentzian",
+        "parameters": {
             "amplitude": {"value": 0.8, "min": 0, "max": 2, "vary": True},
             "center": {"value": 0.5, "min": 0, "max": 2, "vary": True},
             "fwhml": {"value": 0.4, "min": 0.1, "max": 2.0, "vary": True},
-        }
+        },
     },
-}
+]
 
 
 @pytest.fixture
 def cfg_single() -> UnifiedFittingConfig:
     """Single gaussian peak config."""
-    return UnifiedFittingConfig(peaks=MINIMAL_PEAKS)
+    return UnifiedFittingConfig(components=MINIMAL_COMPONENTS)
 
 
 @pytest.fixture
 def cfg_two() -> UnifiedFittingConfig:
     """Two-peak config: gaussian + lorentzian."""
-    return UnifiedFittingConfig(peaks=TWO_PEAK_PEAKS)
+    return UnifiedFittingConfig(components=TWO_COMPONENTS)
 
 
 # ---------------------------------------------------------------------------
-# components computed field
+# components field
 # ---------------------------------------------------------------------------
 
 
@@ -81,7 +81,6 @@ class TestComponentsComputedField:
         assert isinstance(cfg_single.components[0], Component)
 
     def test_id_sanitized(self, cfg_single: UnifiedFittingConfig) -> None:
-        # peak id "1" → sanitized to "p1"
         assert cfg_single.components[0].id == "p1"
 
     def test_model_name(self, cfg_single: UnifiedFittingConfig) -> None:
@@ -116,16 +115,18 @@ class TestComponentsComputedField:
     def test_components_is_fresh_each_call(
         self, cfg_single: UnifiedFittingConfig
     ) -> None:
-        # computed_field: each access returns a new list (by value, not cached)
+        # Accessing the field repeatedly should return equal values.
         c1 = cfg_single.components
         c2 = cfg_single.components
         assert c1 == c2
 
     def test_expr_field_translated(self) -> None:
-        """dot-notation expr in peaks is translated when migrated."""
-        peaks = {
-            "1": {
-                "gaussian": {
+        """dot-notation expr in components is translated at validation time."""
+        components = [
+            {
+                "id": "p1",
+                "model": "gaussian",
+                "parameters": {
                     "amplitude": {"value": 1.0, "vary": True},
                     "center": {
                         "value": 0.0,
@@ -133,12 +134,11 @@ class TestComponentsComputedField:
                         "expr": "p1.amplitude * 0.5",
                     },
                     "fwhmg": {"value": 0.5, "vary": True},
-                }
+                },
             }
-        }
-        cfg = UnifiedFittingConfig(peaks=peaks)
+        ]
+        cfg = UnifiedFittingConfig(components=components)
         expr = cfg.components[0].parameters["center"].expr
-        # dot-notation should be translated to underscore
         assert expr == "p1_amplitude * 0.5"
 
 
@@ -157,11 +157,11 @@ class TestContextComputedField:
         assert cfg_single.context.n_datasets == 1
 
     def test_global_1_gives_global_mode(self) -> None:
-        cfg = UnifiedFittingConfig(peaks=MINIMAL_PEAKS, **{"global": 1})
+        cfg = UnifiedFittingConfig(components=MINIMAL_COMPONENTS, **{"global": 1})
         assert cfg.context.mode == FittingMode.GLOBAL
 
     def test_global_2_gives_global_mode(self) -> None:
-        cfg = UnifiedFittingConfig(peaks=MINIMAL_PEAKS, **{"global": 2})
+        cfg = UnifiedFittingConfig(components=MINIMAL_COMPONENTS, **{"global": 2})
         assert cfg.context.mode == FittingMode.GLOBAL
 
     def test_global_int_roundtrip(self, cfg_single: UnifiedFittingConfig) -> None:

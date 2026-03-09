@@ -36,7 +36,7 @@ or higher and can be optional managed via [pyenv][6].
 
 ```bash
 # Setting up your Python environment
-pyenv local 3.10.0
+pyenv local 3.11.0
 
 # Install dependencies with uv
 uv pip install -e .

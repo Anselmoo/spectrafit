@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import pytest
 
+from spectrafit.core.fitting_config import UnifiedFittingConfig
 from spectrafit.models.naming import lmfit_param_name
 from spectrafit.models.naming import sanitize_component_id
 from spectrafit.models.naming import translate_dot_notation
@@ -89,7 +90,7 @@ class TestLmfitParamName:
         """Separator between id and field is always a single underscore."""
         result = lmfit_param_name("main", "amplitude")
         parts = result.split("_")
-        assert len(parts) >= 2  # noqa: PLR2004
+        assert len(parts) >= 2
 
 
 class TestTranslateDotNotation:
@@ -139,3 +140,47 @@ class TestTranslateDotNotation:
         once = translate_dot_notation(expr)
         twice = translate_dot_notation(once)
         assert once == twice
+
+
+class TestV2NamingAuthority:
+    """Guardrails for canonical naming behavior in the v2 configuration path."""
+
+    @pytest.mark.unit
+    def test_build_composite_model_uses_canonical_lmfit_param_names(self) -> None:
+        cfg = UnifiedFittingConfig(
+            components=[
+                {
+                    "id": "1",
+                    "model": "gaussian",
+                    "parameters": {
+                        "amplitude": {"value": 1.0, "vary": True},
+                        "center": {
+                            "value": 0.0,
+                            "vary": False,
+                            "expr": "p1.amplitude * 0.5",
+                        },
+                        "fwhmg": {"value": 0.6, "vary": True},
+                    },
+                },
+                {
+                    "id": "bg",
+                    "model": "linear",
+                    "parameters": {
+                        "slope": {"value": 0.0, "vary": True},
+                        "intercept": {"value": 1.0, "vary": True},
+                    },
+                },
+            ]
+        )
+
+        bundle = cfg.build_composite_model()
+        expected_names = {
+            lmfit_param_name("1", "amplitude"),
+            lmfit_param_name("1", "center"),
+            lmfit_param_name("1", "fwhmg"),
+            lmfit_param_name("bg", "slope"),
+            lmfit_param_name("bg", "intercept"),
+        }
+
+        assert expected_names.issubset(set(bundle.params.keys()))
+        assert cfg.components[0].parameters["center"].expr == "p1_amplitude * 0.5"

@@ -8,6 +8,7 @@ from __future__ import annotations
 import json
 
 from pathlib import Path
+from typing import TYPE_CHECKING
 from typing import cast
 
 import numpy as np
@@ -16,72 +17,30 @@ import pandas as pd
 from spectrafit.models.types import DataSplitDict
 
 
+if TYPE_CHECKING:
+    from spectrafit.core.postprocessing import PostProcessingResult
+
+
 class SaveResult:
     """Saving the result of the fitting process."""
 
-    def __init__(self, df: pd.DataFrame, args: dict[str, object]) -> None:
+    def __init__(
+        self,
+        df: pd.DataFrame,
+        post: PostProcessingResult,
+        outfile: str,
+    ) -> None:
         """Initialize SaveResult class.
 
-        !!! note "About SaveResult"
-
-            The SaveResult class is responsible for saving the results of the
-            optimization process. The results are saved in the following formats:
-
-            1. JSON (default) for all results and meta data of the fitting process.
-            2. CSV for the results of the optimization process.
-
-        !!! note "About the output `CSV`-file"
-
-            The output files are seperated into three classes:
-
-                1. The `results` of the optimization process.
-                2. The `correlation analysis` of the optimization process.
-                3. The `error analysis` of the optimization process.
-
-            The result outputfile contains the following information:
-
-                1. The column names of the energy axis (`x`) and the intensity values
-                (`data`)
-                2. The name of the column containing the energy axis (`x`)
-                3. The name of the column containing the intensity values (`data`)
-                4. The name of the column containing the best fit (`best_fit`)
-                5. The name of the column containing the residuum (`residuum`)
-                6. The name of the column containing the model contribution (`model`)
-                7. The name of the column containing the error of the model
-                    contribution (`model_error`)
-                8. The name of the column containing the error of the best fit
-                    (`best_fit_error`)
-                9. The name of the column containing the error of the residuum
-                    (`residuum_error`)
-
-            The `correlation analysis` file contains the following information about all
-            attributes of the model:
-
-                1. Energy
-                2. Intensity or Intensities (global fitting)
-                3. Residuum
-                4. Best fit
-                5. Model contribution(s)
-
-            The `error analysis` file contains the following information about all model
-            attributes vs:
-
-                1. Initial model values
-                2. Current model values
-                3. Best model values
-                4. Residuum / error relative to the best fit
-                5. Residuum / error relative to the absolute fit
-
         Args:
-            df (pd.DataFrame): DataFrame containing the input data (`x` and `data`),
-                 as well as the best fit and the corresponding residuum. Hence, it will
-                 be extended by the single contribution of the model.
-            args (FittingArgs): The input file arguments as a dictionary with
-                 additional information beyond the command line arguments.
+            df: DataFrame containing the fit results.
+            post: Typed post-processing result.
+            outfile: Output file path stem (without extension).
 
         """
         self.df = df
-        self.args = cast("dict[str, object]", transform_nested_types(args))
+        self.post = post
+        self.outfile = outfile
 
     def __call__(self) -> None:
         """Call the SaveResult class."""
@@ -89,43 +48,45 @@ class SaveResult:
         self.save_as_csv()
 
     def save_as_csv(self) -> None:
-        """Save the the fit results to csv files.
-
-        !!! note "About saving the fit results"
-            The fit results are saved to csv files and are divided into three different
-            categories:
-
-                1. The `results` of the optimization process.
-                2. The `correlation analysis` of the optimization process.
-                3. The `error analysis` of the optimization process.
-        """
-        _fname = Path(f"{cast('str', self.args['outfile'])}_fit.csv")
+        """Save the fit results to csv files."""
+        _fname = Path(f"{self.outfile}_fit.csv")
         self.df.to_csv(_fname, index=False)
-        pd.DataFrame(**cast("DataSplitDict", self.args["linear_correlation"])).to_csv(
-            Path(f"{cast('str', self.args['outfile'])}_correlation.csv"),
+        pd.DataFrame(**cast("DataSplitDict", self.post.linear_correlation)).to_csv(
+            Path(f"{self.outfile}_correlation.csv"),
             index=True,
             index_label="attributes",
         )
         pd.DataFrame.from_dict(
-            cast("dict[str, dict[str, object]]", self.args["fit_insights"])[
-                "variables"
-            ],
+            cast("dict[str, dict[str, object]]", self.post.fit_insights)["variables"],
         ).to_csv(
-            Path(f"{cast('str', self.args['outfile'])}_components.csv"),
+            Path(f"{self.outfile}_components.csv"),
             index=True,
             index_label="attributes",
         )
 
     def save_as_json(self) -> None:
         """Save the fitting result as json file."""
-        if not self.args["outfile"]:
+        if not self.outfile:
             msg = "No output file provided!"
             raise FileNotFoundError(msg)
-        with Path(f"{cast('str', self.args['outfile'])}_summary.json").open(
+
+        summary: dict[str, object] = {
+            "fit_insights": transform_nested_types(self.post.fit_insights),
+            "confidence_interval": transform_nested_types(
+                self.post.confidence_interval
+            ),
+            "linear_correlation": transform_nested_types(self.post.linear_correlation),
+            "fit_result": transform_nested_types(self.post.fit_result_data),
+            "regression_metrics": transform_nested_types(self.post.regression_metrics),
+            "descriptive_statistic": transform_nested_types(
+                self.post.descriptive_statistic
+            ),
+        }
+        with Path(f"{self.outfile}_summary.json").open(
             "w",
             encoding="utf-8",
         ) as f:
-            json.dump(transform_nested_types(self.args), f, indent=4)
+            json.dump(summary, f, indent=4)
 
 
 def exclude_none_dictionary(value: object) -> object:

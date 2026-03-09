@@ -5,6 +5,7 @@ from __future__ import annotations
 from collections.abc import Callable
 
 from pydantic import BaseModel
+from pydantic import ConfigDict
 from pydantic import Field
 
 
@@ -13,6 +14,8 @@ __description__ = "Lmfit expression for explicit dependencies."
 
 class AmplitudeAPI(BaseModel):
     """Definition of the amplitude of the models distributions."""
+
+    model_config = ConfigDict(extra="forbid")
 
     max: float | None = Field(default=None, description="Maximum amplitude.")
     min: int | None = Field(default=None, description="Minimum amplitude.")
@@ -24,6 +27,8 @@ class AmplitudeAPI(BaseModel):
 class CenterAPI(BaseModel):
     """Definition of the center of the models distributions."""
 
+    model_config = ConfigDict(extra="forbid")
+
     max: float | None = Field(default=None, description="Maximum center.")
     min: int | None = Field(default=None, description="Minimum center.")
     vary: bool = Field(default=True, description="Vary the center.")
@@ -33,6 +38,8 @@ class CenterAPI(BaseModel):
 
 class FwhmgAPI(BaseModel):
     """Definition of the FWHM Gaussian of the models distributions."""
+
+    model_config = ConfigDict(extra="forbid")
 
     max: float | None = Field(
         default=None,
@@ -57,6 +64,8 @@ class FwhmgAPI(BaseModel):
 class FwhmlAPI(BaseModel):
     """Definition of the FWHM Lorentzian of the models distributions."""
 
+    model_config = ConfigDict(extra="forbid")
+
     max: float | None = Field(
         default=None,
         description="Maximum Full Width Half Maximum of the Lorentzian Distribution.",
@@ -80,6 +89,8 @@ class FwhmlAPI(BaseModel):
 class FwhmvAPI(BaseModel):
     """Definition of the FWHM Voigt of the models distributions."""
 
+    model_config = ConfigDict(extra="forbid")
+
     max: float | None = Field(
         default=None,
         description="Maximum Full Width Half Maximum of the Voigt Distribution.",
@@ -102,6 +113,8 @@ class FwhmvAPI(BaseModel):
 class WidthAPI(BaseModel):
     """Definition of the Width of the ORCA Gaussian of the models distributions."""
 
+    model_config = ConfigDict(extra="forbid")
+
     max: float | None = Field(default=None, description="Maximum width.")
     min: int | None = Field(default=None, description="Minimum width.")
     vary: bool = Field(default=True, description="Vary the width.")
@@ -112,6 +125,8 @@ class WidthAPI(BaseModel):
 class GammaAPI(BaseModel):
     """Definition of the Gamma of the Voigt of the models distributions."""
 
+    model_config = ConfigDict(extra="forbid")
+
     max: float | None = Field(default=None, description="Maximum gamma.")
     min: int | None = Field(default=None, description="Minimum gamma.")
     vary: bool = Field(default=True, description="Vary the gamma.")
@@ -121,6 +136,8 @@ class GammaAPI(BaseModel):
 
 class DecayAPI(BaseModel):
     """Definition of the Decay of the Exponential of the models distributions."""
+
+    model_config = ConfigDict(extra="forbid")
 
     max: float | None = Field(default=None, description="Maximum decay rate.")
     min: int | None = Field(default=None, description="Minimum decay rate.")
@@ -135,6 +152,8 @@ class DecayAPI(BaseModel):
 class InterceptAPI(BaseModel):
     """Definition of the Intercept of the Linear of the models distributions."""
 
+    model_config = ConfigDict(extra="forbid")
+
     max: float | None = Field(default=None, description="Maximum intercept.")
     min: int | None = Field(default=None, description="Minimum intercept.")
     vary: bool = Field(default=True, description="Vary the intercept.")
@@ -144,6 +163,8 @@ class InterceptAPI(BaseModel):
 
 class ExponentAPI(BaseModel):
     """Definition of the Exponent of the Linear of the models distributions."""
+
+    model_config = ConfigDict(extra="forbid")
 
     max: float | None = Field(default=None, description="Maximum exponent.")
     min: int | None = Field(default=None, description="Minimum exponent.")
@@ -155,6 +176,8 @@ class ExponentAPI(BaseModel):
 class SlopeAPI(BaseModel):
     """Definition of the Slope of the Linear of the models distributions."""
 
+    model_config = ConfigDict(extra="forbid")
+
     max: float | None = Field(default=None, description="Maximum slope.")
     min: int | None = Field(default=None, description="Minimum slope.")
     vary: bool = Field(default=True, description="Vary the slope.")
@@ -165,6 +188,8 @@ class SlopeAPI(BaseModel):
 class SigmaAPI(BaseModel):
     """Definition of the Sigma of the models distributions."""
 
+    model_config = ConfigDict(extra="forbid")
+
     max: float | None = Field(default=None, description="Maximum sigma.")
     min: int | None = Field(default=None, description="Minimum sigma.")
     vary: bool = Field(default=True, description="Vary the sigma.")
@@ -174,6 +199,8 @@ class SigmaAPI(BaseModel):
 
 class CoefficientAPI(BaseModel):
     """Definition of the Coefficient of the models distributions."""
+
+    model_config = ConfigDict(extra="forbid")
 
     max: float | None = Field(default=None, description="Maximum coefficient.")
     min: int | None = Field(default=None, description="Minimum coefficient.")
@@ -188,6 +215,8 @@ class CoefficientAPI(BaseModel):
 class PseudovoigtAPI(BaseModel):
     """Definition of the Pseudovoigt of the models distributions."""
 
+    model_config = ConfigDict(extra="forbid")
+
     amplitude: AmplitudeAPI = AmplitudeAPI()
     center: CenterAPI = CenterAPI()
     fwhmg: FwhmgAPI = FwhmgAPI()
@@ -197,6 +226,8 @@ class PseudovoigtAPI(BaseModel):
 class GaussianAPI(BaseModel):
     """Definition of the Gaussian of the models distributions."""
 
+    model_config = ConfigDict(extra="forbid")
+
     amplitude: AmplitudeAPI = AmplitudeAPI()
     center: CenterAPI = CenterAPI()
     fwhmg: FwhmgAPI = FwhmgAPI()
@@ -204,6 +235,8 @@ class GaussianAPI(BaseModel):
 
 class OrcaGaussianAPI(BaseModel):
     """Definition of the ORCA Gaussian of the models distributions."""
+
+    model_config = ConfigDict(extra="forbid")
 
     amplitude: AmplitudeAPI = AmplitudeAPI()
     center: CenterAPI = CenterAPI()
@@ -213,6 +246,8 @@ class OrcaGaussianAPI(BaseModel):
 class LorentzianAPI(BaseModel):
     """Definition of the Lorentzian of the models distributions."""
 
+    model_config = ConfigDict(extra="forbid")
+
     amplitude: AmplitudeAPI = AmplitudeAPI()
     center: CenterAPI = CenterAPI()
     fwhml: FwhmlAPI = FwhmlAPI()
@@ -220,6 +255,8 @@ class LorentzianAPI(BaseModel):
 
 class VoigtAPI(BaseModel):
     """Definition of the Voigt of the models distributions."""
+
+    model_config = ConfigDict(extra="forbid")
 
     center: CenterAPI = CenterAPI()
     fwhmv: FwhmvAPI = FwhmvAPI()
@@ -229,6 +266,8 @@ class VoigtAPI(BaseModel):
 class ExponentialAPI(BaseModel):
     """Definition of the Exponential of the models distributions."""
 
+    model_config = ConfigDict(extra="forbid")
+
     amplitude: AmplitudeAPI = AmplitudeAPI()
     decay: DecayAPI = DecayAPI()
     intercept: InterceptAPI = InterceptAPI()
@@ -236,6 +275,8 @@ class ExponentialAPI(BaseModel):
 
 class PowerAPI(BaseModel):
     """Definition of the Power of the models distributions."""
+
+    model_config = ConfigDict(extra="forbid")
 
     amplitude: AmplitudeAPI = AmplitudeAPI()
     exponent: ExponentAPI = ExponentAPI()
@@ -245,6 +286,8 @@ class PowerAPI(BaseModel):
 class LinearAPI(BaseModel):
     """Definition of the Linear of the models distributions."""
 
+    model_config = ConfigDict(extra="forbid")
+
     slope: SlopeAPI = SlopeAPI()
     intercept: InterceptAPI = InterceptAPI()
 
@@ -252,11 +295,15 @@ class LinearAPI(BaseModel):
 class ConstantAPI(BaseModel):
     """Definition of the Constant of the models distributions."""
 
+    model_config = ConfigDict(extra="forbid")
+
     amplitude: AmplitudeAPI = AmplitudeAPI()
 
 
 class ErfAPI(BaseModel):
     """Definition of the Step of the models distributions."""
+
+    model_config = ConfigDict(extra="forbid")
 
     amplitude: AmplitudeAPI = AmplitudeAPI()
     center: CenterAPI = CenterAPI()
@@ -266,6 +313,8 @@ class ErfAPI(BaseModel):
 class HeavisideAPI(BaseModel):
     """Definition of the Step of the models distributions."""
 
+    model_config = ConfigDict(extra="forbid")
+
     amplitude: AmplitudeAPI = AmplitudeAPI()
     center: CenterAPI = CenterAPI()
     sigma: SigmaAPI = SigmaAPI()
@@ -273,6 +322,8 @@ class HeavisideAPI(BaseModel):
 
 class AtanAPI(BaseModel):
     """Definition of the Step of the models distributions."""
+
+    model_config = ConfigDict(extra="forbid")
 
     amplitude: AmplitudeAPI = AmplitudeAPI()
     center: CenterAPI = CenterAPI()
@@ -282,6 +333,8 @@ class AtanAPI(BaseModel):
 class LogAPI(BaseModel):
     """Definition of the Step of the models distributions."""
 
+    model_config = ConfigDict(extra="forbid")
+
     amplitude: AmplitudeAPI = AmplitudeAPI()
     center: CenterAPI = CenterAPI()
     sigma: SigmaAPI = SigmaAPI()
@@ -289,6 +342,8 @@ class LogAPI(BaseModel):
 
 class CGaussianAPI(BaseModel):
     """Definition of the cumulative Gaussian of the models distributions."""
+
+    model_config = ConfigDict(extra="forbid")
 
     amplitude: AmplitudeAPI = AmplitudeAPI()
     center: CenterAPI = CenterAPI()
@@ -298,6 +353,8 @@ class CGaussianAPI(BaseModel):
 class CLorentzianAPI(BaseModel):
     """Definition of the cumulative Lorentzian of the models distributions."""
 
+    model_config = ConfigDict(extra="forbid")
+
     amplitude: AmplitudeAPI = AmplitudeAPI()
     center: CenterAPI = CenterAPI()
     fwhml: FwhmlAPI = FwhmlAPI()
@@ -305,6 +362,8 @@ class CLorentzianAPI(BaseModel):
 
 class CVoigtAPI(BaseModel):
     """Definition of the cumulative Voigt of the models distributions."""
+
+    model_config = ConfigDict(extra="forbid")
 
     center: CenterAPI = CenterAPI()
     fwhmv: FwhmvAPI = FwhmvAPI()
@@ -314,6 +373,8 @@ class CVoigtAPI(BaseModel):
 class Polynomia2API(BaseModel):
     """Definition of the second order polynomial of the models distributions."""
 
+    model_config = ConfigDict(extra="forbid")
+
     coefficient0: CoefficientAPI = CoefficientAPI()
     coefficient1: CoefficientAPI = CoefficientAPI()
     coefficient2: CoefficientAPI = CoefficientAPI()
@@ -321,6 +382,8 @@ class Polynomia2API(BaseModel):
 
 class Polynomia3API(BaseModel):
     """Definition of the third order polynomial of the models distributions."""
+
+    model_config = ConfigDict(extra="forbid")
 
     coefficient0: CoefficientAPI = CoefficientAPI()
     coefficient1: CoefficientAPI = CoefficientAPI()
@@ -330,6 +393,8 @@ class Polynomia3API(BaseModel):
 
 class SkewnessAPI(BaseModel):
     """Definition of the skewness of the models distributions."""
+
+    model_config = ConfigDict(extra="forbid")
 
     max: float | None = Field(default=None, description="Maximum skewness.")
     min: int | None = Field(default=None, description="Minimum skewness.")
@@ -341,6 +406,8 @@ class SkewnessAPI(BaseModel):
 class KurtosisAPI(BaseModel):
     """Definition of the kurtosis of the models distributions."""
 
+    model_config = ConfigDict(extra="forbid")
+
     max: float | None = Field(default=None, description="Maximum kurtosis.")
     min: int | None = Field(default=None, description="Minimum kurtosis.")
     vary: bool = Field(default=True, description="Vary the kurtosis.")
@@ -351,6 +418,8 @@ class KurtosisAPI(BaseModel):
 class Pearson1API(BaseModel):
     """Definition of the pearson type I of the models distributions."""
 
+    model_config = ConfigDict(extra="forbid")
+
     amplitude: AmplitudeAPI = AmplitudeAPI()
     center: CenterAPI = CenterAPI()
     sigma: SigmaAPI = SigmaAPI()
@@ -360,6 +429,8 @@ class Pearson1API(BaseModel):
 class Pearson2API(BaseModel):
     """Definition of the pearson type II of the models distributions."""
 
+    model_config = ConfigDict(extra="forbid")
+
     amplitude: AmplitudeAPI = AmplitudeAPI()
     center: CenterAPI = CenterAPI()
     sigma: SigmaAPI = SigmaAPI()
@@ -368,6 +439,8 @@ class Pearson2API(BaseModel):
 
 class Pearson3API(BaseModel):
     """Definition of the pearson type III of the models distributions."""
+
+    model_config = ConfigDict(extra="forbid")
 
     amplitude: AmplitudeAPI = AmplitudeAPI()
     center: CenterAPI = CenterAPI()
@@ -379,6 +452,8 @@ class Pearson3API(BaseModel):
 class Pearson4API(BaseModel):
     """Definition of the pearson type IV of the models distributions."""
 
+    model_config = ConfigDict(extra="forbid")
+
     amplitude: AmplitudeAPI = AmplitudeAPI()
     center: CenterAPI = CenterAPI()
     sigma: SigmaAPI = SigmaAPI()
@@ -389,6 +464,8 @@ class Pearson4API(BaseModel):
 
 class DistributionModelAPI(BaseModel):
     """Definition of the models distributions."""
+
+    model_config = ConfigDict(extra="forbid")
 
     gaussian: GaussianAPI = GaussianAPI()
     orcagaussian: OrcaGaussianAPI = OrcaGaussianAPI()
@@ -416,6 +493,8 @@ class DistributionModelAPI(BaseModel):
 
 class ConfIntervalAPI(BaseModel):
     """Definition of Confidence Interval Function."""
+
+    model_config = ConfigDict(extra="forbid")
 
     p_names: list[str] | None = Field(
         default=None,

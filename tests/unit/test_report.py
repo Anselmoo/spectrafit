@@ -6,11 +6,11 @@ from pathlib import Path
 
 import pytest
 
-from spectrafit.models.fit_summary import FitInsightsReport
-from spectrafit.models.fit_summary import FitStatisticsReport
-from spectrafit.models.fit_summary import FitSummaryReport
-from spectrafit.models.fit_summary import FitVariableReport
-from spectrafit.models.fit_summary import SplitOrientFrame
+from spectrafit.models.results.fit_summary import FitInsightsReport
+from spectrafit.models.results.fit_summary import FitStatisticsReport
+from spectrafit.models.results.fit_summary import FitSummaryReport
+from spectrafit.models.results.fit_summary import FitVariableReport
+from spectrafit.models.results.fit_summary import SplitOrientFrame
 
 
 # ---------------------------------------------------------------------------
@@ -136,6 +136,30 @@ class TestFitSummaryReport:
         rpt = FitSummaryReport.model_validate(data)
         assert rpt.fit_insights.statistics.chi_square == pytest.approx(0.0012)
         assert rpt.outfile == "my_fit"
+
+    def test_model_validate_fitresult_schema(self) -> None:
+        """FitSummaryReport accepts FitResult-shaped data via schema migration."""
+        data: dict[str, object] = {
+            "fit_insights": {
+                "statistics": {"chi_square": 0.0012},
+                "variables": {"p1_center": {"best_value": 0.1}},
+            },
+            "data_summary": {
+                "regression_metrics": {
+                    "index": ["r2"],
+                    "columns": ["value"],
+                    "data": [[0.99]],
+                },
+                "linear_correlation": {
+                    "index": ["energy"],
+                    "columns": ["energy"],
+                    "data": [[1.0]],
+                },
+            },
+        }
+        rpt = FitSummaryReport.model_validate(data)
+        assert rpt.regression_metrics.columns == ["value"]
+        assert rpt.linear_correlation.columns == ["energy"]
 
     def test_extra_keys_ignored(self) -> None:
         """FitSummaryReport uses extra='allow' — unknown top-level keys don't raise."""

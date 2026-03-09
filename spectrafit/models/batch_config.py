@@ -34,16 +34,16 @@ from pydantic import ConfigDict
 from pydantic import Field
 from pydantic import field_validator
 
+from spectrafit.core.fitting_config import UnifiedFittingConfig
+
 
 class BatchFittingConfig(BaseModel):
     """Configuration for fitting a batch of spectra in parallel.
 
     Attributes:
-        configs: List of per-spectrum fitting configurations.  Each entry is a
-            plain dict that will be validated as
-            :class:`~spectrafit.core.fitting_config.UnifiedFittingConfig` at
-            run time.  Using plain dicts avoids circular import during model
-            construction.
+        configs: List of per-spectrum fitting configurations.  Each entry is
+            validated as :class:`~spectrafit.core.fitting_config.UnifiedFittingConfig`
+            at construction time via a lazy import to avoid circular dependency.
         workers: Number of parallel worker processes.  ``1`` disables
             parallelism (useful for debugging or small batches).
         timeout: Optional per-spectrum timeout in seconds passed to
@@ -55,9 +55,9 @@ class BatchFittingConfig(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    configs: list[dict[str, object]] = Field(
+    configs: list[UnifiedFittingConfig] = Field(
         default_factory=list,
-        description="List of per-spectrum UnifiedFittingConfig dicts",
+        description="List of per-spectrum UnifiedFittingConfig instances",
         min_length=1,
     )
     workers: int = Field(
@@ -73,6 +73,26 @@ class BatchFittingConfig(BaseModel):
         default=False,
         description="Raise on first failure (True) or collect all failures (False)",
     )
+
+    @field_validator("configs", mode="before")
+    @classmethod
+    def _coerce_configs(cls, v: object) -> list[object]:
+        """Coerce plain dicts to ``UnifiedFittingConfig`` instances.
+
+        Args:
+            v: Raw list of dicts or ``UnifiedFittingConfig`` instances.
+
+        Returns:
+            list[UnifiedFittingConfig]: Validated config instances.
+        """
+        if not isinstance(v, list):
+            return v  # type: ignore[return-value]
+        return [
+            UnifiedFittingConfig.model_validate(item)
+            if isinstance(item, dict)
+            else item
+            for item in v
+        ]
 
     @field_validator("workers")
     @classmethod

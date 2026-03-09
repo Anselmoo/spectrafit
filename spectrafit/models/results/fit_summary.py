@@ -14,6 +14,7 @@ from pathlib import Path
 from pydantic import BaseModel
 from pydantic import ConfigDict
 from pydantic import Field
+from pydantic import model_validator
 
 
 class FitStatisticsReport(BaseModel):
@@ -26,7 +27,7 @@ class FitStatisticsReport(BaseModel):
         bayesian_information: Bayesian information criterion.
     """
 
-    model_config = ConfigDict(extra="allow")
+    model_config = ConfigDict(extra="forbid")
 
     chi_square: float | None = Field(default=None, description="Chi-square statistic")
     reduced_chi_square: float | None = Field(
@@ -46,12 +47,39 @@ class FitVariableReport(BaseModel):
         stderr: Standard error of the parameter (if errorbars were estimated).
     """
 
-    model_config = ConfigDict(extra="allow")
+    model_config = ConfigDict(extra="forbid")
 
     init_value: float | None = None
     model_value: float | None = None
     best_value: float | None = None
     stderr: float | None = None
+
+
+class FitConfigurationsReport(BaseModel):
+    """Serialized fit configuration metadata from lmfit."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    fitting_method: str | None = None
+    function_evals: int | None = None
+    data_points: int | None = None
+    variable_names: list[str] = Field(default_factory=list)
+    variable_numbers: int | None = None
+    degree_of_freedom: int | None = None
+
+
+class ComputationalReport(BaseModel):
+    """Computational metadata attached to fit insights."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    success: bool | None = None
+    message: str | None = None
+    errorbars: bool | None = None
+    nfev: int | None = None
+    max_nfev: int | None = None
+    scale_covar: bool | None = None
+    calc_covar: bool | None = None
 
 
 class FitInsightsReport(BaseModel):
@@ -60,12 +88,24 @@ class FitInsightsReport(BaseModel):
     Attributes:
         statistics: Goodness-of-fit statistics.
         variables: Mapping of parameter name → per-parameter result.
+        configurations: lmfit fit configuration metadata (method, evals, DOF, …).
+        errorbars: Whether lmfit estimated parameter errorbars.
+        correlations: Parameter correlation matrix produced by lmfit.
+        covariance_matrix: Parameter covariance matrix produced by lmfit.
+        computational: Computational timing / platform metadata.
     """
 
-    model_config = ConfigDict(extra="allow")
+    model_config = ConfigDict(extra="forbid")
 
     statistics: FitStatisticsReport = Field(default_factory=FitStatisticsReport)
     variables: dict[str, FitVariableReport] = Field(default_factory=dict)
+    configurations: FitConfigurationsReport = Field(
+        default_factory=FitConfigurationsReport
+    )
+    errorbars: dict[str, str] = Field(default_factory=dict)
+    correlations: dict[str, dict[str, float]] = Field(default_factory=dict)
+    covariance_matrix: dict[str, dict[str, float]] = Field(default_factory=dict)
+    computational: ComputationalReport = Field(default_factory=ComputationalReport)
 
 
 class SplitOrientFrame(BaseModel):
@@ -77,7 +117,7 @@ class SplitOrientFrame(BaseModel):
         data: Row-major nested list of cell values.
     """
 
-    model_config = ConfigDict(extra="allow")
+    model_config = ConfigDict(extra="allow")  # intentional: pandas split-orient dict
 
     index: list[str | int | float] = Field(default_factory=list)
     columns: list[str | int | float] = Field(default_factory=list)
@@ -97,12 +137,43 @@ class FitSummaryReport(BaseModel):
         outfile: Base output path used when the fit was saved.
     """
 
-    model_config = ConfigDict(extra="allow")
-
+    model_config = ConfigDict(extra="allow")  # intentional: forward-compat JSON schemas
     fit_insights: FitInsightsReport = Field(default_factory=FitInsightsReport)
     regression_metrics: SplitOrientFrame = Field(default_factory=SplitOrientFrame)
     linear_correlation: SplitOrientFrame = Field(default_factory=SplitOrientFrame)
     outfile: str | None = None
+
+    @model_validator(mode="before")
+    @classmethod
+    def migrate_fitresult_schema(cls, raw: object) -> object:
+        """Map FitResult JSON shape to the report-reader shape.
+
+        FitResult stores regression and correlation data under ``data_summary``.
+        The report command reads the legacy top-level keys, so this validator
+        bridges the schema without requiring downstream dict casts.
+
+        Args:
+            raw: Incoming object passed to model validation.
+
+        Returns:
+            object: Normalized mapping compatible with FitSummaryReport fields.
+        """
+        if not isinstance(raw, dict):
+            return raw
+        data_summary = raw.get("data_summary")
+        if not isinstance(data_summary, dict):
+            return raw
+
+        normalized: dict[str, object] = dict(raw)
+        if "regression_metrics" not in normalized:
+            regression = data_summary.get("regression_metrics")
+            if isinstance(regression, dict):
+                normalized["regression_metrics"] = regression
+        if "linear_correlation" not in normalized:
+            correlation = data_summary.get("linear_correlation")
+            if isinstance(correlation, dict):
+                normalized["linear_correlation"] = correlation
+        return normalized
 
     @classmethod
     def from_json_file(cls, path: str | object) -> FitSummaryReport:

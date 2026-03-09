@@ -13,6 +13,10 @@ from typing import TYPE_CHECKING
 from pydantic import BaseModel
 from pydantic import ConfigDict
 from pydantic import Field
+from pydantic import model_validator
+
+from spectrafit.models.fitting_context import FittingContext
+from spectrafit.models.fitting_context import FittingMode
 
 
 if TYPE_CHECKING:
@@ -43,8 +47,8 @@ class DataConfig(BaseModel):
         header: Row index to use as column header (``None`` for no header).
         decimal: Decimal point character.
         comment: Character indicating comment lines; ``None`` disables.
-        global_: Forwarded global fitting flag; non-zero means *all* columns
-            are loaded (no ``usecols`` restriction).
+        context: Typed fitting context. Non-standard modes load all columns
+            (no ``usecols`` restriction).
 
     Examples:
         >>> cfg = DataConfig(infile="spectrum.txt")
@@ -80,11 +84,49 @@ class DataConfig(BaseModel):
         default=None,
         description="Character marking comment lines; None disables comment parsing",
     )
-    global_: int = Field(
-        default=0,
-        alias="global",
-        description="Fitting mode flag; non-zero loads all columns (no usecols)",
+    context: FittingContext = Field(
+        default_factory=FittingContext,
+        description="Typed fitting context; non-standard modes load all columns.",
     )
+
+    @model_validator(mode="before")
+    @classmethod
+    def _coerce_legacy_global(cls, raw: object) -> object:
+        """Accept legacy ``global``/``global_`` inputs and map to ``context``.
+
+        Args:
+            raw: Raw mapping passed to model validation.
+
+        Returns:
+            object: Normalized mapping with ``context`` when legacy keys are used.
+        """
+        if not isinstance(raw, dict):
+            return raw
+        data: dict[str, object] = dict(raw)
+        if "context" in data:
+            return data
+        legacy = data.pop("global_", data.pop("global", None))
+        if legacy is None:
+            return data
+        if isinstance(legacy, FittingContext):
+            data["context"] = legacy
+            return data
+        if isinstance(legacy, FittingMode):
+            data["context"] = FittingContext(mode=legacy)
+            return data
+        if isinstance(legacy, bool):
+            data["context"] = FittingContext.from_global_int(1 if legacy else 0)
+            return data
+        if isinstance(legacy, int):
+            data["context"] = FittingContext.from_global_int(legacy)
+            return data
+        data["context"] = FittingContext(mode=FittingMode(str(legacy)))
+        return data
+
+    @property
+    def global_(self) -> int:
+        """Legacy int accessor retained for frozen loader compatibility."""
+        return self.context.global_int
 
     @classmethod
     def from_unified(
@@ -121,8 +163,11 @@ class DataConfig(BaseModel):
 
         Examples:
             >>> from spectrafit.core.fitting_config import UnifiedFittingConfig
-            >>> peaks = {"1": {"gaussian": {"amplitude": {"value": 1.0, "vary": True}}}}
-            >>> cfg = UnifiedFittingConfig(peaks=peaks)
+            >>> cfg = UnifiedFittingConfig(components=[{
+            ...     "id": "p1",
+            ...     "model": "gaussian",
+            ...     "parameters": {"amplitude": {"value": 1.0, "vary": True}},
+            ... }])
             >>> dc = DataConfig.from_unified(cfg, "spectrum.txt")
             >>> dc.x_col
             'energy'
@@ -139,7 +184,7 @@ class DataConfig(BaseModel):
             header=config.header if header is ... else header,
             decimal=decimal if decimal is not None else config.decimal,
             comment=config.comment if comment is ... else comment,
-            **{"global": config.context.global_int},
+            context=config.context,
         )
 
     @classmethod
@@ -176,5 +221,5 @@ class DataConfig(BaseModel):
             header=int(str(args["header"])) if args.get("header") is not None else None,
             decimal=str(args.get("decimal", ".")),
             comment=str(args["comment"]) if args.get("comment") is not None else None,
-            **{"global": int(str(args.get("global_", 0)))},
+            context=FittingContext.from_global_int(int(str(args.get("global_", 0)))),
         )

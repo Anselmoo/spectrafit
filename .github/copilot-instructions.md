@@ -9,7 +9,7 @@
 
 SpectraFit fits 1D–3D X-ray absorption / emission spectra using `lmfit` + `scipy`.
 CLI-first (`typer`), also usable as a Python API and Jupyter notebook plugin.
-Package management: `uv`. Build backend: `hatchling`. Python 3.10–3.13.
+Package management: `uv`. Build backend: `hatchling`. Python 3.11–3.13.
 
 **Entry points:**
 - `spectrafit` → `spectrafit.cli.main:run`
@@ -65,6 +65,8 @@ CLI / Jupyter / API
 5. **`from __future__ import annotations` in every module.**
 6. **No `sys.exit()` in business logic.** Raise typed exceptions.
 7. **`translate_dot_notation()` at parse time.** User writes `p1.center`; lmfit sees `p1_center`.
+8. **Do not introduce new `from_legacy_dict()` usage.** Prefer typed construction via
+   `model_validate()`, explicit adapters, or `from_dict()` entry points.
 
 ---
 

@@ -14,6 +14,14 @@ from spectrafit.models.fitting_context import FittingMode
 from spectrafit.models.global_fitting import GlobalFittingConfig
 from spectrafit.models.global_fitting import SharedParameter
 
+MINIMAL_COMPONENTS = [
+    {
+        "id": "p1",
+        "model": "gaussian",
+        "parameters": {"amplitude": {"value": 1.0}},
+    }
+]
+
 
 # ---------------------------------------------------------------------------
 # FittingMode coercion from legacy int values (replaces TestGlobalModeEnum)
@@ -36,7 +44,7 @@ class TestFittingModeCoercion:
         """Legacy integers 0/1/2 coerce to the correct FittingMode."""
         from spectrafit.core.fitting_config import UnifiedFittingConfig
 
-        cfg = UnifiedFittingConfig(peaks={"1": {"gaussian": {"amplitude": {"value": 1.0}}}}, **{"global": int_value})
+        cfg = UnifiedFittingConfig(components=MINIMAL_COMPONENTS, **{"global": int_value})
         assert cfg.global_ == expected_mode
 
     def test_string_coercion(self) -> None:
@@ -44,7 +52,7 @@ class TestFittingModeCoercion:
         from spectrafit.core.fitting_config import UnifiedFittingConfig
 
         cfg = UnifiedFittingConfig(
-            peaks={"1": {"gaussian": {"amplitude": {"value": 1.0}}}},
+            components=MINIMAL_COMPONENTS,
             **{"global": "global"},
         )
         assert cfg.global_ == FittingMode.GLOBAL
@@ -53,7 +61,7 @@ class TestFittingModeCoercion:
         """Default global_ is FittingMode.STANDARD (replaces GlobalMode.NONE=0)."""
         from spectrafit.core.fitting_config import UnifiedFittingConfig
 
-        cfg = UnifiedFittingConfig(peaks={"1": {"gaussian": {"amplitude": {"value": 1.0}}}})
+        cfg = UnifiedFittingConfig(components=MINIMAL_COMPONENTS)
         assert cfg.global_ == FittingMode.STANDARD
 
     def test_invalid_int_raises(self) -> None:
@@ -62,7 +70,7 @@ class TestFittingModeCoercion:
 
         with pytest.raises(Exception):
             UnifiedFittingConfig(
-                peaks={"1": {"gaussian": {"amplitude": {"value": 1.0}}}},
+                components=MINIMAL_COMPONENTS,
                 **{"global": 99},
             )
 
@@ -70,26 +78,6 @@ class TestFittingModeCoercion:
 # ---------------------------------------------------------------------------
 # Legacy backward-compat constants (still pinned in autopeak/builtin shims)
 # ---------------------------------------------------------------------------
-
-
-@pytest.mark.unit
-class TestLegacyGlobalConstants:
-    """Pin the legacy int constants still exported from deprecated shims."""
-
-    def test_global_none_is_zero(self) -> None:
-        from spectrafit.models.autopeak import GLOBAL_NONE
-
-        assert GLOBAL_NONE == 0
-
-    def test_global_standard_is_one(self) -> None:
-        from spectrafit.models.autopeak import GLOBAL_STANDARD
-
-        assert GLOBAL_STANDARD == 1
-
-    def test_global_with_pre_is_two(self) -> None:
-        from spectrafit.models.autopeak import GLOBAL_WITH_PRE
-
-        assert GLOBAL_WITH_PRE == 2
 
 
 # ---------------------------------------------------------------------------

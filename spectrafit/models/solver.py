@@ -20,7 +20,6 @@ import numpy as np
 from lmfit import Minimizer
 from lmfit import Parameters
 
-from spectrafit.api.tools_model import GlobalFittingAPI
 from spectrafit.api.tools_model import SolverModelsAPI
 from spectrafit.models.fitting_context import FittingMode
 from spectrafit.models.model_parameters import ModelParameters
@@ -60,12 +59,11 @@ class SolverModels(ModelParameters):
 
         """
         super().__init__(df=df, config=config)
-        self.args_solver = SolverModelsAPI(
+        self._solver_config = SolverModelsAPI(
             minimizer=config.minimizer,
             optimizer=config.optimizer,
-        ).model_dump()
-        is_global = int(config.global_ == FittingMode.GLOBAL)
-        self.args_global = GlobalFittingAPI(global_=is_global).model_dump()
+        )
+        self._is_global = config.global_ == FittingMode.GLOBAL
         self.params = self.return_params
 
     def __call__(self) -> tuple[Minimizer, MinimizerResult]:
@@ -75,26 +73,25 @@ class SolverModels(ModelParameters):
             tuple[Minimizer, MinimizerResult]: Minimizer class and the fitting results.
 
         """
-        if self.args_global["global_"]:
+        if self._is_global:
             cfg: GlobalFittingConfig | None = self.global_fitting_config
             minimizer = Minimizer(
                 self.solve_global_fitting,
                 params=self.params,
                 fcn_args=(self.x, self.data, cfg),
-                **self.args_solver["minimizer"],
+                **self._solver_config.minimizer.model_dump(),
             )
         else:
             minimizer = Minimizer(
                 self._local_residual,
                 params=self.params,
                 fcn_args=(self.x, self.data),
-                **self.args_solver["minimizer"],
+                **self._solver_config.minimizer.model_dump(),
             )
 
         result = minimizer.minimize(
-            **self.args_solver["optimizer"],
+            **self._solver_config.optimizer.model_dump(exclude_none=True),
         )
-        self.args_solver["optimizer"]["max_nfev"] = minimizer.max_nfev
         return minimizer, result
 
     def _local_residual(
@@ -186,7 +183,7 @@ def calculated_model(
     params: Parameters,
     x: NDArray[np.float64],
     df: pd.DataFrame,
-    global_fit: int,
+    global_fit: bool,
     bundle: CompositeModelBundle | None = None,
 ) -> pd.DataFrame:
     r"""Calculate the single contributions of the models and add them to the dataframe.
@@ -202,9 +199,9 @@ def calculated_model(
         df (pd.DataFrame): DataFrame containing the input data (`x` and `data`),
              as well as the best fit and the corresponding residuum. Hence, it will be
              extended by the single contribution of the model.
-        global_fit (int): If 1 or 2, the model is calculated for the global fit.
+        global_fit (bool): ``True`` for global fitting mode.
         bundle (CompositeModelBundle | None): Optional composite model bundle for
-            v2 local fits. When provided and ``global_fit`` is 0, decomposition uses
+            v2 local fits. When provided and ``global_fit`` is ``False``, decomposition uses
             ``bundle.decompose()`` instead of the legacy string-split approach.
 
     Returns:

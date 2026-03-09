@@ -15,28 +15,28 @@ import lmfit
 from pydantic import BaseModel
 from pydantic import ConfigDict
 
-from spectrafit.models.regular import atan_step
-from spectrafit.models.regular import cgaussian
-from spectrafit.models.regular import clorentzian
-from spectrafit.models.regular import constant
-from spectrafit.models.regular import cvoigt
-from spectrafit.models.regular import erf_step
-from spectrafit.models.regular import exponential
-from spectrafit.models.regular import gaussian
-from spectrafit.models.regular import heaviside
-from spectrafit.models.regular import linear
-from spectrafit.models.regular import log_step
-from spectrafit.models.regular import lorentzian
-from spectrafit.models.regular import orcagaussian
-from spectrafit.models.regular import pearson1
-from spectrafit.models.regular import pearson2
-from spectrafit.models.regular import pearson3
-from spectrafit.models.regular import pearson4
-from spectrafit.models.regular import polynom2
-from spectrafit.models.regular import polynom3
-from spectrafit.models.regular import power
-from spectrafit.models.regular import pseudovoigt
-from spectrafit.models.regular import voigt
+from spectrafit.models.functions.regular import atan_step
+from spectrafit.models.functions.regular import cgaussian
+from spectrafit.models.functions.regular import clorentzian
+from spectrafit.models.functions.regular import constant
+from spectrafit.models.functions.regular import cvoigt
+from spectrafit.models.functions.regular import erf_step
+from spectrafit.models.functions.regular import exponential
+from spectrafit.models.functions.regular import gaussian
+from spectrafit.models.functions.regular import heaviside
+from spectrafit.models.functions.regular import linear
+from spectrafit.models.functions.regular import log_step
+from spectrafit.models.functions.regular import lorentzian
+from spectrafit.models.functions.regular import orcagaussian
+from spectrafit.models.functions.regular import pearson1
+from spectrafit.models.functions.regular import pearson2
+from spectrafit.models.functions.regular import pearson3
+from spectrafit.models.functions.regular import pearson4
+from spectrafit.models.functions.regular import polynom2
+from spectrafit.models.functions.regular import polynom3
+from spectrafit.models.functions.regular import power
+from spectrafit.models.functions.regular import pseudovoigt
+from spectrafit.models.functions.regular import voigt
 
 
 ModelCategory = Literal[

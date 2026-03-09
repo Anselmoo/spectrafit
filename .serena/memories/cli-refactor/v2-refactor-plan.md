@@ -67,4 +67,4 @@ Update: CLI help text and epilogs in main.py
 - JupyterPlugin entry-point: removed from pyproject.toml
 
 ## GitHub Issue
-Tracking issue: https://github.com/Anselmoo/spectrafit/issues/ (see cli-refactor label)
+Tracking issue: https://github.com/Anselmoo/spectrafit/issues/2094

@@ -1,41 +1,13 @@
-"""Unit tests for TypeAlias definitions (v2.0.0).
-
-Tests the TypeAlias contract that currently lives in ``spectrafit.models.autopeak``
-and will be migrated to ``spectrafit.models.types`` in Phase 1.
-
-Import path is parametrised so this file works both before and after the migration.
-"""
+"""Unit tests for TypeAlias definitions (v2.0.0)."""
 
 from __future__ import annotations
 
 import pytest
 
-
-# ---------------------------------------------------------------------------
-# Import-path compatibility shim
-# ---------------------------------------------------------------------------
-try:
-    from spectrafit.models.types import FittingArgs  # target location (post-Phase 1)
-    from spectrafit.models.types import (  # target location (post-Phase 1)
-        ModelParameterSpec,
-    )
-    from spectrafit.models.types import (  # target location (post-Phase 1)
-        ParameterConstraint,
-    )
-    from spectrafit.models.types import PeakModelSpec  # target location (post-Phase 1)
-    from spectrafit.models.types import PeaksDict  # target location (post-Phase 1)
-except ImportError:
-    from spectrafit.models.autopeak import FittingArgs  # current location (pre-Phase 1)
-    from spectrafit.models.autopeak import (  # current location (pre-Phase 1)
-        ModelParameterSpec,
-    )
-    from spectrafit.models.autopeak import (  # current location (pre-Phase 1)
-        ParameterConstraint,
-    )
-    from spectrafit.models.autopeak import (  # current location (pre-Phase 1)
-        PeakModelSpec,
-    )
-    from spectrafit.models.autopeak import PeaksDict  # current location (pre-Phase 1)
+from spectrafit.models.types import DataSplitDict
+from spectrafit.models.types import FitReportKwargs
+from spectrafit.models.types import ModelParameterSpec
+from spectrafit.models.types import ParameterConstraint
 
 
 # ---------------------------------------------------------------------------
@@ -80,91 +52,28 @@ class TestModelParameterSpec:
         assert set(spec.keys()) == {"amplitude", "center", "fwhmg"}
 
 
-# ---------------------------------------------------------------------------
-# PeakModelSpec
-# ---------------------------------------------------------------------------
+@pytest.mark.unit
+class TestDataSplitDict:
+    """DataSplitDict matches pandas ``orient='split'`` structure."""
+
+    def test_split_payload_shape(self) -> None:
+        split: DataSplitDict = {
+            "columns": ["x", "y"],
+            "index": [0, 1],
+            "data": [[1.0, 2.0], [3.0, 4.0]],
+        }
+        assert split["columns"] == ["x", "y"]
+        assert len(split["data"]) == 2
 
 
 @pytest.mark.unit
-class TestPeakModelSpec:
-    """PeakModelSpec = dict[str, ModelParameterSpec]  — maps model name → params."""
+class TestFitReportKwargs:
+    """FitReportKwargs remains a typed optional-keys mapping."""
 
-    def test_gaussian_spec(self) -> None:
-        spec: PeakModelSpec = {
-            "gaussian": {
-                "amplitude": {"value": 1.0, "vary": True},
-                "center": {"value": 0.0, "vary": True},
-                "fwhmg": {"value": 0.5, "vary": True},
-            }
+    def test_optional_kwargs(self) -> None:
+        kwargs: FitReportKwargs = {
+            "sort_pars": True,
+            "show_correl": False,
+            "min_correl": 0.25,
         }
-        assert "gaussian" in spec
-        assert "amplitude" in spec["gaussian"]
-
-
-# ---------------------------------------------------------------------------
-# PeaksDict
-# ---------------------------------------------------------------------------
-
-
-@pytest.mark.unit
-class TestPeaksDict:
-    """PeaksDict = dict[str, PeakModelSpec]  — string-integer keys."""
-
-    def test_single_peak(self) -> None:
-        peaks: PeaksDict = {
-            "1": {
-                "pseudovoigt": {
-                    "amplitude": {"value": 1.0, "vary": True},
-                    "center": {"value": 0.0, "vary": True},
-                    "fwhmg": {"value": 0.1, "vary": True},
-                    "fwhml": {"value": 0.1, "vary": True},
-                }
-            }
-        }
-        assert "1" in peaks
-
-    def test_multiple_peaks_ordered_by_string_key(self) -> None:
-        peaks: PeaksDict = {
-            "1": {
-                "gaussian": {
-                    "amplitude": {"value": 1.0},
-                    "center": {"value": -1.0},
-                    "fwhmg": {"value": 0.5},
-                }
-            },
-            "2": {
-                "lorentzian": {
-                    "amplitude": {"value": 0.5},
-                    "center": {"value": 1.0},
-                    "fwhml": {"value": 0.5},
-                }
-            },
-        }
-        assert list(peaks.keys()) == ["1", "2"]
-
-
-# ---------------------------------------------------------------------------
-# FittingArgs
-# ---------------------------------------------------------------------------
-
-
-@pytest.mark.unit
-class TestFittingArgs:
-    """FittingArgs = dict[str, Any]  — top-level pipeline input dict."""
-
-    def test_minimal_valid_args(self) -> None:
-        args: FittingArgs = {
-            "peaks": {
-                "1": {
-                    "gaussian": {
-                        "amplitude": {"value": 1.0},
-                        "center": {"value": 0.0},
-                        "fwhmg": {"value": 0.5},
-                    }
-                }
-            },
-            "column": ["energy", "intensity"],
-            "global_": 0,
-        }
-        assert args["global_"] == 0
-        assert isinstance(args["peaks"], dict)
+        assert kwargs["sort_pars"] is True

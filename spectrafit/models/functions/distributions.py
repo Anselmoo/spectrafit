@@ -8,28 +8,28 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from spectrafit.models.regular import atan_step as _atan
-from spectrafit.models.regular import cgaussian as _cgaussian
-from spectrafit.models.regular import clorentzian as _clorentzian
-from spectrafit.models.regular import constant as _constant
-from spectrafit.models.regular import cvoigt as _cvoigt
-from spectrafit.models.regular import erf_step as _erf
-from spectrafit.models.regular import exponential as _exponential
-from spectrafit.models.regular import gaussian as _gaussian
-from spectrafit.models.regular import heaviside as _heaviside
-from spectrafit.models.regular import linear as _linear
-from spectrafit.models.regular import log_step as _log
-from spectrafit.models.regular import lorentzian as _lorentzian
-from spectrafit.models.regular import orcagaussian as _orcagaussian
-from spectrafit.models.regular import pearson1 as _pearson1
-from spectrafit.models.regular import pearson2 as _pearson2
-from spectrafit.models.regular import pearson3 as _pearson3
-from spectrafit.models.regular import pearson4 as _pearson4
-from spectrafit.models.regular import polynom2 as _polynom2
-from spectrafit.models.regular import polynom3 as _polynom3
-from spectrafit.models.regular import power as _power
-from spectrafit.models.regular import pseudovoigt as _pseudovoigt
-from spectrafit.models.regular import voigt as _voigt
+from spectrafit.models.functions.regular import atan_step as _atan
+from spectrafit.models.functions.regular import cgaussian as _cgaussian
+from spectrafit.models.functions.regular import clorentzian as _clorentzian
+from spectrafit.models.functions.regular import constant as _constant
+from spectrafit.models.functions.regular import cvoigt as _cvoigt
+from spectrafit.models.functions.regular import erf_step as _erf
+from spectrafit.models.functions.regular import exponential as _exponential
+from spectrafit.models.functions.regular import gaussian as _gaussian
+from spectrafit.models.functions.regular import heaviside as _heaviside
+from spectrafit.models.functions.regular import linear as _linear
+from spectrafit.models.functions.regular import log_step as _log
+from spectrafit.models.functions.regular import lorentzian as _lorentzian
+from spectrafit.models.functions.regular import orcagaussian as _orcagaussian
+from spectrafit.models.functions.regular import pearson1 as _pearson1
+from spectrafit.models.functions.regular import pearson2 as _pearson2
+from spectrafit.models.functions.regular import pearson3 as _pearson3
+from spectrafit.models.functions.regular import pearson4 as _pearson4
+from spectrafit.models.functions.regular import polynom2 as _polynom2
+from spectrafit.models.functions.regular import polynom3 as _polynom3
+from spectrafit.models.functions.regular import power as _power
+from spectrafit.models.functions.regular import pseudovoigt as _pseudovoigt
+from spectrafit.models.functions.regular import voigt as _voigt
 
 
 if TYPE_CHECKING:

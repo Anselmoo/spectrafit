@@ -17,6 +17,7 @@ from spectrafit.core.pipeline import FittingPipeline
 from spectrafit.core.pipeline import FittingResult
 from spectrafit.core.pipeline import fitting_routine_pipeline
 from spectrafit.core.postprocessing import PostProcessing
+from spectrafit.core.postprocessing import PostProcessingResult
 from spectrafit.core.preprocessing import PreProcessing
 
 
@@ -26,6 +27,7 @@ __all__ = [
     "FittingPipeline",
     "FittingResult",
     "PostProcessing",
+    "PostProcessingResult",
     "PreProcessing",
     "SaveResult",
     "UnifiedFittingConfig",

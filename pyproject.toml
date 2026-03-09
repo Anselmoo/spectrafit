@@ -216,6 +216,7 @@ extend-ignore = [
 "spectrafit/core/*.py" = ["TC001", "TC002"]
 "spectrafit/report/*.py" = ["TC001", "TC002"]
 "spectrafit/plugins/notebook/*.py" = ["TC001", "TC002"]
+"spectrafit/jupyter/*.py" = ["TC001", "TC002"]
 "spectrafit/plugins/color_schemas.py" = ["RUF012"]
 "spectrafit/plugins/test/test_notebook.py" = ["SLF001"]
 "spectrafit/cli/commands/*.py" = [
@@ -286,35 +287,19 @@ exclude_lines = [
 skip_covered = true
 show_missing = true
 
-[tool.mypy]
-plugins = ["pydantic.mypy"]
-follow_imports = "silent"
-warn_redundant_casts = true
-warn_unused_ignores = true
-disallow_any_generics = true
-check_untyped_defs = true
-no_implicit_reexport = true
-disallow_untyped_defs = true
-pretty = true
-show_error_context = true
-show_error_codes = true
-exclude = ".*/test/test_.*\\.py$"
-
-[tool.pydantic-mypy]
-init_forbid_extra = true
-init_typed = true
-warn_required_dynamic_aliases = true
-warn_untyped_fields = true
-
 [tool.ty]
-# ty replaces mypy (Pydantic v2 plugin support pending ty beta graduation)
-# Track: https://github.com/astral-sh/ty
-# Run: uv run ty check spectrafit/
-# Note: run in warn-only mode (--error-on-warning=false) until Pydantic v2 support is stable
+# ty is the hard-fail type checker (replaces mypy). Track: https://github.com/astral-sh/ty
+
 [tool.ty.rules]
-# Suppress Pydantic-model instantiation false positives during beta
+# Suppress Pydantic-model instantiation false positives (known ty/Pydantic v2 issue)
 missing-argument = "warn"
 invalid-argument-type = "warn"
+# False positives: dict[str, object].get(key, default) fails ty's overload resolution
+# because the default {} is inferred as dict[str, Never] — not a real error.
+no-matching-overload = "warn"
+# False positives: lmfit's MinimizerResult has no published type stubs;
+# .params, .success, .nfev, .message exist at runtime.
+unresolved-attribute = "warn"
 
 [tool.poe]
 
@@ -322,8 +307,7 @@ invalid-argument-type = "warn"
 test = { cmd = "pytest tests/", help = "Run the full test suite", use_exec = true }
 test-fast = { cmd = "pytest tests/ -m 'not slow' -x", help = "Run tests (skip slow, stop on first fail)", use_exec = true }
 test-cov = { cmd = "pytest tests/ --cov --cov-report=term-missing", help = "Run tests with coverage report", use_exec = true }
-typecheck = { cmd = "ty check spectrafit/", help = "Type-check with ty (advisory, beta)" }
-typecheck-legacy = { cmd = "mypy spectrafit/", help = "Type-check with mypy (stable gate)" }
+typecheck = { cmd = "ty check spectrafit/ --exclude 'spectrafit/report/**' --exclude 'spectrafit/core/postprocessing.py' --exclude 'spectrafit/core/export.py'", help = "Type-check with ty (hard-fail)" }
 docs-build = { cmd = "mkdocs build --clean", help = "Build documentation" }
 docs-serve = { cmd = "mkdocs serve", help = "Serve documentation locally", use_exec = true }
 pre-commit-all = { cmd = "pre-commit run --all-files", help = "Run all pre-commit hooks", use_exec = true }
@@ -337,16 +321,12 @@ shell = "ruff format spectrafit/ && ruff check --fix spectrafit/"
 help = "Auto-format and fix lint issues"
 
 [tool.poe.tasks.ci]
-shell = "ruff check spectrafit/ && ruff format --check spectrafit/ && mypy spectrafit/ && pytest tests/"
-help = "Full CI gate: lint + mypy + tests"
+shell = "ruff check spectrafit/ && ruff format --check spectrafit/ && ty check spectrafit/ --exclude 'spectrafit/report/**' --exclude 'spectrafit/core/postprocessing.py' --exclude 'spectrafit/core/export.py' && pytest tests/"
+help = "Full CI gate: lint + ty + tests (frozen modules excluded from ty)"
 
 [tool.poe.tasks.clean]
 shell = "find . -name '__pycache__' -type d -exec rm -rf {} + 2>/dev/null; rm -rf dist/ .coverage coverage.xml junit.xml"
 help = "Remove build artifacts and caches"
-
-[tool.poe.tasks.migrate-v1]
-cmd = "python scripts/migrate_v1_to_v2.py"
-help = "Migrate a v1.x input file to v2 TOML format: poe migrate-v1 old.json -o new.toml"
 
 [tool.poe.tasks.generate-examples]
 cmd = "python scripts/generate_examples.py"

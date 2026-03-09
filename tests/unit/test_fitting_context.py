@@ -1,114 +1,126 @@
-"""Tests for Phase 6.4 — FittingContext and FittingMode.
-
-Verifies:
-- FittingMode is a str enum with correct values
-- FittingContext defaults to STANDARD mode
-- GLOBAL mode requires n_datasets >= 2
-- from_global_int converts legacy values correctly
-- global_int property provides backward-compat integer
-- time_axis length validation
-"""
+"""Unit tests for FittingContext, FittingMode, EnvironmentMode and detect_environment."""
 
 from __future__ import annotations
 
+from unittest.mock import MagicMock
+from unittest.mock import patch
+
 import pytest
 
+from spectrafit.models.fitting_context import EnvironmentMode
 from spectrafit.models.fitting_context import FittingContext
-from spectrafit.models.fitting_context import FittingMode
+from spectrafit.models.fitting_context import detect_environment
 
 
-class TestFittingMode:
-    def test_values_are_strings(self) -> None:
-        assert FittingMode.STANDARD == "standard"
-        assert FittingMode.GLOBAL == "global"
-        assert FittingMode.TIME_RESOLVED == "time_resolved"
-        assert FittingMode.SEQUENTIAL == "sequential"
+class TestEnvironmentMode:
+    """Tests for EnvironmentMode enum."""
 
-    def test_construct_from_string(self) -> None:
-        assert FittingMode("standard") == FittingMode.STANDARD
-        assert FittingMode("global") == FittingMode.GLOBAL
-
-
-class TestFittingContextDefaults:
-    def test_default_mode_is_standard(self) -> None:
-        ctx = FittingContext()
-        assert ctx.mode == FittingMode.STANDARD
-
-    def test_default_n_datasets(self) -> None:
-        ctx = FittingContext()
-        assert ctx.n_datasets == 1
-
-    def test_default_shared_parameters_empty(self) -> None:
-        ctx = FittingContext()
-        assert ctx.shared_parameters == []
-
-    def test_default_time_axis_none(self) -> None:
-        ctx = FittingContext()
-        assert ctx.time_axis is None
-
-
-class TestFittingContextValidation:
-    def test_global_mode_requires_n_datasets_ge_2(self) -> None:
-        with pytest.raises(ValueError, match="n_datasets >= 2"):
-            FittingContext(mode=FittingMode.GLOBAL, n_datasets=1)
-
-    def test_global_mode_n_datasets_2_ok(self) -> None:
-        ctx = FittingContext(mode=FittingMode.GLOBAL, n_datasets=2)
-        assert ctx.n_datasets == 2
-
-    def test_time_axis_wrong_length_raises(self) -> None:
-        with pytest.raises(ValueError, match="time_axis length"):
-            FittingContext(
-                mode=FittingMode.TIME_RESOLVED,
-                n_datasets=3,
-                time_axis=[0.0, 1.0],  # length 2, not 3
-            )
-
-    def test_time_axis_correct_length_ok(self) -> None:
-        ctx = FittingContext(
-            mode=FittingMode.TIME_RESOLVED,
-            n_datasets=3,
-            time_axis=[0.0, 1.0, 2.0],
-        )
-        assert len(ctx.time_axis) == 3  # type: ignore[arg-type]
-
-
-class TestGlobalInt:
-    def test_standard_gives_zero(self) -> None:
-        ctx = FittingContext(mode=FittingMode.STANDARD)
-        assert ctx.global_int == 0
-
-    def test_global_gives_one(self) -> None:
-        ctx = FittingContext(mode=FittingMode.GLOBAL, n_datasets=2)
-        assert ctx.global_int == 1
-
-    def test_sequential_gives_one(self) -> None:
-        ctx = FittingContext(mode=FittingMode.SEQUENTIAL)
-        assert ctx.global_int == 1
-
-
-class TestFromGlobalInt:
+    @pytest.mark.unit
     @pytest.mark.parametrize(
-        ("value", "expected_mode"),
+        ("value", "expected"),
         [
-            (0, FittingMode.STANDARD),
-            (1, FittingMode.GLOBAL),
-            (2, FittingMode.GLOBAL),
+            ("cli", EnvironmentMode.CLI),
+            ("notebook", EnvironmentMode.NOTEBOOK),
+            ("api", EnvironmentMode.API),
         ],
     )
-    def test_golden_table(self, value: int, expected_mode: FittingMode) -> None:
-        ctx = FittingContext.from_global_int(value)
-        assert ctx.mode == expected_mode
+    def test_from_string(self, value: str, expected: EnvironmentMode) -> None:
+        assert EnvironmentMode(value) == expected
 
-    def test_invalid_value_raises(self) -> None:
-        with pytest.raises(ValueError, match="global_"):
-            FittingContext.from_global_int(3)
+    @pytest.mark.unit
+    def test_is_str_subclass(self) -> None:
+        assert isinstance(EnvironmentMode.CLI, str)
+        assert EnvironmentMode.CLI == "cli"
 
-    def test_zero_returns_single_dataset(self) -> None:
-        ctx = FittingContext.from_global_int(0)
-        assert ctx.n_datasets == 1
+    @pytest.mark.unit
+    def test_all_values_unique(self) -> None:
+        values = [m.value for m in EnvironmentMode]
+        assert len(values) == len(set(values))
 
-    def test_one_returns_two_datasets(self) -> None:
-        """from_global_int(1) sets n_datasets=2 as minimum valid GLOBAL config."""
-        ctx = FittingContext.from_global_int(1)
-        assert ctx.n_datasets == 2
+
+class TestDetectEnvironment:
+    """Tests for detect_environment()."""
+
+    @pytest.mark.unit
+    def test_returns_environment_mode_instance(self) -> None:
+        result = detect_environment()
+        assert isinstance(result, EnvironmentMode)
+
+    @pytest.mark.unit
+    def test_detects_notebook_when_ipython_kernel_active(self) -> None:
+        mock_ipython = MagicMock()
+        mock_get_ipython = MagicMock(return_value=mock_ipython)
+        mock_ipython_module = MagicMock()
+        mock_ipython_module.get_ipython = mock_get_ipython
+
+        with patch.dict("sys.modules", {"IPython": mock_ipython_module}):
+            result = detect_environment()
+
+        assert result == EnvironmentMode.NOTEBOOK
+
+    @pytest.mark.unit
+    def test_detects_api_when_stdin_not_tty(self) -> None:
+        with patch("sys.stdin") as mock_stdin:
+            mock_stdin.isatty.return_value = False
+            with patch.dict("sys.modules", {"IPython": None}, clear=False):
+                # Remove IPython to force CLI/API path
+                import builtins
+                original_import = builtins.__import__
+
+                def import_without_ipython(name: str, *args: object, **kwargs: object) -> object:
+                    if name == "IPython":
+                        raise ImportError("no IPython")
+                    return original_import(name, *args, **kwargs)
+
+                builtins.__import__ = import_without_ipython
+                try:
+                    result = detect_environment()
+                    assert result == EnvironmentMode.API
+                finally:
+                    builtins.__import__ = original_import
+
+    @pytest.mark.unit
+    def test_detects_cli_when_stdin_is_tty(self) -> None:
+        import builtins
+
+        original_import = builtins.__import__
+
+        def import_without_ipython(name: str, *args: object, **kwargs: object) -> object:
+            if name == "IPython":
+                raise ImportError("no IPython")
+            return original_import(name, *args, **kwargs)
+
+        with patch("sys.stdin") as mock_stdin:
+            mock_stdin.isatty.return_value = True
+            builtins.__import__ = import_without_ipython
+            try:
+                result = detect_environment()
+                assert result == EnvironmentMode.CLI
+            finally:
+                builtins.__import__ = original_import
+
+
+class TestFittingContextEnvironmentField:
+    """Test that FittingContext carries the environment field."""
+
+    @pytest.mark.unit
+    def test_default_environment_is_set(self) -> None:
+        ctx = FittingContext()
+        assert isinstance(ctx.environment, EnvironmentMode)
+
+    @pytest.mark.unit
+    def test_explicit_environment(self) -> None:
+        ctx = FittingContext(environment=EnvironmentMode.NOTEBOOK)
+        assert ctx.environment == EnvironmentMode.NOTEBOOK
+
+    @pytest.mark.unit
+    def test_frozen_context_raises_on_mutation(self) -> None:
+        ctx = FittingContext(environment=EnvironmentMode.CLI)
+        with pytest.raises(Exception):
+            ctx.environment = EnvironmentMode.API  # type: ignore[misc]
+
+    @pytest.mark.unit
+    def test_serialises_environment(self) -> None:
+        ctx = FittingContext(environment=EnvironmentMode.API)
+        data = ctx.model_dump()
+        assert data["environment"] == "api"

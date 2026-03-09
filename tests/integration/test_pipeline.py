@@ -22,16 +22,18 @@ from spectrafit.models.output_config import OutputConfig
 # Shared test data
 # ---------------------------------------------------------------------------
 
-MINIMAL_PEAKS: dict[str, object] = {
-    "peaks": {
-        "1": {
-            "gaussian": {
+MINIMAL_COMPONENTS: dict[str, object] = {
+    "components": [
+        {
+            "id": "p1",
+            "model": "gaussian",
+            "parameters": {
                 "amplitude": {"min": 0, "max": 2, "value": 1.0, "vary": True},
                 "center": {"min": -1, "max": 1, "value": 0.0, "vary": True},
                 "fwhmg": {"min": 0.1, "max": 2.0, "value": 0.7, "vary": True},
-            }
+            },
         }
-    },
+    ],
     "column": {"x": "energy", "y": "intensity"},
     "minimizer": {"nan_policy": "propagate", "calc_covar": True},
     "optimizer": {"max_nfev": 1000, "method": "leastsq"},
@@ -49,23 +51,23 @@ class TestFittingPipelineConstructor:
 
     def test_dict_coerced_to_unified_config(self) -> None:
         """from_dict() + FittingPipeline stores a UnifiedFittingConfig."""
-        config = UnifiedFittingConfig.from_dict(MINIMAL_PEAKS)
+        config = UnifiedFittingConfig.from_dict(MINIMAL_COMPONENTS)
         pipeline = FittingPipeline(config=config)
         assert isinstance(pipeline.config, UnifiedFittingConfig)
 
     def test_unified_config_stored_directly(self) -> None:
         """UnifiedFittingConfig input must be stored without re-wrapping."""
-        config = UnifiedFittingConfig.from_dict(MINIMAL_PEAKS)
+        config = UnifiedFittingConfig.from_dict(MINIMAL_COMPONENTS)
         pipeline = FittingPipeline(config=config)
         assert isinstance(pipeline.config, UnifiedFittingConfig)
         assert pipeline.config is config
 
-    def test_peaks_accessible_via_config(self) -> None:
-        """Pipeline config must expose peaks after from_dict coercion."""
-        config = UnifiedFittingConfig.from_dict(MINIMAL_PEAKS)
+    def test_components_accessible_via_config(self) -> None:
+        """Pipeline config must expose components after from_dict coercion."""
+        config = UnifiedFittingConfig.from_dict(MINIMAL_COMPONENTS)
         pipeline = FittingPipeline(config=config)
-        assert "1" in pipeline.config.peaks
-        assert "gaussian" in pipeline.config.peaks["1"]
+        assert len(pipeline.config.components) == 1
+        assert pipeline.config.components[0].model == "gaussian"
 
 
 # ---------------------------------------------------------------------------
@@ -92,7 +94,7 @@ class TestFittingPipelineRun:
 
         cfg = UnifiedFittingConfig.from_dict(
             {
-                **MINIMAL_PEAKS,
+                **MINIMAL_COMPONENTS,
                 "data": {
                     "infile": str(csv),
                     "x_col": "energy",
@@ -112,11 +114,10 @@ class TestFittingPipelineRun:
             }
         )
         output = OutputConfig(outfile=str(tmp_path / "out"), noplot=True)  # type: ignore[operator]
-        result_df, result_args = fitting_routine_pipeline(cfg, output=output)
-        assert result_df is not None
-        assert "p1_amplitude" in result_args.get("fit_insights", {}).get(
-            "variables", {}
-        )
+        result = fitting_routine_pipeline(cfg, output=output)
+        assert result is not None
+        assert result.post is not None
+        assert "p1_amplitude" in result.post.fit_insights.get("variables", {})
 
 
 # ---------------------------------------------------------------------------
@@ -138,7 +139,7 @@ class TestPipelineIdempotency:
         df.to_csv(csv, index=False)
 
         cfg_dict: dict[str, object] = {
-            **MINIMAL_PEAKS,
+            **MINIMAL_COMPONENTS,
             "data": {
                 "infile": str(csv),
                 "x_col": "energy",

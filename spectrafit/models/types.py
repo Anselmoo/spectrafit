@@ -29,22 +29,6 @@ Example::
     {"amplitude": {...}, "center": {...}, "fwhmg": {...}}
 """
 
-PeakModelSpec: TypeAlias = dict[str, ModelParameterSpec]
-"""Maps a model name to its parameter specs.
-
-Example::
-
-    {"gaussian": {"amplitude": {...}, "center": {...}}}
-"""
-
-PeaksDict: TypeAlias = dict[str, PeakModelSpec]
-"""All peaks keyed by positive string-integer index.
-
-Example::
-
-    {"1": {"pseudovoigt": {...}}, "2": {"gaussian": {...}}}
-"""
-
 
 class DataSplitDict(TypedDict):
     """Pandas ``DataFrame.to_dict(orient='split')`` output format.
@@ -56,7 +40,7 @@ class DataSplitDict(TypedDict):
 
     data: list[list[float | str | None]]
     index: list[int | str]
-    columns: list[str]
+    columns: list[int | str]
 
 
 class FitReportKwargs(TypedDict, total=False):
@@ -65,16 +49,3 @@ class FitReportKwargs(TypedDict, total=False):
     sort_pars: bool
     show_correl: bool
     min_correl: float
-
-
-FittingArgs: TypeAlias = dict[str, object]
-"""Top-level fitting arguments dictionary passed through the pipeline.
-
-Keys: ``peaks``, ``column``, ``minimizer``, ``optimizer``, ``global_``,
-and optionally ``conf_interval``, ``global_fitting_config``.
-
-!!! warning
-    This alias is the v2 migration target. In v2.1.0 all consumers
-    will accept ``UnifiedFittingConfig`` directly and this alias will
-    be removed.
-"""

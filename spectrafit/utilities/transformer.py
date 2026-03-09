@@ -2,19 +2,33 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TypeAlias
+from typing import TypedDict
 
 from spectrafit.models.registry import REGISTRY
 
 
-if TYPE_CHECKING:
-    from spectrafit.models.types import PeakModelSpec
-    from spectrafit.models.types import PeaksDict
+LegacyConstraintScalar: TypeAlias = float | int | bool | str | None
+JsonScalar: TypeAlias = float | int | bool | str | None
+JsonValue: TypeAlias = JsonScalar | list["JsonValue"] | dict[str, "JsonValue"]
+
+
+LegacyParameterConstraint = dict[str, LegacyConstraintScalar]
+LegacyModelParameters = dict[str, LegacyParameterConstraint]
+LegacyModelSpec = dict[str, LegacyModelParameters]
+
+
+class NotebookComponentSpec(TypedDict):
+    """Legacy notebook component entry converted to v2 component schema."""
+
+    id: str
+    model: str
+    parameters: LegacyModelParameters
 
 
 def list2dict(
-    peak_list: list[PeakModelSpec],
-) -> dict[str, PeaksDict]:
+    peak_list: list[LegacyModelSpec],
+) -> dict[str, dict[str, LegacyModelSpec]]:
     """Convert the list of peaks to dictionary.
 
     Args:
@@ -26,7 +40,7 @@ def list2dict(
             under ``"peaks"`` and indexed by 1-based string ordinals.
 
     """
-    peaks_dict: dict[str, PeaksDict] = {"peaks": {}}
+    peaks_dict: dict[str, dict[str, LegacyModelSpec]] = {"peaks": {}}
     for i, peak in enumerate(peak_list, start=1):
         model_name = next(iter(peak))
         if model_name in REGISTRY:
@@ -34,7 +48,33 @@ def list2dict(
     return peaks_dict
 
 
-def remove_none_type(d: object) -> dict[str, object] | list[object] | object:
+def list2components(peak_list: list[LegacyModelSpec]) -> list[NotebookComponentSpec]:
+    """Convert legacy notebook peak-list specs into v2 ``components`` entries.
+
+    Args:
+        peak_list: Legacy initial model list from notebook inputs.
+
+    Returns:
+        list[NotebookComponentSpec]: v2 component dictionaries accepted by
+            ``UnifiedFittingConfig``.
+    """
+    components: list[NotebookComponentSpec] = []
+    for i, peak in enumerate(peak_list, start=1):
+        model_name = next(iter(peak))
+        if model_name not in REGISTRY:
+            continue
+        parameters = peak[model_name]
+        components.append(
+            {
+                "id": f"p{i}",
+                "model": model_name,
+                "parameters": parameters,
+            }
+        )
+    return components
+
+
+def remove_none_type(d: JsonValue) -> JsonValue:
     """Remove None type from dictionary in a recursive fashion.
 
     1. Remove None type from each value in the dictionary

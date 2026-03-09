@@ -32,15 +32,17 @@ def simple_df() -> pd.DataFrame:
 def simple_config() -> UnifiedFittingConfig:
     """Minimal UnifiedFittingConfig for a single Gaussian peak."""
     return UnifiedFittingConfig(
-        peaks={
-            "1": {
-                "gaussian": {
+        components=[
+            {
+                "id": "p1",
+                "model": "gaussian",
+                "parameters": {
                     "amplitude": {"min": 0, "max": 2, "value": 1.0, "vary": True},
                     "center": {"min": -2, "max": 2, "value": 0.0, "vary": True},
                     "fwhmg": {"min": 0.01, "max": 1.0, "value": 0.5, "vary": True},
-                }
+                },
             }
-        }
+        ]
     )
 
 
@@ -100,22 +102,26 @@ class TestLmfitParameterNamingContract:
 
     def test_second_peak_naming(self, simple_df: pd.DataFrame) -> None:
         config = UnifiedFittingConfig(
-            peaks={
-                "1": {
-                    "gaussian": {
+            components=[
+                {
+                    "id": "p1",
+                    "model": "gaussian",
+                    "parameters": {
                         "amplitude": {"value": 1.0, "vary": True},
                         "center": {"value": -1.0, "vary": True},
                         "fwhmg": {"value": 0.5, "vary": True},
-                    }
+                    },
                 },
-                "2": {
-                    "lorentzian": {
+                {
+                    "id": "p2",
+                    "model": "lorentzian",
+                    "parameters": {
                         "amplitude": {"value": 0.8, "vary": True},
                         "center": {"value": 1.0, "vary": True},
                         "fwhml": {"value": 0.5, "vary": True},
-                    }
+                    },
                 },
-            }
+            ]
         )
         mp = ModelParameters(df=simple_df, config=config)
         params = mp.return_params

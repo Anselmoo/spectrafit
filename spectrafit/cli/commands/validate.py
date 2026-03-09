@@ -33,8 +33,8 @@ def validate(
     """Validate a SpectraFit input configuration file.
 
     Parses the file with :class:`~spectrafit.core.fitting_config.UnifiedFittingConfig`
-    and reports any validation errors.  Accepts v2 (``[data]``/``[[components]]``) and
-    v1 legacy (``fitting.peaks`` / flat keys) formats transparently.
+    and reports any validation errors. Accepts only v2
+    (``[data]``/``[[components]]``) format.
     """
     try:
         cfg = UnifiedFittingConfig.from_file(input_file)

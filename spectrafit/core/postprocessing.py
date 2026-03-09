@@ -1,6 +1,7 @@
 """Post-processing utilities for SpectraFit.
 
-This module contains the PostProcessing class for data post-processing.
+This module contains the PostProcessing class and its typed result container
+:class:`PostProcessingResult`.
 """
 
 from __future__ import annotations
@@ -13,12 +14,17 @@ import pandas as pd
 from lmfit.confidence import ConfidenceInterval
 from lmfit.minimizer import MinimizerException
 from lmfit.minimizer import MinimizerResult
+from pydantic import BaseModel
+from pydantic import ConfigDict
+from pydantic import Field
 
-from spectrafit.models.builtin import calculated_model
 from spectrafit.models.bundle import CompositeModelBundle
 from spectrafit.models.column_names import ColumnNames
+from spectrafit.models.functions.builtin import calculated_model
+from spectrafit.models.types import DataSplitDict
 from spectrafit.report import RegressionMetrics
 from spectrafit.report import fit_report_as_dict
+from spectrafit.report.formatter import FitReportBuffer
 
 
 if TYPE_CHECKING:
@@ -29,15 +35,61 @@ if TYPE_CHECKING:
 _COLS = ColumnNames()
 
 
+class PostProcessingResult(BaseModel):
+    """Typed container for all post-processing outputs.
+
+    Replaces the legacy ``dict[str, object]`` return from ``PostProcessing``.
+    Every consumer of post-processing data should read from this model
+    instead of indexing into a raw dictionary.
+    """
+
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
+    df: pd.DataFrame = Field(
+        description="Enriched DataFrame with residuals, fits, contributions"
+    )
+    fit_insights: FitReportBuffer = Field(
+        default_factory=dict,
+        description="Fit report: statistics, variables, errorbars, correlations",
+    )
+    confidence_interval: dict[str, object] | tuple[object, ...] = Field(
+        default_factory=dict,
+        description="Confidence interval results (dict or tuple with trace)",
+    )
+    linear_correlation: DataSplitDict = Field(
+        default_factory=dict,
+        description="Linear correlation matrix in split-orient dict format",
+    )
+    fit_result_data: DataSplitDict = Field(
+        default_factory=dict,
+        description="Full fit result DataFrame in split-orient dict format",
+    )
+    regression_metrics: DataSplitDict = Field(
+        default_factory=dict,
+        description="Regression metrics in split-orient dict format",
+    )
+    descriptive_statistic: DataSplitDict = Field(
+        default_factory=dict,
+        description="Descriptive statistics in split-orient dict format",
+    )
+
+
 class PostProcessing:
-    """Post-processing of the dataframe."""
+    """Post-processing of the dataframe.
+
+    Produces a :class:`PostProcessingResult` containing the enriched DataFrame
+    and all derived statistics.
+    """
 
     def __init__(
         self,
         df: pd.DataFrame,
-        args: dict[str, object],
         minimizer: Minimizer,
         result: MinimizerResult,
+        *,
+        is_global: bool = False,
+        conf_interval: dict[str, object] | bool = False,
+        bundle: CompositeModelBundle | None = None,
     ) -> None:
         """Initialize PostProcessing class.
 
@@ -45,64 +97,65 @@ class PostProcessing:
             df: DataFrame containing the input data (``x`` and ``data``),
                  as well as the best fit and the corresponding residuum. Hence, it will
                  be extended by the single contribution of the model.
-            args: The input file arguments as a dictionary with additional information.
-                Must contain ``global_`` (int) and ``conf_interval`` (dict or falsy).
             minimizer: The minimizer class.
             result: The result of the minimization of the best fit.
+            is_global: Whether global fitting mode is enabled.
+            conf_interval: Confidence interval settings (dict to enable, False to skip).
+            bundle: Optional CompositeModelBundle for local-fit decomposition.
 
         """
-        self.args = args.copy()
-        self.df = self.rename_columns(df=df)
+        self._is_global = is_global
+        self._conf_interval = conf_interval
+        self._bundle = bundle
+        self.df = self._rename_columns(df=df)
         self.minimizer = minimizer
         self.result = result
-        self.data_size = self.check_global_fitting()
+        self._data_size = self._check_global_fitting()
 
-    def __call__(self) -> tuple[pd.DataFrame, dict[str, object]]:
-        """Call the post-processing."""
-        self.make_insight_report()
-        self.make_residual_fit()
-        self.make_fit_contributions()
-        self.export_correlation2args()
-        self.export_results2args()
-        self.export_regression_metrics2args()
-        self.export_desprective_statistic2args()
-        return (self.df, self.args)
+    def __call__(self) -> PostProcessingResult:
+        """Run post-processing and return typed result."""
+        fit_insights = self._make_insight_report()
+        confidence_interval = self._compute_confidence_interval()
+        self._make_residual_fit()
+        self._make_fit_contributions()
 
-    def check_global_fitting(self) -> int | None:
+        return PostProcessingResult(
+            df=self.df,
+            fit_insights=fit_insights,
+            confidence_interval=confidence_interval,
+            linear_correlation=self.df.corr().to_dict(orient="split"),  # type: ignore[assignment]
+            fit_result_data=self.df.to_dict(orient="split"),  # type: ignore[assignment]
+            regression_metrics=RegressionMetrics(self.df)(),  # type: ignore[assignment]
+            descriptive_statistic=self.df.describe(
+                percentiles=np.arange(0.1, 1, 0.1).tolist(),
+            ).to_dict(orient="split"),  # type: ignore[assignment]
+        )
+
+    def _check_global_fitting(self) -> int | None:
         """Check if the global fitting is performed.
-
-        !!! note "About Global Fitting"
-            In case of the global fitting, the data is extended by the single
-            contribution of the model.
 
         Returns:
             int | None: The number of spectra of the global fitting.
 
         """
-        if self.args.get("global_"):
+        if self._is_global:
             return max(
                 int(self.result.params[i].name.split("_")[-1])
                 for i in self.result.params
             )
         return None
 
-    def rename_columns(self, df: pd.DataFrame) -> pd.DataFrame:
+    def _rename_columns(self, df: pd.DataFrame) -> pd.DataFrame:
         """Rename the columns of the dataframe.
 
-        Rename the columns of the dataframe to the names defined in the input file.
-
         Args:
-            df: DataFrame containing the original input data, which are
-                 individually pre-named.
+            df: DataFrame containing the original input data.
 
         Returns:
-            pd.DataFrame: DataFrame containing renamed columns. All column-names are
-                 lowered. In case of a regular fitting, the columns are named ``energy``
-                 and ``intensity``. In case of a global fitting, ``energy`` stays
-                 and ``intensity`` is extended by a ``_`` and column index.
+            pd.DataFrame: DataFrame with renamed columns.
 
         """
-        if self.args.get("global_"):
+        if self._is_global:
             return df.rename(
                 columns={
                     col: (_COLS.energy if i == 0 else f"{_COLS.intensity}_{i}")
@@ -116,80 +169,59 @@ class PostProcessing:
             },
         )
 
-    def make_insight_report(self) -> None:
-        """Make an insight-report of the fit statistic.
+    def _make_insight_report(self) -> FitReportBuffer:
+        """Build the fit insight report.
 
-        !!! note "About Insight Report"
-
-            The insight report based on:
-
-                1. Configurations
-                2. Statistics
-                3. Variables
-                4. Error-bars
-                5. Correlations
-                6. Covariance Matrix
-                7. _Optional_: Confidence Interval
-
-            All of the above are included in the report as dictionary in ``args``.
+        Returns:
+            FitReportBuffer: Dictionary with statistics, variables, errorbars, etc.
 
         """
-        self.args["fit_insights"] = fit_report_as_dict(
+        return fit_report_as_dict(
             inpars=self.result,
             settings=self.minimizer,
             modelpars=self.result.params,
         )
-        conf_interval = self.args.get("conf_interval")
-        if conf_interval and isinstance(conf_interval, dict):
-            try:
-                _ci_args = dict(conf_interval)
-                _min_rel_change = _ci_args.pop("min_rel_change", None)
-                ci = ConfidenceInterval(
-                    self.minimizer,
-                    self.result,
-                    **_ci_args,
-                )
-                if _min_rel_change is not None:
-                    ci.min_rel_change = _min_rel_change
-                    conf_interval["min_rel_change"] = _min_rel_change
 
-                trace = _ci_args.get("trace")
+    def _compute_confidence_interval(
+        self,
+    ) -> dict[str, object] | tuple[object, ...]:
+        """Compute confidence intervals if configured.
 
-                if trace is True:
-                    self.args["confidence_interval"] = (ci.calc_all_ci(), ci.trace_dict)
-                else:
-                    self.args["confidence_interval"] = ci.calc_all_ci()
+        Returns:
+            Confidence interval results, or empty dict on failure/skip.
 
-            except (MinimizerException, ValueError, KeyError):
-                self.args["confidence_interval"] = {}
+        """
+        if not self._conf_interval or not isinstance(self._conf_interval, dict):
+            return {}
+        try:
+            ci_args = dict(self._conf_interval)
+            min_rel_change = ci_args.pop("min_rel_change", None)
+            ci = ConfidenceInterval(
+                self.minimizer,
+                self.result,
+                **ci_args,
+            )
+            if min_rel_change is not None:
+                ci.min_rel_change = min_rel_change
 
-    def make_residual_fit(self) -> None:
+            trace = ci_args.get("trace")
+            if trace is True:
+                return (ci.calc_all_ci(), ci.trace_dict)
+            return ci.calc_all_ci()
+
+        except (MinimizerException, ValueError, KeyError):
+            return {}
+
+    def _make_residual_fit(self) -> None:
         r"""Make the residuals of the model and the fit.
 
-        !!! note "About Residual and Fit"
-
-            The residual is calculated by the difference of the best fit ``model`` and
-            the reference ``data``. In case of a global fitting, the residuals are
-            calculated for each ``spectra`` separately plus an averaged global residual.
-
-            $$
-            \mathrm{residual} = \mathrm{model} - \mathrm{data}
-            $$
-            $$
-            \mathrm{residual}_{i} = \mathrm{model}_{i} - \mathrm{data}_{i}
-            $$
-            $$
-            \mathrm{residual}_{avg} = \frac{ \sum_{i}
-                \mathrm{model}_{i} - \mathrm{data}_{i}}{i}
-            $$
-
-            The fit is defined by the difference sum of fit and reference data. In case
-            of a global fitting, the residuals are calculated for each ``spectra``
-            separately.
+        The residual is calculated by the difference of the best fit model and
+        the reference data. In case of a global fitting, the residuals are
+        calculated for each spectra separately plus an averaged global residual.
         """
         df_copy: pd.DataFrame = self.df.copy()
-        if self.args.get("global_"):
-            residual = self.result.residual.reshape((-1, self.data_size)).T
+        if self._is_global:
+            residual = self.result.residual.reshape((-1, self._data_size)).T
             for i, _residual in enumerate(residual, start=1):
                 df_copy[f"{_COLS.residual}_{i}"] = _residual
                 df_copy[f"{_COLS.fit}_{i}"] = (
@@ -202,69 +234,12 @@ class PostProcessing:
             df_copy[_COLS.fit] = self.df[_COLS.intensity].to_numpy() + residual
         self.df = df_copy
 
-    def make_fit_contributions(self) -> None:
-        """Make the fit contributions of the best fit model.
-
-        !!! info "About Fit Contributions"
-            The fit contributions are made independently of the local or global fitting.
-        """
-        popped = self.args.pop("_bundle", None)
-        bundle: CompositeModelBundle | None = (
-            popped if isinstance(popped, CompositeModelBundle) else None
-        )
+    def _make_fit_contributions(self) -> None:
+        """Make the fit contributions of the best fit model."""
         self.df = calculated_model(
             params=self.result.params,
             x=self.df.iloc[:, 0].to_numpy(),
             df=self.df,
-            global_fit=bool(self.args.get("global_")),
-            bundle=bundle,
+            global_fit=self._is_global,
+            bundle=self._bundle,
         )
-
-    def export_correlation2args(self) -> None:
-        """Export the correlation matrix to the input file arguments.
-
-        !!! note "About Correlation Matrix"
-
-            The linear correlation matrix is calculated from and for the pandas
-            dataframe and divided into two parts:
-
-            1. Linear correlation matrix
-            2. Non-linear correlation matrix (coming later ...)
-
-        !!! note "About reading the correlation matrix"
-
-            The correlation matrix is stored in the ``args`` as a dictionary with the
-            following keys:
-
-            * ``index``
-            * ``columns``
-            * ``data``
-
-            For re-reading the data, it is important to use the following code:
-
-            >>> import pandas as pd
-            >>> pd.DataFrame(**args["linear_correlation"])
-
-            Important is to use the generator function for access the three keys and
-            their values.
-        """
-        self.args["linear_correlation"] = self.df.corr().to_dict(orient="split")
-
-    def export_results2args(self) -> None:
-        """Export the results of the fit to the input file arguments."""
-        self.args["fit_result"] = self.df.to_dict(orient="split")
-
-    def export_regression_metrics2args(self) -> None:
-        """Export the regression metrics of the fit to the input file arguments.
-
-        !!! note "About Regression Metrics"
-            The regression metrics are calculated by the ``statsmodels.stats.diagnostic``
-            module.
-        """
-        self.args["regression_metrics"] = RegressionMetrics(self.df)()
-
-    def export_desprective_statistic2args(self) -> None:
-        """Export the descriptive statistic of the spectra, fit, and contributions."""
-        self.args["descriptive_statistic"] = self.df.describe(
-            percentiles=np.arange(0.1, 1, 0.1).tolist(),
-        ).to_dict(orient="split")

@@ -9,8 +9,8 @@ from typing import Annotated
 
 import typer
 
-from spectrafit.models.fit_summary import FitInsightsReport
-from spectrafit.models.fit_summary import FitSummaryReport
+from spectrafit.models.results.fit_summary import FitInsightsReport
+from spectrafit.models.results.fit_summary import FitSummaryReport
 
 
 def report(

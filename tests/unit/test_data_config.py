@@ -119,9 +119,11 @@ class TestFromUnified:
         from spectrafit.core.fitting_config import UnifiedFittingConfig
 
         return UnifiedFittingConfig(
-            peaks={
-                "1": {
-                    "gaussian": {
+            components=[
+                {
+                    "id": "p1",
+                    "model": "gaussian",
+                    "parameters": {
                         "amplitude": {"value": 1.0, "min": 0, "max": 2, "vary": True},
                         "center": {"value": 0.0, "min": -1, "max": 1, "vary": True},
                         "fwhmg": {
@@ -130,9 +132,9 @@ class TestFromUnified:
                             "max": 2.0,
                             "vary": True,
                         },
-                    }
+                    },
                 }
-            }
+            ]
         )
 
     def test_column_from_config(self, tmp_path: Path) -> None:

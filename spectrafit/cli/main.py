@@ -17,13 +17,15 @@ from spectrafit.cli.commands.scaffolding import new_config
 from spectrafit.cli.commands.validate import validate
 
 
+_BANNER_COMMANDS: set[str] = {"fit", "init", "jupyter", "plugins"}
+
+
 # Create main Typer app
 app = typer.Typer(
     help="SpectraFit - Fast Fitting Program for ascii txt files.",
     epilog="For more information, visit https://anselmoo.github.io/spectrafit/",
     add_completion=False,
     context_settings={"help_option_names": ["-h", "--help"]},
-    no_args_is_help=True,
     rich_markup_mode="rich",
     pretty_exceptions_enable=True,
     pretty_exceptions_show_locals=False,
@@ -31,8 +33,9 @@ app = typer.Typer(
 
 
 # Register version callback at app level
-@app.callback()
+@app.callback(invoke_without_command=True)
 def main(
+    ctx: typer.Context,
     version: Annotated[
         bool | None,
         typer.Option(
@@ -48,6 +51,20 @@ def main(
 
     Use 'spectrafit <command> --help' for more information about a command.
     """
+    from rich.console import Console  # noqa: PLC0415
+
+    from spectrafit.cli.banner import render_startup_panel  # noqa: PLC0415
+    from spectrafit.models.fitting_context import detect_environment  # noqa: PLC0415
+
+    show_banner = (
+        ctx.invoked_subcommand is None or ctx.invoked_subcommand in _BANNER_COMMANDS
+    )
+    if show_banner:
+        render_startup_panel(Console(), detect_environment())
+
+    if ctx.invoked_subcommand is None:
+        typer.echo(ctx.get_help())
+        raise typer.Exit
 
 
 # Register subcommands

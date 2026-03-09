@@ -103,10 +103,6 @@ class TestUnifiedFittingConfigV2Schema:
         cfg = UnifiedFittingConfig.model_validate(_V2_DICT)
         assert cfg is not None
 
-    def test_peaks_is_none(self) -> None:
-        cfg = UnifiedFittingConfig.model_validate(_V2_DICT)
-        assert cfg.peaks is None
-
     def test_components_list_length(self) -> None:
         cfg = UnifiedFittingConfig.model_validate(_V2_DICT)
         assert len(cfg.components) == 2
@@ -142,10 +138,8 @@ class TestUnifiedFittingConfigV2Schema:
 
     def test_prototype_metadata_stripped(self) -> None:
         cfg = UnifiedFittingConfig.model_validate(_V2_DICT)
-        extra = cfg.model_extra
-        assert "schema_version" not in extra
-        assert "config_type" not in extra
-        assert "meta" not in extra
+        # With extra="forbid", model_extra is None — unknown keys are rejected at parse time.
+        assert cfg.model_extra is None
 
     def test_bounds_shorthand_in_parameters(self) -> None:
         cfg = UnifiedFittingConfig.model_validate(_V2_DICT)
@@ -226,38 +220,25 @@ fwhmg     = { value = 0.3, bounds = [0.05, 1.0], vary = true }
 
 
 # ---------------------------------------------------------------------------
-# Error: neither peaks nor components
+# Error: components required
 # ---------------------------------------------------------------------------
 
 
-class TestValidatePeaksNonEmpty:
+class TestValidateComponentsNonEmpty:
     def test_empty_config_raises(self) -> None:
         with pytest.raises(Exception):  # noqa: B017
             UnifiedFittingConfig.model_validate({})
 
-    def test_v1_peaks_still_accepted(self) -> None:
-        cfg = UnifiedFittingConfig.model_validate(
-            {
-                "peaks": {
-                    "1": {
-                        "gaussian": {
-                            "amplitude": {
-                                "value": 1.0,
-                                "min": 0,
-                                "max": 2,
-                                "vary": True,
-                            },
-                            "center": {"value": 0.0, "min": -1, "max": 1, "vary": True},
-                            "fwhmg": {
-                                "value": 0.5,
-                                "min": 0.1,
-                                "max": 2.0,
-                                "vary": True,
-                            },
+    def test_v1_peaks_rejected(self) -> None:
+        with pytest.raises(Exception):  # noqa: B017
+            UnifiedFittingConfig.model_validate(
+                {
+                    "peaks": {
+                        "1": {
+                            "gaussian": {
+                                "amplitude": {"value": 1.0},
+                            }
                         }
                     }
                 }
-            }
-        )
-        assert cfg.peaks is not None
-        assert len(cfg.components) == 1
+            )

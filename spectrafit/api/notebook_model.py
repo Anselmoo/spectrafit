@@ -7,12 +7,15 @@ from _plotly_utils.colors.carto import Purp_r
 from _plotly_utils.colors.carto import Teal_r
 from _plotly_utils.colors.qualitative import Plotly as PlotlyColors
 from pydantic import BaseModel
+from pydantic import ConfigDict
 from pydantic import Field
 from pydantic.functional_validators import field_validator
 
 
 class XAxisAPI(BaseModel):
     """Defintion of the X-Axis of the plotly figure."""
+
+    model_config = ConfigDict(extra="forbid")
 
     name: str = Field(default="Energy", description="Name of the x-axis of the plot.")
     unit: str | None = Field(
@@ -23,6 +26,8 @@ class XAxisAPI(BaseModel):
 
 class YAxisAPI(BaseModel):
     """Defintion of the Y-Axis of the plotly figure."""
+
+    model_config = ConfigDict(extra="forbid")
 
     name: str = Field(
         default="Intensity",
@@ -42,6 +47,8 @@ class YAxisAPI(BaseModel):
 class ResidualAPI(BaseModel):
     """Definition of the residual plot Y-Axis for the plotly figure."""
 
+    model_config = ConfigDict(extra="forbid")
+
     name: str = Field(
         default="Residuals",
         description="Name of the residual-axis of the plot.",
@@ -54,6 +61,8 @@ class ResidualAPI(BaseModel):
 
 class MetricAPI(BaseModel):
     """Definition of the residual plot (Y-Axis) of the plotly figure."""
+
+    model_config = ConfigDict(extra="forbid")
 
     name_0: str = Field(
         default="Metrics",
@@ -76,6 +85,8 @@ class MetricAPI(BaseModel):
 class RunAPI(BaseModel):
     """Definition of the residual plot (Y-Axis) of the plotly figure."""
 
+    model_config = ConfigDict(extra="forbid")
+
     name: str = Field(default="Run", description="Name of the Run-axis of the plot.")
     unit: str | None = Field(
         default="#",
@@ -85,6 +96,8 @@ class RunAPI(BaseModel):
 
 class FontAPI(BaseModel):
     """Definition of the used font of the plotly figure."""
+
+    model_config = ConfigDict(extra="forbid")
 
     family: str = Field(
         default="Open Sans, monospace",
@@ -97,6 +110,8 @@ class FontAPI(BaseModel):
 class LegendAPI(BaseModel):
     """Definition of the legend of the plotly figure."""
 
+    model_config = ConfigDict(extra="forbid")
+
     orientation: str = Field(default="h", description="Orientation of the legend.")
     yanchor: str = Field(default="bottom", description="Y anchor of the legend.")
     y: float = Field(default=1.02, description="Y position of the legend.")
@@ -107,6 +122,8 @@ class LegendAPI(BaseModel):
 class GridAPI(BaseModel):
     """Definition of the grid of the plotly figure."""
 
+    model_config = ConfigDict(extra="forbid")
+
     show: bool = Field(default=True, description="Show grid lines.")
     ticks: str = Field(default="outside", description="Show grid ticks.")
     dash: str = Field(default="dot", description="Show grid dashes.")
@@ -114,6 +131,8 @@ class GridAPI(BaseModel):
 
 class ColorAPI(BaseModel):
     """Definition of the colors of the plotly figure."""
+
+    model_config = ConfigDict(extra="forbid")
 
     intensity: str = Field(
         default=PlotlyColors[0],
@@ -173,6 +192,8 @@ class ColorAPI(BaseModel):
 class PlotAPI(BaseModel):
     """Definition of the plotly figure."""
 
+    model_config = ConfigDict(extra="forbid")
+
     x: str = Field(..., description="Name of the x column to plot.")
     y: str | list[str] = Field(
         ...,
@@ -199,6 +220,8 @@ class PlotAPI(BaseModel):
 
 class FnameAPI(BaseModel):
     """Definition of the file name."""
+
+    model_config = ConfigDict(extra="forbid")
 
     fname: str = Field(..., description="Name of the file to save.")
     suffix: str = Field(..., description="Suffix of the file to save.")

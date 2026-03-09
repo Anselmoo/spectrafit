@@ -13,15 +13,20 @@ not expose).
 from __future__ import annotations
 
 from pydantic import BaseModel
+from pydantic import ConfigDict
 from pydantic import Field
+from pydantic import field_validator
 
 from spectrafit.models.column_names import ColumnNames as ColumnNamesAPI
+from spectrafit.models.fitting_context import FittingMode
 from spectrafit.models.solver_config import MinimizerConfig
 from spectrafit.models.solver_config import OptimizerConfig
 
 
 class DataPreProcessingAPI(BaseModel):
     """Definition of the data preprocessing command line argument."""
+
+    model_config = ConfigDict(extra="forbid")
 
     oversampling: bool = Field(
         default=False,
@@ -54,11 +59,28 @@ class DataPreProcessingAPI(BaseModel):
 class GlobalFittingAPI(BaseModel):
     """Definition of the global fitting routine."""
 
-    global_: int = Field(default=0, ge=0, le=2, description="Global fitting routine.")
+    model_config = ConfigDict(extra="forbid")
+
+    global_: FittingMode = Field(
+        default=FittingMode.STANDARD,
+        description="Global fitting mode.",
+    )
+
+    @field_validator("global_", mode="before")
+    @classmethod
+    def _coerce_global_mode(cls, v: object) -> str:
+        """Accept legacy bool/int values for backward compatibility."""
+        if isinstance(v, bool):
+            return FittingMode.GLOBAL.value if v else FittingMode.STANDARD.value
+        if isinstance(v, int):
+            return FittingMode.GLOBAL.value if v else FittingMode.STANDARD.value
+        return str(v)
 
 
 class SolverModelsAPI(BaseModel):
     """Definition of the solver of SpectraFit."""
+
+    model_config = ConfigDict(extra="forbid")
 
     minimizer: MinimizerConfig = Field(
         default_factory=MinimizerConfig,
@@ -73,9 +95,21 @@ class SolverModelsAPI(BaseModel):
 class GeneralSolverModelsAPI(BaseModel):
     """Definition of the general solver of SpectraFit."""
 
-    global_: int = GlobalFittingAPI().global_
+    model_config = ConfigDict(extra="forbid")
+
+    global_: FittingMode = GlobalFittingAPI().global_
     minimizer: MinimizerConfig = Field(default_factory=MinimizerConfig)
     optimizer: OptimizerConfig = Field(default_factory=OptimizerConfig)
+
+    @field_validator("global_", mode="before")
+    @classmethod
+    def _coerce_global_mode(cls, v: object) -> str:
+        """Accept legacy bool/int global flags."""
+        if isinstance(v, bool):
+            return FittingMode.GLOBAL.value if v else FittingMode.STANDARD.value
+        if isinstance(v, int):
+            return FittingMode.GLOBAL.value if v else FittingMode.STANDARD.value
+        return str(v)
 
 
 __all__ = [

@@ -10,6 +10,7 @@ from socket import gethostname
 from uuid import uuid4
 
 from pydantic import BaseModel
+from pydantic import ConfigDict
 from pydantic import Field
 from pydantic import HttpUrl
 from pydantic.functional_validators import field_validator
@@ -19,6 +20,8 @@ from spectrafit import __version__
 
 class DescriptionAPI(BaseModel):
     """Model for the description command line argument."""
+
+    model_config = ConfigDict(extra="forbid")
 
     project_name: str = Field(
         default="FittingProject",
