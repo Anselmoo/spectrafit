@@ -95,9 +95,6 @@ Issues = "https://github.com/Anselmoo/spectrafit/issues"
 spectrafit = "spectrafit.cli.main:run"
 spectrafit-jupyter = "spectrafit.app.app:jupyter"
 
-[project.entry-points."spectrafit.plugins"]
-jupyter = "spectrafit.plugins.jupyter_plugin:JupyterPlugin"
-
 [dependency-groups]
 dev = [
   "bandit>=1.7.10",

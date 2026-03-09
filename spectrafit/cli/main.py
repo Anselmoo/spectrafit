@@ -9,6 +9,7 @@ import typer
 from spectrafit.cli._callbacks import version_callback
 from spectrafit.cli.commands.convert import convert
 from spectrafit.cli.commands.fit import fit
+from spectrafit.cli.commands.jupyter import jupyter
 from spectrafit.cli.commands.plugins import plugins_app
 from spectrafit.cli.commands.report import report
 from spectrafit.cli.commands.scaffolding import init
@@ -58,6 +59,10 @@ app.command(name="convert", help="Convert configuration files between formats.")
 app.command(name="report", help="Generate reports from fitting results.")(report)
 app.command(name="init", help="Scaffold a new fitting project.")(init)
 app.command(name="new-config", help="Generate a configuration file.")(new_config)
+app.command(
+    name="jupyter",
+    help="Launch Jupyter Lab for interactive SpectraFit analysis.",
+)(jupyter)
 
 # Register plugins subcommand group
 app.add_typer(plugins_app, name="plugins", help="Additional tools and visualizers.")

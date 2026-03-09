@@ -41,9 +41,7 @@ class PluginRegistry:
     def __init__(self) -> None:
         """Initialize the plugin registry."""
         self._plugins: dict[str, SpectraFitPlugin] = {}
-        self._builtin_plugins: dict[str, str] = {
-            "jupyter": "spectrafit.plugins.jupyter_plugin",
-        }
+        self._builtin_plugins: dict[str, str] = {}
 
     def discover_plugins(
         self,
