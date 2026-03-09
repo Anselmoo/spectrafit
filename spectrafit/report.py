@@ -33,6 +33,7 @@ from sklearn.metrics import mean_squared_log_error
 from sklearn.metrics import median_absolute_error
 from sklearn.metrics import r2_score
 
+from spectrafit import PACKAGE_LIFECYCLE_NOTICE
 from spectrafit import __version__
 
 
@@ -982,11 +983,7 @@ class PrintingStatus:
 
     def lifecycle_notice(self) -> str:
         """Return the current lifecycle notice for users."""
-        return (
-            "User information: SpectraFit v2.0 is currently in development. "
-            "SpectraFit v1.x is in end-of-life maintenance mode and will "
-            "receive only critical hotfixes."
-        )
+        return f"User information: {PACKAGE_LIFECYCLE_NOTICE}"
 
     def welcome(self) -> None:
         """Print the welcome message."""

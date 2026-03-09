@@ -20,6 +20,17 @@ from typing import Literal
 
 
 PYTHON_END_OF_LIFE: tuple[Literal[3], Literal[9]] = (3, 9)
+PACKAGE_LIFECYCLE_NOTICE = (
+    "SpectraFit v2.0 is currently in development. "
+    "SpectraFit v1.x is in end-of-life maintenance mode and will receive "
+    "only critical hotfixes."
+)
+
+warnings.warn(
+    PACKAGE_LIFECYCLE_NOTICE,
+    FutureWarning,
+    stacklevel=2,
+)
 
 if sys.version_info[:2] == PYTHON_END_OF_LIFE:
     version_str = f"{PYTHON_END_OF_LIFE[0]}.{PYTHON_END_OF_LIFE[1]}"
