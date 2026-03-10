@@ -32,7 +32,7 @@ from __future__ import annotations
 # Use a plain str-subclassing enum for clean JSON serialisation
 import sys
 
-from enum import Enum
+from enum import StrEnum
 from enum import unique
 
 from pydantic import BaseModel
@@ -44,7 +44,7 @@ from spectrafit.models.global_fitting import SharedParameter  # noqa: TC001
 
 
 @unique
-class EnvironmentMode(str, Enum):
+class EnvironmentMode(StrEnum):
     """Runtime execution environment.
 
     Attributes:
@@ -93,7 +93,7 @@ def detect_environment() -> EnvironmentMode:
 
 
 @unique
-class FittingMode(str, Enum):
+class FittingMode(StrEnum):
     """Enumeration of supported fitting strategies.
 
     Attributes:

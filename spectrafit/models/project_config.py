@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
+from datetime import UTC
 from datetime import datetime
-from datetime import timezone
 from typing import TYPE_CHECKING
 
 from pydantic import BaseModel
@@ -63,9 +63,7 @@ class ProjectMeta(BaseModel):
         description="SpectraFit version used to create this project.",
     )
     created_at: str = Field(
-        default_factory=lambda: datetime.now(tz=timezone.utc).isoformat(
-            timespec="seconds"
-        ),
+        default_factory=lambda: datetime.now(tz=UTC).isoformat(timespec="seconds"),
         description="ISO-8601 creation timestamp.",
     )
     files: ProjectFiles = Field(default_factory=ProjectFiles)

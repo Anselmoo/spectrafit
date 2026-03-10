@@ -2,15 +2,14 @@
 
 from __future__ import annotations
 
-from typing import TypeAlias
 from typing import TypedDict
 
 from spectrafit.models.registry import REGISTRY
 
 
-LegacyConstraintScalar: TypeAlias = float | int | bool | str | None
-JsonScalar: TypeAlias = float | int | bool | str | None
-JsonValue: TypeAlias = JsonScalar | list["JsonValue"] | dict[str, "JsonValue"]
+type LegacyConstraintScalar = float | int | bool | str | None
+type JsonScalar = float | int | bool | str | None
+type JsonValue = JsonScalar | list["JsonValue"] | dict[str, "JsonValue"]
 
 
 LegacyParameterConstraint = dict[str, LegacyConstraintScalar]

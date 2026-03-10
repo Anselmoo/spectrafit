@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
+from datetime import UTC
 from datetime import datetime
-from datetime import timezone
 from getpass import getuser
 from hashlib import sha256
 from socket import gethostname
@@ -48,12 +48,12 @@ class DescriptionAPI(BaseModel):
     )
     metadata: dict[str, object] | list[object] | None = Field(
         default=None,
-        description="Metadata for the project",
+        description="Arbitrary command metadata; structurally variable by command type.",
     )
     license: str = "BSD-3-Clause"
     version: str = __version__
     host_info: str = sha256(f"{getuser()}@{gethostname()}".encode()).hexdigest()
-    timestamp: str = datetime.now(tz=timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
+    timestamp: str = datetime.now(tz=UTC).strftime("%Y-%m-%d %H:%M:%S")
     id_: str = Field(
         default=str(uuid4()),
         alias="id",

@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import json
 
-from enum import Enum
+from enum import StrEnum
 from enum import unique
 from pathlib import Path
 from typing import Annotated
@@ -34,7 +34,7 @@ from spectrafit.models.registry import REGISTRY
 
 
 @unique
-class InitEnvironment(str, Enum):
+class InitEnvironment(StrEnum):
     """Target environment for the scaffolded project.
 
     Attributes:

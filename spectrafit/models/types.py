@@ -9,11 +9,10 @@ shim remains there for backward compatibility until v2.1.0.
 
 from __future__ import annotations
 
-from typing import TypeAlias
 from typing import TypedDict
 
 
-ParameterConstraint: TypeAlias = dict[str, float | bool | str | None]
+type ParameterConstraint = dict[str, float | bool | str | None]
 """Single lmfit parameter constraint.
 
 Example::
@@ -21,7 +20,7 @@ Example::
     {"min": 0, "max": 2, "vary": True, "value": 1.0}
 """
 
-ModelParameterSpec: TypeAlias = dict[str, ParameterConstraint]
+type ModelParameterSpec = dict[str, ParameterConstraint]
 """Maps parameter names to constraints.
 
 Example::

@@ -7,7 +7,6 @@ exporting results from Jupyter notebooks.
 from __future__ import annotations
 
 from pathlib import Path
-from typing import TypeAlias
 
 import pandas as pd
 import tomli_w
@@ -35,7 +34,7 @@ from spectrafit.utilities.transformer import LegacyModelSpec
 
 __all__ = ["ExportReport", "ExportResults"]
 
-ReportDocument: TypeAlias = dict[str, object]
+type ReportDocument = dict[str, object]
 
 
 class ExportResults:

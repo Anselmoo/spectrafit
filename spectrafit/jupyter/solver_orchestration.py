@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 from typing import Protocol
-from typing import TypeAlias
 from typing import TypedDict
 
 import pandas as pd
@@ -27,8 +26,8 @@ if TYPE_CHECKING:
     from lmfit.minimizer import MinimizerResult
 
 
-ConfIntervalSettingsDict: TypeAlias = dict[str, object]
-ResolvedConfInterval: TypeAlias = ConfIntervalConfig | ConfIntervalAPI
+type ConfIntervalSettingsDict = dict[str, object]
+type ResolvedConfInterval = ConfIntervalConfig | ConfIntervalAPI
 CI_BOUND_PAIR_LENGTH = 2
 
 

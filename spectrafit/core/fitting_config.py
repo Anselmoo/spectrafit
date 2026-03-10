@@ -12,7 +12,6 @@ import json
 
 from collections.abc import Mapping
 from pathlib import Path
-from typing import TypeAlias
 
 import tomli
 import yaml
@@ -64,7 +63,7 @@ class ColumnConfig(BaseModel):
         return str(v)
 
 
-LegacyConfigPayload: TypeAlias = Mapping[str, object]
+type LegacyConfigPayload = Mapping[str, object]
 """Read-only mapping accepted by legacy config construction bridges."""
 
 

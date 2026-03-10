@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import sys
 
-from enum import Enum
+from enum import StrEnum
 
 
 def reset_keyboard_protocol() -> None:
@@ -24,7 +24,7 @@ def reset_keyboard_protocol() -> None:
         sys.stdout.flush()
 
 
-class OutputFormatEnum(str, Enum):
+class OutputFormatEnum(StrEnum):
     """Enum for output file format choices."""
 
     JSON = "json"

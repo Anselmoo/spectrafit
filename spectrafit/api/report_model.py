@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from typing import TypeAlias
-
 from dtale import __version__ as dtale_version
 from emcee import __version__ as emcee_version
 from itables import __version__ as itables_version
@@ -29,8 +27,8 @@ from spectrafit.models.fitting_context import FittingMode
 from spectrafit.models.types import DataSplitDict
 
 
-DataCell: TypeAlias = float | int | str | bool | None
-DataFrameListDict: TypeAlias = dict[str, list[DataCell]]
+type DataCell = float | int | str | bool | None
+type DataFrameListDict = dict[str, list[DataCell]]
 
 
 class FitConfigurationsAPI(BaseModel):

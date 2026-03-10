@@ -6,7 +6,6 @@ This module contains functions for generating fit reports as dictionaries.
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
-from typing import TypeAlias
 from warnings import warn
 
 import numpy as np
@@ -20,7 +19,7 @@ if TYPE_CHECKING:
     from lmfit import Parameters
     from lmfit.minimizer import minimize
 
-FitReportBuffer: TypeAlias = dict[str, dict[str, object]]
+type FitReportBuffer = dict[str, dict[str, object]]
 """Buffer dict holding fit report sections: configurations, statistics, variables, etc."""
 
 
