@@ -14,8 +14,8 @@ class _ValidPlugin:
     version = "1.0.0"
     description = "demo plugin"
 
-    def register_commands(self, parent_app: object) -> None:
-        del parent_app
+    def register_commands(self, _parent_app: object) -> None:
+        pass
 
     def register_models(self) -> list[type]:
         return []
@@ -39,7 +39,7 @@ class _FakeEntryPoints:
         self._values = values
 
     def select(self, *, group: str) -> list[_FakeEntryPoint]:
-        del group
+        _ = group
         return self._values
 
 
