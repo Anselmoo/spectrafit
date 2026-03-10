@@ -81,12 +81,15 @@ MCP tool surface is defined in `docs/spikes/api-mcp-server-design-spike.md`.
 
 | Component | Minimum | Tested |
 |-----------|---------|--------|
-| Python | 3.10 | 3.10 – 3.13 |
+| Python | 3.12 | 3.12 – 3.13 |
 | lmfit | 1.3 | latest |
 | pydantic | 2.0 | v2.x |
 | numpy | 2.0 | latest |
 | pandas | 2.0 | latest |
 | scipy | 1.10 | latest |
 
-Always target the **oldest supported Python** (3.10) for syntax choices. Use `X | Y`
+> **Note:** Python 3.12+ is required for PEP 695 type aliases (`type X = ...`), `StrEnum`, and
+> `tomllib` stdlib.
+
+Always target the **oldest supported Python** (3.12) for syntax choices. Use `X | Y`
 union syntax (not `Union[X, Y]`) and `dict[K, V]` (not `Dict[K, V]`).

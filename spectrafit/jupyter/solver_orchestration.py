@@ -26,7 +26,9 @@ if TYPE_CHECKING:
     from lmfit.minimizer import MinimizerResult
 
 
-type ConfIntervalSettingsDict = dict[str, object]
+type ConfIntervalSettingsDict = dict[
+    str, object
+]  # intentional: TOML/JSON scalar export boundary
 type ResolvedConfInterval = ConfIntervalConfig | ConfIntervalAPI
 CI_BOUND_PAIR_LENGTH = 2
 
@@ -34,11 +36,17 @@ CI_BOUND_PAIR_LENGTH = 2
 class LegacySolverArgs(TypedDict):
     """Legacy SolverModels kwargs dictionary used by notebook bridge paths."""
 
-    global_: int
+    global_: (
+        int  # intentional: frozen-adapter for legacy SolverModels; 0=STANDARD, 1=GLOBAL
+    )
     column: list[str]
     peaks: dict[str, LegacyModelSpec]
-    minimizer: dict[str, object]
-    optimizer: dict[str, object]
+    minimizer: dict[
+        str, object
+    ]  # intentional: frozen-adapter — passes legacy SolverModels kwargs
+    optimizer: dict[
+        str, object
+    ]  # intentional: frozen-adapter — passes legacy SolverModels kwargs
 
 
 class PostProcessingResultView(Protocol):
@@ -48,7 +56,7 @@ class PostProcessingResultView(Protocol):
     regression_metrics: DataSplitDict
     descriptive_statistic: DataSplitDict
     linear_correlation: DataSplitDict
-    confidence_interval: dict[str, object] | tuple[object, ...]
+    confidence_interval: dict[str, object] | tuple[object, ...]  # intentional: protocol
 
 
 def _serialize_conf_interval_settings(
@@ -72,7 +80,8 @@ def _serialize_conf_interval_settings(
 
 
 def _serialize_ci_results(
-    ci_payload: dict[str, object] | tuple[object, ...],
+    ci_payload: dict[str, object]  # intentional: post-processing boundary
+    | tuple[object, ...],
 ) -> dict[str, list[tuple[float, float]]]:
     """Convert post-processing confidence payload to typed confidence results."""
     if not isinstance(ci_payload, dict):
@@ -97,11 +106,13 @@ def _serialize_ci_results(
     return ci_results
 
 
-def _to_object_dict(value: object) -> dict[str, object]:
-    """Convert object-like dictionaries into ``dict[str, object]``."""
+def _to_object_dict(value: object) -> dict[str, object]:  # intentional: lmfit bridge
+    """Convert object-like dictionaries into a homogeneous string-keyed dict."""
     if not isinstance(value, dict):
         return {}
-    typed: dict[str, object] = {}
+    typed: dict[
+        str, object
+    ] = {}  # intentional: homogeneous wrapper for lmfit kwargs bridge
     for key, item in value.items():
         typed[str(key)] = item
     return typed

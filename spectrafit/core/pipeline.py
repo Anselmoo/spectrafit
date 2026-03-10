@@ -18,17 +18,22 @@ from spectrafit.core.data_loader import load_data
 from spectrafit.core.fitting_config import UnifiedFittingConfig
 from spectrafit.core.postprocessing import PostProcessing
 from spectrafit.core.postprocessing import PostProcessingResult
-from spectrafit.core.preprocessing import PreProcessing
+from spectrafit.core.preprocessing import preprocess
 from spectrafit.models.bundle import CompositeModelBundle
 from spectrafit.models.data_config import DataConfig
 from spectrafit.models.functions.builtin import SolverModels
 from spectrafit.models.output_config import OutputConfig
+from spectrafit.models.preprocess_result import PreprocessResult
 from spectrafit.models.solver_config import ConfIntervalConfig
 from spectrafit.models.types import DataSplitDict
 from spectrafit.report import PrintingResults
 
 
-def _resolve_conf_interval(ci: bool | ConfIntervalConfig) -> bool | dict[str, object]:
+def _resolve_conf_interval(
+    ci: bool | ConfIntervalConfig,
+) -> (
+    bool | dict[str, object]
+):  # intentional: serialization boundary to frozen PostProcessing layer
     """Convert ``ConfIntervalConfig`` to the ``dict`` form expected by frozen modules.
 
     Args:
@@ -205,8 +210,9 @@ class FittingPipeline:
         df = self._load_data()
 
         # Step 2: Preprocess
-        df, pre_args = self._preprocess(df)
-        data_statistic = _coerce_data_statistic(pre_args.get("data_statistic"))
+        pre_result = self._preprocess(df)
+        df = pre_result.df
+        data_statistic = pre_result.data_statistic
 
         # Step 3: Solve
         minimizer, result, bundle = self._solve(df)
@@ -233,19 +239,18 @@ class FittingPipeline:
         """
         return load_data(DataConfig.from_unified(self.config))
 
-    def _preprocess(self, df: pd.DataFrame) -> tuple[pd.DataFrame, dict[str, object]]:
+    def _preprocess(self, df: pd.DataFrame) -> PreprocessResult:
         """Preprocess the data.
 
         Args:
             df (pd.DataFrame): Input DataFrame.
 
         Returns:
-            tuple[pd.DataFrame, dict[str, object]]: Preprocessed DataFrame and
-                 ``data_statistic`` result dict.
+            PreprocessResult: Typed result with the preprocessed DataFrame and
+                descriptive statistics of the raw input frame.
 
         """
-        preprocessor = PreProcessing(df=df, config=self.config)
-        return preprocessor()
+        return preprocess(df=df, config=self.config)
 
     def _solve(
         self,

@@ -70,7 +70,9 @@ type LegacyConfigPayload = Mapping[str, object]
 class V2DataBlock(BaseModel):
     """Typed parser for the optional v2 ``[data]`` block."""
 
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
+    model_config = ConfigDict(
+        populate_by_name=True, extra="allow"
+    )  # intentional: parse-time adapter, accepts flexible v2 input before coercion
 
     infile: str | Path | None = None
     x_col: str = "energy"
@@ -80,9 +82,9 @@ class V2DataBlock(BaseModel):
 class V2SolverBlock(BaseModel):
     """Typed parser for the optional v2 ``[solver]`` block."""
 
-    model_config = ConfigDict(extra="allow")
-
-    method: str = "leastsq"
+    model_config = ConfigDict(
+        extra="allow"
+    )  # intentional: parse-time adapter, accepts flexible v2 solver input before coercion
     max_nfev: int | None = None
     nan_policy: str = "propagate"
     calc_covar: bool = True
@@ -238,7 +240,11 @@ class UnifiedFittingConfig(BaseModel):
         )
 
     @classmethod
-    def _migrate_v2_format(cls, data: LegacyConfigPayload) -> dict[str, object]:
+    def _migrate_v2_format(
+        cls, data: LegacyConfigPayload
+    ) -> dict[
+        str, object
+    ]:  # intentional: parse-time v2 adapter, coerces to internal dict before model_validate
         """Translate v2 ``[[components]]`` input to internal representation.
 
         Handles the prototype schema::

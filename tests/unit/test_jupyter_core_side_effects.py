@@ -11,6 +11,7 @@ import spectrafit.jupyter.core as jupyter_core
 from spectrafit.api.notebook_model import FnameAPI
 from spectrafit.api.tools_model import DataPreProcessingAPI
 from spectrafit.jupyter.core import SpectraFitNotebook
+from spectrafit.models.preprocess_result import PreprocessResult
 
 
 def _notebook_stub() -> SpectraFitNotebook:
@@ -45,10 +46,11 @@ class TestSideEffectMethods:
                 captured["df"] = df
                 captured["config"] = config
 
-            def __call__(self) -> tuple[pd.DataFrame, dict[str, object]]:
-                return processed_df, {
-                    "data_statistic": {"data": [[1.0]], "index": [0], "columns": ["rows"]}
-                }
+            def __call__(self) -> PreprocessResult:
+                return PreprocessResult(
+                    df=processed_df,
+                    data_statistic={"data": [[1.0]], "index": [0], "columns": ["rows"]},
+                )
 
         monkeypatch.setattr(jupyter_core, "PreProcessing", FakePreProcessing)
 

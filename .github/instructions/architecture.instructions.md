@@ -100,7 +100,7 @@ These modules are **not to be refactored until Phase 6+ / v2.1.0**:
 
 | Module | Status |
 |--------|--------|
-| `spectrafit/core/preprocessing.py` | **FROZEN** — Layer 4 |
+| `spectrafit/core/preprocessing.py` | **Scheduled for modernisation** — Layer 4 wrapper being replaced with pure functions + `PreprocessResult` model in R7 |
 | `spectrafit/core/postprocessing.py` | **FROZEN** — Layer 4 |
 | `spectrafit/core/export.py` | **FROZEN** — Layer 4 |
 | `spectrafit/plugins/` | Re-export shims only — `plugins/notebook/` re-exports from `spectrafit/jupyter/`; do not add new code here |

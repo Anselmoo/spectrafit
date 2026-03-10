@@ -23,7 +23,10 @@ if TYPE_CHECKING:
 
 
 def _normalize_conf_interval_settings(
-    settings: bool | dict[str, object] | ConfIntervalConfig | ConfIntervalAPI,
+    settings: bool
+    | dict[str, object]  # intentional: accepts legacy CI dict from saved notebooks
+    | ConfIntervalConfig
+    | ConfIntervalAPI,  # intentional
 ) -> bool | ConfIntervalConfig:
     """Normalize confidence interval settings into UnifiedFittingConfig shape."""
     if isinstance(settings, bool | ConfIntervalConfig):
@@ -131,7 +134,7 @@ def export_notebook_config_toml(
     components = [
         component.model_dump(exclude_none=True) for component in config.components
     ]
-    out: dict[str, object] = {
+    out: dict[str, object] = {  # intentional: TOML serialization boundary
         "components": components,
         "minimizer": config.minimizer.model_dump(exclude_none=True)
         if config.minimizer

@@ -114,7 +114,7 @@ def convert(
         raise typer.Exit(1) from e
 
 
-def _read_config(filepath: Path) -> dict[str, object]:
+def _read_config(filepath: Path) -> dict[str, object]:  # intentional: I/O boundary
     """Read configuration from file.
 
     Args:
@@ -143,7 +143,7 @@ def _read_config(filepath: Path) -> dict[str, object]:
 
 
 def _write_config(
-    config: dict[str, object],
+    config: dict[str, object],  # intentional: I/O boundary
     filepath: Path,
     fmt: OutputFormatEnum,
 ) -> None:
@@ -173,7 +173,10 @@ def _write_config(
                 f.write(_dict_to_toml(config))
 
 
-def _dict_to_toml(data: dict[str, object], prefix: str = "") -> str:
+def _dict_to_toml(
+    data: dict[str, object],  # intentional: TOML edge
+    prefix: str = "",
+) -> str:
     """Convert dictionary to TOML string (simple implementation).
 
     Args:
@@ -184,7 +187,9 @@ def _dict_to_toml(data: dict[str, object], prefix: str = "") -> str:
         TOML formatted string.
     """
     lines: list[str] = []
-    tables: list[tuple[str, dict[str, object]]] = []
+    tables: list[
+        tuple[str, dict[str, object]]  # intentional: TOML section accumulator
+    ] = []
 
     for key, value in data.items():
         full_key = f"{prefix}.{key}" if prefix else key

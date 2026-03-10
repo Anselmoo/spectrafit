@@ -102,7 +102,7 @@ class DataConfig(BaseModel):
         """
         if not isinstance(raw, dict):
             return raw
-        data: dict[str, object] = dict(raw)
+        data: dict[str, object] = dict(raw)  # intentional: validator scratch dict
         if "context" in data:
             return data
         legacy = data.pop("global_", data.pop("global", None))
@@ -188,7 +188,10 @@ class DataConfig(BaseModel):
         )
 
     @classmethod
-    def from_args_dict(cls, args: dict[str, object]) -> DataConfig:
+    def from_args_dict(
+        cls,
+        args: dict[str, object],  # intentional: legacy bridge
+    ) -> DataConfig:
         """Construct a :class:`DataConfig` from a legacy args dictionary.
 
         Supports both the old ``column`` list format and the new ``x_col``/``y_col``

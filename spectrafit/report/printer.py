@@ -44,8 +44,8 @@ class PrintingResults:
         result: MinimizerResult,
         minimizer: Minimizer,
         *,
-        data_statistic: dict[str, object] | None = None,
-        conf_interval: dict[str, object] | bool = False,
+        data_statistic: dict[str, object] | None = None,  # intentional: frozen
+        conf_interval: dict[str, object] | bool = False,  # intentional: frozen
         verbose: int = 0,
     ) -> None:
         """Initialize the PrintingResults class.
@@ -75,7 +75,7 @@ class PrintingResults:
             self.printing_verbose_mode()
 
     @staticmethod
-    def print_tabulate(args: dict[str, object]) -> None:
+    def print_tabulate(args: dict[str, object]) -> None:  # intentional: frozen
         """Print the results of the fitting process.
 
         Args:
@@ -83,7 +83,7 @@ class PrintingResults:
 
         """
         PrintingResults.print_tabulate_df(
-            df=pd.DataFrame(**args).T,
+            df=pd.DataFrame(**args).T,  # intentional: frozen Layer 4
         )
 
     @staticmethod
@@ -123,7 +123,7 @@ class PrintingResults:
                 from spectrafit.report.confidence import CIReport  # noqa: PLC0415
 
                 ci_data = cast(
-                    "tuple[dict[str, list[tuple[float, float]]], dict[str, object]]",
+                    "tuple[dict[str, list[tuple[float, float]]], dict[str, object]]",  # intentional
                     self.post.confidence_interval,
                 )
                 CIReport(ci_data[0])()

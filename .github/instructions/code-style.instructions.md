@@ -34,7 +34,7 @@ The `from __future__ import annotations` import is **required** in every module.
 
 ## Type Hints
 
-- Use Python 3.10+ syntax: `dict[str, Any]`, `list[str]`, `X | Y` (never `Dict`, `List`, `Optional`).
+- Use Python 3.12+ syntax: `dict[str, Any]`, `list[str]`, `X | Y` (never `Dict`, `List`, `Optional`).
 - Use `TYPE_CHECKING` guard for heavy imports used only in annotations:
 
 ```python
@@ -44,6 +44,14 @@ if TYPE_CHECKING:
     import pandas as pd
 ```
 
+- Use the PEP 695 `type` keyword for all type aliases (Python 3.12+):
+
+```python
+# Python 3.12+ — use PEP 695 type keyword
+type JsonValue = float | int | str | bool | None | list["JsonValue"] | dict[str, "JsonValue"]
+```
+
+- Use `StrEnum` (not `class X(str, Enum)`) for string enumerations.
 - No bare `from typing import Any` in new code; use `dict[str, object]` for truly untyped dicts
   where possible.
 

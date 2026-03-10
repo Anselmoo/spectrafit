@@ -57,7 +57,9 @@ class SaveResult:
             index_label="attributes",
         )
         pd.DataFrame.from_dict(
-            cast("dict[str, dict[str, object]]", self.post.fit_insights)["variables"],
+            cast("dict[str, dict[str, object]]", self.post.fit_insights)[
+                "variables"
+            ],  # intentional: frozen Layer 4
         ).to_csv(
             Path(f"{self.outfile}_components.csv"),
             index=True,
@@ -70,7 +72,9 @@ class SaveResult:
             msg = "No output file provided!"
             raise FileNotFoundError(msg)
 
-        summary: dict[str, object] = {
+        summary: dict[
+            str, object
+        ] = {  # intentional: frozen Layer 4, serialization boundary
             "fit_insights": transform_nested_types(self.post.fit_insights),
             "confidence_interval": transform_nested_types(
                 self.post.confidence_interval

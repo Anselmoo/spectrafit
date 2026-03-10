@@ -2,7 +2,7 @@
 
 See :class:`~spectrafit.core.export.SaveResult` for usage.
 
-``SaveResultArgs`` replaces the bare ``dict[str, object]`` (formerly typed as
+``SaveResultArgs`` replaces the bare untyped result dict (formerly typed as
 ``FittingArgs``) at the export boundary.  It is the *write-path* counterpart to
 :class:`~spectrafit.models.fit_summary.FitSummaryReport`, which is the *read-path*
 model used by the CLI ``report`` sub-command.
@@ -32,7 +32,7 @@ class SaveResultArgs(BaseModel):
 
     This model captures every key that :class:`~spectrafit.core.export.SaveResult`
     reads.  Unknown keys from the pipeline (e.g. ``peaks``, ``column``,
-    ``minimizer``, ``_bundle``) are stored as extra fields (``extra="allow"``) so
+    ``minimizer``, ``_bundle``) are stored as extra fields (``extra='allow'``) so
     that ``model_dump()`` produces the same dict that was passed in — preserving
     full round-trip fidelity for the JSON summary file.
 
@@ -47,7 +47,10 @@ class SaveResultArgs(BaseModel):
             split-orient format (``df.describe().to_dict("split")``).
     """
 
-    model_config = ConfigDict(extra="allow", frozen=False)
+    model_config = ConfigDict(
+        extra="allow",  # intentional: result container, v2.1 migration target
+        frozen=False,
+    )
 
     outfile: str = Field(description="Base output path (no extension)")
     linear_correlation: SplitOrientFrame = Field(

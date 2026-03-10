@@ -208,7 +208,9 @@ def _generate_json_report(summary: FitSummaryReport, sections: list[str]) -> str
     Returns:
         JSON formatted report.
     """
-    report_data: dict[str, object] = {}
+    report_data: dict[
+        str, object
+    ] = {}  # intentional: JSON report builder (model_dump results)
 
     if "summary" in sections:
         report_data["summary"] = summary.fit_insights.statistics.model_dump(

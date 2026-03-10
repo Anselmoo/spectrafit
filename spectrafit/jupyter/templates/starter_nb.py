@@ -128,7 +128,9 @@ _OWN_DATA_CODE = """\
 # ---------------------------------------------------------------------------
 
 
-def build_starter_notebook(project_name: str) -> dict[str, object]:
+def build_starter_notebook(
+    project_name: str,
+) -> dict[str, object]:  # intentional: nbformat v4
     """Build a *Getting Started* notebook as a raw nbformat dict.
 
     Args:
@@ -138,14 +140,14 @@ def build_starter_notebook(project_name: str) -> dict[str, object]:
         Dict representing an nbformat v4 notebook (ready for ``json.dumps``).
     """
 
-    def md(source: str) -> dict[str, object]:
+    def md(source: str) -> dict[str, object]:  # intentional: nbformat v4 cell dict
         return {
             "cell_type": "markdown",
             "metadata": {},
             "source": source,
         }
 
-    def code(source: str) -> dict[str, object]:
+    def code(source: str) -> dict[str, object]:  # intentional: nbformat v4 cell dict
         return {
             "cell_type": "code",
             "execution_count": None,
@@ -154,7 +156,7 @@ def build_starter_notebook(project_name: str) -> dict[str, object]:
             "source": source,
         }
 
-    cells: list[dict[str, object]] = [
+    cells: list[dict[str, object]] = [  # intentional: nbformat v4 cell list
         md(
             f"# {project_name} — SpectraFit Getting Started\n\n"
             + _HEADER_MD[_HEADER_MD.find("\n") + 1 :]

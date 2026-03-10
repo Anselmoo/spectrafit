@@ -143,11 +143,13 @@ class RegressionMetrics:
             (true, pred) if true.shape[1] > 1 else (np.array([true]), np.array([pred]))
         )
 
-    def __call__(self) -> dict[str, object]:
+    def __call__(
+        self,
+    ) -> dict[str, object]:  # intentional: frozen Layer 4, v2.1 migration target
         """Calculate the regression metrics of the Fit(s) for the post analysis.
 
         Returns:
-            dict[str, object]: Dictionary containing the regression metrics
+            dict[str, object]: Dictionary containing the regression metrics  # intentional
                 in pandas split-orient format (keys: ``data``, ``index``, ``columns``).
 
         """

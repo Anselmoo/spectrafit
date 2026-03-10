@@ -19,7 +19,7 @@ if TYPE_CHECKING:
     from lmfit import Parameters
     from lmfit.minimizer import minimize
 
-type FitReportBuffer = dict[str, dict[str, object]]
+type FitReportBuffer = dict[str, dict[str, object]]  # intentional: frozen Layer 4
 """Buffer dict holding fit report sections: configurations, statistics, variables, etc."""
 
 
@@ -84,7 +84,11 @@ def fit_report_as_dict(  # noqa: C901
     )
     for name in parnames:
         par = params[name]
-        par_entry: dict[str, object] = {"init_value": get_init_value(param=par)}
+        par_entry: dict[
+            str, object
+        ] = {  # intentional: frozen Layer 4, v2.1 migration target
+            "init_value": get_init_value(param=par)
+        }
         buffer["variables"][name] = par_entry
 
         if modelpars is not None and name in modelpars:
@@ -102,7 +106,9 @@ def fit_report_as_dict(  # noqa: C901
 
     for i, name_1 in enumerate(parnames):
         par = params[name_1]
-        correl_entry: dict[str, object] = {}
+        correl_entry: dict[
+            str, object
+        ] = {}  # intentional: frozen Layer 4, v2.1 migration target
         buffer["correlations"][name_1] = correl_entry
         if not par.vary:
             continue

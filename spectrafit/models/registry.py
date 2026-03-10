@@ -76,7 +76,7 @@ class ModelInfo(BaseModel):
         conventions exactly (e.g. ``fwhmg``, not ``sigma``).
 
         Args:
-            prefix: lmfit parameter prefix, typically ``f"{component_id}_"``.
+            prefix: lmfit parameter prefix, typically ``f'{component_id}_'``.
                 Must start with a letter (see
                 :func:`~spectrafit.models.naming.sanitize_component_id`).
 
@@ -145,9 +145,11 @@ class ModelRegistry:
         Returns:
             list[ModelInfo]: List of matching model info objects.
         """
-        if category is None:
-            return list(self._models.values())
-        return [m for m in self._models.values() if m.category == category]
+        return [
+            m
+            for m in self._models.values()
+            if category is None or m.category == category
+        ]
 
     def __contains__(self, name: str) -> bool:
         """Check if a model is registered.

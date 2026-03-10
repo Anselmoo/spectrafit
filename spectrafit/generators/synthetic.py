@@ -14,6 +14,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 from typing import Literal
+from typing import TypedDict
 from typing import cast
 
 import numpy as np
@@ -37,6 +38,59 @@ if TYPE_CHECKING:
 _MODEL_REGISTRY: dict[str, tuple[Callable[..., object], list[str]]] = {
     info.name: (info.function, info.parameters) for info in REGISTRY.list_models()
 }
+
+
+class PeakInfoDict(TypedDict):
+    """Per-peak ground-truth information produced by :meth:`SyntheticSpectrum.generate`.
+
+    Attributes:
+        index: Zero-based peak index within the spectrum definition.
+        model: Model name as registered in the SpectraFit model registry.
+        params: Mapping of parameter name → fitted/true float value.
+    """
+
+    index: int
+    model: str
+    params: dict[str, float]
+
+
+class SyntheticGroundTruth(TypedDict):
+    """Ground-truth data returned by :meth:`SyntheticSpectrum.generate`.
+
+    Attributes:
+        y_clean: Noise-free summed spectrum intensity array.
+        noise: Noise array that was added to the clean signal.
+        components: Per-peak intensity arrays before summation.
+        peaks: Ordered list of per-peak ground-truth metadata.
+        noise_level: Standard deviation of the injected noise.
+        noise_type: Noise distribution used (``"gaussian"`` or ``"poisson"``).
+        seed: Random seed used for reproducibility (``None`` = non-deterministic).
+    """
+
+    y_clean: NDArray[np.float64]
+    noise: NDArray[np.float64]
+    components: list[NDArray[np.float64]]
+    peaks: list[PeakInfoDict]
+    noise_level: float
+    noise_type: str
+    seed: int | None
+
+
+class ParamBoundsDict(TypedDict):
+    """Bounds and variation settings for a single fit parameter in SpectraFit format.
+
+    Attributes:
+        value: Initial/true parameter value.
+        vary: Whether the parameter is free to vary during fitting.
+        min: Lower bound for the parameter during fitting.
+        max: Upper bound for the parameter during fitting.
+    """
+
+    value: float
+    vary: bool
+    min: float
+    max: float
+
 
 ModelName = Literal[
     "gaussian",
@@ -159,7 +213,7 @@ class SyntheticSpectrum(BaseModel):
 
     def generate(
         self,
-    ) -> tuple[NDArray[np.float64], NDArray[np.float64], dict[str, object]]:
+    ) -> tuple[NDArray[np.float64], NDArray[np.float64], SyntheticGroundTruth]:
         """Generate synthetic spectrum data.
 
         Returns:
@@ -173,19 +227,16 @@ class SyntheticSpectrum(BaseModel):
 
         # Compute each peak contribution
         components: list[NDArray[np.float64]] = []
-        peak_info: list[dict[str, object]] = []
+        peak_info: list[PeakInfoDict] = []
         for i, peak in enumerate(self.peaks):
             func, _ = _MODEL_REGISTRY[peak.model]
             y_component = cast("NDArray[np.float64]", func(x, **peak.params))
             components.append(y_component)
             peak_info.append(
-                cast(
-                    "dict[str, object]",
-                    {
-                        "index": i,
-                        "model": peak.model,
-                        "params": dict(peak.params),
-                    },
+                PeakInfoDict(
+                    index=i,
+                    model=peak.model,
+                    params=dict(peak.params),
                 ),
             )
 
@@ -207,7 +258,7 @@ class SyntheticSpectrum(BaseModel):
 
         y = y_clean + noise
 
-        ground_truth: dict[str, object] = {
+        ground_truth: SyntheticGroundTruth = {
             "y_clean": y_clean,
             "noise": noise,
             "components": components,
@@ -239,7 +290,9 @@ class SyntheticSpectrum(BaseModel):
         x, y, _ = self.generate()
         return pd.DataFrame({energy_col: x, intensity_col: y})
 
-    def to_spectrafit_input(self) -> dict[str, object]:
+    def to_spectrafit_input(
+        self,
+    ) -> dict[str, object]:  # intentional: serialization boundary
         """Generate a SpectraFit-compatible input configuration.
 
         Returns:
@@ -260,9 +313,9 @@ class SyntheticSpectrum(BaseModel):
             >>> config["peaks"]["1"]["gaussian"]["amplitude"]["value"]
             1.0
         """
-        peaks_config: dict[str, dict[str, dict[str, dict[str, object]]]] = {}
+        peaks_config: dict[str, dict[str, dict[str, ParamBoundsDict]]] = {}
         for i, peak in enumerate(self.peaks, start=1):
-            param_config: dict[str, dict[str, object]] = {
+            param_config: dict[str, ParamBoundsDict] = {
                 param_name: {
                     "value": param_value,
                     "vary": True,

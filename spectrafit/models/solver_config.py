@@ -15,11 +15,13 @@ class MinimizerConfig(BaseModel):
         calc_covar: Whether to calculate the covariance matrix.
 
     Note:
-        ``extra="allow"`` is intentional: lmfit accepts additional minimizer
+        ``extra='allow'`` is intentional: lmfit accepts additional minimizer
         keyword arguments that vary by method and should pass through unchanged.
     """
 
-    model_config = ConfigDict(extra="allow")
+    model_config = ConfigDict(
+        extra="allow"  # intentional: result container, v2.1 migration target
+    )
 
     nan_policy: str = Field(
         default="propagate",
@@ -39,11 +41,13 @@ class OptimizerConfig(BaseModel):
         method: Optimization method (e.g., leastsq, least_squares, nelder).
 
     Note:
-        ``extra="allow"`` is intentional: method-specific kwargs (e.g., ``ftol``,
+        ``extra='allow'`` is intentional: method-specific kwargs (e.g., ``ftol``,
         ``xtol``) should pass through to lmfit without being declared here.
     """
 
-    model_config = ConfigDict(extra="allow")
+    model_config = ConfigDict(
+        extra="allow"  # intentional: result container, v2.1 migration target
+    )
 
     max_nfev: int | None = Field(
         default=None,

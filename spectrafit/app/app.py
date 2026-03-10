@@ -44,4 +44,6 @@ def jupyter(notebook_file: Path | None = None) -> None:
         ],
     )
     sys.argv = new_argv
-    sys.exit(main())
+    sys.exit(
+        main()
+    )  # intentional: CLI entry point, propagates Jupyter server exit code

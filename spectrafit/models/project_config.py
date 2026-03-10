@@ -112,7 +112,7 @@ class ProjectConfig(BaseModel):
             raw = tomllib.load(fh)
         return cls.model_validate(raw)
 
-    def to_toml_dict(self) -> dict[str, object]:
+    def to_toml_dict(self) -> dict[str, object]:  # intentional: serialization boundary
         """Serialise to a plain dict suitable for ``tomli_w.dump``.
 
         Returns:

@@ -127,7 +127,7 @@ class SplitOrientFrame(BaseModel):
 class FitSummaryReport(BaseModel):
     """Top-level deserialisation model for a SpectraFit ``_summary.json`` file.
 
-    All keys not explicitly modelled are captured via ``extra="allow"`` so that
+    All keys not explicitly modelled are captured via ``extra='allow'`` so that
     forward-compatible reading of richer result files is safe.
 
     Attributes:
@@ -164,7 +164,9 @@ class FitSummaryReport(BaseModel):
         if not isinstance(data_summary, dict):
             return raw
 
-        normalized: dict[str, object] = dict(raw)
+        normalized: dict[str, object] = dict(  # intentional: legacy JSON normalization
+            raw
+        )
         if "regression_metrics" not in normalized:
             regression = data_summary.get("regression_metrics")
             if isinstance(regression, dict):

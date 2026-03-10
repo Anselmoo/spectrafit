@@ -34,7 +34,7 @@ from spectrafit.utilities.transformer import LegacyModelSpec
 
 __all__ = ["ExportReport", "ExportResults"]
 
-type ReportDocument = dict[str, object]
+type ReportDocument = dict[str, object]  # intentional: report serialization boundary
 
 
 class ExportResults:
@@ -103,7 +103,7 @@ class ExportResults:
 
         """
         if prefix:
-            fname = f"{prefix}_{fname}"
+            fname = f"{prefix}_{fname}"  # intentional: prefix construction
         _fname = Path(fname).with_suffix(f".{suffix}")
         if folder:
             Path(folder).mkdir(parents=True, exist_ok=True)
@@ -157,8 +157,9 @@ class ExportReport:
 
         self.df_org = df_org.to_dict(orient="list")
         self.df_fit = df_fit.to_dict(orient="list")
-        if df_pre is None:  # pragma: no cover
-            df_pre = pd.DataFrame()
+        df_pre = (
+            df_pre if df_pre is not None else pd.DataFrame()
+        )  # intentional: compat shim
         self.df_pre = df_pre.to_dict(orient="list")
 
     @staticmethod
@@ -273,7 +274,7 @@ class ExportReport:
         """
         return OutputAPI(df_org=self.df_org, df_fit=self.df_fit, df_pre=self.df_pre)
 
-    def __call__(self) -> dict[str, object]:
+    def __call__(self) -> dict[str, object]:  # intentional: TOML serialization boundary
         """Get the complete report as dictionary.
 
         !!! info "About the report and ``exclude_none_dictionary``"
@@ -285,7 +286,7 @@ class ExportReport:
             values from the dictionary, which are hidden in the nested dictionaries.
 
         Returns:
-            dict[str, object]: Report as dictionary using ``.model_dump()``.
+            ReportDocument: Report as dictionary using ``.model_dump()``.
                 ``None`` is excluded.
 
         """

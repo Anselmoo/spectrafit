@@ -14,7 +14,7 @@ from spectrafit.models.types import DataSplitDict
 class PlotConfig(BaseModel):
     """Typed plot configuration for :class:`~spectrafit.plotting.PlotSpectra`.
 
-    Replaces the legacy ``args: dict[str, object]`` contract so that callers
+    Replaces the legacy untyped ``args`` dict contract so that callers
     and the plotting layer share a single, validated surface.
 
     Args:

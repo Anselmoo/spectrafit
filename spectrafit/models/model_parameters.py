@@ -186,8 +186,7 @@ class ModelParameters:
         that callers can specify exactly *which* parameters are shared and
         across *which* datasets.
         """
-        cfg = self.global_fitting_config
-        if cfg is None:
+        if (cfg := self.global_fitting_config) is None:
             return
 
         for sp in cfg.shared_parameters:

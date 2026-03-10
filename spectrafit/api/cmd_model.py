@@ -46,7 +46,9 @@ class DescriptionAPI(BaseModel):
         alias="refs",
         description="References for the project",
     )
-    metadata: dict[str, object] | list[object] | None = Field(
+    metadata: (
+        dict[str, object] | list[object] | None  # intentional: variable metadata
+    ) = Field(
         default=None,
         description="Arbitrary command metadata; structurally variable by command type.",
     )

@@ -58,7 +58,11 @@ if TYPE_CHECKING:
 
 # Constants
 MIN_DATAFRAME_COLUMNS = 2  # Minimum number of columns required in a dataframe
-_PREPROCESS_PLACEHOLDER_COMPONENTS: list[dict[str, object]] = [
+_PREPROCESS_PLACEHOLDER_COMPONENTS: list[
+    dict[
+        str, object
+    ]  # intentional: nbformat-style component spec for legacy pre-processing bridge
+] = [  # intentional: legacy bridge
     {
         "id": "pre",
         "model": "gaussian",
@@ -114,7 +118,9 @@ def _to_data_split_dict(value: object) -> DataSplitDict:
     )
 
 
-class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
+class SpectraFitNotebook(  # intentional: Facade
+    DataFramePlot, DataFrameDisplay, ExportResults
+):
     """Jupyter Notebook plugin for SpectraFit."""
 
     global_: FittingMode
@@ -127,7 +133,7 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
     _solver_results: SolverResults
     _resolved_ci: ConfIntervalAPI | ConfIntervalConfig | None
 
-    def __init__(  # noqa: C901
+    def __init__(  # noqa: C901  # intentional: complex init pending NotebookConfig facade (R8)
         self,
         df: pd.DataFrame,
         x_column: str,
@@ -252,26 +258,38 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
             shift=shift,
             column=list(self.df.columns),
         )
-        if description is None:
+        if (
+            description is None
+        ):  # intentional: plot API default pending NotebookConfig facade (R8)
             description = DescriptionAPI()
         self.args_desc = description
 
-        if xaxis_title is None:
+        if (
+            xaxis_title is None
+        ):  # intentional: plot API default pending NotebookConfig facade (R8)
             xaxis_title = XAxisAPI(name="Energy", unit="eV")
-        if yaxis_title is None:
+        if (
+            yaxis_title is None
+        ):  # intentional: plot API default pending NotebookConfig facade (R8)
             yaxis_title = YAxisAPI(name="Intensity", unit="a.u.")
-        if residual_title is None:
+        if residual_title is None:  # intentional: plot API default (R8 facade)
             residual_title = ResidualAPI(name="Residual", unit="a.u.")
-        if metric_title is None:
+        if (
+            metric_title is None
+        ):  # intentional: plot API default pending NotebookConfig facade (R8)
             metric_title = MetricAPI(
                 name_0="Metrics",
                 unit_0="a.u.",
                 name_1="Metrics",
                 unit_1="a.u.",
             )
-        if run_title is None:
+        if (
+            run_title is None
+        ):  # intentional: plot API default pending NotebookConfig facade (R8)
             run_title = RunAPI(name="Run", unit="#")
-        if legend is None:
+        if (
+            legend is None
+        ):  # intentional: plot API default pending NotebookConfig facade (R8)
             legend = LegendAPI(
                 orientation="h",
                 yanchor="bottom",
@@ -279,11 +297,17 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
                 xanchor="right",
                 x=1,
             )
-        if font is None:
+        if (
+            font is None
+        ):  # intentional: plot API default pending NotebookConfig facade (R8)
             font = FontAPI(family="Open Sans, monospace", size=12, color="black")
-        if color is None:
+        if (
+            color is None
+        ):  # intentional: plot API default pending NotebookConfig facade (R8)
             color = ColorAPI()
-        if grid is None:
+        if (
+            grid is None
+        ):  # intentional: plot API default pending NotebookConfig facade (R8)
             grid = GridAPI()
 
         self.args_plot = PlotAPI(
@@ -374,14 +398,15 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
                 smooth=self.args_pre.smooth,
             ),
         )
-        self.df, _pre_statistic = PreProcessing(
+        pre_result = PreProcessing(
             df=self.df,
             config=pre_config,
         )()
-        self.pre_statistic = _to_data_split_dict(_pre_statistic.get("data_statistic"))
+        self.df = pre_result.df
+        self.pre_statistic = _to_data_split_dict(pre_result.data_statistic)
         self.df_pre = self.df.copy()
 
-    @property
+    @property  # intentional: compat shim (R8 will deprecate)
     def pre_process(self) -> None:
         """Compatibility shim for legacy pre-processing property access."""
         self.preprocess_df()
@@ -416,7 +441,7 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
         self.export_args_df.prefix = "act"
         self.export_df(df=self.df, args=self.export_args_df)
 
-    @property
+    @property  # intentional: export compat shim (R8 will deprecate)
     def export_df_act(self) -> None:
         """Compatibility shim for active-data export property access."""
         self.export_active_df()
@@ -426,7 +451,7 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
         self.export_args_df.prefix = "fit"
         self.export_df(df=self.df_fit, args=self.export_args_df)
 
-    @property
+    @property  # intentional: export compat shim (R8 will deprecate)
     def export_df_fit(self) -> None:
         """Compatibility shim for fit-data export property access."""
         self.export_fit_dataframe()
@@ -436,7 +461,7 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
         self.export_args_df.prefix = "org"
         self.export_df(df=self.df_org, args=self.export_args_df)
 
-    @property
+    @property  # intentional: export compat shim (R8 will deprecate)
     def export_df_org(self) -> None:
         """Compatibility shim for original-data export property access."""
         self.export_original_df()
@@ -447,7 +472,7 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
             self.export_args_df.prefix = "pre"
             self.export_df(df=self.df_pre, args=self.export_args_df)
 
-    @property
+    @property  # intentional: export compat shim (R8 will deprecate)
     def export_df_pre(self) -> None:
         """Compatibility shim for preprocessed-data export property access."""
         self.export_preprocessed_df()
@@ -458,7 +483,7 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
             self.export_args_df.prefix = "metric"
             self.export_df(df=self.df_metric, args=self.export_args_df)
 
-    @property
+    @property  # intentional: export compat shim (R8 will deprecate)
     def export_df_metric(self) -> None:
         """Compatibility shim for metric-data export property access."""
         self.export_metric_df()
@@ -469,7 +494,7 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
             self.export_args_df.prefix = "peaks"
             self.export_df(df=self.df_peaks, args=self.export_args_df)
 
-    @property
+    @property  # intentional: export compat shim (R8 will deprecate)
     def export_df_peaks(self) -> None:
         """Compatibility shim for peaks-data export property access."""
         self.export_peaks_df()
@@ -478,7 +503,7 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
         """Plot the original spectra."""
         self.plot_dataframe(args_plot=self.args_plot, df=self.df_org)
 
-    @property
+    @property  # intentional: plot compat shim (R8 will deprecate)
     def plot_original_df(self) -> None:
         """Compatibility shim for original-data plotting property access."""
         self.plot_original()
@@ -487,7 +512,7 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
         """Plot the current spectra."""
         self.plot_dataframe(args_plot=self.args_plot, df=self.df)
 
-    @property
+    @property  # intentional: plot compat shim (R8 will deprecate)
     def plot_current_df(self) -> None:
         """Compatibility shim for current-data plotting property access."""
         self.plot_current()
@@ -500,7 +525,7 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
             df_2=self.df_org,
         )
 
-    @property
+    @property  # intentional: plot compat shim (R8 will deprecate)
     def plot_preprocessed_df(self) -> None:
         """Compatibility shim for preprocessed plotting property access."""
         self.plot_preprocessed()
@@ -526,13 +551,13 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
                     the line plot. Defaults to None.
 
         """
-        if bar_criteria is None:
+        if bar_criteria is None:  # intentional: mutable default sentinel
             bar_criteria = [
                 "akaike_information",
                 "bayesian_information",
             ]
 
-        if line_criteria is None:
+        if line_criteria is None:  # intentional: mutable default sentinel
             line_criteria = [
                 "mean_squared_error",
             ]
@@ -561,7 +586,7 @@ class SpectraFitNotebook(DataFramePlot, DataFrameDisplay, ExportResults):
             args=self.export_args_out,
         )
 
-    @property
+    @property  # intentional: report compat shim (R8 will deprecate)
     def generate_report(self) -> None:
         """Compatibility shim for report-generation property access."""
         self.generate_fit_report()

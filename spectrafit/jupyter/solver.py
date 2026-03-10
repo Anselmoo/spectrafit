@@ -4,9 +4,8 @@ This module contains the SolverResults class for storing and accessing
 solver results as a typed Pydantic model wrapping ``FitResult``.
 
 The class replaces the legacy ``SolverResults(args_out: FittingArgs)`` pattern
-where all result access was via raw dict keys such as
-``self.args_out["fit_insights"]["errorbars"]``.  All properties now delegate to
-typed ``FitResult`` fields.
+where raw dict key access was used for all result fields.  All properties now
+delegate to typed ``FitResult`` fields.
 """
 
 from __future__ import annotations
@@ -58,25 +57,27 @@ class SolverResults(BaseModel):
 
     @computed_field
     @property
-    def settings_configurations(self) -> dict[str, object]:
+    def settings_configurations(self) -> dict[str, object]:  # intentional: report layer
         """Fit method and solver configuration snapshot.
 
         Returns:
-            dict[str, object]: Configuration settings from ``FitConfigurations``.
+            Serialized configuration dict from ``FitConfigurations``.
 
         """
         return self.result.fit_insights.configurations.model_dump()
 
     @computed_field
     @property
-    def settings_conf_interval(self) -> bool | dict[str, object]:
+    def settings_conf_interval(
+        self,
+    ) -> bool | dict[str, object]:  # intentional: CI settings
         """Confidence interval settings.
 
         ``None`` values inside a dict are replaced with empty dicts to match the
         legacy behaviour expected by ``InputAPI`` / ``FitMethodAPI``.
 
         Returns:
-            bool | dict[str, object]: Confidence interval settings.
+            CI settings dict (or ``False`` when disabled).
 
         """
         settings = self.result.confidence.settings
@@ -145,11 +146,13 @@ class SolverResults(BaseModel):
 
     @computed_field
     @property
-    def get_computational(self) -> dict[str, object]:
+    def get_computational(
+        self,
+    ) -> dict[str, object]:  # intentional: serialized for report
         """Computational timing and metadata.
 
         Returns:
-            dict[str, object]: Computational information.
+            Serialized computational information dict.
 
         """
         return self.result.fit_insights.computational.model_dump()

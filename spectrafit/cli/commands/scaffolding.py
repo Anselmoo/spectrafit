@@ -138,7 +138,9 @@ def _build_component(model_name: str, num: int) -> Component:
     )
 
 
-def _build_config(peaks: list[tuple[int, str]]) -> dict[str, object]:
+def _build_config(
+    peaks: list[tuple[int, str]],
+) -> dict[str, object]:  # intentional: I/O boundary
     """Build a full SpectraFit v2 configuration dictionary.
 
     The returned dict uses the v2 ``components`` format accepted by
@@ -158,7 +160,11 @@ def _build_config(peaks: list[tuple[int, str]]) -> dict[str, object]:
     }
 
 
-def _write_config(config: dict[str, object], path: Path, fmt: OutputFormatEnum) -> None:
+def _write_config(
+    config: dict[str, object],  # intentional: I/O boundary
+    path: Path,
+    fmt: OutputFormatEnum,
+) -> None:
     """Serialise *config* to *path* in the requested format.
 
     Args:
@@ -178,7 +184,10 @@ def _write_config(config: dict[str, object], path: Path, fmt: OutputFormatEnum) 
             tomli_w.dump(config, f)
 
 
-def _config_to_stdout(config: dict[str, object], fmt: OutputFormatEnum) -> None:
+def _config_to_stdout(
+    config: dict[str, object],  # intentional
+    fmt: OutputFormatEnum,
+) -> None:
     """Print *config* to stdout in the requested format.
 
     Args:
