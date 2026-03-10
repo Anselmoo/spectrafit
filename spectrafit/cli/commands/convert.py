@@ -3,11 +3,11 @@
 from __future__ import annotations
 
 import json
+import tomllib
 
 from pathlib import Path
 from typing import Annotated
 
-import tomli
 import typer
 import yaml
 
@@ -133,7 +133,7 @@ def _read_config(filepath: Path) -> dict[str, object]:  # intentional: I/O bound
             return json.load(f)
     elif suffix == ".toml":
         with filepath.open("rb") as f:
-            return tomli.load(f)
+            return tomllib.load(f)
     elif suffix in {".yaml", ".yml"}:
         with filepath.open(encoding="utf-8") as f:
             return yaml.safe_load(f)

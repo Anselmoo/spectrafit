@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import tomllib
+
 from datetime import UTC
 from datetime import datetime
 from typing import TYPE_CHECKING
@@ -103,11 +105,6 @@ class ProjectConfig(BaseModel):
             FileNotFoundError: If *path* does not exist.
             ValueError: If the TOML cannot be parsed or validated.
         """
-        try:
-            import tomllib  # noqa: PLC0415
-        except ImportError:
-            import tomli as tomllib  # type: ignore[no-redef]  # noqa: PLC0415
-
         with path.open("rb") as fh:
             raw = tomllib.load(fh)
         return cls.model_validate(raw)

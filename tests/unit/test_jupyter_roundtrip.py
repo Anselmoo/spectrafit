@@ -7,8 +7,6 @@ Covers:
 
 from __future__ import annotations
 
-import json
-
 from pathlib import Path
 from unittest.mock import MagicMock
 
@@ -59,10 +57,7 @@ class TestExportConfigToml:
 
     @pytest.mark.unit
     def test_toml_is_valid_v2_format(self, tmp_path: Path) -> None:
-        try:
-            import tomllib  # noqa: PLC0415
-        except ImportError:
-            import tomli as tomllib  # type: ignore[no-redef]  # noqa: PLC0415
+        import tomllib
 
         nb = _mock_notebook()
         dest = tmp_path / "fit.toml"
@@ -129,9 +124,9 @@ class TestLoadCliConfig:
 
     @pytest.mark.unit
     def test_loads_valid_toml(self, tmp_path: Path) -> None:
-        from spectrafit.cli.commands.scaffolding import _build_config  # noqa: PLC0415
-        from spectrafit.cli.commands.scaffolding import _write_config  # noqa: PLC0415
-        from spectrafit.cli._types import OutputFormatEnum  # noqa: PLC0415
+        from spectrafit.cli._types import OutputFormatEnum
+        from spectrafit.cli.commands.scaffolding import _build_config
+        from spectrafit.cli.commands.scaffolding import _write_config
 
         toml_path = tmp_path / "config.toml"
         _write_config(_build_config([(1, "voigt")]), toml_path, OutputFormatEnum.TOML)
@@ -142,9 +137,9 @@ class TestLoadCliConfig:
 
     @pytest.mark.unit
     def test_loads_valid_json(self, tmp_path: Path) -> None:
-        from spectrafit.cli.commands.scaffolding import _build_config  # noqa: PLC0415
-        from spectrafit.cli.commands.scaffolding import _write_config  # noqa: PLC0415
-        from spectrafit.cli._types import OutputFormatEnum  # noqa: PLC0415
+        from spectrafit.cli._types import OutputFormatEnum
+        from spectrafit.cli.commands.scaffolding import _build_config
+        from spectrafit.cli.commands.scaffolding import _write_config
 
         json_path = tmp_path / "config.json"
         _write_config(_build_config([(1, "gaussian")]), json_path, OutputFormatEnum.JSON)
@@ -154,9 +149,9 @@ class TestLoadCliConfig:
 
     @pytest.mark.unit
     def test_accepts_path_object_and_string(self, tmp_path: Path) -> None:
-        from spectrafit.cli.commands.scaffolding import _build_config  # noqa: PLC0415
-        from spectrafit.cli.commands.scaffolding import _write_config  # noqa: PLC0415
-        from spectrafit.cli._types import OutputFormatEnum  # noqa: PLC0415
+        from spectrafit.cli._types import OutputFormatEnum
+        from spectrafit.cli.commands.scaffolding import _build_config
+        from spectrafit.cli.commands.scaffolding import _write_config
 
         toml_path = tmp_path / "cfg.toml"
         _write_config(_build_config([(1, "gaussian")]), toml_path, OutputFormatEnum.TOML)

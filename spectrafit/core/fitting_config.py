@@ -9,11 +9,11 @@ format expected by the current solver pipeline.
 from __future__ import annotations
 
 import json
+import tomllib
 
 from collections.abc import Mapping
 from pathlib import Path
 
-import tomli
 import yaml
 
 from pydantic import BaseModel
@@ -446,7 +446,7 @@ class UnifiedFittingConfig(BaseModel):
 
         if path.suffix == ".toml":
             with path.open("rb") as fb:
-                raw: object = tomli.load(fb)
+                raw: object = tomllib.load(fb)
         elif path.suffix == ".json":
             with path.open(encoding="utf-8") as ft:
                 raw = json.load(ft)

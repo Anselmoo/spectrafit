@@ -11,8 +11,6 @@ import importlib.metadata
 import logging
 
 from typing import TYPE_CHECKING
-from typing import Any
-from typing import cast
 
 from spectrafit.plugins.protocol import SpectraFitPlugin
 
@@ -65,15 +63,8 @@ class PluginRegistry:
         """
         # Discover plugins via entry points
         try:
-            entry_points = cast("Any", importlib.metadata.entry_points())
-            # Handle both Python 3.11+ and older versions
-            plugins_eps: Any
-            if hasattr(entry_points, "select"):
-                plugins_eps = entry_points.select(group=entry_point_group)
-            else:
-                # For older Python versions, entry_points returns dict
-                # Access as dict for backward compatibility
-                plugins_eps = entry_points.get(entry_point_group, [])
+            entry_points = importlib.metadata.entry_points()
+            plugins_eps = entry_points.select(group=entry_point_group)
 
             for entry_point in plugins_eps:
                 try:

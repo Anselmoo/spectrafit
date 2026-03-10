@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-import json
-
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -160,24 +158,13 @@ def load_notebook_config(path: Path | str) -> UnifiedFittingConfig:
         FileNotFoundError: If the file does not exist.
         ValueError: If the file extension is unsupported.
     """
-    try:
-        import tomllib  # noqa: PLC0415
-    except ImportError:
-        import tomli as tomllib  # type: ignore[no-redef]  # noqa: PLC0415
-
     src = Path(path)
     if not src.exists():
         msg = f"Config file not found: '{src}'"
         raise FileNotFoundError(msg)
 
-    if src.suffix == ".toml":
-        with src.open("rb") as fh:
-            raw = tomllib.load(fh)
-    elif src.suffix == ".json":
-        with src.open("r", encoding="utf-8") as fh:
-            raw = json.load(fh)
-    else:
+    if src.suffix not in {".toml", ".json"}:
         msg = f"Unsupported config format: '{src.suffix}'. Use .toml or .json."
         raise ValueError(msg)
 
-    return UnifiedFittingConfig.model_validate(raw)
+    return UnifiedFittingConfig.from_file(src)
