@@ -57,7 +57,9 @@ class SaveResult:
             index_label="attributes",
         )
         pd.DataFrame.from_dict(
-            cast("dict[str, dict[str, object]]", self.post.fit_insights)[
+            cast(
+                "dict[str, dict[str, object]]", self.post.fit_insights
+            )[  # intentional: frozen Layer 4
                 "variables"
             ],  # intentional: frozen Layer 4
         ).to_csv(

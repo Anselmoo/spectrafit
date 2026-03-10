@@ -216,8 +216,8 @@ class SolverAPI(BaseModel):
     """Solver API for the report endpoint."""
 
     model_config = ConfigDict(
-        extra="allow"
-    )  # intentional: result container, v2.1 migration target
+        extra="allow"  # intentional: result container, v2.1 migration target
+    )
 
     goodness_of_fit: dict[str, float] = Field(..., description="Goodness of fit")
     regression_metrics: DataSplitDict = Field(

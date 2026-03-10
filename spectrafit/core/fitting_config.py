@@ -71,7 +71,8 @@ class V2DataBlock(BaseModel):
     """Typed parser for the optional v2 ``[data]`` block."""
 
     model_config = ConfigDict(
-        populate_by_name=True, extra="allow"
+        populate_by_name=True,
+        extra="allow",  # intentional: parse-time adapter
     )  # intentional: parse-time adapter, accepts flexible v2 input before coercion
 
     infile: str | Path | None = None
@@ -83,8 +84,8 @@ class V2SolverBlock(BaseModel):
     """Typed parser for the optional v2 ``[solver]`` block."""
 
     model_config = ConfigDict(
-        extra="allow"
-    )  # intentional: parse-time adapter, accepts flexible v2 solver input before coercion
+        extra="allow"  # intentional: parse-time adapter
+    )
     max_nfev: int | None = None
     nan_policy: str = "propagate"
     calc_covar: bool = True

@@ -29,19 +29,17 @@ from spectrafit.models.types import DataSplitDict
 from spectrafit.report import PrintingResults
 
 
-def _resolve_conf_interval(
-    ci: bool | ConfIntervalConfig,
-) -> (
-    bool | dict[str, object]
-):  # intentional: serialization boundary to frozen PostProcessing layer
+type _CIResult = bool | dict[str, object]  # intentional: serialization boundary
+
+
+def _resolve_conf_interval(ci: bool | ConfIntervalConfig) -> _CIResult:
     """Convert ``ConfIntervalConfig`` to the ``dict`` form expected by frozen modules.
 
     Args:
-        ci: Confidence-interval configuration from :class:`UnifiedFittingConfig`.
+        ci: Confidence-interval configuration from `UnifiedFittingConfig`.
 
     Returns:
-        bool | dict[str, object]: ``False`` to disable CI, or a kwargs dict for
-        ``lmfit.conf_interval``.
+        ``False`` to disable CI, or a kwargs dict for ``lmfit.conf_interval``.
     """
     if isinstance(ci, ConfIntervalConfig):
         return ci.model_dump(exclude_none=True)
