@@ -3,7 +3,7 @@ name = "SpectraFit"
 version = "2.0.0.dev0"
 description = "Fast fitting of 2D- and 3D-Spectra with established routines"
 authors = [{ name = "Anselm Hahn", email = "anselm.hahn@gmail.com" }]
-requires-python = ">=3.11,<3.14"
+requires-python = ">=3.12,<3.14"
 readme = "README.md"
 license = "BSD-3-Clause"
 maintainers = [{ name = "Anselm Hahn", email = "anselm.hahn@gmail.com" }]
@@ -23,7 +23,6 @@ classifiers = [
   "Framework :: Matplotlib",
   "Framework :: Jupyter :: JupyterLab",
   "Operating System :: OS Independent",
-  "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
   "Programming Language :: Python :: Implementation :: CPython",
@@ -154,7 +153,7 @@ build-backend = "hatchling.build"
 fix = true
 include = ["*.py"]
 src = ["spectrafit"]
-target-version = "py310"
+target-version = "py312"
 
 [tool.ruff.lint]
 select = ["ALL"]
@@ -339,3 +338,19 @@ help = "Generate fit-validation PNG plots for all examples/ (Agg backend, saved 
 [tool.poe.tasks.validate-examples]
 cmd = "pytest tests/integration/test_examples.py -v"
 help = "Smoke-test all examples/*/input.toml via FittingPipeline"
+
+[tool.poe.tasks.scan]
+cmd = "python scripts/scan_antipatterns.py"
+help = "Scan spectrafit/ for known anti-patterns (use --module, --severity, --json)"
+
+[tool.poe.tasks.arch-check]
+cmd = "python scripts/architecture_check.py"
+help = "Check spectrafit/ architecture invariants (use --module, --invariant, --json)"
+
+[tool.poe.tasks.health]
+shell = "python scripts/scan_antipatterns.py; python scripts/architecture_check.py"
+help = "Run both anti-pattern scan and architecture check"
+
+[tool.poe.tasks.scan-antipatterns]
+cmd = "python scripts/scan_antipatterns.py"
+help = "Scan spectrafit/ for known anti-patterns (use --module, --severity, --json)"
