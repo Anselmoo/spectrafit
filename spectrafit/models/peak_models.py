@@ -3,20 +3,20 @@
 This module contains the data layer for the v2.0.0 component-based fitting
 pipeline.  It defines two Pydantic models:
 
-- :class:`FitParameter` — validated representation of a single parameter
+- `FitParameter` — validated representation of a single parameter
   constraint (value, min, max, vary, expr).
-- :class:`Component` — a named fitting component that maps to one
-  :class:`lmfit.Model` instance.
+- `Component` — a named fitting component that maps to one
+  `lmfit.Model` instance.
 
 The boundary between Pydantic and lmfit is entirely in this module:
-Pydantic validates user input; :meth:`Component.to_lmfit_model` hands
+Pydantic validates user input; `Component.to_lmfit_model` hands
 control to lmfit for numerical optimisation.
 
-Naming convention
------------------
+**Naming convention**
+
 All lmfit parameter names are constructed exclusively via
-:func:`~spectrafit.models.naming.lmfit_param_name`.  No inline
-``f"{x}_{y}"`` formatting is used anywhere else.
+`lmfit_param_name`.  No inline
+``f'{x}_{y}'`` formatting is used anywhere else.
 """
 
 from __future__ import annotations
@@ -137,7 +137,7 @@ class Component(BaseModel):
     ``id`` is the namespace root for all lmfit parameter names belonging to
     this component.  The lmfit parameter name for field ``"amplitude"`` of
     component ``"1"`` is ``"p1_amplitude"`` — computed exclusively via
-    :func:`~spectrafit.models.naming.lmfit_param_name`.
+    `lmfit_param_name`.
 
     Args:
         id: Unique component identifier.  Numeric ids (e.g. ``"1"``) are
@@ -145,7 +145,7 @@ class Component(BaseModel):
             prefixes.
         model: Registry key identifying the model type
             (e.g. ``"gaussian"``, ``"lorentzian"``).
-        parameters: Mapping of parameter field name → :class:`FitParameter`.
+        parameters: Mapping of parameter field name → `FitParameter`.
 
     Examples:
         >>> from spectrafit.models.peak_models import Component, FitParameter
@@ -226,7 +226,7 @@ class Component(BaseModel):
         """Override lmfit defaults with user-supplied constraints.
 
         Called after ``model.make_params()`` to apply the ``min``, ``max``,
-        ``vary``, and ``expr`` constraints from :attr:`parameters`.
+        ``vary``, and ``expr`` constraints from `parameters`.
 
         Only parameters that appear in ``params`` (i.e. parameters that the
         model actually declares) are overridden.  Unknown field names are

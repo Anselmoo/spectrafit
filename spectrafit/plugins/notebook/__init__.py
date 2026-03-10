@@ -1,6 +1,6 @@
 """Notebook package for SpectraFit — deprecated re-export shim.
 
-.. deprecated:: 2.0.0
+!!! warning "Deprecated"
     Import from ``spectrafit.jupyter`` instead.  This shim will be removed in v3.0.0.
 """
 

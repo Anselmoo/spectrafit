@@ -1,20 +1,21 @@
 """Typed fitting result container — v2 output model.
 
-Mirrors the :class:`~prototype.input_output_interface.PrototypeOutput` design with
+Mirrors the `PrototypeOutput` design with
 full JSON Schema support via Pydantic v2.  The model is intentionally kept at the
 *data* level (plain Python scalars / lists) so that it is serialisable to JSON
 without any lmfit dependency at the consumer side.
 
-Usage::
-
+Examples:
+    ```python
     result = FitResult.from_dict(data)
     result.save(Path("output.json"))
     schema = FitResult.model_json_schema()   # stable, MCP-ready
+    ```
 
-.. note::
-    ``FittingResult`` (``spectrafit.core.pipeline``) still wraps lmfit objects and
-    is used internally by :class:`~spectrafit.core.pipeline.FittingPipeline`.
-    ``FitResult`` is the *export* representation produced after the fit.
+!!! note
+    `FittingResult` (``spectrafit.core.pipeline``) still wraps lmfit objects and
+    is used internally by `FittingPipeline`.
+    `FitResult` is the *export* representation produced after the fit.
 """
 
 from __future__ import annotations
@@ -114,7 +115,7 @@ class FitStatistics(BaseModel):
 
 
 class VariableFitResult(BaseModel):
-    """Result for a single fitted variable within :class:`FitInsights`.
+    """Result for a single fitted variable within `FitInsights`.
 
     Attributes:
         init_value: Initial parameter value before fitting.
@@ -161,7 +162,7 @@ class ComputationalMeta(BaseModel):
     """
 
     model_config = ConfigDict(
-        extra="allow"
+        extra="allow"  # intentional: result container, v2.1 migration target
     )  # intentional: lmfit result keys vary by method
 
     success: bool | None = None
@@ -208,14 +209,14 @@ class FitInsights(BaseModel):
 
     @classmethod
     def from_minimizer_result(cls, result: MinimizerResult) -> FitInsights:
-        """Build :class:`FitInsights` directly from an lmfit :class:`MinimizerResult`.
+        """Build `FitInsights` directly from an lmfit `MinimizerResult`.
 
-        Follows the prototype pattern from :func:`prototype.core_fitting.extract_parameters`
-        and :func:`prototype.core_fitting.extract_statistics`: typed Pydantic models
+        Follows the prototype pattern from `extract_parameters`
+        and `extract_statistics`: typed Pydantic models
         are built directly from lmfit objects — no intermediate dict roundtrip.
 
         Args:
-            result: The lmfit :class:`~lmfit.minimizer.MinimizerResult` after fitting.
+            result: The lmfit `MinimizerResult` after fitting.
 
         Returns:
             FitInsights: Fully-typed insights instance.
@@ -310,7 +311,7 @@ class ConfidenceResults(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    settings: dict[str, object] | bool = False
+    settings: dict[str, object] | bool = False  # intentional: ci-result settings dict
     results: dict[str, list[tuple[float, float]]] = Field(default_factory=dict)
 
 
@@ -410,7 +411,10 @@ class FitResult(BaseModel):
         return str(v)
 
     @classmethod
-    def from_dict(cls, data: dict[str, object]) -> FitResult:
+    def from_dict(
+        cls,
+        data: dict[str, object],  # intentional: deserialization boundary
+    ) -> FitResult:
         """Deserialise a ``FitResult`` from a plain dict or JSON file content.
 
         Args:
@@ -423,7 +427,7 @@ class FitResult(BaseModel):
 
     @classmethod
     def load(cls, path: Path | str) -> FitResult:
-        """Load a ``FitResult`` from a JSON file written by :meth:`save`.
+        """Load a ``FitResult`` from a JSON file written by `save`.
 
         Args:
             path: Path to the JSON file.

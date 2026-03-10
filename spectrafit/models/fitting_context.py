@@ -1,27 +1,25 @@
-"""FittingContext — typed fitting mode replacing bare ``global_: int``.
+"""FittingContext — typed fitting mode replacing bare ``global_`` (int).
 
-The old ``global_: int`` flag (0/1/2) is a stringly-typed encoding of
+The old ``global_`` (int) flag (0/1/2) is a stringly-typed encoding of
 what is semantically a richer concept: *how many datasets are being fit
 simultaneously and what advanced fitting strategy applies*.
 
 This module introduces:
 
-- :class:`FittingMode` — a ``str`` enum with four values.  ``str`` mixin
+- `FittingMode` — a `str` enum with four values.  `str` mixin
   allows direct JSON serialisation without a custom encoder.
-- :class:`FittingContext` — a Pydantic model that replaces the bare
+- `FittingContext` — a Pydantic model that replaces the bare
   integer and makes all fitting configuration explicit and validated.
 
-Backward compatibility
-----------------------
-``FittingContext.from_global_int(n)`` converts old ``global_: int`` values:
+**Backward compatibility**
 
-=====  =======================
- int    FittingMode
-=====  =======================
-  0    STANDARD (single dataset)
-  1    GLOBAL (multi-dataset)
-  2    GLOBAL (pre-defined params)
-=====  =======================
+`FittingContext.from_global_int(n)` converts old `global_` (int) values:
+
+| int | FittingMode |
+|-----|-------------|
+| 0   | STANDARD (single dataset) |
+| 1   | GLOBAL (multi-dataset) |
+| 2   | GLOBAL (pre-defined params) |
 """
 
 from __future__ import annotations
@@ -69,9 +67,9 @@ def detect_environment() -> EnvironmentMode:
     interactive IPython sessions), then falls back to ``sys.stdin.isatty()``.
 
     Returns:
-        :attr:`EnvironmentMode.NOTEBOOK` when an IPython kernel is active,
-        :attr:`EnvironmentMode.CLI` when stdin is a tty,
-        :attr:`EnvironmentMode.API` otherwise (piped, CI, scripted).
+        `EnvironmentMode.NOTEBOOK` when an IPython kernel is active,
+        `EnvironmentMode.CLI` when stdin is a tty,
+        `EnvironmentMode.API` otherwise (piped, CI, scripted).
 
     Examples:
         >>> isinstance(detect_environment(), EnvironmentMode)
@@ -128,16 +126,16 @@ class FittingMode(StrEnum):
 
 
 class FittingContext(BaseModel):
-    """Typed, validated fitting context replacing ``global_: int``.
+    """Typed, validated fitting context replacing ``global_`` (int).
 
     Args:
-        mode: Fitting strategy.  Defaults to :attr:`FittingMode.STANDARD`.
+        mode: Fitting strategy.  Defaults to `FittingMode.STANDARD`.
         n_datasets: Number of datasets for multi-dataset modes.  Must be
             ``≥ 1``.  Defaults to ``1``.
         shared_parameters: Parameters linked across datasets.  Only
-            meaningful for :attr:`FittingMode.GLOBAL`.
+            meaningful for `FittingMode.GLOBAL`.
         time_axis: Values along the time axis.  Only meaningful for
-            :attr:`FittingMode.TIME_RESOLVED`.
+            `FittingMode.TIME_RESOLVED`.
 
     Examples:
         >>> ctx = FittingContext(mode=FittingMode.STANDARD)
@@ -197,7 +195,7 @@ class FittingContext(BaseModel):
 
     @property
     def global_int(self) -> int:
-        """Legacy ``global_: int`` representation for backward compatibility.
+        """Legacy ``global_`` (int) representation for backward compatibility.
 
         Returns:
             ``0`` for STANDARD, ``1`` for GLOBAL/TIME_RESOLVED/SEQUENTIAL.
@@ -215,13 +213,13 @@ class FittingContext(BaseModel):
 
     @classmethod
     def from_global_int(cls, value: int) -> FittingContext:
-        """Construct a :class:`FittingContext` from a legacy integer flag.
+        """Construct a `FittingContext` from a legacy integer flag.
 
         Args:
             value: Legacy ``global_`` value (0, 1, or 2).
 
         Returns:
-            A :class:`FittingContext` with the equivalent mode.
+            A `FittingContext` with the equivalent mode.
 
         Raises:
             ValueError: If ``value`` is not 0, 1, or 2.

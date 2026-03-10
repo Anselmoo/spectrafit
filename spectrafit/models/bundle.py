@@ -1,6 +1,6 @@
 """CompositeModelBundle — lmfit model composition and component decomposition.
 
-This module provides the bridge between a list of :class:`~spectrafit.models.peak_models.Component`
+This module provides the bridge between a list of `Component`
 objects and a single lmfit ``CompositeModel`` that can be handed to the
 numerical optimiser.
 
@@ -14,10 +14,9 @@ The central design principle is **lmfit-native composition**:
 - Per-component curve recovery via ``model.eval(result.params, x=x)``
   — no duplicate evaluation loop.
 
-Usage example
--------------
-.. code-block:: python
+**Usage example**
 
+```python
     from spectrafit.models.peak_models import Component, FitParameter
     from spectrafit.models.bundle import build_composite_bundle
 
@@ -35,6 +34,7 @@ Usage example
     params = bundle.make_params()          # all component defaults merged
     result = bundle.composite.fit(y, params, x=x)
     curves = bundle.decompose(result.params, x)  # {"p1": array, "bg": array}
+```
 """
 
 from __future__ import annotations
@@ -62,7 +62,7 @@ class CompositeModelBundle:
         composite: The composite lmfit model (``m1 + m2 + ...``).  Pass
             this to ``composite.fit(data, params, x=x)``.
         params: Merged ``lmfit.Parameters`` with all component defaults
-            pre-applied by :func:`build_composite_bundle`.
+            pre-applied by `build_composite_bundle`.
         parts: Ordered list of ``(component_id, lmfit.Model)`` pairs
             retained for per-component curve recovery.
     """
@@ -106,23 +106,22 @@ class CompositeModelBundle:
 def build_composite_bundle(
     components: list[Component],
 ) -> CompositeModelBundle:
-    """Build a :class:`CompositeModelBundle` from a list of components.
+    """Build a `CompositeModelBundle` from a list of components.
 
     Steps:
-    1. For each component, call :meth:`~spectrafit.models.peak_models.Component.to_lmfit_model`
+    1. For each component, call `Component.to_lmfit_model`
        to create an ``lmfit.Model`` with the correct prefix.
     2. Merge all component models with lmfit's ``__add__`` operator.
     3. Call ``composite.make_params()`` to get default parameters.
     4. For each component, call
-       :meth:`~spectrafit.models.peak_models.Component.apply_parameters`
+       `Component.apply_parameters`
        to override defaults with user constraints.
 
     Args:
-        components: Non-empty list of :class:`~spectrafit.models.peak_models.Component`
-            objects.
+        components: Non-empty list of `Component` objects.
 
     Returns:
-        :class:`CompositeModelBundle` with ``composite``, ``parts``, and
+        `CompositeModelBundle` with ``composite``, ``parts``, and
         ``params`` fully populated.
 
     Raises:

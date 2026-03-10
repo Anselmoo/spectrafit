@@ -3,17 +3,18 @@
 These three functions are the **single source of truth** for the naming
 convention used throughout the fitting pipeline.  No other module may
 construct lmfit parameter names via inline string formatting — always call
-:func:`lmfit_param_name`.
+`lmfit_param_name`.
 
-Naming contract
----------------
+**Naming contract**
+
 ``lmfit parameter name = {sanitized_id}_{field_name}``
 
-Examples::
-
+Examples:
+    ```
     lmfit_param_name("main", "amplitude")  →  "main_amplitude"
     lmfit_param_name("1",    "center")     →  "p1_center"
     lmfit_param_name("bg",   "slope")      →  "bg_slope"
+    ```
 
 User-facing expressions use dot notation (natural for scientists):
 
@@ -90,7 +91,7 @@ def translate_dot_notation(expr: str) -> str:
     what ``asteval`` processes during fitting).
 
     This translation happens **once** at config parse time via
-    :class:`~spectrafit.models.peak_models.FitParameter`'s field validator.
+    `FitParameter`'s field validator.
     The translated expression is stored and passed to lmfit; the user never
     sees the underscore form.
 

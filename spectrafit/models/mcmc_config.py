@@ -3,8 +3,8 @@
 When ``OptimizerConfig.method = "emcee"`` the solver passes this config to
 ``lmfit.Minimizer.emcee()`` rather than ``Minimizer.minimize()``.
 
-Example::
-
+Examples:
+    ```python
     from spectrafit.models.mcmc_config import MCMCConfig
     from spectrafit.core.fitting_config import UnifiedFittingConfig
 
@@ -13,14 +13,14 @@ Example::
         "mcmc": {"nwalkers": 100, "steps": 1000, "burn": 300, "thin": 5},
         "components": [...],
     })
+    ```
 
-.. note::
+!!! note
     ``emcee`` must be installed: ``pip install emcee``.
     The ``progress`` field controls the tqdm progress bar; set ``False`` in
     non-interactive / CI environments.
 
-.. seealso::
-    `lmfit emcee documentation <https://lmfit.github.io/lmfit-py/fitting.html#lmfit.minimizer.Minimizer.emcee>`_
+See also the [lmfit emcee documentation](https://lmfit.github.io/lmfit-py/fitting.html#lmfit.minimizer.Minimizer.emcee).
 """
 
 from __future__ import annotations

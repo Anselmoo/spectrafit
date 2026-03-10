@@ -2,11 +2,11 @@
 
 Enables fitting multiple spectra in a single call using
 ``concurrent.futures.ProcessPoolExecutor``.  Each spectrum is described by its
-own :class:`~spectrafit.core.fitting_config.UnifiedFittingConfig` so that peak
+own `UnifiedFittingConfig` so that peak
 models can differ between spectra.
 
-Example::
-
+Examples:
+    ```python
     from spectrafit.models.batch_config import BatchFittingConfig
 
     batch = BatchFittingConfig.model_validate({
@@ -17,14 +17,13 @@ Example::
         ],
     })
     # results: list[FitResult] = batch.run()
+    ```
 
-.. note::
+!!! note
     ``workers > 1`` requires the calling code to guard with
     ``if __name__ == "__main__":`` on Windows / macOS spawn context.
 
-.. seealso::
-    :class:`~spectrafit.core.fitting_config.UnifiedFittingConfig`
-    :class:`~spectrafit.models.fit_result.FitResult`
+See also `UnifiedFittingConfig` and `FitResult`.
 """
 
 from __future__ import annotations
@@ -42,7 +41,7 @@ class BatchFittingConfig(BaseModel):
 
     Attributes:
         configs: List of per-spectrum fitting configurations.  Each entry is
-            validated as :class:`~spectrafit.core.fitting_config.UnifiedFittingConfig`
+            validated as `UnifiedFittingConfig`
             at construction time via a lazy import to avoid circular dependency.
         workers: Number of parallel worker processes.  ``1`` disables
             parallelism (useful for debugging or small batches).

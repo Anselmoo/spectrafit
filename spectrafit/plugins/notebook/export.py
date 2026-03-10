@@ -1,6 +1,6 @@
 """Export utilities — deprecated re-export shim.
 
-.. deprecated:: 2.0.0
+!!! warning "Deprecated"
     Import from ``spectrafit.jupyter.export`` instead.
 """
 
