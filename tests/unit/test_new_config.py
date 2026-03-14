@@ -6,9 +6,16 @@ import pytest
 
 from spectrafit.cli.commands.scaffolding import _build_component
 from spectrafit.cli.commands.scaffolding import _build_config
+from spectrafit.cli.commands.scaffolding import _build_config_model
 from spectrafit.cli.commands.scaffolding import _default_for_param
+from spectrafit.cli.main import app
+from spectrafit.core.fitting_config import UnifiedFittingConfig
 from spectrafit.models.peak_models import Component
 from spectrafit.models.peak_models import FitParameter
+from typer.testing import CliRunner
+
+
+runner = CliRunner()
 
 
 class TestDefaultForParam:
@@ -85,6 +92,15 @@ class TestBuildConfig:
     """Golden-table tests for _build_config() v2 output format."""
 
     @pytest.mark.unit
+    def test_build_config_model_returns_typed_config(self) -> None:
+        config = _build_config_model([(1, "gaussian"), (2, "voigt")])
+
+        assert isinstance(config, UnifiedFittingConfig)
+        assert [component.id for component in config.components] == ["p1", "p2"]
+        assert config.optimizer.method == "leastsq"
+        assert config.minimizer.nan_policy == "propagate"
+
+    @pytest.mark.unit
     def test_v2_format_components_key(self) -> None:
         """Output must have 'components' key — never 'fitting' (v1 banned)."""
         cfg = _build_config([(1, "gaussian")])
@@ -134,13 +150,20 @@ class TestBuildConfig:
     @pytest.mark.unit
     def test_round_trip_unified_fitting_config(self) -> None:
         """Config produced by _build_config must validate through UnifiedFittingConfig."""
-        from spectrafit.core.fitting_config import UnifiedFittingConfig  # noqa: PLC0415
-
         cfg = _build_config([(1, "voigt"), (2, "gaussian")])
         unified = UnifiedFittingConfig.model_validate(cfg)
         assert len(unified.components) == 2
         assert unified.components[0].model == "voigt"
         assert unified.components[1].model == "gaussian"
+
+    @pytest.mark.unit
+    def test_serialized_build_config_matches_typed_model_dump(self) -> None:
+        typed = _build_config_model([(1, "voigt"), (2, "gaussian")])
+
+        assert _build_config([(1, "voigt"), (2, "gaussian")]) == typed.model_dump(
+            mode="json",
+            exclude_none=True,
+        )
 
     @pytest.mark.unit
     def test_no_none_values_in_component_dump(self) -> None:
@@ -155,7 +178,7 @@ class TestBuildConfig:
     @pytest.mark.unit
     def test_toml_serialisation(self) -> None:
         """Config must be serialisable to TOML without errors."""
-        import tomli_w  # noqa: PLC0415
+        import tomli_w
 
         cfg = _build_config([(1, "voigt"), (2, "lorentzian")])
         toml_str = tomli_w.dumps(cfg)
@@ -170,12 +193,18 @@ class TestNewConfigDefaultFormat:
 
     @pytest.mark.unit
     def test_default_fmt_is_toml(self) -> None:
-        from spectrafit.cli._types import OutputFormatEnum  # noqa: PLC0415
+        import inspect
 
-        import inspect  # noqa: PLC0415
-
-        from spectrafit.cli.commands.scaffolding import new_config  # noqa: PLC0415
+        from spectrafit.cli._types import OutputFormatEnum
+        from spectrafit.cli.commands.scaffolding import new_config
 
         sig = inspect.signature(new_config)
         fmt_default = sig.parameters["fmt"].default
         assert fmt_default == OutputFormatEnum.TOML
+
+    @pytest.mark.unit
+    def test_cli_new_config_emits_toml_by_default(self) -> None:
+        result = runner.invoke(app, ["new-config"])
+
+        assert result.exit_code == 0
+        assert "[[components]]" in result.output

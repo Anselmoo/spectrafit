@@ -7,7 +7,6 @@ from io import StringIO
 import pytest
 
 from rich.console import Console
-
 from spectrafit.cli.banner import _env_label
 from spectrafit.cli.banner import render_startup_panel
 from spectrafit.models.fitting_context import EnvironmentMode
@@ -25,8 +24,10 @@ class TestEnvLabel:
         """_env_label returns a plain Rich colour name, not a markup string."""
         label = _env_label(env)
         # Must be a non-empty string usable as a Rich style (no angle-bracket markup)
-        assert isinstance(label, str) and len(label) > 0
-        assert "<" not in label and "[" not in label
+        assert isinstance(label, str)
+        assert len(label) > 0
+        assert "<" not in label
+        assert "[" not in label
 
     @pytest.mark.unit
     def test_cli_is_green(self) -> None:

@@ -13,6 +13,7 @@ import numpy as np
 import pandas as pd
 
 from spectrafit.models.preprocess_result import PreprocessResult
+from spectrafit.models.split_frame import SplitFrame
 
 
 if TYPE_CHECKING:
@@ -40,7 +41,7 @@ def energy_range(df: pd.DataFrame, config: UnifiedFittingConfig) -> pd.DataFrame
     """
     energy_start = config.energy_start
     energy_stop = config.energy_stop
-    x_col = config.column.x
+    x_col = config.x_column
     df_copy = df.copy()
 
     if energy_start is not None and energy_stop is not None:
@@ -64,7 +65,7 @@ def energy_shift(df: pd.DataFrame, config: UnifiedFittingConfig) -> pd.DataFrame
 
     """
     df_copy = df.copy()
-    x_col = config.column.x
+    x_col = config.x_column
     df_copy.loc[:, x_col] = df[x_col].to_numpy() + config.shift
     return df_copy
 
@@ -86,8 +87,8 @@ def oversampling(df: pd.DataFrame, config: UnifiedFittingConfig) -> pd.DataFrame
         pd.DataFrame: DataFrame oversampled by a factor of 5.
 
     """
-    x_col = config.column.x
-    y_col = config.column.y
+    x_col = config.x_column
+    y_col = config.y_column
     x_values = np.linspace(df[x_col].min(), df[x_col].max(), 5 * df.shape[0])
     y_values = np.interp(x_values, df[x_col].to_numpy(), df[y_col].to_numpy())
     return pd.DataFrame({x_col: x_values, y_col: y_values})
@@ -106,7 +107,7 @@ def smooth_signal(df: pd.DataFrame, config: UnifiedFittingConfig) -> pd.DataFram
 
     """
     box = np.ones(config.smooth) / config.smooth
-    y_col = config.column.y
+    y_col = config.y_column
     df_copy = df.copy()
     df_copy.loc[:, y_col] = np.convolve(df[y_col].to_numpy(), box, mode="same")
     return df_copy
@@ -133,9 +134,9 @@ def preprocess(df: pd.DataFrame, config: UnifiedFittingConfig) -> PreprocessResu
             descriptive statistics of the *raw* input frame.
 
     """
-    data_statistic = df.describe(
-        percentiles=np.arange(0.1, 1.0, 0.1).tolist(),
-    ).to_dict(orient="split")
+    data_statistic = SplitFrame.from_dataframe(
+        df.describe(percentiles=np.arange(0.1, 1.0, 0.1).tolist())
+    )
     df_out = df.copy()
     for guard, step in _STEPS:
         if guard(config):

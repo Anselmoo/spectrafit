@@ -1,7 +1,7 @@
 ---
 name: pydantic-patterns-architect
 description: "Distinguished Engineer–grade code pattern architect for SpectraFit. Designs professional Pydantic v2 composition patterns, eliminates constructor anti-patterns, and applies canonical design patterns (Builder, Facade, Strategy) to scientific Python. Triggers: 'decompose __init__', 'constructor too long', 'None-defaulting', 'Field(default_factory)', 'side-effect property', '@property -> None', 'facade pattern', 'builder pattern', 'composition over inheritance', 'professional code patterns', 'design pattern', 'config decomposition'."
-tools: [execute, read, agent, edit, search, 'context7/*', 'serena/*', 'ai-agent-guidelines/*', 'github/*', todo]
+tools: [vscode, execute, read, agent, edit, search, web, github/get_file_contents, github/search_code, github/search_issues, 'ai-agent-guidelines/*', 'context7/*', github/get_file_contents, github/search_code, github/search_issues, 'serena/*', 'zen-of-languages/*', ms-python.python/getPythonEnvironmentInfo, ms-python.python/getPythonExecutableCommand, ms-python.python/installPythonPackage, ms-python.python/configurePythonEnvironment, todo]
 agents: [Explore, pydantic-refactor-analyzer, pydantic-multiagent-analyzer]
 ---
 

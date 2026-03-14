@@ -2,46 +2,79 @@
 
 from __future__ import annotations
 
-import json
-
 from pathlib import Path
 from typing import TYPE_CHECKING
 
 import pandas as pd
 import tomli_w
 
-from spectrafit.api.models_model import ConfIntervalAPI
 from spectrafit.api.tools_model import SolverModelsAPI
 from spectrafit.core.fitting_config import ColumnConfig
 from spectrafit.core.fitting_config import UnifiedFittingConfig
+from spectrafit.models.fitting_context import FittingContext
+from spectrafit.models.fitting_context import FittingMode
+from spectrafit.models.preprocessing_config import PreprocessingConfig
 from spectrafit.models.solver_config import ConfIntervalConfig
-from spectrafit.utilities.transformer import list2components
+from spectrafit.models.solver_config import normalize_conf_interval_value
 
 
 if TYPE_CHECKING:
+    from collections.abc import Mapping
+
     from spectrafit.jupyter.core import SpectraFitNotebook
 
 
+type TomlScalar = str | int | float | bool | None
+type TomlValue = TomlScalar | list["TomlValue"] | dict[str, "TomlValue"]
+type TomlDocument = dict[str, TomlValue]
+
+
 def _normalize_conf_interval_settings(
-    settings: bool
-    | dict[str, object]  # intentional: accepts legacy CI dict from saved notebooks
-    | ConfIntervalConfig
-    | ConfIntervalAPI,  # intentional
+    settings: bool | Mapping[str, object] | ConfIntervalConfig,
 ) -> bool | ConfIntervalConfig:
     """Normalize confidence interval settings into UnifiedFittingConfig shape."""
-    if isinstance(settings, bool | ConfIntervalConfig):
-        return settings
+    normalized = normalize_conf_interval_value(settings)
+    return normalized if normalized is not None else False
 
-    raw_settings = (
-        settings.model_dump(exclude_none=True)
-        if isinstance(settings, ConfIntervalAPI)
-        else dict(settings)
-    )
-    prob_func = raw_settings.get("prob_func")
-    if prob_func is not None and not isinstance(prob_func, str):
-        raw_settings.pop("prob_func", None)
 
-    return ConfIntervalConfig.model_validate(raw_settings)
+def _resolve_notebook_y_column_input(
+    df: pd.DataFrame,
+    config: UnifiedFittingConfig,
+) -> str | list[str]:
+    """Resolve the canonical notebook y-column input from config and dataframe."""
+    if config.context.mode == FittingMode.STANDARD:
+        return config.y_column
+
+    dataframe_y_columns = [
+        str(column) for column in df.columns if str(column) != config.x_column
+    ]
+    if config.y_column not in dataframe_y_columns:
+        msg = (
+            f"Notebook config data.y_col='{config.y_column}' is not present in the "
+            f"dataframe y-columns {dataframe_y_columns}."
+        )
+        raise ValueError(msg)
+
+    if len(dataframe_y_columns) == 1:
+        return config.y_column
+
+    if len(dataframe_y_columns) != config.context.n_datasets:
+        msg = (
+            "Notebook config context.n_datasets="
+            f"{config.context.n_datasets} does not match dataframe y-columns="
+            f"{len(dataframe_y_columns)}."
+        )
+        raise ValueError(msg)
+
+    if dataframe_y_columns[0] != config.y_column:
+        msg = (
+            f"Notebook config data.y_col='{config.y_column}' must match the first "
+            f"dataframe y-column '{dataframe_y_columns[0]}' for notebook "
+            "roundtrip reconstruction."
+        )
+        raise ValueError(msg)
+
+    return dataframe_y_columns
 
 
 def build_notebook_from_config(
@@ -63,15 +96,22 @@ def build_notebook_from_config(
     """
     notebook = notebook_cls(
         df=df,
-        x_column=config.column.x,
-        y_column=config.column.y,
+        x_column=config.x_column,
+        y_column=_resolve_notebook_y_column_input(df=df, config=config),
         **kwargs,
     )
     notebook.settings_solver_models = SolverModelsAPI(
         minimizer=config.minimizer,
         optimizer=config.optimizer,
     )
-    notebook.global_ = config.context.mode
+    notebook.n_datasets = config.context.n_datasets
+    notebook.fitting_mode = config.context.mode
+    notebook.preprocessing_config = (
+        config.preprocessing
+        if config.preprocessing is not None
+        else PreprocessingConfig()
+    )
+    notebook.initial_components = config.components
     return notebook
 
 
@@ -84,12 +124,9 @@ def notebook_args_to_config(notebook: SpectraFitNotebook) -> UnifiedFittingConfi
     Returns:
         UnifiedFittingConfig: Validated configuration matching notebook state.
     """
-    components = list2components(peak_list=notebook.initial_model)
-    y_col = (
-        notebook.y_column
-        if isinstance(notebook.y_column, str)
-        else notebook.y_column[0]
-    )
+    components = notebook.initial_components
+    y_columns = notebook.y_columns
+    y_col = y_columns[0]
 
     conf_interval: bool | ConfIntervalConfig = False
     resolved_ci = getattr(notebook, "_resolved_ci", None)
@@ -97,7 +134,7 @@ def notebook_args_to_config(notebook: SpectraFitNotebook) -> UnifiedFittingConfi
         conf_interval = _normalize_conf_interval_settings(
             notebook.fit_result.confidence.settings
         )
-    elif isinstance(resolved_ci, ConfIntervalAPI | ConfIntervalConfig):
+    elif resolved_ci is not None:
         conf_interval = _normalize_conf_interval_settings(resolved_ci)
 
     return UnifiedFittingConfig(
@@ -105,8 +142,12 @@ def notebook_args_to_config(notebook: SpectraFitNotebook) -> UnifiedFittingConfi
         minimizer=notebook.settings_solver_models.minimizer,
         optimizer=notebook.settings_solver_models.optimizer,
         column=ColumnConfig(x=notebook.x_column, y=y_col),
-        global_=notebook.global_,
+        context=FittingContext(
+            mode=notebook.fitting_mode,
+            n_datasets=notebook.n_datasets,
+        ),
         conf_interval=conf_interval,
+        preprocessing=notebook.preprocessing_config,
     )
 
 
@@ -131,53 +172,29 @@ def export_notebook_config_toml(
         msg = f"'{dest}' already exists. Pass force=True to overwrite."
         raise FileExistsError(msg)
 
-    components = [
-        component.model_dump(exclude_none=True) for component in config.components
-    ]
-    out: dict[str, object] = {  # intentional: TOML serialization boundary
-        "components": components,
-        "minimizer": config.minimizer.model_dump(exclude_none=True)
-        if config.minimizer
-        else {},
-        "optimizer": config.optimizer.model_dump(exclude_none=True)
-        if config.optimizer
-        else {},
-    }
+    out: TomlDocument = config.model_dump(  # intentional: TOML serialization boundary
+        mode="json",
+        exclude_none=True,
+    )
     with dest.open("wb") as fh:
         tomli_w.dump(out, fh)
 
 
 def load_notebook_config(path: Path | str) -> UnifiedFittingConfig:
-    """Load and validate a v2 TOML/JSON configuration file.
+    """Load and validate a v2 TOML/JSON/YAML configuration file.
 
     Args:
-        path: Path to ``.toml`` or ``.json`` file.
+        path: Path to ``.toml``, ``.json``, ``.yaml``, or ``.yml`` file.
 
     Returns:
         UnifiedFittingConfig: Validated configuration model.
 
     Raises:
         FileNotFoundError: If the file does not exist.
-        ValueError: If the file extension is unsupported.
+        OSError: If the file extension is unsupported.
     """
-    try:
-        import tomllib  # noqa: PLC0415
-    except ImportError:
-        import tomli as tomllib  # type: ignore[no-redef]  # noqa: PLC0415
-
     src = Path(path)
     if not src.exists():
         msg = f"Config file not found: '{src}'"
         raise FileNotFoundError(msg)
-
-    if src.suffix == ".toml":
-        with src.open("rb") as fh:
-            raw = tomllib.load(fh)
-    elif src.suffix == ".json":
-        with src.open("r", encoding="utf-8") as fh:
-            raw = json.load(fh)
-    else:
-        msg = f"Unsupported config format: '{src.suffix}'. Use .toml or .json."
-        raise ValueError(msg)
-
-    return UnifiedFittingConfig.model_validate(raw)
+    return UnifiedFittingConfig.from_file(src)

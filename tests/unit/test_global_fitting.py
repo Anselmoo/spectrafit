@@ -10,9 +10,11 @@ from __future__ import annotations
 
 import pytest
 
+from pydantic import ValidationError
 from spectrafit.models.fitting_context import FittingMode
 from spectrafit.models.global_fitting import GlobalFittingConfig
 from spectrafit.models.global_fitting import SharedParameter
+
 
 MINIMAL_COMPONENTS = [
     {
@@ -68,7 +70,7 @@ class TestFittingModeCoercion:
         """Integer values outside 0/1/2 raise ValueError."""
         from spectrafit.core.fitting_config import UnifiedFittingConfig
 
-        with pytest.raises(Exception):
+        with pytest.raises(ValidationError):
             UnifiedFittingConfig(
                 components=MINIMAL_COMPONENTS,
                 **{"global": 99},
@@ -91,7 +93,7 @@ class TestGlobalFittingConfig:
 
     def test_shared_parameter_requires_name(self) -> None:
         """SharedParameter.name must be non-empty."""
-        with pytest.raises(Exception):
+        with pytest.raises(ValidationError):
             SharedParameter(name="")
 
     def test_global_fitting_config_valid(self) -> None:

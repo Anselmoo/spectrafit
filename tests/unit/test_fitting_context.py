@@ -7,6 +7,7 @@ from unittest.mock import patch
 
 import pytest
 
+from pydantic import ValidationError
 from spectrafit.models.fitting_context import EnvironmentMode
 from spectrafit.models.fitting_context import FittingContext
 from spectrafit.models.fitting_context import detect_environment
@@ -69,7 +70,8 @@ class TestDetectEnvironment:
 
                 def import_without_ipython(name: str, *args: object, **kwargs: object) -> object:
                     if name == "IPython":
-                        raise ImportError("no IPython")
+                        msg = "no IPython"
+                        raise ImportError(msg)
                     return original_import(name, *args, **kwargs)
 
                 builtins.__import__ = import_without_ipython
@@ -87,7 +89,8 @@ class TestDetectEnvironment:
 
         def import_without_ipython(name: str, *args: object, **kwargs: object) -> object:
             if name == "IPython":
-                raise ImportError("no IPython")
+                msg = "no IPython"
+                raise ImportError(msg)
             return original_import(name, *args, **kwargs)
 
         with patch("sys.stdin") as mock_stdin:
@@ -116,7 +119,7 @@ class TestFittingContextEnvironmentField:
     @pytest.mark.unit
     def test_frozen_context_raises_on_mutation(self) -> None:
         ctx = FittingContext(environment=EnvironmentMode.CLI)
-        with pytest.raises(Exception):
+        with pytest.raises(ValidationError):
             ctx.environment = EnvironmentMode.API  # type: ignore[misc]
 
     @pytest.mark.unit

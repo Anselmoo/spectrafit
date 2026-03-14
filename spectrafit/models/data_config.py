@@ -13,10 +13,8 @@ from typing import TYPE_CHECKING
 from pydantic import BaseModel
 from pydantic import ConfigDict
 from pydantic import Field
-from pydantic import model_validator
 
 from spectrafit.models.fitting_context import FittingContext
-from spectrafit.models.fitting_context import FittingMode
 
 
 if TYPE_CHECKING:
@@ -89,40 +87,6 @@ class DataConfig(BaseModel):
         description="Typed fitting context; non-standard modes load all columns.",
     )
 
-    @model_validator(mode="before")
-    @classmethod
-    def _coerce_legacy_global(cls, raw: object) -> object:
-        """Accept legacy ``global``/``global_`` inputs and map to ``context``.
-
-        Args:
-            raw: Raw mapping passed to model validation.
-
-        Returns:
-            object: Normalized mapping with ``context`` when legacy keys are used.
-        """
-        if not isinstance(raw, dict):
-            return raw
-        data: dict[str, object] = dict(raw)  # intentional: validator scratch dict
-        if "context" in data:
-            return data
-        legacy = data.pop("global_", data.pop("global", None))
-        if legacy is None:
-            return data
-        if isinstance(legacy, FittingContext):
-            data["context"] = legacy
-            return data
-        if isinstance(legacy, FittingMode):
-            data["context"] = FittingContext(mode=legacy)
-            return data
-        if isinstance(legacy, bool):
-            data["context"] = FittingContext.from_global_int(1 if legacy else 0)
-            return data
-        if isinstance(legacy, int):
-            data["context"] = FittingContext.from_global_int(legacy)
-            return data
-        data["context"] = FittingContext(mode=FittingMode(str(legacy)))
-        return data
-
     @property
     def global_(self) -> int:
         """Legacy int accessor retained for frozen loader compatibility."""
@@ -178,51 +142,11 @@ class DataConfig(BaseModel):
             raise ValueError(msg)
         return cls(
             infile=resolved_infile,
-            x_col=config.column.x,
-            y_col=config.column.y,
+            x_col=config.x_column,
+            y_col=config.y_column,
             separator=separator if separator is not None else config.separator,
             header=config.header if header is ... else header,
             decimal=decimal if decimal is not None else config.decimal,
             comment=config.comment if comment is ... else comment,
             context=config.context,
-        )
-
-    @classmethod
-    def from_args_dict(
-        cls,
-        args: dict[str, object],  # intentional: legacy bridge
-    ) -> DataConfig:
-        """Construct a :class:`DataConfig` from a legacy args dictionary.
-
-        Supports both the old ``column`` list format and the new ``x_col``/``y_col``
-        format so that v1→v2 migration scripts can call this transparently.
-
-        Args:
-            args: Legacy argument dictionary with keys ``infile``, ``separator``,
-                ``header``, ``decimal``, ``comment``, ``column`` (old) or
-                ``x_col``/``y_col`` (new), ``global_``.
-
-        Returns:
-            DataConfig: Validated data loading configuration.
-        """
-        col = args.get("column", [])
-        x_col = (
-            str(col[0])
-            if isinstance(col, list) and col
-            else str(args.get("x_col", "energy"))
-        )
-        y_col = (
-            str(col[1])
-            if isinstance(col, list) and len(col) > 1
-            else str(args.get("y_col", "intensity"))
-        )
-        return cls(
-            infile=Path(str(args["infile"])),
-            x_col=x_col,
-            y_col=y_col,
-            separator=str(args.get("separator", r"\s+")),
-            header=int(str(args["header"])) if args.get("header") is not None else None,
-            decimal=str(args.get("decimal", ".")),
-            comment=str(args["comment"]) if args.get("comment") is not None else None,
-            context=FittingContext.from_global_int(int(str(args.get("global_", 0)))),
         )

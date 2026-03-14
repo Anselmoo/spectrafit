@@ -9,14 +9,19 @@ from __future__ import annotations
 import json
 
 from pathlib import Path
+from typing import ClassVar
 
 import pytest
 
+from pydantic import ValidationError
+from spectrafit.adapters.fit_result_json import deserialize_fit_result
+from spectrafit.adapters.fit_result_json import load_fit_result
+from spectrafit.adapters.fit_result_json import save_fit_result
 from spectrafit.models.batch_config import BatchFittingConfig
 from spectrafit.models.fitting_context import FittingMode
+from spectrafit.models.mcmc_config import MCMCConfig
 from spectrafit.models.results.fit_result import ComponentResult
 from spectrafit.models.results.fit_result import ConfidenceResults
-from spectrafit.models.types import DataSplitDict
 from spectrafit.models.results.fit_result import DataSummary
 from spectrafit.models.results.fit_result import FitConfigurations
 from spectrafit.models.results.fit_result import FitInsights
@@ -24,7 +29,8 @@ from spectrafit.models.results.fit_result import FitResult
 from spectrafit.models.results.fit_result import FitStatistics
 from spectrafit.models.results.fit_result import ParameterResult
 from spectrafit.models.results.fit_result import VariableFitResult
-from spectrafit.models.mcmc_config import MCMCConfig
+from spectrafit.models.solver_config import ConfIntervalConfig
+from spectrafit.models.split_frame import SplitFrame
 
 
 # ---------------------------------------------------------------------------
@@ -77,22 +83,22 @@ class TestFitResult:
     def test_json_round_trip(self) -> None:
         r = self._make_result()
         dumped = r.model_dump(mode="json")
-        r2 = FitResult.from_dict(dumped)
+        r2 = deserialize_fit_result(dumped)
         assert r2.statistics.chisqr == pytest.approx(r.statistics.chisqr)
         assert r2.parameters[0].best_value == pytest.approx(0.98)
 
     def test_save_load(self, tmp_path: Path) -> None:
         r = self._make_result()
         out = tmp_path / "result.json"
-        r.save(out)
+        save_fit_result(r, out)
         assert out.exists()
-        r2 = FitResult.load(out)
+        r2 = load_fit_result(out)
         assert r2.statistics.nfev == 50
 
     def test_save_is_valid_json(self, tmp_path: Path) -> None:
         r = self._make_result()
         out = tmp_path / "result.json"
-        r.save(out)
+        save_fit_result(r, out)
         parsed = json.loads(out.read_text())
         assert "statistics" in parsed
         assert "parameters" in parsed
@@ -142,15 +148,15 @@ class TestMCMCConfig:
         assert cfg.seed == 42
 
     def test_nwalkers_ge_2(self) -> None:
-        with pytest.raises(Exception):
+        with pytest.raises(ValidationError):
             MCMCConfig(nwalkers=1)
 
     def test_steps_ge_1(self) -> None:
-        with pytest.raises(Exception):
+        with pytest.raises(ValidationError):
             MCMCConfig(steps=0)
 
     def test_extra_fields_forbidden(self) -> None:
-        with pytest.raises(Exception):
+        with pytest.raises(ValidationError):
             MCMCConfig(unknown_field=99)  # type: ignore[call-arg]
 
     def test_json_schema_complete(self) -> None:
@@ -192,15 +198,15 @@ class TestBatchFittingConfig:
         assert b.workers == 2
 
     def test_workers_capped_at_64(self) -> None:
-        with pytest.raises(Exception):
+        with pytest.raises(ValidationError):
             BatchFittingConfig(configs=[_SPECTRUM_CFG], workers=65)
 
     def test_empty_configs_rejected(self) -> None:
-        with pytest.raises(Exception):
+        with pytest.raises(ValidationError):
             BatchFittingConfig(configs=[])
 
     def test_extra_fields_forbidden(self) -> None:
-        with pytest.raises(Exception):
+        with pytest.raises(ValidationError):
             BatchFittingConfig(configs=[_SPECTRUM_CFG], unknown=True)  # type: ignore[call-arg]
 
     def test_fail_fast_default_false(self) -> None:
@@ -294,7 +300,7 @@ class TestVariableFitResult:
 
     @pytest.mark.unit
     def test_extra_fields_forbidden(self) -> None:
-        with pytest.raises(Exception):
+        with pytest.raises(ValidationError):
             VariableFitResult(unknown=99)  # type: ignore[call-arg]
 
     @pytest.mark.unit
@@ -322,14 +328,14 @@ class TestFitConfigurations:
 
     @pytest.mark.unit
     def test_extra_fields_forbidden(self) -> None:
-        with pytest.raises(Exception):
+        with pytest.raises(ValidationError):
             FitConfigurations(unknown="x")  # type: ignore[call-arg]
 
 
 class TestFitInsights:
     """FitInsights replaces the raw fit_insights dict."""
 
-    _LEGACY: dict[str, object] = {
+    _LEGACY: ClassVar[dict[str, object]] = {
         "configurations": {"method": "leastsq", "max_nfev": 0, "nan_policy": "raise"},
         "statistics": {"chisqr": 0.05, "redchi": 0.0005},
         "variables": {
@@ -371,17 +377,29 @@ class TestFitInsights:
 
     @pytest.mark.unit
     def test_extra_fields_forbidden(self) -> None:
-        with pytest.raises(Exception):
+        with pytest.raises(ValidationError):
             FitInsights(unknown_field=99)  # type: ignore[call-arg]
 
 
 class TestDataSummary:
     """DataSummary wraps regression metrics and descriptive stats."""
 
-    _LEGACY: dict[str, object] = {
-        "regression_metrics": {"index": [0, 1], "columns": ["r2", "rmse"], "data": [[0.99], [0.01]]},
-        "descriptive_statistic": {"index": [0, 1], "columns": ["mean", "std"], "data": [[0.5], [0.1]]},
-        "linear_correlation": {"index": [0], "columns": ["pearson_r"], "data": [[0.98]]},
+    _LEGACY: ClassVar[dict[str, object]] = {
+        "regression_metrics": {
+            "index": [0, 1],
+            "columns": ["r2", "rmse"],
+            "data": [[0.99], [0.01]],
+        },
+        "descriptive_statistic": {
+            "index": [0, 1],
+            "columns": ["mean", "std"],
+            "data": [[0.5], [0.1]],
+        },
+        "linear_correlation": {
+            "index": [0],
+            "columns": ["pearson_r"],
+            "data": [[0.98]],
+        },
     }
 
     @pytest.mark.unit
@@ -404,7 +422,7 @@ class TestDataSummary:
 
     @pytest.mark.unit
     def test_extra_fields_forbidden(self) -> None:
-        with pytest.raises(Exception):
+        with pytest.raises(ValidationError):
             DataSummary(unknown_field=99)  # type: ignore[call-arg]
 
     @pytest.mark.unit
@@ -433,18 +451,23 @@ class TestConfidenceResults:
             settings={"sigmas": [1, 2, 3], "verbose": True},
             results={"p1_amplitude": [(0.95, 0.99)]},
         )
-        assert isinstance(cr.settings, dict)
+        assert isinstance(cr.settings, ConfIntervalConfig)
+        assert cr.settings.sigmas == [1.0, 2.0, 3.0]
         assert cr.results["p1_amplitude"] == [(0.95, 0.99)]
 
     @pytest.mark.unit
     def test_extra_fields_forbidden(self) -> None:
-        with pytest.raises(Exception):
+        with pytest.raises(ValidationError):
             ConfidenceResults(unknown=True)  # type: ignore[call-arg]
 
     @pytest.mark.unit
     def test_json_round_trip(self) -> None:
-        cr = ConfidenceResults(settings={"sigmas": [1, 2]}, results={"p1": [(0.95, 0.05)]})
+        cr = ConfidenceResults(
+            settings={"sigmas": [1, 2]}, results={"p1": [(0.95, 0.05)]}
+        )
         cr2 = ConfidenceResults.model_validate(cr.model_dump())
+        assert isinstance(cr2.settings, ConfIntervalConfig)
+        assert cr2.settings.sigmas == [1.0, 2.0]
         assert cr2.results == cr.results
 
 
@@ -460,33 +483,39 @@ class TestFitResultExtended:
         assert isinstance(r.confidence, ConfidenceResults)
 
     @pytest.mark.unit
-    def test_global_fitting_coerced_from_int(self) -> None:
+    def test_json_adapter_coerces_global_fitting_from_int(self) -> None:
         # int 1 → GLOBAL; 0 → STANDARD
-        assert FitResult(global_fitting=1).global_fitting == FittingMode.GLOBAL
-        assert FitResult(global_fitting=0).global_fitting == FittingMode.STANDARD
+        assert (
+            deserialize_fit_result({"global_fitting": 1}).global_fitting
+            == FittingMode.GLOBAL
+        )
+        assert (
+            deserialize_fit_result({"global_fitting": 0}).global_fitting
+            == FittingMode.STANDARD
+        )
 
     @pytest.mark.unit
     def test_direct_construction_minimal(self) -> None:
-        r = FitResult(global_fitting=0)
+        r = FitResult(global_fitting=FittingMode.STANDARD)
         assert r.global_fitting == FittingMode.STANDARD
         assert r.fit_insights.statistics == {}
 
     @pytest.mark.unit
     def test_direct_construction_full(self) -> None:
         r = FitResult(
-            global_fitting=0,
+            global_fitting=FittingMode.STANDARD,
             fit_insights=FitInsights(
                 statistics={"chisqr": 0.05},
                 errorbars={"p1_amplitude": "True"},
             ),
             data_summary=DataSummary(
-                regression_metrics=DataSplitDict(data=[[0.99]], index=[0], columns=["r2"]),
+                regression_metrics=SplitFrame(data=[[0.99]], index=[0], columns=["r2"]),
             ),
             confidence=ConfidenceResults(settings=False),
         )
         assert r.fit_insights.statistics["chisqr"] == pytest.approx(0.05)
         assert r.fit_insights.errorbars["p1_amplitude"] == "True"
-        assert r.data_summary.regression_metrics["columns"] == ["r2"]
+        assert r.data_summary.regression_metrics.columns == ["r2"]
         assert r.confidence.settings is False
 
     @pytest.mark.unit
@@ -499,27 +528,34 @@ class TestFitResultExtended:
     @pytest.mark.unit
     def test_save_load_with_insights(self, tmp_path: Path) -> None:
         r = FitResult(
-            global_fitting=False,
+            global_fitting=FittingMode.STANDARD,
             fit_insights=FitInsights(statistics={"chisqr": 0.05}),
         )
         path = tmp_path / "extended.json"
-        r.save(path)
-        r2 = FitResult.load(path)
+        save_fit_result(r, path)
+        r2 = load_fit_result(path)
         assert r2.fit_insights.statistics["chisqr"] == pytest.approx(0.05)
 
     @pytest.mark.unit
     def test_full_json_round_trip(self) -> None:
         r = FitResult(
-            global_fitting=1,
+            global_fitting=FittingMode.GLOBAL,
             fit_insights=FitInsights(
                 statistics={"redchi": 0.0005},
                 errorbars={"p1_amp": "True"},
             ),
-            data_summary=DataSummary(regression_metrics=DataSplitDict(data=[[0.99]], index=[0], columns=["r2"])),
+            data_summary=DataSummary(
+                regression_metrics=SplitFrame(data=[[0.99]], index=[0], columns=["r2"])
+            ),
             confidence=ConfidenceResults(settings=False),
         )
         dumped = r.model_dump(mode="json")
-        r2 = FitResult.from_dict(dumped)
+        r2 = deserialize_fit_result(dumped)
         assert r2.global_fitting == FittingMode.GLOBAL
         assert r2.fit_insights.errorbars["p1_amp"] == "True"
-        assert r2.data_summary.regression_metrics["columns"] == ["r2"]
+        assert r2.data_summary.regression_metrics.columns == ["r2"]
+
+    @pytest.mark.unit
+    def test_rejects_unknown_root_fields(self) -> None:
+        with pytest.raises(ValidationError):
+            FitResult(unknown_field=99)  # type: ignore[call-arg]

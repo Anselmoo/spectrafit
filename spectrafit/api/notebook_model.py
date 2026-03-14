@@ -2,10 +2,8 @@
 
 from __future__ import annotations
 
-from _plotly_utils.colors.carto import Burg
-from _plotly_utils.colors.carto import Purp_r
-from _plotly_utils.colors.carto import Teal_r
-from _plotly_utils.colors.qualitative import Plotly as PlotlyColors
+from plotly.colors import carto
+from plotly.colors import qualitative
 from pydantic import BaseModel
 from pydantic import ConfigDict
 from pydantic import Field
@@ -135,24 +133,24 @@ class ColorAPI(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     intensity: str = Field(
-        default=PlotlyColors[0],
+        default=qualitative.Plotly[0],
         description="Color of the spectrum-intensity.",
     )
     residual: str = Field(
-        default=PlotlyColors[1],
+        default=qualitative.Plotly[1],
         description="Color of the residuals.",
     )
-    fit: str = Field(default=PlotlyColors[5], description="Color of the fit.")
+    fit: str = Field(default=qualitative.Plotly[5], description="Color of the fit.")
     components: str = Field(
-        default=PlotlyColors[6],
+        default=qualitative.Plotly[6],
         description="Color of the components, mainly peaks.",
     )
     bars: list[str] = Field(
-        default=[i for j in zip(Teal_r, Purp_r, strict=False) for i in j],
+        default=[i for j in zip(carto.Teal_r, carto.Purp_r, strict=False) for i in j],
         description="Color of the bar plot of the metrics.",
     )
     lines: list[str] = Field(
-        default=Burg,
+        default=carto.Burg,
         description="Color of the lines of the plot.",
     )
     paper: str = Field(default="white", description="Color of the paper.")

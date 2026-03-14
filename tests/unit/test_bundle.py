@@ -11,11 +11,16 @@ Verifies:
 from __future__ import annotations
 
 import numpy as np
+import pandas as pd
 import pytest
 
+from lmfit import Parameters
 from spectrafit.models.bundle import build_composite_bundle
 from spectrafit.models.peak_models import Component
 from spectrafit.models.peak_models import FitParameter
+from spectrafit.models.registry import REGISTRY
+from spectrafit.models.solver import SolverModels
+from spectrafit.models.solver import calculated_model
 
 
 @pytest.fixture
@@ -158,6 +163,24 @@ class TestDecompose:
             assert isinstance(v, np.ndarray)
             assert len(v) == len(x)
 
+    def test_calculated_model_requires_bundle_for_local_fit(
+        self,
+        gaussian_component: Component,
+    ) -> None:
+        x = np.linspace(-1, 1, 20)
+        df = pd.DataFrame({"energy": x, "intensity": np.zeros_like(x)})
+
+        with pytest.raises(
+            RuntimeError,
+            match="CompositeModelBundle required for local decomposition",
+        ):
+            calculated_model(
+                params=build_composite_bundle([gaussian_component]).params,
+                x=x,
+                df=df,
+                global_fit=False,
+            )
+
 
 class TestCrossComponentExpr:
     def test_expr_constraint_applied(self) -> None:
@@ -184,3 +207,140 @@ class TestCrossComponentExpr:
         bundle = build_composite_bundle([comp1, comp2])
         # sat_amplitude should be constrained (expr set)
         assert bundle.params["sat_amplitude"].expr == "main_amplitude * 0.3"
+
+
+class TestGlobalContributionAssembly:
+    @staticmethod
+    def _global_params() -> Parameters:
+        params = Parameters()
+        params.add("gaussian_main_amplitude_1", value=1.0)
+        params.add("gaussian_main_center_1", value=0.0)
+        params.add("gaussian_main_fwhmg_1", value=0.5)
+        params.add("gaussian_main_amplitude_2", value=0.5)
+        params.add("gaussian_main_center_2", value=0.5)
+        params.add("gaussian_main_fwhmg_2", value=0.75)
+        return params
+
+    def test_calculated_model_global_preserves_full_contribution_id(self) -> None:
+        params = self._global_params()
+        x = np.linspace(-2, 2, 40)
+        df = pd.DataFrame(
+            {
+                "energy": x,
+                "intensity_1": np.zeros_like(x),
+                "intensity_2": np.zeros_like(x),
+            }
+        )
+
+        result = calculated_model(params=params, x=x, df=df, global_fit=True)
+
+        expected_1 = REGISTRY.get("gaussian").function(
+            x,
+            amplitude=params["gaussian_main_amplitude_1"],
+            center=params["gaussian_main_center_1"],
+            fwhmg=params["gaussian_main_fwhmg_1"],
+        )
+        expected_2 = REGISTRY.get("gaussian").function(
+            x,
+            amplitude=params["gaussian_main_amplitude_2"],
+            center=params["gaussian_main_center_2"],
+            fwhmg=params["gaussian_main_fwhmg_2"],
+        )
+
+        assert "gaussian_main_1" in result.columns
+        assert "gaussian_main_2" in result.columns
+        np.testing.assert_allclose(result["gaussian_main_1"], expected_1)
+        np.testing.assert_allclose(result["gaussian_main_2"], expected_2)
+
+    def test_calculated_model_global_supports_canonical_component_ids_with_model_map(
+        self,
+    ) -> None:
+        params = Parameters()
+        params.add("p1_amplitude_1", value=1.0)
+        params.add("p1_center_1", value=0.0)
+        params.add("p1_fwhmg_1", value=0.5)
+        params.add("p1_amplitude_2", value=0.5)
+        params.add("p1_center_2", value=0.5)
+        params.add("p1_fwhmg_2", value=0.75)
+        x = np.linspace(-2, 2, 40)
+        df = pd.DataFrame(
+            {
+                "energy": x,
+                "intensity_1": np.zeros_like(x),
+                "intensity_2": np.zeros_like(x),
+            }
+        )
+
+        result = calculated_model(
+            params=params,
+            x=x,
+            df=df,
+            global_fit=True,
+            component_models={"p1": "gaussian"},
+        )
+
+        assert "p1_1" in result.columns
+        assert "p1_2" in result.columns
+
+    def test_solve_global_fitting_assembles_contributions_by_dataset(self) -> None:
+        params = self._global_params()
+        x = np.linspace(-2, 2, 40)
+        data = np.column_stack(
+            [
+                REGISTRY.get("gaussian").function(
+                    x,
+                    amplitude=params["gaussian_main_amplitude_1"],
+                    center=params["gaussian_main_center_1"],
+                    fwhmg=params["gaussian_main_fwhmg_1"],
+                ),
+                REGISTRY.get("gaussian").function(
+                    x,
+                    amplitude=params["gaussian_main_amplitude_2"],
+                    center=params["gaussian_main_center_2"],
+                    fwhmg=params["gaussian_main_fwhmg_2"],
+                ),
+            ]
+        )
+
+        residual = SolverModels.solve_global_fitting(params=params, x=x, data=data)
+
+        assert residual.shape == (x.size * data.shape[1],)
+        np.testing.assert_allclose(residual, np.zeros_like(residual))
+
+    def test_solve_global_fitting_supports_canonical_component_ids_with_model_map(
+        self,
+    ) -> None:
+        params = Parameters()
+        params.add("p1_amplitude_1", value=1.0)
+        params.add("p1_center_1", value=0.0)
+        params.add("p1_fwhmg_1", value=0.5)
+        params.add("p1_amplitude_2", value=0.5)
+        params.add("p1_center_2", value=0.5)
+        params.add("p1_fwhmg_2", value=0.75)
+        x = np.linspace(-2, 2, 40)
+        data = np.column_stack(
+            [
+                REGISTRY.get("gaussian").function(
+                    x,
+                    amplitude=params["p1_amplitude_1"],
+                    center=params["p1_center_1"],
+                    fwhmg=params["p1_fwhmg_1"],
+                ),
+                REGISTRY.get("gaussian").function(
+                    x,
+                    amplitude=params["p1_amplitude_2"],
+                    center=params["p1_center_2"],
+                    fwhmg=params["p1_fwhmg_2"],
+                ),
+            ]
+        )
+
+        residual = SolverModels.solve_global_fitting(
+            params=params,
+            x=x,
+            data=data,
+            component_models={"p1": "gaussian"},
+        )
+
+        assert residual.shape == (x.size * data.shape[1],)
+        np.testing.assert_allclose(residual, np.zeros_like(residual))

@@ -12,6 +12,7 @@ example data and enables:
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from typing import TYPE_CHECKING
 from typing import Literal
 from typing import TypedDict
@@ -20,10 +21,18 @@ from typing import cast
 import numpy as np
 
 from pydantic import BaseModel
+from pydantic import ConfigDict
 from pydantic import Field
+from pydantic import field_validator
 from pydantic import model_validator
 
+from spectrafit.core.fitting_config import UnifiedFittingConfig
+from spectrafit.models.peak_models import Component
+from spectrafit.models.peak_models import FitParameter
 from spectrafit.models.registry import REGISTRY
+from spectrafit.models.types import CanonicalComponentInput
+from spectrafit.models.types import CanonicalSpectraFitInput
+from spectrafit.models.types import LegacySpectraFitInput
 
 
 if TYPE_CHECKING:
@@ -33,11 +42,16 @@ if TYPE_CHECKING:
 
     from numpy.typing import NDArray
 
+    from spectrafit.models.registry import ModelInfo
+    from spectrafit.models.types import ModelParameterSpec
 
-# Model name → (function, parameter names) — derived from central registry
-_MODEL_REGISTRY: dict[str, tuple[Callable[..., object], list[str]]] = {
-    info.name: (info.function, info.parameters) for info in REGISTRY.list_models()
-}
+
+_SYNTHETIC_COMPONENT_ID = "synthetic"
+
+
+def _registered_model_info(model_name: str) -> ModelInfo:
+    """Return canonical metadata for a registered model name."""
+    return REGISTRY.get(model_name)
 
 
 class PeakInfoDict(TypedDict):
@@ -76,49 +90,7 @@ class SyntheticGroundTruth(TypedDict):
     seed: int | None
 
 
-class ParamBoundsDict(TypedDict):
-    """Bounds and variation settings for a single fit parameter in SpectraFit format.
-
-    Attributes:
-        value: Initial/true parameter value.
-        vary: Whether the parameter is free to vary during fitting.
-        min: Lower bound for the parameter during fitting.
-        max: Upper bound for the parameter during fitting.
-    """
-
-    value: float
-    vary: bool
-    min: float
-    max: float
-
-
-ModelName = Literal[
-    "gaussian",
-    "orcagaussian",
-    "lorentzian",
-    "voigt",
-    "pseudovoigt",
-    "exponential",
-    "power",
-    "linear",
-    "constant",
-    "erf",
-    "heaviside",
-    "atan",
-    "log",
-    "cgaussian",
-    "clorentzian",
-    "cvoigt",
-    "polynom2",
-    "polynom3",
-    "pearson1",
-    "pearson2",
-    "pearson3",
-    "pearson4",
-]
-
-
-class PeakDefinition(BaseModel):
+class PeakDefinition(Component):
     """Definition of a single peak/component in the synthetic spectrum.
 
     Args:
@@ -135,29 +107,107 @@ class PeakDefinition(BaseModel):
         ... )
     """
 
-    model: ModelName
-    params: dict[str, float]
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+
+    id: str = Field(default=_SYNTHETIC_COMPONENT_ID, exclude=True)
+    parameters: dict[str, FitParameter] = Field(default_factory=dict, alias="params")
+
+    @staticmethod
+    def _fit_parameter_from_scalar(parameter_value: float) -> FitParameter:
+        """Promote a scalar shorthand into a canonical FitParameter model."""
+        if parameter_value == 0.0:
+            return FitParameter(
+                value=parameter_value,
+                vary=False,
+                min=0.0,
+                max=0.0,
+            )
+
+        return FitParameter(
+            value=parameter_value,
+            vary=True,
+            min=(
+                parameter_value * 0.5 if parameter_value > 0 else parameter_value * 1.5
+            ),
+            max=(
+                parameter_value * 1.5 if parameter_value > 0 else parameter_value * 0.5
+            ),
+        )
+
+    @field_validator("parameters", mode="before")
+    @classmethod
+    def _coerce_parameters(
+        cls,
+        value: object,
+    ) -> object:
+        """Promote shorthand scalar parameters into canonical FitParameter models."""
+        if not isinstance(value, Mapping):
+            return value
+
+        normalized: dict[str, FitParameter] = {}
+        for raw_name, raw_parameter in value.items():
+            param_name = str(raw_name)
+            if isinstance(raw_parameter, FitParameter):
+                normalized[param_name] = raw_parameter
+            elif isinstance(raw_parameter, int | float):
+                normalized[param_name] = cls._fit_parameter_from_scalar(
+                    float(raw_parameter)
+                )
+            elif isinstance(raw_parameter, Mapping):
+                normalized[param_name] = FitParameter.model_validate(raw_parameter)
+            else:
+                msg = (
+                    f"Parameter '{param_name}' for model '{getattr(cls, 'model', 'unknown')}' "
+                    "must be a scalar, mapping, or FitParameter."
+                )
+                raise TypeError(msg)
+        return normalized
 
     @model_validator(mode="after")
     def _validate_params(self) -> PeakDefinition:
         """Validate that params match the model's expected parameters."""
-        if self.model not in _MODEL_REGISTRY:
-            msg = f"Unknown model '{self.model}'. Available: {sorted(_MODEL_REGISTRY)}"
-            raise ValueError(msg)
-        _, expected_params = _MODEL_REGISTRY[self.model]
-        if missing := set(expected_params) - set(self.params):
+        try:
+            expected_params = _registered_model_info(self.model).parameters
+        except KeyError as exc:
+            msg = f"Unknown model '{self.model}'. Available: {REGISTRY.names()}"
+            raise ValueError(msg) from exc
+        if missing := set(expected_params) - set(self.parameters):
             msg = (
                 f"Model '{self.model}' missing required params: {sorted(missing)}. "
                 f"Expected: {expected_params}"
             )
             raise ValueError(msg)
-        if extra := set(self.params) - set(expected_params):
+        if extra := set(self.parameters) - set(expected_params):
             msg = (
                 f"Model '{self.model}' got unexpected params: {sorted(extra)}. "
                 f"Expected: {expected_params}"
             )
             raise ValueError(msg)
         return self
+
+    @property
+    def parameter_values(self) -> dict[str, float]:
+        """Return the generator-ready scalar values for this component."""
+        return {
+            parameter_name: parameter.value
+            for parameter_name, parameter in self.parameters.items()
+        }
+
+    @property
+    def params(self) -> dict[str, float]:
+        """Compatibility alias for the generator-ready scalar parameter values."""
+        return self.parameter_values
+
+    def to_component(self, component_id: str | int) -> Component:
+        """Render this synthetic peak definition as a canonical v2 component."""
+        return Component(
+            id=str(component_id),
+            model=self.model,
+            parameters={
+                name: parameter.model_copy(deep=True)
+                for name, parameter in self.parameters.items()
+            },
+        )
 
 
 class SyntheticSpectrum(BaseModel):
@@ -229,14 +279,17 @@ class SyntheticSpectrum(BaseModel):
         components: list[NDArray[np.float64]] = []
         peak_info: list[PeakInfoDict] = []
         for i, peak in enumerate(self.peaks):
-            func, _ = _MODEL_REGISTRY[peak.model]
-            y_component = cast("NDArray[np.float64]", func(x, **peak.params))
+            func = cast(
+                "Callable[..., object]",
+                _registered_model_info(peak.model).function,
+            )
+            y_component = cast("NDArray[np.float64]", func(x, **peak.parameter_values))
             components.append(y_component)
             peak_info.append(
                 PeakInfoDict(
                     index=i,
                     model=peak.model,
-                    params=dict(peak.params),
+                    params=dict(peak.parameter_values),
                 ),
             )
 
@@ -290,14 +343,60 @@ class SyntheticSpectrum(BaseModel):
         x, y, _ = self.generate()
         return pd.DataFrame({energy_col: x, intensity_col: y})
 
+    def to_components(self) -> list[Component]:
+        """Render the synthetic peaks as canonical v2 components."""
+        return [
+            peak.to_component(f"p{index}")
+            for index, peak in enumerate(self.peaks, start=1)
+        ]
+
+    def to_config(self) -> UnifiedFittingConfig:
+        """Generate a canonical v2 fitting config for this synthetic spectrum."""
+        return UnifiedFittingConfig(components=self.to_components())
+
+    @staticmethod
+    def _component_payload(component: Component) -> CanonicalComponentInput:
+        """Serialize a canonical component into a v2 component payload."""
+        return CanonicalComponentInput(
+            id=component.id,
+            model=component.model,
+            parameters={
+                param_name: parameter.model_dump(mode="json", exclude_none=True)
+                for param_name, parameter in component.parameters.items()
+            },
+        )
+
+    def _to_legacy_peaks_payload(self) -> LegacySpectraFitInput:
+        """Generate the quarantined legacy v1 peaks mapping."""
+        peaks_config: dict[str, dict[str, ModelParameterSpec]] = {}
+        for index, component in enumerate(self.to_components(), start=1):
+            peaks_config[str(index)] = {
+                component.model: {
+                    param_name: parameter.model_dump(mode="json", exclude_none=True)
+                    for param_name, parameter in component.parameters.items()
+                }
+            }
+        return LegacySpectraFitInput(peaks=peaks_config)
+
+    def _to_canonical_payload(self) -> CanonicalSpectraFitInput:
+        """Generate the canonical v2 serialized config payload."""
+        return CanonicalSpectraFitInput(
+            components=[
+                self._component_payload(component) for component in self.to_components()
+            ]
+        )
+
     def to_spectrafit_input(
         self,
-    ) -> dict[str, object]:  # intentional: serialization boundary
+        *,
+        legacy: bool = False,
+    ) -> CanonicalSpectraFitInput | LegacySpectraFitInput:
         """Generate a SpectraFit-compatible input configuration.
 
         Returns:
-            dict: Input dict with peaks defined in SpectraFit format, suitable
-                for JSON/YAML/TOML serialization.
+            dict: Input dict in canonical v2 format by default. Pass
+                ``legacy=True`` to render the quarantined legacy v1 ``peaks``
+                mapping for compatibility.
 
         Examples:
             >>> spectrum = SyntheticSpectrum(
@@ -310,27 +409,12 @@ class SyntheticSpectrum(BaseModel):
             ...     ],
             ... )
             >>> config = spectrum.to_spectrafit_input()
-            >>> config["peaks"]["1"]["gaussian"]["amplitude"]["value"]
+            >>> config["components"][0]["parameters"]["amplitude"]["value"]
             1.0
         """
-        peaks_config: dict[str, dict[str, dict[str, ParamBoundsDict]]] = {}
-        for i, peak in enumerate(self.peaks, start=1):
-            param_config: dict[str, ParamBoundsDict] = {
-                param_name: {
-                    "value": param_value,
-                    "vary": True,
-                    "min": (
-                        param_value * 0.5 if param_value > 0 else param_value * 1.5
-                    ),
-                    "max": (
-                        param_value * 1.5 if param_value > 0 else param_value * 0.5
-                    ),
-                }
-                for param_name, param_value in peak.params.items()
-            }
-            peaks_config[str(i)] = {peak.model: param_config}
-
-        return {"peaks": peaks_config}
+        if legacy:
+            return self._to_legacy_peaks_payload()
+        return self._to_canonical_payload()
 
     def to_json(self) -> str:
         """Serialize the spectrum definition to JSON.

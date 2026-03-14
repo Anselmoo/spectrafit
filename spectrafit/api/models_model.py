@@ -492,7 +492,11 @@ class DistributionModelAPI(BaseModel):
 
 
 class ConfIntervalAPI(BaseModel):
-    """Definition of Confidence Interval Function."""
+    """Legacy notebook compatibility DTO for confidence interval settings.
+
+    Internal runtime code should normalize immediately to
+    ``spectrafit.models.solver_config.ConfIntervalConfig``.
+    """
 
     model_config = ConfigDict(extra="forbid")
 

@@ -4,8 +4,11 @@ from __future__ import annotations
 
 import pytest
 
+from spectrafit.models.peak_models import Component
+from spectrafit.utilities.transformer import components2legacy_specs
 from spectrafit.utilities.transformer import list2components
 from spectrafit.utilities.transformer import list2dict
+from spectrafit.utilities.transformer import normalize_components
 from spectrafit.utilities.transformer import remove_none_type
 
 
@@ -29,15 +32,36 @@ def test_list2dict_filters_unknown_models() -> None:
 
 @pytest.mark.unit
 def test_list2components_builds_component_entries() -> None:
-    """Legacy peak rows are transformed into v2-style component dictionaries."""
+    """Legacy peak rows are transformed into typed component models."""
     components = list2components(_LEGACY_PEAKS)
     assert components == [
-        {
-            "id": "p1",
-            "model": "gaussian",
-            "parameters": _LEGACY_PEAKS[0]["gaussian"],
-        }
+        Component(
+            id="p1",
+            model="gaussian",
+            parameters=_LEGACY_PEAKS[0]["gaussian"],
+        )
     ]
+
+
+@pytest.mark.unit
+def test_components2legacy_specs_preserves_notebook_shape() -> None:
+    """Typed components are projected back to the notebook report boundary shape."""
+    components = list2components(_LEGACY_PEAKS)
+    assert components2legacy_specs(components) == [_LEGACY_PEAKS[0]]
+
+
+@pytest.mark.unit
+def test_normalize_components_accepts_typed_components_without_mutating_input() -> None:
+    """Canonical components should survive normalization without legacy churn."""
+    components = list2components(_LEGACY_PEAKS)
+
+    normalized = normalize_components(components)
+    assert normalized == components
+    normalized[0].parameters["amplitude"].value = 9.0
+
+    assert normalized is not components
+    assert normalized[0] is not components[0]
+    assert components[0].parameters["amplitude"].value == pytest.approx(1.0)
 
 
 @pytest.mark.unit

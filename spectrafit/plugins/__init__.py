@@ -1,9 +1,7 @@
 """Plugin module for SpectraFit.
 
-This module provides the plugin architecture for SpectraFit, including:
-- Plugin protocol definition
-- Plugin discovery and loading
-- Built-in plugins (Jupyter)
+This module provides the external plugin architecture for SpectraFit,
+including the plugin protocol definition and entry-point discovery helpers.
 """
 
 from __future__ import annotations

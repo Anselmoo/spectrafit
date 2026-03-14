@@ -93,7 +93,7 @@ class BatchFittingConfig(BaseModel):
             for item in v
         ]
 
-    @field_validator("workers")
+    @field_validator("workers", mode="after")
     @classmethod
     def _workers_reasonable(cls, v: int) -> int:
         """Cap workers at 64 to avoid accidental resource exhaustion.

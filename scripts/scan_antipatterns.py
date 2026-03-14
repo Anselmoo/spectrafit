@@ -200,18 +200,18 @@ def _should_skip_match(
     content: str,
     match_start: int,
 ) -> bool:
-    """Return True if this match should be excluded from findings.
-
-    A line annotated with # intentional is always suppressed regardless of
-    pattern type — this covers accepted trade-offs documented inline (e.g.,
-    legacy adapter fields, compat shims, pending facade refactors).
-    """
-    # Universal intentional suppression — any pattern can be silenced inline.
-    if _is_intentional(line_text):
+    """Return True if this match should be excluded from findings."""
+    if ap.name == "dict[str, object] boundary" and _is_intentional(line_text):
         return True
-    # Pattern-specific structural exclusions (no comment-based suppression present).
-    if ap.name == "@property -> None (side-effect)":
-        return not _is_property_side_effect(lines, line_num - 1)
+    if (
+        ap.name == "extra='allow' on input model"
+        and _DICT_INTENTIONAL_COMMENT in line_text
+    ):
+        return True
+    if ap.name == "@property -> None (side-effect)" and not (
+        _is_property_side_effect(lines, line_num - 1)
+    ):
+        return True
     return ap.name == "None-defaulting in __init__" and not (
         _is_none_default_in_init(content, match_start)
     )

@@ -13,6 +13,9 @@ import plotly.express as px
 
 from plotly.subplots import make_subplots
 
+from spectrafit._plot_builders import FitPlotStyle
+from spectrafit._plot_builders import build_local_fit_figure
+from spectrafit._plot_builders import iter_global_fit_frames
 from spectrafit.api.notebook_model import PlotAPI
 from spectrafit.api.tools_model import ColumnNamesAPI
 
@@ -56,7 +59,7 @@ class DataFramePlot:
             df_1 (pd.DataFrame): First dataframe to plot, which will generate
                 a fit plot with residual plot. The ratio is 70% to 20% with
                 10% space in between.
-            df_2 (Optional[pd.DataFrame], optional): Second optional dataframe to
+            df_2 (pd.DataFrame | None, optional): Second optional dataframe to
                 plot for comparison. In this case, the ratio between the first
                 and second plot will be the same. Defaults to None.
 
@@ -66,34 +69,20 @@ class DataFramePlot:
         else:
             fig = self._plot_two_dataframes(args_plot, df_1, df_2)
 
-        fig.show(
-            config={
-                "toImageButtonOptions": {
-                    "format": "png",
-                    "filename": "plot_of_2_dataframes",
-                    "scale": 4,
-                },
-            },
-        )
+        self._show_figure(fig, filename="plot_of_2_dataframes")
 
     def _plot_single_dataframe(self, args_plot: PlotAPI, df: pd.DataFrame) -> Figure:
         """Plot a single dataframe with residuals."""
-        fig = make_subplots(
-            rows=2,
-            cols=1,
-            shared_xaxes=True,
-            shared_yaxes=True,
-            vertical_spacing=0.05,
+        fig = build_local_fit_figure(
+            df,
+            style=FitPlotStyle(
+                intensity_color=args_plot.color.intensity,
+                residual_color=args_plot.color.residual,
+                fit_color=args_plot.color.fit,
+                component_colors=(args_plot.color.components,),
+                fit_dash="longdash",
+            ),
         )
-
-        residual_fig = self._create_residual_plot(df, args_plot)
-        fit_fig = self._create_fit_plot(df, args_plot)
-
-        for trace in residual_fig["data"]:
-            fig.add_trace(trace, row=1, col=1)
-        for trace in fit_fig["data"]:
-            fig.add_trace(trace, row=2, col=1)
-
         self._update_plot_layout(fig, args_plot, df_2_provided=False)
         return fig
 
@@ -122,44 +111,6 @@ class DataFramePlot:
 
         self._update_plot_layout(fig, args_plot, df_2_provided=True)
         return fig
-
-    def _create_residual_plot(self, df: pd.DataFrame, args_plot: PlotAPI) -> Figure:
-        """Create the residual plot."""
-        return px.line(
-            df,
-            x=self._COLUMNS.energy,
-            y=self._COLUMNS.residual,
-            color_discrete_sequence=[args_plot.color.residual],
-        )
-
-    def _create_fit_plot(self, df: pd.DataFrame, args_plot: PlotAPI) -> Figure:
-        """Create the fit plot."""
-        y_columns = df.columns.drop(
-            [self._COLUMNS.energy, self._COLUMNS.residual],
-        )
-        color_map = {
-            self._COLUMNS.intensity: args_plot.color.intensity,
-            self._COLUMNS.fit: args_plot.color.fit,
-            **dict.fromkeys(
-                y_columns.drop([self._COLUMNS.intensity, self._COLUMNS.fit]),
-                args_plot.color.components,
-            ),
-        }
-        line_dash_map = {
-            self._COLUMNS.intensity: "solid",
-            self._COLUMNS.fit: "longdash",
-            **dict.fromkeys(
-                y_columns.drop([self._COLUMNS.intensity, self._COLUMNS.fit]),
-                "dash",
-            ),
-        }
-        return px.line(
-            df,
-            x=self._COLUMNS.energy,
-            y=y_columns,
-            color_discrete_map=color_map,
-            line_dash_map=line_dash_map,
-        )
 
     def _update_plot_layout(
         self,
@@ -245,18 +196,11 @@ class DataFramePlot:
             df (pd.DataFrame): Dataframe to plot.
 
         """
-        num_fits = df.columns.str.startswith(self._COLUMNS.fit).sum()
-        for i in range(1, num_fits + 1):
-            cols = [col for col in df.columns if col.endswith(f"_{i}")]
-            cols.append(self._COLUMNS.energy)
-            df_subset = df[cols].rename(
-                columns={
-                    f"{self._COLUMNS.intensity}_{i}": self._COLUMNS.intensity,
-                    f"{self._COLUMNS.fit}_{i}": self._COLUMNS.fit,
-                    f"{self._COLUMNS.residual}_{i}": self._COLUMNS.residual,
-                },
+        for _, df_subset in iter_global_fit_frames(df):
+            self._show_figure(
+                self._plot_single_dataframe(args_plot, df_subset),
+                filename="plot_of_2_dataframes",
             )
-            self.plot_2dataframes(args_plot, df_subset)
 
     def plot_metric(
         self,
@@ -379,7 +323,7 @@ class DataFramePlot:
 
         Args:
             name (str): Name of the variable.
-            unit (Optional[str], optional): Unit of the variable. Defaults to None.
+            unit (str | None, optional): Unit of the variable. Defaults to None.
 
         Returns:
             str: Title text.
@@ -403,3 +347,16 @@ class DataFramePlot:
             "ticks": args_plot.grid.ticks,
             "griddash": args_plot.grid.dash,
         }
+
+    @staticmethod
+    def _show_figure(fig: Figure, *, filename: str) -> None:
+        """Render a figure with the shared notebook export configuration."""
+        fig.show(
+            config={
+                "toImageButtonOptions": {
+                    "format": "png",
+                    "filename": filename,
+                    "scale": 4,
+                },
+            },
+        )

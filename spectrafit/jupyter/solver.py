@@ -10,27 +10,48 @@ delegate to typed ``FitResult`` fields.
 
 from __future__ import annotations
 
-import numpy as np
+import warnings
+
 import pandas as pd
 
 from pydantic import BaseModel
 from pydantic import ConfigDict
 from pydantic import computed_field
 
+from spectrafit.jupyter.result_projection import NotebookMetricProjection
+from spectrafit.jupyter.result_projection import NotebookPeaksProjection
 from spectrafit.models.fitting_context import FittingMode
+from spectrafit.models.results.fit_result import ComputationalMeta
+from spectrafit.models.results.fit_result import FitConfigurations
 from spectrafit.models.results.fit_result import FitResult
 from spectrafit.models.results.fit_result import VariableFitResult
-from spectrafit.models.types import DataSplitDict
+from spectrafit.models.split_frame import SplitFrame
+from spectrafit.reporting.service import CanonicalReportSchema
+from spectrafit.reporting.service import SolverReportProjection
+from spectrafit.reporting.service import project_canonical_report
+
+
+def _warn_legacy_solver_shim(*, legacy_name: str, canonical_name: str) -> None:
+    """Emit a deprecation warning for legacy notebook solver getters."""
+    warnings.warn(
+        (
+            f"SolverResults.{legacy_name} is a legacy compatibility shim in v2.x; "
+            f"use SolverResults.{canonical_name} instead. "
+            "The shim will be removed in v3.0.0."
+        ),
+        FutureWarning,
+        stacklevel=3,
+    )
 
 
 class SolverResults(BaseModel):
-    """Jupyter-facing result view — wraps FitResult with typed property access.
+    """Jupyter-facing result view — owns canonical projections over ``FitResult``.
 
     Usage::
 
         solver = SolverResults(result=fit_result)
-        solver.get_gof             # dict[str, float]
-        solver.get_current_metric  # pd.DataFrame
+        solver.goodness_of_fit     # dict[str, float]
+        solver.current_metric      # pd.DataFrame
 
     """
 
@@ -42,48 +63,85 @@ class SolverResults(BaseModel):
     # Settings / configuration
     # ------------------------------------------------------------------
 
-    @computed_field
     @property
-    def settings_global_fitting(self) -> int:
-        """Global fitting flag as legacy integer (0 = standard, 1 = global).
+    def fitting_mode(self) -> FittingMode:
+        """Canonical fitting mode for notebook/runtime consumers."""
+        return self.result.global_fitting
 
-        Returns:
-            int: ``0`` for :attr:`~FittingMode.STANDARD`, ``1`` for
-            :attr:`~FittingMode.GLOBAL`.  The integer form is preserved for
-            backward compatibility with the API layer.
-
-        """
-        return 0 if self.result.global_fitting == FittingMode.STANDARD else 1
-
-    @computed_field
     @property
-    def settings_configurations(self) -> dict[str, object]:  # intentional: report layer
-        """Fit method and solver configuration snapshot.
+    def is_global(self) -> bool:
+        """Whether the solver result represents a global fit."""
+        return self.fitting_mode != FittingMode.STANDARD
 
-        Returns:
-            Serialized configuration dict from ``FitConfigurations``.
-
-        """
-        return self.result.fit_insights.configurations.model_dump()
-
-    @computed_field
     @property
-    def settings_conf_interval(
-        self,
-    ) -> bool | dict[str, object]:  # intentional: CI settings
-        """Confidence interval settings.
+    def fit_configurations_model(self) -> FitConfigurations:
+        """Typed fit configuration snapshot for report/model bridges."""
+        return self.canonical_report.configurations
 
-        ``None`` values inside a dict are replaced with empty dicts to match the
-        legacy behaviour expected by ``InputAPI`` / ``FitMethodAPI``.
+    @property
+    def canonical_report(self) -> CanonicalReportSchema:
+        """Canonical report ownership for notebook/report/export consumers."""
+        return project_canonical_report(self.result)
 
-        Returns:
-            CI settings dict (or ``False`` when disabled).
+    @property
+    def report_projection(self) -> SolverReportProjection:
+        """Canonical solver projection shared by notebook/export/report adapters."""
+        return self.canonical_report.solver
 
-        """
-        settings = self.result.confidence.settings
-        if isinstance(settings, dict):
-            return {k: (v if v is not None else {}) for k, v in settings.items()}
-        return settings
+    @property
+    def confidence_interval_settings(self) -> bool | dict[str, object]:
+        """Plain confidence settings payload for report/export boundaries."""
+        return self.canonical_report.confidence_settings
+
+    @property
+    def goodness_of_fit(self) -> dict[str, float]:
+        """Canonical goodness-of-fit projection."""
+        return self.report_projection.goodness_of_fit
+
+    @property
+    def variables(self) -> dict[str, VariableFitResult]:
+        """Canonical variable projection."""
+        return self.report_projection.variables
+
+    @property
+    def errorbars(self) -> dict[str, str]:
+        """Canonical error-bar projection."""
+        return self.report_projection.errorbars
+
+    @property
+    def component_correlation(self) -> dict[str, dict[str, float]]:
+        """Canonical component-correlation projection."""
+        return self.report_projection.component_correlation
+
+    @property
+    def covariance_matrix(self) -> dict[str, dict[str, float]]:
+        """Canonical covariance-matrix projection."""
+        return self.report_projection.covariance_matrix
+
+    @property
+    def computational(self) -> ComputationalMeta:
+        """Canonical computational metadata projection."""
+        return self.report_projection.computational
+
+    @property
+    def regression_metrics(self) -> SplitFrame:
+        """Canonical regression-metrics projection."""
+        return self.report_projection.regression_metrics
+
+    @property
+    def descriptive_statistic(self) -> SplitFrame:
+        """Canonical descriptive-statistic projection."""
+        return self.report_projection.descriptive_statistic
+
+    @property
+    def linear_correlation(self) -> SplitFrame:
+        """Canonical linear-correlation projection."""
+        return self.report_projection.linear_correlation
+
+    @property
+    def confidence_interval(self) -> dict[str, list[tuple[float, float]]]:
+        """Canonical confidence-interval projection."""
+        return self.report_projection.confidence_interval
 
     # ------------------------------------------------------------------
     # Fit quality
@@ -98,7 +156,11 @@ class SolverResults(BaseModel):
             dict[str, float]: Goodness of fit values.
 
         """
-        return self.result.fit_insights.statistics
+        _warn_legacy_solver_shim(
+            legacy_name="get_gof",
+            canonical_name="goodness_of_fit",
+        )
+        return self.goodness_of_fit
 
     @computed_field
     @property
@@ -109,7 +171,11 @@ class SolverResults(BaseModel):
             dict[str, VariableFitResult]: Variables of the fit.
 
         """
-        return self.result.fit_insights.variables
+        _warn_legacy_solver_shim(
+            legacy_name="get_variables",
+            canonical_name="variables",
+        )
+        return self.variables
 
     @computed_field
     @property
@@ -120,7 +186,11 @@ class SolverResults(BaseModel):
             dict[str, str]: Error-bar comments as dictionary.
 
         """
-        return self.result.fit_insights.errorbars
+        _warn_legacy_solver_shim(
+            legacy_name="get_errorbars",
+            canonical_name="errorbars",
+        )
+        return self.errorbars
 
     @computed_field
     @property
@@ -131,7 +201,11 @@ class SolverResults(BaseModel):
             dict[str, dict[str, float]]: Linear correlation of the components.
 
         """
-        return self.result.fit_insights.correlations
+        _warn_legacy_solver_shim(
+            legacy_name="get_component_correlation",
+            canonical_name="component_correlation",
+        )
+        return self.component_correlation
 
     @computed_field
     @property
@@ -142,7 +216,11 @@ class SolverResults(BaseModel):
             dict[str, dict[str, float]]: Covariance matrix.
 
         """
-        return self.result.fit_insights.covariance_matrix
+        _warn_legacy_solver_shim(
+            legacy_name="get_covariance_matrix",
+            canonical_name="covariance_matrix",
+        )
+        return self.covariance_matrix
 
     @computed_field
     @property
@@ -155,7 +233,16 @@ class SolverResults(BaseModel):
             Serialized computational information dict.
 
         """
-        return self.result.fit_insights.computational.model_dump()
+        _warn_legacy_solver_shim(
+            legacy_name="get_computational",
+            canonical_name="computational",
+        )
+        return self.computational.model_dump()
+
+    @property
+    def computational_metadata(self) -> ComputationalMeta:
+        """Typed computational metadata for report/model bridges."""
+        return self.computational
 
     # ------------------------------------------------------------------
     # Data summary
@@ -163,37 +250,49 @@ class SolverResults(BaseModel):
 
     @computed_field
     @property
-    def get_regression_metrics(self) -> DataSplitDict:
+    def get_regression_metrics(self) -> SplitFrame:
         """Regression metrics (index + data lists).
 
         Returns:
-            DataSplitDict: Regression metrics in pandas split-dict format.
+            SplitFrame: Regression metrics as a validated split-frame model.
 
         """
-        return self.result.data_summary.regression_metrics
+        _warn_legacy_solver_shim(
+            legacy_name="get_regression_metrics",
+            canonical_name="regression_metrics",
+        )
+        return self.regression_metrics
 
     @computed_field
     @property
-    def get_descriptive_statistic(self) -> DataSplitDict:
+    def get_descriptive_statistic(self) -> SplitFrame:
         """Descriptive statistics.
 
         Returns:
-            DataSplitDict: Descriptive statistic of the spectra, fit, and
+            SplitFrame: Descriptive statistic of the spectra, fit, and
                 components.
 
         """
-        return self.result.data_summary.descriptive_statistic
+        _warn_legacy_solver_shim(
+            legacy_name="get_descriptive_statistic",
+            canonical_name="descriptive_statistic",
+        )
+        return self.descriptive_statistic
 
     @computed_field
     @property
-    def get_linear_correlation(self) -> DataSplitDict:
+    def get_linear_correlation(self) -> SplitFrame:
         """Linear correlation coefficients.
 
         Returns:
-            DataSplitDict: Linear correlation of spectra, fit, and components.
+            SplitFrame: Linear correlation of spectra, fit, and components.
 
         """
-        return self.result.data_summary.linear_correlation
+        _warn_legacy_solver_shim(
+            legacy_name="get_linear_correlation",
+            canonical_name="linear_correlation",
+        )
+        return self.linear_correlation
 
     # ------------------------------------------------------------------
     # Confidence interval
@@ -208,9 +307,11 @@ class SolverResults(BaseModel):
             dict[str, list[tuple[float, float]]]: Confidence interval results.
 
         """
-        if self.result.confidence.settings is False:
-            return {}
-        return self.result.confidence.results
+        _warn_legacy_solver_shim(
+            legacy_name="get_confidence_interval",
+            canonical_name="confidence_interval",
+        )
+        return self.confidence_interval
 
     # ------------------------------------------------------------------
     # Derived / display
@@ -231,18 +332,23 @@ class SolverResults(BaseModel):
             pd.DataFrame: One-row dataframe combining GoF and regression metrics.
 
         """
-        gof: dict[str, list[float]] = {
-            key: [value] for key, value in self.get_gof.items()
-        }
-        reg_metrics: DataSplitDict = self.get_regression_metrics
-        reg: dict[str, list[float]] = {}
-        if "index" in reg_metrics and "data" in reg_metrics:
-            reg = {
-                key: [np.average(val)]
-                for key, val in zip(
-                    reg_metrics["index"],
-                    reg_metrics["data"],
-                    strict=False,
-                )
-            }
-        return pd.DataFrame(gof | reg)
+        _warn_legacy_solver_shim(
+            legacy_name="get_current_metric",
+            canonical_name="current_metric",
+        )
+        return self.current_metric
+
+    @property
+    def current_metric(self) -> pd.DataFrame:
+        """Canonical one-row metrics dataframe for notebook presentation."""
+        return self.metric_projection.to_dataframe()
+
+    @property
+    def metric_projection(self) -> NotebookMetricProjection:
+        """Typed notebook metric projection for presentation adapters."""
+        return NotebookMetricProjection.from_solver_report(self.report_projection)
+
+    @property
+    def peaks_projection(self) -> NotebookPeaksProjection:
+        """Typed notebook peaks projection for presentation adapters."""
+        return NotebookPeaksProjection.from_solver_report(self.report_projection)

@@ -83,7 +83,7 @@ def load_data(args: DataConfig) -> pd.DataFrame:
         ValueError: If the file cannot be loaded or the format is invalid.
 
     """
-    usecols = None if args.global_ else [args.x_col, args.y_col]
+    usecols = None if args.context.is_global else [args.x_col, args.y_col]
     # Auto-detect separator when the user left it as the default "\s+".
     # Explicit user-set separators are never overridden.
     separator = args.separator

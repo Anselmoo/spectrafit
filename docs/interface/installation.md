@@ -65,15 +65,22 @@ SpectraFit supports optional dependencies for additional features:
 uv pip install "spectrafit[all]"
 
 # Install with specific extras
-uv pip install "spectrafit[plotting,jupyter]"
+uv pip install "spectrafit[jupyter]"
+uv pip install "spectrafit[graph]"
 ```
 
 Available extras include:
 
-- `plotting`: For enhanced visualization capabilities
 - `jupyter`: For Jupyter notebook integration
-- `dev`: For development dependencies (testing, linting, etc.)
+- `graph`: For graph-oriented optional dependencies
 - `all`: Installs all optional dependencies
+
+If you are working from a clone of the repository and want to run the shipped
+example notebooks, the most direct setup is:
+
+```bash
+uv sync --extra jupyter
+```
 
 ## Conda Installation
 

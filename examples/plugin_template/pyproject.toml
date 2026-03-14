@@ -1,0 +1,20 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "spectrafit-example-plugin"
+version = "0.1.0"
+description = "Minimal external plugin package for SpectraFit"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+  "spectrafit>=2.0.0",
+  "typer>=0.20.0",
+]
+
+[project.entry-points."spectrafit.plugins"]
+example = "spectrafit_example_plugin:ExamplePlugin"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/spectrafit_example_plugin"]

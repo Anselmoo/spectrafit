@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
-from typing import TypedDict
-
+from spectrafit.adapters.component_conversion import LegacyModelSpec
+from spectrafit.adapters.component_conversion import legacy_list_to_components
+from spectrafit.models.peak_models import Component
 from spectrafit.models.registry import REGISTRY
 
 
@@ -14,15 +15,7 @@ type JsonValue = JsonScalar | list["JsonValue"] | dict[str, "JsonValue"]
 
 LegacyParameterConstraint = dict[str, LegacyConstraintScalar]
 LegacyModelParameters = dict[str, LegacyParameterConstraint]
-LegacyModelSpec = dict[str, LegacyModelParameters]
-
-
-class NotebookComponentSpec(TypedDict):
-    """Legacy notebook component entry converted to v2 component schema."""
-
-    id: str
-    model: str
-    parameters: LegacyModelParameters
+InitialModelLike = list[LegacyModelSpec] | list[Component]
 
 
 def list2dict(
@@ -47,30 +40,69 @@ def list2dict(
     return peaks_dict
 
 
-def list2components(peak_list: list[LegacyModelSpec]) -> list[NotebookComponentSpec]:
-    """Convert legacy notebook peak-list specs into v2 ``components`` entries.
+def list2components(peak_list: list[LegacyModelSpec]) -> list[Component]:
+    """Convert legacy notebook peak-list specs into typed v2 components.
+
+    Delegates to :func:`~spectrafit.adapters.component_conversion.legacy_list_to_components`,
+    which is the canonical ingress for all legacy-to-Component conversion.
 
     Args:
         peak_list: Legacy initial model list from notebook inputs.
 
     Returns:
-        list[NotebookComponentSpec]: v2 component dictionaries accepted by
-            ``UnifiedFittingConfig``.
+        list[Component]: Validated component models accepted by
+            ``UnifiedFittingConfig`` and notebook export bridges.
     """
-    components: list[NotebookComponentSpec] = []
-    for i, peak in enumerate(peak_list, start=1):
-        model_name = next(iter(peak))
-        if model_name not in REGISTRY:
-            continue
-        parameters = peak[model_name]
-        components.append(
-            {
-                "id": f"p{i}",
-                "model": model_name,
-                "parameters": parameters,
-            }
-        )
-    return components
+    return legacy_list_to_components(peak_list)
+
+
+def normalize_components(initial_model: InitialModelLike) -> list[Component]:
+    """Normalize notebook initial-model inputs into canonical typed components.
+
+    Args:
+        initial_model: Legacy notebook specs or canonical typed components.
+
+    Returns:
+        list[Component]: Deep-copied canonical typed components.
+    """
+    if not initial_model:
+        return []
+    typed_components: list[Component] = []
+    legacy_specs: list[LegacyModelSpec] = []
+    for item in initial_model:
+        if isinstance(item, Component):
+            typed_components.append(item.model_copy(deep=True))
+        else:
+            legacy_specs.append(item)
+
+    if typed_components and legacy_specs:
+        msg = "initial_model must contain either typed components or legacy specs, not both."
+        raise TypeError(msg)
+    if typed_components:
+        return typed_components
+    return list2components(legacy_specs)
+
+
+def components2legacy_specs(components: list[Component]) -> list[LegacyModelSpec]:
+    """Project typed components to the legacy notebook/report initial-model shape.
+
+    Args:
+        components: Canonical typed component models.
+
+    Returns:
+        list[LegacyModelSpec]: Notebook/report boundary payload shaped as
+            ``[{model_name: {parameter_name: constraint_dict}}]``.
+    """
+    return [
+        {
+            component.model: component.model_dump(
+                mode="json",
+                include={"parameters"},
+                exclude_unset=True,
+            )["parameters"]
+        }
+        for component in components
+    ]
 
 
 def remove_none_type(d: JsonValue) -> JsonValue:

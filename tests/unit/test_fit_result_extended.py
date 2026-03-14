@@ -5,15 +5,16 @@ from __future__ import annotations
 import pytest
 
 from pydantic import ValidationError
-
+from spectrafit.adapters.fit_result_json import deserialize_fit_result
 from spectrafit.models.fitting_context import FittingMode
 from spectrafit.models.results.fit_result import ConfidenceResults
-from spectrafit.models.types import DataSplitDict
 from spectrafit.models.results.fit_result import DataSummary
 from spectrafit.models.results.fit_result import FitConfigurations
 from spectrafit.models.results.fit_result import FitInsights
 from spectrafit.models.results.fit_result import FitResult
 from spectrafit.models.results.fit_result import VariableFitResult
+from spectrafit.models.solver_config import ConfIntervalConfig
+from spectrafit.models.split_frame import SplitFrame
 
 
 class TestFitConfigurations:
@@ -51,7 +52,9 @@ class TestVariableFitResult:
 
     @pytest.mark.unit
     def test_explicit_values(self) -> None:
-        v = VariableFitResult(init_value=1.0, model_value=1.1, best_value=1.05, stderr=0.01)
+        v = VariableFitResult(
+            init_value=1.0, model_value=1.1, best_value=1.05, stderr=0.01
+        )
         assert v.best_value == pytest.approx(1.05)
         assert v.stderr == pytest.approx(0.01)
 
@@ -110,13 +113,15 @@ class TestDataSummary:
     @pytest.mark.unit
     def test_direct_construction(self) -> None:
         ds = DataSummary(
-            regression_metrics=DataSplitDict(data=[[0.99]], index=[0], columns=["r2"]),
-            descriptive_statistic=DataSplitDict(data=[[1.0]], index=[0], columns=["mean"]),
-            linear_correlation=DataSplitDict(data=[[0.98]], index=[0], columns=["pearson"]),
+            regression_metrics=SplitFrame(data=[[0.99]], index=[0], columns=["r2"]),
+            descriptive_statistic=SplitFrame(data=[[1.0]], index=[0], columns=["mean"]),
+            linear_correlation=SplitFrame(
+                data=[[0.98]], index=[0], columns=["pearson"]
+            ),
         )
-        assert ds.regression_metrics["columns"] == ["r2"]
-        assert ds.descriptive_statistic["columns"] == ["mean"]
-        assert ds.linear_correlation["columns"] == ["pearson"]
+        assert ds.regression_metrics.columns == ["r2"]
+        assert ds.descriptive_statistic.columns == ["mean"]
+        assert ds.linear_correlation.columns == ["pearson"]
 
     @pytest.mark.unit
     def test_extra_forbid(self) -> None:
@@ -136,11 +141,54 @@ class TestConfidenceResults:
     @pytest.mark.unit
     def test_enabled_with_results(self) -> None:
         cr = ConfidenceResults(
-            settings={"p=0.95": {}},
+            settings={"sigmas": [1.0, 2.0], "verbose": True},
             results={"p1_amplitude": [(0.9, 1.0), (1.0, 1.1)]},
         )
-        assert isinstance(cr.settings, dict)
+        assert isinstance(cr.settings, ConfIntervalConfig)
+        assert cr.settings.sigmas == [1.0, 2.0]
         assert "p1_amplitude" in cr.results
+
+    @pytest.mark.unit
+    def test_legacy_sigma_key_is_normalized(self) -> None:
+        cr = ConfidenceResults(settings={"sigma": [1.0, 2.0]})
+        assert isinstance(cr.settings, ConfIntervalConfig)
+        assert cr.settings.sigmas == [1.0, 2.0]
+
+    @pytest.mark.unit
+    def test_legacy_results_payload_is_normalized(self) -> None:
+        cr = ConfidenceResults(
+            results={
+                "p1_center": [(1, 0.25), [2, 0.5], ("bad", 0.75), (3,)],
+                "p2_center": "invalid",
+            }
+        )
+
+        assert cr.results == {"p1_center": [(1.0, 0.25), (2.0, 0.5)]}
+
+    @pytest.mark.unit
+    def test_report_projections_preserve_legacy_contract(self) -> None:
+        cr = ConfidenceResults(
+            settings={
+                "sigma": [1.0, 2.0],
+                "trace": True,
+                "maxiter": 50,
+                "verbose": True,
+                "p_names": ["p1_center"],
+                "prob_func": "f_compare",
+            },
+            results={
+                "p1_center": [(1, 0.25), [2, 0.5], ("bad", 0.75)],
+                "p2_center": "invalid",
+            },
+        )
+
+        assert cr.report_settings() == {
+            "p_names": ["p1_center"],
+            "trace": True,
+            "maxiter": 50,
+            "verbose": True,
+        }
+        assert cr.report_results() == {"p1_center": [(1.0, 0.25), (2.0, 0.5)]}
 
     @pytest.mark.unit
     def test_extra_forbid(self) -> None:
@@ -160,7 +208,12 @@ class TestFitResultConstruction:
 
     @pytest.mark.unit
     def test_global_fitting_flag(self) -> None:
-        result = FitResult(global_fitting=1)
+        result = FitResult(global_fitting=FittingMode.GLOBAL)
+        assert result.global_fitting == FittingMode.GLOBAL
+
+    @pytest.mark.unit
+    def test_json_adapter_coerces_legacy_global_fitting_flag(self) -> None:
+        result = deserialize_fit_result({"global_fitting": 1})
         assert result.global_fitting == FittingMode.GLOBAL
 
     @pytest.mark.unit
@@ -177,10 +230,10 @@ class TestFitResultConstruction:
     def test_data_summary_propagated(self) -> None:
         result = FitResult(
             data_summary=DataSummary(
-                regression_metrics=DataSplitDict(data=[[0.99]], index=[0], columns=["r2"])
+                regression_metrics=SplitFrame(data=[[0.99]], index=[0], columns=["r2"])
             )
         )
-        assert result.data_summary.regression_metrics["columns"] == ["r2"]
+        assert result.data_summary.regression_metrics.columns == ["r2"]
 
     @pytest.mark.unit
     def test_sub_models_have_extra_forbid(self) -> None:
@@ -188,3 +241,8 @@ class TestFitResultConstruction:
         for cls in (FitInsights, DataSummary, ConfidenceResults, FitConfigurations):
             with pytest.raises(ValidationError):
                 cls(unknown_field=True)  # type: ignore[call-arg]
+
+    @pytest.mark.unit
+    def test_fit_result_rejects_unknown_root_fields(self) -> None:
+        with pytest.raises(ValidationError):
+            FitResult(unknown_field=True)  # type: ignore[call-arg]

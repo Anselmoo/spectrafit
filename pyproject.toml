@@ -34,19 +34,18 @@ classifiers = [
 dependencies = [
   "art>=6.5",
   "emcee>=3.1.6",
-  "eval-type-backport>=0.2.2",
   "lmfit>=1.3.2",
   "numdifftools>=0.9.41",
   "numpy>=1.24.4",
   "openpyxl>=3.1.5",
   "pandas>=2.0.3",
+  "plotly>=6.0.1",
   "pydantic>=2.10.6",
   "pyyaml>=6.0.2",
   "scikit-learn>=1.3.2",
   "scipy>=1.10.1",
   "seaborn>=0.13.2",
   "tabulate>=0.9.0",
-  "tomli>=2.2.1",
   "tomli-w>=1.0.0",
   "tqdm>=4.67.1",
   "typer[all]>=0.20.0",
@@ -54,39 +53,20 @@ dependencies = [
 
 [project.optional-dependencies]
 jupyter = [
-  "dtale>=3.17.0",
   "itables>=2.3.0",
   "jupyterlab>=4.3.6",
-  "kaleido==1.0.0",
-  "plotly>=6.0.1",
-  "python-pptx>=1.0.2",
-]
-jupyter-dash = [
-  "dash-bootstrap-components>=1.6.0",
-  "dash-bootstrap-templates>=2.1.0",
-  "ipywidgets>=8.1.6",
-  "jupyter-dash>=0.4.2",
 ]
 graph = ["networkx>=3.1", "pydot>=3.0.4"]
 all = [
-  "dash-bootstrap-components>=1.6.0",
-  "dash-bootstrap-templates>=2.1.0",
-  "dtale>=3.17.0",
-  "ipywidgets>=8.1.6",
   "itables>=2.3.0",
-  "jupyter-dash>=0.4.2",
   "jupyterlab>=4.3.6",
-  "kaleido>=0.2.1",
   "networkx>=3.1",
-  "plotly>=6.0.1",
   "pydot>=3.0.4",
-  "python-pptx>=1.0.2",
 ]
 
 [project.urls]
 Homepage = "https://pypi.org/project/spectrafit/"
 Repository = "https://github.com/Anselmoo/spectrafit"
-Documentation = "https://anselmoo.github.io/spectrafit/"
 Changelog = "https://github.com/Anselmoo/spectrafit/blob/main/CHANGELOG.md"
 Issues = "https://github.com/Anselmoo/spectrafit/issues"
 
@@ -99,7 +79,6 @@ dev = [
   "bandit>=1.7.10",
   "black[jupyter]>=24.8.0",
   "bump-pydantic>=0.8.0",
-  "dash[testing]>=2.18.2",
   "poethepoet>=0.42.1",
   "pre-commit>=3.5.0",
   "pytest>=8.3.5",
@@ -135,7 +114,7 @@ docs = [
 
 
 [tool.uv]
-default-groups = ["dev", "docs"]
+default-groups = ["dev"]
 
 [tool.hatch.build.targets.sdist]
 include = ["spectrafit", "spectrafit/plugins/img/SpectraFit.png"]
@@ -310,6 +289,7 @@ typecheck = { cmd = "ty check spectrafit/ --exclude 'spectrafit/report/**' --exc
 docs-build = { cmd = "mkdocs build --clean", help = "Build documentation" }
 docs-serve = { cmd = "mkdocs serve", help = "Serve documentation locally", use_exec = true }
 pre-commit-all = { cmd = "pre-commit run --all-files", help = "Run all pre-commit hooks", use_exec = true }
+quality = { shell = "python scripts/scan_antipatterns.py && python scripts/architecture_check.py", help = "Run quality model checks (anti-patterns + architecture invariants)" }
 
 [tool.poe.tasks.lint]
 shell = "ruff check spectrafit/ && ruff format --check spectrafit/"
@@ -320,24 +300,40 @@ shell = "ruff format spectrafit/ && ruff check --fix spectrafit/"
 help = "Auto-format and fix lint issues"
 
 [tool.poe.tasks.ci]
-shell = "ruff check spectrafit/ && ruff format --check spectrafit/ && ty check spectrafit/ --exclude 'spectrafit/report/**' --exclude 'spectrafit/core/postprocessing.py' --exclude 'spectrafit/core/export.py' && pytest tests/"
-help = "Full CI gate: lint + ty + tests (frozen modules excluded from ty)"
+shell = "ruff check spectrafit/ && ruff format --check spectrafit/ && ty check spectrafit/ --exclude 'spectrafit/report/**' --exclude 'spectrafit/core/postprocessing.py' --exclude 'spectrafit/core/export.py' && python scripts/scan_antipatterns.py && python scripts/architecture_check.py && pytest tests/ && python scripts/generate_checklist.py --check"
+help = "Full CI gate: lint + ty + quality model + tests + checklist validation (frozen modules excluded from ty)"
 
 [tool.poe.tasks.clean]
-shell = "find . -name '__pycache__' -type d -exec rm -rf {} + 2>/dev/null; rm -rf dist/ .coverage coverage.xml junit.xml"
-help = "Remove build artifacts and caches"
+shell = "find . -name '__pycache__' -type d -exec rm -rf {} + 2>/dev/null; rm -rf dist/ htmlcov/ .coverage coverage.xml junit.xml .mypy_cache/ .pytest_cache/ .ruff_cache/ .copilot-tracking/ REVIEW_SRC.md REVIEW_TESTS.md REVIEW_EXAMPLES.md CHECKLIST_DEV.md"
+help = "Remove local build, cache, and generated review artifacts"
 
 [tool.poe.tasks.generate-examples]
 cmd = "python scripts/generate_examples.py"
-help = "Regenerate synthetic CSV data for all examples/ directories"
+help = "Regenerate committed example CSV, input TOML, and notebook artifacts"
 
 [tool.poe.tasks.generate-plots]
 cmd = "python scripts/generate_plots.py"
-help = "Generate fit-validation PNG plots for all examples/ (Agg backend, saved to examples/*/fit_validation.png)"
+help = "Generate local/CI Plotly validation overlays under examples/*/fit_validation.html"
 
 [tool.poe.tasks.validate-examples]
 cmd = "pytest tests/integration/test_examples.py -v"
 help = "Smoke-test all examples/*/input.toml via FittingPipeline"
+
+[tool.poe.tasks.validate-cli-examples]
+cmd = "pytest -o addopts='' tests/integration/test_examples.py::test_example_cli_fit_writes_outputs -v"
+help = "Run the committed synthetic examples through the CLI and verify output files"
+
+[tool.poe.tasks.validate-starter-notebook]
+cmd = "pytest -o addopts='' tests/integration/test_init_workflow.py::TestInitWorkflow::test_init_jupyter_notebook_executes_without_error -m slow -v"
+help = "Headlessly execute the generated starter notebook"
+
+[tool.poe.tasks.validate-generated-workflows]
+shell = "python scripts/generate_examples.py && pytest -o addopts='' tests/integration/test_examples.py tests/integration/test_init_workflow.py::TestInitWorkflow::test_init_jupyter_notebook_executes_without_error -v"
+help = "Regenerate synthetic examples, validate example pipeline/CLI flows, and execute the starter notebook"
+
+[tool.poe.tasks.live]
+shell = "python scripts/generate_examples.py && python scripts/run_live_examples.py"
+help = "Regenerate examples/ synthetic data, run example configs through the CLI, and execute notebook-mode exports"
 
 [tool.poe.tasks.scan]
 cmd = "python scripts/scan_antipatterns.py"
@@ -354,3 +350,27 @@ help = "Run both anti-pattern scan and architecture check"
 [tool.poe.tasks.scan-antipatterns]
 cmd = "python scripts/scan_antipatterns.py"
 help = "Scan spectrafit/ for known anti-patterns (use --module, --severity, --json)"
+
+[tool.poe.tasks.checklist]
+cmd = "python scripts/generate_checklist.py"
+help = "Generate CHECKLIST.md with relative hyperlinks to all source files"
+
+[tool.poe.tasks.checklist-github]
+cmd = "python scripts/generate_checklist.py --github --conclusions"
+help = "Generate CHECKLIST.md with GitHub URLs and per-chapter conclusions"
+
+[tool.poe.tasks.review-src]
+cmd = "python scripts/generate_checklist.py --feedback --target src"
+help = "Generate REVIEW_SRC.md with source review prompts and feedback sections"
+
+[tool.poe.tasks.review-tests]
+cmd = "python scripts/generate_checklist.py --feedback --target tests"
+help = "Generate REVIEW_TESTS.md with separated test review prompts"
+
+[tool.poe.tasks.review-examples]
+cmd = "python scripts/generate_checklist.py --feedback --target examples"
+help = "Generate REVIEW_EXAMPLES.md with separated example review prompts"
+
+[tool.poe.tasks.checklist-dev]
+cmd = "python scripts/generate_checklist.py --feedback --target src --output CHECKLIST_DEV.md"
+help = "Backward-compatible alias for source review feedback output"

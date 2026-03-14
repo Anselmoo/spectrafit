@@ -3,14 +3,15 @@
 from __future__ import annotations
 
 import json
+import subprocess
+import sys
 
 from pathlib import Path
 
 import pytest
 
-from typer.testing import CliRunner
-
 from spectrafit.cli.main import app
+from typer.testing import CliRunner
 
 
 runner = CliRunner()
@@ -30,7 +31,7 @@ class TestInitWorkflow:
         project = tmp_path / "e2e_cli"
         assert project.is_dir()
         assert (project / "config.toml").is_file()
-        assert (project / "data").is_dir()
+        assert (project / "data.csv").is_file()
         assert (project / "results").is_dir()
 
     def test_init_jupyter_creates_valid_notebook(self, tmp_path: Path) -> None:
@@ -42,8 +43,8 @@ class TestInitWorkflow:
 
         nb_path = tmp_path / "e2e_nb" / "spectrafit_getting_started.ipynb"
         assert nb_path.is_file()
+        assert (tmp_path / "e2e_nb" / "data.csv").is_file()
 
-        # Validate basic notebook JSON structure
         with nb_path.open() as f:
             nb = json.load(f)
         assert "nbformat" in nb
@@ -58,8 +59,23 @@ class TestInitWorkflow:
         code_text = "\n".join(
             src if isinstance(src, str) else "".join(src) for src in sources
         )
-        assert "UnifiedFittingConfig" in code_text
-        assert "SpectraFitNotebook.from_config" in code_text
+        assert "import spectrafit.notebook as sf" in code_text
+        assert "df = sf.read(DATA_PATH" in code_text
+        assert "sf.peak(" in code_text
+        assert "sf.background(" in code_text
+        assert "result = sf.fit(" in code_text
+        assert "artifacts = result.save(OUTPUT_DIR" in code_text
+        assert "FitParameter(" not in code_text
+        assert "Component(" not in code_text
+        assert "UnifiedFittingConfig(" not in code_text
+        assert "config = config.with_data_infile(DATA_PATH.resolve())" not in code_text
+        assert "df = load_data(config.data)" not in code_text
+        assert "notebook.initial_components" not in code_text
+        assert "config_payload = {" not in code_text
+        assert "UnifiedFittingConfig.model_validate(resolved_config_payload)" not in code_text
+        assert "UnifiedFittingConfig.from_file(CONFIG_PATH)" not in code_text
+        assert "SpectraFitNotebook.from_config" not in code_text
+        assert 'get_synthetic_scenario("starter-notebook")' not in code_text
         assert "args=config" not in code_text
 
     def test_init_both_creates_all_files(self, tmp_path: Path) -> None:
@@ -70,8 +86,67 @@ class TestInitWorkflow:
         assert result.exit_code == 0, result.output
 
         project = tmp_path / "e2e_both"
+        assert (project / "data.csv").is_file()
         assert (project / "config.toml").is_file()
         assert (project / "spectrafit_getting_started.ipynb").is_file()
+        assert (project / "results").is_dir()
+
+    @pytest.mark.slow
+    def test_init_jupyter_notebook_executes_without_error(self, tmp_path: Path) -> None:
+        """Verify the generated starter notebook executes headlessly."""
+        pytest.importorskip("nbconvert")
+
+        result = runner.invoke(
+            app,
+            ["init", "e2e_exec_test", "--jupyter", "--output-dir", str(tmp_path)],
+        )
+        assert result.exit_code == 0, result.output
+
+        project_dir = tmp_path / "e2e_exec_test"
+        nb_path = project_dir / "spectrafit_getting_started.ipynb"
+        assert nb_path.is_file(), f"Notebook not created at {nb_path}"
+
+        exec_result = subprocess.run(  # noqa: S603
+            [
+                sys.executable,
+                "-m",
+                "jupyter",
+                "nbconvert",
+                "--to",
+                "notebook",
+                "--execute",
+                "--inplace",
+                str(nb_path),
+            ],
+            capture_output=True,
+            check=False,
+            cwd=project_dir,
+            text=True,
+            timeout=180,
+        )
+
+        assert exec_result.returncode == 0, (
+            "Generated starter notebook failed to execute.\n"
+            f"STDOUT:\n{exec_result.stdout}\n"
+            f"STDERR:\n{exec_result.stderr}"
+        )
+
+        with nb_path.open(encoding="utf-8") as f:
+            executed_nb = json.load(f)
+
+        code_cells = [
+            cell for cell in executed_nb["cells"] if cell.get("cell_type") == "code"
+        ]
+        assert code_cells, "Expected generated notebook to contain code cells"
+
+        for index, cell in enumerate(code_cells):
+            assert cell["execution_count"] is not None, (
+                f"Code cell {index} was not executed "
+                f"(execution_count is {cell['execution_count']!r})"
+            )
+            assert all(
+                output.get("output_type") != "error" for output in cell.get("outputs", [])
+            ), f"Code cell {index} produced an error output"
 
     def test_init_toml_config_is_parseable(self, tmp_path: Path) -> None:
         result = runner.invoke(
@@ -81,12 +156,13 @@ class TestInitWorkflow:
         assert result.exit_code == 0, result.output
 
         config_path = tmp_path / "e2e_toml_check" / "config.toml"
-        import tomllib  # available in Python 3.11+; else use tomli
+        import tomllib
 
         with config_path.open("rb") as f:
             config = tomllib.load(f)
 
         assert isinstance(config, dict)
+        assert config["data"]["infile"] == "data.csv"
 
     def test_init_json_format(self, tmp_path: Path) -> None:
         result = runner.invoke(
@@ -122,8 +198,7 @@ class TestInitWorkflow:
             ["init", "--cli", "--output-dir", str(tmp_path)],
             input="test_interactive_name\n",
         )
-        # Wizard resolves project_name from input when only --cli flag present
-        assert result.exit_code in (0, 1)  # may abort or succeed
+        assert result.exit_code in (0, 1)
 
     def test_init_overwrite_flag(self, tmp_path: Path) -> None:
         for _ in range(2):

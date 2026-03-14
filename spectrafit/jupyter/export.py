@@ -11,30 +11,47 @@ from pathlib import Path
 import pandas as pd
 import tomli_w
 
+from pydantic import BaseModel
+from pydantic import ConfigDict
+
+from spectrafit.adapters.preprocessing_boundary import NotebookBoundaryColumn
+from spectrafit.adapters.preprocessing_boundary import preprocessing_from_boundary
+from spectrafit.adapters.preprocessing_boundary import preprocessing_to_boundary
 from spectrafit.api.cmd_model import DescriptionAPI
-from spectrafit.api.models_model import ConfIntervalAPI
 from spectrafit.api.notebook_model import FnameAPI
-from spectrafit.api.report_model import ComputationalInfo
-from spectrafit.api.report_model import FitConfigurationsAPI
-from spectrafit.api.report_model import FitMethodAPI
-from spectrafit.api.report_model import InputAPI
-from spectrafit.api.report_model import OutputAPI
-from spectrafit.api.report_model import ParameterSpec
-from spectrafit.api.report_model import ReportAPI
-from spectrafit.api.report_model import SolverAPI
-from spectrafit.api.report_model import VariableResult
 from spectrafit.api.tools_model import DataPreProcessingAPI
 from spectrafit.api.tools_model import SolverModelsAPI
-from spectrafit.core import exclude_none_dictionary
-from spectrafit.core import transform_nested_types
+from spectrafit.core.result_bridge import resolve_fit_result_input_config
 from spectrafit.jupyter.solver import SolverResults
 from spectrafit.models.fitting_context import FittingMode
-from spectrafit.utilities.transformer import LegacyModelSpec
+from spectrafit.models.preprocessing_config import PreprocessingConfig
+from spectrafit.reporting.service import CanonicalReportSchema
+from spectrafit.reporting.service import ConfidenceSettingValue
+from spectrafit.reporting.service import SolverReportProjection
+from spectrafit.utilities.transformer import InitialModelLike
+from spectrafit.utilities.transformer import components2legacy_specs
+from spectrafit.utilities.transformer import normalize_components
 
 
 __all__ = ["ExportReport", "ExportResults"]
 
 type ReportDocument = dict[str, object]  # intentional: report serialization boundary
+type DataCell = float | int | str | bool | None
+type DataFrameListDict = dict[str, list[DataCell]]
+type ReportConfidenceSettings = bool | dict[str, ConfidenceSettingValue]
+
+_UNSET_DF_PRE = object()
+_UNSET_COLUMN = object()
+
+
+class NotebookExportDocument(BaseModel):
+    """Thin notebook export adapter over the canonical reporting owner."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    input: dict[str, object]
+    solver: SolverReportProjection
+    output: dict[str, DataFrameListDict]
 
 
 class ExportResults:
@@ -59,27 +76,22 @@ class ExportResults:
             index=False,
         )
 
-    def export_report(self, report: ReportDocument | ReportAPI, args: FnameAPI) -> None:
+    def export_report(self, report: ReportDocument, args: FnameAPI) -> None:
         """Export the results as toml file.
 
         Args:
-            report (ReportDocument | ReportAPI): Results to export.
+            report (ReportDocument): Results to export.
             args (FnameAPI): Arguments for the file export including the path, prefix,
                  and suffix.
 
         """
-        report_dict = (
-            report.model_dump(exclude_none=True)
-            if isinstance(report, ReportAPI)
-            else report
-        )
         with self.fname2path(
             fname=args.fname,
             prefix=args.prefix,
             suffix=args.suffix,
             folder=args.folder,
         ).open("wb+") as f:
-            tomli_w.dump(report_dict, f)
+            tomli_w.dump(report, f)
 
     @staticmethod
     def fname2path(
@@ -93,9 +105,9 @@ class ExportResults:
         Args:
             fname (str): Filename
             suffix (str): Name of the suffix of the file.
-            prefix (Optional[str], optional): Name of the prefix of the file. Defaults
+            prefix (str | None, optional): Name of the prefix of the file. Defaults
                  to None.
-            folder (Optional[str], optional): Folder, where it will be saved.
+            folder (str | None, optional): Folder, where it will be saved.
                  This folders will be created, if not exist. Defaults to None.
 
         Returns:
@@ -103,7 +115,7 @@ class ExportResults:
 
         """
         if prefix:
-            fname = f"{prefix}_{fname}"  # intentional: prefix construction
+            fname = prefix + "_" + fname
         _fname = Path(fname).with_suffix(f".{suffix}")
         if folder:
             Path(folder).mkdir(parents=True, exist_ok=True)
@@ -122,21 +134,25 @@ class ExportReport:
     def __init__(
         self,
         description: DescriptionAPI,
-        initial_model: list[LegacyModelSpec],
-        pre_processing: DataPreProcessingAPI,
-        settings_solver_models: SolverModelsAPI,
         fname: FnameAPI,
         solver: SolverResults,
         df_org: pd.DataFrame,
         df_fit: pd.DataFrame,
-        df_pre: pd.DataFrame | None = None,
+        *,
+        initial_model: InitialModelLike | None = None,
+        pre_processing: DataPreProcessingAPI | PreprocessingConfig | None = None,
+        settings_solver_models: SolverModelsAPI | None = None,
+        df_pre: pd.DataFrame | object = _UNSET_DF_PRE,
+        column: NotebookBoundaryColumn | object = _UNSET_COLUMN,
     ) -> None:
         """Initialize the ExportReport class.
 
         Args:
             description (DescriptionAPI): Description of the fit project.
-            initial_model (list[LegacyModelSpec]): Initial model for the fit.
-            pre_processing (DataPreProcessingAPI): Data pre-processing settings.
+            initial_model: Initial notebook model payload for the fit.
+            pre_processing: Data pre-processing settings. Canonical notebook/runtime
+                 flows pass ``PreprocessingConfig``; compatibility callers may still
+                 pass ``DataPreProcessingAPI`` directly.
             settings_solver_models (SolverModelsAPI): Solver models settings.
             fname (FnameAPI): Filename of the fit project including the path, prefix,
                  and suffix.
@@ -144,157 +160,186 @@ class ExportReport:
             df_org (pd.DataFrame): Dataframe of the original data for performing
                  the fit.
             df_fit (pd.DataFrame): Dataframe of the final fit data.
-            df_pre (Optional[pd.DataFrame], optional): Dataframe of the pre-processed
+            df_pre (pd.DataFrame | None, optional): Dataframe of the pre-processed
                  data. Defaults to None (empty DataFrame).
+            column: Compatibility column payload used when projecting canonical
+                 preprocessing settings to the report boundary.
 
         """
         self._solver = solver
         self.description = description
-        self.initial_model = initial_model
-        self.pre_processing = pre_processing
-        self.settings_solver_models = settings_solver_models
+        self._input_config = resolve_fit_result_input_config(self._solver.result)
+        self._initial_components = self._resolve_initial_components(
+            initial_model=initial_model
+        )
+        (
+            self._preprocessing,
+            self._preprocessing_column,
+        ) = self._resolve_pre_processing_owner(
+            pre_processing=pre_processing,
+            column=column,
+        )
+        self.settings_solver_models = self._resolve_solver_models(
+            settings_solver_models=settings_solver_models
+        )
         self.fname = fname
 
         self.df_org = df_org.to_dict(orient="list")
         self.df_fit = df_fit.to_dict(orient="list")
-        df_pre = (
-            df_pre if df_pre is not None else pd.DataFrame()
+        resolved_df_pre = (
+            df_pre if isinstance(df_pre, pd.DataFrame) else pd.DataFrame()
         )  # intentional: compat shim
-        self.df_pre = df_pre.to_dict(orient="list")
+        self.df_pre = resolved_df_pre.to_dict(orient="list")
 
     @staticmethod
-    def _coerce_report_document(value: object) -> ReportDocument:
-        """Convert a generic nested object into a report-compatible dictionary."""
-        if not isinstance(value, dict):
-            return {}
-        report_document: ReportDocument = {}
-        for key, item in value.items():
-            report_document[str(key)] = item
-        return report_document
+    def _snapshot_column(
+        column: NotebookBoundaryColumn | object,
+    ) -> NotebookBoundaryColumn | None:
+        """Normalize optional notebook-boundary column input."""
+        if column is _UNSET_COLUMN or column is None:
+            return None
+        return list(column)
 
-    @staticmethod
-    def _serialize_initial_model(
-        initial_model: list[LegacyModelSpec],
-    ) -> list[dict[str, dict[str, ParameterSpec]]]:
-        """Convert legacy initial-model specs into report-model parameter specs."""
-        serialized: list[dict[str, dict[str, ParameterSpec]]] = []
-        for peak in initial_model:
-            model_block: dict[str, dict[str, ParameterSpec]] = {}
-            for model_name, model_parameters in peak.items():
-                model_block[model_name] = {
-                    parameter_name: ParameterSpec.model_validate(parameter_value)
-                    for parameter_name, parameter_value in model_parameters.items()
-                }
-            serialized.append(model_block)
-        return serialized
+    def _resolve_initial_components(
+        self,
+        *,
+        initial_model: InitialModelLike | None,
+    ) -> list[object]:
+        """Prefer the typed FitResult snapshot for notebook input ownership."""
+        if self._input_config is not None and self._input_config.components:
+            return list(self._input_config.components)
+        if initial_model is None:
+            return []
+        return normalize_components(initial_model)
 
-    def _serialize_conf_interval(self) -> bool | ConfIntervalAPI:
-        """Serialize confidence settings to report API contract."""
-        settings = self._solver.settings_conf_interval
-        if isinstance(settings, bool):
-            return settings
+    def _resolve_solver_models(
+        self,
+        *,
+        settings_solver_models: SolverModelsAPI | None,
+    ) -> SolverModelsAPI:
+        """Prefer typed solver settings captured in the canonical FitResult."""
+        if self._input_config is not None:
+            return SolverModelsAPI(
+                minimizer=self._input_config.minimizer,
+                optimizer=self._input_config.optimizer,
+            )
+        return settings_solver_models or SolverModelsAPI()
 
-        filtered_settings = {
-            key: value
-            for key, value in settings.items()
-            if key in {"p_names", "trace", "maxiter", "verbose", "prob_func"}
-        }
-        prob_func = filtered_settings.get("prob_func")
-        if prob_func is not None and not callable(prob_func):
-            filtered_settings.pop("prob_func", None)
-        return ConfIntervalAPI.model_validate(filtered_settings)
+    def _resolve_pre_processing_owner(
+        self,
+        pre_processing: DataPreProcessingAPI | PreprocessingConfig | None,
+        *,
+        column: NotebookBoundaryColumn | object,
+    ) -> tuple[PreprocessingConfig, NotebookBoundaryColumn]:
+        """Capture canonical preprocessing ownership plus report-boundary columns."""
+        if self._input_config is not None:
+            return (
+                self._input_config.preprocessing.model_copy(deep=True)
+                if self._input_config.preprocessing is not None
+                else PreprocessingConfig(),
+                [
+                    self._input_config.x_column,
+                    self._input_config.y_column,
+                ],
+            )
 
-    def _serialize_variables(self) -> dict[str, VariableResult]:
-        """Map ``VariableFitResult`` entries into ``VariableResult`` report entries."""
-        return {
-            key: VariableResult.model_validate(value.model_dump(exclude_none=True))
-            for key, value in self._solver.get_variables.items()
-        }
+        if pre_processing is None:
+            return (
+                PreprocessingConfig(),
+                self._snapshot_column(column) or list(DataPreProcessingAPI().column),
+            )
+        if isinstance(pre_processing, DataPreProcessingAPI):
+            return (
+                preprocessing_from_boundary(pre_processing),
+                list(pre_processing.column),
+            )
+        resolved_column = self._snapshot_column(column)
+        if resolved_column is None:
+            msg = "column is required when pre_processing is a PreprocessingConfig"
+            raise ValueError(msg)
+        return pre_processing.model_copy(deep=True), resolved_column
 
-    def _fit_global_mode(self) -> FittingMode:
-        """Map legacy integer global-flag values to ``FittingMode``."""
-        return (
-            FittingMode.GLOBAL
-            if self._solver.settings_global_fitting
-            else FittingMode.STANDARD
+    @property
+    def pre_processing(self) -> DataPreProcessingAPI:
+        """Project canonical preprocessing ownership to the report DTO boundary."""
+        return preprocessing_to_boundary(
+            self._preprocessing,
+            column=self._preprocessing_column,
         )
 
     @property
-    def make_input_contribution(self) -> InputAPI:
+    def canonical_report(self) -> CanonicalReportSchema:
+        """Canonical reporting owner shared by notebook export adapters."""
+        return self._solver.canonical_report
+
+    def _serialize_conf_interval(self) -> ReportConfidenceSettings:
+        """Serialize confidence settings to the plain report boundary."""
+        return self.canonical_report.confidence_settings
+
+    def _fit_global_mode(self) -> FittingMode:
+        """Return the canonical fitting mode for the report bridge."""
+        return self._solver.fitting_mode
+
+    @property
+    def make_input_contribution(self) -> dict[str, object]:
         """Make input contribution of the report.
 
         Returns:
-            InputAPI: Input contribution of the report as class.
+            dict[str, object]: Input contribution projected from canonical ownership.
 
         """
-        return InputAPI(
-            description=self.description,
-            initial_model=self._serialize_initial_model(self.initial_model),
-            pre_processing=self.pre_processing,
-            method=FitMethodAPI(
-                global_fitting=self._fit_global_mode(),
-                confidence_interval=self._serialize_conf_interval(),
-                configurations=FitConfigurationsAPI.model_validate(
-                    self._solver.settings_configurations
-                ),
-                settings_solver_models=self.settings_solver_models,
-            ),
-        )
+        canonical_report = self.canonical_report
+        return {
+            "description": self.description,
+            "initial_model": self._initial_components,
+            "method": {
+                "global_fitting": self._fit_global_mode().value,
+                "confidence_interval": self._serialize_conf_interval(),
+                "configurations": canonical_report.configurations,
+                "settings_solver_models": self.settings_solver_models,
+            },
+            "pre_processing": self.pre_processing,
+        }
 
     @property
-    def make_solver_contribution(self) -> SolverAPI:
+    def make_solver_contribution(self) -> SolverReportProjection:
         """Make solver contribution of the report.
 
         Returns:
-            SolverAPI: Solver contribution of the report as class.
+            SolverReportProjection: Solver contribution as a typed report section.
 
         """
-        return SolverAPI(
-            goodness_of_fit=self._solver.get_gof,
-            regression_metrics=self._solver.get_regression_metrics,
-            descriptive_statistic=self._solver.get_descriptive_statistic,
-            linear_correlation=self._solver.get_linear_correlation,
-            component_correlation=self._solver.get_component_correlation,
-            confidence_interval=self._solver.get_confidence_interval,
-            covariance_matrix=self._solver.get_covariance_matrix,
-            variables=self._serialize_variables(),
-            errorbars=self._solver.get_errorbars,
-            computational=ComputationalInfo.model_validate(
-                self._solver.get_computational
-            ),
-        )
+        return self.canonical_report.solver
 
     @property
-    def make_output_contribution(self) -> OutputAPI:
+    def make_output_contribution(self) -> dict[str, DataFrameListDict]:
         """Make output contribution of the report.
 
         Returns:
-            OutputAPI: Output contribution of the report as class.
+            dict[str, DataFrameListDict]: Notebook dataframe payloads.
 
         """
-        return OutputAPI(df_org=self.df_org, df_fit=self.df_fit, df_pre=self.df_pre)
+        return {
+            "df_org": self.df_org,
+            "df_fit": self.df_fit,
+            "df_pre": self.df_pre,
+        }
 
     def __call__(self) -> dict[str, object]:  # intentional: TOML serialization boundary
         """Get the complete report as dictionary.
-
-        !!! info "About the report and ``exclude_none_dictionary``"
-
-            The report is generated by using the ``ReportAPI`` class, which is a
-            Pydantic definition of the report. The Pydantic definition is converted
-            to a dictionary by using the ``.model_dump()`` option of Pydantic.
-            The ``recursive_exclude_none`` function is used to remove all ``None``
-            values from the dictionary, which are hidden in the nested dictionaries.
 
         Returns:
             ReportDocument: Report as dictionary using ``.model_dump()``.
                 ``None`` is excluded.
 
         """
-        report = ReportAPI(
+        report = NotebookExportDocument(
             input=self.make_input_contribution,
             solver=self.make_solver_contribution,
             output=self.make_output_contribution,
-        ).model_dump(exclude_none=True)
-        report = exclude_none_dictionary(report)
-        transformed_report = transform_nested_types(report)
-        return self._coerce_report_document(transformed_report)
+        )
+        serialized = report.model_dump(mode="json", exclude_none=True)
+        serialized["input"]["initial_model"] = components2legacy_specs(
+            self._initial_components
+        )
+        return serialized

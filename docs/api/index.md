@@ -11,11 +11,14 @@ tags:
 
 # SpectraFit API Reference
 
-This section provides comprehensive documentation of the **SpectraFit** API, allowing you to use the package programmatically in your own applications.
+This section provides comprehensive documentation of the **SpectraFit** API,
+allowing you to use the package programmatically in your own applications.
 
 ## Overview
 
-The **SpectraFit** API is organized into several modules, each providing specific functionality for spectral analysis. This reference documents all public classes, functions, and their parameters.
+The **SpectraFit** API is organized around canonical v2 surfaces for validated
+configuration, fitting orchestration, notebook integration, reporting, and
+typed model contracts.
 
 !!! info "API Usage"
 
@@ -25,9 +28,9 @@ The **SpectraFit** API is organized into several modules, each providing specifi
 
 <div class="grid cards" markdown>
 
-- :material-application: **[SpectraFit Core](spectrafit_api.md)**
+- :material-application: **[SpectraFit Command Surface](spectrafit_api.md)**
 
-  Main module providing the core functionality for spectral fitting.
+  CLI/runtime-facing entry surfaces and command orchestration helpers.
 
 - :material-chart-scatter-plot: **[Plotting](plotting_api.md)**
 
@@ -39,7 +42,7 @@ The **SpectraFit** API is organized into several modules, each providing specifi
 
 - :material-function-variant: **[Modelling](modelling_api.md)**
 
-  Models and functions for peak fitting and background subtraction.
+  Typed components, registry-backed models, bundle composition, and naming.
 
 - :material-file-document: **[Reporting](reporting_api.md)**
 
@@ -51,7 +54,7 @@ The **SpectraFit** API is organized into several modules, each providing specifi
 
 - :material-database: **[Data Model](data_model_api.md)**
 
-  Data structures and schemas used throughout the package.
+  Pydantic-owned data structures and API-facing schemas.
 
 </div>
 
@@ -60,32 +63,28 @@ The **SpectraFit** API is organized into several modules, each providing specifi
 Here's a simple example of using the **SpectraFit** API programmatically:
 
 ```python
-import numpy as np
-from spectrafit import spectrafit, models
+from spectrafit.core.fitting_config import UnifiedFittingConfig
+from spectrafit.models.output_config import OutputConfig
 
-# Generate sample data
-x = np.linspace(-10, 10, 1000)
-y = models.gaussian(x, amplitude=5, center=0, sigma=1) + np.random.normal(0, 0.1, size=len(x))
-
-# Configure fitting parameters
-parameters = {
-    "peaks": {
-        "1": {
-            "gaussian": {
-                "amplitude": {"value": 4, "min": 0, "max": 10, "vary": True},
-                "center": {"value": 0.5, "min": -5, "max": 5, "vary": True},
-                "sigma": {"value": 1.2, "min": 0.1, "max": 3, "vary": True}
+config = UnifiedFittingConfig.model_validate(
+    {
+        "data": {"infile": "sample.csv", "x_col": "energy", "y_col": "intensity"},
+        "components": [
+            {
+                "id": "p1",
+                "model": "gaussian",
+                "parameters": {
+                    "amplitude": {"value": 1.0, "min": 0.0, "max": 2.0, "vary": True},
+                    "center": {"value": 0.0, "min": -2.0, "max": 2.0, "vary": True},
+                    "fwhmg": {"value": 0.5, "min": 0.01, "max": 2.0, "vary": True},
+                },
             }
-        }
+        ],
     }
-}
+)
+output = OutputConfig(outfile="spectrafit_results", noplot=True, verbose=1)
 
-# Perform the fit
-result = spectrafit.fit_spectrum(x, y, parameters)
-
-# Access the results
-fitted_params = result.best_values
-fitted_curve = result.best_fit
+# Pass canonical models into the runtime pipeline or notebook surface.
 ```
 
 ## Integration with Other Packages

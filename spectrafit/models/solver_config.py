@@ -2,9 +2,24 @@
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from pydantic import BaseModel
 from pydantic import ConfigDict
 from pydantic import Field
+
+
+if TYPE_CHECKING:
+    from collections.abc import Mapping
+
+
+type LmfitKwargScalar = str | int | float | bool | None
+type LmfitKwargValue = (
+    LmfitKwargScalar
+    | list["LmfitKwargValue"]
+    | dict[str, "LmfitKwargValue"]
+    | tuple["LmfitKwargValue", ...]
+)
 
 
 class MinimizerConfig(BaseModel):
@@ -59,6 +74,34 @@ class OptimizerConfig(BaseModel):
     )
 
 
+class SolverConfig(BaseModel):
+    """Canonical internal solver configuration.
+
+    This model groups minimizer and optimizer settings used by the solver core.
+    API-facing DTOs may adapt to and from this model, but internal execution
+    should depend on this canonical representation only.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    minimizer: MinimizerConfig = Field(
+        default_factory=MinimizerConfig,
+        description="Minimizer options forwarded to lmfit",
+    )
+    optimizer: OptimizerConfig = Field(
+        default_factory=OptimizerConfig,
+        description="Optimizer options forwarded to lmfit",
+    )
+
+    def minimizer_kwargs(self) -> dict[str, LmfitKwargValue]:
+        """Serialize minimizer options for ``lmfit.Minimizer`` construction."""
+        return self.minimizer.model_dump()
+
+    def optimizer_kwargs(self) -> dict[str, LmfitKwargValue]:
+        """Serialize optimizer options for ``lmfit.Minimizer.minimize``."""
+        return self.optimizer.model_dump(exclude_none=True)
+
+
 class ConfIntervalConfig(BaseModel):
     """Configuration for lmfit confidence interval calculation.
 
@@ -109,3 +152,25 @@ class ConfIntervalConfig(BaseModel):
         default=None,
         description="Name of probability function (None = default F-distribution)",
     )
+
+
+def normalize_conf_interval_value(
+    conf_interval: bool | ConfIntervalConfig | Mapping[str, object] | None,
+) -> ConfIntervalConfig | None:
+    """Normalize raw CI input to the canonical configuration model."""
+    if isinstance(conf_interval, ConfIntervalConfig):
+        return conf_interval
+    if conf_interval is None or conf_interval is False:
+        return None
+    if conf_interval is True:
+        return ConfIntervalConfig()
+
+    raw_settings = dict(conf_interval)
+    if "sigma" in raw_settings and "sigmas" not in raw_settings:
+        raw_settings["sigmas"] = raw_settings.pop("sigma")
+
+    prob_func = raw_settings.get("prob_func")
+    if prob_func is not None and not isinstance(prob_func, str):
+        raw_settings.pop("prob_func", None)
+
+    return ConfIntervalConfig.model_validate(raw_settings)

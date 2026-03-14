@@ -92,7 +92,8 @@ See `prototype/input.toml` for the reference schema.
 `spectrafit/core/__init__.py` eagerly imports `FittingPipeline`, which triggers the
 postprocessing chain. **Do not move symbols** to `spectrafit/core/` if they are imported
 (even transitively) by modules that `spectrafit/core/__init__.py` imports.
-`spectrafit/models/model_parameters.py` must stay in `spectrafit/models/` for this reason.
+Keep canonical parameter-builder symbols in `spectrafit.models.parameter_builder`
+to avoid reintroducing a circular-import-prone shim layer.
 
 ## Frozen Modules (Phase 6+)
 

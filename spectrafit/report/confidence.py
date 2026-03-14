@@ -1,7 +1,8 @@
-"""Confidence interval and fit report classes.
+"""Frozen confidence-report helpers for legacy report imports.
 
-This module contains the CIReport and FitReport classes for generating
-confidence interval and fit reports.
+Canonical runtime report ownership now lives in
+:mod:`spectrafit.reporting.service`. This module only preserves the historical
+table-oriented compatibility classes used by legacy import paths.
 """
 
 from __future__ import annotations
@@ -14,16 +15,148 @@ from lmfit import Parameters
 from lmfit.printfuncs import alphanumeric_sort
 from lmfit.printfuncs import getfloat_attr
 from lmfit.printfuncs import gformat
+from pydantic import BaseModel
+from pydantic import ConfigDict
+from pydantic import Field
 
-from spectrafit.report.printer import PrintingResults
+from spectrafit.report._table import print_tabulate_df
 
 
 if TYPE_CHECKING:
     from collections.abc import Callable
+    from collections.abc import Mapping
+
+    from spectrafit.models.results.fit_result import ConfidenceResults
+
+
+class ConfidenceBound(BaseModel):
+    """Typed confidence bound pair used by the legacy table adapter."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    sigma: float
+    value: float
+
+
+class ConfidenceParameterBounds(BaseModel):
+    """Typed confidence bound series for one parameter."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    name: str
+    bounds: list[ConfidenceBound]
+
+
+class ConfidenceTableColumn(BaseModel):
+    """One rendered column in the legacy confidence table."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    label: str
+    entries: dict[str, float] = Field(default_factory=dict)
+
+
+class ConfidenceTableDocument(BaseModel):
+    """Typed compatibility projection for the legacy confidence table."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    columns: list[ConfidenceTableColumn] = Field(default_factory=list)
+
+    def to_dataframe(self) -> pd.DataFrame:
+        """Project the typed table document to the legacy DataFrame surface."""
+        return pd.DataFrame({column.label: column.entries for column in self.columns})
+
+
+class FitStatisticsRow(BaseModel):
+    """Single-row fit-statistics projection for the legacy fit report."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    fitting_method: str
+    function_evals: str
+    data_points: str
+    variables: str
+    chi_square: str
+    reduced_chi_square: str
+    akaike_info_crit: str
+    bayesian_info_crit: str
+    r_squared: str | None = None
+
+    def to_dataframe(self) -> pd.DataFrame:
+        """Project the typed statistics row to the legacy DataFrame surface."""
+        return pd.DataFrame(
+            [
+                {
+                    "fitting method": self.fitting_method,
+                    "function evals": self.function_evals,
+                    "data points": self.data_points,
+                    "variables": self.variables,
+                    "chi-square": self.chi_square,
+                    "reduced chi-square": self.reduced_chi_square,
+                    "Akaike info crit": self.akaike_info_crit,
+                    "Bayesian info crit": self.bayesian_info_crit,
+                    "R-squared": self.r_squared,
+                }
+            ]
+        )
+
+
+class VariableDisplayRow(BaseModel):
+    """Typed variable row used by the legacy fit report table."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    name: str
+    value: str | None = None
+    stderr_absolute: str | None = None
+    stderr_percent: float | None = None
+    expr: str | None = None
+    init: float | str | None = None
+    model_value: float | None = None
+    fixed: bool
+
+    def to_legacy_mapping(self) -> dict[str, str | float | bool | None]:
+        """Project the typed row to the legacy DataFrame dict shape."""
+        return {
+            "name": self.name,
+            "value": self.value,
+            "stderr absolute": self.stderr_absolute,
+            "stderr percent": self.stderr_percent,
+            "expr": self.expr,
+            "init": self.init,
+            "model_value": self.model_value,
+            "fixed": self.fixed,
+        }
+
+
+class FitReportSection(BaseModel):
+    """Typed titled section for the legacy fit report document."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True, arbitrary_types_allowed=True)
+
+    title: str
+    frame: pd.DataFrame | None
+
+
+class FitReportDocument(BaseModel):
+    """Typed compatibility document for the legacy fit report output."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True, arbitrary_types_allowed=True)
+
+    sections: list[FitReportSection] = Field(default_factory=list)
+
+    def to_mapping(self) -> dict[str, pd.DataFrame]:
+        """Project the typed fit report to the legacy mapping contract."""
+        return {
+            section.title: section.frame
+            for section in self.sections
+            if section.frame is not None
+        }
 
 
 class CIReport:
-    """Generate a report of confidence intervals.
+    """Render confidence intervals for the frozen report compatibility layer.
 
     !!! info "About the Confidence Interval Report"
 
@@ -45,7 +178,7 @@ class CIReport:
 
     def __init__(
         self,
-        ci: dict[str, list[tuple[float, float]]],
+        ci: ConfidenceResults | Mapping[str, list[tuple[float, float]]],
         with_offset: bool = True,
         ndigits: int = 5,
         best_tol: float = 1.0e-2,
@@ -63,12 +196,30 @@ class CIReport:
                 Defaults to 1.0e-2.
 
         """
-        self.ci = ci
+        self.ci = self._normalize_ci(ci)
         self.with_offset = with_offset
         self.ndigits = ndigits
         self.best_tol = best_tol
 
         self.df = pd.DataFrame()
+
+    @staticmethod
+    def _normalize_ci(
+        ci: ConfidenceResults | Mapping[str, list[tuple[float, float]]],
+    ) -> list[ConfidenceParameterBounds]:
+        """Normalize confidence payloads to typed parameter-bound series."""
+        if hasattr(ci, "report_results"):
+            ci = ci.report_results()
+        return [
+            ConfidenceParameterBounds(
+                name=name,
+                bounds=[
+                    ConfidenceBound(sigma=float(sigma), value=float(value))
+                    for sigma, value in row
+                ],
+            )
+            for name, row in ci.items()
+        ]
 
     def convp(self, x: tuple[float, float], bound_type: str) -> str:
         """Convert the confidence interval to a string.
@@ -85,7 +236,7 @@ class CIReport:
             "BEST" if abs(x[0]) < self.best_tol else f"{x[0] * 100:.2f}% - {bound_type}"
         )
 
-    def calculate_offset(self, row: list[tuple[float, float]]) -> float:
+    def calculate_offset(self, row: list[ConfidenceBound]) -> float:
         """Calculate the offset for a row.
 
         Args:
@@ -97,17 +248,17 @@ class CIReport:
         """
         offset = 0.0
         if self.with_offset:
-            for cval, val in row:
-                if abs(cval) < (self.best_tol or 0.0):
-                    offset = val
+            for bound in row:
+                if abs(bound.sigma) < (self.best_tol or 0.0):
+                    offset = bound.value
         return offset
 
     def create_report_row(
         self,
         name: str,
-        row: list[tuple[float, float]],
+        row: list[ConfidenceBound],
         offset: float,
-    ) -> None:
+    ) -> list[ConfidenceTableColumn]:
         """Create a row for the report.
 
         Args:
@@ -116,27 +267,45 @@ class CIReport:
             offset (float): The offset for the row.
 
         """
-        for i, (cval, val) in enumerate(row):
-            sval = val if cval < self.best_tol else val - offset
+        columns: list[ConfidenceTableColumn] = []
+        for i, bound in enumerate(row):
+            sval = bound.value if bound.sigma < self.best_tol else bound.value - offset
             bound_type = "LOWER" if i < len(row) / 2 else "UPPER"
-            self.report.setdefault(self.convp((cval, val), bound_type), {})[name] = sval
+            columns.append(
+                ConfidenceTableColumn(
+                    label=self.convp((bound.sigma, bound.value), bound_type),
+                    entries={name: sval},
+                )
+            )
+        return columns
 
     def __call__(self) -> None:
         """Generate the Confidence report as a table."""
-        self.report: dict[str, dict[str, float]] = {}
-        for name, row in self.ci.items():
-            offset = self.calculate_offset(row)
-            self.create_report_row(name, row, offset)
+        merged_columns: dict[str, dict[str, float]] = {}
+        for parameter_bounds in self.ci:
+            offset = self.calculate_offset(parameter_bounds.bounds)
+            for column in self.create_report_row(
+                parameter_bounds.name,
+                parameter_bounds.bounds,
+                offset,
+            ):
+                merged_columns.setdefault(column.label, {}).update(column.entries)
 
-        self.tabulate(df=pd.DataFrame(self.report))
+        document = ConfidenceTableDocument(
+            columns=[
+                ConfidenceTableColumn(label=label, entries=values)
+                for label, values in merged_columns.items()
+            ]
+        )
+        self.tabulate(df=document.to_dataframe())
 
     def tabulate(self, df: pd.DataFrame) -> None:
         """Print the Confidence report as a table."""
-        PrintingResults.print_tabulate_df(df=df, floatfmt=f".{self.ndigits}f")
+        print_tabulate_df(df=df, floatfmt=f".{self.ndigits}f")
 
 
 class FitReport:
-    """Generate fit reports based on the result of the fitting process.
+    """Render fit tables for the frozen report compatibility layer.
 
     Args:
         inpars (Parameters): The input parameters used for fitting.
@@ -238,25 +407,21 @@ class FitReport:
 
         """
         if self.result is not None:
-            return pd.DataFrame(
-                {
-                    "fitting method": [self.result.method],
-                    "function evals": [getfloat_attr(self.result, "nfev")],
-                    "data points": [getfloat_attr(self.result, "ndata")],
-                    "variables": [getfloat_attr(self.result, "nvarys")],
-                    "chi-square": [getfloat_attr(self.result, "chisqr")],
-                    "reduced chi-square": [getfloat_attr(self.result, "redchi")],
-                    "Akaike info crit": [getfloat_attr(self.result, "aic")],
-                    "Bayesian info crit": [getfloat_attr(self.result, "bic")],
-                    "R-squared": [
-                        (
-                            getfloat_attr(self.result, "rsquared")
-                            if hasattr(self.result, "rsquared")
-                            else None
-                        ),
-                    ],
-                },
-            )
+            return FitStatisticsRow(
+                fitting_method=self.result.method,
+                function_evals=getfloat_attr(self.result, "nfev"),
+                data_points=getfloat_attr(self.result, "ndata"),
+                variables=getfloat_attr(self.result, "nvarys"),
+                chi_square=getfloat_attr(self.result, "chisqr"),
+                reduced_chi_square=getfloat_attr(self.result, "redchi"),
+                akaike_info_crit=getfloat_attr(self.result, "aic"),
+                bayesian_info_crit=getfloat_attr(self.result, "bic"),
+                r_squared=(
+                    getfloat_attr(self.result, "rsquared")
+                    if hasattr(self.result, "rsquared")
+                    else None
+                ),
+            ).to_dataframe()
         return None
 
     def generate_variables(self) -> pd.DataFrame:
@@ -274,7 +439,7 @@ class FitReport:
                 - fixed: A boolean indicating whether the variable is fixed or not
 
         """
-        variables = []
+        variables: list[VariableDisplayRow] = []
         namelen = max(len(n) for n in self.parnames)
         for name in self.parnames:
             par = self.params[name]
@@ -299,19 +464,19 @@ class FitReport:
                 except ZeroDivisionError:  # pragma: no cover
                     spercent = None
 
-            variable = {
-                "name": nout,
-                "value": sval,
-                "stderr absolute": serr,
-                "stderr percent": spercent,
-                "expr": par.expr,
-                "init": inval,
-                "model_value": model_val,
-                "fixed": par.vary,
-            }
-
-            variables.append(variable)
-        return pd.DataFrame(variables)
+            variables.append(
+                VariableDisplayRow(
+                    name=nout,
+                    value=sval,
+                    stderr_absolute=serr,
+                    stderr_percent=spercent,
+                    expr=par.expr,
+                    init=inval,
+                    model_value=model_val,
+                    fixed=par.vary,
+                )
+            )
+        return pd.DataFrame([variable.to_legacy_mapping() for variable in variables])
 
     def generate_correlations(self) -> pd.DataFrame:
         """Generate a correlation matrix for the varying parameters.
@@ -352,13 +517,24 @@ class FitReport:
                 the generated report.
 
         """
-        report = {
-            "Fit Statistics": self.generate_fit_statistics(),
-            "Variables and Values": self.generate_variables(),
-        }
+        sections = [
+            FitReportSection(
+                title="Fit Statistics",
+                frame=self.generate_fit_statistics(),
+            ),
+            FitReportSection(
+                title="Variables and Values",
+                frame=self.generate_variables(),
+            ),
+        ]
         if self.show_correl:
-            report["Correlations of Components"] = self.generate_correlations()
-        return report
+            sections.append(
+                FitReportSection(
+                    title="Correlations of Components",
+                    frame=self.generate_correlations(),
+                )
+            )
+        return FitReportDocument(sections=sections).to_mapping()
 
     def __call__(self) -> None:
         """Generate and print a report based on the data.
@@ -376,4 +552,7 @@ class FitReport:
         """
         report = self.generate_report()
         for df in report.values():
-            PrintingResults.print_tabulate_df(df=df)
+            print_tabulate_df(df=df)
+
+
+__all__ = ["CIReport", "FitReport"]

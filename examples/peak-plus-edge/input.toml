@@ -1,0 +1,43 @@
+schema_version = "2.0"
+config_type = "peak_fit"
+
+[meta]
+description = "Pseudo-Voigt peak riding on a smooth erf edge and constant offset."
+
+[data]
+infile = "data.csv"
+x_col = "energy"
+y_col = "intensity"
+separator = ","
+
+[solver]
+method = "leastsq"
+max_nfev = 1200
+nan_policy = "propagate"
+calc_covar = true
+
+[[components]]
+id = "peak1"
+model = "pseudovoigt"
+
+[components.parameters]
+amplitude = { value = 0.9, bounds = [0.0, 2.0], vary = true }
+center = { value = 0.65, bounds = [0.0, 1.5], vary = true }
+fwhmg = { value = 0.35, bounds = [0.1, 1.0], vary = true }
+fwhml = { value = 0.3, bounds = [0.1, 1.0], vary = true }
+
+[[components]]
+id = "edge"
+model = "erf"
+
+[components.parameters]
+amplitude = { value = 0.4, bounds = [0.0, 1.0], vary = true }
+center = { value = -0.3, bounds = [-1.0, 0.5], vary = true }
+sigma = { value = 0.45, bounds = [0.1, 1.2], vary = true }
+
+[[components]]
+id = "bg"
+model = "constant"
+
+[components.parameters]
+amplitude = { value = 0.06, bounds = [0.0, 0.2], vary = true }

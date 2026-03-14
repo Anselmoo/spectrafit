@@ -30,6 +30,7 @@ from __future__ import annotations
 # Use a plain str-subclassing enum for clean JSON serialisation
 import sys
 
+from collections.abc import Mapping
 from enum import StrEnum
 from enum import unique
 
@@ -242,3 +243,45 @@ class FittingContext(BaseModel):
             return cls(mode=FittingMode.STANDARD)
         # For values 1/2, we need at least 2 datasets; caller must set n_datasets
         return cls(mode=FittingMode.GLOBAL, n_datasets=2)
+
+
+def coerce_legacy_fitting_mode(value: object) -> FittingMode:
+    """Normalize legacy fitting-mode inputs to ``FittingMode``.
+
+    Args:
+        value: ``FittingMode`` / ``FittingContext`` / ``str`` / legacy
+            ``int``/``bool`` value.
+
+    Returns:
+        FittingMode: Canonical fitting mode value.
+    """
+    if isinstance(value, FittingMode):
+        return value
+    if isinstance(value, FittingContext):
+        return value.mode
+    if isinstance(value, bool):
+        return FittingMode.GLOBAL if value else FittingMode.STANDARD
+    if isinstance(value, int):
+        return FittingContext.from_global_int(value).mode
+    return FittingMode(str(value))
+
+
+def coerce_legacy_fitting_context(value: object) -> FittingContext:
+    """Normalize legacy fitting inputs to ``FittingContext``.
+
+    Args:
+        value: ``FittingContext`` / mapping / ``FittingMode`` / legacy
+            ``int``/``bool`` / string value.
+
+    Returns:
+        FittingContext: Canonical typed fitting context.
+    """
+    if isinstance(value, FittingContext):
+        return value
+    if isinstance(value, Mapping):
+        return FittingContext.model_validate(dict(value))
+
+    mode = coerce_legacy_fitting_mode(value)
+    if mode == FittingMode.STANDARD:
+        return FittingContext(mode=mode)
+    return FittingContext(mode=mode, n_datasets=2)

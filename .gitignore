@@ -218,6 +218,9 @@ $RECYCLE.BIN/
 # Local History for Visual Studio Code
 .history/
 
+# Local AI/session tracking artifacts
+.copilot-tracking/
+
 # Built Visual Studio Code Extensions
 *.vsix
 spectrafit/plugins/dev_notebook.ipynb
@@ -237,6 +240,9 @@ bandit-report.html
 # Test artifacts
 /fit_results_summary.json
 /plots/*.pdf
+/examples/*/outputs/
+/examples/*/fit_validation.html
+/plan/
 fit_results_components.csv
 fit_results_correlation.csv
 fit_results_fit.csv

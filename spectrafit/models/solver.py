@@ -6,8 +6,8 @@ fitting problems using lmfit.
 
 from __future__ import annotations
 
-from collections import defaultdict
 from dataclasses import dataclass
+from dataclasses import field
 from math import log
 from math import pi
 from math import sqrt
@@ -17,13 +17,9 @@ from typing import cast
 
 import numpy as np
 
-from lmfit import Minimizer
-from lmfit import Parameters
-
-from spectrafit.api.tools_model import SolverModelsAPI
-from spectrafit.models.fitting_context import FittingMode
-from spectrafit.models.model_parameters import ModelParameters
-from spectrafit.models.model_parameters import ReferenceKeys
+from spectrafit.models.naming import GlobalLmfitContributionKey
+from spectrafit.models.naming import global_contribution_name
+from spectrafit.models.parameter_builder import ReferenceKeys
 from spectrafit.models.registry import REGISTRY
 
 
@@ -31,74 +27,123 @@ if TYPE_CHECKING:
     import pandas as pd
 
     from lmfit import Parameter
-    from lmfit.minimizer import MinimizerResult
+    from lmfit import Parameters
     from numpy.typing import NDArray
 
     from spectrafit.core.fitting_config import UnifiedFittingConfig
+    from spectrafit.core.solver_runtime import SolverExecutionPlan
     from spectrafit.models.bundle import CompositeModelBundle
     from spectrafit.models.global_fitting import GlobalFittingConfig
 
+_CANONICAL_SOLVER_DEPENDENCY_MARKERS = (
+    "from spectrafit.models.parameter_builder import ParameterBuilder",
+    "from spectrafit.models.solver_config import SolverConfig",
+)
 
-class SolverModels(ModelParameters):
-    """Solving models for 2D and 3D data sets.
 
-    !!! hint "Solver Modes"
-        * `"2D"`: Solve 2D models via the classic `lmfit` function.
-        * `"3D"`: Solve 3D models via global git. For the `global-fitting` procedure,
-             the `lmfit` function is used to solve the models with an extended set of
-             parameters.
-          the `lmfit` function is used.
+@dataclass(slots=True)
+class _GlobalContribution:
+    """Grouped global contribution parameters for one dataset/component curve."""
+
+    contribution_id: str
+    dataset_index: int
+    registry_model: str
+    parameter_values: dict[str, Parameter] = field(default_factory=dict)
+
+    def add_parameter(
+        self, parameter_key: GlobalLmfitContributionKey, value: Parameter
+    ) -> None:
+        """Add a parsed lmfit parameter to this contribution."""
+        self.parameter_values[parameter_key.field_name] = value
+
+    @property
+    def column_name(self) -> str:
+        """Return the output column name for this contribution."""
+        return global_contribution_name(self.contribution_id, self.dataset_index)
+
+    @property
+    def dataset_offset(self) -> int:
+        """Return the zero-based dataset offset."""
+        return self.dataset_index - 1
+
+    def evaluate(
+        self,
+        x: NDArray[np.float64],
+    ) -> NDArray[np.float64]:
+        """Evaluate the contribution curve for one dataset."""
+        ReferenceKeys().model_check(model=self.registry_model)
+        return np.asarray(
+            REGISTRY.get(self.registry_model).function(x, **self.parameter_values),
+            dtype=np.float64,
+        )
+
+
+def _group_global_contributions(params: Parameters) -> list[_GlobalContribution]:
+    """Group global lmfit parameters into typed per-dataset contributions."""
+    return _group_global_contributions_with_models(params=params)
+
+
+def _group_global_contributions_with_models(
+    params: Parameters,
+    component_models: dict[str, str] | None = None,
+) -> list[_GlobalContribution]:
+    """Group global lmfit parameters into typed per-dataset contributions."""
+    grouped: dict[str, _GlobalContribution] = {}
+
+    for parameter_name, value in params.items():
+        contribution_key = GlobalLmfitContributionKey.parse(parameter_name)
+        registry_model = contribution_key.registry_model
+        if component_models is not None:
+            registry_model = component_models.get(
+                contribution_key.contribution_id,
+                registry_model,
+            )
+        contribution = grouped.setdefault(
+            contribution_key.contribution_name,
+            _GlobalContribution(
+                contribution_id=contribution_key.contribution_id,
+                dataset_index=contribution_key.dataset_index,
+                registry_model=registry_model,
+            ),
+        )
+        contribution.add_parameter(contribution_key, value)
+
+    return list(grouped.values())
+
+
+class SolverModels:
+    """Solver residual helpers plus a compatibility runtime shim.
+
+    Runtime orchestration now lives in :mod:`spectrafit.core.solver_runtime`
+    per ADR-004. This class remains as the canonical home for residual helpers
+    and as a thin compatibility wrapper for direct ``SolverModels(...)`` usage.
     """
 
     def __init__(self, df: pd.DataFrame, config: UnifiedFittingConfig) -> None:
-        """Initialize the solver modes.
+        """Create a compatibility wrapper around the core solver runtime."""
+        from spectrafit.core.solver_runtime import LmfitSolverRuntime  # noqa: PLC0415
 
-        Args:
-            df (pd.DataFrame): DataFrame containing the input data (`x` and `data`).
-            config (UnifiedFittingConfig): Validated fitting configuration.
+        self._runtime = LmfitSolverRuntime(df=df, config=config)
 
-        """
-        super().__init__(df=df, config=config)
-        self._solver_config = SolverModelsAPI(
-            minimizer=config.minimizer,
-            optimizer=config.optimizer,
-        )
-        self._is_global = config.global_ == FittingMode.GLOBAL
-        self.params = self.return_params
+    @property
+    def bundle(self) -> CompositeModelBundle | None:
+        """Return the prepared local-fit bundle when available."""
+        return self._runtime.bundle
 
-    def __call__(self) -> tuple[Minimizer, MinimizerResult]:
-        """Solve the fitting model.
+    def build_execution_plan(self) -> SolverExecutionPlan:
+        """Build an explicit solver execution plan via the core runtime."""
+        return self._runtime.build_execution_plan()
 
-        Returns:
-            tuple[Minimizer, MinimizerResult]: Minimizer class and the fitting results.
+    def solve(self) -> tuple[object, object]:
+        """Solve the fitting model via the core runtime."""
+        return self._runtime.solve()
 
-        """
-        if self._is_global:
-            cfg: GlobalFittingConfig | None = self.global_fitting_config
-            minimizer = Minimizer(
-                self.solve_global_fitting,
-                params=self.params,
-                fcn_args=(self.x, self.data, cfg),
-                **self._solver_config.minimizer.model_dump(),
-            )
-        else:
-            minimizer = Minimizer(
-                self._local_residual,
-                params=self.params,
-                fcn_args=(self.x, self.data),
-                **self._solver_config.minimizer.model_dump(),
-            )
-
-        result = minimizer.minimize(
-            **self._solver_config.optimizer.model_dump(exclude_none=True),
-        )
-        return minimizer, result
-
-    def _local_residual(
-        self,
+    @staticmethod
+    def solve_local_fitting(
         params: Parameters,
         x: NDArray[np.float64],
         data: NDArray[np.float64],
+        bundle: CompositeModelBundle,
     ) -> NDArray[np.float64]:
         """Compute residual for local (single-dataset) fitting using the composite bundle.
 
@@ -106,16 +151,14 @@ class SolverModels(ModelParameters):
             params (Parameters): Current parameter values from the minimizer.
             x (NDArray[np.float64]): x-values of the data.
             data (NDArray[np.float64]): y-values of the data as 1d-array.
+            bundle (CompositeModelBundle): Prepared local-fit composite bundle.
 
         Returns:
             NDArray[np.float64]: Residual (model - data).
 
         """
-        if self._bundle is None:
-            msg = "CompositeModelBundle not initialized"
-            raise RuntimeError(msg)
         return np.array(
-            self._bundle.composite.eval(params, x=x) - data,
+            bundle.composite.eval(params, x=x) - data,
             dtype=np.float64,
         )
 
@@ -125,6 +168,7 @@ class SolverModels(ModelParameters):
         x: NDArray[np.float64],
         data: NDArray[np.float64],
         config: GlobalFittingConfig | None = None,
+        component_models: dict[str, str] | None = None,
     ) -> NDArray[np.float64]:
         r"""Solving the fitting for global problem.
 
@@ -148,26 +192,22 @@ class SolverModels(ModelParameters):
             data (NDArray[np.float64]): `y`-values of the data as 2D-array.
             config (GlobalFittingConfig | None): Optional global fitting
                 configuration with per-dataset weights.
+            component_models: Optional mapping from canonical component ids
+                (e.g. ``"p1"``) to registry model names (e.g. ``"gaussian"``)
+                for canonical global-fit parameter names.
 
         Returns:
             NDArray[np.float64]: The best-fitted data based on the proposed model.
 
         """
         val = np.zeros(data.shape)
-        peak_kwargs: dict[tuple[str, str, str], dict[str, Parameter]] = defaultdict(
-            dict,
-        )
-
-        for model, value in params.items():
-            model_lower = model.lower()
-            ReferenceKeys().model_check(model=model_lower)
-            c_name = model_lower.split("_")
-            peak_kwargs[(c_name[0], c_name[2], c_name[3])][c_name[1]] = value
-        for key, _kwarg in peak_kwargs.items():
-            i = int(key[2]) - 1
-            val[:, i] += cast(
+        for contribution in _group_global_contributions_with_models(
+            params=params,
+            component_models=component_models,
+        ):
+            val[:, contribution.dataset_offset] += cast(
                 "np.ndarray[tuple[int], np.dtype[np.float64]]",
-                REGISTRY.get(key[0]).function(x, **_kwarg),
+                contribution.evaluate(x),
             )
 
         residual = val - data
@@ -185,6 +225,7 @@ def calculated_model(
     df: pd.DataFrame,
     global_fit: bool,
     bundle: CompositeModelBundle | None = None,
+    component_models: dict[str, str] | None = None,
 ) -> pd.DataFrame:
     r"""Calculate the single contributions of the models and add them to the dataframe.
 
@@ -203,6 +244,8 @@ def calculated_model(
         bundle (CompositeModelBundle | None): Optional composite model bundle for
             v2 local fits. When provided and ``global_fit`` is ``False``, decomposition uses
             ``bundle.decompose()`` instead of the legacy string-split approach.
+        component_models: Optional mapping from canonical component ids to
+            registry model names for canonical global-fit contribution names.
 
     Returns:
         pd.DataFrame: Extended dataframe containing the single contributions of the
@@ -211,27 +254,19 @@ def calculated_model(
     """
     _df = df.copy()
 
-    if bundle is not None and not global_fit:
+    if not global_fit:
+        if bundle is None:
+            msg = "CompositeModelBundle required for local decomposition."
+            raise RuntimeError(msg)
         for comp_id, curve in bundle.decompose(params, x).items():
             _df[comp_id] = curve
         return _df
 
-    peak_kwargs: dict[tuple[str, str] | tuple[str, str, str], dict[str, Parameter]] = (
-        defaultdict(dict)
-    )
-
-    for model, value in params.items():
-        model_lower = model.lower()
-        ReferenceKeys().model_check(model=model_lower)
-        p_name = model_lower.split("_")
-        if global_fit:
-            peak_kwargs[(p_name[0], p_name[2], p_name[3])][p_name[1]] = value
-        else:
-            peak_kwargs[(p_name[0], p_name[2])][p_name[1]] = value
-
-    for key, _kwarg in peak_kwargs.items():
-        c_name = "_".join(key)
-        _df[c_name] = REGISTRY.get(key[0]).function(x, **_kwarg)
+    for contribution in _group_global_contributions_with_models(
+        params=params,
+        component_models=component_models,
+    ):
+        _df[contribution.column_name] = contribution.evaluate(x)
 
     return _df
 

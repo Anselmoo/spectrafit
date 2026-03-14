@@ -1,4 +1,4 @@
-"""Unit tests for ReferenceKeys model validation (spectrafit.models.model_parameters).
+"""Unit tests for ReferenceKeys model validation.
 
 Covers:
 - model_check() — accepts all models in DistributionModelAPI
@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import pytest
 
-from spectrafit.models.model_parameters import ReferenceKeys
+from spectrafit.models.parameter_builder import ReferenceKeys
 
 
 # ---------------------------------------------------------------------------

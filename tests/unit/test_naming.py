@@ -11,6 +11,10 @@ from __future__ import annotations
 import pytest
 
 from spectrafit.core.fitting_config import UnifiedFittingConfig
+from spectrafit.models.naming import GlobalLmfitContributionKey
+from spectrafit.models.naming import dataset_scoped_name
+from spectrafit.models.naming import global_contribution_name
+from spectrafit.models.naming import global_lmfit_param_name
 from spectrafit.models.naming import lmfit_param_name
 from spectrafit.models.naming import sanitize_component_id
 from spectrafit.models.naming import translate_dot_notation
@@ -93,6 +97,32 @@ class TestLmfitParamName:
         assert len(parts) >= 2
 
 
+class TestDatasetScopedNames:
+    """Global dataset suffix helpers stay owned by canonical naming helpers."""
+
+    @pytest.mark.parametrize(
+        ("base_name", "dataset_index", "expected"),
+        [
+            ("p1_center", 1, "p1_center_1"),
+            ("fit", 2, "fit_2"),
+            ("residual", "avg", "residual_avg"),
+        ],
+    )
+    def test_dataset_scoped_name(
+        self,
+        base_name: str,
+        dataset_index: int | str,
+        expected: str,
+    ) -> None:
+        assert dataset_scoped_name(base_name, dataset_index) == expected
+
+    def test_global_lmfit_param_name_uses_canonical_base_name(self) -> None:
+        assert global_lmfit_param_name("1", "center", 2) == "p1_center_2"
+
+    def test_global_contribution_name_matches_grouped_column_shape(self) -> None:
+        assert global_contribution_name("gaussian_main", 3) == "gaussian_main_3"
+
+
 class TestTranslateDotNotation:
     """translate_dot_notation: user "id.field" → lmfit "id_field"."""
 
@@ -140,6 +170,44 @@ class TestTranslateDotNotation:
         once = translate_dot_notation(expr)
         twice = translate_dot_notation(once)
         assert once == twice
+
+
+class TestGlobalLmfitContributionKey:
+    """Global contribution keys parse from the right-most dataset/field boundary."""
+
+    @pytest.mark.parametrize(
+        ("parameter_name", "expected_id", "expected_field", "expected_dataset"),
+        [
+            ("pseudovoigt_amplitude_1", "pseudovoigt", "amplitude", 1),
+            ("gaussian_main_center_2", "gaussian_main", "center", 2),
+            ("gaussian_main_fwhmg_12", "gaussian_main", "fwhmg", 12),
+        ],
+    )
+    def test_parse_preserves_full_contribution_id(
+        self,
+        parameter_name: str,
+        expected_id: str,
+        expected_field: str,
+        expected_dataset: int,
+    ) -> None:
+        parsed = GlobalLmfitContributionKey.parse(parameter_name)
+
+        assert parsed.contribution_id == expected_id
+        assert parsed.field_name == expected_field
+        assert parsed.dataset_index == expected_dataset
+        assert parsed.contribution_name == f"{expected_id}_{expected_dataset}"
+
+    def test_registry_model_uses_contribution_prefix(self) -> None:
+        parsed = GlobalLmfitContributionKey.parse("gaussian_main_amplitude_1")
+        assert parsed.registry_model == "gaussian"
+
+    @pytest.mark.parametrize(
+        "parameter_name",
+        ["missing_dataset", "gaussian__1", "gaussian_main_center_zero"],
+    )
+    def test_parse_rejects_invalid_names(self, parameter_name: str) -> None:
+        with pytest.raises(ValueError):
+            GlobalLmfitContributionKey.parse(parameter_name)
 
 
 class TestV2NamingAuthority:

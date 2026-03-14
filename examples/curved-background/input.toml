@@ -1,0 +1,35 @@
+schema_version = "2.0"
+config_type = "peak_fit"
+
+[meta]
+description = "Single Gaussian peak on a curved quadratic background."
+
+[data]
+infile = "data.csv"
+x_col = "energy"
+y_col = "intensity"
+separator = ","
+
+[solver]
+method = "leastsq"
+max_nfev = 800
+nan_policy = "propagate"
+calc_covar = true
+
+[[components]]
+id = "peak1"
+model = "gaussian"
+
+[components.parameters]
+amplitude = { value = 1.1, bounds = [0.0, 2.5], vary = true }
+center = { value = 0.35, bounds = [-0.5, 1.0], vary = true }
+fwhmg = { value = 0.45, bounds = [0.1, 1.0], vary = true }
+
+[[components]]
+id = "bg"
+model = "polynom2"
+
+[components.parameters]
+coefficient0 = { value = 0.08, bounds = [0.0, 0.2], vary = true }
+coefficient1 = { value = -0.03, bounds = [-0.1, 0.1], vary = true }
+coefficient2 = { value = 0.02, bounds = [0.0, 0.08], vary = true }

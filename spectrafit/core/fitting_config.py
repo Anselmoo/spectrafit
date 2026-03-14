@@ -1,28 +1,23 @@
 """Unified fitting configuration model for SpectraFit.
 
 This module provides a single Pydantic model that captures the full fitting
-configuration consumed by both the CLI and notebook interfaces.  It supports
-loading from JSON, YAML, and TOML files and can produce the legacy dict
-format expected by the current solver pipeline.
+configuration consumed by both the CLI and notebook interfaces. Raw legacy and
+structured config ingress is normalized at the adapter boundary before this
+typed model composes and validates the canonical runtime surface.
 """
 
 from __future__ import annotations
 
-import json
-
 from collections.abc import Mapping
-from pathlib import Path
-
-import tomli
-import yaml
+from typing import TYPE_CHECKING
 
 from pydantic import BaseModel
 from pydantic import ConfigDict
 from pydantic import Field
-from pydantic import computed_field
 from pydantic import field_validator
 from pydantic import model_validator
 
+from spectrafit.core.config_loader import load_config_payload
 from spectrafit.models.bundle import CompositeModelBundle
 from spectrafit.models.bundle import build_composite_bundle
 from spectrafit.models.data_config import DataConfig
@@ -36,6 +31,10 @@ from spectrafit.models.preprocessing_config import PreprocessingConfig
 from spectrafit.models.solver_config import ConfIntervalConfig
 from spectrafit.models.solver_config import MinimizerConfig
 from spectrafit.models.solver_config import OptimizerConfig
+
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 class ColumnConfig(BaseModel):
@@ -63,34 +62,6 @@ class ColumnConfig(BaseModel):
         return str(v)
 
 
-type LegacyConfigPayload = Mapping[str, object]
-"""Read-only mapping accepted by legacy config construction bridges."""
-
-
-class V2DataBlock(BaseModel):
-    """Typed parser for the optional v2 ``[data]`` block."""
-
-    model_config = ConfigDict(
-        populate_by_name=True,
-        extra="allow",  # intentional: parse-time adapter
-    )  # intentional: parse-time adapter, accepts flexible v2 input before coercion
-
-    infile: str | Path | None = None
-    x_col: str = "energy"
-    y_col: str = "intensity"
-
-
-class V2SolverBlock(BaseModel):
-    """Typed parser for the optional v2 ``[solver]`` block."""
-
-    model_config = ConfigDict(
-        extra="allow"  # intentional: parse-time adapter
-    )
-    max_nfev: int | None = None
-    nan_policy: str = "propagate"
-    calc_covar: bool = True
-
-
 class UnifiedFittingConfig(BaseModel):
     """Unified fitting configuration consumed by CLI and notebook.
 
@@ -103,13 +74,14 @@ class UnifiedFittingConfig(BaseModel):
         components: Typed component definitions (v2 canonical format).
         minimizer: Minimizer options forwarded to *lmfit*.
         optimizer: Optimizer options forwarded to *lmfit*.
-        column: Column-name mapping for the input data (compat bridge for
-            frozen preprocessing / model_parameters modules).
-        global_: Global fitting mode — ``FittingMode.STANDARD`` for single-dataset
-            fits; ``FittingMode.GLOBAL`` for multi-dataset global fitting.
-            Accepts legacy integer values ``0`` (standard), ``1``/``2`` (global).
+        column: Column-name mapping for the input data. This remains as a
+            synchronized compatibility view, but ``data`` owns column metadata
+            whenever a ``[data]`` block is present.
+        context: Canonical typed fitting context carrying fitting mode ownership.
+            Legacy ``global`` / ``global_`` inputs are normalized into this field.
         conf_interval: Confidence-interval configuration.  ``False`` disables
-            CI calculation; a dict is forwarded to *lmfit* ``conf_interval``.
+            CI calculation; enabled settings are normalized into
+            :class:`~spectrafit.models.solver_config.ConfIntervalConfig`.
         meta: Optional project metadata (``[meta]`` section in TOML).
         data: Data-loading configuration (``[data]`` section in TOML).
         preprocessing: Pre-processing configuration (``[preprocessing]`` section).
@@ -131,12 +103,17 @@ class UnifiedFittingConfig(BaseModel):
     )
     column: ColumnConfig = Field(
         default_factory=ColumnConfig,
-        description="Column name mapping — compat bridge for frozen modules",
+        description=(
+            "Column name mapping — synchronized compatibility view over data-owned "
+            "column metadata."
+        ),
     )
-    global_: FittingMode = Field(
-        default=FittingMode.STANDARD,
-        alias="global",
-        description="Global fitting mode — STANDARD (default) or GLOBAL for multi-dataset fits",
+    context: FittingContext = Field(
+        default_factory=FittingContext,
+        description=(
+            "Canonical typed fitting context. Legacy global/global_ inputs are "
+            "normalized into this field at the adapter boundary."
+        ),
     )
     conf_interval: bool | ConfIntervalConfig = Field(
         default=False,
@@ -198,6 +175,33 @@ class UnifiedFittingConfig(BaseModel):
         """Comment character (delegates to ``data.comment``)."""
         return self.data.comment if self.data else None
 
+    def with_data_infile(self, infile: Path | str) -> UnifiedFittingConfig:
+        """Return a copy of the config with ``data.infile`` owned canonically.
+
+        Args:
+            infile: New input-data location to embed in the returned config.
+
+        Returns:
+            UnifiedFittingConfig: Deep copy with a typed :class:`DataConfig`
+                carrying the requested ``infile``.
+        """
+        from spectrafit.models.data_config import DataConfig  # noqa: PLC0415
+
+        return self.model_copy(
+            update={"data": DataConfig.from_unified(self, infile=infile)},
+            deep=True,
+        )
+
+    @property
+    def x_column(self) -> str:
+        """Canonical x-column name owned by ``data`` when available."""
+        return self.data.x_col if self.data is not None else self.column.x
+
+    @property
+    def y_column(self) -> str:
+        """Canonical y-column name owned by ``data`` when available."""
+        return self.data.y_col if self.data is not None else self.column.y
+
     @property
     def energy_start(self) -> float | None:
         """Lower energy bound (delegates to ``preprocessing.energy_start``)."""
@@ -224,103 +228,17 @@ class UnifiedFittingConfig(BaseModel):
         return self.preprocessing.oversampling if self.preprocessing else False
 
     # ------------------------------------------------------------------
-    # Computed fields — derived from global_
+    # Compatibility accessors — derived from canonical context
     # ------------------------------------------------------------------
 
-    @computed_field  # type: ignore[prop-decorator]
     @property
-    def context(self) -> FittingContext:
-        """Derive :class:`FittingContext` from the ``global_`` mode flag.
+    def global_(self) -> FittingMode:
+        """Compatibility alias exposing fitting mode from ``context``.
 
         Returns:
-            FittingContext: Typed fitting context with mode and n_datasets
-                derived from the legacy integer flag.
+            FittingMode: Canonical fitting mode derived from ``context``.
         """
-        return FittingContext.from_global_int(
-            0 if self.global_ == FittingMode.STANDARD else 1
-        )
-
-    @classmethod
-    def _migrate_v2_format(
-        cls, data: LegacyConfigPayload
-    ) -> dict[
-        str, object
-    ]:  # intentional: parse-time v2 adapter, coerces to internal dict before model_validate
-        """Translate v2 ``[[components]]`` input to internal representation.
-
-        Handles the prototype schema::
-
-            [[components]]
-            id    = "p1"
-            model = "gaussian"
-            [components.parameters]
-            amplitude = { value = 1.0, bounds = [0.0, 3.0], vary = true }
-
-            [data]
-            infile = "synth.csv"
-            x_col  = "energy"
-            y_col  = "intensity"
-
-            [solver]
-            method     = "leastsq"
-            max_nfev   = 1000
-            nan_policy = "propagate"
-            calc_covar = true
-
-        Args:
-            data: Raw input dict containing a ``components`` list.
-
-        Returns:
-            dict: Normalised dict ready for field validation.
-        """
-        data = dict(data)
-
-        # Promote a top-level ``infile`` key into the ``data`` sub-dict so it
-        # is parsed by DataConfig rather than rejected as an extra field.
-        if "infile" in data:
-            data_block = data.get("data", {})
-            if isinstance(data_block, dict):
-                data_block.setdefault("infile", data.pop("infile"))
-                data["data"] = data_block
-            else:
-                data.pop("infile")
-
-        # Keep the `data` dict in place — Pydantic will parse it as DataConfig.
-        # We also populate `column` for the frozen-module compat bridge.
-        if isinstance(data.get("data"), dict):
-            raw_data = data["data"]
-            if not isinstance(raw_data, dict):
-                msg = "Expected 'data' to be a dict"
-                raise TypeError(msg)
-            data_block = V2DataBlock.model_validate(raw_data)
-            data.setdefault(
-                "column",
-                {"x": data_block.x_col, "y": data_block.y_col},
-            )
-
-        if "solver" in data:
-            s = data.pop("solver")
-            if not isinstance(s, dict):
-                msg = "Expected 'solver' to be a dict"
-                raise TypeError(msg)
-            solver_block = V2SolverBlock.model_validate(s)
-            data.setdefault(
-                "minimizer",
-                {
-                    "nan_policy": solver_block.nan_policy,
-                    "calc_covar": solver_block.calc_covar,
-                },
-            )
-            data.setdefault(
-                "optimizer",
-                {"method": solver_block.method, "max_nfev": solver_block.max_nfev},
-            )
-
-        # Drop non-model metadata keys; `meta` stays → Pydantic parses as MetaConfig.
-        for key in ("schema_version", "config_type"):
-            data.pop(key, None)
-
-        return data
+        return self.context.mode
 
     @model_validator(mode="before")
     @classmethod
@@ -334,68 +252,13 @@ class UnifiedFittingConfig(BaseModel):
             object: Normalized dict ready for field validation, or original value
                 if input is not a dict.
         """
-        if not isinstance(data, dict):
+        if not isinstance(data, Mapping):
             return data
+        from spectrafit.adapters.unified_config_input import (  # noqa: PLC0415
+            normalize_strict_unified_config_input,
+        )
 
-        data = dict(data)
-        data.pop("context", None)
-
-        if isinstance(data.get("components"), list):
-            return cls._migrate_v2_format(data)
-        return data
-
-    @field_validator("global_", mode="before")
-    @classmethod
-    def coerce_global_mode(cls, v: object) -> FittingMode:
-        """Coerce legacy integer global_ values to :class:`FittingMode`.
-
-        Maps ``0`` → :attr:`FittingMode.STANDARD`,
-        ``1``/``2`` → :attr:`FittingMode.GLOBAL`.
-        String values are passed to :class:`FittingMode` directly.
-
-        Args:
-            v: Raw global_ value — integer (legacy) or string/FittingMode.
-
-        Returns:
-            FittingMode: Validated fitting mode.
-
-        Raises:
-            ValueError: If the value is not a recognised integer or FittingMode string.
-        """
-        if isinstance(v, FittingMode):
-            return v
-        if isinstance(v, int):
-            _map = {
-                0: FittingMode.STANDARD,
-                1: FittingMode.GLOBAL,
-                2: FittingMode.GLOBAL,
-            }
-            if v not in _map:
-                msg = f"global_ must be 0, 1, or 2; got {v!r}."
-                raise ValueError(msg)
-            return _map[v]
-        return FittingMode(v)
-
-    @field_validator("column", mode="before")
-    @classmethod
-    def coerce_column(cls, v: object) -> object:
-        """Coerce list/tuple column input to ColumnConfig-compatible dict.
-
-        Accepts the legacy ``["x_col", "y_col"]`` list format produced by the
-        CLI argument parser and converts it to ``{"x": ..., "y": ...}`` so that
-        Pydantic can instantiate ``ColumnConfig`` normally.
-
-        Args:
-            v: Raw column value — either a ``list``/``tuple`` of two strings,
-               a ``dict`` (passed through), or a ``ColumnConfig`` instance.
-
-        Returns:
-            Any: Dict suitable for ``ColumnConfig`` construction, or the original
-            value if it is already a dict/instance.
-        """
-        if isinstance(v, (list, tuple)) and len(v) >= 2:  # noqa: PLR2004
-            return {"x": str(v[0]), "y": str(v[1])}
-        return v
+        return normalize_strict_unified_config_input(data)
 
     @model_validator(mode="after")
     def validate_components_non_empty(self) -> UnifiedFittingConfig:
@@ -423,12 +286,42 @@ class UnifiedFittingConfig(BaseModel):
             raise ValueError(msg)
         return self
 
+    @model_validator(mode="after")
+    def sync_column_compatibility_view(self) -> UnifiedFittingConfig:
+        """Keep the legacy ``column`` view synchronized with data-owned columns."""
+        if self.data is None:
+            return self
+
+        synced_column = ColumnConfig(x=self.data.x_col, y=self.data.y_col)
+        if self.column != synced_column:
+            self.column = synced_column
+        return self
+
     # ------------------------------------------------------------------
     # Factory helpers
     # ------------------------------------------------------------------
 
     @classmethod
-    def from_file(cls, path: Path) -> UnifiedFittingConfig:
+    def _validate_mapping(cls, data: Mapping[str, object]) -> UnifiedFittingConfig:
+        """Validate a raw config mapping through the canonical ingress path."""
+        return cls.model_validate(data)
+
+    @classmethod
+    def _validate_legacy_mapping(
+        cls, data: Mapping[str, object]
+    ) -> UnifiedFittingConfig:
+        """Validate a legacy mapping through the explicit compatibility path."""
+        from spectrafit.adapters.unified_config_input import (  # noqa: PLC0415
+            normalize_unified_config_input,
+        )
+
+        normalized = normalize_unified_config_input(
+            data, allow_optimizer_passthrough=True
+        )
+        return cls.model_validate(normalized)
+
+    @classmethod
+    def from_file(cls, path: Path | str) -> UnifiedFittingConfig:
         """Load configuration from a JSON, YAML, or TOML file.
 
         The file format is auto-detected from the extension.
@@ -442,41 +335,14 @@ class UnifiedFittingConfig(BaseModel):
         Raises:
             OSError: If the file extension is not supported.
         """
-        path = Path(path)
-
-        if path.suffix == ".toml":
-            with path.open("rb") as fb:
-                raw: object = tomli.load(fb)
-        elif path.suffix == ".json":
-            with path.open(encoding="utf-8") as ft:
-                raw = json.load(ft)
-        elif path.suffix in {".yaml", ".yml"}:
-            with path.open(encoding="utf-8") as ft:
-                raw = yaml.load(ft, Loader=yaml.FullLoader)
-        else:
-            msg = (
-                f"Unsupported file format '{path.suffix}'. "
-                "Supported formats are: .json, .yaml, .yml, .toml"
-            )
-            raise OSError(msg)
-
-        # Rebase relative infile against the config file's directory so that
-        # `spectrafit fit path/to/input.toml` works regardless of CWD.
-        if isinstance(raw, dict):
-            data_section = raw.get("data")
-            if isinstance(data_section, dict):
-                infile_val = data_section.get("infile")
-                if isinstance(infile_val, str) and not Path(infile_val).is_absolute():
-                    data_section["infile"] = str((path.parent / infile_val).resolve())
-
-        return cls.model_validate(raw)
+        return cls._validate_mapping(load_config_payload(path))
 
     @classmethod
-    def from_dict(cls, data: LegacyConfigPayload) -> UnifiedFittingConfig:
+    def from_dict(cls, data: Mapping[str, object]) -> UnifiedFittingConfig:
         """Create a configuration from a plain dictionary.
 
-        This provides backward-compatible construction from the legacy dict
-        format used throughout SpectraFit.
+        This strict entry point accepts canonical v2 configuration shapes only.
+        Legacy aliases must use :meth:`from_legacy_dict`.
 
         Args:
             data: Mapping with fitting configuration keys.
@@ -484,8 +350,31 @@ class UnifiedFittingConfig(BaseModel):
         Returns:
             UnifiedFittingConfig: Validated configuration instance.
         """
-        # intentional: legacy callers still provide mapping-like config payloads.
-        return cls.model_validate(dict(data))
+        return cls._validate_mapping(data)
+
+    @classmethod
+    def from_legacy_file(cls, path: Path | str) -> UnifiedFittingConfig:
+        """Load a legacy config file through the explicit compatibility path.
+
+        Args:
+            path: Path to the legacy configuration file.
+
+        Returns:
+            UnifiedFittingConfig: Validated configuration instance.
+        """
+        return cls._validate_legacy_mapping(load_config_payload(path))
+
+    @classmethod
+    def from_legacy_dict(cls, data: Mapping[str, object]) -> UnifiedFittingConfig:
+        """Create a config from a legacy mapping via the compatibility adapter.
+
+        Args:
+            data: Mapping with legacy v1 or compatibility-shim keys.
+
+        Returns:
+            UnifiedFittingConfig: Validated configuration instance.
+        """
+        return cls._validate_legacy_mapping(data)
 
     # ------------------------------------------------------------------
     # Conversion helpers
@@ -496,7 +385,7 @@ class UnifiedFittingConfig(BaseModel):
 
         This is the v2 entry point for constructing the lmfit model graph.
         It replaces the nested ``define_parameters*`` loops in
-        :class:`~spectrafit.models.model_parameters.ModelParameters`.
+        :class:`~spectrafit.models.parameter_builder.ParameterBuilder`.
 
         Returns:
             CompositeModelBundle: Ready-to-fit composite model with all

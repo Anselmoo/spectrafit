@@ -4,7 +4,12 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
+from pydantic import ValidationError
+from spectrafit.adapters.data_config_args import data_config_from_args_dict
 from spectrafit.models.data_config import DataConfig
+from spectrafit.models.fitting_context import FittingContext
 
 
 # ---------------------------------------------------------------------------
@@ -40,7 +45,7 @@ class TestDataConfigDefaults:
             comment="#",
             x_col="x",
             y_col="y",
-            **{"global": 1},
+            context=FittingContext.from_global_int(1),
         )
         assert cfg.separator == ","
         assert cfg.decimal == ","
@@ -49,14 +54,18 @@ class TestDataConfigDefaults:
         assert cfg.y_col == "y"
         assert cfg.global_ == 1
 
+    def test_legacy_global_field_rejected(self, tmp_path: Path) -> None:
+        with pytest.raises(ValidationError):
+            DataConfig(infile=tmp_path / "data.csv", **{"global": 1})
+
 
 # ---------------------------------------------------------------------------
-# from_args_dict
+# legacy args adapter
 # ---------------------------------------------------------------------------
 
 
-class TestFromArgsDict:
-    """DataConfig.from_args_dict bridges the legacy dict interface."""
+class TestLegacyArgsAdapter:
+    """Dedicated adapter bridges the legacy dict interface into DataConfig."""
 
     def test_full_dict_with_column_list(self, tmp_path: Path) -> None:
         """Old ``column`` list format is transparently converted."""
@@ -70,7 +79,7 @@ class TestFromArgsDict:
             "column": ["energy", "intensity"],
             "global_": 0,
         }
-        cfg = DataConfig.from_args_dict(args)
+        cfg = data_config_from_args_dict(args)
         assert cfg.infile == infile
         assert cfg.separator == ","
         assert cfg.x_col == "energy"
@@ -86,12 +95,12 @@ class TestFromArgsDict:
             "y_col": "absorbance",
             "global_": 0,
         }
-        cfg = DataConfig.from_args_dict(args)
+        cfg = data_config_from_args_dict(args)
         assert cfg.x_col == "wavenumber"
         assert cfg.y_col == "absorbance"
 
     def test_minimal_dict_uses_defaults(self, tmp_path: Path) -> None:
-        cfg = DataConfig.from_args_dict({"infile": str(tmp_path / "f.txt")})
+        cfg = data_config_from_args_dict({"infile": str(tmp_path / "f.txt")})
         assert cfg.separator == r"\s+"
         assert cfg.header is None
         assert cfg.decimal == "."
@@ -101,7 +110,7 @@ class TestFromArgsDict:
         assert cfg.global_ == 0
 
     def test_global_flag_truthy(self, tmp_path: Path) -> None:
-        cfg = DataConfig.from_args_dict(
+        cfg = data_config_from_args_dict(
             {"infile": str(tmp_path / "f.txt"), "global_": 1}
         )
         assert cfg.global_ == 1
@@ -162,3 +171,34 @@ class TestFromUnified:
         cfg = self._make_config()
         dc = DataConfig.from_unified(cfg, tmp_path / "data.txt")
         assert dc.global_ == 0
+
+    def test_prefers_data_owned_columns_over_compat_column(self, tmp_path: Path) -> None:
+        from spectrafit.core.fitting_config import UnifiedFittingConfig
+
+        cfg = UnifiedFittingConfig(
+            components=[
+                {
+                    "id": "p1",
+                    "model": "gaussian",
+                    "parameters": {
+                        "amplitude": {"value": 1.0, "min": 0, "max": 2, "vary": True},
+                        "center": {"value": 0.0, "min": -1, "max": 1, "vary": True},
+                        "fwhmg": {"value": 0.5, "min": 0.1, "max": 2.0, "vary": True},
+                    },
+                }
+            ],
+            column={"x": "legacy_x", "y": "legacy_y"},
+            data=DataConfig(
+                infile=tmp_path / "owned.csv",
+                x_col="owned_x",
+                y_col="owned_y",
+                separator=",",
+            ),
+        )
+
+        dc = DataConfig.from_unified(cfg, tmp_path / "data.txt")
+
+        assert cfg.column.x == "owned_x"
+        assert cfg.column.y == "owned_y"
+        assert dc.x_col == "owned_x"
+        assert dc.y_col == "owned_y"

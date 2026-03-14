@@ -1,23 +1,15 @@
-"""Plotting of the fit results.
-
-!!! info "About the Font Cache"
-
-    For avoiding problems with the font cache, the font cache is rebuilt at the
-    beginning of the program. This can take a few seconds. If you want to avoid
-    this, you can comment out the line `matplotlib.font_manager._rebuild()` in
-    the `plotting.py` file.
-"""
+"""Plot fit results with shared Plotly builders."""
 
 from __future__ import annotations
 
+from pathlib import Path
 from typing import TYPE_CHECKING
 
-import matplotlib.font_manager
-import matplotlib.pyplot as plt
-import seaborn as sns
+from plotly.colors import qualitative
 
-from matplotlib.widgets import MultiCursor
-
+from spectrafit._plot_builders import FitPlotStyle
+from spectrafit._plot_builders import build_global_fit_figure
+from spectrafit._plot_builders import build_local_fit_figure
 from spectrafit.api.tools_model import ColumnNamesAPI
 from spectrafit.models.fitting_context import FittingMode
 from spectrafit.models.plot_config import PlotConfig
@@ -26,11 +18,7 @@ from spectrafit.models.plot_config import PlotConfig
 if TYPE_CHECKING:
     import pandas as pd
 
-
-matplotlib.font_manager.findfont("serif", rebuild_if_missing=True)
-
-sns.set_theme(style="whitegrid")
-color = sns.color_palette("Paired")
+    from plotly.graph_objects import Figure
 
 
 class PlotSpectra:
@@ -55,147 +43,50 @@ class PlotSpectra:
 
     def __call__(self) -> None:
         """Plot the data and the fit."""
-        if not self.config.noplot:
-            if self.config.global_fitting != FittingMode.STANDARD:
-                self.plot_global_spectra()
-            else:
-                self.plot_local_spectra()
-            plt.show()
+        if self.config.noplot:
+            return
+        self.figure().show()
 
-    def plot_global_spectra(self) -> None:
-        """Plot spectra for global fitting.
-
-        !!! info "Plotting of the global spectra"
-
-            The plotting routine for global fitting is similar to the local plotting
-            routine, but the spectra are plotted in a grid spectra plot. The first
-            row of the grid plot contains the residuals of each single fit, the
-            second row the best fit of the model with single peak contributions.
-        """
-        ds = self.config.data_statistic
-        n_spec: int = max(len(list(ds)) - 1, 1)
-        _, axs = plt.subplots(
-            nrows=2,
-            ncols=n_spec,
-            sharex=True,
-            figsize=(9, 9),
-            gridspec_kw={"height_ratios": [1, 2]},
+    def figure(self) -> Figure:
+        """Build the configured Plotly figure for the fit dataframe."""
+        return (
+            self.plot_global_spectra()
+            if self.config.global_fitting != FittingMode.STANDARD
+            else self.plot_local_spectra()
         )
 
-        for i in range(n_spec):
-            axs[0, i].set_title(f"Spectrum #{i + 1}")
-            sns.regplot(
-                x=ColumnNamesAPI().energy,
-                y=f"{ColumnNamesAPI().residual}_{i + 1}",
-                data=self.df,
-                ax=axs[0, i],
-                color=color[5],
+    def write_html(self, output_path: str | Path) -> Path:
+        """Write the configured Plotly figure as a standalone HTML artifact."""
+        resolved_output = Path(output_path)
+        resolved_output.parent.mkdir(parents=True, exist_ok=True)
+        self.figure().write_html(
+            resolved_output,
+            full_html=True,
+            include_plotlyjs=True,
+        )
+        return resolved_output
+
+    @staticmethod
+    def _style() -> FitPlotStyle:
+        return FitPlotStyle(component_colors=tuple(qualitative.Plotly[2:]))
+
+    @staticmethod
+    def _apply_layout(figure: Figure) -> Figure:
+        columns = ColumnNamesAPI()
+        figure.update_layout(template="plotly_white", hovermode="x unified")
+        figure.update_xaxes(title_text=columns.energy)
+        return figure
+
+    def plot_global_spectra(self) -> Figure:
+        """Build a Plotly figure for global fitting."""
+        return self._apply_layout(
+            build_global_fit_figure(
+                self.df,
+                data_statistic=self.config.data_statistic,
+                style=self._style(),
             )
-            axs[1, i] = sns.lineplot(
-                x=ColumnNamesAPI().energy,
-                y=f"{ColumnNamesAPI().intensity}_{i + 1}",
-                data=self.df,
-                ax=axs[1, i],
-                color=color[1],
-            )
-            axs[1, i] = sns.lineplot(
-                x=ColumnNamesAPI().energy,
-                y=f"fit_{i + 1}",
-                data=self.df,
-                ax=axs[1, i],
-                ls="--",
-                color=color[0],
-            )
-            peaks = [
-                peak
-                for peak in self.df.columns
-                if not peak.startswith(tuple(ColumnNamesAPI().model_dump().values()))
-                and peak.endswith(f"_{i + 1}")
-            ]
-            color_peaks = sns.color_palette("rocket", len(peaks))
-            for j, peak in enumerate(peaks):
-                axs[1, i] = sns.lineplot(
-                    x=ColumnNamesAPI().energy,
-                    y=peak,
-                    data=self.df,
-                    ax=axs[1, i],
-                    ls=":",
-                    color=color_peaks[j],
-                )
-
-        plt.tight_layout()
-
-    def plot_local_spectra(self) -> None:
-        """Plot spectra for local fitting.
-
-        `plot_spectra` performs a dual split plot. In the upper part, the residuum is
-        plotted together with a linear regression line. This means, if the linear
-        regression is a flat line, the fit and spectra are identically.
-        In the lower part, the fit is plotted together with the original spectra. Also
-        the single contributions of the fit are drawn.
-
-        !!! info "About Plotting"
-
-            `plot_spectra` is a wrapper around the `seaborn.lineplot` and
-            `seaborn.regplot` function. Furthermore, the `MultiCursor` widget is used
-            to create an interactive plot, for picking the energy and intensity of the
-            spectrum. the `MultiCursor` widget is a part of the `matplotlib` library
-            and can be used for both, the residual plot and the spectrum plot.
-
-
-        ![_](../../images/image001.png)
-        > The upper part shows the residuum and the linear regression line. The lower
-        > part shows the fit and the single contributions of the fit.
-        """
-        fig, (ax1, ax2) = plt.subplots(
-            2,
-            sharex=True,
-            figsize=(9, 9),
-            gridspec_kw={"height_ratios": [1, 2]},
         )
-        ax1 = sns.regplot(
-            x=ColumnNamesAPI().energy,
-            y=ColumnNamesAPI().residual,
-            data=self.df,
-            ax=ax1,
-            color=color[5],
-        )
-        ax2 = sns.lineplot(
-            x=ColumnNamesAPI().energy,
-            y=ColumnNamesAPI().intensity,
-            data=self.df,
-            ax=ax2,
-            color=color[1],
-        )
-        ax2 = sns.lineplot(
-            x=ColumnNamesAPI().energy,
-            y=ColumnNamesAPI().fit,
-            data=self.df,
-            ax=ax2,
-            ls="--",
-            color=color[0],
-        )
-        peaks = [
-            peak
-            for peak in self.df.columns
-            if peak not in list(ColumnNamesAPI().model_dump().values())
-        ]
-        color_peaks = sns.color_palette("rocket", len(peaks))
-        for i, peak in enumerate(peaks):
-            ax2 = sns.lineplot(
-                x=ColumnNamesAPI().energy,
-                y=peak,
-                data=self.df,
-                ax=ax2,
-                ls=":",
-                color=color_peaks[i],
-            )
 
-        _ = MultiCursor(
-            fig.canvas,
-            (ax1, ax2),
-            color=color[4],
-            ls="--",
-            lw=1,
-            horizOn=True,
-        )
+    def plot_local_spectra(self) -> Figure:
+        """Build a Plotly figure for local fitting."""
+        return self._apply_layout(build_local_fit_figure(self.df, style=self._style()))

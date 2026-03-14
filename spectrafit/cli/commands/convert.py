@@ -3,15 +3,26 @@
 from __future__ import annotations
 
 import json
+import tomllib
 
+from enum import StrEnum
 from pathlib import Path
 from typing import Annotated
 
-import tomli
 import typer
 import yaml
 
 from spectrafit.cli._types import OutputFormatEnum
+from spectrafit.jupyter import materialize_notebook_from_config
+
+
+class ConvertOutputFormat(StrEnum):
+    """Enum for supported ``spectrafit convert`` output formats."""
+
+    JSON = "json"
+    YAML = "yaml"
+    TOML = "toml"
+    IPYNB = "ipynb"
 
 
 def convert(
@@ -26,13 +37,13 @@ def convert(
         ),
     ],
     output_format: Annotated[
-        OutputFormatEnum,
+        ConvertOutputFormat,
         typer.Option(
             "-f",
             "--format",
-            help="Output format (json, yaml, or toml).",
+            help="Output format (json, yaml, toml, or ipynb).",
         ),
-    ] = OutputFormatEnum.TOML,
+    ] = ConvertOutputFormat.TOML,
     output_file: Annotated[
         Path | None,
         typer.Option(
@@ -49,7 +60,7 @@ def convert(
         ),
     ] = False,
 ) -> None:
-    """Convert input configuration files between JSON, YAML, and TOML formats.
+    """Convert input configuration files into config or notebook outputs.
 
     This command allows you to convert SpectraFit configuration files between
     different formats while preserving the structure and content.
@@ -57,11 +68,9 @@ def convert(
     Examples:
         spectrafit convert input.json --format yaml
         spectrafit convert config.toml -f json -o output.json
+        spectrafit convert input.toml -f ipynb -o analysis.ipynb
     """
     try:
-        # Read input file
-        config = _read_config(input_file)
-
         # Determine output filename
         if output_file is None:
             output_file = input_file.with_suffix(f".{output_format.value}")
@@ -88,8 +97,18 @@ def convert(
             )
             raise typer.Exit(1)
 
-        # Write output file
-        _write_config(config, output_file, output_format)
+        if output_format == ConvertOutputFormat.IPYNB:
+            materialize_notebook_from_config(
+                config_path=input_file,
+                output_path=output_file,
+            )
+        else:
+            config = _read_config(input_file)
+            _write_config(
+                config,
+                output_file,
+                _as_standard_output_format(output_format),
+            )
 
         typer.echo(
             typer.style(
@@ -114,6 +133,11 @@ def convert(
         raise typer.Exit(1) from e
 
 
+def _as_standard_output_format(output_format: ConvertOutputFormat) -> OutputFormatEnum:
+    """Map convert output choices to config serialization formats."""
+    return OutputFormatEnum(output_format.value)
+
+
 def _read_config(filepath: Path) -> dict[str, object]:  # intentional: I/O boundary
     """Read configuration from file.
 
@@ -133,7 +157,7 @@ def _read_config(filepath: Path) -> dict[str, object]:  # intentional: I/O bound
             return json.load(f)
     elif suffix == ".toml":
         with filepath.open("rb") as f:
-            return tomli.load(f)
+            return tomllib.load(f)
     elif suffix in {".yaml", ".yml"}:
         with filepath.open(encoding="utf-8") as f:
             return yaml.safe_load(f)

@@ -28,7 +28,7 @@ _TIPS: list[str] = [
     "Run [bold cyan]spectrafit fit --help[/] to see all fit options.",
     "Use [bold cyan]spectrafit init[/] to scaffold a new project with a starter config.",
     "Combine [bold cyan]--jupyter[/] with init to generate a reference notebook.",
-    "Pipe a config via stdin: [bold cyan]cat config.toml | spectrafit fit data.csv -[/]",
+    "Run [bold cyan]spectrafit fit config.toml[/] once your config points at your data file.",
     "Run [bold cyan]spectrafit new-config -m voigt -n 3[/] to generate a 3-peak template.",
     "Add [bold cyan]--noplot[/] to skip plot generation in non-interactive runs.",
     "Use [bold cyan]spectrafit validate config.toml[/] to check your config before fitting.",

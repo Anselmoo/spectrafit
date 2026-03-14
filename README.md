@@ -41,30 +41,32 @@ scientific applications.
 
 ## Installation
 
-via pip:
+Install the command-line tool:
 
 ```bash
 pip install spectrafit
+```
 
-# with support for Jupyter Notebook
+Install notebook support when you want to run the committed example notebooks:
 
-pip install spectrafit[jupyter]
+```bash
+pip install "spectrafit[jupyter]"
+```
 
-# with support for the dashboard in the Jupyter Notebook
+Optional extras:
 
-pip install spectrafit[jupyter-dash]
+```bash
+pip install "spectrafit[graph]"   # graph-oriented extras
+pip install "spectrafit[all]"     # all optional runtime extras
+pip install --upgrade spectrafit
+```
 
-# with support to visualize pkl-files as graph
+If you are working from this repository, the easiest scientist-friendly setup is:
 
-pip install spectrafit[graph]
-
-# with all upcomming features
-
-pip install spectrafit[all]
-
-# Upgrade
-
-pip install spectrafit --upgrade
+```bash
+git clone https://github.com/Anselmoo/spectrafit.git
+cd spectrafit
+uv sync --extra jupyter
 ```
 
 via conda, see also
@@ -72,175 +74,105 @@ via conda, see also
 
 ```bash
 conda install -c conda-forge spectrafit
-
-# with support for Jupyter Notebook
-
-conda install -c conda-forge spectrafit-jupyter
-
-# with all upcomming features
-
-conda install -c conda-forge spectrafit-all
 ```
 
-## Usage
+## Quickstart with the shipped examples
 
-`SpectraFit` needs as command line tool only two things:
+The fastest way to learn SpectraFit v2 is to start from the committed examples
+under [`examples/`](examples/README.md). Each example ships with:
 
-1. The reference data, which should be fitted.
-2. The input file, which contains the initial model.
+- `data.csv` — synthetic input data you can inspect locally
+- `input.toml` — readable v2 config used by both CLI and notebook flows
+- `notebook.ipynb` — local Jupyter notebook rooted in the example directory
+- `fit_validation.html` — generated on demand when you want a quick Plotly
+  validation overlay
 
-As model files [json](https://en.wikipedia.org/wiki/JSON),
-[toml](https://en.wikipedia.org/wiki/TOML), and
-[yaml](https://en.wikipedia.org/wiki/YAML) are supported. By making use of the
-python `**kwargs` feature, the input file can call most of the following
-functions of [LMFIT](https://lmfit.github.io/lmfit-py/index.html). LMFIT is the
-workhorse for the fit optimization, which is macro wrapper based on:
-
-1. [NumPy](https://www.numpy.org/)
-2. [SciPy](https://www.scipy.org/)
-3. [uncertainties](https://pythonhosted.org/uncertainties/)
-
-In case of `SpectraFit`, we have further extend the package by:
-
-1. [Pandas](https://pandas.pydata.org/)
-2. [statsmodels](https://www.statsmodels.org/stable/index.html)
-3. [numdifftools](https://github.com/pbrod/numdifftools)
-4. [Matplotlib](https://matplotlib.org/) in combination with
-   [Seaborn](https://seaborn.pydata.org/)
+### 1. Regenerate the example data
 
 ```bash
-spectrafit data_file.txt -i input_file.json
+uv run poe generate-examples
 ```
+
+### 2. Run a fit from the CLI
 
 ```bash
-usage: spectrafit [-h] [-o OUTFILE] [-i INPUT] [-ov] [-e0 ENERGY_START]
-                  [-e1 ENERGY_STOP] [-s SMOOTH] [-sh SHIFT] [-c COLUMN COLUMN]
-                  [-sep {       ,,,;,:,|, ,s+}] [-dec {.,,}] [-hd HEADER]
-                  [-g {0,1,2}] [-auto] [-np] [-v] [-vb {0,1,2}]
-                  infile
-
-Fast Fitting Program for ascii txt files.
-
-positional arguments:
-  infile                Filename of the spectra data
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -o OUTFILE, --outfile OUTFILE
-                        Filename for the export, default to set to
-                        'spectrafit_results'.
-  -i INPUT, --input INPUT
-                        Filename for the input parameter, default to set to
-                        'fitting_input.toml'.Supported fileformats are:
-                        '*.json', '*.yml', '*.yaml', and '*.toml'
-  -ov, --oversampling   Oversampling the spectra by using factor of 5;
-                        default to False.
-  -e0 ENERGY_START, --energy_start ENERGY_START
-                        Starting energy in eV; default to start of energy.
-  -e1 ENERGY_STOP, --energy_stop ENERGY_STOP
-                        Ending energy in eV; default to end of energy.
-  -s SMOOTH, --smooth SMOOTH
-                        Number of smooth points for lmfit; default to 0.
-  -sh SHIFT, --shift SHIFT
-                        Constant applied energy shift; default to 0.0.
-  -c COLUMN COLUMN, --column COLUMN COLUMN
-                        Selected columns for the energy- and intensity-values;
-                        default to '0' for energy (x-axis) and '1' for intensity
-                        (y-axis). In case of working with header, the column
-                        should be set to the column names as 'str'; default
-                        to 0 and 1.
-  -sep { ,,,;,:,|, ,s+}, --separator { ,,,;,:,|, ,s+}
-                        Redefine the type of separator; default to ' '.
-  -dec {.,,}, --decimal {.,,}
-                        Type of decimal separator; default to '.'.
-  -hd HEADER, --header HEADER
-                        Selected the header for the dataframe; default to None.
-  -cm COMMENT, --comment COMMENT
-                        Lines with comment characters like '#' should not be
-                        parsed; default to None.
-  -g {0,1,2}, --global_ {0,1,2}
-                        Perform a global fit over the complete dataframe. The
-                        options are '0' for classic fit (default). The
-                        option '1' for global fitting with auto-definition
-                        of the peaks depending on the column size and '2'
-                        for self-defined global fitting routines.
-  -auto, --autopeak     Auto detection of peaks in the spectra based on `SciPy`.
-                        The position, height, and width are used as estimation
-                        for the `Gaussian` models.The default option is 'False'
-                        for  manual peak definition.
-  -np, --noplot         No plotting the spectra and the fit of `SpectraFit`.
-  -v, --version         Display the current version of `SpectraFit`.
-  -vb {0,1,2}, --verbose {0,1,2}
-                        Display the initial configuration parameters and fit
-                        results, as a table '1', as a dictionary '2', or not in
-                        the terminal '0'. The default option is set to 1 for
-                        table `printout`.
+uv run spectrafit fit examples/basic/input.toml --noplot
+uv run spectrafit fit examples/two-peak-constrained/input.toml --noplot
 ```
 
-### Jupyter Notebook
-
-Open the `Jupyter Notebook` and run the following code:
+### 3. Open an example notebook directly
 
 ```bash
-spectrafit-jupyter
+jupyter lab examples/basic/notebook.ipynb
+jupyter lab examples/two-peak-constrained/notebook.ipynb
 ```
 
-or via Docker Image for `<cpu>` with `amd64` and `arm64`:
+For the repository examples, opening the committed notebook file directly is the
+recommended path. You do not need a special launcher to explore the local
+example workflow.
+
+## What gets written where
+
+The example workflows keep persistent artifacts next to the example so a
+scientist can inspect results without guessing where files went.
+
+| Surface | Example path | Typical artifacts |
+|---------|--------------|-------------------|
+| CLI live workflow | `examples/<name>/outputs/live/cli/` | `input.resolved.json`, `<name>_fit.csv`, `<name>_components.csv`, `<name>_correlation.csv`, `<name>_summary.json` |
+| Notebook live workflow | `examples/<name>/outputs/live/notebook/` | `fit_<name>.csv`, `metric_<name>.csv`, `peaks_<name>.csv`, `<name>.lock` |
+
+Two concrete directories to inspect after a run are:
+
+- `examples/basic/outputs/live/cli/`
+- `examples/basic/outputs/live/notebook/`
+
+## Example workflows for scientists
+
+### `basic/`
+
+- Purpose: learn the smallest useful v2 fit
+- Models: one Gaussian peak + flat linear background
+- Best for: first-time users learning the TOML schema and output files
+- Read more: [`examples/basic/README.md`](examples/basic/README.md)
+
+### `two-peak-constrained/`
+
+- Purpose: fit overlapping peaks with physically meaningful constraints
+- Models: Gaussian + Pseudo-Voigt + linear background
+- Best for: learning dot-notation constraints such as `p1.center + 1.0`
+- Read more:
+  [`examples/two-peak-constrained/README.md`](examples/two-peak-constrained/README.md)
+
+## Focused validation commands
 
 ```bash
-docker pull ghcr.io/anselmoo/spectrafit-<cpu>:latest
-docker run -it -p 8888:8888 spectrafit-<cpu>:latest
+uv run poe validate-examples      # pipeline smoke tests for examples/*
+uv run poe validate-cli-examples  # verify CLI exports for committed examples
+uv run poe live                   # regenerate data and refresh CLI + notebook live outputs
 ```
 
-or just:
+## Command-line usage
+
+The public fitting command is:
 
 ```bash
-docker run -p 8888:8888 ghcr.io/anselmoo/spectrafit-<cpu>:latest
+uv run spectrafit fit [CONFIG] [--noplot] [--outfile NAME]
 ```
 
-Next define your initial model and the reference data:
+Use `uv run spectrafit fit --help` to see the full current CLI contract.
 
-```python
-from spectrafit.plugins.notebook import SpectraFitNotebook
-import pandas as pd
+## Jupyter usage
 
-df = pd.read_csv(
-    "https://raw.githubusercontent.com/Anselmoo/spectrafit/main/Examples/data.csv"
-)
+The shipped example notebooks demonstrate the canonical notebook flow:
 
-initial_model = [
-    {
-        "pseudovoigt": {
-            "amplitude": {"max": 2, "min": 0, "vary": True, "value": 1},
-            "center": {"max": 2, "min": -2, "vary": True, "value": 0},
-            "fwhmg": {"max": 0.4, "min": 0.1, "vary": True, "value": 0.21},
-            "fwhml": {"max": 0.4, "min": 0.1, "vary": True, "value": 0.21},
-        }
-    },
-    {
-        "pseudovoigt": {
-            "amplitude": {"max": 2, "min": 0, "vary": True, "value": 1},
-            "center": {"max": 2, "min": -2, "vary": True, "value": 1},
-            "fwhmg": {"max": 0.4, "min": 0.1, "vary": True, "value": 0.21},
-            "fwhml": {"max": 0.4, "min": 0.1, "vary": True, "value": 0.21},
-        }
-    },
-    {
-        "pseudovoigt": {
-            "amplitude": {"max": 2, "min": 0, "vary": True, "value": 1},
-            "center": {"max": 2, "min": -2, "vary": True, "value": 1},
-            "fwhmg": {"max": 0.4, "min": 0.1, "vary": True, "value": 0.21},
-            "fwhml": {"max": 0.4, "min": 0.1, "vary": True, "value": 0.21},
-        }
-    },
-]
-spf = SpectraFitNotebook(df=df, x_column="Energy", y_column="Noisy")
-spf.solver_model(initial_model)
-```
+1. Load local data through `spectrafit.notebook.read(...)`
+2. Define peaks/background with compact `sf.peak(...)` and `sf.background(...)`
+3. Run `spectrafit.notebook.fit(...)` and export persistent artifacts into
+   `outputs/live/notebook/`
 
-Which results in the following output:
-
-![img_jupyter](https://github.com/Anselmoo/spectrafit/blob/8962a277b0c3d2aa05970617f0ac323a07de2fec/docs/images/jupyter_plot.png?raw=true)
+If you want a reusable notebook-oriented environment inside the repo, install
+the `jupyter` extra and open the example notebook you care about with
+`jupyter lab <path-to-notebook>`.
 
 ## Documentation
 

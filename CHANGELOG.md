@@ -2,6 +2,44 @@
 
 All notable changes to this project will be documented in this file.
 
+## v2.0.0 🌈 - 2026-03-18
+
+### :compass: What's Changed
+
+SpectraFit v2.0.0 completes the migration to the validated v2 runtime surface:
+
+- subcommand-based CLI (`fit`, `validate`, `convert`, `report`, `init`,
+  `new-config`, `plugins`, `jupyter`)
+- canonical Pydantic-owned fitting input via `UnifiedFittingConfig`
+- canonical typed runtime/export results via `FitResult`
+- external-only plugin system with repository template support
+- refreshed documentation, ADR coverage, and API/reference pages for the v2
+  architecture
+
+### :warning: Breaking Changes
+
+- legacy flat CLI invocation has been replaced by explicit subcommands
+- legacy v1 config shapes are deprecated in favor of canonical `[data]` and
+  `[[components]]` payloads
+- bundled Mössbauer and plugin-era notebook command surfaces no longer ship as
+  built-in plugins
+
+### :rocket: Migration & Release Notes
+
+- [Breaking changes](docs/changelogs/v2.0.0-breaking-changes.md)
+- [Release notes](docs/changelogs/v2.0.0-release-notes.md)
+- [Migration guide](docs/interface/migration-v2.md)
+- [API changes](docs/changelogs/v2.0.0-api-changes.md)
+
+### :microscope: Verification
+
+- release-prep validation covered lint, anti-pattern scanning, test execution,
+  and package metadata updates
+- release metadata updated to `2.0.0`
+- benchmarked a comparable single-fit CLI workload against `v1.4.2`; current
+  `v2.0.0` reached near-parity with a slightly lower median runtime
+  (`1.4628s` vs `1.4788s`)
+
 ## v1.4.0 🌈 - 2025-06-08
 
 ### :compass: What's Changed

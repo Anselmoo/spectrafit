@@ -1,12 +1,11 @@
 """Plugin discovery and loading system for SpectraFit.
 
-This module provides utilities for discovering, loading, and managing plugins
-using entry points and dynamic imports.
+This module provides utilities for discovering and managing external plugins
+via Python entry points.
 """
 
 from __future__ import annotations
 
-import importlib
 import importlib.metadata
 import logging
 
@@ -41,7 +40,6 @@ class PluginRegistry:
     def __init__(self) -> None:
         """Initialize the plugin registry."""
         self._plugins: dict[str, SpectraFitPlugin] = {}
-        self._builtin_plugins: dict[str, str] = {}
 
     def discover_plugins(
         self,
@@ -92,56 +90,6 @@ class PluginRegistry:
         except (ImportError, AttributeError):
             logger.exception("Failed to discover plugins")
 
-    def load_builtin_plugin(self, plugin_name: str) -> SpectraFitPlugin | None:
-        """Load a built-in plugin by name.
-
-        Args:
-            plugin_name: Name of the built-in plugin to load.
-
-        Returns:
-            Plugin instance if successfully loaded, None otherwise.
-
-        Example:
-            ```python
-            registry = PluginRegistry()
-            jupyter_plugin = registry.load_builtin_plugin("jupyter")
-            if jupyter_plugin:
-                print(f"Loaded {jupyter_plugin.name}")
-            ```
-        """
-        if plugin_name in self._plugins:
-            return self._plugins[plugin_name]
-
-        module_path = self._builtin_plugins.get(plugin_name)
-        if not module_path:
-            logger.error("Unknown built-in plugin: %s", plugin_name)
-            return None
-
-        try:
-            module = importlib.import_module(module_path)
-            # Look for a class that implements SpectraFitPlugin
-            for attr_name in dir(module):
-                attr = getattr(module, attr_name)
-                if (
-                    isinstance(attr, type)
-                    and attr_name.endswith("Plugin")
-                    and hasattr(attr, "name")
-                ):
-                    try:
-                        plugin = attr()
-                        if isinstance(plugin, SpectraFitPlugin):
-                            self._plugins[plugin.name] = plugin
-                            return plugin
-                    except (TypeError, AttributeError):
-                        # Plugin class instantiation failed, try next
-                        continue
-        except ImportError as e:
-            logger.warning("Failed to import plugin %s: %s", plugin_name, e)
-        except (AttributeError, TypeError):
-            logger.exception("Failed to load plugin %s", plugin_name)
-
-        return None
-
     def get_plugin(self, plugin_name: str) -> SpectraFitPlugin | None:
         """Get a plugin by name.
 
@@ -160,14 +108,6 @@ class PluginRegistry:
             List of registered plugin names.
         """
         return list(self._plugins.keys())
-
-    def list_available_builtins(self) -> list[str]:
-        """List all available built-in plugin names.
-
-        Returns:
-            List of built-in plugin names.
-        """
-        return list(self._builtin_plugins.keys())
 
 
 # Global plugin registry instance

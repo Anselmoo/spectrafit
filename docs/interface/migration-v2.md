@@ -33,6 +33,7 @@ Use this checklist to track your upgrade progress:
 - [ ] Replace static `Examples/` data with `SyntheticSpectrum` generator
 - [ ] Remove any PPTX export code
 - [ ] Update CI/CD pipelines that reference removed entry points or markers
+- [ ] Refresh notebook examples to use `import spectrafit.notebook as sf` as the default authoring path
 
 ---
 
@@ -71,8 +72,14 @@ class and related methods are removed.
 | `define_parameters_auto` method | :x: Removed |
 | `detection_check` method | :x: Removed |
 | `autopeak` configuration field | :x: Removed |
-| `ModelParameters` class | :white_check_mark: Still available |
-| `ReferenceKeys` class | :white_check_mark: Still available |
+| `ModelParameters` class | :x: Removed; use `spectrafit.models.parameter_builder.ParameterBuilder` |
+| `ReferenceKeys` class | :white_check_mark: Available from `spectrafit.models.parameter_builder` |
+
+!!! warning "Legacy model builder shim removed"
+
+    `spectrafit.models.model_parameters` has been removed in v2.x.
+    Import the canonical implementation from
+    `spectrafit.models.parameter_builder` instead.
 
 ### :file_folder: Static Examples
 
@@ -102,8 +109,35 @@ The following table lists every import affected by v2.0.0:
 | `from spectrafit.tools import ...` | :x: Removed | Delete import |
 | `from spectrafit.models.autopeak import ModelParameters` | :white_check_mark: Available | No change needed |
 | `from spectrafit.models.autopeak import ReferenceKeys` | :white_check_mark: Available | No change needed |
+| `from spectrafit.jupyter import SpectraFitNotebook` | :white_check_mark: Available | Keep for advanced runtime integrations; prefer `import spectrafit.notebook as sf` for new notebooks |
+| `import spectrafit.notebook as sf` | :sparkles: New | Preferred notebook authoring surface in v2.x |
 | `from spectrafit.models.registry import REGISTRY` | :sparkles: New | See [Model Registry](#model-registry) |
 | `from spectrafit.generators.synthetic import SyntheticSpectrum` | :sparkles: New | See [Synthetic Data](#synthetic-data-generator) |
+
+---
+
+## Notebook Authoring in v2.x
+
+For new or refreshed notebooks, prefer the compact notebook facade:
+
+```python
+import spectrafit.notebook as sf
+
+df = sf.read("data.csv", x="energy", y="intensity")
+result = sf.fit(
+    df,
+    peaks=[sf.peak("gaussian", id="main", amplitude=(1.0, 0.0, 2.0))],
+    name="analysis",
+)
+artifacts = result.save("outputs/live/notebook")
+```
+
+This keeps routine notebook work to one import, shorthand builders, and a
+bundled export call. Use `sf.tie("main.center + 0.5")` for tied parameters in
+scientist-friendly dot notation.
+
+Keep `spectrafit.jupyter.*` when you need advanced escape hatches such as
+config-to-notebook materialization or lower-level runtime integrations.
 
 ---
 

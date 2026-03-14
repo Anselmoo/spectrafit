@@ -6,9 +6,8 @@ from unittest.mock import patch
 
 import pytest
 
-from typer.testing import CliRunner
-
 from spectrafit.cli.main import app
+from typer.testing import CliRunner
 
 
 runner = CliRunner()
@@ -23,6 +22,10 @@ class TestCliMainBannerScope:
             result = runner.invoke(app, [])
         assert result.exit_code == 0
         render_banner.assert_called_once()
+
+    def test_root_short_help_exits_zero(self) -> None:
+        result = runner.invoke(app, ["-h"])
+        assert result.exit_code == 0
 
     @pytest.mark.parametrize("command", ["fit", "init", "jupyter", "plugins"])
     def test_banner_shows_for_interactive_commands(self, command: str) -> None:

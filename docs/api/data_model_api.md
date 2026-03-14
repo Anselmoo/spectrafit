@@ -1,14 +1,6 @@
 !!! note "About the Data Model"
-
-    The **Data Model** API is a new feature in the v0.12.0 release of
-    `SpectraFit` with major focus on:
-
-    1. Data Validation
-    2. Settings Management
-
-    The Data Model API is a work in progress and is subject to change.
-    It is realized by using the
-    [pydantic](https://pydantic-docs.helpmanual.io/) library.
+    The v2 data-model surface is built on Pydantic and focuses on validated
+    command, model, notebook, and utility payloads.
 
 ## Data Model API
 
@@ -20,24 +12,10 @@
 
 ::: spectrafit.api.models_model
 
-::: spectrafit.api.moessbauer_model
-
 ### Juptyer Notebook
 
 ::: spectrafit.api.notebook_model
 
-### Report Design
-
-::: spectrafit.api.report_model
-
 ### Tools and Utilities
 
 ::: spectrafit.api.tools_model
-
-### File Model API
-
-::: spectrafit.api.file_model
-
-### PPTX Model API
-
-::: spectrafit.api.pptx_model

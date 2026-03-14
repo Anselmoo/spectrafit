@@ -6,12 +6,46 @@ in various formats in Jupyter notebooks.
 
 from __future__ import annotations
 
+import importlib
+
+from typing import TYPE_CHECKING
+
 import pandas as pd
 
 from IPython.display import display
 from IPython.display import display_markdown
-from dtale import show as dtale_show
-from itables import show as itables_show
+
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
+
+
+def _load_optional_display_backend(
+    *,
+    module_name: str,
+    callable_name: str,
+    feature_name: str,
+) -> Callable[[pd.DataFrame], object]:
+    """Load an optional dataframe display backend on demand."""
+    try:
+        module = importlib.import_module(module_name)
+    except ImportError as exc:
+        msg = (
+            f"{feature_name} display requires optional dependency '{module_name}'. "
+            "Install with: pip install spectrafit[jupyter]"
+        )
+        raise ImportError(msg) from exc
+
+    try:
+        backend = getattr(module, callable_name)
+    except AttributeError as exc:
+        msg = (
+            f"{feature_name} display dependency '{module_name}' is missing "
+            f"'{callable_name}'. Reinstall with: pip install spectrafit[jupyter]"
+        )
+        raise ImportError(msg) from exc
+
+    return backend
 
 
 class DataFrameDisplay:
@@ -40,13 +74,13 @@ class DataFrameDisplay:
 
         Args:
             df (pd.DataFrame): Dataframe to display.
-            mode (str, Optional): Display mode. Defaults to None.
+            mode (str | None, optional): Display mode. Defaults to None.
 
         Raises:
             ValueError: Raises ValueError if mode of displaying is not supported.
 
         Returns:
-            Optional[Any]: Returns the dtale object for plotting in the Jupyter
+            Any | None: Returns the dtale object for plotting in the Jupyter
                  notebook, if mode is `dtale`.
 
         """
@@ -86,6 +120,11 @@ class DataFrameDisplay:
             df (pd.DataFrame): Dataframe to display.
 
         """
+        itables_show = _load_optional_display_backend(
+            module_name="itables",
+            callable_name="show",
+            feature_name="interactive",
+        )
         itables_show(df)
 
     @staticmethod
@@ -99,6 +138,11 @@ class DataFrameDisplay:
             object: Returns the dtale object for plotting in the Jupyter notebook.
 
         """
+        dtale_show = _load_optional_display_backend(
+            module_name="dtale",
+            callable_name="show",
+            feature_name="dtale",
+        )
         return dtale_show(df)
 
     @staticmethod

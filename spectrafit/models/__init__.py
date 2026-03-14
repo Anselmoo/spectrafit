@@ -7,6 +7,7 @@ from spectrafit.models.column_names import ColumnNames
 from spectrafit.models.data_config import DataConfig
 from spectrafit.models.fitting_context import FittingContext
 from spectrafit.models.fitting_context import FittingMode
+from spectrafit.models.fitting_request import FittingRequest
 from spectrafit.models.global_fitting import GlobalFittingConfig
 from spectrafit.models.mcmc_config import MCMCConfig
 from spectrafit.models.meta_config import MetaConfig
@@ -28,6 +29,7 @@ __all__ = [
     "FitResult",
     "FittingContext",
     "FittingMode",
+    "FittingRequest",
     "GlobalFittingConfig",
     "MCMCConfig",
     "MetaConfig",

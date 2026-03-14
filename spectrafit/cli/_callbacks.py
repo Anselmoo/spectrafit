@@ -4,12 +4,11 @@ from __future__ import annotations
 
 import typer
 
-from spectrafit.report import PrintingStatus
+from spectrafit.cli._status import cli_status
 
 
 def version_callback(value: bool) -> None:
     """Display version information."""
     if value:
-        status = PrintingStatus()
-        typer.echo(status.version())
+        typer.echo(cli_status.version())
         raise typer.Exit

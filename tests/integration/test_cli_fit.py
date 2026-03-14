@@ -17,6 +17,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
+from spectrafit.adapters.fit_result_json import load_fit_result
 from spectrafit.cli.main import app
 from typer.testing import CliRunner
 
@@ -89,9 +90,13 @@ def minimal_json_input(tmp_path: Path) -> tuple[Path, Path]:
 @pytest.mark.integration
 class TestFitWithJsonInput:
     def test_fit_exits_zero(
-        self, minimal_json_input: tuple[Path, Path], tmp_path: Path
+        self,
+        minimal_json_input: tuple[Path, Path],
+        tmp_path: Path,
+        monkeypatch: pytest.MonkeyPatch,
     ) -> None:
         _data_file, config_file = minimal_json_input
+        monkeypatch.chdir(tmp_path)
         result = runner.invoke(
             app,
             ["fit", str(config_file), "--noplot"],
@@ -100,15 +105,40 @@ class TestFitWithJsonInput:
         assert result.exit_code == 0, result.output
 
     def test_fit_produces_output_file(
-        self, minimal_json_input: tuple[Path, Path], tmp_path: Path
+        self,
+        minimal_json_input: tuple[Path, Path],
+        tmp_path: Path,
+        monkeypatch: pytest.MonkeyPatch,
     ) -> None:
         _data_file, config_file = minimal_json_input
+        monkeypatch.chdir(tmp_path)
         runner.invoke(
             app,
             ["fit", str(config_file), "--noplot"],
         )
-        output_files = list(tmp_path.glob("*.csv")) + list(tmp_path.glob("*.json"))
-        assert len(output_files) > 0, "No output files produced by fit command"
+        assert list(tmp_path.glob("*_fit.csv"))
+        assert list(tmp_path.glob("*_summary.json"))
+
+    def test_fit_summary_validates_through_canonical_model(
+        self,
+        minimal_json_input: tuple[Path, Path],
+        tmp_path: Path,
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        _data_file, config_file = minimal_json_input
+        monkeypatch.chdir(tmp_path)
+        result = runner.invoke(
+            app,
+            ["fit", str(config_file), "--noplot"],
+        )
+        assert result.exit_code == 0, result.output
+
+        summary_files = list(tmp_path.glob("*_summary.json"))
+        assert summary_files, "Fit command did not write a summary JSON output"
+
+        fit_result = load_fit_result(summary_files[0])
+        assert fit_result.fit_insights.variables
+        assert fit_result.data_summary.regression_metrics["columns"]
 
 
 @pytest.mark.integration

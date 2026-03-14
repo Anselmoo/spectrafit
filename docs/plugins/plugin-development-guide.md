@@ -1,10 +1,19 @@
 # Plugin Development Guide
 
-This guide explains how to create plugins for SpectraFit.
+This guide explains how to create **external entry-point plugins** for SpectraFit.
 
 ## Overview
 
-SpectraFit uses a plugin architecture that allows you to extend its functionality with custom commands and models. Plugins are discovered automatically using Python entry points.
+SpectraFit uses a plugin architecture that allows you to extend its
+functionality with custom commands and models. Plugins are discovered
+automatically using Python entry points.
+
+Core SpectraFit does not currently ship built-in `spectrafit.plugins` entry
+points. Jupyter is exposed as a top-level command, and the `plugins` command
+group is reserved for third-party extensions.
+
+If you want a starting point, copy the repository template under
+`examples/plugin_template/`.
 
 ## Plugin Protocol
 

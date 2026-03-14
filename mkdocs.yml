@@ -239,6 +239,8 @@ nav:
       - Interface: interface/index.md
       - Installation: interface/installation.md
       - Usage: interface/usage.md
+      - CLI Reference: interface/cli-reference.md
+      - v2 Migration Guide: interface/migration-v2.md
       - Features: interface/features.md
   - Examples:
       - Overview: examples/index.md
@@ -265,7 +267,7 @@ nav:
       - Statistics: doc/statistics.md
   - Plugins:
       - Overview: plugins/index.md
-      - Jupyter-Notebook-Integration: plugins/jupyter_interface.md
+      - Development Guide: plugins/plugin-development-guide.md
   - API:
       - Overview: api/index.md
       - SpectraFit: api/spectrafit_api.md
@@ -285,5 +287,8 @@ nav:
       - Changelog:
           - v1.x.x: changelog.md
           - v0.x.x: changelogs/v0.x.x.md
+          - v2.0.0 Breaking Changes: changelogs/v2.0.0-breaking-changes.md
+          - v2.0.0 API Changes: changelogs/v2.0.0-api-changes.md
+          - v2.0.0 Release Notes: changelogs/v2.0.0-release-notes.md
       - Contributors: contributors.md
   - Tags: tags.md

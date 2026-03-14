@@ -2,12 +2,17 @@
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 import pytest
 
-from spectrafit.models.types import DataSplitDict
-from spectrafit.models.types import FitReportKwargs
-from spectrafit.models.types import ModelParameterSpec
-from spectrafit.models.types import ParameterConstraint
+from spectrafit.models.split_frame import SplitFrame
+
+
+if TYPE_CHECKING:
+    from spectrafit.models.types import FitReportKwargs
+    from spectrafit.models.types import ModelParameterSpec
+    from spectrafit.models.types import ParameterConstraint
 
 
 # ---------------------------------------------------------------------------
@@ -53,17 +58,21 @@ class TestModelParameterSpec:
 
 
 @pytest.mark.unit
-class TestDataSplitDict:
-    """DataSplitDict matches pandas ``orient='split'`` structure."""
+class TestSplitFrame:
+    """SplitFrame matches pandas ``orient='split'`` structure."""
 
     def test_split_payload_shape(self) -> None:
-        split: DataSplitDict = {
-            "columns": ["x", "y"],
-            "index": [0, 1],
-            "data": [[1.0, 2.0], [3.0, 4.0]],
-        }
-        assert split["columns"] == ["x", "y"]
-        assert len(split["data"]) == 2
+        split = SplitFrame(
+            columns=["x", "y"],
+            index=[0, 1],
+            data=[[1.0, 2.0], [3.0, 4.0]],
+        )
+        assert split.columns == ["x", "y"]
+        assert len(split.data) == 2
+
+    def test_compatibility_key_access(self) -> None:
+        split = SplitFrame(columns=["x"], index=[0], data=[[1.0]])
+        assert split["columns"] == ["x"]
 
 
 @pytest.mark.unit

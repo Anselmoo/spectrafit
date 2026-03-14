@@ -6,6 +6,11 @@ separating concerns and making the code more maintainable.
 
 from __future__ import annotations
 
+from dataclasses import dataclass
+from functools import cached_property
+from typing import TYPE_CHECKING
+from typing import Protocol
+
 import pandas as pd
 
 from lmfit import Minimizer
@@ -19,52 +24,110 @@ from spectrafit.core.fitting_config import UnifiedFittingConfig
 from spectrafit.core.postprocessing import PostProcessing
 from spectrafit.core.postprocessing import PostProcessingResult
 from spectrafit.core.preprocessing import preprocess
+from spectrafit.core.solver_runtime import LmfitSolverRuntime
 from spectrafit.models.bundle import CompositeModelBundle
 from spectrafit.models.data_config import DataConfig
-from spectrafit.models.functions.builtin import SolverModels
+from spectrafit.models.fitting_request import FittingRequest
+from spectrafit.models.naming import sanitize_component_id
 from spectrafit.models.output_config import OutputConfig
 from spectrafit.models.preprocess_result import PreprocessResult
-from spectrafit.models.solver_config import ConfIntervalConfig
-from spectrafit.models.types import DataSplitDict
-from spectrafit.report import PrintingResults
+from spectrafit.models.split_frame import SplitFrame
+from spectrafit.reporting.service import emit_runtime_report
 
 
-type _CIResult = bool | dict[str, object]  # intentional: serialization boundary
+if TYPE_CHECKING:
+    from collections.abc import Callable
+
+    from spectrafit.models.results.fit_result import FitResult
 
 
-def _resolve_conf_interval(ci: bool | ConfIntervalConfig) -> _CIResult:
-    """Convert ``ConfIntervalConfig`` to the ``dict`` form expected by frozen modules.
+class SolverRuntime(Protocol):
+    """Protocol for solver collaborators used by the pipeline."""
 
-    Args:
-        ci: Confidence-interval configuration from `UnifiedFittingConfig`.
+    @property
+    def bundle(self) -> CompositeModelBundle | None:
+        """Return the prepared bundle, when available."""
 
-    Returns:
-        ``False`` to disable CI, or a kwargs dict for ``lmfit.conf_interval``.
-    """
-    if isinstance(ci, ConfIntervalConfig):
-        return ci.model_dump(exclude_none=True)
-    return ci
+    def solve(self) -> tuple[Minimizer, MinimizerResult]:
+        """Execute solving and return minimizer plus result."""
 
 
-def _coerce_data_statistic(raw: object) -> DataSplitDict:
-    """Normalize preprocessing statistics to ``DataSplitDict``.
+def build_data_config(config: UnifiedFittingConfig) -> DataConfig:
+    """Build the typed data-loader config from the unified fitting config."""
+    return DataConfig.from_unified(config)
 
-    Args:
-        raw: Raw ``data_statistic`` payload from frozen preprocessing code.
 
-    Returns:
-        DataSplitDict: Normalized split-orient payload.
-    """
-    empty = DataSplitDict(data=[], index=[], columns=[])
-    if not isinstance(raw, dict):
-        return empty
-    if {"data", "index", "columns"} - set(raw):
-        return empty
-    return DataSplitDict(
-        data=list(raw.get("data", [])),
-        index=list(raw.get("index", [])),
-        columns=list(raw.get("columns", [])),
+def build_solver_models(
+    df: pd.DataFrame, config: UnifiedFittingConfig
+) -> SolverRuntime:
+    """Build the solver runtime for one fitting pipeline run."""
+    return LmfitSolverRuntime(df=df, config=config)
+
+
+def run_postprocessing(
+    df: pd.DataFrame,
+    minimizer: Minimizer,
+    result: MinimizerResult,
+    config: UnifiedFittingConfig,
+    bundle: CompositeModelBundle | None = None,
+) -> PostProcessingResult:
+    """Run canonical post-processing for one fitting pipeline run."""
+    return PostProcessing(
+        df=df,
+        minimizer=minimizer,
+        result=result,
+        is_global=config.context.is_global,
+        conf_interval=config.conf_interval,
+        bundle=bundle,
+        source_x_column=config.x_column,
+        source_y_columns=[
+            str(column) for column in df.columns if str(column) != config.x_column
+        ],
+        component_models={
+            sanitize_component_id(component.id): component.model
+            for component in config.components
+        },
+    )()
+
+
+@dataclass(frozen=True, slots=True)
+class PipelineDependencies:
+    """Injected collaborators for fitting pipeline orchestration."""
+
+    data_config_factory: Callable[[UnifiedFittingConfig], DataConfig] = (
+        build_data_config
     )
+    data_loader: Callable[[DataConfig], pd.DataFrame] = load_data
+    preprocessor: Callable[[pd.DataFrame, UnifiedFittingConfig], PreprocessResult] = (
+        preprocess
+    )
+    solver_factory: Callable[[pd.DataFrame, UnifiedFittingConfig], SolverRuntime] = (
+        build_solver_models
+    )
+    postprocess_runner: Callable[
+        [
+            pd.DataFrame,
+            Minimizer,
+            MinimizerResult,
+            UnifiedFittingConfig,
+            CompositeModelBundle | None,
+        ],
+        PostProcessingResult,
+    ] = run_postprocessing
+    report_emitter: ReportEmitter = emit_runtime_report
+
+
+class ReportEmitter(Protocol):
+    """Protocol for emitting runtime fit reports from pipeline results."""
+
+    def __call__(
+        self,
+        *,
+        fit_result: FitResult,
+        data_statistic: SplitFrame,
+        verbose: int,
+    ) -> None:
+        """Emit a runtime report from canonical fit-result data."""
 
 
 class FitStatistics(BaseModel):
@@ -114,9 +177,7 @@ class FittingResult(BaseModel):
     post: PostProcessingResult
     config: UnifiedFittingConfig
     output: OutputConfig = Field(default_factory=OutputConfig)
-    data_statistic: DataSplitDict = Field(
-        default_factory=lambda: DataSplitDict(data=[], index=[], columns=[])
-    )
+    data_statistic: SplitFrame = Field(default_factory=SplitFrame.empty)
     minimizer: Minimizer
     result: MinimizerResult
 
@@ -139,6 +200,27 @@ class FittingResult(BaseModel):
     def success(self) -> bool:
         """Return whether the fit was successful."""
         return bool(self.result.success)
+
+    @cached_property
+    def fit_result(self) -> FitResult:
+        """Return the canonical typed fit-result projection for this pipeline run."""
+        from spectrafit.core.result_bridge import (  # noqa: PLC0415
+            build_fit_result_from_pipeline,
+        )
+
+        return build_fit_result_from_pipeline(self)
+
+    def to_fit_result(self) -> FitResult:
+        """Build a canonical :class:`~spectrafit.models.results.fit_result.FitResult`.
+
+        Delegates to :func:`~spectrafit.core.result_bridge.build_fit_result_from_pipeline`
+        so that all bridge logic lives in one module.
+
+        Returns:
+            FitResult: Canonical typed result ready for serialisation or
+                further processing.
+        """
+        return self.fit_result
 
     def to_json(self) -> FitStatistics:
         """Export serializable fit metadata.
@@ -168,27 +250,29 @@ class FittingPipeline:
     data loading, preprocessing, solving, and postprocessing steps.
 
     Attributes:
-        config (UnifiedFittingConfig): Validated configuration for the pipeline.
-        output (OutputConfig): Runtime output configuration (outfile, noplot, verbose).
+        request (FittingRequest): Typed request carrying config and output settings.
 
     """
 
     def __init__(
         self,
-        config: UnifiedFittingConfig,
-        output: OutputConfig | None = None,
+        request: FittingRequest,
+        deps: PipelineDependencies | None = None,
     ) -> None:
         """Initialize FittingPipeline.
 
         Args:
-            config: Validated :class:`UnifiedFittingConfig` for the fitting run.
-            output: Optional :class:`OutputConfig` controlling result export and
-                display.  Defaults to ``OutputConfig()`` (standard output,
-                plots enabled, table verbosity).
+            request: Typed request containing the validated
+                :class:`UnifiedFittingConfig` plus runtime output settings.
+            deps: Optional injected collaborators for data loading,
+                preprocessing, solver construction, post-processing, and
+                runtime reporting.
 
         """
-        self.config: UnifiedFittingConfig = config
-        self.output: OutputConfig = output or OutputConfig()
+        self.request: FittingRequest = request
+        self.config: UnifiedFittingConfig = request.config
+        self.output = request.output
+        self.deps: PipelineDependencies = deps or PipelineDependencies()
 
     def run(self) -> FittingResult:
         """Run the complete fitting pipeline.
@@ -235,7 +319,7 @@ class FittingPipeline:
             pd.DataFrame: Loaded data.
 
         """
-        return load_data(DataConfig.from_unified(self.config))
+        return self.deps.data_loader(self.deps.data_config_factory(self.config))
 
     def _preprocess(self, df: pd.DataFrame) -> PreprocessResult:
         """Preprocess the data.
@@ -248,7 +332,7 @@ class FittingPipeline:
                 descriptive statistics of the raw input frame.
 
         """
-        return preprocess(df=df, config=self.config)
+        return self.deps.preprocessor(df, self.config)
 
     def _solve(
         self,
@@ -264,8 +348,8 @@ class FittingPipeline:
                 Minimizer, fitting result, and the composite bundle (None for global fits).
 
         """
-        solver = SolverModels(df=df, config=self.config)
-        minimizer, result = solver()
+        solver = self.deps.solver_factory(df, self.config)
+        minimizer, result = solver.solve()
         bundle: CompositeModelBundle | None = solver.bundle
         return minimizer, result, bundle
 
@@ -288,20 +372,18 @@ class FittingPipeline:
             PostProcessingResult: Typed post-processing output.
 
         """
-        postprocessor = PostProcessing(
-            df=df,
-            minimizer=minimizer,
-            result=result,
-            is_global=self.config.context.is_global,
-            conf_interval=_resolve_conf_interval(self.config.conf_interval),
-            bundle=bundle,
+        return self.deps.postprocess_runner(
+            df,
+            minimizer,
+            result,
+            self.config,
+            bundle,
         )
-        return postprocessor()
 
 
 def fitting_routine_pipeline(
-    args: UnifiedFittingConfig,
-    output: OutputConfig | None = None,
+    request: FittingRequest,
+    deps: PipelineDependencies | None = None,
 ) -> FittingResult:
     """Run the fitting algorithm using the pipeline pattern.
 
@@ -309,25 +391,21 @@ def fitting_routine_pipeline(
     prints results, and returns the typed ``FittingResult``.
 
     Args:
-        args: Validated :class:`UnifiedFittingConfig` for the fitting run.
-        output: Optional :class:`OutputConfig` controlling result export and
-            display.  Defaults to ``OutputConfig()`` (standard output).
+        request: Typed request containing the validated fitting config and
+            runtime output settings for this execution.
+        deps: Optional injected collaborators for pipeline orchestration and
+            runtime reporting.
 
     Returns:
         FittingResult: Typed container with all pipeline outputs.
 
     """
-    pipeline = FittingPipeline(config=args, output=output)
+    pipeline = FittingPipeline(request=request, deps=deps)
     result = pipeline.run()
-
-    # Print results
-    PrintingResults(
-        post=result.post,
+    pipeline.deps.report_emitter(
+        fit_result=result.fit_result,
         data_statistic=result.data_statistic,
-        conf_interval=_resolve_conf_interval(result.config.conf_interval),
-        verbose=result.output.verbose,
-        minimizer=result.minimizer,
-        result=result.result,
-    )()
+        verbose=request.output.verbose,
+    )
 
     return result

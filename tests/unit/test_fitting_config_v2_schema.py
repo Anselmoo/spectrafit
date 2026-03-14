@@ -218,6 +218,28 @@ fwhmg     = { value = 0.3, bounds = [0.05, 1.0], vary = true }
         assert len(cfg.components) == 1
         assert cfg.components[0].model == "gaussian"
 
+    def test_solver_block_rejects_unknown_typo_fields(self) -> None:
+        data = {
+            **_V2_DICT,
+            "solver": {
+                **_V2_DICT["solver"],
+                "nan_polciy": "omit",
+            },
+        }
+        with pytest.raises(Exception):  # noqa: B017
+            UnifiedFittingConfig.model_validate(data)
+
+    def test_solver_block_rejects_method_specific_kwargs(self) -> None:
+        data = {
+            **_V2_DICT,
+            "solver": {
+                **_V2_DICT["solver"],
+                "xtol": 1e-8,
+            },
+        }
+        with pytest.raises(Exception):  # noqa: B017
+            UnifiedFittingConfig.model_validate(data)
+
 
 # ---------------------------------------------------------------------------
 # Error: components required
@@ -230,7 +252,10 @@ class TestValidateComponentsNonEmpty:
             UnifiedFittingConfig.model_validate({})
 
     def test_v1_peaks_rejected(self) -> None:
-        with pytest.raises(Exception):  # noqa: B017
+        with pytest.raises(
+            Exception,
+            match=r"from_legacy_dict\(\).*from_legacy_file\(\)",
+        ):
             UnifiedFittingConfig.model_validate(
                 {
                     "peaks": {

@@ -1,6 +1,8 @@
-"""Fit report formatting functions.
+"""Frozen dict-format report helpers for legacy import paths.
 
-This module contains functions for generating fit reports as dictionaries.
+Canonical fit-result ownership now lives in typed post-processing models and
+:mod:`spectrafit.reporting.service`. This module only retains dict-shaped
+compatibility buffers for callers that still import the legacy formatter API.
 """
 
 from __future__ import annotations
@@ -8,9 +10,17 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 from warnings import warn
 
-import numpy as np
+from pydantic import BaseModel
+from pydantic import ConfigDict
+from pydantic import Field
 
-from spectrafit.report.metrics import warn_meassage
+from spectrafit.models.results.fit_result import ComputationalMeta
+from spectrafit.models.results.fit_result import ErrorbarDiagnostics
+from spectrafit.models.results.fit_result import FitInsights
+from spectrafit.models.results.fit_result import FitResult
+from spectrafit.models.results.fit_result import FitStatistics
+from spectrafit.report._warnings import warn_meassage
+from spectrafit.reporting.service import project_canonical_report
 
 
 if TYPE_CHECKING:
@@ -23,7 +33,205 @@ type FitReportBuffer = dict[str, dict[str, object]]  # intentional: frozen Layer
 """Buffer dict holding fit report sections: configurations, statistics, variables, etc."""
 
 
-def fit_report_as_dict(  # noqa: C901
+class ReportConfigurations(BaseModel):
+    """Typed compatibility projection for legacy report configuration fields."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    fitting_method: str = ""
+    function_evals: int = 0
+    data_points: int = 0
+    variable_names: list[str] = Field(default_factory=list)
+    variable_numbers: int = 0
+    degree_of_freedom: int = 0
+
+
+class ReportStatistics(BaseModel):
+    """Typed compatibility projection for legacy goodness-of-fit fields."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    chi_square: float = 0.0
+    reduced_chi_square: float = 0.0
+    akaike_information: float = 0.0
+    bayesian_information: float = 0.0
+
+
+class ReportVariableEntry(BaseModel):
+    """Typed compatibility projection for one variable entry."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    init_value: float | str | None = None
+    model_value: float | None = None
+    best_value: float | None = None
+    error_relative: float | None = None
+    error_absolute: float | None = None
+
+
+class ReportErrorbars(BaseModel):
+    """Typed compatibility projection for legacy errorbar issue flags."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    at_initial_value: str | None = None
+    at_boundary: str | None = None
+
+
+class LegacyFitReport(BaseModel):
+    """Typed projection that preserves the frozen ``fit_report_as_dict`` contract."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    configurations: ReportConfigurations = Field(default_factory=ReportConfigurations)
+    statistics: ReportStatistics = Field(default_factory=ReportStatistics)
+    variables: dict[str, ReportVariableEntry] = Field(default_factory=dict)
+    errorbars: ReportErrorbars = Field(default_factory=ReportErrorbars)
+    correlations: dict[str, dict[str, float]] = Field(default_factory=dict)
+    covariance_matrix: dict[str, dict[str, float]] = Field(default_factory=dict)
+    computational: ComputationalMeta = Field(default_factory=ComputationalMeta)
+
+    def to_buffer(self) -> FitReportBuffer:
+        """Project the typed compatibility model to the frozen dict contract."""
+        return {
+            "configurations": self.configurations.model_dump(
+                mode="json",
+                exclude_none=True,
+            ),
+            "statistics": self.statistics.model_dump(mode="json", exclude_none=True),
+            "variables": {
+                name: entry.model_dump(mode="json", exclude_none=True)
+                for name, entry in self.variables.items()
+            },
+            "errorbars": self.errorbars.model_dump(mode="json", exclude_none=True),
+            "correlations": self.correlations,
+            "covariance_matrix": self.covariance_matrix,
+            "computational": self.computational.model_dump(
+                mode="json",
+                exclude_none=True,
+            ),
+        }
+
+
+def _build_fit_insights(
+    result: minimize,
+    settings: Minimizer | None = None,
+) -> FitInsights:
+    """Build canonical typed fit insights from runtime lmfit state."""
+    return FitInsights.from_minimizer_result(
+        result,
+        max_nfev=(
+            int(getattr(settings, "max_nfev", 0) or 0) if settings is not None else None
+        ),
+        nan_policy=(
+            str(getattr(settings, "nan_policy", "raise"))
+            if settings is not None
+            else None
+        ),
+        scale_covar=(
+            bool(settings.scale_covar)
+            if settings is not None and hasattr(settings, "scale_covar")
+            else None
+        ),
+        calc_covar=(
+            bool(settings.calc_covar)
+            if settings is not None and hasattr(settings, "calc_covar")
+            else None
+        ),
+    )
+
+
+def _warn_for_errorbar_diagnostics(diagnostics: ErrorbarDiagnostics) -> None:
+    """Emit legacy warning messages from typed diagnostics."""
+    for message in diagnostics.warning_messages():
+        warn(warn_meassage(msg=message), stacklevel=3)
+
+
+def _build_report_variables(
+    *,
+    result: minimize,
+    fit_insights: FitInsights,
+    modelpars: Parameters | None,
+) -> dict[str, ReportVariableEntry]:
+    """Build typed compatibility variable entries."""
+    variables: dict[str, ReportVariableEntry] = {}
+    for name, parameter in result.params.items():
+        fit_variable = fit_insights.variables.get(name)
+        model_param = (
+            modelpars[name] if modelpars is not None and name in modelpars else None
+        )
+
+        error_absolute: float | None = None
+        if fit_variable is not None and fit_variable.stderr is not None:
+            if fit_variable.best_value == 0:
+                error_absolute = float("inf")
+            elif fit_variable.best_value is not None:
+                error_absolute = (
+                    abs(fit_variable.stderr / fit_variable.best_value) * 100
+                )
+
+        variables[name] = ReportVariableEntry(
+            init_value=get_init_value(parameter, model_param),
+            model_value=(
+                float(model_param.value)
+                if model_param is not None
+                else fit_variable.model_value
+                if fit_variable is not None
+                else None
+            ),
+            best_value=fit_variable.best_value if fit_variable is not None else None,
+            error_relative=fit_variable.stderr if fit_variable is not None else None,
+            error_absolute=error_absolute,
+        )
+    return variables
+
+
+def _build_legacy_fit_report(
+    *,
+    result: minimize,
+    settings: Minimizer | None = None,
+    modelpars: Parameters | None = None,
+) -> LegacyFitReport:
+    """Build the frozen compatibility report from typed projection models."""
+    fit_statistics = FitStatistics.from_minimizer_result(result)
+    fit_insights = _build_fit_insights(result, settings)
+    fit_result = FitResult(
+        statistics=fit_statistics,
+        fit_insights=fit_insights,
+    )
+    report_schema = project_canonical_report(fit_result)
+    _warn_for_errorbar_diagnostics(report_schema.solver.computational.diagnostics)
+
+    return LegacyFitReport(
+        configurations=ReportConfigurations(
+            fitting_method=report_schema.statistics.method,
+            function_evals=report_schema.statistics.nfev,
+            data_points=report_schema.statistics.ndata,
+            variable_names=list(result.var_names or result.params.keys()),
+            variable_numbers=report_schema.statistics.nvarys,
+            degree_of_freedom=report_schema.statistics.nfree,
+        ),
+        statistics=ReportStatistics(
+            chi_square=report_schema.summary.chi_square or 0.0,
+            reduced_chi_square=report_schema.summary.reduced_chi_square or 0.0,
+            akaike_information=report_schema.summary.akaike_information or 0.0,
+            bayesian_information=report_schema.summary.bayesian_information or 0.0,
+        ),
+        variables=_build_report_variables(
+            result=result,
+            fit_insights=fit_result.fit_insights,
+            modelpars=modelpars,
+        ),
+        errorbars=ReportErrorbars.model_validate(
+            report_schema.solver.computational.diagnostics.report_mapping()
+        ),
+        correlations=report_schema.solver.component_correlation,
+        covariance_matrix=report_schema.solver.covariance_matrix,
+        computational=report_schema.solver.computational,
+    )
+
+
+def fit_report_as_dict(
     inpars: minimize,
     settings: Minimizer,
     modelpars: Parameters | None = None,
@@ -40,10 +248,6 @@ def fit_report_as_dict(  # noqa: C901
             2. Fit variables
             3. Fit correlations
 
-    !!! tip "About `Pydantic` for the report"
-
-        In a next release, the report will be generated as a `Pydantic` model.
-
     Args:
         inpars (minimize): Input Parameters from a fit or the  Minimizer results
              returned from a fit.
@@ -57,76 +261,11 @@ def fit_report_as_dict(  # noqa: C901
          FitReportBuffer: The report as a dictionary.
 
     """
-    result = inpars
-    params = inpars.params
-
-    parnames: list[str] = list(params.keys())
-
-    buffer: FitReportBuffer = {
-        "configurations": {},
-        "statistics": {},
-        "variables": {},
-        "errorbars": {},
-        "correlations": {},
-        "covariance_matrix": {},
-        "computational": {},
-    }
-
-    result, buffer, params = _extracted_gof_from_results(
-        result=result,
-        buffer=buffer,
-        params=params,
-    )
-    buffer = _extracted_computational_from_results(
-        result=result,
+    return _build_legacy_fit_report(
+        result=inpars,
         settings=settings,
-        buffer=buffer,
-    )
-    for name in parnames:
-        par = params[name]
-        par_entry: dict[
-            str, object
-        ] = {  # intentional: frozen Layer 4, v2.1 migration target
-            "init_value": get_init_value(param=par)
-        }
-        buffer["variables"][name] = par_entry
-
-        if modelpars is not None and name in modelpars:
-            par_entry["model_value"] = modelpars[name].value
-        try:
-            par_entry["best_value"] = par.value
-        except (TypeError, ValueError):  # pragma: no cover
-            par_entry["init_value"] = "NonNumericValue"
-        if par.stderr is not None:
-            par_entry["error_relative"] = par.stderr
-            try:
-                par_entry["error_absolute"] = abs(par.stderr / par.value) * 100
-            except ZeroDivisionError:  # pragma: no cover
-                par_entry["error_absolute"] = np.inf
-
-    for i, name_1 in enumerate(parnames):
-        par = params[name_1]
-        correl_entry: dict[
-            str, object
-        ] = {}  # intentional: frozen Layer 4, v2.1 migration target
-        buffer["correlations"][name_1] = correl_entry
-        if not par.vary:
-            continue
-        if hasattr(par, "correl") and par.correl is not None:
-            for name_2 in parnames[i + 1 :]:
-                if (
-                    name_1 != name_2
-                    and name_2 in par.correl
-                    and abs(par.correl[name_2]) <= 1.0
-                ):
-                    correl_entry[name_2] = par.correl[name_2]
-
-    if result.covar is not None and result.covar.shape[0] == len(parnames):
-        for i, name_1 in enumerate(parnames):
-            buffer["covariance_matrix"][name_1] = {
-                name_2: result.covar[i, j] for j, name_2 in enumerate(parnames)
-            }
-    return buffer
+        modelpars=modelpars,
+    ).to_buffer()
 
 
 def get_init_value(
@@ -171,16 +310,15 @@ def _extracted_computational_from_results(
         FitReportBuffer: The buffer with updated results.
 
     """
-    buffer["computational"]["success"] = result.success
-    if hasattr(result, "message"):
-        buffer["computational"]["message"] = result.message
-    buffer["computational"]["errorbars"] = result.errorbars
-    buffer["computational"]["nfev"] = result.nfev
-
-    buffer["computational"]["max_nfev"] = settings.max_nfev
-    buffer["computational"]["scale_covar"] = settings.scale_covar
-    buffer["computational"]["calc_covar"] = settings.calc_covar
-
+    legacy_report = _build_legacy_fit_report(result=result, settings=settings)
+    buffer["computational"] = legacy_report.computational.model_dump(
+        mode="json",
+        exclude_none=True,
+    )
+    buffer["errorbars"] = legacy_report.errorbars.model_dump(
+        mode="json",
+        exclude_none=True,
+    )
     return buffer
 
 
@@ -202,52 +340,25 @@ def _extracted_gof_from_results(
         Parameters: The parameters.
 
     """
-    if result is not None:
-        buffer["configurations"]["fitting_method"] = result.method
-        buffer["configurations"]["function_evals"] = result.nfev
-        buffer["configurations"]["data_points"] = result.ndata
-        buffer["configurations"]["variable_names"] = result.var_names
-        buffer["configurations"]["variable_numbers"] = result.nvarys
-        buffer["configurations"]["degree_of_freedom"] = result.nfree
-
-        buffer["statistics"]["chi_square"] = result.chisqr
-        buffer["statistics"]["reduced_chi_square"] = result.redchi
-        buffer["statistics"]["akaike_information"] = result.aic
-        buffer["statistics"]["bayesian_information"] = result.bic
-
-        if not result.errorbars:
-            warn(warn_meassage("Uncertainties could not be estimated"), stacklevel=2)
-
-            if result.method not in ("leastsq", "least_squares"):
-                warn(
-                    warn_meassage(
-                        msg=f"The fitting method '{result.method}' does not "
-                        "natively calculate and uncertainties cannot be "
-                        "estimated due to be out of region!",
-                    ),
-                    stacklevel=2,
-                )
-
-            parnames_varying = [par for par in result.params if result.params[par].vary]
-            for name in parnames_varying:
-                par = params[name]
-                if par.init_value and np.allclose(par.value, par.init_value):
-                    buffer["errorbars"]["at_initial_value"] = name
-                    warn(
-                        warn_meassage(
-                            msg=f"The parameter '{name}' is at its initial "
-                            "value and uncertainties cannot be estimated!",
-                        ),
-                        stacklevel=2,
-                    )
-                if np.allclose(par.value, par.min) or np.allclose(par.value, par.max):
-                    buffer["errorbars"]["at_boundary"] = name
-                    warn(
-                        warn_meassage(
-                            msg=f"The parameter '{name}' is at its boundary "
-                            "and uncertainties cannot be estimated!",
-                        ),
-                        stacklevel=2,
-                    )
-
+    legacy_report = _build_legacy_fit_report(result=result)
+    buffer["configurations"] = legacy_report.configurations.model_dump(
+        mode="json",
+        exclude_none=True,
+    )
+    buffer["statistics"] = legacy_report.statistics.model_dump(
+        mode="json",
+        exclude_none=True,
+    )
+    buffer["errorbars"] = legacy_report.errorbars.model_dump(
+        mode="json",
+        exclude_none=True,
+    )
     return result, buffer, params
+
+
+__all__ = [
+    "FitReportBuffer",
+    "_extracted_gof_from_results",
+    "fit_report_as_dict",
+    "get_init_value",
+]

@@ -8,8 +8,8 @@ from pydantic import BaseModel
 from pydantic import ConfigDict
 from pydantic import Field
 
-from spectrafit.models.types import (
-    DataSplitDict,  # noqa: TC001 — Pydantic resolves DataSplitDict at runtime
+from spectrafit.models.split_frame import (
+    SplitFrame,  # noqa: TC001 — Pydantic resolves at runtime
 )
 
 
@@ -21,14 +21,14 @@ class PreprocessResult(BaseModel):
 
     Attributes:
         df: Preprocessed DataFrame (energy range, shifted, oversampled, smoothed).
-        data_statistic: Descriptive statistics of the *raw* input frame in
-            ``DataFrame.to_dict(orient='split')`` format.
+        data_statistic: Descriptive statistics of the *raw* input frame as a
+            validated split-frame model.
 
     """
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
     df: pd.DataFrame = Field(..., description="Preprocessed DataFrame")
-    data_statistic: DataSplitDict = Field(
+    data_statistic: SplitFrame = Field(
         ..., description="Descriptive statistics of the raw input frame"
     )

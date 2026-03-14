@@ -8,19 +8,21 @@ icon: material/alert-decagram
 ---
 
 !!! note "About Models"
+    The v2 modelling surface is centered on typed component definitions,
+    registry-backed model lookup, naming helpers, and composite model assembly.
 
-## Built-in Models
+## Peak Models
 
-::: spectrafit.models.builtin
+::: spectrafit.models.peak_models
 
-## Regular Models
+## Model Registry
 
-::: spectrafit.models.regular
+::: spectrafit.models.registry
 
-## Moessbauer Models
+## Composite Bundles
 
-!!! warning "Experimental"
+::: spectrafit.models.bundle
 
-    The Moessbauer models are experimental and may not be fully functional.
+## Naming Helpers
 
-::: spectrafit.models.moessbauer
+::: spectrafit.models.naming

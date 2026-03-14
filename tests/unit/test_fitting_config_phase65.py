@@ -6,6 +6,7 @@ import numpy as np
 import pytest
 
 from spectrafit.core.fitting_config import UnifiedFittingConfig
+from spectrafit.models.fitting_context import FittingContext
 from spectrafit.models.fitting_context import FittingMode
 from spectrafit.models.peak_models import Component
 from spectrafit.models.peak_models import FitParameter
@@ -156,6 +157,13 @@ class TestContextComputedField:
     def test_standard_n_datasets_is_1(self, cfg_single: UnifiedFittingConfig) -> None:
         assert cfg_single.context.n_datasets == 1
 
+    def test_context_input_is_canonical(self) -> None:
+        context = FittingContext(mode=FittingMode.GLOBAL, n_datasets=3)
+        cfg = UnifiedFittingConfig(components=MINIMAL_COMPONENTS, context=context)
+
+        assert cfg.context == context
+        assert cfg.global_ == FittingMode.GLOBAL
+
     def test_global_1_gives_global_mode(self) -> None:
         cfg = UnifiedFittingConfig(components=MINIMAL_COMPONENTS, **{"global": 1})
         assert cfg.context.mode == FittingMode.GLOBAL
@@ -164,12 +172,40 @@ class TestContextComputedField:
         cfg = UnifiedFittingConfig(components=MINIMAL_COMPONENTS, **{"global": 2})
         assert cfg.context.mode == FittingMode.GLOBAL
 
+    def test_context_and_legacy_global_must_agree(self) -> None:
+        context = FittingContext(mode=FittingMode.STANDARD)
+
+        with pytest.raises(ValueError, match="context and legacy global mode must agree"):
+            UnifiedFittingConfig(
+                components=MINIMAL_COMPONENTS,
+                context=context,
+                **{"global": 1},
+            )
+
+    def test_model_dump_uses_context_not_global_alias(self) -> None:
+        cfg = UnifiedFittingConfig(components=MINIMAL_COMPONENTS, **{"global": 1})
+
+        dumped = cfg.model_dump(mode="json")
+
+        assert dumped["context"]["mode"] == "global"
+        assert "global_" not in dumped
+        assert "global" not in dumped
+
     def test_global_int_roundtrip(self, cfg_single: UnifiedFittingConfig) -> None:
         # global_int is 0 for STANDARD, 1 for GLOBAL — no longer an IntEnum
         from spectrafit.models.fitting_context import FittingMode
 
         expected = 0 if cfg_single.global_ == FittingMode.STANDARD else 1
         assert cfg_single.context.global_int == expected
+
+    def test_column_list_input_is_normalized_at_adapter_boundary(self) -> None:
+        cfg = UnifiedFittingConfig(
+            components=MINIMAL_COMPONENTS,
+            column=["energy_ev", "signal"],
+        )
+
+        assert cfg.column.x == "energy_ev"
+        assert cfg.column.y == "signal"
 
 
 # ---------------------------------------------------------------------------

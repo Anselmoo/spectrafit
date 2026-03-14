@@ -1,7 +1,7 @@
 ---
 name: pydantic-multiagent-analyzer
 description: "Pydantic v2 refactoring architect for SpectraFit. Use proactively for anti-pattern detection, dict-to-model migration, module overlap analysis, and architecture alignment against prototype/. Triggers: 'refactor models', 'anti-pattern scan', 'dict[str, object]', 'v2 migration', '@property side-effect', 'module overlap', 'break barriers', 'health score'."
-tools: [execute, read, agent, edit, search, ai-agent-guidelines/gap-frameworks-analyzers, ai-agent-guidelines/hierarchical-prompt-builder, 'context7/*', 'serena/*', todo]
+tools: [vscode, execute, read, agent, edit, search, web, github/get_file_contents, github/search_code, github/search_issues, 'ai-agent-guidelines/*', 'context7/*', github/get_file_contents, github/search_code, github/search_issues, 'serena/*', 'zen-of-languages/*', ms-python.python/getPythonEnvironmentInfo, ms-python.python/getPythonExecutableCommand, ms-python.python/installPythonPackage, ms-python.python/configurePythonEnvironment, todo]
 agents: [Explore, pydantic-refactor-analyzer, pydantic-patterns-architect]
 ---
 

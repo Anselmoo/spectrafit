@@ -8,6 +8,7 @@ import typer
 
 from spectrafit.cli._callbacks import version_callback
 from spectrafit.cli.commands.convert import convert
+from spectrafit.cli.commands.examples import examples_app
 from spectrafit.cli.commands.fit import fit
 from spectrafit.cli.commands.jupyter import jupyter
 from spectrafit.cli.commands.plugins import plugins_app
@@ -15,6 +16,7 @@ from spectrafit.cli.commands.report import report
 from spectrafit.cli.commands.scaffolding import init
 from spectrafit.cli.commands.scaffolding import new_config
 from spectrafit.cli.commands.validate import validate
+from spectrafit.cli.runtime import build_cli_runtime
 
 
 _BANNER_COMMANDS: set[str] = {"fit", "init", "jupyter", "plugins"}
@@ -59,6 +61,7 @@ def main(
     show_banner = (
         ctx.invoked_subcommand is None or ctx.invoked_subcommand in _BANNER_COMMANDS
     )
+    ctx.obj = {"runtime": build_cli_runtime()}
     if show_banner:
         render_startup_panel(Console(), detect_environment())
 
@@ -69,6 +72,7 @@ def main(
 
 # Register subcommands
 app.command(name="fit", help="Fit spectra data using SpectraFit.")(fit)
+app.add_typer(examples_app, name="examples", help="Inspect and run shipped examples.")
 app.command(name="validate", help="Validate input configuration files.")(validate)
 app.command(name="convert", help="Convert configuration files between formats.")(
     convert,

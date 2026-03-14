@@ -23,9 +23,13 @@ from pydantic import Field
 
 from spectrafit.cli._types import OutputFormatEnum
 from spectrafit.cli._types import reset_keyboard_protocol
+from spectrafit.core.fitting_config import UnifiedFittingConfig
+from spectrafit.generators.scenarios import get_synthetic_scenario
 from spectrafit.models.peak_models import Component
 from spectrafit.models.peak_models import FitParameter
 from spectrafit.models.registry import REGISTRY
+from spectrafit.models.solver_config import MinimizerConfig
+from spectrafit.models.solver_config import OptimizerConfig
 
 
 # ---------------------------------------------------------------------------
@@ -152,12 +156,29 @@ def _build_config(
     Returns:
         Complete v2 configuration dict ready for serialisation.
     """
+    return _build_config_model(peaks).model_dump(mode="json", exclude_none=True)
+
+
+def _build_config_model(peaks: list[tuple[int, str]]) -> UnifiedFittingConfig:
+    """Build a typed SpectraFit v2 configuration before serialization.
+
+    Args:
+        peaks: List of ``(peak_number, model_name)`` pairs.
+
+    Returns:
+        Validated :class:`~spectrafit.core.fitting_config.UnifiedFittingConfig`.
+    """
     components = [_build_component(model, num) for num, model in peaks]
-    return {
-        "components": [c.model_dump(exclude_none=True) for c in components],
-        "minimizer": {"nan_policy": "propagate", "calc_covar": True},
-        "optimizer": {"max_nfev": 1000, "method": "leastsq"},
-    }
+    return UnifiedFittingConfig(
+        components=components,
+        minimizer=MinimizerConfig(nan_policy="propagate", calc_covar=True),
+        optimizer=OptimizerConfig(max_nfev=1000, method="leastsq"),
+    ).with_data_infile("data.csv")
+
+
+def _build_starter_project_config_model() -> UnifiedFittingConfig:
+    """Return the canonical typed starter config used by ``spectrafit init``."""
+    return get_synthetic_scenario("basic").to_config().with_data_infile("data.csv")
 
 
 def _write_config(
@@ -233,14 +254,20 @@ def _run_init(cfg: InitConfig) -> None:
 
     # Create directory structure
     project_path.mkdir(parents=True, exist_ok=True)
-    (project_path / "data").mkdir(exist_ok=True)
     (project_path / "results").mkdir(exist_ok=True)
 
     generated: list[str] = []
+    starter_scenario = get_synthetic_scenario("basic")
+    starter_config_model = _build_starter_project_config_model()
+    starter_data = starter_scenario.to_dataframe()
+
+    data_file = project_path / "data.csv"
+    starter_data.to_csv(data_file, index=False)
+    generated.append("data.csv")
 
     # --- CLI config file ---
     if cfg.environment in (InitEnvironment.CLI, InitEnvironment.BOTH):
-        config = _build_config([(1, "gaussian")])
+        config = starter_config_model.model_dump(mode="json", exclude_none=True)
         config_file = project_path / f"config.{cfg.fmt.value}"
         _write_config(config, config_file, cfg.fmt)
         generated.append(f"config.{cfg.fmt.value}")
@@ -250,7 +277,11 @@ def _run_init(cfg: InitConfig) -> None:
         from spectrafit.jupyter.templates.starter_nb import write_starter_notebook
 
         nb_path = project_path / "spectrafit_getting_started.ipynb"
-        write_starter_notebook(cfg.project_name, nb_path)
+        write_starter_notebook(
+            cfg.project_name,
+            nb_path,
+            starter_config_model,
+        )
         generated.append("spectrafit_getting_started.ipynb")
 
     # --- spectrafit.toml project meta file ---
@@ -291,20 +322,30 @@ def _run_init(cfg: InitConfig) -> None:
     tree_lines = [
         f"[cyan]{cfg.project_name}/[/cyan]",
         *[f"  [green]├── {name}[/green]" for name in generated],
-        "  [green]├── data/[/green]",
         "  [green]└── results/[/green]",
     ]
+
+    next_steps = [
+        "[dim]Next:[/dim] inspect the starter [cyan]data.csv[/cyan] and edit "
+        f"[cyan]config.{cfg.fmt.value}[/cyan] so [cyan][data].infile[/cyan] points "
+        "at your own data file when you are ready.",
+    ]
+    if cfg.environment in (InitEnvironment.JUPYTER, InitEnvironment.BOTH):
+        next_steps.append(
+            "[dim]Notebook:[/dim] open [cyan]spectrafit_getting_started.ipynb[/cyan] "
+            "to adapt the typed config in-place."
+        )
+    if cfg.environment in (InitEnvironment.CLI, InitEnvironment.BOTH):
+        next_steps.append(
+            f"[dim]Run:[/dim] [cyan]cd {cfg.project_name} && spectrafit fit "
+            f"config.{cfg.fmt.value}[/cyan]"
+        )
 
     summary = Text.from_markup(
         "[bold green]✅ Project created[/bold green]\n\n"
         + "\n".join(tree_lines)
         + "\n\n"
-        + "[dim]Next:[/dim] "
-        + "[cyan]cd "
-        + cfg.project_name
-        + " && spectrafit fit data/<file> config."
-        + cfg.fmt.value
-        + "[/cyan]"
+        + "\n".join(next_steps)
     )
     console.print(Panel(summary, border_style="bright_blue"))
 

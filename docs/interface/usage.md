@@ -11,14 +11,21 @@ tags:
 
 # Using SpectraFit
 
-This guide covers both basic and advanced usage patterns for **SpectraFit**, including configuration options, input file formats, and special features.
+This guide covers both basic and advanced usage patterns for **SpectraFit**,
+including configuration options, input file formats, and special features.
+
+!!! note "SpectraFit v2 CLI"
+    SpectraFit v2 uses subcommands such as `spectrafit fit`,
+    `spectrafit validate`, and `spectrafit report`. For current command syntax,
+    see the [CLI reference](cli-reference.md). For command-line migration notes,
+    see the [v2 migration guide](migration-v2.md).
 
 ## Standard Usage
 
 !!! example "Basic Command"
 
     ```bash
-      spectrafit data_file.txt input_file.json
+      spectrafit fit fitting_input.toml
     ```
 
     In case of the standard usage of **SpectraFit**, the following steps are necessary:
@@ -543,58 +550,75 @@ Especially, the `toml` and `yaml` files are very useful for the configuration of
 
 ## Jupyter Notebook Interface
 
-The **SpectraFit** can be used in the [Jupyter Notebook](https://jupyter.org). First, the plugin has to be installed as described in [Installation](../interface/installation.md). To use the **SpectraFit** in the Jupyter Notebook, the **SpectraFit** has to be imported as follows:
+The primary documented notebook path is now the compact
+`import spectrafit.notebook as sf` facade.
 
-```python
-from spectrafit.plugins import notebook
-```
-
-Next, the **peak** definition has to be defined now as follows:
-
-```python
-initial_model = [
-    {
-        "pseudovoigt": {
-            "amplitude": {"max": 2, "min": 0, "vary": True, "value": 1},
-            "center": {"max": 2, "min": -2, "vary": True, "value": 0},
-            "fwhmg": {"max": 0.1, "min": 0.02, "vary": True, "value": 0.01},
-            "fwhml": {"max": 0.1, "min": 0.01, "vary": True, "value": 0.01},
-        }
-    },
-    {
-        "gaussian": {
-            "amplitude": {"max": 2, "min": 0, "vary": True, "value": 1},
-            "center": {"max": 2, "min": -2, "vary": True, "value": 0},
-            "fwhmg": {"max": 0.1, "min": 0.02, "vary": True, "value": 0.01},
-        }
-    },
-]
-```
-
-For generating the first fit via `spectrafit.plugins.notebook`, the following code has to be used:
-
-```python
-spf = SpectraFitNotebook(df=df, x_column="Energy", y_column="Noisy")
-spf.solver_model(
-    initial_model,
-)
-```
-
-and to save the results as `toml` file, just save the `spf` object as follows:
-
-```python
-spf.generate_report
-```
-
-!!! info "About the Jupyter Interface"
-The Jupyter interface is still under development and not yet fully functional. Furthermore, the peak definition changes a little bit - from a `dictionary` of `dictionary` to a `list` of `dictionaries`. As a consequence, the peak number is not needed anymore.
-
-    Also the _global fitting routine_ is not yet implemented for the Jupyter interface.
-
-More information about the Jupyter Notebook interface can be found in the [Jupyter Example](../examples/example9_1.ipynb) and the plugin documentation for [Jupyter-SpectraFit-Interface](../plugins/jupyter_interface.md) of **SpectraFit**.
-
-The Jupyter Lab for the **SpectraFit** can be also started via the command line:
+The easiest starting point is still one of the committed local example
+notebooks:
 
 ```bash
-spectrafit-jupyter
+jupyter lab examples/basic/notebook.ipynb
 ```
+
+Those notebooks already use the beginner-friendly workflow:
+
+```python
+from pathlib import Path
+
+import spectrafit.notebook as sf
+
+df = sf.read("data.csv", x="energy", y="intensity")
+
+result = sf.fit(
+    df,
+    peaks=[
+        sf.peak(
+            "gaussian",
+            id="p1",
+            amplitude=(1.0, 0.0, 2.0),
+            center=(0.0, -2.0, 2.0),
+            fwhmg=(0.2, 0.05, 1.0),
+        )
+    ],
+    background=[
+        sf.background(
+            "linear",
+            id="bg",
+            slope=sf.fixed(0.0),
+            intercept=(0.02, 0.0, 0.5),
+        )
+    ],
+    optimizer=sf.OptimizerConfig(method="leastsq", max_nfev=500),
+    name="analysis",
+)
+
+artifacts = result.save(Path("outputs/live/notebook"))
+```
+
+This keeps the normal notebook loop to one import, compact builders, and a
+single bundled export call. Use `sf.tie("p1.center + 1.0")` when you need tied
+parameters written in scientist-friendly dot notation.
+
+For config-driven notebook generation, SpectraFit can still materialize a real
+`.ipynb` file directly from a validated config:
+
+```bash
+spectrafit convert examples/basic/input.toml --format ipynb --output analysis.ipynb
+```
+
+!!! info "Advanced escape hatches"
+    Repository examples, materialized notebooks, and direct notebook API usage
+    all share the same canonical fit pipeline. Reach for these lower-level
+    surfaces only when you need them:
+
+    - `FitSession.to_config()` / `FitSession.to_toml(...)` to inspect or persist
+      the validated config behind a notebook run.
+    - `spectrafit.jupyter.materialize_notebook_from_config` for config-to-notebook
+      generation.
+    - `spectrafit.jupyter.SpectraFitNotebook` for advanced runtime integrations.
+
+See also:
+
+- [Jupyter interface](../plugins/jupyter_interface.md)
+- [Notebook API](../api/notebook_api.md)
+- [CLI reference](cli-reference.md)
