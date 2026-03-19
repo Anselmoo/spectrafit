@@ -14,6 +14,11 @@ tags:
 
 SpectraFit is available as a Python package and can be installed using various package managers. The recommended Python version is 3.8 or higher.
 
+!!! warning "SpectraFit v1.x lifecycle notice"
+
+    SpectraFit v2.0 is currently in development. SpectraFit v1.x is in
+    end-of-life maintenance mode and will receive only critical hotfixes.
+
 ## Quick Install Using UV
 
 [UV](https://github.com/astral-sh/uv) is a fast Python package installer and resolver that we recommend for installing SpectraFit:

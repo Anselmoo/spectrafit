@@ -30,6 +30,24 @@ def assert_no_critical_stderr(ret: Any) -> None:
 class TestCommandLineRunner:
     """Testing the command line interface."""
 
+    def test_help_contains_lifecycle_notice(
+        self,
+        monkeypatch: Any,
+        capsys: pytest.CaptureFixture[str],
+    ) -> None:
+        """Testing help contains the lifecycle notice."""
+        from spectrafit.spectrafit import get_args
+
+        monkeypatch.setattr(sys, "argv", ["spectrafit", "--help"])
+
+        with pytest.raises(SystemExit) as exc:
+            get_args()
+
+        assert exc.value.code == 0
+        out = capsys.readouterr().out
+        assert "SpectraFit v2.0 is currently in development." in out
+        assert "will receive only critical hotfixes." in out
+
     @pytest.mark.skip(
         reason="deactivated flaky subprocess version test for CI stability"
     )

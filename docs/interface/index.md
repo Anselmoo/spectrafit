@@ -13,6 +13,11 @@ tags:
 
 Welcome to the interface documentation for **SpectraFit**, a comprehensive Python package for spectral analysis and curve fitting.
 
+!!! warning "SpectraFit v1.x lifecycle notice"
+
+    SpectraFit v2.0 is currently in development. SpectraFit v1.x is in
+    end-of-life maintenance mode and will receive only critical hotfixes.
+
 ## Overview
 
 The interface of **SpectraFit** is designed to be flexible and user-friendly, accommodating both command-line usage and integration with Jupyter notebooks. This section covers everything you need to get started with **SpectraFit** and take advantage of its powerful features.

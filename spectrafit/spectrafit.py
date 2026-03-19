@@ -41,7 +41,10 @@ def get_args() -> dict[str, Any]:
     parser = argparse.ArgumentParser(
         description="Fast Fitting Program for ascii txt files.",
         usage="spectrafit [options] infile",
-        epilog="For more information, visit https://anselmoo.github.io/spectrafit/",
+        epilog=(
+            f"{__status__.lifecycle_notice()}\n"
+            "For more information, visit https://anselmoo.github.io/spectrafit/"
+        ),
         prog="spectrafit",
     )
     parser.add_argument("infile", type=str, help="Filename of the spectra data")

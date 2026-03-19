@@ -433,7 +433,13 @@ class TestPrintingStatus:
 
     def test_version(self, capfd: Any) -> None:
         """Test of the version message."""
-        self.ps.version()
+        from spectrafit import __version__
+
+        version = self.ps.version()
+
+        assert f"Currently used version is: {__version__}" in version
+        assert "SpectraFit v2.0 is currently in development." in version
+        assert "will receive only critical hotfixes." in version
         self.assert_capfd(capfd=capfd)
 
     def test_start(self, capfd: Any) -> None:
