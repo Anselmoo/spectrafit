@@ -33,9 +33,11 @@ def test_version() -> None:
     """Test that the package __version__ matches the installed distribution version."""
     from importlib.metadata import version as pkg_version
 
-    from spectrafit import __version__
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", FutureWarning)
+        module = reload_spectrafit()
 
-    assert __version__ == pkg_version("spectrafit")
+    assert module.__version__ == pkg_version("spectrafit")
 
 
 def test_package_lifecycle_warning() -> None:
@@ -53,17 +55,14 @@ def test_package_lifecycle_warning() -> None:
 
 def test_python_end_of_life_warning(monkeypatch: pytest.MonkeyPatch) -> None:
     """Test that a warning is issued for Python 3.9."""
-    module = importlib.import_module("spectrafit")
-
     # Set the Python version to 3.9
     monkeypatch.setattr(sys, "version_info", (3, 9, 0))
-
-    version_str = f"{module.PYTHON_END_OF_LIFE[0]}.{module.PYTHON_END_OF_LIFE[1]}"
 
     with warnings.catch_warnings(record=True) as captured:
         warnings.simplefilter("always")
         # Reload the module to trigger the warning
         module = reload_spectrafit()
+        version_str = f"{module.PYTHON_END_OF_LIFE[0]}.{module.PYTHON_END_OF_LIFE[1]}"
 
     assert any(
         issubclass(warning.category, FutureWarning)
@@ -80,8 +79,6 @@ def test_python_end_of_life_warning(monkeypatch: pytest.MonkeyPatch) -> None:
 
 def test_no_warning_for_other_versions(monkeypatch: pytest.MonkeyPatch) -> None:
     """Test that only the lifecycle warning is issued for Python versions other than 3.9."""
-    module = importlib.import_module("spectrafit")
-
     # Set the Python version to 3.10
     monkeypatch.setattr(sys, "version_info", (3, 10, 0))
 
