@@ -1442,7 +1442,7 @@ wheels = [
 
 [[package]]
 name = "dtale"
-version = "3.18.2"
+version = "3.20.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "beautifulsoup4" },
@@ -1488,9 +1488,9 @@ dependencies = [
     { name = "xarray", version = "2025.11.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "xlrd" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/9d/96/d50c0dfdd218bf3f7668e68585ec33250b43ca292e4b4aabedaa86a24bb9/dtale-3.18.2.tar.gz", hash = "sha256:262425fb21ec18025df053dae1002c3a4819c176eda71f38cb2206f1ec786ac6", size = 16559313, upload-time = "2025-07-30T16:03:25.964Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/dd/b3/83cd4eb0ec47c354f31e8252338f52ea6f43f98dd631f5a4a23c8e33feed/dtale-3.20.0.tar.gz", hash = "sha256:4a60f8b5e11e59056a8c7b05dcf746835b48bae2626c69fb2a77459d657128c8", size = 16444012, upload-time = "2026-02-18T22:43:49.467Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/28/8a/11cf2306b864336ad2cc2c17f913589c5d99b78efa966a00a92146321aba/dtale-3.18.2-py2.py3-none-any.whl", hash = "sha256:040dbc984662320a0615e78e607ffabb3e6880bf7c9709a180d6debb6f257fb5", size = 17603057, upload-time = "2025-07-30T16:01:15.917Z" },
+    { url = "https://files.pythonhosted.org/packages/6b/3f/03f429c58422bba0c6027cb5a3f16d71fd239ffee50a3393565dfc21678f/dtale-3.20.0-py2.py3-none-any.whl", hash = "sha256:638881432538a91c997cae58693bcaec2879524007b831b6861aa241dde51d41", size = 17479228, upload-time = "2026-02-18T22:43:44.657Z" },
 ]
 
 [[package]]
