@@ -421,12 +421,14 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
     display: inline-block;
     white-space: normal;
   }
-</style> <!-- End of mermaid configuration --><div class=jupyter-wrapper> <div class=jp-Notebook data-jp-theme-light=true data-jp-theme-name="JupyterLab Light"> <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell"> <div class=jp-Cell-inputWrapper tabindex=0> <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser"> </div> <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt"> </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type=text/markdown> <h2 id=global-fitting-of-a-series-of-spectra>Global Fitting of a series of spectra<a class=anchor-link href=#global-fitting-of-a-series-of-spectra>¶</a></h2> </div> </div> </div> </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs"> <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs"> <div class=jp-Cell-inputWrapper tabindex=0> <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser"> </div> <div class="jp-InputArea jp-Cell-inputArea"> <div class="jp-InputPrompt jp-InputArea-prompt">In [1]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type=inline> <div class="CodeMirror cm-s-jupyter"> <div class=zeroclipboard-container> <clipboard-copy , aria-label="Copy to Clipboard" for=cell-1> <div> <span class=notice hidden>Copied!</span> <svg aria-hidden=true class=clipboard-copy-icon data-view-component=true height=20 version=1.1 viewbox="0 0 16 16" width=20> <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill=currentColor fill-rule=evenodd></path> <path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill=currentColor fill-rule=evenodd></path> </svg> </div> </clipboard-copy> </div> <div class="highlight-ipynb hl-python"><pre><span></span><span class=kn>from</span><span class=w> </span><span class=nn>__future__</span><span class=w> </span><span class=kn>import</span> <span class=n>annotations</span>
+</style> <!-- End of mermaid configuration --><div class=jupyter-wrapper> <div class=jp-Notebook data-jp-theme-light=true data-jp-theme-name="JupyterLab Light"> <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell"> <div class=jp-Cell-inputWrapper tabindex=0> <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser"> </div> <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt"> </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type=text/markdown> <h2 id=global-fitting-of-a-series-of-spectra>Global Fitting of a series of spectra<a class=anchor-link href=#global-fitting-of-a-series-of-spectra>¶</a></h2> </div> </div> </div> </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell"> <div class="jp-Cell jp-CodeCell jp-Notebook-cell"> <div class=jp-Cell-inputWrapper tabindex=0> <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser"> </div> <div class="jp-InputArea jp-Cell-inputArea"> <div class="jp-InputPrompt jp-InputArea-prompt">In [1]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type=inline> <div class="CodeMirror cm-s-jupyter"> <div class=zeroclipboard-container> <clipboard-copy , aria-label="Copy to Clipboard" for=cell-1> <div> <span class=notice hidden>Copied!</span> <svg aria-hidden=true class=clipboard-copy-icon data-view-component=true height=20 version=1.1 viewbox="0 0 16 16" width=20> <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill=currentColor fill-rule=evenodd></path> <path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill=currentColor fill-rule=evenodd></path> </svg> </div> </clipboard-copy> </div> <div class="highlight-ipynb hl-python"><pre><span></span><span class=kn>from</span><span class=w> </span><span class=nn>__future__</span><span class=w> </span><span class=kn>import</span> <span class=n>annotations</span>
 
 <span class=kn>import</span><span class=w> </span><span class=nn>pandas</span><span class=w> </span><span class=k>as</span><span class=w> </span><span class=nn>pd</span>
 
 <span class=kn>from</span><span class=w> </span><span class=nn>spectrafit.plugins</span><span class=w> </span><span class=kn>import</span> <span class=n>notebook</span> <span class=k>as</span> <span class=n>nb</span>
-</pre></div> <div class=clipboard-copy-txt id=cell-1>from __future__ import annotations import pandas as pd from spectrafit.plugins import notebook as nb</div> </div> </div> </div> </div> </div> </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs"> <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs"> <div class=jp-Cell-inputWrapper tabindex=0> <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser"> </div> <div class="jp-InputArea jp-Cell-inputArea"> <div class="jp-InputPrompt jp-InputArea-prompt">In [2]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type=inline> <div class="CodeMirror cm-s-jupyter"> <div class=zeroclipboard-container> <clipboard-copy , aria-label="Copy to Clipboard" for=cell-2> <div> <span class=notice hidden>Copied!</span> <svg aria-hidden=true class=clipboard-copy-icon data-view-component=true height=20 version=1.1 viewbox="0 0 16 16" width=20> <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill=currentColor fill-rule=evenodd></path> <path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill=currentColor fill-rule=evenodd></path> </svg> </div> </clipboard-copy> </div> <div class="highlight-ipynb hl-python"><pre><span></span><span class=n>df</span> <span class=o>=</span> <span class=n>pd</span><span class=o>.</span><span class=n>read_csv</span><span class=p>(</span>
+</pre></div> <div class=clipboard-copy-txt id=cell-1>from __future__ import annotations import pandas as pd from spectrafit.plugins import notebook as nb</div> </div> </div> </div> </div> <div class=jp-Cell-outputWrapper> <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser"> </div> <div class="jp-OutputArea jp-Cell-outputArea"> <div class=jp-OutputArea-child> <div class="jp-OutputPrompt jp-OutputArea-prompt"></div> <div class="jp-RenderedText jp-OutputArea-output" data-mime-type=application/vnd.jupyter.stderr tabindex=0> <pre>/tmp/ipykernel_3002/2629412198.py:5: FutureWarning: SpectraFit v2.0 is currently in development. SpectraFit v1.x is in end-of-life maintenance mode and will receive only critical hotfixes.
+  from spectrafit.plugins import notebook as nb
+</pre> </div> </div> </div> </div> </div> </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs"> <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs"> <div class=jp-Cell-inputWrapper tabindex=0> <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser"> </div> <div class="jp-InputArea jp-Cell-inputArea"> <div class="jp-InputPrompt jp-InputArea-prompt">In [2]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type=inline> <div class="CodeMirror cm-s-jupyter"> <div class=zeroclipboard-container> <clipboard-copy , aria-label="Copy to Clipboard" for=cell-2> <div> <span class=notice hidden>Copied!</span> <svg aria-hidden=true class=clipboard-copy-icon data-view-component=true height=20 version=1.1 viewbox="0 0 16 16" width=20> <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill=currentColor fill-rule=evenodd></path> <path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill=currentColor fill-rule=evenodd></path> </svg> </div> </clipboard-copy> </div> <div class="highlight-ipynb hl-python"><pre><span></span><span class=n>df</span> <span class=o>=</span> <span class=n>pd</span><span class=o>.</span><span class=n>read_csv</span><span class=p>(</span>
     <span class=s2>"https://raw.githubusercontent.com/Anselmoo/spectrafit/1cda9e0d93f9d0536380075e75fac50459555b99/Examples/data_global.csv"</span><span class=p>,</span>
 <span class=p>)</span>
 </pre></div> <div class=clipboard-copy-txt id=cell-2>df = pd.read_csv( "https://raw.githubusercontent.com/Anselmoo/spectrafit/1cda9e0d93f9d0536380075e75fac50459555b99/Examples/data_global.csv", )</div> </div> </div> </div> </div> </div> </div> <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell"> <div class=jp-Cell-inputWrapper tabindex=0> <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser"> </div> <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt"> </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type=text/markdown> <h3 id=this-example-shows-how-to-fit-a-series-of-spectra-with-a-common-model>This example shows how to fit a series of spectra with a common model<a class=anchor-link href=#this-example-shows-how-to-fit-a-series-of-spectra-with-a-common-model>¶</a></h3><p>To activate the <em>global fitting</em> routine, <code>y_column</code> has to be defined to a list of column names and not a single column name. The list of column names will be selected for the fitting.</p> </div> </div> </div> </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs"> <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs"> <div class=jp-Cell-inputWrapper tabindex=0> <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser"> </div> <div class="jp-InputArea jp-Cell-inputArea"> <div class="jp-InputPrompt jp-InputArea-prompt">In [3]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type=inline> <div class="CodeMirror cm-s-jupyter"> <div class=zeroclipboard-container> <clipboard-copy , aria-label="Copy to Clipboard" for=cell-3> <div> <span class=notice hidden>Copied!</span> <svg aria-hidden=true class=clipboard-copy-icon data-view-component=true height=20 version=1.1 viewbox="0 0 16 16" width=20> <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill=currentColor fill-rule=evenodd></path> <path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill=currentColor fill-rule=evenodd></path> </svg> </div> </clipboard-copy> </div> <div class="highlight-ipynb hl-python"><pre><span></span><span class=n>spn</span> <span class=o>=</span> <span class=n>nb</span><span class=o>.</span><span class=n>SpectraFitNotebook</span><span class=p>(</span>
@@ -478,7 +480,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
     <span class=p>},</span>
 <span class=p>]</span>
 <span class=n>spn</span><span class=o>.</span><span class=n>solver_model</span><span class=p>(</span><span class=n>initial_model</span><span class=o>=</span><span class=n>initial_model</span><span class=p>,</span> <span class=n>show_plot</span><span class=o>=</span><span class=kc>True</span><span class=p>,</span> <span class=n>show_metric</span><span class=o>=</span><span class=kc>False</span><span class=p>)</span>
-</pre></div> <div class=clipboard-copy-txt id=cell-4>initial_model = [ { "pseudovoigt": { "amplitude": {"max": 2, "min": 0, "vary": True, "value": 1}, "center": {"max": 2, "min": -2, "vary": True, "value": 0}, "fwhmg": {"max": 0.3, "min": 0.02, "vary": True, "value": 0.1}, "fwhml": {"max": 0.2, "min": 0.01, "vary": True, "value": 0.1}, }, }, { "gaussian": { "amplitude": {"max": 2, "min": 0, "vary": True, "value": 0.3}, "center": {"max": 2.0, "min": 0, "vary": True, "value": 2}, "fwhmg": {"max": 0.3, "min": 0.02, "vary": True, "value": 0.1}, }, }, { "gaussian": { "amplitude": {"max": 2, "min": 0, "vary": True, "value": 0.3}, "center": {"max": 3.5, "min": 1.5, "vary": True, "value": 2.5}, "fwhmg": {"max": 0.4, "min": 0.02, "vary": True, "value": 0.2}, }, }, { "gaussian": { "amplitude": {"max": 2, "min": 0, "vary": True, "value": 0.3}, "center": {"max": 3.5, "min": 2, "vary": True, "value": 2.5}, "fwhmg": {"max": 0.4, "min": 0.02, "vary": True, "value": 0.3}, }, }, { "gaussian": { "amplitude": {"max": 2, "min": 0, "vary": True, "value": 0.3}, "center": {"max": 4.5, "min": 3, "vary": True, "value": 2.5}, "fwhmg": {"max": 0.4, "min": 0.02, "vary": True, "value": 0.3}, }, }, { "gaussian": { "amplitude": {"max": 2, "min": 0, "vary": True, "value": 0.3}, "center": {"max": 4.7, "min": 3.7, "vary": True, "value": 3.8}, "fwhmg": {"max": 0.4, "min": 0.02, "vary": True, "value": 0.3}, }, }, ] spn.solver_model(initial_model=initial_model, show_plot=True, show_metric=False)</div> </div> </div> </div> </div> <div class=jp-Cell-outputWrapper> <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser"> </div> <div class="jp-OutputArea jp-Cell-outputArea"> <div class=jp-OutputArea-child> <div class="jp-OutputPrompt jp-OutputArea-prompt"></div> <div class="jp-RenderedText jp-OutputArea-output" data-mime-type=application/vnd.jupyter.stderr tabindex=0> <pre>/home/runner/work/spectrafit/spectrafit/spectrafit/report.py:268: UserWarning:
+</pre></div> <div class=clipboard-copy-txt id=cell-4>initial_model = [ { "pseudovoigt": { "amplitude": {"max": 2, "min": 0, "vary": True, "value": 1}, "center": {"max": 2, "min": -2, "vary": True, "value": 0}, "fwhmg": {"max": 0.3, "min": 0.02, "vary": True, "value": 0.1}, "fwhml": {"max": 0.2, "min": 0.01, "vary": True, "value": 0.1}, }, }, { "gaussian": { "amplitude": {"max": 2, "min": 0, "vary": True, "value": 0.3}, "center": {"max": 2.0, "min": 0, "vary": True, "value": 2}, "fwhmg": {"max": 0.3, "min": 0.02, "vary": True, "value": 0.1}, }, }, { "gaussian": { "amplitude": {"max": 2, "min": 0, "vary": True, "value": 0.3}, "center": {"max": 3.5, "min": 1.5, "vary": True, "value": 2.5}, "fwhmg": {"max": 0.4, "min": 0.02, "vary": True, "value": 0.2}, }, }, { "gaussian": { "amplitude": {"max": 2, "min": 0, "vary": True, "value": 0.3}, "center": {"max": 3.5, "min": 2, "vary": True, "value": 2.5}, "fwhmg": {"max": 0.4, "min": 0.02, "vary": True, "value": 0.3}, }, }, { "gaussian": { "amplitude": {"max": 2, "min": 0, "vary": True, "value": 0.3}, "center": {"max": 4.5, "min": 3, "vary": True, "value": 2.5}, "fwhmg": {"max": 0.4, "min": 0.02, "vary": True, "value": 0.3}, }, }, { "gaussian": { "amplitude": {"max": 2, "min": 0, "vary": True, "value": 0.3}, "center": {"max": 4.7, "min": 3.7, "vary": True, "value": 3.8}, "fwhmg": {"max": 0.4, "min": 0.02, "vary": True, "value": 0.3}, }, }, ] spn.solver_model(initial_model=initial_model, show_plot=True, show_metric=False)</div> </div> </div> </div> </div> <div class=jp-Cell-outputWrapper> <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser"> </div> <div class="jp-OutputArea jp-Cell-outputArea"> <div class=jp-OutputArea-child> <div class="jp-OutputPrompt jp-OutputArea-prompt"></div> <div class="jp-RenderedText jp-OutputArea-output" data-mime-type=application/vnd.jupyter.stderr tabindex=0> <pre>/home/runner/work/spectrafit/spectrafit/spectrafit/report.py:269: UserWarning:
 
 
 
@@ -487,7 +489,7 @@ Uncertainties could not be estimated
 ####################################
 
 
-/home/runner/work/spectrafit/spectrafit/spectrafit/report.py:268: UserWarning:
+/home/runner/work/spectrafit/spectrafit/spectrafit/report.py:269: UserWarning:
 
 
 
@@ -496,7 +498,7 @@ The parameter 'pseudovoigt_amplitude_1_1' is at its boundary and uncertainties c
 ###################################################################################################
 
 
-/home/runner/work/spectrafit/spectrafit/spectrafit/report.py:268: UserWarning:
+/home/runner/work/spectrafit/spectrafit/spectrafit/report.py:269: UserWarning:
 
 
 
@@ -505,7 +507,7 @@ The parameter 'pseudovoigt_fwhmg_1_1' is at its boundary and uncertainties canno
 ###############################################################################################
 
 
-/home/runner/work/spectrafit/spectrafit/spectrafit/report.py:268: UserWarning:
+/home/runner/work/spectrafit/spectrafit/spectrafit/report.py:269: UserWarning:
 
 
 
@@ -514,7 +516,7 @@ The parameter 'pseudovoigt_fwhml_1_1' is at its boundary and uncertainties canno
 ###############################################################################################
 
 
-/home/runner/work/spectrafit/spectrafit/spectrafit/report.py:268: UserWarning:
+/home/runner/work/spectrafit/spectrafit/spectrafit/report.py:269: UserWarning:
 
 
 
@@ -523,7 +525,7 @@ The parameter 'gaussian_fwhmg_2_1' is at its boundary and uncertainties cannot b
 ############################################################################################
 
 
-/home/runner/work/spectrafit/spectrafit/spectrafit/report.py:268: UserWarning:
+/home/runner/work/spectrafit/spectrafit/spectrafit/report.py:269: UserWarning:
 
 
 
@@ -532,7 +534,7 @@ The parameter 'gaussian_fwhmg_3_1' is at its boundary and uncertainties cannot b
 ############################################################################################
 
 
-/home/runner/work/spectrafit/spectrafit/spectrafit/report.py:268: UserWarning:
+/home/runner/work/spectrafit/spectrafit/spectrafit/report.py:269: UserWarning:
 
 
 
@@ -541,7 +543,7 @@ The parameter 'gaussian_center_4_1' is at its boundary and uncertainties cannot 
 #############################################################################################
 
 
-/home/runner/work/spectrafit/spectrafit/spectrafit/report.py:268: UserWarning:
+/home/runner/work/spectrafit/spectrafit/spectrafit/report.py:269: UserWarning:
 
 
 
@@ -550,7 +552,7 @@ The parameter 'gaussian_fwhmg_4_1' is at its boundary and uncertainties cannot b
 ############################################################################################
 
 
-/home/runner/work/spectrafit/spectrafit/spectrafit/report.py:268: UserWarning:
+/home/runner/work/spectrafit/spectrafit/spectrafit/report.py:269: UserWarning:
 
 
 
@@ -559,7 +561,7 @@ The parameter 'gaussian_fwhmg_5_1' is at its boundary and uncertainties cannot b
 ############################################################################################
 
 
-/home/runner/work/spectrafit/spectrafit/spectrafit/report.py:268: UserWarning:
+/home/runner/work/spectrafit/spectrafit/spectrafit/report.py:269: UserWarning:
 
 
 
@@ -568,7 +570,7 @@ The parameter 'gaussian_center_6_1' is at its boundary and uncertainties cannot 
 #############################################################################################
 
 
-/home/runner/work/spectrafit/spectrafit/spectrafit/report.py:268: UserWarning:
+/home/runner/work/spectrafit/spectrafit/spectrafit/report.py:269: UserWarning:
 
 
 
@@ -577,7 +579,7 @@ The parameter 'gaussian_fwhmg_6_1' is at its boundary and uncertainties cannot b
 ############################################################################################
 
 
-/home/runner/work/spectrafit/spectrafit/spectrafit/report.py:268: UserWarning:
+/home/runner/work/spectrafit/spectrafit/spectrafit/report.py:269: UserWarning:
 
 
 
@@ -586,7 +588,7 @@ The parameter 'pseudovoigt_amplitude_1_2' is at its boundary and uncertainties c
 ###################################################################################################
 
 
-/home/runner/work/spectrafit/spectrafit/spectrafit/report.py:268: UserWarning:
+/home/runner/work/spectrafit/spectrafit/spectrafit/report.py:269: UserWarning:
 
 
 
