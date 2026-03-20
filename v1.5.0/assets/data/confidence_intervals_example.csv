@@ -1,0 +1,13 @@
+,99.73%,95.45%,68.27%,_BEST_,68.27%,95.45%,99.73%
+pseudovoigt_amplitude_1,-inf,-inf,-inf,0.16404,+inf,+inf,+inf
+pseudovoigt_center_1,-inf,-inf,-inf,0.03500,+inf,+inf,+inf
+pseudovoigt_fwhmg_1,-inf,-inf,-inf,0.06877,+inf,+inf,+inf
+pseudovoigt_fwhml_1,-inf,-inf,-inf,0.09252,+inf,+inf,+inf
+pseudovoigt_amplitude_2,-inf,-inf,-inf,0.09740,+inf,+inf,+inf
+pseudovoigt_center_2,-inf,-inf,-inf,-0.01805,+inf,+inf,+inf
+pseudovoigt_fwhmg_2,-inf,-inf,-inf,0.04334,+inf,+inf,+inf
+pseudovoigt_fwhml_2,-inf,-inf,-inf,0.09990,+inf,+inf,+inf
+constant_amplitude_3,-inf,-inf,-inf,0.03677,+inf,+inf,+inf
+gaussian_amplitude_4,-inf,-inf,-inf,0.01411,+inf,+inf,+inf
+gaussian_center_4,-inf,-inf,-inf,0.00079,+inf,+inf,+inf
+gaussian_fwhmg_4,-inf,-inf,-inf,0.04893,+inf,+inf,+inf
