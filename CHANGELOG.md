@@ -2,6 +2,58 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.5.0 🌈 - 2026-03-20
+
+### :compass: What's Changed
+
+#### :toolbox: Maintenance
+
+* release: bump to version 1.5.0 (#2100) @Anselmoo
+* Mark converter tests obsolete and deactivate flaky CI-blocking tests (including test_input on macOS/Windows) (#2091) @[copilot-swe-agent[bot]](https://github.com/apps/copilot-swe-agent)
+* refactor: ♻️ Remove PPTX plugin and models completely (#2064) @[copilot-swe-agent[bot]](https://github.com/apps/copilot-swe-agent)
+
+#### :snake: Python
+
+* release: bump to version 1.5.0 (#2100) @Anselmoo
+* Remove devcontainer CI pipelines and add SpectraFit lifecycle warnings (#2093) @[copilot-swe-agent[bot]](https://github.com/apps/copilot-swe-agent)
+* Mark converter tests obsolete and deactivate flaky CI-blocking tests (including test_input on macOS/Windows) (#2091) @[copilot-swe-agent[bot]](https://github.com/apps/copilot-swe-agent)
+* refactor: ♻️ Remove PPTX plugin and models completely (#2064) @[copilot-swe-agent[bot]](https://github.com/apps/copilot-swe-agent)
+
+#### :octocat: Github Actions
+
+* Remove devcontainer CI pipelines and add SpectraFit lifecycle warnings (#2093) @[copilot-swe-agent[bot]](https://github.com/apps/copilot-swe-agent)
+* chore: 🔨 Update GitHub Actions (#2070) @[renovate[bot]](https://github.com/apps/renovate)
+* chore: 🔨 Update actions/cache action to v5 (#2069) @[renovate[bot]](https://github.com/apps/renovate)
+* chore: 🔨 Update GitHub Actions (major) (#2033) @[renovate[bot]](https://github.com/apps/renovate)
+
+#### :card_index_dividers: Documentation
+
+* Remove devcontainer CI pipelines and add SpectraFit lifecycle warnings (#2093) @[copilot-swe-agent[bot]](https://github.com/apps/copilot-swe-agent)
+* refactor: ♻️ Remove PPTX plugin and models completely (#2064) @[copilot-swe-agent[bot]](https://github.com/apps/copilot-swe-agent)
+
+#### :link: Dependency Updates
+
+* release: bump to version 1.5.0 (#2100) @Anselmoo
+* chore: 🔨 Update GitHub Actions (#2070) @[renovate[bot]](https://github.com/apps/renovate)
+* chore: 🔨 Update actions/cache action to v5 (#2069) @[renovate[bot]](https://github.com/apps/renovate)
+* chore: 🔨 Update alpine:latest Docker digest to 865b95f (#2041) @[renovate[bot]](https://github.com/apps/renovate)
+* chore: 🔨 Pin dependencies (#2029) @[renovate[bot]](https://github.com/apps/renovate)
+* chore: 🔨 Update GitHub Actions (major) (#2033) @[renovate[bot]](https://github.com/apps/renovate)
+
+#### :microscope: Testing & Coverage
+
+* Remove devcontainer CI pipelines and add SpectraFit lifecycle warnings (#2093) @[copilot-swe-agent[bot]](https://github.com/apps/copilot-swe-agent)
+* Mark converter tests obsolete and deactivate flaky CI-blocking tests (including test_input on macOS/Windows) (#2091) @[copilot-swe-agent[bot]](https://github.com/apps/copilot-swe-agent)
+* refactor: ♻️ Remove PPTX plugin and models completely (#2064) @[copilot-swe-agent[bot]](https://github.com/apps/copilot-swe-agent)
+
+### :package: Full Changelog
+
+**Full Changelog**: https://github.com/Anselmoo/spectrafit/compare/v1.4.2...v1.4.3
+
+### :gear: Who Contributes
+
+@Anselmoo, @Copilot, @renovate[bot], [copilot-swe-agent[bot]](https://github.com/apps/copilot-swe-agent) and [renovate[bot]](https://github.com/apps/renovate)
+
 ## v1.4.0 🌈 - 2025-06-08
 
 ### :compass: What's Changed
