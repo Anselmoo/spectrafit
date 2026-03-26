@@ -105,7 +105,7 @@ All notable changes to this project will be documented in this file.
 
 ### :package: Full Changelog
 
-**Full Changelog**: https://github.com/Anselmoo/spectrafit/compare/v1.3.0...v1.4.0
+**Full Changelog**: https://github.com/Anselmoo/SpectraFit/compare/v1.3.0...v1.4.0
 
 ### :gear: Who Contributes
 
@@ -157,7 +157,7 @@ All notable changes to this project will be documented in this file.
 
 ### :package: Full Changelog
 
-**Full Changelog**: https://github.com/Anselmoo/spectrafit/compare/v1.2.2...v1.3.0
+**Full Changelog**: https://github.com/Anselmoo/SpectraFit/compare/v1.2.2...v1.3.0
 
 ### :gear: Who Contributes
 
@@ -229,7 +229,7 @@ All notable changes to this project will be documented in this file.
 
 ### :package: Full Changelog
 
-**Full Changelog**: https://github.com/Anselmoo/spectrafit/compare/v1.2.1...v1.2.2
+**Full Changelog**: https://github.com/Anselmoo/SpectraFit/compare/v1.2.1...v1.2.2
 
 ### :gear: Who Contributes
 
@@ -295,7 +295,7 @@ All notable changes to this project will be documented in this file.
 
 ### :package: Full Changelog
 
-**Full Changelog**: https://github.com/Anselmoo/spectrafit/compare/v1.2.0...v1.2.1
+**Full Changelog**: https://github.com/Anselmoo/SpectraFit/compare/v1.2.0...v1.2.1
 
 ### :gear: Who Contributes
 
@@ -415,7 +415,7 @@ All notable changes to this project will be documented in this file.
 
 ### :package: Full Changelog
 
-**Full Changelog**: https://github.com/Anselmoo/spectrafit/compare/v1.1.0...v1.2.0
+**Full Changelog**: https://github.com/Anselmoo/SpectraFit/compare/v1.1.0...v1.2.0
 
 ### :gear: Who Contributes
 
@@ -562,7 +562,7 @@ All notable changes to this project will be documented in this file.
 ### :package: Full Changelog
 
 **Full Changelog**:
-https://github.com/Anselmoo/spectrafit/compare/v1.0.5...v1.1.0
+https://github.com/Anselmoo/SpectraFit/compare/v1.0.5...v1.1.0
 
 ### :gear: Who Contributes
 
@@ -646,7 +646,7 @@ https://github.com/Anselmoo/spectrafit/compare/v1.0.5...v1.1.0
 ### :package: Full Changelog
 
 **Full Changelog**:
-https://github.com/Anselmoo/spectrafit/compare/v1.0.4...v1.0.5
+https://github.com/Anselmoo/SpectraFit/compare/v1.0.4...v1.0.5
 
 ### :gear: Who Contributes
 
@@ -787,7 +787,7 @@ https://github.com/Anselmoo/spectrafit/compare/v1.0.4...v1.0.5
 ### :package: Full Changelog
 
 **Full Changelog**:
-https://github.com/Anselmoo/spectrafit/compare/v1.0.3.post2...v1.0.4
+https://github.com/Anselmoo/SpectraFit/compare/v1.0.3.post2...v1.0.4
 
 ### :gear: Who Contributes
 
@@ -820,7 +820,7 @@ https://github.com/Anselmoo/spectrafit/compare/v1.0.3.post2...v1.0.4
 ### :package: Full Changelog
 
 **Full Changelog**:
-https://github.com/Anselmoo/spectrafit/compare/v1.0.3.post1...v1.0.4
+https://github.com/Anselmoo/SpectraFit/compare/v1.0.3.post1...v1.0.4
 
 ### :gear: Who Contributes
 
@@ -853,7 +853,7 @@ https://github.com/Anselmoo/spectrafit/compare/v1.0.3.post1...v1.0.4
 ### :package: Full Changelog
 
 **Full Changelog**:
-https://github.com/Anselmoo/spectrafit/compare/v1.0.3.post0...v1.0.4
+https://github.com/Anselmoo/SpectraFit/compare/v1.0.3.post0...v1.0.4
 
 ### :gear: Who Contributes
 
@@ -883,7 +883,7 @@ https://github.com/Anselmoo/spectrafit/compare/v1.0.3.post0...v1.0.4
 ### :package: Full Changelog
 
 **Full Changelog**:
-https://github.com/Anselmoo/spectrafit/compare/v1.0.3...v1.0.4
+https://github.com/Anselmoo/SpectraFit/compare/v1.0.3...v1.0.4
 
 ### :gear: Who Contributes
 
@@ -905,7 +905,7 @@ https://github.com/Anselmoo/spectrafit/compare/v1.0.3...v1.0.4
 ### :package: Full Changelog
 
 **Full Changelog**:
-https://github.com/Anselmoo/spectrafit/compare/v1.0.2...v1.0.3
+https://github.com/Anselmoo/SpectraFit/compare/v1.0.2...v1.0.3
 
 ### :gear: Who Contributes
 
@@ -1041,7 +1041,7 @@ https://github.com/Anselmoo/spectrafit/compare/v1.0.2...v1.0.3
 ### :package: Full Changelog
 
 **Full Changelog**:
-https://github.com/Anselmoo/spectrafit/compare/v1.0.1...v1.0.2
+https://github.com/Anselmoo/SpectraFit/compare/v1.0.1...v1.0.2
 
 ### :gear: Who Contributes
 
@@ -1253,7 +1253,7 @@ https://github.com/Anselmoo/spectrafit/compare/v1.0.1...v1.0.2
 ### :package: Full Changelog
 
 **Full Changelog**:
-https://github.com/Anselmoo/spectrafit/compare/v1.0.0.post1...v1.1.0
+https://github.com/Anselmoo/SpectraFit/compare/v1.0.0.post1...v1.1.0
 
 ### :gear: Who Contributes
 
@@ -1283,7 +1283,7 @@ https://github.com/Anselmoo/spectrafit/compare/v1.0.0.post1...v1.1.0
 ### :package: Full Changelog
 
 **Full Changelog**:
-https://github.com/Anselmoo/spectrafit/compare/v1.0.0.post0...v1.0.1
+https://github.com/Anselmoo/SpectraFit/compare/v1.0.0.post0...v1.0.1
 
 ### :gear: Who Contributes
 
@@ -1415,7 +1415,7 @@ https://github.com/Anselmoo/spectrafit/compare/v1.0.0.post0...v1.0.1
 ### :package: Full Changelog
 
 **Full Changelog**:
-https://github.com/Anselmoo/spectrafit/compare/v1.0.0...v1.1.0
+https://github.com/Anselmoo/SpectraFit/compare/v1.0.0...v1.1.0
 
 ### :gear: Who Contributes
 
@@ -1453,7 +1453,7 @@ https://github.com/Anselmoo/spectrafit/compare/v1.0.0...v1.1.0
 ### :package: Full Changelog
 
 **Full Changelog**:
-https://github.com/Anselmoo/spectrafit/compare/v0.22.9...v0.22.10
+https://github.com/Anselmoo/SpectraFit/compare/v0.22.9...v0.22.10
 
 ### :gear: Who Contributes
 

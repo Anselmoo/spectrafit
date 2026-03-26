@@ -19,7 +19,7 @@ This folder contains the configuration for the SpectraFit development container,
 
 ### Option 2: Using GitHub Codespaces
 
-1. Go to the [SpectraFit repository](https://github.com/Anselmoo/spectrafit)
+1. Go to the [SpectraFit repository](https://github.com/Anselmoo/SpectraFit)
 2. Click the green "Code" button
 3. Select "Codespaces" tab
 4. Click "Create codespace on main"
@@ -140,7 +140,7 @@ To change post-creation setup steps, edit `.devcontainer/setup.sh`:
 
 - [VS Code Dev Containers Documentation](https://code.visualstudio.com/docs/devcontainers/containers)
 - [Dev Container Features](https://containers.dev/features)
-- [SpectraFit Documentation](https://anselmoo.github.io/spectrafit/)
+- [SpectraFit Documentation](https://anselmoo.github.io/SpectraFit/)
 - [uv Documentation](https://docs.astral.sh/uv/)
 
 ## 🤝 Contributing

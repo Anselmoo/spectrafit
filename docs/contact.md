@@ -1,5 +1,5 @@
 ## Contact us at ...
 
-- [Issue-Board](https://github.com/Anselmoo/spectrafit/issues)
-- [Project-Board](https://github.com/Anselmoo/spectrafit/projects/1)
+- [Issue-Board](https://github.com/Anselmoo/SpectraFit/issues)
+- [Project-Board](https://github.com/Anselmoo/SpectraFit/projects/1)
 - Discussion-Board might come later ...
