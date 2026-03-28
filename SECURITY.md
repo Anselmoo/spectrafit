@@ -33,14 +33,14 @@ possible.
 > Current Python vulnerabilities can be found at the [:link:GitHub's Advisory
 > Database][10]. See also: [:link:GitHub's Security Lab][11].
 
-[1]: https://github.com/Anselmoo/spectrafit/
-[2]: https://github.com/Anselmoo/spectrafit/releases
+[1]: https://github.com/Anselmoo/SpectraFit/
+[2]: https://github.com/Anselmoo/SpectraFit/releases
 [3]: https://securitylab.github.com/tools/codeql/
 [4]: https://synk.io/
 [5]: https://sonarcloud.io/
 [6]: https://github.com/dependabot
 [7]: https://pre-commit.com/
 [8]: https://codecov.io/
-[9]: https://github.com/Anselmoo/spectrafit/issues/new/choose
+[9]: https://github.com/Anselmoo/SpectraFit/issues/new/choose
 [10]: https://github.com/advisories?query=type%3Areviewed+ecosystem%3Apip
 [11]: https://securitylab.github.com/

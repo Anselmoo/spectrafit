@@ -21,9 +21,9 @@ help this project `SpectraFit`.
 
 Here are some important resources:
 
-- [Issues](https://github.com/Anselmoo/spectrafit/issues) for open BUG reports
+- [Issues](https://github.com/Anselmoo/SpectraFit/issues) for open BUG reports
   or feature requests
-- [Pull requests](https://github.com/Anselmoo/spectrafit/pulls) for contributing
+- [Pull requests](https://github.com/Anselmoo/SpectraFit/pulls) for contributing
   code
 - Milestones, which are listed below.
 
@@ -124,7 +124,7 @@ The footer should contain any information about **Breaking Changes** and is also
 
 ## Milestones
 
-[Milestones][10] now also available for the `spectrafit` application.
+[Milestones][10] now also available for the `SpectraFit` application.
 Furthermore, project status can be seen in the [GitHub Project Panel][13].
 
 ## Testing
@@ -178,7 +178,7 @@ readability:
 
 This template is adapted from [opengovernment][3].
 
-[1]: https://github.com/Anselmoo/spectrafit/actions
+[1]: https://github.com/Anselmoo/SpectraFit/actions
 [2]: https://google.github.io/styleguide/pyguide.html
 [3]: https://github.com/opengovernment/opengovernment/blob/main/CONTRIBUTING.md
 [4]: https://github.com/astral-sh/uv
@@ -189,9 +189,9 @@ This template is adapted from [opengovernment][3].
 <!-- trunk-ignore(markdownlint/MD053) -->
 
 [8]: https://lmfit.github.io/lmfit-py/fitting.html
-[9]: https://github.com/Anselmoo/spectrafit/pulls
-[10]: https://github.com/Anselmoo/spectrafit/milestones
-[11]: https://github.com/Anselmoo/spectrafit/issues
+[9]: https://github.com/Anselmoo/SpectraFit/pulls
+[10]: https://github.com/Anselmoo/SpectraFit/milestones
+[11]: https://github.com/Anselmoo/SpectraFit/issues
 [12]: https://docs.github.com/en/issues/tracking-your-work-with-issues/linking-a-pull-request-to-an-issue
-[13]: https://github.com/Anselmoo/spectrafit/projects/1
+[13]: https://github.com/Anselmoo/SpectraFit/projects/1
 [14]: https://www.conventionalcommits.org/

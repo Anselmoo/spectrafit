@@ -24,7 +24,7 @@ SpectraFit is available as a Python package and can be installed using various p
 [UV](https://github.com/astral-sh/uv) is a fast Python package installer and resolver that we recommend for installing SpectraFit:
 
 ```bash
-uv pip install spectrafit
+uv pip install SpectraFit
 ```
 
 ## Standard Installation Using pip
@@ -32,7 +32,7 @@ uv pip install spectrafit
 You can install SpectraFit using pip, which is the standard package manager for Python:
 
 ```bash
-pip install spectrafit
+pip install SpectraFit
 ```
 
 ## Development Installation
@@ -41,18 +41,18 @@ If you want to contribute to SpectraFit or install the latest development versio
 
 ```bash
 # Install using UV (recommended)
-uv pip install git+https://github.com/Anselmoo/spectrafit.git
+uv pip install git+https://github.com/Anselmoo/SpectraFit.git
 
 # Or using pip
-pip install git+https://github.com/Anselmoo/spectrafit.git
+pip install git+https://github.com/Anselmoo/SpectraFit.git
 ```
 
 For a development setup with all dependencies:
 
 ```bash
 # Clone the repository
-git clone https://github.com/Anselmoo/spectrafit.git
-cd spectrafit
+git clone https://github.com/Anselmoo/SpectraFit.git
+cd SpectraFit
 
 # Install with development dependencies using UV
 uv pip install -e ".[dev]"
@@ -67,10 +67,10 @@ SpectraFit supports optional dependencies for additional features:
 
 ```bash
 # Install with all extras
-uv pip install "spectrafit[all]"
+uv pip install "SpectraFit[all]"
 
 # Install with specific extras
-uv pip install "spectrafit[plotting,jupyter]"
+uv pip install "SpectraFit[plotting,jupyter]"
 ```
 
 Available extras include:
@@ -86,11 +86,11 @@ If you prefer using conda for managing Python environments, you can create a ded
 
 ```bash
 # Create a new conda environment
-conda create -n spectrafit python=3.10
-conda activate spectrafit
+conda create -n SpectraFit python=3.10
+conda activate SpectraFit
 
 # Install using pip within conda
-pip install spectrafit
+pip install SpectraFit
 ```
 
 ## Verification
@@ -98,7 +98,7 @@ pip install spectrafit
 After installation, you can verify that SpectraFit is correctly installed by running:
 
 ```bash
-spectrafit --version
+SpectraFit --version
 ```
 
 ## System Requirements
@@ -116,5 +116,5 @@ If you encounter any issues during installation:
 1. Make sure your Python version is 3.8 or higher
 2. Try upgrading your package manager: `uv pip install --upgrade pip` or `pip install --upgrade pip`
 3. For conda environments, ensure conda-forge is in your channels: `conda config --add channels conda-forge`
-4. Check the [GitHub Issues](https://github.com/Anselmoo/spectrafit/issues) for known problems
-5. Report new issues on the [GitHub repository](https://github.com/Anselmoo/spectrafit/issues)
+4. Check the [GitHub Issues](https://github.com/Anselmoo/SpectraFit/issues) for known problems
+5. Report new issues on the [GitHub repository](https://github.com/Anselmoo/SpectraFit/issues)

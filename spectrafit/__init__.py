@@ -43,4 +43,4 @@ if sys.version_info[:2] == PYTHON_END_OF_LIFE:
         stacklevel=2,
     )
 
-__version__ = "1.5.0"
+__version__ = "1.5.1"
