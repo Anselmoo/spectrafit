@@ -2,7 +2,7 @@
 [![codecov](https://codecov.io/gh/Anselmoo/SpectraFit/branch/main/graph/badge.svg?token=pNIMKwWsO2)](https://codecov.io/gh/Anselmoo/SpectraFit)
 [![PyPI](https://img.shields.io/pypi/v/SpectraFit?logo=PyPi&logoColor=yellow)](https://pypi.org/project/SpectraFit/)
 [![Conda](https://img.shields.io/conda/v/conda-forge/SpectraFit?label=Anaconda.org&logo=anaconda)](https://github.com/conda-forge/SpectraFit-feedstock)
-[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/SpectraFit?color=gree&logo=Python&logoColor=yellow)](https://pypi.org/project/SpectraFit/)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/SpectraFit?color=green&logo=Python&logoColor=yellow)](https://pypi.org/project/SpectraFit/)
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/Anselmoo/SpectraFit/main.svg)](https://results.pre-commit.ci/latest/github/Anselmoo/SpectraFit/main)
 [![doi](https://img.shields.io/badge/10.1021/acsomega.3c09262-blue?logo=DOI&logoColor=white)](https://pubs.acs.org/doi/full/10.1021/acsomega.3c09262)
 
