@@ -2,6 +2,50 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.5.1 🌈 - 2026-03-29
+
+### :compass: What's Changed
+
+#### :computer: Codesspaces
+
+* fix: correct spelling of `SpectraFit` (#2102) @Anselmoo
+
+#### :toolbox: Maintenance
+
+* fix: correct spelling of `SpectraFit` (#2102) @Anselmoo
+
+#### :snake: Python
+
+* fix: correct spelling of `SpectraFit` (#2102) @Anselmoo
+
+#### :card_index_dividers: Documentation
+
+* fix: correct spelling of `SpectraFit` (#2102) @Anselmoo
+
+#### :link: Dependency Updates
+
+* fix: correct spelling of `SpectraFit` (#2102) @Anselmoo
+
+#### :lock: Security
+
+* fix: correct spelling of `SpectraFit` (#2102) @Anselmoo
+
+#### :memo: Changelog
+
+* fix: correct spelling of `SpectraFit` (#2102) @Anselmoo
+
+#### :receipt: Forms
+
+* fix: correct spelling of `SpectraFit` (#2102) @Anselmoo
+
+### :package: Full Changelog
+
+**Full Changelog**: https://github.com/Anselmoo/SpectraFit/compare/v1.5.0...v1.5.1
+
+### :gear: Who Contributes
+
+@Anselmoo
+
 ## v1.4.0 🌈 - 2025-06-08
 
 ### :compass: What's Changed
