@@ -10,7 +10,6 @@ import pytest
 from spectrafit.api.cmd_model import DescriptionAPI
 from spectrafit.api.notebook_model import FnameAPI
 from spectrafit.api.tools_model import DataPreProcessingAPI
-from spectrafit.api.tools_model import SolverModelsAPI
 from spectrafit.core.fitting_config import UnifiedFittingConfig
 from spectrafit.jupyter.export import ExportReport
 from spectrafit.jupyter.export import ExportResults
@@ -23,6 +22,7 @@ from spectrafit.models.results.fit_result import FitInsights
 from spectrafit.models.results.fit_result import FitResult
 from spectrafit.models.results.fit_result import VariableFitResult
 from spectrafit.models.solver_config import ConfIntervalConfig
+from spectrafit.models.solver_config import SolverConfig
 from spectrafit.models.split_frame import SplitFrame
 from spectrafit.reporting.service import CanonicalReportSchema
 from spectrafit.reporting.service import project_solver_report
@@ -90,7 +90,9 @@ def _build_solver_results_with_snapshot() -> SolverResults:
     )
     fit_result = _build_solver_results().result.model_copy(
         update={
-            "input_snapshot": snapshot_config.model_dump(mode="python", exclude_none=True)
+            "input_snapshot": snapshot_config.model_dump(
+                mode="python", exclude_none=True
+            )
         }
     )
     solver = SolverResults(result=fit_result)
@@ -112,7 +114,7 @@ def export_report_fixture() -> ExportReport:
             }
         ],
         pre_processing=DataPreProcessingAPI(),
-        settings_solver_models=SolverModelsAPI(),
+        settings_solver_models=SolverConfig(),
         fname=FnameAPI(fname="report", suffix="lock"),
         solver=_build_solver_results(),
         df_org=pd.DataFrame({"energy": [1.0, 2.0], "data": [3.0, 4.0]}),
@@ -216,7 +218,7 @@ def test_export_report_accepts_typed_initial_components() -> None:
         description=DescriptionAPI(),
         initial_model=components,
         pre_processing=DataPreProcessingAPI(),
-        settings_solver_models=SolverModelsAPI(),
+        settings_solver_models=SolverConfig(),
         fname=FnameAPI(fname="report", suffix="lock"),
         solver=_build_solver_results(),
         df_org=pd.DataFrame({"energy": [1.0], "data": [3.0]}),
@@ -235,8 +237,9 @@ def test_export_report_accepts_typed_initial_components() -> None:
 
 
 @pytest.mark.unit
-def test_export_report_accepts_canonical_preprocessing_and_serializes_compat_boundary(
-) -> None:
+def test_export_report_accepts_canonical_preprocessing_and_serializes_compat_boundary() -> (
+    None
+):
     exporter = ExportReport(
         description=DescriptionAPI(),
         initial_model=[],
@@ -248,7 +251,7 @@ def test_export_report_accepts_canonical_preprocessing_and_serializes_compat_bou
             oversampling=True,
         ),
         column=["energy", "intensity"],
-        settings_solver_models=SolverModelsAPI(),
+        settings_solver_models=SolverConfig(),
         fname=FnameAPI(fname="report", suffix="lock"),
         solver=_build_solver_results(),
         df_org=pd.DataFrame({"energy": [1.0, 2.0], "data": [3.0, 4.0]}),
@@ -282,7 +285,7 @@ def test_export_report_prefers_fit_result_snapshot_for_input_ownership() -> None
             energy_start=1.0,
             shift=9.0,
         ),
-        settings_solver_models=SolverModelsAPI(
+        settings_solver_models=SolverConfig(
             minimizer={"nan_policy": "raise"},
             optimizer={"method": "nelder", "max_nfev": 9},
         ),
@@ -294,7 +297,9 @@ def test_export_report_prefers_fit_result_snapshot_for_input_ownership() -> None
     )
 
     report_input = exporter.make_input_contribution
-    expected_snapshot = _build_solver_results_with_snapshot().__dict__["_snapshot_config"]
+    expected_snapshot = _build_solver_results_with_snapshot().__dict__[
+        "_snapshot_config"
+    ]
 
     assert report_input["initial_model"] == expected_snapshot.components
     assert report_input["pre_processing"] == DataPreProcessingAPI(
@@ -306,7 +311,7 @@ def test_export_report_prefers_fit_result_snapshot_for_input_ownership() -> None
         oversampling=True,
     )
     assert report_input["method"]["global_fitting"] == "standard"
-    assert report_input["method"]["settings_solver_models"] == SolverModelsAPI(
+    assert report_input["method"]["settings_solver_models"] == SolverConfig(
         minimizer={"nan_policy": "omit"},
         optimizer={"method": "least_squares", "max_nfev": 321},
     )
@@ -324,7 +329,7 @@ def test_export_report_snapshots_compat_preprocessing_at_boundary() -> None:
         description=DescriptionAPI(),
         initial_model=[],
         pre_processing=compat_preprocessing,
-        settings_solver_models=SolverModelsAPI(),
+        settings_solver_models=SolverConfig(),
         fname=FnameAPI(fname="report", suffix="lock"),
         solver=_build_solver_results(),
         df_org=pd.DataFrame({"energy": [1.0, 2.0], "data": [3.0, 4.0]}),

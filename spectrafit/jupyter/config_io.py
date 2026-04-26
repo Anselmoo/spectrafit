@@ -4,17 +4,18 @@ from __future__ import annotations
 
 from pathlib import Path
 from typing import TYPE_CHECKING
+from typing import Any
 
 import pandas as pd
 import tomli_w
 
-from spectrafit.api.tools_model import SolverModelsAPI
 from spectrafit.core.fitting_config import ColumnConfig
 from spectrafit.core.fitting_config import UnifiedFittingConfig
 from spectrafit.models.fitting_context import FittingContext
 from spectrafit.models.fitting_context import FittingMode
 from spectrafit.models.preprocessing_config import PreprocessingConfig
 from spectrafit.models.solver_config import ConfIntervalConfig
+from spectrafit.models.solver_config import SolverConfig
 from spectrafit.models.solver_config import normalize_conf_interval_value
 
 
@@ -81,7 +82,7 @@ def build_notebook_from_config(
     notebook_cls: type[SpectraFitNotebook],
     df: pd.DataFrame,
     config: UnifiedFittingConfig,
-    **kwargs: object,
+    **kwargs: Any,
 ) -> SpectraFitNotebook:
     """Create and configure a notebook instance from a unified config.
 
@@ -100,7 +101,7 @@ def build_notebook_from_config(
         y_column=_resolve_notebook_y_column_input(df=df, config=config),
         **kwargs,
     )
-    notebook.settings_solver_models = SolverModelsAPI(
+    notebook.settings_solver_models = SolverConfig(
         minimizer=config.minimizer,
         optimizer=config.optimizer,
     )

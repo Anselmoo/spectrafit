@@ -6,27 +6,23 @@ fitting problems using lmfit.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-from dataclasses import field
+import warnings
+
 from math import log
 from math import pi
 from math import sqrt
 from typing import TYPE_CHECKING
-from typing import ClassVar
-from typing import cast
 
-import numpy as np
+from pydantic import BaseModel
+from pydantic import ConfigDict
 
-from spectrafit.models.naming import GlobalLmfitContributionKey
 from spectrafit.models.naming import global_contribution_name
-from spectrafit.models.parameter_builder import ReferenceKeys
-from spectrafit.models.registry import REGISTRY
 
 
 if TYPE_CHECKING:
+    import numpy as np
     import pandas as pd
 
-    from lmfit import Parameter
     from lmfit import Parameters
     from numpy.typing import NDArray
 
@@ -41,76 +37,6 @@ _CANONICAL_SOLVER_DEPENDENCY_MARKERS = (
 )
 
 
-@dataclass(slots=True)
-class _GlobalContribution:
-    """Grouped global contribution parameters for one dataset/component curve."""
-
-    contribution_id: str
-    dataset_index: int
-    registry_model: str
-    parameter_values: dict[str, Parameter] = field(default_factory=dict)
-
-    def add_parameter(
-        self, parameter_key: GlobalLmfitContributionKey, value: Parameter
-    ) -> None:
-        """Add a parsed lmfit parameter to this contribution."""
-        self.parameter_values[parameter_key.field_name] = value
-
-    @property
-    def column_name(self) -> str:
-        """Return the output column name for this contribution."""
-        return global_contribution_name(self.contribution_id, self.dataset_index)
-
-    @property
-    def dataset_offset(self) -> int:
-        """Return the zero-based dataset offset."""
-        return self.dataset_index - 1
-
-    def evaluate(
-        self,
-        x: NDArray[np.float64],
-    ) -> NDArray[np.float64]:
-        """Evaluate the contribution curve for one dataset."""
-        ReferenceKeys().model_check(model=self.registry_model)
-        return np.asarray(
-            REGISTRY.get(self.registry_model).function(x, **self.parameter_values),
-            dtype=np.float64,
-        )
-
-
-def _group_global_contributions(params: Parameters) -> list[_GlobalContribution]:
-    """Group global lmfit parameters into typed per-dataset contributions."""
-    return _group_global_contributions_with_models(params=params)
-
-
-def _group_global_contributions_with_models(
-    params: Parameters,
-    component_models: dict[str, str] | None = None,
-) -> list[_GlobalContribution]:
-    """Group global lmfit parameters into typed per-dataset contributions."""
-    grouped: dict[str, _GlobalContribution] = {}
-
-    for parameter_name, value in params.items():
-        contribution_key = GlobalLmfitContributionKey.parse(parameter_name)
-        registry_model = contribution_key.registry_model
-        if component_models is not None:
-            registry_model = component_models.get(
-                contribution_key.contribution_id,
-                registry_model,
-            )
-        contribution = grouped.setdefault(
-            contribution_key.contribution_name,
-            _GlobalContribution(
-                contribution_id=contribution_key.contribution_id,
-                dataset_index=contribution_key.dataset_index,
-                registry_model=registry_model,
-            ),
-        )
-        contribution.add_parameter(contribution_key, value)
-
-    return list(grouped.values())
-
-
 class SolverModels:
     """Solver residual helpers plus a compatibility runtime shim.
 
@@ -121,6 +47,12 @@ class SolverModels:
 
     def __init__(self, df: pd.DataFrame, config: UnifiedFittingConfig) -> None:
         """Create a compatibility wrapper around the core solver runtime."""
+        warnings.warn(
+            "SolverModels is a legacy compatibility wrapper; instantiate "
+            "spectrafit.core.solver_runtime.LmfitSolverRuntime directly for new code.",
+            FutureWarning,
+            stacklevel=2,
+        )
         from spectrafit.core.solver_runtime import LmfitSolverRuntime  # noqa: PLC0415
 
         self._runtime = LmfitSolverRuntime(df=df, config=config)
@@ -145,21 +77,14 @@ class SolverModels:
         data: NDArray[np.float64],
         bundle: CompositeModelBundle,
     ) -> NDArray[np.float64]:
-        """Compute residual for local (single-dataset) fitting using the composite bundle.
+        """Delegate local residual calculation to the core runtime owner."""
+        from spectrafit.core.solver_runtime import solve_local_fitting  # noqa: PLC0415
 
-        Args:
-            params (Parameters): Current parameter values from the minimizer.
-            x (NDArray[np.float64]): x-values of the data.
-            data (NDArray[np.float64]): y-values of the data as 1d-array.
-            bundle (CompositeModelBundle): Prepared local-fit composite bundle.
-
-        Returns:
-            NDArray[np.float64]: Residual (model - data).
-
-        """
-        return np.array(
-            bundle.composite.eval(params, x=x) - data,
-            dtype=np.float64,
+        return solve_local_fitting(
+            params=params,
+            x=x,
+            data=data,
+            bundle=bundle,
         )
 
     @staticmethod
@@ -170,53 +95,16 @@ class SolverModels:
         config: GlobalFittingConfig | None = None,
         component_models: dict[str, str] | None = None,
     ) -> NDArray[np.float64]:
-        r"""Solving the fitting for global problem.
+        """Delegate global residual calculation to the core runtime owner."""
+        from spectrafit.core.solver_runtime import solve_global_fitting  # noqa: PLC0415
 
-        !!! note "About implemented models"
-            `solve_global_fitting` is the global solution of `solve_local_fitting` a
-            wrapper function for the calling the implemented moldels. For the kind of
-            supported models see `solve_local_fitting`.
-
-        !!! note "About the global solution"
-            The global solution is a solution for the problem, where the `x`-values is
-            the energy, but the y-values are the intensities, which has to be fitted as
-            one unit. For this reason, the residual is calculated as the difference
-            between all the y-values and the global proposed solution. Later the
-            residual has to be flattened to a 1-dimensional array and minimized by the
-            `lmfit`-optimizer.
-
-
-        Args:
-            params (Parameters): The best optimized parameters of the fit.
-            x (NDArray[np.float64]): `x`-values of the data.
-            data (NDArray[np.float64]): `y`-values of the data as 2D-array.
-            config (GlobalFittingConfig | None): Optional global fitting
-                configuration with per-dataset weights.
-            component_models: Optional mapping from canonical component ids
-                (e.g. ``"p1"``) to registry model names (e.g. ``"gaussian"``)
-                for canonical global-fit parameter names.
-
-        Returns:
-            NDArray[np.float64]: The best-fitted data based on the proposed model.
-
-        """
-        val = np.zeros(data.shape)
-        for contribution in _group_global_contributions_with_models(
+        return solve_global_fitting(
             params=params,
+            x=x,
+            data=data,
+            config=config,
             component_models=component_models,
-        ):
-            val[:, contribution.dataset_offset] += cast(
-                "np.ndarray[tuple[int], np.dtype[np.float64]]",
-                contribution.evaluate(x),
-            )
-
-        residual = val - data
-
-        if config is not None and config.weights is not None:
-            weights_arr = np.array(config.weights, dtype=np.float64)
-            residual = residual * weights_arr[np.newaxis, :]
-
-        return residual.flatten()
+        )
 
 
 def calculated_model(
@@ -252,6 +140,10 @@ def calculated_model(
             models.
 
     """
+    from spectrafit.core.solver_runtime import (  # noqa: PLC0415
+        _group_global_contributions_with_models,
+    )
+
     _df = df.copy()
 
     if not global_fit:
@@ -266,24 +158,29 @@ def calculated_model(
         params=params,
         component_models=component_models,
     ):
-        _df[contribution.column_name] = contribution.evaluate(x)
+        _df[
+            global_contribution_name(
+                contribution.contribution_id,
+                contribution.dataset_index,
+            )
+        ] = contribution.evaluate(x)
 
     return _df
 
 
-@dataclass(frozen=True)
-class Constants:
+class Constants(BaseModel):
     """Constants used for calculations.
 
     This class provides mathematical constants used across the package.
-    It's implemented as a frozen dataclass with class variables
-    to ensure they can't be modified.
+    Implemented as a frozen Pydantic model to ensure immutability.
     """
 
-    ln2: ClassVar[float] = log(2.0)
-    sq2pi: ClassVar[float] = sqrt(2.0 * pi)
-    sqpi: ClassVar[float] = sqrt(pi)
-    sq2: ClassVar[float] = sqrt(2.0)
-    fwhmg2sig: ClassVar[float] = 1 / (2.0 * sqrt(2.0 * log(2.0)))
-    fwhml2sig: ClassVar[float] = 1 / 2.0
-    fwhmv2sig: ClassVar[float] = 1 / 3.60131
+    model_config = ConfigDict(frozen=True)
+
+    ln2: float = log(2.0)
+    sq2pi: float = sqrt(2.0 * pi)
+    sqpi: float = sqrt(pi)
+    sq2: float = sqrt(2.0)
+    fwhmg2sig: float = 1 / (2.0 * sqrt(2.0 * log(2.0)))
+    fwhml2sig: float = 1 / 2.0
+    fwhmv2sig: float = 1 / 3.60131

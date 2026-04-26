@@ -29,7 +29,6 @@ from spectrafit.api.notebook_model import RunAPI
 from spectrafit.api.notebook_model import XAxisAPI
 from spectrafit.api.notebook_model import YAxisAPI
 from spectrafit.api.tools_model import DataPreProcessingAPI
-from spectrafit.api.tools_model import SolverModelsAPI
 from spectrafit.core.fitting_config import ColumnConfig
 from spectrafit.core.fitting_config import UnifiedFittingConfig
 from spectrafit.core.pipeline import FittingPipeline
@@ -56,6 +55,7 @@ from spectrafit.models.preprocess_result import PreprocessResult
 from spectrafit.models.preprocessing_config import PreprocessingConfig
 from spectrafit.models.results.fit_result import FitResult
 from spectrafit.models.solver_config import ConfIntervalConfig
+from spectrafit.models.solver_config import SolverConfig
 from spectrafit.models.split_frame import SplitFrame
 from spectrafit.plotting import PlotSpectra
 from spectrafit.utilities.transformer import InitialModelLike
@@ -385,7 +385,7 @@ class SpectraFitNotebook(DataFramePlot):  # intentional: Facade
         self.export_args_df = FnameAPI(fname=fname, folder=folder, suffix="csv")
         self.export_args_out = FnameAPI(fname=fname, folder=folder, suffix="lock")
 
-        self.settings_solver_models: SolverModelsAPI = SolverModelsAPI()
+        self.settings_solver_models: SolverConfig = SolverConfig()
         self.pre_statistic: SplitFrame = SplitFrame.empty()
         self._pipeline_deps = PipelineDependencies()
         self._initial_components = []
@@ -891,7 +891,7 @@ class SpectraFitNotebook(DataFramePlot):  # intentional: Facade
         conf_interval: bool | ConfIntervalAPI | ConfIntervalConfig = False,
         bar_criteria: str | list[str] | None = None,
         line_criteria: str | list[str] | None = None,
-        solver_settings: SolverModelsAPI | None = None,
+        solver_settings: SolverConfig | None = None,
         config: UnifiedFittingConfig | None = None,
     ) -> None:
         """Solves the fit problem based on the proposed model.
@@ -916,7 +916,7 @@ class SpectraFitNotebook(DataFramePlot):  # intentional: Facade
             line_criteria (str | list[str] | None, optional): Criteria for
                 the line plot. It is recommended to use attributes from
                 `regression metric` module. Defaults to None.
-            solver_settings (SolverModelsAPI | None, optional): Settings for the
+            solver_settings (SolverConfig | None, optional): Settings for the
                 solver models, which is split into settings for ``minimizer`` and
                 ``optimizer``. Defaults to None.
             config (UnifiedFittingConfig | None, optional): Unified fitting

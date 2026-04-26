@@ -52,17 +52,9 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-jupyter = [
-  "itables>=2.3.0",
-  "jupyterlab>=4.3.6",
-]
+jupyter = ["itables>=2.3.0", "jupyterlab>=4.3.6"]
 graph = ["networkx>=3.1", "pydot>=3.0.4"]
-all = [
-  "itables>=2.3.0",
-  "jupyterlab>=4.3.6",
-  "networkx>=3.1",
-  "pydot>=3.0.4",
-]
+all = ["itables>=2.3.0", "jupyterlab>=4.3.6", "networkx>=3.1", "pydot>=3.0.4"]
 
 [project.urls]
 Homepage = "https://pypi.org/project/spectrafit/"
@@ -310,6 +302,10 @@ help = "Remove local build, cache, and generated review artifacts"
 [tool.poe.tasks.generate-examples]
 cmd = "python scripts/generate_examples.py"
 help = "Regenerate committed example CSV, input TOML, and notebook artifacts"
+
+[tool.poe.tasks.check-generated-examples]
+cmd = "python scripts/generate_examples.py --check"
+help = "Verify committed example CSV, input TOML, and notebook artifacts are up to date"
 
 [tool.poe.tasks.generate-plots]
 cmd = "python scripts/generate_plots.py"

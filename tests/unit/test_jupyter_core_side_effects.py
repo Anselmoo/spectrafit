@@ -11,7 +11,6 @@ import spectrafit.jupyter.core as jupyter_core
 
 from spectrafit.api.models_model import ConfIntervalAPI
 from spectrafit.api.notebook_model import FnameAPI
-from spectrafit.api.tools_model import SolverModelsAPI
 from spectrafit.core.fitting_config import UnifiedFittingConfig
 from spectrafit.core.pipeline import PipelineDependencies
 from spectrafit.core.postprocessing import PostProcessingResult
@@ -23,6 +22,7 @@ from spectrafit.models.preprocessing_config import PreprocessingConfig
 from spectrafit.models.results.fit_result import ConfidenceResults
 from spectrafit.models.results.fit_result import FitInsights
 from spectrafit.models.solver_config import ConfIntervalConfig
+from spectrafit.models.solver_config import SolverConfig
 from spectrafit.models.split_frame import SplitFrame
 
 
@@ -106,7 +106,9 @@ class TestSideEffectMethods:
         notebook.export_active_df()
 
         assert notebook.export_args_df.prefix == "act"
-        notebook.export_df.assert_called_once_with(df=notebook.df, args=notebook.export_args_df)
+        notebook.export_df.assert_called_once_with(
+            df=notebook.df, args=notebook.export_args_df
+        )
 
     @pytest.mark.unit
     def test_args_pre_mutation_updates_canonical_preprocessing_state(self) -> None:
@@ -138,7 +140,7 @@ class TestSideEffectMethods:
                 }
             }
         ]
-        notebook.settings_solver_models = SolverModelsAPI()
+        notebook.settings_solver_models = SolverConfig()
         notebook.fitting_mode = FittingMode.STANDARD
 
         with pytest.warns(FutureWarning, match=r"SpectraFitNotebook\.args_pre"):
@@ -151,7 +153,9 @@ class TestSideEffectMethods:
         assert notebook.args_to_config().preprocessing == notebook.preprocessing_config
 
     @pytest.mark.unit
-    def test_args_pre_reassignment_updates_canonical_preprocessing_and_columns(self) -> None:
+    def test_args_pre_reassignment_updates_canonical_preprocessing_and_columns(
+        self,
+    ) -> None:
         notebook = _notebook_stub()
         notebook.x_column = "energy"
         notebook.y_column = "signal"
@@ -180,7 +184,7 @@ class TestSideEffectMethods:
                 }
             }
         ]
-        notebook.settings_solver_models = SolverModelsAPI()
+        notebook.settings_solver_models = SolverConfig()
         notebook.fitting_mode = FittingMode.STANDARD
 
         with pytest.warns(FutureWarning, match=r"SpectraFitNotebook\.args_pre"):
@@ -387,7 +391,7 @@ class TestSideEffectMethods:
         notebook.x_column = "x"
         notebook.y_column = "y"
         notebook.fitting_mode = FittingMode.STANDARD
-        notebook.settings_solver_models = SolverModelsAPI()
+        notebook.settings_solver_models = SolverConfig()
         notebook.args_to_config = MagicMock(
             return_value=UnifiedFittingConfig.from_dict(
                 {
@@ -491,7 +495,9 @@ class TestSideEffectMethods:
                 self.deps = deps
 
             def run(self) -> SimpleNamespace:
-                df = self.deps.data_loader(self.deps.data_config_factory(self.request.config))
+                df = self.deps.data_loader(
+                    self.deps.data_config_factory(self.request.config)
+                )
                 pre_result = self.deps.preprocessor(df, self.request.config)
                 minimizer, result = self.deps.solver_factory(
                     pre_result.df,
@@ -511,7 +517,9 @@ class TestSideEffectMethods:
                 )
 
         monkeypatch.setattr(jupyter_core, "FittingPipeline", FakePipeline)
-        monkeypatch.setattr(jupyter_core, "SolverResults", MagicMock(return_value=MagicMock()))
+        monkeypatch.setattr(
+            jupyter_core, "SolverResults", MagicMock(return_value=MagicMock())
+        )
 
         notebook.solver_model(
             initial_model=[],
@@ -523,8 +531,14 @@ class TestSideEffectMethods:
 
         assert solver_calls["df"] is notebook.df
         assert solver_calls["config"] is postprocess_calls["config"]
-        assert solver_calls["config"].minimizer == notebook.settings_solver_models.minimizer
-        assert solver_calls["config"].optimizer == notebook.settings_solver_models.optimizer
+        assert (
+            solver_calls["config"].minimizer
+            == notebook.settings_solver_models.minimizer
+        )
+        assert (
+            solver_calls["config"].optimizer
+            == notebook.settings_solver_models.optimizer
+        )
         assert postprocess_calls == {
             "df": notebook.df,
             "minimizer": minimizer,
@@ -547,7 +561,7 @@ class TestSideEffectMethods:
         notebook.x_column = "x"
         notebook.y_column = "y"
         notebook.fitting_mode = FittingMode.STANDARD
-        notebook.settings_solver_models = SolverModelsAPI()
+        notebook.settings_solver_models = SolverConfig()
         notebook.args_to_config = MagicMock(
             return_value=UnifiedFittingConfig.from_dict(
                 {
@@ -605,7 +619,9 @@ class TestSideEffectMethods:
 
         notebook.__dict__["_pipeline_deps"] = PipelineDependencies(
             solver_factory=lambda _df, _config: FakeSolver(),
-            postprocess_runner=lambda _df, _minimizer, _result, _config, _bundle: post_result,
+            postprocess_runner=lambda _df, _minimizer, _result, _config, _bundle: (
+                post_result
+            ),
         )
 
         class FakePipeline:
@@ -614,7 +630,9 @@ class TestSideEffectMethods:
                 self.deps = deps
 
             def run(self) -> SimpleNamespace:
-                df = self.deps.data_loader(self.deps.data_config_factory(self.request.config))
+                df = self.deps.data_loader(
+                    self.deps.data_config_factory(self.request.config)
+                )
                 pre_result = self.deps.preprocessor(df, self.request.config)
                 self.deps.solver_factory(pre_result.df, self.request.config).solve()
                 post_result = self.deps.postprocess_runner(
@@ -631,7 +649,9 @@ class TestSideEffectMethods:
                 )
 
         monkeypatch.setattr(jupyter_core, "FittingPipeline", FakePipeline)
-        monkeypatch.setattr(jupyter_core, "SolverResults", MagicMock(return_value=MagicMock()))
+        monkeypatch.setattr(
+            jupyter_core, "SolverResults", MagicMock(return_value=MagicMock())
+        )
 
         notebook.solver_model(
             initial_model=[],

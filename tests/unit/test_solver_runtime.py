@@ -7,8 +7,9 @@ import pandas as pd
 import pytest
 
 from spectrafit.core.fitting_config import UnifiedFittingConfig
+from spectrafit.core.solver_runtime import solve_global_fitting
+from spectrafit.core.solver_runtime import solve_local_fitting
 from spectrafit.models.global_fitting import GlobalFittingConfig
-from spectrafit.models.solver import SolverModels
 
 
 LOCAL_CONFIG: dict[str, object] = {
@@ -69,7 +70,7 @@ def test_runtime_builds_local_execution_plan() -> None:
     runtime = LmfitSolverRuntime(df=df, config=config)
     plan = runtime.build_execution_plan()
 
-    assert plan.residual is SolverModels.solve_local_fitting
+    assert plan.residual is solve_local_fitting
     assert plan.bundle is not None
     assert runtime.bundle is plan.bundle
     np.testing.assert_array_equal(plan.fcn_args[0], df["energy"].to_numpy())
@@ -96,7 +97,7 @@ def test_runtime_builds_global_execution_plan() -> None:
     runtime = LmfitSolverRuntime(df=df, config=config)
     plan = runtime.build_execution_plan()
 
-    assert plan.residual is SolverModels.solve_global_fitting
+    assert plan.residual is solve_global_fitting
     assert plan.bundle is None
     assert runtime.bundle is None
     np.testing.assert_array_equal(plan.fcn_args[0], df["energy"].to_numpy())
@@ -141,7 +142,7 @@ def test_runtime_solve_forwards_solver_config(monkeypatch: pytest.MonkeyPatch) -
 
     assert isinstance(minimizer, FakeMinimizer)
     assert result is result_sentinel
-    assert captured["residual"] is SolverModels.solve_local_fitting
+    assert captured["residual"] is solve_local_fitting
     assert captured["minimizer_kwargs"] == {
         "nan_policy": "omit",
         "calc_covar": False,

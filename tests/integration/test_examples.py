@@ -10,6 +10,7 @@ import sys
 import warnings
 
 from pathlib import Path
+from typing import cast
 
 import pandas as pd
 import pytest
@@ -35,6 +36,34 @@ from typer.testing import CliRunner
 runner = CliRunner()
 
 
+def _normalized_cell_source(source: object) -> str:
+    """Return stable cell source text across string/list notebook serializations."""
+    if isinstance(source, str):
+        return source.rstrip("\n")
+    return "".join(
+        line if line.endswith("\n") else f"{line}\n"
+        for line in cast("list[str]", source)
+    ).rstrip("\n")
+
+
+def _normalized_notebook_payload(payload: dict[str, object]) -> dict[str, object]:
+    """Return a semantic notebook view stable across editor serializations."""
+    cells = payload.get("cells", [])
+    assert isinstance(cells, list)
+
+    normalized_cells: list[dict[str, object]] = []
+    for raw_cell in cells:
+        assert isinstance(raw_cell, dict)
+        cell = cast("dict[str, object]", raw_cell)
+        normalized_cell: dict[str, object] = {
+            "cell_type": cell.get("cell_type"),
+            "source": _normalized_cell_source(cell.get("source", "")),
+        }
+        normalized_cells.append(normalized_cell)
+
+    return {"cells": normalized_cells}
+
+
 @pytest.mark.integration
 @pytest.mark.parametrize("input_toml", EXAMPLE_INPUTS, ids=lambda p: p.parent.name)
 def test_committed_example_notebook_matches_generator(input_toml: Path) -> None:
@@ -45,10 +74,16 @@ def test_committed_example_notebook_matches_generator(input_toml: Path) -> None:
         (input_toml.parent / "notebook.ipynb").read_text(encoding="utf-8")
     )
 
-    assert committed_notebook == build_example_notebook(
-        example_name=example_name,
-        description=scenario.description,
-    ), f"Committed notebook for {example_name} is stale. Run `uv run poe generate-examples`."
+    assert _normalized_notebook_payload(
+        committed_notebook
+    ) == _normalized_notebook_payload(
+        build_example_notebook(
+            example_name=example_name,
+            description=scenario.description,
+        )
+    ), (
+        f"Committed notebook for {example_name} is stale. Run `uv run poe generate-examples`."
+    )
 
 
 @pytest.mark.integration
@@ -107,7 +142,8 @@ def test_example_loads_and_converges(input_toml: Path, tmp_path: Path) -> None:
     fit = FittingPipeline(request=FittingRequest.from_config(cfg)).run()
 
     assert fit.success, (
-        f"Fit did not converge for {input_toml.parent.name}: {fit.result.message}"
+        f"Fit did not converge for {input_toml.parent.name}: "
+        f"{getattr(fit.result, 'message', getattr(fit.result, 'lmdif_message', 'unknown failure'))}"
     )
 
     y_col = df.columns[1]
@@ -144,7 +180,9 @@ def test_example_cli_fit_writes_outputs(
 
     assert result.exit_code == 0, result.output
     assert list(tmp_path.glob("*_fit.csv")), "Fit command did not write a fit CSV"
-    assert list(tmp_path.glob("*_summary.json")), "Fit command did not write a summary JSON"
+    assert list(tmp_path.glob("*_summary.json")), (
+        "Fit command did not write a summary JSON"
+    )
 
 
 @pytest.mark.integration
@@ -204,10 +242,18 @@ def test_example_notebook_fit_writes_outputs(input_toml: Path, tmp_path: Path) -
 
     assert notebook.fit_result.fit_insights.variables
     assert list(tmp_path.glob("fit_*.csv")), "Notebook flow did not export a fit CSV"
-    assert list(tmp_path.glob("metric_*.csv")), "Notebook flow did not export a metric CSV"
-    assert list(tmp_path.glob("peaks_*.csv")), "Notebook flow did not export a peaks CSV"
-    assert list(tmp_path.glob("fit_*.html")), "Notebook flow did not export an HTML fit plot"
-    assert list(tmp_path.glob("*.lock")), "Notebook flow did not export a report lockfile"
+    assert list(tmp_path.glob("metric_*.csv")), (
+        "Notebook flow did not export a metric CSV"
+    )
+    assert list(tmp_path.glob("peaks_*.csv")), (
+        "Notebook flow did not export a peaks CSV"
+    )
+    assert list(tmp_path.glob("fit_*.html")), (
+        "Notebook flow did not export an HTML fit plot"
+    )
+    assert list(tmp_path.glob("*.lock")), (
+        "Notebook flow did not export a report lockfile"
+    )
 
 
 @pytest.mark.integration
@@ -225,9 +271,13 @@ def test_example_notebook_executes_headlessly(
     shutil.copytree(source_example_dir, working_example_dir)
 
     notebook_path = working_example_dir / "notebook.ipynb"
-    assert notebook_path.exists(), f"Missing notebook.ipynb for {source_example_dir.name}"
+    assert notebook_path.exists(), (
+        f"Missing notebook.ipynb for {source_example_dir.name}"
+    )
 
-    shutil.rmtree(working_example_dir / "outputs" / "live" / "notebook", ignore_errors=True)
+    shutil.rmtree(
+        working_example_dir / "outputs" / "live" / "notebook", ignore_errors=True
+    )
 
     exec_result = subprocess.run(  # noqa: S603 - fixed interpreter/module invocation
         [
@@ -270,7 +320,9 @@ def test_example_notebook_executes_headlessly(
         ), f"Code cell {index} produced an error output"
 
     output_dir = working_example_dir / "outputs" / "live" / "notebook"
-    assert list(output_dir.glob("fit_*.csv")), "Headless notebook run did not export a fit CSV"
+    assert list(output_dir.glob("fit_*.csv")), (
+        "Headless notebook run did not export a fit CSV"
+    )
     assert list(output_dir.glob("metric_*.csv")), (
         "Headless notebook run did not export a metric CSV"
     )
@@ -280,7 +332,9 @@ def test_example_notebook_executes_headlessly(
     assert list(output_dir.glob("fit_*.html")), (
         "Headless notebook run did not export an HTML fit plot"
     )
-    assert list(output_dir.glob("*.lock")), "Headless notebook run did not export a lockfile"
+    assert list(output_dir.glob("*.lock")), (
+        "Headless notebook run did not export a lockfile"
+    )
 
 
 @pytest.mark.integration
@@ -349,7 +403,9 @@ def test_run_example_workflows_persists_outputs_under_example_directories(
 
     monkeypatch.setattr("spectrafit.workflow.validation.EXAMPLE_INPUTS", [input_toml])
     monkeypatch.setattr("spectrafit.workflow.validation.run_cli_example", _fake_cli)
-    monkeypatch.setattr("spectrafit.workflow.validation.run_notebook_example", _fake_notebook)
+    monkeypatch.setattr(
+        "spectrafit.workflow.validation.run_notebook_example", _fake_notebook
+    )
 
     run_example_workflows(
         surface=ExampleWorkflowSurface.BOTH,

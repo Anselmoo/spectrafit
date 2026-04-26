@@ -20,11 +20,12 @@ from spectrafit.adapters.preprocessing_boundary import preprocessing_to_boundary
 from spectrafit.api.cmd_model import DescriptionAPI
 from spectrafit.api.notebook_model import FnameAPI
 from spectrafit.api.tools_model import DataPreProcessingAPI
-from spectrafit.api.tools_model import SolverModelsAPI
 from spectrafit.core.result_bridge import resolve_fit_result_input_config
 from spectrafit.jupyter.solver import SolverResults
 from spectrafit.models.fitting_context import FittingMode
+from spectrafit.models.peak_models import Component
 from spectrafit.models.preprocessing_config import PreprocessingConfig
+from spectrafit.models.solver_config import SolverConfig
 from spectrafit.reporting.service import CanonicalReportSchema
 from spectrafit.reporting.service import ConfidenceSettingValue
 from spectrafit.reporting.service import SolverReportProjection
@@ -141,7 +142,7 @@ class ExportReport:
         *,
         initial_model: InitialModelLike | None = None,
         pre_processing: DataPreProcessingAPI | PreprocessingConfig | None = None,
-        settings_solver_models: SolverModelsAPI | None = None,
+        settings_solver_models: SolverConfig | None = None,
         df_pre: pd.DataFrame | object = _UNSET_DF_PRE,
         column: NotebookBoundaryColumn | object = _UNSET_COLUMN,
     ) -> None:
@@ -153,7 +154,7 @@ class ExportReport:
             pre_processing: Data pre-processing settings. Canonical notebook/runtime
                  flows pass ``PreprocessingConfig``; compatibility callers may still
                  pass ``DataPreProcessingAPI`` directly.
-            settings_solver_models (SolverModelsAPI): Solver models settings.
+            settings_solver_models (SolverConfig): Solver settings.
             fname (FnameAPI): Filename of the fit project including the path, prefix,
                  and suffix.
             solver (SolverResults): Typed solver results from the fitting pipeline.
@@ -196,34 +197,36 @@ class ExportReport:
         column: NotebookBoundaryColumn | object,
     ) -> NotebookBoundaryColumn | None:
         """Normalize optional notebook-boundary column input."""
-        if column is _UNSET_COLUMN or column is None:
-            return None
-        return list(column)
+        if isinstance(column, list):
+            normalized_column = [
+                item for item in column if isinstance(item, (int, str))
+            ]
+            if len(normalized_column) == len(column):
+                return normalized_column
+        return None
 
     def _resolve_initial_components(
         self,
         *,
         initial_model: InitialModelLike | None,
-    ) -> list[object]:
+    ) -> list[Component]:
         """Prefer the typed FitResult snapshot for notebook input ownership."""
         if self._input_config is not None and self._input_config.components:
             return list(self._input_config.components)
-        if initial_model is None:
-            return []
-        return normalize_components(initial_model)
+        return normalize_components(initial_model) if initial_model is not None else []
 
     def _resolve_solver_models(
         self,
         *,
-        settings_solver_models: SolverModelsAPI | None,
-    ) -> SolverModelsAPI:
+        settings_solver_models: SolverConfig | None,
+    ) -> SolverConfig:
         """Prefer typed solver settings captured in the canonical FitResult."""
         if self._input_config is not None:
-            return SolverModelsAPI(
+            return SolverConfig(
                 minimizer=self._input_config.minimizer,
                 optimizer=self._input_config.optimizer,
             )
-        return settings_solver_models or SolverModelsAPI()
+        return settings_solver_models or SolverConfig()
 
     def _resolve_pre_processing_owner(
         self,

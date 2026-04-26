@@ -148,9 +148,21 @@ def test_dtale_display_reports_missing_dtale_dependency(
 @pytest.mark.unit
 def test_plugins_notebook_reexports_notebook_surface() -> None:
     """Legacy notebook import path should still resolve to the live notebook class."""
+    import warnings
+
     from spectrafit.jupyter.core import SpectraFitNotebook
     from spectrafit.plugins import notebook as notebook_module
-    from spectrafit.plugins.notebook import SpectraFitNotebook as CompatNotebook
 
-    assert notebook_module.SpectraFitNotebook is SpectraFitNotebook
+    with pytest.warns(FutureWarning, match=r"spectrafit\.plugins\.notebook"):
+        compat_notebook = notebook_module.SpectraFitNotebook
+
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always")
+        from spectrafit.plugins.notebook import SpectraFitNotebook as CompatNotebook
+
+    assert compat_notebook is SpectraFitNotebook
     assert CompatNotebook is SpectraFitNotebook
+    future_warnings = [
+        warning for warning in caught if issubclass(warning.category, FutureWarning)
+    ]
+    assert future_warnings

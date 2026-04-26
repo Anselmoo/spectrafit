@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from spectrafit.api.models_model import ConfIntervalAPI
-from spectrafit.api.tools_model import SolverModelsAPI
 from spectrafit.core.fitting_config import UnifiedFittingConfig
 from spectrafit.models.solver_config import ConfIntervalConfig
 from spectrafit.models.solver_config import SolverConfig
@@ -30,7 +29,7 @@ def normalize_conf_interval(
 
 def resolve_solver_options(
     conf_interval: bool | ConfIntervalAPI | ConfIntervalConfig,
-    solver_settings: SolverModelsAPI | None,
+    solver_settings: SolverConfig | None,
     config: UnifiedFittingConfig | None,
 ) -> tuple[ConfIntervalConfig | None, SolverConfig | None]:
     """Resolve solver options from explicit params and optional unified config.
@@ -53,16 +52,13 @@ def resolve_solver_options(
             ),
         )
 
-    resolved_solver_settings = (
-        solver_settings.to_solver_config() if solver_settings is not None else None
-    )
-    return normalize_conf_interval(conf_interval), resolved_solver_settings
+    return normalize_conf_interval(conf_interval), solver_settings
 
 
 def apply_solver_settings(
-    current_settings: SolverModelsAPI,
+    current_settings: SolverConfig,
     solver_settings: SolverConfig | None,
-) -> SolverModelsAPI:
+) -> SolverConfig:
     """Apply solver settings while preserving existing notebook defaults.
 
     Args:
@@ -70,8 +66,8 @@ def apply_solver_settings(
         solver_settings: New settings model, or ``None`` to keep current.
 
     Returns:
-        SolverModelsAPI: Effective solver settings after applying overrides.
+        SolverConfig: Effective solver settings after applying overrides.
     """
     if solver_settings is None:
         return current_settings
-    return SolverModelsAPI.from_solver_config(solver_settings)
+    return solver_settings.model_copy(deep=True)

@@ -16,7 +16,6 @@ import pandas as pd
 import pytest
 
 from spectrafit.api.tools_model import DataPreProcessingAPI
-from spectrafit.api.tools_model import SolverModelsAPI
 from spectrafit.core.fitting_config import UnifiedFittingConfig
 from spectrafit.jupyter.config_io import build_notebook_from_config
 from spectrafit.jupyter.config_io import load_notebook_config
@@ -26,6 +25,7 @@ from spectrafit.models.fitting_context import FittingContext
 from spectrafit.models.fitting_context import FittingMode
 from spectrafit.models.preprocessing_config import PreprocessingConfig
 from spectrafit.models.solver_config import ConfIntervalConfig
+from spectrafit.models.solver_config import SolverConfig
 
 
 _SIMPLE_COMPONENTS: list[dict[str, object]] = [
@@ -727,7 +727,7 @@ def test_notebook_args_to_config_prefers_canonical_initial_components() -> None:
             self.fitting_mode = FittingMode.STANDARD
             self.n_datasets = 1
             self.preprocessing_config = PreprocessingConfig()
-            self.settings_solver_models = SolverModelsAPI()
+            self.settings_solver_models = SolverConfig()
             self.initial_components = UnifiedFittingConfig(
                 components=_SIMPLE_COMPONENTS
             ).components

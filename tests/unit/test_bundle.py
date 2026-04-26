@@ -15,11 +15,11 @@ import pandas as pd
 import pytest
 
 from lmfit import Parameters
+from spectrafit.core.solver_runtime import solve_global_fitting
 from spectrafit.models.bundle import build_composite_bundle
 from spectrafit.models.peak_models import Component
 from spectrafit.models.peak_models import FitParameter
 from spectrafit.models.registry import REGISTRY
-from spectrafit.models.solver import SolverModels
 from spectrafit.models.solver import calculated_model
 
 
@@ -302,7 +302,7 @@ class TestGlobalContributionAssembly:
             ]
         )
 
-        residual = SolverModels.solve_global_fitting(params=params, x=x, data=data)
+        residual = solve_global_fitting(params=params, x=x, data=data)
 
         assert residual.shape == (x.size * data.shape[1],)
         np.testing.assert_allclose(residual, np.zeros_like(residual))
@@ -335,7 +335,7 @@ class TestGlobalContributionAssembly:
             ]
         )
 
-        residual = SolverModels.solve_global_fitting(
+        residual = solve_global_fitting(
             params=params,
             x=x,
             data=data,

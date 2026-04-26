@@ -8,16 +8,16 @@ from pydantic import ValidationError
 from spectrafit.adapters.unified_config_input import (
     normalize_strict_unified_config_input,
 )
-from spectrafit.api.tools_model import GeneralSolverModelsAPI
-from spectrafit.api.tools_model import GlobalFittingAPI
 from spectrafit.models.fitting_context import FittingContext
 from spectrafit.models.fitting_context import FittingMode
+from spectrafit.models.fitting_context import coerce_legacy_fitting_context
+from spectrafit.models.fitting_context import coerce_legacy_fitting_mode
 from spectrafit.models.plot_config import PlotConfig
 from spectrafit.models.solver_config import SolverConfig
 
 
-class TestApiBoundaryNormalization:
-    """Legacy fitting-mode coercion stays at explicit API boundaries."""
+class TestFittingContextCoercion:
+    """Legacy fitting-mode coercion lives in canonical fitting-context helpers."""
 
     @pytest.mark.parametrize(
         ("raw_value", "expected"),
@@ -27,35 +27,31 @@ class TestApiBoundaryNormalization:
             (True, FittingMode.GLOBAL),
         ],
     )
-    def test_global_fitting_api_accepts_legacy_values(
+    def test_coerce_legacy_fitting_mode_accepts_legacy_values(
         self, raw_value: object, expected: FittingMode
     ) -> None:
-        assert GlobalFittingAPI(global_=raw_value).global_ == expected
+        assert coerce_legacy_fitting_mode(raw_value) == expected
 
-    def test_general_solver_models_api_accepts_legacy_values(self) -> None:
-        assert GeneralSolverModelsAPI(global_=1).global_ == FittingMode.GLOBAL
+    def test_coerce_legacy_fitting_context_returns_global_context(self) -> None:
+        context = coerce_legacy_fitting_context(1)
 
-    def test_global_fitting_api_roundtrips_canonical_fitting_context(self) -> None:
+        assert context == FittingContext(mode=FittingMode.GLOBAL, n_datasets=2)
+
+    def test_fitting_context_from_global_int_roundtrips_canonical_context(self) -> None:
         context = FittingContext(mode=FittingMode.GLOBAL, n_datasets=3)
+        projected = FittingContext.from_global_int(context.global_int)
 
-        adapter = GlobalFittingAPI.from_fitting_context(context)
+        assert projected.mode == FittingMode.GLOBAL
+        assert projected.n_datasets == 2
+        assert projected.model_copy(update={"n_datasets": 3}) == context
 
-        assert adapter.global_ == FittingMode.GLOBAL
-        assert adapter.to_fitting_context(n_datasets=3) == context
-
-    def test_general_solver_models_api_roundtrips_canonical_solver_config(self) -> None:
-        adapter = GeneralSolverModelsAPI(global_=1)
-
-        solver_config = adapter.to_solver_config()
+    def test_solver_config_stays_canonical_without_global_mode_boundary(self) -> None:
+        solver_config = SolverConfig()
 
         assert solver_config == SolverConfig(
-            minimizer=adapter.minimizer,
-            optimizer=adapter.optimizer,
+            minimizer=solver_config.minimizer,
+            optimizer=solver_config.optimizer,
         )
-        assert GeneralSolverModelsAPI.from_solver_context(
-            solver_config=solver_config,
-            fitting_context=FittingContext(mode=FittingMode.GLOBAL, n_datasets=4),
-        ) == adapter.model_copy(update={"global_": FittingMode.GLOBAL})
 
 
 class TestCanonicalPlotConfig:
@@ -63,7 +59,7 @@ class TestCanonicalPlotConfig:
 
     def test_plot_config_rejects_legacy_int_mode(self) -> None:
         with pytest.raises(ValidationError):
-            PlotConfig(global_fitting=1)
+            PlotConfig.model_validate({"global_fitting": 1})
 
 
 # ---------------------------------------------------------------------------

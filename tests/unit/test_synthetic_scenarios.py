@@ -6,10 +6,12 @@ import json
 import tomllib
 
 from pathlib import Path
+from typing import cast
 
 import pandas as pd
 import pandas.testing as pdt
 import pytest
+import typer
 
 from scripts import generate_examples
 from spectrafit.core.fitting_config import UnifiedFittingConfig
@@ -22,6 +24,23 @@ from spectrafit.jupyter.templates.starter_nb import build_starter_notebook
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
+
+
+def _code_cell_sources(notebook: dict[str, object]) -> list[str]:
+    """Return the code-cell sources from a notebook payload."""
+    cells = notebook["cells"]
+    assert isinstance(cells, list)
+
+    sources: list[str] = []
+    for raw_cell in cells:
+        assert isinstance(raw_cell, dict)
+        cell = cast("dict[str, object]", raw_cell)
+        if cell.get("cell_type") != "code":
+            continue
+        source = cell.get("source")
+        if isinstance(source, str):
+            sources.append(source)
+    return sources
 
 
 @pytest.mark.unit
@@ -58,27 +77,26 @@ def test_example_scenarios_match_committed_examples(
 
 @pytest.mark.unit
 def test_build_starter_notebook_uses_supplied_typed_config() -> None:
-    notebook = build_starter_notebook("demo", get_synthetic_scenario("basic").to_config())
-    sources = [
-        cell["source"]
-        for cell in notebook["cells"]
-        if isinstance(cell, dict) and cell.get("cell_type") == "code"
-    ]
-    code_text = "\n".join(source for source in sources if isinstance(source, str))
+    notebook = build_starter_notebook(
+        "demo", get_synthetic_scenario("basic").to_config()
+    )
+    code_text = "\n".join(_code_cell_sources(notebook))
 
     assert 'get_synthetic_scenario("starter-notebook")' not in code_text
-    assert "FitParameter(" in code_text
-    assert "Component(" in code_text
-    assert "UnifiedFittingConfig(" in code_text
-    assert "config = config.with_data_infile(DATA_PATH.resolve())" in code_text
-    assert "df = load_data(config.data)" in code_text
-    assert "notebook.initial_components" in code_text
-    assert "column =" not in code_text
+    assert "import spectrafit.notebook as sf" in code_text
+    assert "df = sf.read(DATA_PATH, x='energy', y='intensity')" in code_text
+    assert "sf.peak(" in code_text
+    assert "sf.background(" in code_text
+    assert "sf.OptimizerConfig(" in code_text
+    assert "result = sf.fit(" in code_text
+    assert "result.plot()" in code_text
+    assert "artifacts = result.save(OUTPUT_DIR, name='demo')" in code_text
     assert "config_payload = {" not in code_text
     assert "resolved_config_payload" not in code_text
-    assert "UnifiedFittingConfig.model_validate(resolved_config_payload)" not in code_text
-    assert "UnifiedFittingConfig.from_file(CONFIG_PATH)" not in code_text
-    assert "SpectraFitNotebook.from_config" in code_text
+    assert "UnifiedFittingConfig(" not in code_text
+    assert "FitParameter(" not in code_text
+    assert "Component(" not in code_text
+    assert "SpectraFitNotebook.from_config" not in code_text
 
 
 @pytest.mark.unit
@@ -87,26 +105,22 @@ def test_build_example_notebook_uses_local_committed_files() -> None:
         example_name="basic",
         description="Single Gaussian peak with a flat linear background.",
     )
-    sources = [
-        cell["source"]
-        for cell in notebook["cells"]
-        if isinstance(cell, dict) and cell.get("cell_type") == "code"
-    ]
-    code_text = "\n".join(source for source in sources if isinstance(source, str))
+    code_text = "\n".join(_code_cell_sources(notebook))
 
     assert "DATA_PATH = NOTEBOOK_ROOT / 'data.csv'" in code_text
-    assert "FitParameter(" in code_text
-    assert "Component(" in code_text
-    assert "UnifiedFittingConfig(" in code_text
-    assert "config = config.with_data_infile(DATA_PATH.resolve())" in code_text
-    assert "df = load_data(config.data)" in code_text
-    assert "notebook.initial_components" in code_text
+    assert "import spectrafit.notebook as sf" in code_text
+    assert "df = sf.read(DATA_PATH, x='energy', y='intensity')" in code_text
+    assert "sf.peak(" in code_text
+    assert "sf.background(" in code_text
+    assert "sf.OptimizerConfig(" in code_text
+    assert "result = sf.fit(" in code_text
+    assert "artifacts = result.save(OUTPUT_DIR, name='basic')" in code_text
     assert "config_payload = {" not in code_text
     assert "resolved_config_payload" not in code_text
-    assert "UnifiedFittingConfig.model_validate(resolved_config_payload)" not in code_text
-    assert "UnifiedFittingConfig.from_file(CONFIG_PATH)" not in code_text
-    assert "SpectraFitNotebook.from_config" in code_text
-    assert "folder=str(OUTPUT_DIR)" in code_text
+    assert "UnifiedFittingConfig(" not in code_text
+    assert "FitParameter(" not in code_text
+    assert "Component(" not in code_text
+    assert "SpectraFitNotebook.from_config" not in code_text
 
 
 @pytest.mark.unit
@@ -132,22 +146,56 @@ def test_generate_examples_writes_shared_scenarios(
         notebook_path = tmp_path / "examples" / scenario.example_dir / "notebook.ipynb"
         assert notebook_path.exists()
         notebook = json.loads(notebook_path.read_text(encoding="utf-8"))
-        code_text = "\n".join(
-            cell["source"]
-            for cell in notebook["cells"]
-            if cell.get("cell_type") == "code" and isinstance(cell.get("source"), str)
-        )
+        code_text = "\n".join(_code_cell_sources(notebook))
         assert "DATA_PATH = NOTEBOOK_ROOT / 'data.csv'" in code_text
-        assert "FitParameter(" in code_text
-        assert "Component(" in code_text
-        assert "UnifiedFittingConfig(" in code_text
-        assert "config = config.with_data_infile(DATA_PATH.resolve())" in code_text
-        assert "df = load_data(config.data)" in code_text
-        assert "notebook.initial_components" in code_text
+        assert "import spectrafit.notebook as sf" in code_text
+        assert "df = sf.read(DATA_PATH, x='energy', y='intensity')" in code_text
+        assert "sf.peak(" in code_text
+        assert "sf.background(" in code_text
+        assert "sf.OptimizerConfig(" in code_text
+        assert "result = sf.fit(" in code_text
         assert "config_payload = {" not in code_text
-        assert "UnifiedFittingConfig.model_validate(resolved_config_payload)" not in code_text
-        assert "UnifiedFittingConfig.from_file(CONFIG_PATH)" not in code_text
-        assert "SpectraFitNotebook.from_config" in code_text
+        assert "UnifiedFittingConfig(" not in code_text
+        assert "FitParameter(" not in code_text
+        assert "Component(" not in code_text
+        assert "SpectraFitNotebook.from_config" not in code_text
+
+
+@pytest.mark.unit
+def test_generate_examples_check_passes_for_fresh_artifacts(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    monkeypatch.setattr(generate_examples, "_REPO_ROOT", tmp_path)
+
+    generate_examples.main(seed=7)
+    generate_examples.main(seed=7, check=True)
+
+    captured = capsys.readouterr()
+    assert "Committed example artifacts are up to date" in captured.out
+
+
+@pytest.mark.unit
+def test_generate_examples_check_fails_for_stale_artifacts(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    monkeypatch.setattr(generate_examples, "_REPO_ROOT", tmp_path)
+
+    generate_examples.main(seed=7)
+    stale_file = tmp_path / "examples" / "basic" / "input.toml"
+    stale_file.write_text('schema_version = "999.0"\n', encoding="utf-8")
+
+    with pytest.raises(typer.Exit) as exc_info:
+        generate_examples.main(seed=7, check=True)
+
+    assert exc_info.value.exit_code == 1
+    captured = capsys.readouterr()
+    assert "Committed example artifacts are stale" in captured.err
+    assert "basic/input.toml (stale)" in captured.err
+    assert "uv run poe generate-examples" in captured.err
 
 
 @pytest.mark.unit
@@ -182,10 +230,13 @@ def test_example_input_config_is_typed_and_matches_payload() -> None:
     assert isinstance(example_config, ExampleInputConfig)
     assert example_config.data.infile == "data.csv"
     assert example_config.meta.description == scenario.description
-    assert example_config.model_dump(
-        mode="json",
-        exclude_none=True,
-    ) == scenario.example_input_payload()
+    assert (
+        example_config.model_dump(
+            mode="json",
+            exclude_none=True,
+        )
+        == scenario.example_input_payload()
+    )
 
 
 @pytest.mark.unit
@@ -200,7 +251,8 @@ def test_synthetic_scenario_separates_truth_from_materialization() -> None:
     config.components[0].parameters["amplitude"].value = 99.0
 
     assert (
-        scenario.materialization.config.components[0].parameters["amplitude"].value == 1.0
+        scenario.materialization.config.components[0].parameters["amplitude"].value
+        == 1.0
     )
 
 
