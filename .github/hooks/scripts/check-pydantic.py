@@ -207,9 +207,28 @@ class PydanticViolationVisitor(ast.NodeVisitor):
 
     # -- Annotations (return types, field types) --------------------------------
 
+    # Third-party modules commonly placed under TYPE_CHECKING that must be at
+    # runtime when used as Pydantic field types.
+    _TC_MODULES = {"lmfit", "numpy", "pandas", "plotly", "scipy"}
+
     def visit_AnnAssign(self, node: ast.AnnAssign) -> None:  # noqa: N802
         self._check_dict_any_annotation(node.annotation, node.lineno, context="field")
+        self._check_module_dot_class_field(node.annotation, node.lineno)
         self.generic_visit(node)
+
+    def _check_module_dot_class_field(self, ann: ast.expr, lineno: int) -> None:
+        """Detect `module.ClassName` in a field annotation where module is a known TC-only lib."""
+        if not isinstance(ann, ast.Attribute):
+            return
+        if not isinstance(ann.value, ast.Name):
+            return
+        module_name = ann.value.id
+        if module_name in self._TC_MODULES:
+            self.violations.append(
+                f"Line {lineno}: `{module_name}.{ann.attr}` used as field annotation — "
+                f"import the specific class at runtime instead: "
+                f"`from {module_name} import {ann.attr}  # noqa: TC002`"
+            )
 
     def visit_FunctionDef(self, node: ast.FunctionDef) -> None:  # noqa: N802
         if node.returns:

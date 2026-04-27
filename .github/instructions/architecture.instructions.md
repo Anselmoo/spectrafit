@@ -51,6 +51,24 @@ CLI / Jupyter / API
 1. **All lmfit parameter names are built exclusively via `lmfit_param_name(id, field)`.**
    No inline f-strings for parameter naming anywhere in the codebase.
 
+0. **Pydantic field types must be importable at runtime.**
+   When a third-party class (`lmfit.Model`, `lmfit.Parameters`, `NDArray`, etc.) is used as a
+   `BaseModel` field annotation, import the specific class at the top level with `# noqa: TC002`.
+   Do **not** use `module.ClassName` notation with the module under `TYPE_CHECKING` — Pydantic v2
+   resolves annotations at class definition time and raises `PydanticUserError` otherwise.
+   Keep `import module` under `TYPE_CHECKING` only if needed for method-signature annotations.
+
+   ```python
+   from lmfit import Model      # noqa: TC002  — needed by Pydantic at class-definition time
+   from lmfit import Parameters # noqa: TC002
+
+   if TYPE_CHECKING:
+       import lmfit             # only for lmfit.X in docstrings / method sigs
+   ```
+
+1. **All lmfit parameter names are built exclusively via `lmfit_param_name(id, field)`.**
+   No inline f-strings for parameter naming anywhere in the codebase.
+
 2. **`UnifiedFittingConfig` is the single validated entry point.**
    `FittingPipeline.__init__` accepts `UnifiedFittingConfig | dict[str, Any]`; the dict path
    coerces via `UnifiedFittingConfig.from_dict()`. No raw dict may cross module boundaries

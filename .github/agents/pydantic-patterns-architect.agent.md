@@ -84,8 +84,9 @@ Before and after every refactoring task, use the project's poe tasks and scripts
 | `if x is None: x = Default()` | `Field(default_factory=...)` | Builder |
 | `@property → None` (side-effect) | Explicit `def` method | Command |
 | Deep MRO chains | Composition via config models | Delegation |
+| `module.ClassName` field type with module under `TYPE_CHECKING` | Import specific class at runtime: `from lmfit import Model  # noqa: TC002` | Explicit imports |
 
-## The Three Core Solutions
+## The Four Core Solutions
 
 ### 1. None-Defaulting → `Field(default_factory=...)`
 
@@ -148,6 +149,37 @@ class SpectraFitNotebook:
 | Inheritance or composition? | Composition. MRO depth >2 is a smell. |
 | Delete or deprecate? | **Delete.** No `from_args` shims. |
 | Where do defaults live? | On the Pydantic model that owns the concept. |
+
+### 4. `module.ClassName` Field Types → Explicit Runtime Imports
+
+Pydantic v2 resolves field annotations at class definition time, even with
+`from __future__ import annotations`. If the containing module is under `TYPE_CHECKING`,
+Pydantic raises `PydanticUserError: X is not fully defined`.
+
+```python
+# BAD — lmfit.Model cannot be resolved if lmfit is only imported for type checking
+if TYPE_CHECKING:
+    import lmfit
+
+class CompositeModelBundle(BaseModel):
+    composite: lmfit.Model     # PydanticUserError at runtime
+    params: lmfit.Parameters   # PydanticUserError at runtime
+
+# GOOD — import the specific classes at runtime; keep the full module under TYPE_CHECKING
+# only if needed for method-signature annotations
+from lmfit import Model      # noqa: TC002
+from lmfit import Parameters # noqa: TC002
+
+if TYPE_CHECKING:
+    import lmfit               # only needed for lmfit.X in docstrings / method sigs
+
+class CompositeModelBundle(BaseModel):
+    composite: Model           # explicit, resolvable at runtime
+    params: Parameters         # explicit, resolvable at runtime
+```
+
+**Rule:** Any class used as a `BaseModel` field type must be importable at runtime.
+Import the specific class, not the parent module, to stay explicit.
 
 ## Workflow
 

@@ -31,6 +31,7 @@ The `from __future__ import annotations` import is **required** in every module.
 | `# noqa: B008` | `typer.Argument`/`typer.Option` in default parameter values — expected pattern |
 | `# noqa: PLC0415` | Late imports for circular-import guards — intentional |
 | `# noqa: RUF001` / `# noqa: RUF002` | Scientific Unicode (σ, −, ×) in docstrings |
+| `# noqa: TC002` | Third-party class imported at runtime **because Pydantic resolves field annotations at import time**, even with `from __future__ import annotations`. Required for any class used directly as a `BaseModel` field type (e.g. `lmfit.Model`, `lmfit.Parameters`, `NDArray`). Import the class explicitly (`from lmfit import Model`) rather than keeping the module under `TYPE_CHECKING`. |
 
 ## Type Hints
 
@@ -42,6 +43,30 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     import pandas as pd
+```
+
+- **Exception — Pydantic field types must be importable at runtime.** When a third-party class is
+  used as a `BaseModel` field annotation, import it at the top level with `# noqa: TC002`.
+  Import the specific class (not the whole module) to keep it explicit:
+
+```python
+# CORRECT — Pydantic resolves Model/Parameters at class definition time
+from lmfit import Model  # noqa: TC002
+from lmfit import Parameters  # noqa: TC002
+
+if TYPE_CHECKING:
+    import lmfit  # used only in method signatures
+
+class CompositeModelBundle(BaseModel):
+    composite: Model          # explicit, not lmfit.Model
+    params: Parameters        # explicit, not lmfit.Parameters
+
+# WRONG — lmfit.Model cannot be resolved if lmfit is under TYPE_CHECKING
+if TYPE_CHECKING:
+    import lmfit
+
+class CompositeModelBundle(BaseModel):
+    composite: lmfit.Model    # PydanticUserError at runtime
 ```
 
 - Use the PEP 695 `type` keyword for all type aliases (Python 3.12+):
