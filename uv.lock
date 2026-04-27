@@ -1,5 +1,5 @@
 version = 1
-revision = 2
+revision = 3
 requires-python = ">=3.9, <3.14"
 resolution-markers = [
     "python_full_version >= '3.13' and sys_platform == 'win32'",
@@ -1533,15 +1533,6 @@ wheels = [
 ]
 
 [[package]]
-name = "dash-daq"
-version = "0.5.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "dash" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/16/c1/9c6adfc3646990965a5b2ca073f579cc9c09d15553fcfcd83aefd1255494/dash_daq-0.5.0.tar.gz", hash = "sha256:a1d85b6799f7b885652fbc44aebdb58c41254616a8d350b943beeb42ade4256a", size = 642707, upload-time = "2020-04-27T14:23:01.125Z" }
-
-[[package]]
 name = "dash-html-components"
 version = "2.0.0"
 source = { registry = "https://pypi.org/simple" }
@@ -1635,7 +1626,7 @@ wheels = [
 
 [[package]]
 name = "dtale"
-version = "3.21.0"
+version = "3.22.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "beautifulsoup4" },
@@ -1643,7 +1634,6 @@ dependencies = [
     { name = "cycler" },
     { name = "dash" },
     { name = "dash-bootstrap-components" },
-    { name = "dash-daq" },
     { name = "et-xmlfile" },
     { name = "flask" },
     { name = "flask-compress" },
@@ -1685,9 +1675,9 @@ dependencies = [
     { name = "xarray", version = "2026.2.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "xlrd" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/22/aa/73b878b59a66be355e4c37f229af54dc63a6446af233dff1d4a47b96ac4c/dtale-3.21.0.tar.gz", hash = "sha256:8fd93124be4d86f686298ae638a7d0c41ea9a56568c533d14fe6e907a3ec7d25", size = 16347715, upload-time = "2026-03-26T15:32:07.537Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/9b/74/1e6c0d410ab298e11f7e84f3b74ea91a59f6754c4c803a15d0c72afff516/dtale-3.22.0.tar.gz", hash = "sha256:01c3ec821327263f730afb1409f0ca7dd56f2363a92d03e7700961e6b276f8d3", size = 16350896, upload-time = "2026-04-01T13:17:45.419Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/bc/a9/215a86ef5247589eb5a54786c23cd6af058190f627a979b12d15dd39fa45/dtale-3.21.0-py2.py3-none-any.whl", hash = "sha256:8c578d72970238844952688317b489af93d95ade75818e58f59cb2ec476f9f3f", size = 17380428, upload-time = "2026-03-26T15:32:03.456Z" },
+    { url = "https://files.pythonhosted.org/packages/e3/1f/528d48785489c68dd388dd56758a3afd77a52fdff667104569f89b69c410/dtale-3.22.0-py2.py3-none-any.whl", hash = "sha256:7f01141e455ca71e23fc1108407d7155fc67dc569f00285df278cbe39c3feead", size = 17382568, upload-time = "2026-04-01T13:17:38.874Z" },
 ]
 
 [[package]]
