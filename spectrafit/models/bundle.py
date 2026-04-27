@@ -39,11 +39,15 @@ The central design principle is **lmfit-native composition**:
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-from dataclasses import field
 from typing import TYPE_CHECKING
 
 import numpy as np
+
+from lmfit import Model  # noqa: TC002
+from lmfit import Parameters  # noqa: TC002
+from pydantic import BaseModel
+from pydantic import ConfigDict
+from pydantic import Field
 
 
 if TYPE_CHECKING:
@@ -54,8 +58,7 @@ if TYPE_CHECKING:
     from spectrafit.models.peak_models import Component
 
 
-@dataclass
-class CompositeModelBundle:
+class CompositeModelBundle(BaseModel):
     """A fully-assembled lmfit composite model with decomposition support.
 
     Args:
@@ -67,9 +70,11 @@ class CompositeModelBundle:
             retained for per-component curve recovery.
     """
 
-    composite: lmfit.Model
-    params: lmfit.Parameters
-    parts: list[tuple[str, lmfit.Model]] = field(default_factory=list)
+    model_config = ConfigDict(extra="forbid", arbitrary_types_allowed=True)
+
+    composite: Model
+    params: Parameters
+    parts: list[tuple[str, Model]] = Field(default_factory=list)
 
     def decompose(
         self,
@@ -136,7 +141,7 @@ def build_composite_bundle(
         msg = "components must contain at least one Component"
         raise ValueError(msg)
 
-    lm_models: list[tuple[str, lmfit.Model]] = [
+    lm_models: list[tuple[str, Model]] = [
         (comp.id, comp.to_lmfit_model()) for comp in components
     ]
 

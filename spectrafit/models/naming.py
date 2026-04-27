@@ -29,7 +29,8 @@ from __future__ import annotations
 
 import re
 
-from dataclasses import dataclass
+from pydantic import BaseModel
+from pydantic import ConfigDict
 
 
 def sanitize_component_id(raw_id: str) -> str:
@@ -178,8 +179,7 @@ def restore_dot_notation(
     return restored
 
 
-@dataclass(frozen=True, slots=True)
-class GlobalLmfitContributionKey:
+class GlobalLmfitContributionKey(BaseModel):
     """Typed parser for global lmfit contribution parameter names.
 
     Global fitting still produces parameter names in the legacy shape
@@ -187,6 +187,8 @@ class GlobalLmfitContributionKey:
     may itself contain underscores, so parsing must happen from the right-most
     boundary rather than with a positional ``split("_")``.
     """
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
 
     contribution_id: str
     field_name: str

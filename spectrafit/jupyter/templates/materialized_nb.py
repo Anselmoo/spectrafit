@@ -6,7 +6,6 @@ import ast
 import json
 import math
 
-from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -17,6 +16,7 @@ from nbformat.v4 import new_code_cell
 from nbformat.v4 import new_markdown_cell
 from nbformat.v4 import new_notebook
 from pydantic import BaseModel
+from pydantic import ConfigDict
 
 from spectrafit.core.fitting_config import UnifiedFittingConfig
 from spectrafit.models.fitting_context import FittingContext
@@ -64,9 +64,10 @@ _NOTEBOOK_LANGUAGE_VERSION = "3.12.0"
 _BACKGROUND_MODELS = frozenset({"constant", "linear", "polynom2"})
 
 
-@dataclass(frozen=True)
-class _RawCode:
+class _RawCode(BaseModel):
     """Marker for Python source that should be embedded verbatim."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
 
     code: str
 
@@ -203,37 +204,37 @@ def _render_data_section(config: UnifiedFittingConfig) -> str:
     """Render the data-loading section using notebook-local paths."""
     data_config = config.data
     if data_config is None:
-        data_kwargs: dict[str, object] = {"infile": _RawCode("DATA_PATH")}
+        data_kwargs: dict[str, object] = {"infile": _RawCode(code="DATA_PATH")}
     else:
         data_kwargs = data_config.model_dump(mode="python", exclude_none=True)
         data_kwargs.pop("context", None)
-        data_kwargs["infile"] = _RawCode("DATA_PATH")
+        data_kwargs["infile"] = _RawCode(code="DATA_PATH")
     return _render_assignment(
-        "data", _RawCode(_render_model_call("DataConfig", data_kwargs))
+        "data", _RawCode(code=_render_model_call("DataConfig", data_kwargs))
     )
 
 
 def _render_config_assembly(config: UnifiedFittingConfig) -> str:
     """Render the final typed ``UnifiedFittingConfig`` assembly."""
     kwargs: dict[str, object] = {
-        "components": _RawCode("components"),
-        "minimizer": _RawCode("minimizer"),
-        "optimizer": _RawCode("optimizer"),
-        "context": _RawCode("context"),
-        "data": _RawCode("data"),
-        "preprocessing": _RawCode("preprocessing"),
+        "components": _RawCode(code="components"),
+        "minimizer": _RawCode(code="minimizer"),
+        "optimizer": _RawCode(code="optimizer"),
+        "context": _RawCode(code="context"),
+        "data": _RawCode(code="data"),
+        "preprocessing": _RawCode(code="preprocessing"),
     }
     if config.meta is not None:
-        kwargs["meta"] = _RawCode("meta")
+        kwargs["meta"] = _RawCode(code="meta")
     if config.conf_interval not in (False, None):
-        kwargs["conf_interval"] = _RawCode("conf_interval")
+        kwargs["conf_interval"] = _RawCode(code="conf_interval")
     if config.global_fitting_config is not None:
-        kwargs["global_fitting_config"] = _RawCode("global_fitting_config")
+        kwargs["global_fitting_config"] = _RawCode(code="global_fitting_config")
     if config.mcmc is not None:
-        kwargs["mcmc"] = _RawCode("mcmc")
+        kwargs["mcmc"] = _RawCode(code="mcmc")
     return _render_assignment(
         "config",
-        _RawCode(_render_model_call("UnifiedFittingConfig", kwargs)),
+        _RawCode(code=_render_model_call("UnifiedFittingConfig", kwargs)),
     )
 
 

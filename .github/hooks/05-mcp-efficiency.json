@@ -1,0 +1,11 @@
+{
+    "hooks": {
+        "SessionStart": [
+            {
+                "type": "command",
+                "command": ".github/hooks/scripts/inject-mcp-guidance.sh",
+                "timeout": 5
+            }
+        ]
+    }
+}

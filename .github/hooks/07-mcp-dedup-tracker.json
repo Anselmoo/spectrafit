@@ -1,0 +1,25 @@
+{
+    "hooks": {
+        "SessionStart": [
+            {
+                "type": "command",
+                "command": "python3 .github/hooks/scripts/track-mcp-calls.py",
+                "timeout": 5
+            }
+        ],
+        "PreToolUse": [
+            {
+                "type": "command",
+                "command": "python3 .github/hooks/scripts/track-mcp-calls.py",
+                "timeout": 5
+            }
+        ],
+        "PostToolUse": [
+            {
+                "type": "command",
+                "command": "python3 .github/hooks/scripts/track-mcp-calls.py",
+                "timeout": 5
+            }
+        ]
+    }
+}

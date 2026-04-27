@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import os
 
-from dataclasses import dataclass
 from pathlib import Path
 from typing import Protocol
 
@@ -80,9 +79,10 @@ class CliRuntimeSettings(BaseModel):
         return self.app_dir / self.default_config_name
 
 
-@dataclass(slots=True)
-class CliRuntime:
+class CliRuntime(BaseModel):
     """Runtime dependencies shared across CLI commands."""
+
+    model_config = ConfigDict(extra="forbid", arbitrary_types_allowed=True)
 
     settings: CliRuntimeSettings
     status_printer: StatusPrinter

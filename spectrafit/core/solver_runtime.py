@@ -2,8 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-from dataclasses import field
+from collections.abc import Callable  # noqa: TC003
 from typing import TYPE_CHECKING
 from typing import cast
 
@@ -12,7 +11,12 @@ import numpy as np
 from lmfit import Minimizer
 from lmfit import Parameter
 from lmfit import Parameters
+from numpy.typing import NDArray
+from pydantic import BaseModel
+from pydantic import ConfigDict
+from pydantic import Field
 
+from spectrafit.models.bundle import CompositeModelBundle
 from spectrafit.models.naming import GlobalLmfitContributionKey
 from spectrafit.models.parameter_builder import ParameterBuilder
 from spectrafit.models.parameter_builder import ReferenceKeys
@@ -21,26 +25,23 @@ from spectrafit.models.solver_config import SolverConfig
 
 
 if TYPE_CHECKING:
-    from collections.abc import Callable
-
     import pandas as pd
 
     from lmfit.minimizer import MinimizerResult
-    from numpy.typing import NDArray
 
     from spectrafit.core.fitting_config import UnifiedFittingConfig
-    from spectrafit.models.bundle import CompositeModelBundle
     from spectrafit.models.global_fitting import GlobalFittingConfig
 
 
-@dataclass(slots=True)
-class _GlobalContribution:
+class _GlobalContribution(BaseModel):
     """Grouped global contribution parameters for one dataset/component curve."""
+
+    model_config = ConfigDict(extra="forbid", arbitrary_types_allowed=True)
 
     contribution_id: str
     dataset_index: int
     registry_model: str
-    parameter_values: dict[str, Parameter] = field(default_factory=dict)
+    parameter_values: dict[str, Parameter] = Field(default_factory=dict)
 
     def add_parameter(
         self,
@@ -135,9 +136,10 @@ def solve_global_fitting(
     return residual.flatten()
 
 
-@dataclass(frozen=True, slots=True)
-class SolverExecutionPlan:
+class SolverExecutionPlan(BaseModel):
     """Explicit solver execution plan for one fit run."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid", arbitrary_types_allowed=True)
 
     residual: Callable[..., NDArray]
     params: Parameters

@@ -4,13 +4,14 @@ from __future__ import annotations
 
 import re
 
-from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 import plotly.graph_objects as go
 
 from plotly.colors import qualitative
 from plotly.subplots import make_subplots
+from pydantic import BaseModel
+from pydantic import ConfigDict
 
 from spectrafit.api.tools_model import ColumnNamesAPI
 
@@ -28,9 +29,10 @@ _GLOBAL_SUFFIX_PATTERN = re.compile(r"_(\d+)$")
 _LOCAL_COLUMNS = frozenset(_COLUMNS.model_dump().values())
 
 
-@dataclass(frozen=True)
-class FitPlotStyle:
+class FitPlotStyle(BaseModel):
     """Visual styling for shared fit plots."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
 
     intensity_color: str = qualitative.Plotly[0]
     residual_color: str = qualitative.Plotly[1]

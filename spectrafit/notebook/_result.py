@@ -2,13 +2,16 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING
 
 import pandas as pd
 
+from pydantic import BaseModel
+from pydantic import ConfigDict
+
 from spectrafit.api.notebook_model import FnameAPI
+from spectrafit.core.pipeline import FittingResult  # noqa: TC001
 from spectrafit.jupyter.config_io import export_notebook_config_toml
 from spectrafit.jupyter.export import ExportResults
 from spectrafit.jupyter.solver import SolverResults
@@ -21,13 +24,13 @@ if TYPE_CHECKING:
     from plotly.graph_objects import Figure
 
     from spectrafit.core.fitting_config import UnifiedFittingConfig
-    from spectrafit.core.pipeline import FittingResult
     from spectrafit.models.results.fit_result import FitResult
 
 
-@dataclass(frozen=True, slots=True)
-class FitSession:
+class FitSession(BaseModel):
     """Notebook-first facade with simple plots, tables, and bundled exports."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid", arbitrary_types_allowed=True)
 
     pipeline_result: FittingResult
     source_dataframe: pd.DataFrame

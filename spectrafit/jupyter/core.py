@@ -8,7 +8,6 @@ from __future__ import annotations
 
 import warnings
 
-from dataclasses import replace
 from typing import TYPE_CHECKING
 
 import pandas as pd
@@ -703,11 +702,12 @@ class SpectraFitNotebook(DataFramePlot):  # intentional: Facade
     def _build_runtime_pipeline_deps(self) -> PipelineDependencies:
         """Project notebook-owned runtime state onto the canonical pipeline seams."""
         base_deps = getattr(self, "_pipeline_deps", PipelineDependencies())
-        return replace(
-            base_deps,
-            data_config_factory=self._build_runtime_data_config,
-            data_loader=self._load_runtime_dataframe,
-            preprocessor=self._passthrough_preprocessor,
+        return base_deps.model_copy(
+            update={
+                "data_config_factory": self._build_runtime_data_config,
+                "data_loader": self._load_runtime_dataframe,
+                "preprocessor": self._passthrough_preprocessor,
+            },
         )
 
     def preprocess_df(self) -> None:

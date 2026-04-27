@@ -6,7 +6,7 @@ separating concerns and making the code more maintainable.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from collections.abc import Callable
 from functools import cached_property
 from typing import TYPE_CHECKING
 from typing import Protocol
@@ -90,33 +90,6 @@ def run_postprocessing(
     )()
 
 
-@dataclass(frozen=True, slots=True)
-class PipelineDependencies:
-    """Injected collaborators for fitting pipeline orchestration."""
-
-    data_config_factory: Callable[[UnifiedFittingConfig], DataConfig] = (
-        build_data_config
-    )
-    data_loader: Callable[[DataConfig], pd.DataFrame] = load_data
-    preprocessor: Callable[[pd.DataFrame, UnifiedFittingConfig], PreprocessResult] = (
-        preprocess
-    )
-    solver_factory: Callable[[pd.DataFrame, UnifiedFittingConfig], SolverRuntime] = (
-        build_solver_models
-    )
-    postprocess_runner: Callable[
-        [
-            pd.DataFrame,
-            Minimizer,
-            MinimizerResult,
-            UnifiedFittingConfig,
-            CompositeModelBundle | None,
-        ],
-        PostProcessingResult,
-    ] = run_postprocessing
-    report_emitter: ReportEmitter = emit_runtime_report
-
-
 class ReportEmitter(Protocol):
     """Protocol for emitting runtime fit reports from pipeline results."""
 
@@ -128,6 +101,34 @@ class ReportEmitter(Protocol):
         verbose: int,
     ) -> None:
         """Emit a runtime report from canonical fit-result data."""
+
+
+class PipelineDependencies(BaseModel):
+    """Injected collaborators for fitting pipeline orchestration."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid", arbitrary_types_allowed=True)
+
+    data_config_factory: Callable[[UnifiedFittingConfig], DataConfig] = Field(
+        default=build_data_config,
+    )
+    data_loader: Callable[[DataConfig], pd.DataFrame] = Field(default=load_data)
+    preprocessor: Callable[[pd.DataFrame, UnifiedFittingConfig], PreprocessResult] = (
+        Field(default=preprocess)
+    )
+    solver_factory: Callable[[pd.DataFrame, UnifiedFittingConfig], SolverRuntime] = (
+        Field(default=build_solver_models)
+    )
+    postprocess_runner: Callable[
+        [
+            pd.DataFrame,
+            Minimizer,
+            MinimizerResult,
+            UnifiedFittingConfig,
+            CompositeModelBundle | None,
+        ],
+        PostProcessingResult,
+    ] = Field(default=run_postprocessing)
+    report_emitter: Callable[..., None] = Field(default=emit_runtime_report)
 
 
 class FitStatistics(BaseModel):

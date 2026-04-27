@@ -1,0 +1,11 @@
+{
+    "hooks": {
+        "PreToolUse": [
+            {
+                "type": "command",
+                "command": "python3 .github/hooks/scripts/check-legacy-banned.py",
+                "timeout": 10
+            }
+        ]
+    }
+}

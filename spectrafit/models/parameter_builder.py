@@ -2,13 +2,18 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 from typing import TYPE_CHECKING
 from typing import ClassVar
 
+import numpy as np  # noqa: TC002
+
 from lmfit import Parameters
+from numpy.typing import NDArray  # noqa: TC002
+from pydantic import BaseModel
+from pydantic import ConfigDict
 
 from spectrafit.api.models_model import DistributionModelAPI
+from spectrafit.models.bundle import CompositeModelBundle  # noqa: TC001
 from spectrafit.models.naming import dataset_scoped_name
 from spectrafit.models.naming import global_lmfit_param_name
 from spectrafit.models.naming import lmfit_param_name
@@ -16,40 +21,39 @@ from spectrafit.models.naming import sanitize_component_id
 
 
 if TYPE_CHECKING:
-    import numpy as np
     import pandas as pd
 
-    from numpy.typing import NDArray
-
     from spectrafit.core.fitting_config import UnifiedFittingConfig
-    from spectrafit.models.bundle import CompositeModelBundle
     from spectrafit.models.global_fitting import GlobalFittingConfig
 
 # Minimum datasets needed when applying shared-parameter constraints
 _MIN_DATASETS_FOR_SHARING = 2
 
 
-@dataclass(frozen=True, slots=True)
-class PreparedInputData:
+class PreparedInputData(BaseModel):
     """Prepared numeric input arrays derived from a validated dataframe/config pair."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid", arbitrary_types_allowed=True)
 
     x: NDArray[np.float64]
     data: NDArray[np.float64]
     dataset_count: int
 
 
-@dataclass(frozen=True, slots=True)
-class PreparedModelParameters:
+class PreparedModelParameters(BaseModel):
     """Prepared lmfit parameter state ready for solver execution."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid", arbitrary_types_allowed=True)
 
     params: Parameters
     bundle: CompositeModelBundle | None = None
     component_models: dict[str, str] | None = None
 
 
-@dataclass(frozen=True)
-class ReferenceKeys:
+class ReferenceKeys(BaseModel):
     """Reference keys for model fitting — canonical location since v2.0.0."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
 
     __models__: ClassVar[list[str]] = list(
         DistributionModelAPI.model_json_schema()["properties"].keys(),
