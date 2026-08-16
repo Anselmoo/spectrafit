@@ -17,8 +17,11 @@
 > Data Analysis Tool for All Kinds of Spectra
 
 > **Warning**
-> SpectraFit v2.0 is currently in development. SpectraFit v1.x is in end-of-life
-> maintenance mode and will receive only critical hotfixes.
+> SpectraFit v2.0 is currently in development.
+> [Anselmoo/spectrafit-core](https://github.com/Anselmoo/spectrafit-core) is on
+> the way as well, and will later become the replacement for `lmfit` as the
+> fitting engine in v2.0. SpectraFit v1.x is in end-of-life maintenance mode
+> and will receive only critical hotfixes.
 
 `SpectraFit` is a Python tool for quick data fitting based on the regular
 expression of distribution and linear functions via the command line (CMD) or
