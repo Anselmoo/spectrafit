@@ -17,7 +17,9 @@
 > Data Analysis Tool for All Kinds of Spectra
 
 > **Warning**
-> SpectraFit v2.0 is currently in development. SpectraFit v1.x is in end-of-life
+> SpectraFit v2.0 is on the way, developed at
+> [Anselmoo/spectrafit-core](https://github.com/Anselmoo/spectrafit-core) — the
+> new central hub for v2.0 development. SpectraFit v1.x is in end-of-life
 > maintenance mode and will receive only critical hotfixes.
 
 `SpectraFit` is a Python tool for quick data fitting based on the regular
