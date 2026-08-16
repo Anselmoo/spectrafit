@@ -9,6 +9,14 @@
     Currently, SpectraFit only supports Python 3.9 and above. Soon, Python 3.9
     will be deprecated in favor of Python 3.10 and above, see also
     [Release Schedule](https://devguide.python.org/versions/#end-of-life-branches).
+
+!!! warning "About v2.0"
+
+    SpectraFit v2.0 is currently in development. SpectraFit v1.x is in
+    end-of-life maintenance mode and will receive only critical hotfixes.
+    [spectrafit-core](https://github.com/Anselmoo/spectrafit-core) is on the
+    way as well, and will later become the replacement for `lmfit` as the
+    fitting engine in v2.0.
 """
 
 from __future__ import annotations
@@ -23,7 +31,10 @@ PYTHON_END_OF_LIFE: tuple[Literal[3], Literal[9]] = (3, 9)
 PACKAGE_LIFECYCLE_NOTICE = (
     "SpectraFit v2.0 is currently in development. "
     "SpectraFit v1.x is in end-of-life maintenance mode and will receive "
-    "only critical hotfixes."
+    "only critical hotfixes. "
+    "spectrafit-core (https://github.com/Anselmoo/spectrafit-core) is on the "
+    "way as well, and will later become the replacement for `lmfit` as the "
+    "fitting engine in v2.0."
 )
 
 warnings.warn(
