@@ -1,5 +1,12 @@
 # Changelog
 
+## [Unreleased]
+
+## [1.5.2] - 2026-08-16
+
+_No notable changes recorded._
+
+
 All notable changes to this project will be documented in this file.
 
 ## v1.4.0 🌈 - 2025-06-08
