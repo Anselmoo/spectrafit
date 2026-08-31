@@ -4,7 +4,7 @@ build_check:
   stage: deploy
   tags:
     - shared
-  image: python:3.13@sha256:52ed248783130e635b76b2eb8430626b2cdb6c5a5ab037193ece2d019632be0f
+  image: python:3.13@sha256:a05a0a9cfe9db7d6af4daf0c31de1aca499d067eb2da574d6afad8a92615f267
   before_script:
     - python -m pip install --upgrade pip
     - pip install build
