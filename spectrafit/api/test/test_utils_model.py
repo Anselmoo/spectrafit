@@ -45,7 +45,7 @@ def test_create_quadrupolesplitting_api_basic() -> None:
 
 def test_create_quadrupolesplitting_api_all_params() -> None:
     """Test creating QuadrupoleSplittingAPI with all parameters."""
-    data: dict[str, float | bool | None | str] = {
+    data: dict[str, float | bool | str | None] = {
         "value": 0.3,
         "min": -0.5,
         "max": 0.5,
@@ -122,7 +122,7 @@ def test_create_hyperfinefield_api_basic() -> None:
 
 def test_create_hyperfinefield_api_all_params() -> None:
     """Test creating HyperfineFieldAPI with all parameters."""
-    data: dict[str, float | bool | None | str] = {
+    data: dict[str, float | bool | str | None] = {
         "value": 25.0,
         "min": 10.0,
         "max": 40.0,
@@ -166,7 +166,7 @@ def test_factory_functions_consistency(
         api_class: Expected API class type
         test_value: Test value for parameter
     """
-    data: dict[str, float | bool | None | str] = {
+    data: dict[str, float | bool | str | None] = {
         "value": test_value,
         "min": test_value / 2,
         "max": test_value * 2,
