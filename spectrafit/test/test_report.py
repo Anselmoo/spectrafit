@@ -486,7 +486,7 @@ def test_fit_report_init(
     sort_pars: bool,
     show_correl: bool,
     min_correl: float,
-    modelpars: None | dict[str, Parameters],
+    modelpars: dict[str, Parameters] | None,
     expected_parnames: list[str],
 ) -> None:
     """Test the initialization of the FitReport class.
@@ -523,7 +523,7 @@ def test_fit_report_init(
 )
 def test_generate_fit_statistics_edge_cases(
     inpars: Parameters | str,
-    expected_result: None | Exception,
+    expected_result: Exception | None,
 ) -> None:
     """Test the edge cases of the  method in the FitReport class.
 
